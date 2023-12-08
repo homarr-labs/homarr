@@ -1,20 +1,13 @@
-import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
+import Database from 'better-sqlite3';
+import { drizzle } from "drizzle-orm/better-sqlite3";
 
-import * as auth from "./schema/auth";
-import * as post from "./schema/post";
+import * as sqliteSchema from "./schema/sqlite";
 
-export const schema = { ...auth, ...post };
 
-export { mySqlTable as tableCreator } from "./schema/_table";
+export const schema = sqliteSchema;
 
 export * from "drizzle-orm";
 
-export const db = drizzle(
-  new Client({
-    host: process.env.DB_HOST,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-  }).connection(),
-  { schema },
-);
+const sqlite = new Database(process.env.DB_URL!);
+
+export const db = drizzle(sqlite, { schema });

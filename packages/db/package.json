@@ -9,12 +9,13 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "push": "drizzle-kit push:mysql",
+    "push": "drizzle-kit push:sqlite",
     "studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@planetscale/database": "^1.11.0",
+    "@types/better-sqlite3": "^7.6.8",
+    "better-sqlite3": "^9.2.2",
     "drizzle-orm": "^0.29.1"
   },
   "devDependencies": {
