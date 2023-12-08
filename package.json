@@ -21,7 +21,7 @@
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:^0.1.0",
+    "@alparr/prettier-config": "workspace:^0.1.0",
     "@turbo/gen": "^1.10.16",
     "prettier": "^3.1.0",
     "turbo": "^1.10.16",
@@ -32,5 +32,5 @@
       "@auth/core": "0.18.0"
     }
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@alparr/prettier-config"
 }

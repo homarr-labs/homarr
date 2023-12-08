@@ -1,5 +1,5 @@
 {
-  "name": "@acme/db",
+  "name": "@alparr/db",
   "version": "0.1.0",
   "private": true,
   "main": "./index.ts",
@@ -18,9 +18,9 @@
     "drizzle-orm": "^0.29.1"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:^0.2.0",
-    "@acme/prettier-config": "workspace:^0.1.0",
-    "@acme/tsconfig": "workspace:^0.1.0",
+    "@alparr/eslint-config": "workspace:^0.2.0",
+    "@alparr/prettier-config": "workspace:^0.1.0",
+    "@alparr/tsconfig": "workspace:^0.1.0",
     "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.20.6",
     "eslint": "^8.53.0",
@@ -30,8 +30,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@acme/eslint-config/base"
+      "@alparr/eslint-config/base"
     ]
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@alparr/prettier-config"
 }

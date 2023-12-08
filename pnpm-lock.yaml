@@ -11,7 +11,7 @@ importers:
 
   .:
     devDependencies:
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:tooling/prettier
       '@turbo/gen':
@@ -33,13 +33,13 @@ importers:
         specifier: 0.18.0
         version: 0.18.0
     devDependencies:
-      '@acme/eslint-config':
+      '@alparr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
@@ -57,13 +57,13 @@ importers:
 
   apps/nextjs:
     dependencies:
-      '@acme/api':
+      '@alparr/api':
         specifier: workspace:^0.1.0
         version: link:../../packages/api
-      '@acme/auth':
+      '@alparr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
-      '@acme/db':
+      '@alparr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
       '@mantine/core':
@@ -145,13 +145,13 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
-      '@acme/eslint-config':
+      '@alparr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
@@ -178,10 +178,10 @@ importers:
 
   packages/api:
     dependencies:
-      '@acme/auth':
+      '@alparr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
-      '@acme/db':
+      '@alparr/db':
         specifier: workspace:^0.1.0
         version: link:../db
       '@trpc/client':
@@ -197,13 +197,13 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
-      '@acme/eslint-config':
+      '@alparr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
@@ -218,7 +218,7 @@ importers:
 
   packages/auth:
     dependencies:
-      '@acme/db':
+      '@alparr/db':
         specifier: workspace:^0.1.0
         version: link:../db
       '@auth/core':
@@ -246,13 +246,13 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
-      '@acme/eslint-config':
+      '@alparr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
@@ -274,13 +274,13 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(@planetscale/database@1.11.0)
     devDependencies:
-      '@acme/eslint-config':
+      '@alparr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       dotenv-cli:
@@ -329,10 +329,10 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0(eslint@8.53.0)
     devDependencies:
-      '@acme/prettier-config':
+      '@alparr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../prettier
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../typescript
       '@types/eslint':
@@ -356,7 +356,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
     devDependencies:
-      '@acme/tsconfig':
+      '@alparr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../typescript
       typescript:

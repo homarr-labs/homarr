@@ -10,13 +10,13 @@ interface PackageJson {
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator("init", {
-    description: "Generate a new package for the Acme Monorepo",
+    description: "Generate a new package for the alparr Monorepo",
     prompts: [
       {
         type: "input",
         name: "name",
         message:
-          "What is the name of the package? (You can skip the `@acme/` prefix)",
+          "What is the name of the package? (You can skip the `@alparr/` prefix)",
       },
       {
         type: "input",
@@ -28,8 +28,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     actions: [
       (answers) => {
         if ("name" in answers && typeof answers.name === "string") {
-          if (answers.name.startsWith("@acme/")) {
-            answers.name = answers.name.replace("@acme/", "");
+          if (answers.name.startsWith("@alparr/")) {
+            answers.name = answers.name.replace("@alparr/", "");
           }
         }
         return "Config sanitized";
