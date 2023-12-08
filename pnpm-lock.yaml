@@ -66,6 +66,9 @@ importers:
       '@alparr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
+      '@alparr/ui':
+        specifier: workspace:^
+        version: link:../../packages/ui
       '@mantine/core':
         specifier: ^7.3.1
         version: 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
@@ -295,6 +298,28 @@ importers:
       prettier:
         specifier: ^3.1.0
         version: 3.1.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/ui:
+    dependencies:
+      '@mantine/core':
+        specifier: ^7.3.1
+        version: 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@alparr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@alparr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@alparr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
       typescript:
         specifier: ^5.3.3
         version: 5.3.3

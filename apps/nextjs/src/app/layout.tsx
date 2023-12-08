@@ -7,6 +7,7 @@ import '@mantine/notifications/styles.css';
 
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { headers } from "next/headers";
+import { uiConfiguration } from "@alparr/ui";
 
 import { TRPCReactProvider } from "./providers";
 
@@ -35,7 +36,7 @@ export default function Layout(props: { children: React.ReactNode }) {
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headers={headers()}>
-          <MantineProvider>{props.children}</MantineProvider>
+          <MantineProvider defaultColorScheme="dark" {...uiConfiguration}>{props.children}</MantineProvider>
         </TRPCReactProvider>
       </body>
     </html>

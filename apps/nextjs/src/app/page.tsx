@@ -1,7 +1,10 @@
-import { Title } from "@mantine/core";
+import { Button, Stack, Title } from "@mantine/core";
 
 export default function HomePage() {
   return (
-    <Title>Home</Title>
+    <Stack>
+      <Title>Home</Title>
+      <Button>Test</Button>
+    </Stack>
   );
 }

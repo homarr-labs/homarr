@@ -8,7 +8,7 @@ const config = {
     "@ianvs/prettier-plugin-sort-imports"
   ],
   importOrder: [
-    "^(react/(.*)$)|^(react$)|^(react-native(.*)$)",
+    "^(react/(.*)$)|^(react$)$)",
     "^(next/(.*)$)|^(next$)",
     "<THIRD_PARTY_MODULES>",
     "",
