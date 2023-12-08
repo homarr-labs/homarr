@@ -17,12 +17,6 @@ next-env.d.ts
 .nitro/
 .output/
 
-# expo
-.expo/
-dist/
-expo-env.d.ts
-apps/expo/.gitignore
-
 # production
 build
 

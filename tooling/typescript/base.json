@@ -2,7 +2,11 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "ES2022"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,5 +21,10 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": ["node_modules", "build", "dist", ".next", ".expo"]
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    ".next"
+  ]
 }
