@@ -1,12 +1,13 @@
+import { cookies } from "next/headers";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+
+import { db } from "@alparr/db";
 
 import { credentialsConfiguration } from "./providers/credentials";
 import { EmptyNextAuthProvider } from "./providers/empty";
 import { expireDateAfter, generateSessionToken } from "./session";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "@alparr/db";
-import { cookies } from 'next/headers';
 
 const adapter = DrizzleAdapter(db);
 const sessionMaxAgeInSeconds = 30 * 24 * 60 * 60; // 30 days
