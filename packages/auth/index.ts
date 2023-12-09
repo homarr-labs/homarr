@@ -1,12 +1,13 @@
+import Credentials from "@auth/core/providers/credentials";
 import type { DefaultSession } from "@auth/core/types";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 
 import { db } from "@alparr/db";
-import Credentials from "@auth/core/providers/credentials";
+
 import { credentialsConfiguration } from "./providers/credentials";
-import { expireDateAfter, generateSessionToken } from "./session";
 import EmptyNextAuthProvider from "./providers/empty";
+import { expireDateAfter, generateSessionToken } from "./session";
 
 export type { Session } from "next-auth";
 
@@ -21,12 +22,7 @@ declare module "next-auth" {
 const adapter = DrizzleAdapter(db);
 const sessionMaxAgeInSeconds = 30 * 24 * 60 * 60; // 30 days
 
-export const {
-  handlers,
-  auth,
-  signIn,
-  signOut,
-}= NextAuth({
+export const { handlers, auth } = NextAuth({
   adapter,
   providers: [Credentials(credentialsConfiguration), EmptyNextAuthProvider()],
   callbacks: {
@@ -67,10 +63,10 @@ export const {
     strategy: "database",
     maxAge: sessionMaxAgeInSeconds,
   },
-  /*pages: {
+  pages: {
     signIn: "/auth/login",
     error: "/auth/login",
-  },*/
+  },
   /*jwt: {
     encode(params) {
       if (!isCredentialsRequest(req)) {
@@ -100,4 +96,3 @@ export const {
     req.method === 'POST'
   );*/
 //};*/
-
