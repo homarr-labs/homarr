@@ -1,3 +1,3 @@
-export { GET, POST } from "@alparr/auth";
+import { handlers } from "@alparr/auth";
 
-export const runtime = "edge";
+export const { GET, POST } = handlers;

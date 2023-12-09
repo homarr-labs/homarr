@@ -14,7 +14,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.8",
     "better-sqlite3": "^9.2.2",
     "drizzle-orm": "^0.29.1"
   },
@@ -26,7 +25,8 @@
     "drizzle-kit": "^0.20.6",
     "eslint": "^8.53.0",
     "prettier": "^3.1.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@types/better-sqlite3": "7.6.8"
   },
   "eslintConfig": {
     "root": true,
