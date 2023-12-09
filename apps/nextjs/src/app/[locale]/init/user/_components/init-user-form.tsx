@@ -5,6 +5,7 @@ import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import type { z } from "zod";
 
+import { useScopedI18n } from "@alparr/translation/client";
 import { initUserSchema } from "@alparr/validation";
 
 import { showErrorNotification, showSuccessNotification } from "~/notification";
@@ -12,6 +13,7 @@ import { api } from "~/utils/api";
 
 export const InitUserForm = () => {
   const router = useRouter();
+  const t = useScopedI18n("user");
   const { mutateAsync, error, isPending } = api.user.initUser.useMutation();
   const form = useForm<FormType>({
     validate: zodResolver(initUserSchema),
@@ -20,7 +22,7 @@ export const InitUserForm = () => {
     initialValues: {
       username: "",
       password: "",
-      repeatPassword: "",
+      confirmPassword: "",
     },
   });
 
@@ -52,14 +54,20 @@ export const InitUserForm = () => {
         )}
       >
         <Stack gap="lg">
-          <TextInput label="Username" {...form.getInputProps("username")} />
-          <PasswordInput label="Password" {...form.getInputProps("password")} />
+          <TextInput
+            label={t("field.username.label")}
+            {...form.getInputProps("username")}
+          />
           <PasswordInput
-            label="Repeat password"
-            {...form.getInputProps("repeatPassword")}
+            label={t("field.password.label")}
+            {...form.getInputProps("password")}
+          />
+          <PasswordInput
+            label={t("field.passwordConfirm.label")}
+            {...form.getInputProps("confirmPassword")}
           />
           <Button type="submit" fullWidth loading={isPending}>
-            Create user
+            {t("action.create")}
           </Button>
         </Stack>
       </form>
