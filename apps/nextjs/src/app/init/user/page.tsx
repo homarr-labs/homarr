@@ -1,23 +1,36 @@
+import { notFound } from "next/navigation";
 import { Card, Center, Stack, Text, Title } from "@mantine/core";
 
-import { LogoWithTitle } from "~/components/layout/logo";
-import { LoginForm } from "./_components/login-form";
+import { db } from "@alparr/db";
 
-export default function Login() {
+import { LogoWithTitle } from "~/components/layout/logo";
+import { InitUserForm } from "./_components/init-user-form";
+
+export default async function InitUser() {
+  const firstUser = await db.query.users.findFirst({
+    columns: {
+      id: true,
+    },
+  });
+
+  if (firstUser) {
+    return notFound();
+  }
+
   return (
     <Center>
       <Stack align="center" mt="xl">
         <LogoWithTitle />
         <Stack gap={6} align="center">
           <Title order={3} fw={400} ta="center">
-            Log in to your account
+            New Alparr installation
           </Title>
           <Text size="sm" c="gray.5" ta="center">
-            Welcome back! Please enter your credentials
+            Please create the initial administator user.
           </Text>
         </Stack>
         <Card bg="dark.8" w={64 * 6} maw="90vw">
-          <LoginForm />
+          <InitUserForm />
         </Card>
       </Stack>
     </Center>

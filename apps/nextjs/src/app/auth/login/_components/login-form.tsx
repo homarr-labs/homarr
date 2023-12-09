@@ -15,7 +15,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import type { z } from "zod";
 
 import { signIn } from "@alparr/auth/client";
-import { signInSchema } from "@alparr/auth/validation";
+import { signInSchema } from "@alparr/validation";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -63,7 +63,7 @@ export const LoginForm = () => {
       </form>
 
       {error && (
-        <Alert icon={<IconAlertTriangle size={rem(1)} />} color="red">
+        <Alert icon={<IconAlertTriangle size={rem(16)} />} color="red">
           {error}
         </Alert>
       )}

@@ -3,8 +3,7 @@ import bcrypt from "bcrypt";
 
 import { db, eq } from "@alparr/db";
 import { users } from "@alparr/db/schema/sqlite";
-
-import { signInSchema } from "../validation";
+import { signInSchema } from "@alparr/validation";
 
 type CredentialsConfiguration = Parameters<typeof Credentials>[0];
 

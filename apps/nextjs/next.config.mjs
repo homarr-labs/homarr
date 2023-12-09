@@ -6,12 +6,18 @@ import "@alparr/auth/env.mjs";
 const config = {
   reactStrictMode: true,
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ["@alparr/api", "@alparr/auth", "@alparr/db", "@alparr/ui"],
+  transpilePackages: [
+    "@alparr/api",
+    "@alparr/auth",
+    "@alparr/db",
+    "@alparr/ui",
+    "@alparr/validation",
+  ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   experimental: {
-    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
 };
 
