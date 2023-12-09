@@ -15,6 +15,6 @@ export const showSuccessNotification = (props: CommonNotificationProps) =>
 export const showErrorNotification = (props: CommonNotificationProps) =>
   notifications.show({
     ...props,
-    color: "teal",
+    color: "red",
     icon: <IconX size={rem(20)} />,
   });
