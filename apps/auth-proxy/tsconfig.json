@@ -1,4 +1,0 @@
-{
-  "extends": "@alparr/tsconfig/base.json",
-  "include": ["routes"]
-}

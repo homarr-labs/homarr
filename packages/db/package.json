@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.8",
+    "@paralleldrive/cuid2": "^2.2.2",
     "better-sqlite3": "^9.2.2",
     "drizzle-orm": "^0.29.1"
   },
@@ -22,6 +22,7 @@
     "@alparr/eslint-config": "workspace:^0.2.0",
     "@alparr/prettier-config": "workspace:^0.1.0",
     "@alparr/tsconfig": "workspace:^0.1.0",
+    "@types/better-sqlite3": "7.6.8",
     "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.20.6",
     "eslint": "^8.53.0",

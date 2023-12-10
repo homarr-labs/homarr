@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
-import '@mantine/notifications/styles.css';
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
 
-import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { headers } from "next/headers";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+
 import { uiConfiguration } from "@alparr/ui";
 
 import { TRPCReactProvider } from "./providers";
@@ -29,14 +31,22 @@ export const metadata: Metadata = {
 };
 
 export default function Layout(props: { children: React.ReactNode }) {
+  const colorScheme = "dark";
+
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme={colorScheme} />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headers={headers()}>
-          <MantineProvider defaultColorScheme="dark" {...uiConfiguration}>{props.children}</MantineProvider>
+          <MantineProvider
+            defaultColorScheme={colorScheme}
+            {...uiConfiguration}
+          >
+            <Notifications />
+            {props.children}
+          </MantineProvider>
         </TRPCReactProvider>
       </body>
     </html>

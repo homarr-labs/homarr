@@ -1,32 +1,38 @@
 {
-  "name": "@alparr/auth-proxy",
+  "name": "@alparr/validation",
   "private": true,
-  "type": "module",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "license": "MIT",
   "scripts": {
-    "build": "nitro build",
     "clean": "rm -rf .turbo node_modules",
-    "dev": "nitro dev --port 3001",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@auth/core": "^0.18.4"
   },
   "devDependencies": {
     "@alparr/eslint-config": "workspace:^0.2.0",
     "@alparr/prettier-config": "workspace:^0.1.0",
     "@alparr/tsconfig": "workspace:^0.1.0",
     "eslint": "^8.53.0",
-    "nitropack": "^2.8.1",
-    "prettier": "^3.1.0",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {
-    "root": true,
     "extends": [
       "@alparr/eslint-config/base"
     ]
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@alparr/prettier-config",
+  "dependencies": {
+    "zod": "^3.22.2"
+  }
 }
