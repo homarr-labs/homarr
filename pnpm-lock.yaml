@@ -427,6 +427,37 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/widgets:
+    dependencies:
+      '@homarr/form':
+        specifier: workspace:^0.1.0
+        version: link:../form
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../notifications
+      '@homarr/ui':
+        specifier: workspace:^0.1.0
+        version: link:../ui
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   tooling/eslint:
     dependencies:
       '@next/eslint-plugin-next':
