@@ -22,4 +22,4 @@ const signInSchema = z.object({
 export const userSchemas = {
   signIn: signInSchema,
   init: initUserSchema,
-}
+};

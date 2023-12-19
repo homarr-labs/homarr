@@ -8,11 +8,11 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { ZodError } from "@homarr/validation";
 
 import { auth } from "@homarr/auth";
 import type { Session } from "@homarr/auth";
 import { db } from "@homarr/db";
+import { ZodError } from "@homarr/validation";
 
 /**
  * 1. CONTEXT
