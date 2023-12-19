@@ -16,6 +16,7 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",

@@ -13,7 +13,8 @@ import {
   uiConfiguration,
 } from "@homarr/ui";
 
-import { TRPCReactProvider } from "./providers";
+import { NextInternationalProvider } from "./_client-providers/next-international";
+import { TRPCReactProvider } from "./_client-providers/trpc";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -32,7 +33,10 @@ export const metadata: Metadata = {
   description: "Simple monorepo with shared backend for web & mobile apps",
 };
 
-export default function Layout(props: { children: React.ReactNode }) {
+export default function Layout(props: {
+  children: React.ReactNode;
+  params: { locale: string };
+}) {
   const colorScheme = "dark";
 
   return (
@@ -42,13 +46,15 @@ export default function Layout(props: { children: React.ReactNode }) {
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headers={headers()}>
-          <MantineProvider
-            defaultColorScheme={colorScheme}
-            {...uiConfiguration}
-          >
-            <Notifications />
-            {props.children}
-          </MantineProvider>
+          <NextInternationalProvider locale={props.params.locale}>
+            <MantineProvider
+              defaultColorScheme={colorScheme}
+              {...uiConfiguration}
+            >
+              <Notifications />
+              {props.children}
+            </MantineProvider>
+          </NextInternationalProvider>
         </TRPCReactProvider>
       </body>
     </html>
