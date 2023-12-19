@@ -4,13 +4,13 @@ import { TRPCError } from "@trpc/server";
 
 import { createSalt, hashPassword } from "@alparr/auth";
 import { createId, schema } from "@alparr/db";
-import { initUserSchema } from "@alparr/validation";
+import { v } from "@alparr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure
-    .input(initUserSchema)
+    .input(v.user.init)
     .mutation(async ({ ctx, input }) => {
       const firstUser = await ctx.db.query.users.findFirst({
         columns: {

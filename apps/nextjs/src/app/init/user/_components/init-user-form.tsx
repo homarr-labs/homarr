@@ -5,7 +5,7 @@ import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import type { z } from "zod";
 
-import { initUserSchema } from "@alparr/validation";
+import { v } from "@alparr/validation";
 
 import { showErrorNotification, showSuccessNotification } from "~/notification";
 import { api } from "~/utils/api";
@@ -14,7 +14,7 @@ export const InitUserForm = () => {
   const router = useRouter();
   const { mutateAsync, error, isPending } = api.user.initUser.useMutation();
   const form = useForm<FormType>({
-    validate: zodResolver(initUserSchema),
+    validate: zodResolver(v.user.init),
     validateInputOnBlur: true,
     validateInputOnChange: true,
     initialValues: {
@@ -67,4 +67,4 @@ export const InitUserForm = () => {
   );
 };
 
-type FormType = z.infer<typeof initUserSchema>;
+type FormType = z.infer<typeof v.user.init>;

@@ -15,14 +15,14 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import type { z } from "zod";
 
 import { signIn } from "@alparr/auth/client";
-import { signInSchema } from "@alparr/validation";
+import { v } from "@alparr/validation";
 
 export const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
   const form = useForm<FormType>({
-    validate: zodResolver(signInSchema),
+    validate: zodResolver(v.user.signIn),
     initialValues: {
       name: "",
       password: "",
@@ -71,4 +71,4 @@ export const LoginForm = () => {
   );
 };
 
-type FormType = z.infer<typeof signInSchema>;
+type FormType = z.infer<typeof v.user.signIn>;
