@@ -12,12 +12,22 @@ const config = {
     "@homarr/db",
     "@homarr/ui",
     "@homarr/validation",
+    "@homarr/form",
+    "@homarr/notifications",
+    "@homarr/spotlight",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   experimental: {
-    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
+    optimizePackageImports: [
+      "@mantine/core",
+      "@mantine/hooks",
+      "@mantine/dates",
+      "@mantine/notifications",
+      "@mantine/form",
+      "@mantine/spotlight",
+    ],
   },
 };
 

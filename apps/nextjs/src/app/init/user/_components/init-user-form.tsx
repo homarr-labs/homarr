@@ -1,13 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import type { z } from "@homarr/validation";
 
+import { useForm, zodResolver } from "@homarr/form";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
+import { Button, PasswordInput, Stack, TextInput } from "@homarr/ui";
+import type { z } from "@homarr/validation";
 import { v } from "@homarr/validation";
 
-import { showErrorNotification, showSuccessNotification } from "~/notification";
 import { api } from "~/utils/api";
 
 export const InitUserForm = () => {

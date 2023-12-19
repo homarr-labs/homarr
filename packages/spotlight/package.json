@@ -1,10 +1,9 @@
 {
-  "name": "@homarr/ui",
+  "name": "@homarr/spotlight",
   "private": true,
   "version": "0.1.0",
   "exports": {
-    ".": "./index.ts",
-    "./styles.css": "./src/styles.css"
+    ".": "./index.ts"
   },
   "typesVersions": {
     "*": {
@@ -18,7 +17,7 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc--noEmit"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -34,8 +33,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/core": "^7.3.2",
-    "@mantine/dates": "7.3.2",
-    "@tabler/icons-react": "^2.42.0"
+    "@mantine/spotlight": "^7.3.2"
   }
 }

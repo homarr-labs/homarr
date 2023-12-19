@@ -38,39 +38,30 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
+      '@homarr/form':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/form
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/notifications
+      '@homarr/spotlight':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/spotlight
       '@homarr/ui':
         specifier: workspace:^0.1.0
         version: link:../../packages/ui
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
-      '@mantine/core':
-        specifier: ^7.3.1
-        version: 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/dates':
-        specifier: ^7.3.1
-        version: 7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/form':
-        specifier: ^7.3.1
-        version: 7.3.1(react@18.2.0)
       '@mantine/hooks':
         specifier: ^7.3.1
         version: 7.3.1(react@18.2.0)
-      '@mantine/notifications':
-        specifier: ^7.3.1
-        version: 7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/spotlight':
-        specifier: ^7.3.1
-        version: 7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/tiptap':
         specifier: ^7.3.1
         version: 7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(@tabler/icons-react@2.42.0)(@tiptap/extension-link@2.1.13)(react-dom@18.2.0)(react@18.2.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.7.1
-        version: 0.7.1(typescript@5.3.3)(zod@3.22.2)
-      '@tabler/icons-react':
-        specifier: ^2.42.0
-        version: 2.42.0(react@18.2.0)
+        version: 0.7.1(typescript@5.3.3)(zod@3.22.4)
       '@tanstack/react-query':
         specifier: ^5.8.7
         version: 5.8.7(react-dom@18.2.0)(react@18.2.0)
@@ -204,7 +195,7 @@ importers:
         version: link:../db
       '@t3-oss/env-nextjs':
         specifier: ^0.7.1
-        version: 0.7.1(typescript@5.3.3)(zod@3.22.2)
+        version: 0.7.1(typescript@5.3.3)(zod@3.22.4)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -292,11 +283,86 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/form:
+    dependencies:
+      '@mantine/form':
+        specifier: ^7.3.2
+        version: 7.3.2(react@18.2.0)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/notifications:
+    dependencies:
+      '@homarr/ui':
+        specifier: workspace:^0.1.0
+        version: link:../ui
+      '@mantine/notifications':
+        specifier: 7.3.2
+        version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/spotlight:
+    dependencies:
+      '@mantine/spotlight':
+        specifier: ^7.3.2
+        version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   packages/ui:
     dependencies:
       '@mantine/core':
-        specifier: ^7.3.1
-        version: 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^7.3.2
+        version: 7.3.2(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/dates':
+        specifier: 7.3.2
+        version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+      '@tabler/icons-react':
+        specifier: ^2.42.0
+        version: 2.42.0(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1312,25 +1378,45 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/dates@7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-OI2qs5MgdYkwI7n+KuQ1tj9OhHloO0ozVOTSYyF/bgEfawCrd4TM76IcvIbfcTpmTLly1FflqFTM45+KVoQtbQ==}
+  /@mantine/core@7.3.2(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-CwAuQogVLcLR7O9e1eOgi3gtk4XX6cnaqevAxzJJpIOIyCnHiQ3cEGINVXyUUjUUipBlvK3sqz3NPGJ2ekLFDQ==}
     peerDependencies:
-      '@mantine/core': 7.3.1
-      '@mantine/hooks': 7.3.1
+      '@mantine/hooks': 7.3.2
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@floating-ui/react': 0.24.8(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.3.2(react@18.2.0)
+      clsx: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-number-format: 5.3.1(react-dom@18.2.0)(react@18.2.0)
+      react-remove-scroll: 2.5.7(@types/react@18.2.42)(react@18.2.0)
+      react-textarea-autosize: 8.5.3(@types/react@18.2.42)(react@18.2.0)
+      type-fest: 3.13.1
+    transitivePeerDependencies:
+      - '@types/react'
+    dev: false
+
+  /@mantine/dates@7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-mmP0PYpM9GYTXRhEL4Ulb+170vgW8fpGwRdVNuCCE/cyzIKHPJzaI2pEGR/i+sboH+RC1InCy/JaiDkPY6Fzlg==}
+    peerDependencies:
+      '@mantine/core': 7.3.2
+      '@mantine/hooks': 7.3.2
       dayjs: '>=1.0.0'
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.3.1(react@18.2.0)
+      '@mantine/core': 7.3.2(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.3.2(react@18.2.0)
       clsx: 2.0.0
       dayjs: 1.11.10
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@mantine/form@7.3.1(react@18.2.0):
-    resolution: {integrity: sha512-Oo8f7MuexeLM9ylQP5sZu4ljM//8wncvv+N9ZbPsagIn0RMW+oqdEikJfaAgZafSJKngAJ0H4krJu9J83sraDw==}
+  /@mantine/form@7.3.2(react@18.2.0):
+    resolution: {integrity: sha512-/qa1KQKVC46XWgIU190r3XM3Xld8Lsvz4L/an//TO67RnAGEdC5OCvr2JCb+fprZZi3YdxaKOkVNvP20W23qkg==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -1347,39 +1433,47 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@mantine/notifications@7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-9q/Kxzc18hx5PZW4uUSoYRKBlVZPojmbS6DFrua9T684MyDz2a4Hhj6d90i+MwDIu39p6C6i3pl8FLoPqeb0ww==}
+  /@mantine/hooks@7.3.2(react@18.2.0):
+    resolution: {integrity: sha512-xgumuuI3PBWXff5N02HCI7PEy25mDEdyXDQklUYK93J6FKwpcosyZnGVitoUrV1gLtYYa9ZudeAWdhHuh/CpOg==}
     peerDependencies:
-      '@mantine/core': 7.3.1
-      '@mantine/hooks': 7.3.1
+      react: ^18.2.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /@mantine/notifications@7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-XOzgm4pm4XszavVN0QUjN+IP0xiG2IochxJSz/FduTI0r3u1WxdpvDYlOvEJpHhtWvyqI8W8rx6cPJaD2HdAwQ==}
+    peerDependencies:
+      '@mantine/core': 7.3.2
+      '@mantine/hooks': 7.3.2
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.3.1(react@18.2.0)
-      '@mantine/store': 7.3.1(react@18.2.0)
+      '@mantine/core': 7.3.2(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.3.2(react@18.2.0)
+      '@mantine/store': 7.3.2(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-transition-group: 4.4.5(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@mantine/spotlight@7.3.1(@mantine/core@7.3.1)(@mantine/hooks@7.3.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-FgejHyrtwytwwErNwGab83qxrvNXe3TSCcWdJaOY4QSAbk9Awhja2ZpiDUKHV9MR5GKk3IiH6WVvEtYq5eOOhQ==}
+  /@mantine/spotlight@7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wvrIj7ZZKoVwKFxgY+KvWilu1YYdkv8HDUzZzRxOlD9fjPyyMRgBxAdVkxA4sLbol4XoCpW83dNIiXDII4httw==}
     peerDependencies:
-      '@mantine/core': 7.3.1
-      '@mantine/hooks': 7.3.1
+      '@mantine/core': 7.3.2
+      '@mantine/hooks': 7.3.2
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.3.1(react@18.2.0)
-      '@mantine/store': 7.3.1(react@18.2.0)
+      '@mantine/core': 7.3.2(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.3.2(react@18.2.0)
+      '@mantine/store': 7.3.2(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@mantine/store@7.3.1(react@18.2.0):
-    resolution: {integrity: sha512-B4kFI0ZhZTftlMvD5d8P0y1ATKFAMIA5MT4j0gNUgYEKMl1KkM/dT3kBPC2/32jz4GM9t2UL+D3CvkTwSX/BsA==}
+  /@mantine/store@7.3.2(react@18.2.0):
+    resolution: {integrity: sha512-M1eWHzTRCeCFvrpFhXKIM9zblrlIT5/XrMue/fP2HrkA43dpkgq+ArnZkN3LhG9lWR/EKbRwQWDhDIvdLtfD7w==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -1584,7 +1678,7 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /@t3-oss/env-core@0.7.1(typescript@5.3.3)(zod@3.22.2):
+  /@t3-oss/env-core@0.7.1(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-3+SQt39OlmSaRLqYVFv8uRm1BpFepM5TIiMytRqO9cjH+wB77o6BIJdeyM5h5U4qLBMEzOJWCY4MBaU/rLwbYw==}
     peerDependencies:
       typescript: '>=4.7.2'
@@ -1594,10 +1688,10 @@ packages:
         optional: true
     dependencies:
       typescript: 5.3.3
-      zod: 3.22.2
+      zod: 3.22.4
     dev: false
 
-  /@t3-oss/env-nextjs@0.7.1(typescript@5.3.3)(zod@3.22.2):
+  /@t3-oss/env-nextjs@0.7.1(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-tQDbNLGCOvKGi+JoGuJ/CJInJI7/kLWJqtgGppAKS7ZFLdVOqZYR/uRjxlXOWPnxmUKF8VswOAsq7fXUpNZDhA==}
     peerDependencies:
       typescript: '>=4.7.2'
@@ -1606,9 +1700,9 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@t3-oss/env-core': 0.7.1(typescript@5.3.3)(zod@3.22.2)
+      '@t3-oss/env-core': 0.7.1(typescript@5.3.3)(zod@3.22.4)
       typescript: 5.3.3
-      zod: 3.22.2
+      zod: 3.22.4
     dev: false
 
   /@tabler/icons-react@2.42.0(react@18.2.0):
@@ -7009,4 +7103,3 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: true

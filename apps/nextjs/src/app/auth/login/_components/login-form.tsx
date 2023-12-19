@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconAlertTriangle } from "@tabler/icons-react";
+
+import { signIn } from "@homarr/auth/client";
+import { useForm, zodResolver } from "@homarr/form";
 import {
   Alert,
   Button,
@@ -9,12 +13,8 @@ import {
   rem,
   Stack,
   TextInput,
-} from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import { IconAlertTriangle } from "@tabler/icons-react";
+} from "@homarr/ui";
 import type { z } from "@homarr/validation";
-
-import { signIn } from "@homarr/auth/client";
 import { v } from "@homarr/validation";
 
 export const LoginForm = () => {

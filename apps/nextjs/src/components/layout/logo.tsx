@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Group, Title } from "@mantine/core";
+
+import { Group, Title } from "@homarr/ui";
 
 interface LogoProps {
   size: number;

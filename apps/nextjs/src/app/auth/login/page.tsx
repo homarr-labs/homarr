@@ -1,4 +1,4 @@
-import { Card, Center, Stack, Text, Title } from "@mantine/core";
+import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
 import { LogoWithTitle } from "~/components/layout/logo";
 import { LoginForm } from "./_components/login-form";

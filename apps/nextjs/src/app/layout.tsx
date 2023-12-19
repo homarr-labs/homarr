@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
-import "@mantine/notifications/styles.css";
+import "@homarr/ui/styles.css";
+import "@homarr/notifications/styles.css";
 
 import { headers } from "next/headers";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import { Notifications } from "@mantine/notifications";
 
-import { uiConfiguration } from "@homarr/ui";
+import { Notifications } from "@homarr/notifications";
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  uiConfiguration,
+} from "@homarr/ui";
 
 import { TRPCReactProvider } from "./providers";
 

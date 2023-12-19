@@ -1,7 +1,6 @@
-import { rem } from "@mantine/core";
-import type { NotificationData } from "@mantine/notifications";
+import { IconCheck, IconX, rem } from "@homarr/ui";
+import type { NotificationData} from "@mantine/notifications";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
 
 type CommonNotificationProps = Pick<NotificationData, "title" | "message">;
 
