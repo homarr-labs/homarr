@@ -1,5 +1,5 @@
 import { Center } from "@mantine/core";
 
-export default function A() {
+export default function CommonNotFound() {
   return <Center h="100vh">404</Center>;
 }

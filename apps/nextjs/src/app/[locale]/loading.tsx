@@ -1,6 +1,6 @@
 import { Center, Loader } from "@mantine/core";
 
-export default function A() {
+export default function CommonLoading() {
   return (
     <Center h="100vh">
       <Loader />
