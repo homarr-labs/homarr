@@ -7,10 +7,10 @@ export const initUserSchema = z
   .object({
     username: usernameSchema,
     password: passwordSchema,
-    repeatPassword: z.string(),
+    confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.repeatPassword, {
-    path: ["repeatPassword"],
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
     message: "Passwords do not match",
   });
 
