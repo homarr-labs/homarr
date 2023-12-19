@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
-import { uiConfiguration } from "@alparr/ui";
+import { uiConfiguration } from "@homarr/ui";
 
 import { TRPCReactProvider } from "./providers";
 

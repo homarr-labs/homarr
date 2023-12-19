@@ -3,7 +3,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-import { db } from "@alparr/db";
+import { db } from "@homarr/db";
 
 import { credentialsConfiguration } from "./providers/credentials";
 import { EmptyNextAuthProvider } from "./providers/empty";

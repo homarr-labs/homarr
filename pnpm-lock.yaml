@@ -11,7 +11,7 @@ importers:
 
   .:
     devDependencies:
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:tooling/prettier
       '@turbo/gen':
@@ -29,19 +29,19 @@ importers:
 
   apps/nextjs:
     dependencies:
-      '@alparr/api':
+      '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../../packages/api
-      '@alparr/auth':
+      '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
-      '@alparr/db':
+      '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
-      '@alparr/ui':
+      '@homarr/ui':
         specifier: workspace:^0.1.0
         version: link:../../packages/ui
-      '@alparr/validation':
+      '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
       '@mantine/core':
@@ -119,17 +119,14 @@ importers:
       superjson:
         specifier: 2.2.1
         version: 2.2.1
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
-      '@alparr/eslint-config':
+      '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
@@ -156,13 +153,13 @@ importers:
 
   packages/api:
     dependencies:
-      '@alparr/auth':
+      '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
-      '@alparr/db':
+      '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
-      '@alparr/validation':
+      '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
       '@trpc/client':
@@ -174,17 +171,14 @@ importers:
       superjson:
         specifier: 2.2.1
         version: 2.2.1
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
-      '@alparr/eslint-config':
+      '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
@@ -199,15 +193,15 @@ importers:
 
   packages/auth:
     dependencies:
-      '@alparr/db':
-        specifier: workspace:^0.1.0
-        version: link:../db
       '@auth/core':
         specifier: 0.18.0
         version: 0.18.0
       '@auth/drizzle-adapter':
         specifier: ^0.3.9
         version: 0.3.9
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
       '@t3-oss/env-nextjs':
         specifier: ^0.7.1
         version: 0.7.1(typescript@5.3.3)(zod@3.22.2)
@@ -229,20 +223,17 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
-      '@alparr/eslint-config':
+      '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@alparr/validation':
+      '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
       '@types/bcrypt':
@@ -273,13 +264,13 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(@types/better-sqlite3@7.6.8)(better-sqlite3@9.2.2)
     devDependencies:
-      '@alparr/eslint-config':
+      '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/better-sqlite3':
@@ -307,13 +298,13 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(@mantine/hooks@7.3.1)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
-      '@alparr/eslint-config':
+      '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
@@ -329,13 +320,13 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
-      '@alparr/eslint-config':
+      '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
@@ -375,10 +366,10 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0(eslint@8.53.0)
     devDependencies:
-      '@alparr/prettier-config':
+      '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../prettier
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../typescript
       '@types/eslint':
@@ -402,7 +393,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
     devDependencies:
-      '@alparr/tsconfig':
+      '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../typescript
       typescript:

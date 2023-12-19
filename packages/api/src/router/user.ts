@@ -2,9 +2,9 @@ import "server-only";
 
 import { TRPCError } from "@trpc/server";
 
-import { createSalt, hashPassword } from "@alparr/auth";
-import { createId, schema } from "@alparr/db";
-import { v } from "@alparr/validation";
+import { createSalt, hashPassword } from "@homarr/auth";
+import { createId, schema } from "@homarr/db";
+import { v } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 

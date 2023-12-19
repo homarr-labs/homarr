@@ -1,7 +1,7 @@
 import { Button, Stack, Title } from "@mantine/core";
 
-import { auth } from "@alparr/auth";
-import { db } from "@alparr/db";
+import { auth } from "@homarr/auth";
+import { db } from "@homarr/db";
 
 export default async function HomePage() {
   const currentSession = await auth();

@@ -1,7 +1,7 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
-import { appRouter, createTRPCContext } from "@alparr/api";
-import { auth } from "@alparr/auth";
+import { appRouter, createTRPCContext } from "@homarr/api";
+import { auth } from "@homarr/auth";
 
 /**
  * Configure basic CORS headers

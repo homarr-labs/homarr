@@ -12,10 +12,10 @@ import {
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import type { z } from "@alparr/validation";
+import type { z } from "@homarr/validation";
 
-import { signIn } from "@alparr/auth/client";
-import { v } from "@alparr/validation";
+import { signIn } from "@homarr/auth/client";
+import { v } from "@homarr/validation";
 
 export const LoginForm = () => {
   const router = useRouter();

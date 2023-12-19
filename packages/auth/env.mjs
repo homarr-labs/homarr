@@ -1,5 +1,5 @@
 import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "@alparr/validation";
+import { z } from "@homarr/validation";
 
 export const env = createEnv({
   server: {

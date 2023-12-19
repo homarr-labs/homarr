@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/db",
+  "name": "@homarr/db",
   "version": "0.1.0",
   "private": true,
   "main": "./index.ts",
@@ -19,9 +19,9 @@
     "drizzle-orm": "^0.29.1"
   },
   "devDependencies": {
-    "@alparr/eslint-config": "workspace:^0.2.0",
-    "@alparr/prettier-config": "workspace:^0.1.0",
-    "@alparr/tsconfig": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.8",
     "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.20.6",
@@ -32,8 +32,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@alparr/eslint-config/base"
+      "@homarr/eslint-config/base"
     ]
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@homarr/prettier-config"
 }

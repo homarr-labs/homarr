@@ -6,7 +6,7 @@ interface LogoProps {
 }
 
 export const Logo = ({ size = 60 }: LogoProps) => (
-  <Image src="/logo/alparr.png" alt="Alparr logo" width={size} height={size} />
+  <Image src="/logo/homarr.png" alt="homarr logo" width={size} height={size} />
 );
 
 export const LogoWithTitle = () => (

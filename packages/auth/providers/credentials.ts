@@ -1,9 +1,9 @@
 import type Credentials from "@auth/core/providers/credentials";
 import bcrypt from "bcrypt";
 
-import { db, eq } from "@alparr/db";
-import { users } from "@alparr/db/schema/sqlite";
-import { v } from "@alparr/validation";
+import { db, eq } from "@homarr/db";
+import { users } from "@homarr/db/schema/sqlite";
+import { v } from "@homarr/validation";
 
 type CredentialsConfiguration = Parameters<typeof Credentials>[0];
 

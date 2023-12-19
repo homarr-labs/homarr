@@ -9,7 +9,7 @@ const config = {
     "^(next/(.*)$)|^(next$)",
     "<THIRD_PARTY_MODULES>",
     "",
-    "^@alparr/(.*)$",
+    "^@homarr/(.*)$",
     "",
     "^~/",
     "^[../]",

@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/nextjs",
+  "name": "@homarr/nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,11 +13,11 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@alparr/api": "workspace:^0.1.0",
-    "@alparr/auth": "workspace:^0.1.0",
-    "@alparr/db": "workspace:^0.1.0",
-    "@alparr/ui": "workspace:^0.1.0",
-    "@alparr/validation": "workspace:^0.1.0",
+    "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/ui": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^7.3.1",
     "@mantine/dates": "^7.3.1",
     "@mantine/form": "^7.3.1",
@@ -45,9 +45,9 @@
     "superjson": "2.2.1"
   },
   "devDependencies": {
-    "@alparr/eslint-config": "workspace:^0.2.0",
-    "@alparr/prettier-config": "workspace:^0.1.0",
-    "@alparr/tsconfig": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node": "^18.18.13",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
@@ -59,10 +59,10 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@alparr/eslint-config/base",
-      "@alparr/eslint-config/nextjs",
-      "@alparr/eslint-config/react"
+      "@homarr/eslint-config/base",
+      "@homarr/eslint-config/nextjs",
+      "@homarr/eslint-config/react"
     ]
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@homarr/prettier-config"
 }

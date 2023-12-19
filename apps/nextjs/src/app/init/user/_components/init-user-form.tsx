@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
-import type { z } from "@alparr/validation";
+import type { z } from "@homarr/validation";
 
-import { v } from "@alparr/validation";
+import { v } from "@homarr/validation";
 
 import { showErrorNotification, showSuccessNotification } from "~/notification";
 import { api } from "~/utils/api";
