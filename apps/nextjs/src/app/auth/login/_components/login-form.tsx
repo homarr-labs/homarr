@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import type { z } from "zod";
+import type { z } from "@alparr/validation";
 
 import { signIn } from "@alparr/auth/client";
 import { v } from "@alparr/validation";

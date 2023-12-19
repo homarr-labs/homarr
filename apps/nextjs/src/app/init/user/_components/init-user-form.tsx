@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
-import type { z } from "zod";
+import type { z } from "@alparr/validation";
 
 import { v } from "@alparr/validation";
 

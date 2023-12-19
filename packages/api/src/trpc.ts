@@ -8,7 +8,7 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { ZodError } from "zod";
+import { ZodError } from "@alparr/validation";
 
 import { auth } from "@alparr/auth";
 import type { Session } from "@alparr/auth";
