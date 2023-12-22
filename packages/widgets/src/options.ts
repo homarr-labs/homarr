@@ -94,10 +94,15 @@ const optionsFactory = {
 };
 
 type WidgetOptionFactory = typeof optionsFactory;
-type WidgetOptionDefinition = ReturnType<
+export type WidgetOptionDefinition = ReturnType<
   WidgetOptionFactory[keyof WidgetOptionFactory]
 >;
 export type WidgetOptionsRecord = Record<string, WidgetOptionDefinition>;
+export type WidgetOptionType = WidgetOptionDefinition["type"];
+export type WidgetOptionOfType<TType extends WidgetOptionType> = Extract<
+  WidgetOptionDefinition,
+  { type: TType }
+>;
 
 type inferOptionFromDefinition<TDefinition extends WidgetOptionDefinition> =
   TDefinition["defaultValue"];
