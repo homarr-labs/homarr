@@ -23,7 +23,7 @@ export default async function InitUser() {
   return (
     <Center>
       <Stack align="center" mt="xl">
-        <LogoWithTitle />
+        <LogoWithTitle size="lg" />
         <Stack gap={6} align="center">
           <Title order={3} fw={400} ta="center">
             {t("title")}
