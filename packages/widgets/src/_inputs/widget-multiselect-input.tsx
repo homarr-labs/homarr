@@ -2,16 +2,15 @@
 
 import { MultiSelect } from "@homarr/ui";
 
-import type { WidgetSort } from "..";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetMultiSelectInput = <TSort extends WidgetSort>({
+export const WidgetMultiSelectInput = ({
   property,
   sort,
   options,
-}: CommonWidgetInputProps<TSort, "multiSelect">) => {
+}: CommonWidgetInputProps<"multiSelect">) => {
   const t = useWidgetInputTranslation(sort, property);
   const form = useFormContext();
 

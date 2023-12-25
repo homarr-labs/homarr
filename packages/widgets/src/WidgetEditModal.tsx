@@ -9,18 +9,13 @@ import type { WidgetSort } from ".";
 import { getInputForType } from "./_inputs";
 import { FormProvider, useForm } from "./_inputs/form";
 import type { WidgetOptionsRecordOf } from "./definition";
-import type {
-  inferOptionsFromDefinition,
-  WidgetOptionDefinition,
-} from "./options";
+import type { WidgetOptionDefinition } from "./options";
 
 interface ModalProps<TSort extends WidgetSort> {
   sort: TSort;
   state: [
-    inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>,
-    Dispatch<
-      SetStateAction<inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>>
-    >,
+    Record<string, unknown>,
+    Dispatch<SetStateAction<Record<string, unknown>>>,
   ];
   definition: WidgetOptionsRecordOf<TSort>;
 }
@@ -37,7 +32,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
   return (
     <form
       onSubmit={form.onSubmit((v) => {
-        setValue(v as never);
+        setValue(v);
         actions.closeModal();
       })}
     >
@@ -55,8 +50,8 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
                 <Input
                   key={key}
                   sort={innerProps.sort}
-                  property={key as never}
-                  options={value as never}
+                  property={key}
+                  options={value as never} // TODO: fix this
                 />
               );
             },

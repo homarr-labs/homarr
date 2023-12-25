@@ -1,36 +1,13 @@
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetSort } from "..";
-import type { WidgetOptionsRecordOf } from "../definition";
 import type { WidgetOptionOfType, WidgetOptionType } from "../options";
 
-type KeyOf<T> = T extends object ? Exclude<keyof T, number | symbol> : never;
-
-export interface CommonWidgetInputProps<
-  TSort extends WidgetSort,
-  TKey extends WidgetOptionType,
-> {
-  sort: TSort;
-  property: KeyOf<WidgetOptionsRecordOf<TSort>>;
+export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
+  sort: WidgetSort;
+  property: string;
   options: Omit<WidgetOptionOfType<TKey>, "defaultValue" | "type">;
 }
-
-type Input = Parameters<typeof useScopedI18n>[0];
-type StrictIt<
-  TInput extends Input,
-  TSort extends WidgetSort,
-> = TInput extends `widget.${TSort}.option.${Exclude<
-  keyof WidgetOptionsRecordOf<TSort>,
-  symbol
->}`
-  ? TInput
-  : never;
-type StrictWidgetInput<TSort extends WidgetSort> = StrictIt<Input, TSort>;
-
-const translationKeyFor = <TSort extends WidgetSort>(
-  sort: TSort,
-  property: keyof WidgetOptionsRecordOf<TSort>,
-) => `widget.${sort}.option.${property as string}` as StrictWidgetInput<TSort>;
 
 type UseWidgetInputTranslationReturnType = (
   key: "label" | "description",
@@ -46,11 +23,11 @@ type UseWidgetInputTranslationReturnType = (
  * - The label translation can be used for every input, especially considering that all options should have defined a label for themself. The description translation should only be used when withDescription
  *   is defined for the option. The method does sadly not reconize issues with those definitions. So it does not yell at you when you somewhere show the label without having it defined in the translations.
  */
-export const useWidgetInputTranslation = <TSort extends WidgetSort>(
-  sort: TSort,
-  property: KeyOf<WidgetOptionsRecordOf<TSort>>,
+export const useWidgetInputTranslation = (
+  sort: WidgetSort,
+  property: string,
 ): UseWidgetInputTranslationReturnType => {
   return useScopedI18n(
-    translationKeyFor(sort, property),
+    `widget.${sort}.option.${property}` as never, // Because the type is complex and not recognized by typescript, we need to cast it to never to make it work.
   ) as unknown as UseWidgetInputTranslationReturnType;
 };

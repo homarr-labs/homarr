@@ -35,7 +35,7 @@ export default function WidgetPreview(props: Props) {
               innerProps: {
                 sort,
                 definition: widgetImports[sort].definition.options,
-                state: [options, setOptions] as never,
+                state: [options, setOptions],
               },
             });
           }}

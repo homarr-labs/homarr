@@ -2,16 +2,15 @@
 
 import { Switch } from "@homarr/ui";
 
-import type { WidgetSort } from "..";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetSwitchInput = <TSort extends WidgetSort>({
+export const WidgetSwitchInput = ({
   property,
   sort,
   options,
-}: CommonWidgetInputProps<TSort, "switch">) => {
+}: CommonWidgetInputProps<"switch">) => {
   const t = useWidgetInputTranslation(sort, property);
   const form = useFormContext();
 

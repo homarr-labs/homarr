@@ -2,16 +2,15 @@
 
 import { TextInput } from "@homarr/ui";
 
-import type { WidgetSort } from "..";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetTextInput = <TSort extends WidgetSort>({
+export const WidgetTextInput = ({
   property,
   sort: widgetSort,
   options,
-}: CommonWidgetInputProps<TSort, "text">) => {
+}: CommonWidgetInputProps<"text">) => {
   const t = useWidgetInputTranslation(widgetSort, property);
   const form = useFormContext();
 
