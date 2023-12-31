@@ -15,6 +15,7 @@
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",

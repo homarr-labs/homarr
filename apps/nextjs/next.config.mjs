@@ -29,6 +29,9 @@ const config = {
       "@mantine/spotlight",
     ],
   },
+  images: {
+    domains: ["cdn.jsdelivr.net"],
+  },
 };
 
 export default config;

@@ -35,6 +35,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/common
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -255,8 +258,29 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/common:
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   packages/db:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
