@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { capitalize } from "@homarr/common";
-import { integrationSorts } from "@homarr/db/schema/items";
+import { integrationKinds } from "@homarr/db/schema/items";
 import {
   Group,
   IconSearch,
@@ -20,9 +20,9 @@ import { IntegrationAvatar } from "../_avatar";
 export const IntegrationCreateDropdownContent = () => {
   const [search, setSearch] = useState("");
 
-  const filteredSorts = useMemo(() => {
-    return integrationSorts.filter((sort) =>
-      sort.includes(search.toLowerCase()),
+  const filteredKinds = useMemo(() => {
+    return integrationKinds.filter((kind) =>
+      kind.includes(search.toLowerCase()),
     );
   }, [search]);
 
@@ -35,17 +35,17 @@ export const IntegrationCreateDropdownContent = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {filteredSorts.length > 0 ? (
+      {filteredKinds.length > 0 ? (
         <ScrollArea.Autosize mah={384}>
-          {filteredSorts.map((sort) => (
+          {filteredKinds.map((kind) => (
             <Menu.Item
               component={Link}
-              href={`/integrations/new?sort=${sort}`}
-              key={sort}
+              href={`/integrations/new?kind=${kind}`}
+              key={kind}
             >
               <Group>
-                <IntegrationAvatar sort={sort} size="sm" />
-                <Text size="sm">{capitalize(sort)}</Text>
+                <IntegrationAvatar kind={kind} size="sm" />
+                <Text size="sm">{capitalize(kind)}</Text>
               </Group>
             </Menu.Item>
           ))}

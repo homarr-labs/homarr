@@ -1,4 +1,4 @@
-import type { IntegrationSecretSort } from "@homarr/db/schema/items";
+import type { IntegrationSecretKind } from "@homarr/db/schema/items";
 import type { TablerIconsProps } from "@homarr/ui";
 import { IconKey, IconPassword, IconUser } from "@homarr/ui";
 
@@ -7,6 +7,6 @@ export const integrationSecretIcons = {
   apiKey: IconKey,
   password: IconPassword,
 } satisfies Record<
-  IntegrationSecretSort,
+  IntegrationSecretKind,
   (props: TablerIconsProps) => JSX.Element
 >;

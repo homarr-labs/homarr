@@ -3,11 +3,11 @@
 import type { PropsWithChildren } from "react";
 import { useRouter } from "next/navigation";
 
-import type { IntegrationSort } from "@homarr/db/schema/items";
+import type { IntegrationKind } from "@homarr/db/schema/items";
 import { Accordion } from "@homarr/ui";
 
 type IntegrationGroupAccordionControlProps = PropsWithChildren<{
-  activeTab: IntegrationSort | undefined;
+  activeTab: IntegrationKind | undefined;
 }>;
 
 export const IntegrationGroupAccordion = ({

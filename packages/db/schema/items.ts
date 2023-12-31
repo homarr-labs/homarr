@@ -1,106 +1,106 @@
 import { objectKeys } from "@homarr/common";
 
-export const integrationSecretSortObject = {
+export const integrationSecretKindObject = {
   apiKey: { isPublic: false },
   username: { isPublic: true },
   password: { isPublic: false },
 } satisfies Record<string, { isPublic: boolean }>;
 
-export const integrationSecretSort = objectKeys(integrationSecretSortObject);
+export const integrationSecretKind = objectKeys(integrationSecretKindObject);
 
 export const integrations = {
   sabNzbd: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sabnzbd.png",
     category: ["useNetClient"],
   },
   nzbGet: {
-    secretsSorts: ["username", "password"],
+    secretKinds: ["username", "password"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nzbget.png",
     category: ["useNetClient"],
   },
   deluge: {
-    secretsSorts: ["password"],
+    secretKinds: ["password"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/deluge.png",
     category: ["downloadClient"],
   },
   transmission: {
-    secretsSorts: ["username", "password"],
+    secretKinds: ["username", "password"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/transmission.png",
     category: ["downloadClient"],
   },
   qBitTorrent: {
-    secretsSorts: ["username", "password"],
+    secretKinds: ["username", "password"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/qbittorrent.png",
     category: ["downloadClient"],
   },
   jellyseerr: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyseerr.png",
     category: ["mediaSearch", "mediaRequest"],
   },
   overseerr: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/overseerr.png",
     category: ["mediaSearch", "mediaRequest"],
   },
   sonarr: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sonarr.png",
     category: ["calendar"],
   },
   radarr: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/radarr.png",
     category: ["calendar"],
   },
   lidarr: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/lidarr.png",
     category: ["calendar"],
   },
   readarr: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/readarr.png",
     category: ["calendar"],
   },
   jellyfin: {
-    secretsSorts: ["username", "password"],
+    secretKinds: ["username", "password"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyfin.png",
     category: ["mediaService"],
   },
   plex: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/plex.png",
     category: ["mediaService"],
   },
   piHole: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/pi-hole.png",
     category: ["dnsHole"],
   },
   adGuardHome: {
-    secretsSorts: ["username", "password"],
+    secretKinds: ["username", "password"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/adguard-home.png",
     category: ["dnsHole"],
   },
   homeAssistant: {
-    secretsSorts: ["apiKey"],
+    secretKinds: ["apiKey"],
     iconUrl:
       "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: [],
@@ -109,22 +109,22 @@ export const integrations = {
   string,
   {
     iconUrl: string;
-    secretsSorts: IntegrationSecretSort[];
+    secretKinds: IntegrationSecretKind[];
     category: IntegrationCategory[];
   }
 >;
 
-export const getIconUrl = (integration: IntegrationSort) =>
+export const getIconUrl = (integration: IntegrationKind) =>
   integrations[integration]?.iconUrl ?? null;
 
-export const getSecretSorts = (
-  integration: IntegrationSort,
-): IntegrationSecretSort[] => integrations[integration]?.secretsSorts ?? null;
+export const getSecretKinds = (
+  integration: IntegrationKind,
+): IntegrationSecretKind[] => integrations[integration]?.secretKinds ?? null;
 
-export const integrationSorts = objectKeys(integrations);
+export const integrationKinds = objectKeys(integrations);
 
-export type IntegrationSecretSort = (typeof integrationSecretSort)[number];
-export type IntegrationSort = (typeof integrationSorts)[number];
+export type IntegrationSecretKind = (typeof integrationSecretKind)[number];
+export type IntegrationKind = (typeof integrationKinds)[number];
 export type IntegrationCategory =
   | "dnsHole"
   | "mediaService"

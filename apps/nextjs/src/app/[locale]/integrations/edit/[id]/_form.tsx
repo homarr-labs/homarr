@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,14 +9,12 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import type { RouterOutputs } from "@homarr/api";
 import {
-  getSecretSorts,
-  IntegrationSecretSort,
-  integrationSecretSortObject,
+  getSecretKinds,
+  integrationSecretKindObject,
 } from "@homarr/db/schema/items";
 import { useForm, zodResolver } from "@homarr/form";
 import {
   ActionIcon,
-  ActionIconGroup,
   Avatar,
   Button,
   Card,
@@ -36,43 +34,38 @@ import { v } from "@homarr/validation";
 import { api } from "~/trpc/react";
 import { integrationSecretIcons } from "../../_secret-icons";
 import { IntegrationSecretInput } from "../../_secret-inputs";
-import { ServiceSelect } from "../../new/_form";
 import { revalidatePathAction } from "../../new/action";
 
 dayjs.extend(relativeTime);
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
-  serviceData: { value: string; label: string; url: string }[];
 }
 
-export const EditIntegrationForm = ({
-  serviceData,
-  integration,
-}: EditIntegrationForm) => {
-  const secretsSorts = getSecretSorts(integration.sort);
+export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
+  const secretsKinds = getSecretKinds(integration.kind);
   const router = useRouter();
   const form = useForm<FormType>({
     initialValues: {
       name: integration.name,
-      serviceId: integration.service.id,
-      secrets: secretsSorts.map((sort) => ({
-        sort,
-        value: integration.secrets.find((s) => s.sort === sort)?.value ?? "",
+      url: integration.url,
+      secrets: secretsKinds.map((kind) => ({
+        kind,
+        value: integration.secrets.find((s) => s.kind === kind)?.value ?? "",
       })),
     },
-    validate: zodResolver(v.integration.update.omit({ id: true, sort: true })),
+    validate: zodResolver(v.integration.update.omit({ id: true, kind: true })),
   });
   const { mutateAsync, isPending } = api.integration.update.useMutation();
 
-  const secretsMap = new Map(integration.secrets.map((s) => [s.sort, s]));
+  const secretsMap = new Map(integration.secrets.map((s) => [s.kind, s]));
 
   const handleSubmit = async (values: FormType) => {
     await mutateAsync({
       id: integration.id,
       ...values,
       secrets: values.secrets.map((s) => ({
-        sort: s.sort,
+        kind: s.kind,
         value: s.value === "" ? null : s.value,
       })),
     });
@@ -85,31 +78,27 @@ export const EditIntegrationForm = ({
       <Stack>
         <TextInput label="Name" {...form.getInputProps("name")} />
 
-        <ServiceSelect
-          data={serviceData}
-          callbackUrl={createCallbackUrl(form.values)}
-          {...form.getInputProps("serviceId")}
-        />
+        <TextInput label="Url" {...form.getInputProps("url")} />
 
         <Fieldset legend="Secrets">
           <Stack gap="sm">
-            {secretsSorts.map((sort, index) => (
+            {secretsKinds.map((kind, index) => (
               <SecretCard
-                key={sort}
-                secret={secretsMap.get(sort)!}
+                key={kind}
+                secret={secretsMap.get(kind)!}
                 onCancel={() => {
                   // TODO: Add confirm dialog
                   form.setFieldValue(
                     `secrets.${index}.value`,
-                    secretsMap.get(sort)!.value ?? "",
+                    secretsMap.get(kind)!.value ?? "",
                   );
                   return Promise.resolve(true);
                 }}
               >
                 <IntegrationSecretInput
-                  label={`New ${sort}`}
-                  key={sort}
-                  sort={sort}
+                  label={`New ${kind}`}
+                  key={kind}
+                  kind={kind}
                   {...form.getInputProps(`secrets.${index}.value`)}
                 />
               </SecretCard>
@@ -137,12 +126,12 @@ interface SecretCardProps {
 }
 
 const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
-  const { isPublic } = integrationSecretSortObject[secret.sort];
+  const { isPublic } = integrationSecretKindObject[secret.kind];
   const [publicSecretDisplayOpened, { toggle: togglePublicSecretDisplay }] =
     useDisclosure(false);
   const [editMode, setEditMode] = useState(false);
   const DisplayIcon = publicSecretDisplayOpened ? IconEye : IconEyeOff;
-  const SortIcon = integrationSecretIcons[secret.sort];
+  const KindIcon = integrationSecretIcons[secret.kind];
 
   return (
     <Card>
@@ -150,9 +139,9 @@ const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
         <Group justify="space-between">
           <Group>
             <Avatar>
-              <SortIcon size={16} />
+              <KindIcon size={16} />
             </Avatar>
-            <Text fw={500}>{secret.sort}</Text>
+            <Text fw={500}>{secret.kind}</Text>
             {publicSecretDisplayOpened ? <Kbd>{secret.value}</Kbd> : null}
           </Group>
           <Group>
@@ -189,28 +178,6 @@ const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
       </Stack>
     </Card>
   );
-};
-
-/*
-
-<IntegrationSecretInput
-                key={sort}
-                sort={sort}
-                {...form.getInputProps(`secrets.${index}.value`)}
-              />
-
-              */
-
-const createCallbackUrl = (values: { name: string }) => {
-  if (typeof window === "undefined") {
-    return "";
-  }
-
-  const callbackUrl = new URL(window.location.href);
-  callbackUrl.searchParams.set("name", values.name);
-  callbackUrl.searchParams.set("serviceId", "%s");
-
-  return callbackUrl.toString();
 };
 
 type FormType = Omit<z.infer<typeof v.integration.update>, "id">;

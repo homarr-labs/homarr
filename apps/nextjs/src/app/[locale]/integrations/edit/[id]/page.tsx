@@ -13,24 +13,14 @@ export default async function EditIntegrationPage({
 }: EditIntegrationPageProps) {
   const integration = await api.integration.byId.query({ id: params.id });
 
-  const services = await api.service.all.query();
-  const serviceData = services.map((service) => ({
-    value: service.id,
-    label: service.name,
-    url: service.url,
-  }));
-
   return (
     <Container>
       <Stack>
         <Group align="center">
-          <IntegrationAvatar sort={integration.sort} size="md" />
-          <Title>Edit {integration.sort} integration</Title>
+          <IntegrationAvatar kind={integration.kind} size="md" />
+          <Title>Edit {integration.kind} integration</Title>
         </Group>
-        <EditIntegrationForm
-          serviceData={serviceData}
-          integration={integration}
-        />
+        <EditIntegrationForm integration={integration} />
       </Stack>
     </Container>
   );

@@ -1,50 +1,40 @@
 import { notFound } from "next/navigation";
 
-import type { IntegrationSort } from "@homarr/db/schema/items";
-import { integrationSorts } from "@homarr/db/schema/items";
+import type { IntegrationKind } from "@homarr/db/schema/items";
+import { integrationKinds } from "@homarr/db/schema/items";
 import { Container, Group, Stack, Title } from "@homarr/ui";
 import type { v } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
-import { api } from "~/trpc/server";
 import { IntegrationAvatar } from "../_avatar";
 import { NewIntegrationForm } from "./_form";
 
 interface NewIntegrationPageProps {
   searchParams: Partial<z.infer<typeof v.integration.create>> & {
-    sort: IntegrationSort;
+    kind: IntegrationKind;
   };
 }
 
-export default async function IntegrationsNewPage({
+export default function IntegrationsNewPage({
   searchParams,
 }: NewIntegrationPageProps) {
   const result = z
-    .enum([integrationSorts[0]!, ...integrationSorts.slice(1)])
-    .safeParse(searchParams.sort);
+    .enum([integrationKinds[0]!, ...integrationKinds.slice(1)])
+    .safeParse(searchParams.kind);
   if (!result.success) {
     notFound();
   }
 
-  const currentSort = result.data;
-  const services = await api.service.all.query();
-  const serviceData = services.map((service) => ({
-    value: service.id,
-    label: service.name,
-    url: service.url,
-  }));
+  const currentKind = result.data;
 
   return (
     <Container>
       <Stack>
         <Group align="center">
-          <IntegrationAvatar sort={currentSort} size="md" />
-          <Title>New {currentSort} integration</Title>
+          <IntegrationAvatar kind={currentKind} size="md" />
+          <Title>New {currentKind} integration</Title>
         </Group>
-        <NewIntegrationForm
-          serviceData={serviceData}
-          searchParams={searchParams}
-        />
+        <NewIntegrationForm searchParams={searchParams} />
       </Stack>
     </Container>
   );

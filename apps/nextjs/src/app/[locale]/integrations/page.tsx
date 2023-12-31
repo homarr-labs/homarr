@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
 import { capitalize, objectEntries } from "@homarr/common";
-import type { IntegrationSort } from "@homarr/db/schema/items";
+import type { IntegrationKind } from "@homarr/db/schema/items";
 import {
   AccordionControl,
   AccordionItem,
@@ -32,15 +32,12 @@ import {
 import { api } from "~/trpc/server";
 import { IntegrationGroupAccordion } from "./_accordion";
 import { IntegrationAvatar } from "./_avatar";
-import {
-  DeleteIntegrationActionButton,
-  NewIntegrationFromSortActionButton,
-} from "./_buttons";
+import { DeleteIntegrationActionButton } from "./_buttons";
 import { IntegrationCreateDropdownContent } from "./new/_dropdown";
 
 interface IntegrationsPageProps {
   searchParams: {
-    activeTab?: IntegrationSort;
+    activeTab?: IntegrationKind;
   };
 }
 
@@ -84,7 +81,7 @@ export default async function IntegrationsPage({
 
 interface IntegrationListProps {
   integrations: RouterOutputs["integration"]["all"];
-  activeTab?: IntegrationSort;
+  activeTab?: IntegrationKind;
 }
 
 const IntegrationList = ({ integrations, activeTab }: IntegrationListProps) => {
@@ -94,25 +91,24 @@ const IntegrationList = ({ integrations, activeTab }: IntegrationListProps) => {
 
   const grouppedIntegrations = integrations.reduce(
     (acc, integration) => {
-      if (!acc[integration.sort]) {
-        acc[integration.sort] = [];
+      if (!acc[integration.kind]) {
+        acc[integration.kind] = [];
       }
 
-      acc[integration.sort].push(integration);
+      acc[integration.kind].push(integration);
 
       return acc;
     },
-    {} as Record<IntegrationSort, RouterOutputs["integration"]["all"]>,
+    {} as Record<IntegrationKind, RouterOutputs["integration"]["all"]>,
   );
 
   return (
     <IntegrationGroupAccordion activeTab={activeTab}>
-      {objectEntries(grouppedIntegrations).map(([sort, integrations]) => (
-        <AccordionItem key={sort} value={sort}>
-          <AccordionControl icon={<IntegrationAvatar size="sm" sort={sort} />}>
+      {objectEntries(grouppedIntegrations).map(([kind, integrations]) => (
+        <AccordionItem key={kind} value={kind}>
+          <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} />}>
             <Group w="100%" pr="xl" justify="space-between">
-              <Text>{capitalize(sort)}</Text>
-              <NewIntegrationFromSortActionButton sort={sort} />
+              <Text>{capitalize(kind)}</Text>
             </Group>
           </AccordionControl>
           <AccordionPanel>
@@ -130,12 +126,12 @@ const IntegrationList = ({ integrations, activeTab }: IntegrationListProps) => {
                     <TableTd>{integration.name}</TableTd>
                     <TableTd>
                       <Anchor
-                        href={integration.service.url}
+                        href={integration.url}
                         target="_blank"
                         rel="noreferrer"
                         size="sm"
                       >
-                        {integration.service.url}
+                        {integration.url}
                       </Anchor>
                     </TableTd>
                     <TableTd>

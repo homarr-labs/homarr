@@ -1,41 +1,24 @@
 import { TRPCError } from "@trpc/server";
 
 import { and, createId, eq } from "@homarr/db";
-import type { IntegrationSecretSort } from "@homarr/db/schema/items";
-import { integrationSecretSortObject } from "@homarr/db/schema/items";
-import {
-  integrations,
-  integrationSecrets,
-  services,
-} from "@homarr/db/schema/sqlite";
+import type {
+  IntegrationKind,
+  IntegrationSecretKind,
+} from "@homarr/db/schema/items";
+import { integrationSecretKindObject } from "@homarr/db/schema/items";
+import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import { v } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
-    const integrations = await ctx.db.query.integrations.findMany({
-      with: {
-        service: {
-          with: {
-            availabilityUrl: {
-              columns: {
-                url: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const integrations = await ctx.db.query.integrations.findMany();
     return integrations.map((integration) => ({
       id: integration.id,
       name: integration.name,
-      sort: integration.sort,
-      service: {
-        id: integration.service.id,
-        name: integration.service.name,
-        url: integration.service.availabilityUrl.url,
-      },
+      kind: integration.kind,
+      url: integration.url,
     }));
   }),
   byId: publicProcedure
@@ -44,18 +27,9 @@ export const integrationRouter = createTRPCRouter({
       const integration = await ctx.db.query.integrations.findFirst({
         where: eq(integrations.id, input.id),
         with: {
-          service: {
-            with: {
-              availabilityUrl: {
-                columns: {
-                  url: true,
-                },
-              },
-            },
-          },
           secrets: {
             columns: {
-              sort: true,
+              kind: true,
               value: true,
               updatedAt: true,
             },
@@ -73,16 +47,12 @@ export const integrationRouter = createTRPCRouter({
       return {
         id: integration.id,
         name: integration.name,
-        sort: integration.sort,
-        service: {
-          id: integration.service?.id ?? null,
-          name: integration.service?.name ?? null,
-          url: integration.service.availabilityUrl.url,
-        },
+        kind: integration.kind,
+        url: integration.url,
         secrets: integration.secrets.map((secret) => ({
-          sort: secret.sort,
+          kind: secret.kind,
           // Only return the value if the secret is public, so for example the username
-          value: integrationSecretSortObject[secret.sort].isPublic
+          value: integrationSecretKindObject[secret.kind].isPublic
             ? secret.value
             : null,
           updatedAt: secret.updatedAt,
@@ -92,29 +62,17 @@ export const integrationRouter = createTRPCRouter({
   create: publicProcedure
     .input(v.integration.create)
     .mutation(async ({ ctx, input }) => {
-      const service = await ctx.db.query.services.findFirst({
-        where: eq(services.id, input.serviceId),
-      });
-
-      if (!service) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Service not found",
-        });
-      }
-
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
         id: integrationId,
         name: input.name,
-        sort: input.sort,
-        serviceId: service.id,
+        url: input.url,
+        kind: input.kind as IntegrationKind, // TODO: remove cast,
       });
 
       for (const secret of input.secrets) {
         await ctx.db.insert(integrationSecrets).values({
-          id: createId(),
-          sort: secret.sort,
+          kind: secret.kind as IntegrationSecretKind, // TODO: remove cast
           value: secret.value, // TODO: encrypt
           updatedAt: new Date(),
           integrationId,
@@ -142,15 +100,15 @@ export const integrationRouter = createTRPCRouter({
         .update(integrations)
         .set({
           name: input.name,
-          serviceId: input.serviceId,
+          url: input.url,
         })
         .where(eq(integrations.id, input.id));
 
       const changedSecrets = input.secrets.filter(
-        (secret): secret is { sort: IntegrationSecretSort; value: string } =>
+        (secret): secret is { kind: IntegrationSecretKind; value: string } =>
           secret.value !== null && // only update secrets that have a value
           !integration.secrets.find(
-            (s) => s.sort === secret.sort && s.value === secret.value,
+            (s) => s.kind === secret.kind && s.value === secret.value,
           ),
       );
 
@@ -165,7 +123,7 @@ export const integrationRouter = createTRPCRouter({
             .where(
               and(
                 eq(integrationSecrets.integrationId, input.id),
-                eq(integrationSecrets.sort, changedSecret.sort),
+                eq(integrationSecrets.kind, changedSecret.kind),
               ),
             );
         }
