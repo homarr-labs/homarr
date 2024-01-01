@@ -12,6 +12,7 @@ import {
   Anchor,
   Button,
   Container,
+  CountBadge,
   Group,
   IconChevronDown,
   IconPencil,
@@ -107,8 +108,9 @@ const IntegrationList = ({ integrations, activeTab }: IntegrationListProps) => {
       {objectEntries(grouppedIntegrations).map(([kind, integrations]) => (
         <AccordionItem key={kind} value={kind}>
           <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} />}>
-            <Group w="100%" pr="xl" justify="space-between">
+            <Group>
               <Text>{capitalize(kind)}</Text>
+              <CountBadge count={integrations.length} />
             </Group>
           </AccordionControl>
           <AccordionPanel>
