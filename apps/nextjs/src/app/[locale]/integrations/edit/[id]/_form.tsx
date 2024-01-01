@@ -11,7 +11,7 @@ import type { RouterOutputs } from "@homarr/api";
 import {
   getSecretKinds,
   integrationSecretKindObject,
-} from "@homarr/db/schema/items";
+} from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
 import {
   ActionIcon,
@@ -34,6 +34,7 @@ import { v } from "@homarr/validation";
 import { api } from "~/trpc/react";
 import { integrationSecretIcons } from "../../_secret-icons";
 import { IntegrationSecretInput } from "../../_secret-inputs";
+import { TestConnection, useTestConnectionDirty } from "../../_test-connection";
 import { revalidatePathAction } from "../../new/action";
 
 dayjs.extend(relativeTime);
@@ -44,17 +45,24 @@ interface EditIntegrationForm {
 
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const secretsKinds = getSecretKinds(integration.kind);
+  const initialFormValues = {
+    name: integration.name,
+    url: integration.url,
+    secrets: secretsKinds.map((kind) => ({
+      kind,
+      value: integration.secrets.find((s) => s.kind === kind)?.value ?? "",
+    })),
+  };
+  const { isDirty, onValuesChange, removeDirty } = useTestConnectionDirty({
+    defaultDirty: false,
+    initialFormValue: initialFormValues,
+  });
+
   const router = useRouter();
   const form = useForm<FormType>({
-    initialValues: {
-      name: integration.name,
-      url: integration.url,
-      secrets: secretsKinds.map((kind) => ({
-        kind,
-        value: integration.secrets.find((s) => s.kind === kind)?.value ?? "",
-      })),
-    },
+    initialValues: initialFormValues,
     validate: zodResolver(v.integration.update.omit({ id: true, kind: true })),
+    onValuesChange,
   });
   const { mutateAsync, isPending } = api.integration.update.useMutation();
 
@@ -106,13 +114,24 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           </Stack>
         </Fieldset>
 
-        <Group justify="flex-end">
-          <Button variant="default" component={Link} href="/integrations">
-            Back to overview
-          </Button>
-          <Button type="submit" loading={isPending}>
-            Update
-          </Button>
+        <Group justify="space-between" align="center">
+          <TestConnection
+            isDirty={isDirty}
+            removeDirty={removeDirty}
+            integration={{
+              id: integration.id,
+              kind: integration.kind,
+              ...form.values,
+            }}
+          />
+          <Group>
+            <Button variant="default" component={Link} href="/integrations">
+              Back to overview
+            </Button>
+            <Button type="submit" loading={isPending} disabled={isDirty}>
+              Update
+            </Button>
+          </Group>
         </Group>
       </Stack>
     </form>

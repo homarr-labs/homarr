@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
-import type { IntegrationKind } from "@homarr/db/schema/items";
-import { integrationKinds } from "@homarr/db/schema/items";
+import type { IntegrationKind } from "@homarr/definitions";
+import { integrationKinds } from "@homarr/definitions";
 import { Container, Group, Stack, Title } from "@homarr/ui";
 import type { v } from "@homarr/validation";
 import { z } from "@homarr/validation";

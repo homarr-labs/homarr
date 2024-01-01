@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useRouter } from "next/navigation";
 
-import type { IntegrationKind } from "@homarr/db/schema/items";
+import type { IntegrationKind } from "@homarr/definitions";
 import { Accordion } from "@homarr/ui";
 
 type IntegrationGroupAccordionControlProps = PropsWithChildren<{

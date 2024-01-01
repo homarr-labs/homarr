@@ -1,5 +1,5 @@
-import { getIconUrl } from "@homarr/db/schema/items";
-import type { IntegrationKind } from "@homarr/db/schema/items";
+import { getIconUrl } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { Avatar } from "@homarr/ui";
 import type { MantineSize } from "@homarr/ui";
 

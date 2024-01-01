@@ -2,8 +2,8 @@
 
 import type { ChangeEventHandler, FocusEventHandler } from "react";
 
-import { integrationSecretKindObject } from "@homarr/db/schema/items";
-import type { IntegrationSecretKind } from "@homarr/db/schema/items";
+import { integrationSecretKindObject } from "@homarr/definitions";
+import type { IntegrationSecretKind } from "@homarr/definitions";
 import { PasswordInput, TextInput } from "@homarr/ui";
 
 import { integrationSecretIcons } from "./_secret-icons";

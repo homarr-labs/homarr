@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { capitalize } from "@homarr/common";
-import { integrationKinds } from "@homarr/db/schema/items";
+import { integrationKinds } from "@homarr/definitions";
 import {
   Group,
   IconSearch,

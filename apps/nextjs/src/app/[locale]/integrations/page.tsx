@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
 import { capitalize, objectEntries } from "@homarr/common";
-import type { IntegrationKind } from "@homarr/db/schema/items";
+import type { IntegrationKind } from "@homarr/definitions";
 import {
   AccordionControl,
   AccordionItem,

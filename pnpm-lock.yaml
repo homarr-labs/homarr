@@ -41,6 +41,9 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/definitions
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
@@ -165,6 +168,9 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
@@ -281,6 +287,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
@@ -315,6 +324,28 @@ importers:
       prettier:
         specifier: ^3.1.0
         version: 3.1.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/definitions:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -440,6 +471,9 @@ importers:
 
   packages/validation:
     dependencies:
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       zod:
         specifier: ^3.22.2
         version: 3.22.2

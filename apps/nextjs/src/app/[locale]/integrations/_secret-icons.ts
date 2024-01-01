@@ -1,4 +1,4 @@
-import type { IntegrationSecretKind } from "@homarr/db/schema/items";
+import type { IntegrationSecretKind } from "@homarr/definitions";
 import type { TablerIconsProps } from "@homarr/ui";
 import { IconKey, IconPassword, IconUser } from "@homarr/ui";
 

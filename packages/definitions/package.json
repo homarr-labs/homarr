@@ -1,5 +1,5 @@
 {
-  "name": "@homarr/validation",
+  "name": "@homarr/definitions",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -33,7 +33,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "zod": "^3.22.2",
-    "@homarr/definitions": "workspace:^0.1.0"
+    "@homarr/common": "workspace:^0.1.0"
   }
 }

@@ -9,7 +9,10 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
-import type { IntegrationKind, IntegrationSecretKind } from "./items";
+import type {
+  IntegrationKind,
+  IntegrationSecretKind,
+} from "@homarr/definitions";
 
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -89,7 +92,7 @@ export const integrationSecrets = sqliteTable(
   "integrationSecret",
   {
     kind: text("kind").$type<IntegrationSecretKind>().notNull(),
-    value: text("value").notNull(),
+    value: text("value").$type<`${string}.${string}`>().notNull(),
     updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
     integrationId: text("integration_id")
       .notNull()

@@ -6,9 +6,9 @@ export const integrationSecretKindObject = {
   password: { isPublic: false },
 } satisfies Record<string, { isPublic: boolean }>;
 
-export const integrationSecretKind = objectKeys(integrationSecretKindObject);
+export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
 
-export const integrations = {
+export const integrationDefs = {
   sabNzbd: {
     secretKinds: ["apiKey"],
     iconUrl:
@@ -115,15 +115,15 @@ export const integrations = {
 >;
 
 export const getIconUrl = (integration: IntegrationKind) =>
-  integrations[integration]?.iconUrl ?? null;
+  integrationDefs[integration]?.iconUrl ?? null;
 
 export const getSecretKinds = (
   integration: IntegrationKind,
-): IntegrationSecretKind[] => integrations[integration]?.secretKinds ?? null;
+): IntegrationSecretKind[] => integrationDefs[integration]?.secretKinds ?? null;
 
-export const integrationKinds = objectKeys(integrations);
+export const integrationKinds = objectKeys(integrationDefs);
 
-export type IntegrationSecretKind = (typeof integrationSecretKind)[number];
+export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];
 export type IntegrationKind = (typeof integrationKinds)[number];
 export type IntegrationCategory =
   | "dnsHole"
