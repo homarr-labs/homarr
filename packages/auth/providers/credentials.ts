@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 import { db, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
-import { v } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 type CredentialsConfiguration = Parameters<typeof Credentials>[0];
 
@@ -21,7 +21,7 @@ export const credentialsConfiguration = {
     },
   },
   async authorize(credentials) {
-    const data = await v.user.signIn.parseAsync(credentials);
+    const data = await validation.user.signIn.parseAsync(credentials);
 
     const user = await db.query.users.findFirst({
       where: eq(users.name, data.name),

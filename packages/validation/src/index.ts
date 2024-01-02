@@ -1,5 +1,5 @@
 import { userSchemas } from "./user";
 
-export const v = {
+export const validation = {
   user: userSchemas,
 };
