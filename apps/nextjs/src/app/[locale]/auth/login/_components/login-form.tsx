@@ -16,7 +16,7 @@ import {
   TextInput,
 } from "@homarr/ui";
 import type { z } from "@homarr/validation";
-import { v } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 export const LoginForm = () => {
   const t = useScopedI18n("user");
@@ -24,7 +24,7 @@ export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
   const form = useForm<FormType>({
-    validate: zodResolver(v.user.signIn),
+    validate: zodResolver(validation.user.signIn),
     initialValues: {
       name: "",
       password: "",
@@ -79,4 +79,4 @@ export const LoginForm = () => {
   );
 };
 
-type FormType = z.infer<typeof v.user.signIn>;
+type FormType = z.infer<typeof validation.user.signIn>;

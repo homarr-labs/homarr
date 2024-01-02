@@ -10,7 +10,7 @@ import {
 import { useScopedI18n } from "@homarr/translation/client";
 import { Button, PasswordInput, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
-import { v } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { api } from "~/utils/api";
 
@@ -19,7 +19,7 @@ export const InitUserForm = () => {
   const t = useScopedI18n("user");
   const { mutateAsync, error, isPending } = api.user.initUser.useMutation();
   const form = useForm<FormType>({
-    validate: zodResolver(v.user.init),
+    validate: zodResolver(validation.user.init),
     validateInputOnBlur: true,
     validateInputOnChange: true,
     initialValues: {
@@ -78,4 +78,4 @@ export const InitUserForm = () => {
   );
 };
 
-type FormType = z.infer<typeof v.user.init>;
+type FormType = z.infer<typeof validation.user.init>;
