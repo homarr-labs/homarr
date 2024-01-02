@@ -14,7 +14,7 @@ export const ClientSpotlight = () => {
       highlightQuery
       searchProps={{
         leftSection: <IconSearch size={20} stroke={1.5} />,
-        placeholder: `${t("placeholder")}...`,
+        placeholder: `${t("placeholder")}`,
       }}
       yOffset={12}
     />

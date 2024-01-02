@@ -54,7 +54,7 @@ export default {
   },
   common: {
     search: {
-      placeholder: "Suche nach etwas",
+      placeholder: "Suche nach etwas...",
       nothingFound: "Nichts gefunden",
     },
   },

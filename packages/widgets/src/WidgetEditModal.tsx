@@ -51,7 +51,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
                   key={key}
                   sort={innerProps.sort}
                   property={key}
-                  options={value as never} // TODO: fix this
+                  options={value as never}
                 />
               );
             },
