@@ -33,6 +33,7 @@ export default {
       list: {
         title: "Integrations",
         search: "Search integrations",
+        empty: "No integrations found",
       },
       create: {
         title: "New {name} integration",

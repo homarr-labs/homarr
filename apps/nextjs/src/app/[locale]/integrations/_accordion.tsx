@@ -20,8 +20,10 @@ export const IntegrationGroupAccordion = ({
     <Accordion
       variant="separated"
       defaultValue={activeTab}
-      onChange={(v) =>
-        v ? router.replace(`?tab=${v}`, {}) : router.replace("/integrations")
+      onChange={(tab) =>
+        tab
+          ? router.replace(`?tab=${tab}`, {})
+          : router.replace("/integrations")
       }
     >
       {children}

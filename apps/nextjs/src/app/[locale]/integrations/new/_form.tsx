@@ -83,7 +83,7 @@ export const NewIntegrationForm = ({
   };
 
   return (
-    <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
+    <form onSubmit={form.onSubmit((value) => void handleSubmit(value))}>
       <Stack>
         <TestConnectionNoticeAlert />
 

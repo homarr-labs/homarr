@@ -38,7 +38,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     url: integration.url,
     secrets: secretsKinds.map((kind) => ({
       kind,
-      value: integration.secrets.find((s) => s.kind === kind)?.value ?? "",
+      value:
+        integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
     })),
   };
   const { isDirty, onValuesChange, removeDirty } = useTestConnectionDirty({
@@ -56,7 +57,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   });
   const { mutateAsync, isPending } = api.integration.update.useMutation();
 
-  const secretsMap = new Map(integration.secrets.map((s) => [s.kind, s]));
+  const secretsMap = new Map(
+    integration.secrets.map((secret) => [secret.kind, secret]),
+  );
 
   const handleSubmit = async (values: FormType) => {
     if (isDirty) return;
@@ -64,9 +67,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
       {
         id: integration.id,
         ...values,
-        secrets: values.secrets.map((s) => ({
-          kind: s.kind,
-          value: s.value === "" ? null : s.value,
+        secrets: values.secrets.map((secret) => ({
+          kind: secret.kind,
+          value: secret.value === "" ? null : secret.value,
         })),
       },
       {

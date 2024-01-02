@@ -33,6 +33,7 @@ export default {
       list: {
         title: "Integrationen",
         search: "Integration suchen",
+        empty: "Keine Integrationen gefunden",
       },
       create: {
         title: "Neue {name} Integration erstellen",

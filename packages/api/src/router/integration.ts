@@ -24,8 +24,9 @@ export const integrationRouter = createTRPCRouter({
         url: integration.url,
       }))
       .sort(
-        (a, b) =>
-          integrationKinds.indexOf(a.kind) - integrationKinds.indexOf(b.kind),
+        (integrationA, integrationB) =>
+          integrationKinds.indexOf(integrationA.kind) -
+          integrationKinds.indexOf(integrationB.kind),
       );
   }),
   byId: publicProcedure
@@ -120,7 +121,8 @@ export const integrationRouter = createTRPCRouter({
         (secret): secret is { kind: IntegrationSecretKind; value: string } =>
           secret.value !== null && // only update secrets that have a value
           !decryptedSecrets.find(
-            (s) => s.kind === secret.kind && s.value === secret.value,
+            (dSecret) =>
+              dSecret.kind === secret.kind && dSecret.value === secret.value,
           ),
       );
 
@@ -162,7 +164,8 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const secretKinds = getSecretKinds(input.kind);
       const secrets = input.secrets.filter(
-        (x): x is { kind: IntegrationSecretKind; value: string } => !!x.value,
+        (secret): secret is { kind: IntegrationSecretKind; value: string } =>
+          !!secret.value,
       );
       const everyInputSecretDefined = secretKinds.every((secretKind) =>
         secrets.some((secret) => secret.kind === secretKind),

@@ -43,8 +43,11 @@ export const useTestConnectionDirty = ({
       if (
         prevFormValueRef.current.url !== values.url ||
         !prevFormValueRef.current.secrets
-          .map((x) => x.value)
-          .every((v, i) => values.secrets[i]?.value === v)
+          .map((secret) => secret.value)
+          .every(
+            (secretValue, index) =>
+              values.secrets[index]?.value === secretValue,
+          )
       ) {
         setIsDirty(true);
         return;

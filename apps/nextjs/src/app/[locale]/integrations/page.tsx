@@ -95,7 +95,7 @@ const IntegrationList = async ({
   const t = await getScopedI18n("integration");
 
   if (integrations.length === 0) {
-    return <div>No integrations</div>;
+    return <div>{t("page.list.empty")}</div>;
   }
 
   const grouppedIntegrations = integrations.reduce(
