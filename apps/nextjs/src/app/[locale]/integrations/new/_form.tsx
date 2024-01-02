@@ -22,7 +22,7 @@ import {
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
 } from "../_test-connection";
-import { revalidatePathAction } from "./action";
+import { revalidatePathAction } from "../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof v.integration.create>> & {

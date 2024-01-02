@@ -24,7 +24,7 @@ import {
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
 } from "../../_test-connection";
-import { revalidatePathAction } from "../../new/action";
+import { revalidatePathAction } from "../../../../revalidatePathAction";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
