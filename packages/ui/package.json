@@ -24,6 +24,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/css-modules": "^1.0.5",
     "eslint": "^8.53.0",
     "typescript": "^5.3.3"
   },
