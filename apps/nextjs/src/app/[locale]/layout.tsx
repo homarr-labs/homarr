@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import "@homarr/ui/styles.css";
 import "@homarr/notifications/styles.css";
+import "@homarr/spotlight/styles.css";
 
 import { headers } from "next/headers";
 
@@ -13,6 +14,7 @@ import {
   uiConfiguration,
 } from "@homarr/ui";
 
+import { ModalsProvider } from "./_client-providers/modals";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 
@@ -51,8 +53,10 @@ export default function Layout(props: {
               defaultColorScheme={colorScheme}
               {...uiConfiguration}
             >
-              <Notifications />
-              {props.children}
+              <ModalsProvider>
+                <Notifications />
+                {props.children}
+              </ModalsProvider>
             </MantineProvider>
           </NextInternationalProvider>
         </TRPCReactProvider>

@@ -1,10 +1,9 @@
 {
-  "name": "@homarr/spotlight",
+  "name": "@homarr/widgets",
   "private": true,
   "version": "0.1.0",
   "exports": {
-    ".": "./index.ts",
-    "./styles.css": "./src/styles.css"
+    ".": "./index.ts"
   },
   "typesVersions": {
     "*": {
@@ -34,6 +33,10 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/spotlight": "^7.3.2"
+    "@homarr/ui": "workspace:^0.1.0",
+    "@homarr/form": "workspace:^0.1.0",
+    "@homarr/notifications": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0"
   }
 }

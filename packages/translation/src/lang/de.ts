@@ -26,4 +26,36 @@ export default {
       create: "Benutzer erstellen",
     },
   },
+  widget: {
+    clock: {
+      option: {
+        is24HourFormat: {
+          label: "24-Stunden Format",
+          description: "Use 24-hour format instead of 12-hour format",
+        },
+        isLocaleTime: {
+          label: "Use locale time",
+        },
+        timezone: {
+          label: "Timezone",
+        },
+      },
+    },
+    weather: {
+      option: {
+        location: {
+          label: "Standort",
+        },
+        showCity: {
+          label: "Stadt anzeigen",
+        },
+      },
+    },
+  },
+  common: {
+    search: {
+      placeholder: "Suche nach etwas...",
+      nothingFound: "Nichts gefunden",
+    },
+  },
 } as const;
