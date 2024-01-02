@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { modals } from "@mantine/modals";
 
 import type { RouterOutputs } from "@homarr/api";
 import { getSecretKinds } from "@homarr/definitions";
@@ -107,14 +108,29 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
               <SecretCard
                 key={kind}
                 secret={secretsMap.get(kind)!}
-                onCancel={() => {
-                  // TODO: Add confirm dialog
-                  form.setFieldValue(
-                    `secrets.${index}.value`,
-                    secretsMap.get(kind)!.value ?? "",
-                  );
-                  return Promise.resolve(true);
-                }}
+                onCancel={() =>
+                  new Promise((res) => {
+                    // When nothing changed, just close the secret card
+                    if (
+                      (form.values.secrets[index]?.value ?? "") ===
+                      (secretsMap.get(kind)?.value ?? "")
+                    ) {
+                      return res(true);
+                    }
+                    modals.openConfirmModal({
+                      title: t("integration.secrets.reset.title"),
+                      children: t("integration.secrets.reset.message"),
+                      onCancel: () => res(false),
+                      onConfirm: () => {
+                        form.setFieldValue(
+                          `secrets.${index}.value`,
+                          secretsMap.get(kind)!.value ?? "",
+                        );
+                        res(true);
+                      },
+                    });
+                  })
+                }
               >
                 <IntegrationSecretInput
                   label={t(`integration.secrets.kind.${kind}.newLabel`)}

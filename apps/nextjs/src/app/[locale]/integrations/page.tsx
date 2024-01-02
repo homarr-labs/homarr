@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
-import { capitalize, objectEntries } from "@homarr/common";
+import { objectEntries } from "@homarr/common";
+import { getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import {
@@ -39,7 +40,7 @@ import { IntegrationCreateDropdownContent } from "./new/_dropdown";
 
 interface IntegrationsPageProps {
   searchParams: {
-    activeTab?: IntegrationKind;
+    tab?: IntegrationKind;
   };
 }
 
@@ -75,7 +76,7 @@ export default async function IntegrationsPage({
 
         <IntegrationList
           integrations={integrations}
-          activeTab={searchParams.activeTab}
+          activeTab={searchParams.tab}
         />
       </Stack>
     </Container>
@@ -116,7 +117,7 @@ const IntegrationList = async ({
         <AccordionItem key={kind} value={kind}>
           <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} />}>
             <Group>
-              <Text>{capitalize(kind)}</Text>
+              <Text>{getIntegrationName(kind)}</Text>
               <CountBadge count={integrations.length} />
             </Group>
           </AccordionControl>
@@ -156,7 +157,7 @@ const IntegrationList = async ({
                             <IconPencil size={16} stroke={1.5} />
                           </ActionIcon>
                           <DeleteIntegrationActionButton
-                            integrationId={integration.id}
+                            integration={integration}
                             count={integrations.length}
                           />
                         </ActionIconGroup>

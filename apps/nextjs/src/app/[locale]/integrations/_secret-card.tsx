@@ -43,8 +43,6 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
   const DisplayIcon = publicSecretDisplayOpened ? IconEye : IconEyeOff;
   const KindIcon = integrationSecretIcons[secret.kind];
 
-  console.log(params);
-
   return (
     <Card>
       <Stack>

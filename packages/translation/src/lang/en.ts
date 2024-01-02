@@ -60,6 +60,20 @@ export default {
           },
         },
       },
+      delete: {
+        title: "Delete integration",
+        message: "Are you sure you want to delete the integration {name}?",
+        notification: {
+          success: {
+            title: "Deletion successful",
+            message: "The integration was successfully deleted",
+          },
+          error: {
+            title: "Deletion failed",
+            message: "Unable to delete the integration",
+          },
+        },
+      },
     },
     field: {
       name: {
@@ -103,6 +117,10 @@ export default {
       title: "Secrets",
       lastUpdated: "Last updated {date}",
       secureNotice: "This secret cannot be retrieved after creation",
+      reset: {
+        title: "Reset secret",
+        message: "Are you sure you want to reset this secret?",
+      },
       kind: {
         username: {
           label: "Username",
@@ -126,6 +144,7 @@ export default {
       edit: "Edit",
       save: "Save",
       cancel: "Cancel",
+      confirm: "Confirm",
     },
     noResults: "No results found",
   },

@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { modals } from "@mantine/modals";
 
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
+import { useScopedI18n } from "@homarr/translation/client";
 import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { api } from "~/trpc/react";
@@ -9,13 +15,14 @@ import { revalidatePathAction } from "./new/action";
 
 interface DeleteIntegrationActionButtonProps {
   count: number;
-  integrationId: string;
+  integration: { id: string; name: string };
 }
 
 export const DeleteIntegrationActionButton = ({
   count,
-  integrationId,
+  integration,
 }: DeleteIntegrationActionButtonProps) => {
+  const t = useScopedI18n("integration.page.delete");
   const router = useRouter();
   const { mutateAsync, isPending } = api.integration.delete.useMutation();
 
@@ -24,12 +31,34 @@ export const DeleteIntegrationActionButton = ({
       loading={isPending}
       variant="subtle"
       color="red"
-      onClick={async () => {
-        await mutateAsync({ id: integrationId });
-        if (count === 1) {
-          router.replace("/integrations");
-        }
-        await revalidatePathAction("/integrations");
+      onClick={() => {
+        modals.openConfirmModal({
+          title: t("title"),
+          children: t("message", integration),
+          onConfirm: () => {
+            void mutateAsync(
+              { id: integration.id },
+              {
+                onSuccess: () => {
+                  showSuccessNotification({
+                    title: t("notification.success.title"),
+                    message: t("notification.success.message"),
+                  });
+                  if (count === 1) {
+                    router.replace("/integrations");
+                  }
+                  void revalidatePathAction("/integrations");
+                },
+                onError: () => {
+                  showErrorNotification({
+                    title: t("notification.error.title"),
+                    message: t("notification.error.message"),
+                  });
+                },
+              },
+            );
+          },
+        });
       }}
       aria-label="Delete integration"
     >

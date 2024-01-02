@@ -1,3 +1,4 @@
+import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Container, Group, Stack, Title } from "@homarr/ui";
 
@@ -20,7 +21,9 @@ export default async function EditIntegrationPage({
       <Stack>
         <Group align="center">
           <IntegrationAvatar kind={integration.kind} size="md" />
-          <Title>{t("title", { name: integration.kind })}</Title>
+          <Title>
+            {t("title", { name: getIntegrationName(integration.kind) })}
+          </Title>
         </Group>
         <EditIntegrationForm integration={integration} />
       </Stack>

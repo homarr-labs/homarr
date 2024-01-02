@@ -60,6 +60,20 @@ export default {
           },
         },
       },
+      delete: {
+        title: "Integration entfernen",
+        message: "Möchtest du die Integration {name} wirklich entfernen?",
+        notification: {
+          success: {
+            title: "Entfernen erfolgreich",
+            message: "Die Integration wurde erfolgreich entfernt",
+          },
+          error: {
+            title: "Entfernen fehlgeschlagen",
+            message: "Die Integration konnte nicht entfernt werden",
+          },
+        },
+      },
     },
     field: {
       name: {
@@ -75,7 +89,7 @@ export default {
     testConnection: {
       action: "Verbindung überprüfen",
       alertNotice:
-        "Der Button zum Speichern wird aktiviert, sobald die Verbindung erfolgreich hergestellt wurde",
+        "Der Button zum Speichern wird aktiviert, sobald die Verbindung erfolgreich überprüft wurde",
       notification: {
         success: {
           title: "Verbindung erfolgreich",
@@ -104,6 +118,10 @@ export default {
       lastUpdated: "Zuletzt geändert {date}",
       secureNotice:
         "Diese Zugangsdaten können nach der Erstellung nicht mehr ausgelesen werden",
+      reset: {
+        title: "Zugangsdaten zurücksetzen",
+        message: "Möchtest du diese Zugangsdaten wirklich zurücksetzen?",
+      },
       kind: {
         username: {
           label: "Benutzername",
@@ -127,6 +145,7 @@ export default {
       edit: "Bearbeiten",
       save: "Speichern",
       cancel: "Abbrechen",
+      confirm: "Bestätigen",
     },
     noResults: "Keine Ergebnisse gefunden",
   },

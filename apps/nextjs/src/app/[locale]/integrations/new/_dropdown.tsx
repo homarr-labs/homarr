@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
-import { capitalize } from "@homarr/common";
-import { integrationKinds } from "@homarr/definitions";
+import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import {
   Group,
@@ -47,7 +46,7 @@ export const IntegrationCreateDropdownContent = () => {
             >
               <Group>
                 <IntegrationAvatar kind={kind} size="sm" />
-                <Text size="sm">{capitalize(kind)}</Text>
+                <Text size="sm">{getIntegrationName(kind)}</Text>
               </Group>
             </Menu.Item>
           ))}

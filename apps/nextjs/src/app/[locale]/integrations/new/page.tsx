@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import type { IntegrationKind } from "@homarr/definitions";
-import { integrationKinds } from "@homarr/definitions";
+import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Container, Group, Stack, Title } from "@homarr/ui";
 import type { v } from "@homarr/validation";
@@ -35,7 +35,7 @@ export default async function IntegrationsNewPage({
       <Stack>
         <Group align="center">
           <IntegrationAvatar kind={currentKind} size="md" />
-          <Title>{t("title", { name: currentKind })}</Title>
+          <Title>{t("title", { name: getIntegrationName(currentKind) })}</Title>
         </Group>
         <NewIntegrationForm searchParams={searchParams} />
       </Stack>

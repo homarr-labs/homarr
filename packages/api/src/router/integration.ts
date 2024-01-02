@@ -6,6 +6,7 @@ import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
   getSecretKinds,
+  integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { v } from "@homarr/validation";
@@ -15,12 +16,17 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
     const integrations = await ctx.db.query.integrations.findMany();
-    return integrations.map((integration) => ({
-      id: integration.id,
-      name: integration.name,
-      kind: integration.kind,
-      url: integration.url,
-    }));
+    return integrations
+      .map((integration) => ({
+        id: integration.id,
+        name: integration.name,
+        kind: integration.kind,
+        url: integration.url,
+      }))
+      .sort(
+        (a, b) =>
+          integrationKinds.indexOf(a.kind) - integrationKinds.indexOf(b.kind),
+      );
   }),
   byId: publicProcedure
     .input(v.integration.byId)
