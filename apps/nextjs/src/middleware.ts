@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { I18nMiddleware } from "@alparr/translation/middleware";
+import { I18nMiddleware } from "@homarr/translation/middleware";
 
 export function middleware(request: NextRequest) {
   return I18nMiddleware(request);

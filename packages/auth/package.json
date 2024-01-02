@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/auth",
+  "name": "@homarr/auth",
   "version": "0.1.0",
   "private": true,
   "main": "./index.ts",
@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@alparr/db": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
     "@auth/core": "^0.18.4",
     "@auth/drizzle-adapter": "^0.3.9",
     "@t3-oss/env-nextjs": "^0.7.1",
@@ -21,14 +21,13 @@
     "next": "^14.0.3",
     "next-auth": "5.0.0-beta.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "zod": "^3.22.2"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@alparr/eslint-config": "workspace:^0.2.0",
-    "@alparr/prettier-config": "workspace:^0.1.0",
-    "@alparr/tsconfig": "workspace:^0.1.0",
-    "@alparr/validation": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.7.10",
     "eslint": "^8.53.0",
@@ -38,8 +37,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@alparr/eslint-config/base"
+      "@homarr/eslint-config/base"
     ]
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@homarr/prettier-config"
 }

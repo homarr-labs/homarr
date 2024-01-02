@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/nextjs",
+  "name": "@homarr/nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,21 +13,18 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@alparr/api": "workspace:^0.1.0",
-    "@alparr/auth": "workspace:^0.1.0",
-    "@alparr/db": "workspace:^0.1.0",
-    "@alparr/translation": "workspace:^",
-    "@alparr/ui": "workspace:^0.1.0",
-    "@alparr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.3.1",
-    "@mantine/dates": "^7.3.1",
-    "@mantine/form": "^7.3.1",
+    "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0",
+    "@homarr/ui": "workspace:^0.1.0",
+    "@homarr/notifications": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/spotlight": "workspace:^0.1.0",
+    "@homarr/form": "workspace:^0.1.0",
     "@mantine/hooks": "^7.3.1",
-    "@mantine/notifications": "^7.3.1",
-    "@mantine/spotlight": "^7.3.1",
     "@mantine/tiptap": "^7.3.1",
     "@t3-oss/env-nextjs": "^0.7.1",
-    "@tabler/icons-react": "^2.42.0",
     "@tanstack/react-query": "^5.8.7",
     "@tanstack/react-query-devtools": "^5.8.7",
     "@tanstack/react-query-next-experimental": "5.8.7",
@@ -43,13 +40,12 @@
     "postcss-preset-mantine": "^1.11.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "superjson": "2.2.1",
-    "zod": "^3.22.2"
+    "superjson": "2.2.1"
   },
   "devDependencies": {
-    "@alparr/eslint-config": "workspace:^0.2.0",
-    "@alparr/prettier-config": "workspace:^0.1.0",
-    "@alparr/tsconfig": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node": "^18.18.13",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
@@ -61,10 +57,10 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@alparr/eslint-config/base",
-      "@alparr/eslint-config/nextjs",
-      "@alparr/eslint-config/react"
+      "@homarr/eslint-config/base",
+      "@homarr/eslint-config/nextjs",
+      "@homarr/eslint-config/react"
     ]
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@homarr/prettier-config"
 }

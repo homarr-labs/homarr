@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/api",
+  "name": "@homarr/api",
   "version": "0.1.0",
   "private": true,
   "main": "./index.ts",
@@ -12,18 +12,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@alparr/auth": "workspace:^0.1.0",
-    "@alparr/db": "workspace:^0.1.0",
-    "@alparr/validation": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
     "@trpc/client": "next",
     "@trpc/server": "next",
-    "superjson": "2.2.1",
-    "zod": "^3.22.2"
+    "superjson": "2.2.1"
   },
   "devDependencies": {
-    "@alparr/eslint-config": "workspace:^0.2.0",
-    "@alparr/prettier-config": "workspace:^0.1.0",
-    "@alparr/tsconfig": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^8.53.0",
     "prettier": "^3.1.0",
     "typescript": "^5.3.3"
@@ -31,8 +30,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@alparr/eslint-config/base"
+      "@homarr/eslint-config/base"
     ]
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@homarr/prettier-config"
 }

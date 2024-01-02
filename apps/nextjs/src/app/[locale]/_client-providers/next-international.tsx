@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 
-import { defaultLocale } from "@alparr/translation";
-import { I18nProviderClient } from "@alparr/translation/client";
+import { defaultLocale } from "@homarr/translation";
+import { I18nProviderClient } from "@homarr/translation/client";
 
 export const NextInternationalProvider = ({
   children,

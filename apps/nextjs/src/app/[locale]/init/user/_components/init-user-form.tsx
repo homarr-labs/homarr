@@ -1,14 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import type { z } from "zod";
 
-import { useScopedI18n } from "@alparr/translation/client";
-import { initUserSchema } from "@alparr/validation";
+import { useForm, zodResolver } from "@homarr/form";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
+import { useScopedI18n } from "@homarr/translation/client";
+import { Button, PasswordInput, Stack, TextInput } from "@homarr/ui";
+import type { z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
-import { showErrorNotification, showSuccessNotification } from "~/notification";
 import { api } from "~/utils/api";
 
 export const InitUserForm = () => {
@@ -16,7 +19,7 @@ export const InitUserForm = () => {
   const t = useScopedI18n("user");
   const { mutateAsync, error, isPending } = api.user.initUser.useMutation();
   const form = useForm<FormType>({
-    validate: zodResolver(initUserSchema),
+    validate: zodResolver(validation.user.init),
     validateInputOnBlur: true,
     validateInputOnChange: true,
     initialValues: {
@@ -75,4 +78,4 @@ export const InitUserForm = () => {
   );
 };
 
-type FormType = z.infer<typeof initUserSchema>;
+type FormType = z.infer<typeof validation.user.init>;

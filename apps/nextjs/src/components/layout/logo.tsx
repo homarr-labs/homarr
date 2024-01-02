@@ -1,12 +1,13 @@
 import Image from "next/image";
-import { Group, Title } from "@mantine/core";
+
+import { Group, Title } from "@homarr/ui";
 
 interface LogoProps {
   size: number;
 }
 
 export const Logo = ({ size = 60 }: LogoProps) => (
-  <Image src="/logo/alparr.png" alt="Alparr logo" width={size} height={size} />
+  <Image src="/logo/homarr.png" alt="homarr logo" width={size} height={size} />
 );
 
 export const LogoWithTitle = () => (

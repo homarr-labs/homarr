@@ -2,15 +2,15 @@ import "server-only";
 
 import { TRPCError } from "@trpc/server";
 
-import { createSalt, hashPassword } from "@alparr/auth";
-import { createId, schema } from "@alparr/db";
-import { initUserSchema } from "@alparr/validation";
+import { createSalt, hashPassword } from "@homarr/auth";
+import { createId, schema } from "@homarr/db";
+import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure
-    .input(initUserSchema)
+    .input(validation.user.init)
     .mutation(async ({ ctx, input }) => {
       const firstUser = await ctx.db.query.users.findFirst({
         columns: {

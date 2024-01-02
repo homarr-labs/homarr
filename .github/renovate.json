@@ -6,7 +6,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": [
-        "^@alparr/"
+        "^@homarr/"
       ],
       "enabled": false
     }

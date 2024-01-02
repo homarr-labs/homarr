@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/prettier-config",
+  "name": "@homarr/prettier-config",
   "private": true,
   "version": "0.1.0",
   "main": "index.mjs",
@@ -13,8 +13,8 @@
     "prettier": "^3.1.0"
   },
   "devDependencies": {
-    "@alparr/tsconfig": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "typescript": "^5.3.3"
   },
-  "prettier": "@alparr/prettier-config"
+  "prettier": "@homarr/prettier-config"
 }

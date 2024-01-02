@@ -3,7 +3,7 @@ import { z } from "zod";
 const usernameSchema = z.string().min(3).max(255);
 const passwordSchema = z.string().min(8).max(255);
 
-export const initUserSchema = z
+const initUserSchema = z
   .object({
     username: usernameSchema,
     password: passwordSchema,
@@ -14,7 +14,12 @@ export const initUserSchema = z
     message: "Passwords do not match",
   });
 
-export const signInSchema = z.object({
+const signInSchema = z.object({
   name: z.string(),
   password: z.string(),
 });
+
+export const userSchemas = {
+  signIn: signInSchema,
+  init: initUserSchema,
+};

@@ -1,5 +1,5 @@
 {
-  "extends": "@alparr/tsconfig/base.json",
+  "extends": "@homarr/tsconfig/base.json",
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },

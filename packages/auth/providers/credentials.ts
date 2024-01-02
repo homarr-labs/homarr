@@ -1,9 +1,9 @@
 import type Credentials from "@auth/core/providers/credentials";
 import bcrypt from "bcrypt";
 
-import { db, eq } from "@alparr/db";
-import { users } from "@alparr/db/schema/sqlite";
-import { signInSchema } from "@alparr/validation";
+import { db, eq } from "@homarr/db";
+import { users } from "@homarr/db/schema/sqlite";
+import { validation } from "@homarr/validation";
 
 type CredentialsConfiguration = Parameters<typeof Credentials>[0];
 
@@ -21,7 +21,7 @@ export const credentialsConfiguration = {
     },
   },
   async authorize(credentials) {
-    const data = await signInSchema.parseAsync(credentials);
+    const data = await validation.user.signIn.parseAsync(credentials);
 
     const user = await db.query.users.findFirst({
       where: eq(users.name, data.name),

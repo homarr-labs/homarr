@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { createHandlers } from "@alparr/auth";
+import { createHandlers } from "@homarr/auth";
 
 export const GET = async (req: NextRequest) => {
   return await createHandlers(isCredentialsRequest(req)).handlers.GET(req);

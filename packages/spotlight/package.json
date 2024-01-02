@@ -1,5 +1,5 @@
 {
-  "name": "@homarr/validation",
+  "name": "@homarr/spotlight",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -33,6 +33,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "zod": "^3.22.2"
+    "@mantine/spotlight": "^7.3.2"
   }
 }

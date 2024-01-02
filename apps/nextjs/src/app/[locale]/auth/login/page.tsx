@@ -1,6 +1,5 @@
-import { Card, Center, Stack, Text, Title } from "@mantine/core";
-
-import { getScopedI18n } from "@alparr/translation/server";
+import { getScopedI18n } from "@homarr/translation/server";
+import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
 import { LogoWithTitle } from "~/components/layout/logo";
 import { LoginForm } from "./_components/login-form";

@@ -1,5 +1,5 @@
 {
-  "name": "@alparr/translation",
+  "name": "@homarr/translation",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -23,18 +23,18 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@alparr/eslint-config": "workspace:^0.2.0",
-    "@alparr/prettier-config": "workspace:^0.1.0",
-    "@alparr/tsconfig": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^8.53.0",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {
     "extends": [
-      "@alparr/eslint-config/base"
+      "@homarr/eslint-config/base"
     ]
   },
-  "prettier": "@alparr/prettier-config",
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "next-international": "^1.1.4"
   }

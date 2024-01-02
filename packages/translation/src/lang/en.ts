@@ -6,7 +6,7 @@ export default {
         subtitle: "Welcome back! Please enter your credentials",
       },
       init: {
-        title: "New Alparr installation",
+        title: "New Homarr installation",
         subtitle: "Please create the initial administator user",
       },
     },

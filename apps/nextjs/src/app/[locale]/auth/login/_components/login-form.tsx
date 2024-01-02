@@ -2,21 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { signIn } from "@homarr/auth/client";
+import { useForm, zodResolver } from "@homarr/form";
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   Alert,
   Button,
+  IconAlertTriangle,
   PasswordInput,
   rem,
   Stack,
   TextInput,
-} from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import { IconAlertTriangle } from "@tabler/icons-react";
-import type { z } from "zod";
-
-import { signIn } from "@alparr/auth/client";
-import { useScopedI18n } from "@alparr/translation/client";
-import { signInSchema } from "@alparr/validation";
+} from "@homarr/ui";
+import type { z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 export const LoginForm = () => {
   const t = useScopedI18n("user");
@@ -24,7 +24,7 @@ export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
   const form = useForm<FormType>({
-    validate: zodResolver(signInSchema),
+    validate: zodResolver(validation.user.signIn),
     initialValues: {
       name: "",
       password: "",
@@ -79,4 +79,4 @@ export const LoginForm = () => {
   );
 };
 
-type FormType = z.infer<typeof signInSchema>;
+type FormType = z.infer<typeof validation.user.signIn>;
