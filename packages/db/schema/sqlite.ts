@@ -9,6 +9,11 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
+import type {
+  IntegrationKind,
+  IntegrationSecretKind,
+} from "@homarr/definitions";
+
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -70,6 +75,38 @@ export const verificationTokens = sqliteTable(
   }),
 );
 
+export const integrations = sqliteTable(
+  "integration",
+  {
+    id: text("id").notNull().primaryKey(),
+    name: text("name").notNull(),
+    url: text("url").notNull(),
+    kind: text("kind").$type<IntegrationKind>().notNull(),
+  },
+  (i) => ({
+    kindIdx: index("integration__kind_idx").on(i.kind),
+  }),
+);
+
+export const integrationSecrets = sqliteTable(
+  "integrationSecret",
+  {
+    kind: text("kind").$type<IntegrationSecretKind>().notNull(),
+    value: text("value").$type<`${string}.${string}`>().notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    integrationId: text("integration_id")
+      .notNull()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+  },
+  (is) => ({
+    compoundKey: primaryKey({
+      columns: [is.integrationId, is.kind],
+    }),
+    kindIdx: index("integration_secret__kind_idx").on(is.kind),
+    updatedAtIdx: index("integration_secret__updated_at_idx").on(is.updatedAt),
+  }),
+);
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -81,7 +118,23 @@ export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
 
+export const integrationRelations = relations(integrations, ({ many }) => ({
+  secrets: many(integrationSecrets),
+}));
+
+export const integrationSecretRelations = relations(
+  integrationSecrets,
+  ({ one }) => ({
+    integration: one(integrations, {
+      fields: [integrationSecrets.integrationId],
+      references: [integrations.id],
+    }),
+  }),
+);
+
 export type User = InferSelectModel<typeof users>;
 export type Account = InferSelectModel<typeof accounts>;
 export type Session = InferSelectModel<typeof sessions>;
 export type VerificationToken = InferSelectModel<typeof verificationTokens>;
+export type Integration = InferSelectModel<typeof integrations>;
+export type IntegrationSecret = InferSelectModel<typeof integrationSecrets>;

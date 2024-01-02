@@ -9,8 +9,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
-import { auth } from "@homarr/auth";
 import type { Session } from "@homarr/auth";
+import { auth } from "@homarr/auth";
 import { db } from "@homarr/db";
 import { ZodError } from "@homarr/validation";
 
@@ -49,11 +49,11 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  */
 export const createTRPCContext = async (opts: {
-  req?: Request;
+  headers?: Headers;
   auth: Session | null;
 }) => {
   const session = opts.auth ?? (await auth());
-  const source = opts.req?.headers.get("x-trpc-source") ?? "unknown";
+  const source = opts.headers?.get("x-trpc-source") ?? "unknown";
 
   console.log(">>> tRPC Request from", source, "by", session?.user);
 

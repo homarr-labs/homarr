@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@trpc/client": "next",

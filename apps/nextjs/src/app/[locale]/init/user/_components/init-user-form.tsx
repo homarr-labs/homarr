@@ -12,7 +12,7 @@ import { Button, PasswordInput, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 export const InitUserForm = () => {
   const router = useRouter();

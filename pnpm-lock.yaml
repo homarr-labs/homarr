@@ -35,9 +35,15 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/common
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/definitions
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
@@ -62,6 +68,9 @@ importers:
       '@mantine/hooks':
         specifier: ^7.3.2
         version: 7.3.2(react@18.2.0)
+      '@mantine/modals':
+        specifier: ^7.3.2
+        version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/tiptap':
         specifier: ^7.3.2
         version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(@tabler/icons-react@2.42.0)(@tiptap/extension-link@2.1.13)(react-dom@18.2.0)(react@18.2.0)
@@ -162,6 +171,9 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
@@ -255,8 +267,32 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/common:
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   packages/db:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
@@ -291,6 +327,28 @@ importers:
       prettier:
         specifier: ^3.1.0
         version: 3.1.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/definitions:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.53.0
+        version: 8.53.0
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -407,6 +465,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/css-modules':
+        specifier: ^1.0.5
+        version: 1.0.5
       eslint:
         specifier: ^8.53.0
         version: 8.53.0
@@ -416,6 +477,9 @@ importers:
 
   packages/validation:
     dependencies:
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       zod:
         specifier: ^3.22.2
         version: 3.22.2
@@ -1481,6 +1545,20 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@mantine/modals@7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-vhpcp0Yqgm+K/vorDbuweTjzDO4pJaG2POc00cSTV3zJdsbeMAzVClovTuseJT+UO2lUdUP3RG1cInaZqSclhA==}
+    peerDependencies:
+      '@mantine/core': 7.3.2
+      '@mantine/hooks': 7.3.2
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@mantine/core': 7.3.2(@mantine/hooks@7.3.2)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.3.2(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@mantine/notifications@7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-XOzgm4pm4XszavVN0QUjN+IP0xiG2IochxJSz/FduTI0r3u1WxdpvDYlOvEJpHhtWvyqI8W8rx6cPJaD2HdAwQ==}
     peerDependencies:
@@ -2210,6 +2288,10 @@ packages:
       '@types/express': 4.17.21
       '@types/keygrip': 1.0.6
       '@types/node': 18.18.13
+    dev: true
+
+  /@types/css-modules@1.0.5:
+    resolution: {integrity: sha512-oeKafs/df9lwOvtfiXVliZsocFVOexK9PZtLQWuPeuVCFR7jwiqlg60lu80JTe5NFNtH3tnV6Fs/ySR8BUPHAw==}
     dev: true
 
   /@types/eslint@8.44.7:

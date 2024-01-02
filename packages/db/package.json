@@ -14,6 +14,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "better-sqlite3": "^9.2.2",
     "drizzle-orm": "^0.29.1"

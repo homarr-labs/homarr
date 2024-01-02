@@ -33,6 +33,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "zod": "^3.22.2"
+    "zod": "^3.22.2",
+    "@homarr/definitions": "workspace:^0.1.0"
   }
 }
