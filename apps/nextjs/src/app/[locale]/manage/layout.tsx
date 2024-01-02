@@ -1,0 +1,110 @@
+import type { PropsWithChildren } from "react";
+
+import { getScopedI18n } from "@homarr/translation/server";
+import {
+  AppShellMain,
+  IconBook2,
+  IconBrandDiscord,
+  IconBrandDocker,
+  IconBrandGithub,
+  IconGitFork,
+  IconHome,
+  IconInfoSmall,
+  IconLayoutDashboard,
+  IconMailForward,
+  IconQuestionMark,
+  IconTool,
+  IconUser,
+  IconUsers,
+} from "@homarr/ui";
+
+import { MainHeader } from "~/components/layout/header";
+import type { NavigationLink } from "~/components/layout/navigation";
+import { MainNavigation } from "~/components/layout/navigation";
+import { ClientShell } from "~/components/layout/shell";
+
+export default async function ManageLayout({ children }: PropsWithChildren) {
+  const t = await getScopedI18n("management.navbar");
+  const navigationLinks: NavigationLink[] = [
+    {
+      label: t("items.home"),
+      icon: IconHome,
+      href: "/manage",
+    },
+    {
+      icon: IconLayoutDashboard,
+      href: "/manage/boards",
+      label: t("items.boards"),
+    },
+    {
+      icon: IconUser,
+      label: t("items.users.label"),
+      items: [
+        {
+          label: t("items.users.items.manage"),
+          icon: IconUsers,
+          href: "/manage/users",
+        },
+        {
+          label: t("items.users.items.invites"),
+          icon: IconMailForward,
+          href: "/manage/users/invites",
+        },
+      ],
+    },
+    {
+      label: t("items.tools.label"),
+      icon: IconTool,
+      items: [
+        {
+          label: t("items.tools.items.docker"),
+          icon: IconBrandDocker,
+          href: "/manage/tools/docker",
+        },
+      ],
+    },
+    {
+      label: t("items.help.label"),
+      icon: IconQuestionMark,
+      items: [
+        {
+          label: t("items.help.items.documentation"),
+          icon: IconBook2,
+          href: "https://homarr.dev/docs/getting-started/prerequisites",
+          external: true,
+        },
+        {
+          label: t("items.help.items.submitIssue"),
+          icon: IconBrandGithub,
+          href: "https://github.com/ajnart/homarr/issues/new/choose",
+          external: true,
+        },
+        {
+          label: t("items.tools.items.docker"),
+          icon: IconBrandDiscord,
+          href: "https://discord.com/invite/aCsmEV5RgA",
+          external: true,
+        },
+        {
+          label: t("items.help.items.sourceCode"),
+          icon: IconGitFork,
+          href: "https://github.com/ajnart/homarr",
+          external: true,
+        },
+      ],
+    },
+    {
+      label: t("items.about"),
+      icon: IconInfoSmall,
+      href: "/manage/about",
+    },
+  ];
+
+  return (
+    <ClientShell hasNavigation={true}>
+      <MainHeader></MainHeader>
+      <MainNavigation links={navigationLinks}></MainNavigation>
+      <AppShellMain>{children}</AppShellMain>
+    </ClientShell>
+  );
+}
