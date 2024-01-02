@@ -36,9 +36,29 @@ export default {
       },
       create: {
         title: "Neue {name} Integration erstellen",
+        notification: {
+          success: {
+            title: "Erstellung erfolgreich",
+            message: "Die Integration wurde erfolgreich erstellt",
+          },
+          error: {
+            title: "Erstellung fehlgeschlagen",
+            message: "Die Integration konnte nicht erstellt werden",
+          },
+        },
       },
       edit: {
         title: "{name} Integration bearbeiten",
+        notification: {
+          success: {
+            title: "Änderungen erfolgreich angewendet",
+            message: "Die Integration wurde erfolgreich gespeichert",
+          },
+          error: {
+            title: "Änderungen konnten nicht angewendet werden",
+            message: "Die Integration konnte nicht gespeichert werden",
+          },
+        },
       },
     },
     field: {
@@ -51,13 +71,37 @@ export default {
     },
     action: {
       create: "Neue Integration",
-      testConnection: "Verbindung überprüfen",
+    },
+    testConnection: {
+      action: "Verbindung überprüfen",
+      notification: {
+        success: {
+          title: "Verbindung erfolgreich",
+          message: "Die Verbindung wurde erfolgreich hergestellt",
+        },
+        invalidUrl: {
+          title: "Ungültige URL",
+          message: "Die URL ist ungültig",
+        },
+        notAllSecretsProvided: {
+          title: "Fehlende Zugangsdaten",
+          message: "Es wurden nicht alle Zugangsdaten angegeben",
+        },
+        invalidCredentials: {
+          title: "Ungültige Zugangsdaten",
+          message: "Die Zugangsdaten sind ungültig",
+        },
+        commonError: {
+          title: "Verbindung fehlgeschlagen",
+          message: "Die Verbindung konnte nicht hergestellt werden",
+        },
+      },
     },
     secrets: {
-      title: "Secrets",
+      title: "Zugangsdaten",
       lastUpdated: "Zuletzt geändert {date}",
       secureNotice:
-        "Dieses Secret kann nach der Erstellung nicht mehr ausgelesen werden",
+        "Diese Zugangsdaten können nach der Erstellung nicht mehr ausgelesen werden",
       kind: {
         username: {
           label: "Benutzername",

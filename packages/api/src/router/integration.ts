@@ -219,7 +219,7 @@ function encryptSecret(text: string): `${string}.${string}` {
   const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return `${encrypted.toString("hex")}.${iv.toString("hex")}}`;
+  return `${encrypted.toString("hex")}.${iv.toString("hex")}`;
 }
 
 // Decrypting text

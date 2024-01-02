@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getSecretKinds } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
@@ -48,12 +52,30 @@ export const NewIntegrationForm = ({
   const { mutateAsync, isPending } = api.integration.create.useMutation();
 
   const handleSubmit = async (values: FormType) => {
-    await mutateAsync({
-      kind: searchParams.kind,
-      ...values,
-    });
-    await revalidatePathAction("/integrations");
-    router.push("/integrations");
+    if (isDirty) return;
+    await mutateAsync(
+      {
+        kind: searchParams.kind,
+        ...values,
+      },
+      {
+        onSuccess: () => {
+          showSuccessNotification({
+            title: t("integration.page.create.notification.success.title"),
+            message: t("integration.page.create.notification.success.message"),
+          });
+          void revalidatePathAction("/integrations").then(() =>
+            router.push("/integrations"),
+          );
+        },
+        onError: () => {
+          showErrorNotification({
+            title: t("integration.page.create.notification.error.title"),
+            message: t("integration.page.create.notification.error.message"),
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -96,7 +118,7 @@ export const NewIntegrationForm = ({
             <Button variant="default" component={Link} href="/integrations">
               {t("common.action.backToOverview")}
             </Button>
-            <Button type="submit" loading={isPending}>
+            <Button type="submit" loading={isPending} disabled={isDirty}>
               {t("common.action.create")}
             </Button>
           </Group>

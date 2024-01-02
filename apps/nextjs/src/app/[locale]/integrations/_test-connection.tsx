@@ -7,7 +7,7 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import { Anchor, Group, IconCheck, IconX, Loader } from "@homarr/ui";
 
 import { api } from "~/trpc/react";
@@ -64,7 +64,7 @@ export const TestConnection = ({
   removeDirty,
   isDirty,
 }: TestConnectionProps) => {
-  const t = useScopedI18n("integration.action");
+  const t = useScopedI18n("integration.testConnection");
   const { mutateAsync, ...mutation } =
     api.integration.testConnection.useMutation();
 
@@ -78,31 +78,36 @@ export const TestConnection = ({
             onSuccess: () => {
               removeDirty();
               showSuccessNotification({
-                title: "Connection test successful",
-                message: `Integration ${integration.name} is working as expected`,
+                title: t("notification.success.title"),
+                message: t("notification.success.message"),
               });
             },
             onError: (error) => {
               if (error.data?.zodError?.fieldErrors.url) {
                 showErrorNotification({
-                  title: "Connection test failed",
-                  message: "Invalid url provided",
+                  title: t("notification.invalidUrl.title"),
+                  message: t("notification.invalidUrl.message"),
                 });
                 return;
               }
-              console.log(error.message);
+
               if (error.message === "SECRETS_NOT_DEFINED") {
                 showErrorNotification({
-                  title: "Connection test failed",
-                  message: "Not all secrets were provided",
+                  title: t("notification.notAllSecretsProvided.title"),
+                  message: t("notification.notAllSecretsProvided.message"),
                 });
                 return;
               }
+
+              showErrorNotification({
+                title: t("notification.commonError.title"),
+                message: t("notification.commonError.message"),
+              });
             },
           });
         }}
       >
-        {t("testConnection")}
+        {t("action")}
       </Anchor>
       <TestConnectionIcon isDirty={isDirty} {...mutation} size={20} />
     </Group>

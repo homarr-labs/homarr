@@ -36,9 +36,29 @@ export default {
       },
       create: {
         title: "New {name} integration",
+        notification: {
+          success: {
+            title: "Creation successful",
+            message: "The integration was successfully created",
+          },
+          error: {
+            title: "Creation failed",
+            message: "The integration could not be created",
+          },
+        },
       },
       edit: {
         title: "Edit {name} integration",
+        notification: {
+          success: {
+            title: "Changes applied successfully",
+            message: "The integration was successfully saved",
+          },
+          error: {
+            title: "Unable to apply changes",
+            message: "The integration could not be saved",
+          },
+        },
       },
     },
     field: {
@@ -51,7 +71,31 @@ export default {
     },
     action: {
       create: "New integration",
-      testConnection: "Test connection",
+    },
+    testConnection: {
+      action: "Test connection",
+      notification: {
+        success: {
+          title: "Connection successful",
+          message: "The connection was successfully established",
+        },
+        invalidUrl: {
+          title: "Invalid URL",
+          message: "The URL is invalid",
+        },
+        notAllSecretsProvided: {
+          title: "Missing credentials",
+          message: "Not all credentials were provided",
+        },
+        invalidCredentials: {
+          title: "Invalid credentials",
+          message: "The credentials are invalid",
+        },
+        commonError: {
+          title: "Connection failed",
+          message: "The connection could not be established",
+        },
+      },
     },
     secrets: {
       title: "Secrets",

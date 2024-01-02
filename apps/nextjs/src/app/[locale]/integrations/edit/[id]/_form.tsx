@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import type { RouterOutputs } from "@homarr/api";
 import { getSecretKinds } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
@@ -48,16 +52,34 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const secretsMap = new Map(integration.secrets.map((s) => [s.kind, s]));
 
   const handleSubmit = async (values: FormType) => {
-    await mutateAsync({
-      id: integration.id,
-      ...values,
-      secrets: values.secrets.map((s) => ({
-        kind: s.kind,
-        value: s.value === "" ? null : s.value,
-      })),
-    });
-    await revalidatePathAction("/integrations");
-    router.push("/integrations");
+    if (isDirty) return;
+    await mutateAsync(
+      {
+        id: integration.id,
+        ...values,
+        secrets: values.secrets.map((s) => ({
+          kind: s.kind,
+          value: s.value === "" ? null : s.value,
+        })),
+      },
+      {
+        onSuccess: () => {
+          showSuccessNotification({
+            title: t("integration.page.edit.notification.success.title"),
+            message: t("integration.page.edit.notification.success.message"),
+          });
+          void revalidatePathAction("/integrations").then(() =>
+            router.push("/integrations"),
+          );
+        },
+        onError: () => {
+          showErrorNotification({
+            title: t("integration.page.edit.notification.error.title"),
+            message: t("integration.page.edit.notification.error.message"),
+          });
+        },
+      },
+    );
   };
 
   return (

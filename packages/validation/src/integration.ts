@@ -11,7 +11,7 @@ const integrationCreateSchema = z.object({
   secrets: z.array(
     z.object({
       kind: zodEnumFromArray(integrationSecretKinds),
-      value: z.string(),
+      value: z.string().nonempty(),
     }),
   ),
 });
