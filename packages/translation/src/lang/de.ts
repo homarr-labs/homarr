@@ -74,6 +74,8 @@ export default {
     },
     testConnection: {
       action: "Verbindung überprüfen",
+      alertNotice:
+        "Der Button zum Speichern wird aktiviert, sobald die Verbindung erfolgreich hergestellt wurde",
       notification: {
         success: {
           title: "Verbindung erfolgreich",

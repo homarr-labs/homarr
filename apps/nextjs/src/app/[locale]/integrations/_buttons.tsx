@@ -31,6 +31,7 @@ export const DeleteIntegrationActionButton = ({
         }
         await revalidatePathAction("/integrations");
       }}
+      aria-label="Delete integration"
     >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>

@@ -18,7 +18,11 @@ import { v } from "@homarr/validation";
 import { api } from "~/trpc/react";
 import { SecretCard } from "../../_secret-card";
 import { IntegrationSecretInput } from "../../_secret-inputs";
-import { TestConnection, useTestConnectionDirty } from "../../_test-connection";
+import {
+  TestConnection,
+  TestConnectionNoticeAlert,
+  useTestConnectionDirty,
+} from "../../_test-connection";
 import { revalidatePathAction } from "../../new/action";
 
 interface EditIntegrationForm {
@@ -37,7 +41,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     })),
   };
   const { isDirty, onValuesChange, removeDirty } = useTestConnectionDirty({
-    defaultDirty: false,
+    defaultDirty: true,
     initialFormValue: initialFormValues,
   });
 
@@ -85,6 +89,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   return (
     <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
       <Stack>
+        <TestConnectionNoticeAlert />
+
         <TextInput
           label={t("integration.field.name.label")}
           {...form.getInputProps("name")}

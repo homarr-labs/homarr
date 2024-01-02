@@ -74,6 +74,8 @@ export default {
     },
     testConnection: {
       action: "Test connection",
+      alertNotice:
+        "The Save button is enabled once a successful connection is established",
       notification: {
         success: {
           title: "Connection successful",

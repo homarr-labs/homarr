@@ -151,6 +151,7 @@ const IntegrationList = async ({
                             href={`/integrations/edit/${integration.id}`}
                             variant="subtle"
                             color="gray"
+                            aria-label="Edit integration"
                           >
                             <IconPencil size={16} stroke={1.5} />
                           </ActionIcon>

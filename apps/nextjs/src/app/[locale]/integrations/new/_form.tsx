@@ -17,7 +17,11 @@ import { v } from "@homarr/validation";
 
 import { api } from "~/trpc/react";
 import { IntegrationSecretInput } from "../_secret-inputs";
-import { TestConnection, useTestConnectionDirty } from "../_test-connection";
+import {
+  TestConnection,
+  TestConnectionNoticeAlert,
+  useTestConnectionDirty,
+} from "../_test-connection";
 import { revalidatePathAction } from "./action";
 
 interface NewIntegrationFormProps {
@@ -81,6 +85,8 @@ export const NewIntegrationForm = ({
   return (
     <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
       <Stack>
+        <TestConnectionNoticeAlert />
+
         <TextInput
           label={t("integration.field.name.label")}
           {...form.getInputProps("name")}

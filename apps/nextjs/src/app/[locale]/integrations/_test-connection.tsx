@@ -7,8 +7,16 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
-import { Anchor, Group, IconCheck, IconX, Loader } from "@homarr/ui";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import {
+  Alert,
+  Anchor,
+  Group,
+  IconCheck,
+  IconInfoCircle,
+  IconX,
+  Loader,
+} from "@homarr/ui";
 
 import { api } from "~/trpc/react";
 
@@ -134,4 +142,18 @@ const TestConnectionIcon = ({
   if (isSuccess) return <IconCheck size={size} stroke={1.5} color="green" />;
   if (isError) return <IconX size={size} stroke={1.5} color="red" />;
   return null;
+};
+
+export const TestConnectionNoticeAlert = () => {
+  const t = useI18n();
+  return (
+    <Alert
+      variant="light"
+      color="yellow"
+      title="Test Connection"
+      icon={<IconInfoCircle />}
+    >
+      {t("integration.testConnection.alertNotice")}
+    </Alert>
+  );
 };
