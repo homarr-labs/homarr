@@ -68,12 +68,9 @@ importers:
       '@mantine/hooks':
         specifier: ^7.3.2
         version: 7.3.2(react@18.2.0)
-<<<<<<< HEAD
-=======
       '@mantine/modals':
         specifier: ^7.3.2
         version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(react-dom@18.2.0)(react@18.2.0)
->>>>>>> 7b8896e (feat: add confirm modals for integration deletion and secret card cancellation, change ordering for list page, add name property to integrations)
       '@mantine/tiptap':
         specifier: ^7.3.2
         version: 7.3.2(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(@tabler/icons-react@2.42.0)(@tiptap/extension-link@2.1.13)(react-dom@18.2.0)(react@18.2.0)
