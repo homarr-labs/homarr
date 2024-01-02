@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { integrationKinds } from "@homarr/definitions";
+import { getScopedI18n } from "@homarr/translation/server";
 import { Container, Group, Stack, Title } from "@homarr/ui";
 import type { v } from "@homarr/validation";
 import { z } from "@homarr/validation";
@@ -15,7 +16,7 @@ interface NewIntegrationPageProps {
   };
 }
 
-export default function IntegrationsNewPage({
+export default async function IntegrationsNewPage({
   searchParams,
 }: NewIntegrationPageProps) {
   const result = z
@@ -25,6 +26,8 @@ export default function IntegrationsNewPage({
     notFound();
   }
 
+  const t = await getScopedI18n("integration.page.create");
+
   const currentKind = result.data;
 
   return (
@@ -32,7 +35,7 @@ export default function IntegrationsNewPage({
       <Stack>
         <Group align="center">
           <IntegrationAvatar kind={currentKind} size="md" />
-          <Title>New {currentKind} integration</Title>
+          <Title>{t("title", { name: currentKind })}</Title>
         </Group>
         <NewIntegrationForm searchParams={searchParams} />
       </Stack>

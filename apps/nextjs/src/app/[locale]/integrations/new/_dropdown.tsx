@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { capitalize } from "@homarr/common";
 import { integrationKinds } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 import {
   Group,
   IconSearch,
@@ -18,6 +19,7 @@ import {
 import { IntegrationAvatar } from "../_avatar";
 
 export const IntegrationCreateDropdownContent = () => {
+  const t = useI18n();
   const [search, setSearch] = useState("");
 
   const filteredKinds = useMemo(() => {
@@ -30,7 +32,7 @@ export const IntegrationCreateDropdownContent = () => {
     <Stack>
       <TextInput
         leftSection={<IconSearch stroke={1.5} size={20} />}
-        placeholder="Search integrations"
+        placeholder={t("integration.page.list.search")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -51,7 +53,7 @@ export const IntegrationCreateDropdownContent = () => {
           ))}
         </ScrollArea.Autosize>
       ) : (
-        <Menu.Item disabled>No results found</Menu.Item>
+        <Menu.Item disabled>{t("common.noResults")}</Menu.Item>
       )}
     </Stack>
   );

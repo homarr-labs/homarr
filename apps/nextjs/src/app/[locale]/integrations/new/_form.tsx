@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getSecretKinds } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { v } from "@homarr/validation";
@@ -24,6 +25,7 @@ interface NewIntegrationFormProps {
 export const NewIntegrationForm = ({
   searchParams,
 }: NewIntegrationFormProps) => {
+  const t = useI18n();
   const secretKinds = getSecretKinds(searchParams.kind);
   const initialFormValues = {
     name: searchParams.name ?? "",
@@ -57,11 +59,17 @@ export const NewIntegrationForm = ({
   return (
     <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
       <Stack>
-        <TextInput label="Name" {...form.getInputProps("name")} />
+        <TextInput
+          label={t("integration.field.name.label")}
+          {...form.getInputProps("name")}
+        />
 
-        <TextInput label="Url" {...form.getInputProps("url")} />
+        <TextInput
+          label={t("integration.field.url.label")}
+          {...form.getInputProps("url")}
+        />
 
-        <Fieldset legend="Secrets">
+        <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
             {secretKinds.map((kind, index) => (
               <IntegrationSecretInput
@@ -86,10 +94,10 @@ export const NewIntegrationForm = ({
 
           <Group>
             <Button variant="default" component={Link} href="/integrations">
-              Back to overview
+              {t("common.action.backToOverview")}
             </Button>
             <Button type="submit" loading={isPending}>
-              Create
+              {t("common.action.create")}
             </Button>
           </Group>
         </Group>

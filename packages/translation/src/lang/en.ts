@@ -1,3 +1,5 @@
+import "dayjs/locale/en";
+
 export default {
   user: {
     page: {
@@ -25,6 +27,61 @@ export default {
       login: "Login",
       create: "Create user",
     },
+  },
+  integration: {
+    page: {
+      list: {
+        title: "Integrations",
+        search: "Search integrations",
+      },
+      create: {
+        title: "New {name} integration",
+      },
+      edit: {
+        title: "Edit {name} integration",
+      },
+    },
+    field: {
+      name: {
+        label: "Name",
+      },
+      url: {
+        label: "Url",
+      },
+    },
+    action: {
+      create: "New integration",
+      testConnection: "Test connection",
+    },
+    secrets: {
+      title: "Secrets",
+      lastUpdated: "Last updated {date}",
+      secureNotice: "This secret cannot be retrieved after creation",
+      kind: {
+        username: {
+          label: "Username",
+          newLabel: "New username",
+        },
+        apiKey: {
+          label: "API Key",
+          newLabel: "New API Key",
+        },
+        password: {
+          label: "Password",
+          newLabel: "New password",
+        },
+      },
+    },
+  },
+  common: {
+    action: {
+      backToOverview: "Back to overview",
+      create: "Create",
+      edit: "Edit",
+      save: "Save",
+      cancel: "Cancel",
+    },
+    noResults: "No results found",
   },
   widget: {
     clock: {

@@ -1,49 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 
 import type { RouterOutputs } from "@homarr/api";
-import {
-  getSecretKinds,
-  integrationSecretKindObject,
-} from "@homarr/definitions";
+import { getSecretKinds } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  Card,
-  Collapse,
-  Fieldset,
-  Group,
-  IconEye,
-  IconEyeOff,
-  Kbd,
-  Stack,
-  Text,
-  TextInput,
-} from "@homarr/ui";
+import { useI18n } from "@homarr/translation/client";
+import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { v } from "@homarr/validation";
 
 import { api } from "~/trpc/react";
-import { integrationSecretIcons } from "../../_secret-icons";
+import { SecretCard } from "../../_secret-card";
 import { IntegrationSecretInput } from "../../_secret-inputs";
 import { TestConnection, useTestConnectionDirty } from "../../_test-connection";
 import { revalidatePathAction } from "../../new/action";
-
-dayjs.extend(relativeTime);
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
 }
 
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
+  const t = useI18n();
   const secretsKinds = getSecretKinds(integration.kind);
   const initialFormValues = {
     name: integration.name,
@@ -84,11 +63,17 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   return (
     <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
       <Stack>
-        <TextInput label="Name" {...form.getInputProps("name")} />
+        <TextInput
+          label={t("integration.field.name.label")}
+          {...form.getInputProps("name")}
+        />
 
-        <TextInput label="Url" {...form.getInputProps("url")} />
+        <TextInput
+          label={t("integration.field.url.label")}
+          {...form.getInputProps("url")}
+        />
 
-        <Fieldset legend="Secrets">
+        <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
             {secretsKinds.map((kind, index) => (
               <SecretCard
@@ -104,7 +89,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                 }}
               >
                 <IntegrationSecretInput
-                  label={`New ${kind}`}
+                  label={t(`integration.secrets.kind.${kind}.newLabel`)}
                   key={kind}
                   kind={kind}
                   {...form.getInputProps(`secrets.${index}.value`)}
@@ -126,76 +111,15 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           />
           <Group>
             <Button variant="default" component={Link} href="/integrations">
-              Back to overview
+              {t("common.action.backToOverview")}
             </Button>
             <Button type="submit" loading={isPending} disabled={isDirty}>
-              Update
+              {t("common.action.save")}
             </Button>
           </Group>
         </Group>
       </Stack>
     </form>
-  );
-};
-
-interface SecretCardProps {
-  secret: RouterOutputs["integration"]["byId"]["secrets"][number];
-  children: React.ReactNode;
-  onCancel: () => Promise<boolean>;
-}
-
-const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
-  const { isPublic } = integrationSecretKindObject[secret.kind];
-  const [publicSecretDisplayOpened, { toggle: togglePublicSecretDisplay }] =
-    useDisclosure(false);
-  const [editMode, setEditMode] = useState(false);
-  const DisplayIcon = publicSecretDisplayOpened ? IconEye : IconEyeOff;
-  const KindIcon = integrationSecretIcons[secret.kind];
-
-  return (
-    <Card>
-      <Stack>
-        <Group justify="space-between">
-          <Group>
-            <Avatar>
-              <KindIcon size={16} />
-            </Avatar>
-            <Text fw={500}>{secret.kind}</Text>
-            {publicSecretDisplayOpened ? <Kbd>{secret.value}</Kbd> : null}
-          </Group>
-          <Group>
-            <Text c="gray.6" size="sm">
-              Last updated {dayjs().to(dayjs(secret.updatedAt))}
-            </Text>
-            {isPublic ? (
-              <ActionIcon
-                color="gray"
-                variant="subtle"
-                onClick={togglePublicSecretDisplay}
-              >
-                <DisplayIcon size={16} stroke={1.5} />
-              </ActionIcon>
-            ) : null}
-            <Button
-              variant="default"
-              onClick={async () => {
-                if (!editMode) {
-                  setEditMode(true);
-                  return;
-                }
-
-                const shouldCancel = await onCancel();
-                if (!shouldCancel) return;
-                setEditMode(false);
-              }}
-            >
-              {editMode ? "Cancel" : "Edit"}
-            </Button>
-          </Group>
-        </Group>
-        <Collapse in={editMode}>{children}</Collapse>
-      </Stack>
-    </Card>
   );
 };
 

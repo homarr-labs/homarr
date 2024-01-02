@@ -7,6 +7,7 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Anchor, Group, IconCheck, IconX, Loader } from "@homarr/ui";
 
 import { api } from "~/trpc/react";
@@ -63,6 +64,7 @@ export const TestConnection = ({
   removeDirty,
   isDirty,
 }: TestConnectionProps) => {
+  const t = useScopedI18n("integration.action");
   const { mutateAsync, ...mutation } =
     api.integration.testConnection.useMutation();
 
@@ -100,7 +102,7 @@ export const TestConnection = ({
           });
         }}
       >
-        Test connection
+        {t("testConnection")}
       </Anchor>
       <TestConnectionIcon isDirty={isDirty} {...mutation} size={20} />
     </Group>

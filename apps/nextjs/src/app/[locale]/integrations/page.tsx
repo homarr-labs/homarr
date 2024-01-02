@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { RouterOutputs } from "@homarr/api";
 import { capitalize, objectEntries } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
+import { getScopedI18n } from "@homarr/translation/server";
 import {
   AccordionControl,
   AccordionItem,
@@ -46,12 +47,13 @@ export default async function IntegrationsPage({
   searchParams,
 }: IntegrationsPageProps) {
   const integrations = await api.integration.all.query();
+  const t = await getScopedI18n("integration");
 
   return (
     <Container>
       <Stack>
         <Group justify="space-between" align="center">
-          <Title>Integrations</Title>
+          <Title>{t("page.list.title")}</Title>
           <Menu
             width={256}
             trapFocus
@@ -62,7 +64,7 @@ export default async function IntegrationsPage({
           >
             <MenuTarget>
               <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>
-                New integration
+                {t("action.create")}
               </Button>
             </MenuTarget>
             <MenuDropdown>
@@ -85,7 +87,12 @@ interface IntegrationListProps {
   activeTab?: IntegrationKind;
 }
 
-const IntegrationList = ({ integrations, activeTab }: IntegrationListProps) => {
+const IntegrationList = async ({
+  integrations,
+  activeTab,
+}: IntegrationListProps) => {
+  const t = await getScopedI18n("integration");
+
   if (integrations.length === 0) {
     return <div>No integrations</div>;
   }
@@ -117,8 +124,8 @@ const IntegrationList = ({ integrations, activeTab }: IntegrationListProps) => {
             <Table>
               <TableThead>
                 <TableTr>
-                  <TableTh>Name</TableTh>
-                  <TableTh>Url</TableTh>
+                  <TableTh>{t("field.name.label")}</TableTh>
+                  <TableTh>{t("field.url.label")}</TableTh>
                   <TableTh />
                 </TableTr>
               </TableThead>
