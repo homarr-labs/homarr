@@ -58,4 +58,41 @@ export default {
       nothingFound: "Nothing found",
     },
   },
+  management: {
+    metaTitle: "Management",
+    title: {
+      morning: "Good morning, {username}",
+      afternoon: "Good afternoon, {username}",
+      evening: "Good evening, {username}",
+    },
+    navbar: {
+      items: {
+        home: "Home",
+        boards: "Boards",
+        users: {
+          label: "Users",
+          items: {
+            manage: "Manage",
+            invites: "Invites",
+          },
+        },
+        tools: {
+          label: "Tools",
+          items: {
+            docker: "Docker",
+          },
+        },
+        help: {
+          label: "Help",
+          items: {
+            documentation: "Documentation",
+            submitIssue: "Submit an issue",
+            discord: "Community Discord",
+            sourceCode: "Source Code",
+          },
+        },
+        about: "About",
+      },
+    },
+  },
 } as const;
