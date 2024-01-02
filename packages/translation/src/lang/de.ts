@@ -148,6 +148,10 @@ export default {
       confirm: "Bestätigen",
     },
     noResults: "Keine Ergebnisse gefunden",
+    search: {
+      placeholder: "Suche nach etwas...",
+      nothingFound: "Nichts gefunden",
+    },
   },
   widget: {
     clock: {
@@ -173,12 +177,6 @@ export default {
           label: "Stadt anzeigen",
         },
       },
-    },
-  },
-  common: {
-    search: {
-      placeholder: "Suche nach etwas...",
-      nothingFound: "Nichts gefunden",
     },
   },
 } as const;

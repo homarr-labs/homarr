@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { modals } from "@mantine/modals";
 
 import {
   showErrorNotification,
@@ -12,6 +11,7 @@ import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { api } from "~/trpc/react";
 import { revalidatePathAction } from "../../revalidatePathAction";
+import { modalEvents } from "../modals";
 
 interface DeleteIntegrationActionButtonProps {
   count: number;
@@ -32,7 +32,7 @@ export const DeleteIntegrationActionButton = ({
       variant="subtle"
       color="red"
       onClick={() => {
-        modals.openConfirmModal({
+        modalEvents.openConfirmModal({
           title: t("title"),
           children: t("message", integration),
           onConfirm: () => {

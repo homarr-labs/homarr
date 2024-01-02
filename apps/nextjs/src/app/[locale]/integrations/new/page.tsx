@@ -4,14 +4,14 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Container, Group, Stack, Title } from "@homarr/ui";
-import type { v } from "@homarr/validation";
+import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
 import { IntegrationAvatar } from "../_avatar";
 import { NewIntegrationForm } from "./_form";
 
 interface NewIntegrationPageProps {
-  searchParams: Partial<z.infer<typeof v.integration.create>> & {
+  searchParams: Partial<z.infer<typeof validation.integration.create>> & {
     kind: IntegrationKind;
   };
 }

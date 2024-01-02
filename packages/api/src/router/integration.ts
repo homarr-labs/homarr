@@ -9,7 +9,7 @@ import {
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
-import { v } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -29,7 +29,7 @@ export const integrationRouter = createTRPCRouter({
       );
   }),
   byId: publicProcedure
-    .input(v.integration.byId)
+    .input(validation.integration.byId)
     .query(async ({ ctx, input }) => {
       const integration = await ctx.db.query.integrations.findFirst({
         where: eq(integrations.id, input.id),
@@ -67,7 +67,7 @@ export const integrationRouter = createTRPCRouter({
       };
     }),
   create: publicProcedure
-    .input(v.integration.create)
+    .input(validation.integration.create)
     .mutation(async ({ ctx, input }) => {
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
@@ -87,7 +87,7 @@ export const integrationRouter = createTRPCRouter({
       }
     }),
   update: publicProcedure
-    .input(v.integration.update)
+    .input(validation.integration.update)
     .mutation(async ({ ctx, input }) => {
       const integration = await ctx.db.query.integrations.findFirst({
         where: eq(integrations.id, input.id),
@@ -142,7 +142,7 @@ export const integrationRouter = createTRPCRouter({
       }
     }),
   delete: publicProcedure
-    .input(v.integration.delete)
+    .input(validation.integration.delete)
     .mutation(async ({ ctx, input }) => {
       const integration = await ctx.db.query.integrations.findFirst({
         where: eq(integrations.id, input.id),
@@ -158,7 +158,7 @@ export const integrationRouter = createTRPCRouter({
       await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
     }),
   testConnection: publicProcedure
-    .input(v.integration.testConnection)
+    .input(validation.integration.testConnection)
     .mutation(async ({ ctx, input }) => {
       const secretKinds = getSecretKinds(input.kind);
       const secrets = input.secrets.filter(

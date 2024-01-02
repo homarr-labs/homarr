@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { modals } from "@mantine/modals";
 
 import type { RouterOutputs } from "@homarr/api";
 import { getSecretKinds } from "@homarr/definitions";
@@ -14,8 +13,9 @@ import {
 import { useI18n } from "@homarr/translation/client";
 import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
-import { v } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
+import { modalEvents } from "~/app/[locale]/modals";
 import { api } from "~/trpc/react";
 import { SecretCard } from "../../_secret-card";
 import { IntegrationSecretInput } from "../../_secret-inputs";
@@ -49,7 +49,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const router = useRouter();
   const form = useForm<FormType>({
     initialValues: initialFormValues,
-    validate: zodResolver(v.integration.update.omit({ id: true, kind: true })),
+    validate: zodResolver(
+      validation.integration.update.omit({ id: true, kind: true }),
+    ),
     onValuesChange,
   });
   const { mutateAsync, isPending } = api.integration.update.useMutation();
@@ -117,7 +119,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                     ) {
                       return res(true);
                     }
-                    modals.openConfirmModal({
+                    modalEvents.openConfirmModal({
                       title: t("integration.secrets.reset.title"),
                       children: t("integration.secrets.reset.message"),
                       onCancel: () => res(false),
@@ -167,4 +169,4 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   );
 };
 
-type FormType = Omit<z.infer<typeof v.integration.update>, "id">;
+type FormType = Omit<z.infer<typeof validation.integration.update>, "id">;

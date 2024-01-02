@@ -146,6 +146,10 @@ export default {
       cancel: "Cancel",
       confirm: "Confirm",
     },
+    search: {
+      placeholder: "Search for anything...",
+      nothingFound: "Nothing found",
+    },
     noResults: "No results found",
   },
   widget: {
@@ -172,12 +176,6 @@ export default {
           label: "Show city",
         },
       },
-    },
-  },
-  common: {
-    search: {
-      placeholder: "Search for anything...",
-      nothingFound: "Nothing found",
     },
   },
 } as const;

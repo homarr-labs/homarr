@@ -13,7 +13,7 @@ import {
 import { useI18n } from "@homarr/translation/client";
 import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
-import { v } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { api } from "~/trpc/react";
 import { IntegrationSecretInput } from "../_secret-inputs";
@@ -25,7 +25,7 @@ import {
 import { revalidatePathAction } from "../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
-  searchParams: Partial<z.infer<typeof v.integration.create>> & {
+  searchParams: Partial<z.infer<typeof validation.integration.create>> & {
     kind: IntegrationKind;
   };
 }
@@ -50,7 +50,7 @@ export const NewIntegrationForm = ({
   const router = useRouter();
   const form = useForm<FormType>({
     initialValues: initialFormValues,
-    validate: zodResolver(v.integration.create.omit({ kind: true })),
+    validate: zodResolver(validation.integration.create.omit({ kind: true })),
     onValuesChange,
   });
   const { mutateAsync, isPending } = api.integration.create.useMutation();
@@ -134,4 +134,4 @@ export const NewIntegrationForm = ({
   );
 };
 
-type FormType = Omit<z.infer<typeof v.integration.create>, "kind">;
+type FormType = Omit<z.infer<typeof validation.integration.create>, "kind">;
