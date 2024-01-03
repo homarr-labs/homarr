@@ -19,7 +19,7 @@ export const WidgetSelectInput = ({
       label={t("label")}
       data={options.options as unknown as string[]}
       description={options.withDescription ? t("description") : undefined}
-      {...form.getInputProps(property)}
+      {...form.getInputProps(`options.${property}`)}
     />
   );
 };

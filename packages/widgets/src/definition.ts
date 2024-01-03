@@ -1,5 +1,6 @@
 import type { LoaderComponent } from "next/dynamic";
 
+import type { IntegrationKind } from "@homarr/definitions";
 import type { TablerIconsProps } from "@homarr/ui";
 
 import type { WidgetImports, WidgetSort } from ".";
@@ -28,12 +29,24 @@ export const createWidgetDefinition = <
 
 interface Definition {
   icon: (props: TablerIconsProps) => JSX.Element;
+  supportedIntegrations?: IntegrationKind[];
   options: WidgetOptionsRecord;
 }
 
 export interface WidgetComponentProps<TSort extends WidgetSort> {
   options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>;
-  integrations: unknown[];
+  integrations: WidgetImports[TSort]["definition"] extends {
+    supportedIntegrations: infer TSupportedIntegrations;
+  }
+    ? TSupportedIntegrations extends IntegrationKind[]
+      ? {
+          id: string;
+          name: string;
+          url: string;
+          kind: TSupportedIntegrations[number];
+        }[]
+      : never[]
+    : never[];
 }
 
 export type WidgetOptionsRecordOf<TSort extends WidgetSort> =

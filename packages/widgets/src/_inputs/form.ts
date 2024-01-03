@@ -2,5 +2,7 @@
 
 import { createFormContext } from "@homarr/form";
 
+import type { WidgetEditModalState } from "../WidgetEditModal";
+
 export const [FormProvider, useFormContext, useForm] =
-  createFormContext<Record<string, unknown>>();
+  createFormContext<WidgetEditModalState>();
