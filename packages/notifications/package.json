@@ -24,11 +24,11 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.53.0",
+    "eslint": "^8.56.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@mantine/notifications": "7.3.2",
+    "@mantine/notifications": "^7.4.0",
     "@homarr/ui": "workspace:^0.1.0"
   },
   "eslintConfig": {
