@@ -7,8 +7,8 @@ import { Container, Group, Stack, Title } from "@homarr/ui";
 import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
-import { IntegrationAvatar } from "../_avatar";
-import { NewIntegrationForm } from "./_form";
+import { IntegrationAvatar } from "../_integration-avatar";
+import { NewIntegrationForm } from "./_integration-new-form";
 
 interface NewIntegrationPageProps {
   searchParams: Partial<z.infer<typeof validation.integration.create>> & {

@@ -23,7 +23,7 @@ import {
   Text,
 } from "@homarr/ui";
 
-import { integrationSecretIcons } from "./_secret-icons";
+import { integrationSecretIcons } from "./_integration-secret-icons";
 
 dayjs.extend(relativeTime);
 

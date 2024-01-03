@@ -10,8 +10,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { api } from "~/trpc/react";
-import { revalidatePathAction } from "../../revalidatePathAction";
-import { modalEvents } from "../modals";
+import { revalidatePathAction } from "../../../revalidatePathAction";
+import { modalEvents } from "../../modals";
 
 interface DeleteIntegrationActionButtonProps {
   count: number;

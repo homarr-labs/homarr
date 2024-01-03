@@ -33,10 +33,10 @@ import {
 } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
-import { IntegrationGroupAccordion } from "./_accordion";
-import { IntegrationAvatar } from "./_avatar";
-import { DeleteIntegrationActionButton } from "./_buttons";
-import { IntegrationCreateDropdownContent } from "./new/_dropdown";
+import { IntegrationGroupAccordion } from "./_integration-accordion";
+import { IntegrationAvatar } from "./_integration-avatar";
+import { DeleteIntegrationActionButton } from "./_integration-buttons";
+import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
 
 interface IntegrationsPageProps {
   searchParams: {

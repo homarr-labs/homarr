@@ -15,7 +15,7 @@ import {
   TextInput,
 } from "@homarr/ui";
 
-import { IntegrationAvatar } from "../_avatar";
+import { IntegrationAvatar } from "../_integration-avatar";
 
 export const IntegrationCreateDropdownContent = () => {
   const t = useI18n();

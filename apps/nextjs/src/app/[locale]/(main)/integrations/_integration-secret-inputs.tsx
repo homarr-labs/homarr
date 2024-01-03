@@ -7,7 +7,7 @@ import type { IntegrationSecretKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { PasswordInput, TextInput } from "@homarr/ui";
 
-import { integrationSecretIcons } from "./_secret-icons";
+import { integrationSecretIcons } from "./_integration-secret-icons";
 
 interface IntegrationSecretInputProps {
   label?: string;

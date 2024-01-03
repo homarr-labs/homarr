@@ -16,13 +16,13 @@ import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { api } from "~/trpc/react";
-import { IntegrationSecretInput } from "../_secret-inputs";
+import { IntegrationSecretInput } from "../_integration-secret-inputs";
 import {
   TestConnection,
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
-} from "../_test-connection";
-import { revalidatePathAction } from "../../../revalidatePathAction";
+} from "../_integration-test-connection";
+import { revalidatePathAction } from "../../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof validation.integration.create>> & {

@@ -5,7 +5,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
 import { LogoWithTitle } from "~/components/layout/logo";
-import { InitUserForm } from "./_components/init-user-form";
+import { InitUserForm } from "./_init-user-form";
 
 export default async function InitUser() {
   const firstUser = await db.query.users.findFirst({

@@ -3,8 +3,8 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Container, Group, Stack, Title } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
-import { IntegrationAvatar } from "../../_avatar";
-import { EditIntegrationForm } from "./_form";
+import { IntegrationAvatar } from "../../_integration-avatar";
+import { EditIntegrationForm } from "./_integration-edit-form";
 
 interface EditIntegrationPageProps {
   params: { id: string };

@@ -17,14 +17,14 @@ import { validation } from "@homarr/validation";
 
 import { modalEvents } from "~/app/[locale]/modals";
 import { api } from "~/trpc/react";
-import { SecretCard } from "../../_secret-card";
-import { IntegrationSecretInput } from "../../_secret-inputs";
+import { SecretCard } from "../../_integration-secret-card";
+import { IntegrationSecretInput } from "../../_integration-secret-inputs";
 import {
   TestConnection,
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
-} from "../../_test-connection";
-import { revalidatePathAction } from "../../../../revalidatePathAction";
+} from "../../_integration-test-connection";
+import { revalidatePathAction } from "../../../../../revalidatePathAction";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];

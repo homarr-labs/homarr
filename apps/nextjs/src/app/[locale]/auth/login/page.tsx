@@ -2,7 +2,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
 import { LogoWithTitle } from "~/components/layout/logo";
-import { LoginForm } from "./_components/login-form";
+import { LoginForm } from "./_login-form";
 
 export default async function Login() {
   const t = await getScopedI18n("user.page.login");
