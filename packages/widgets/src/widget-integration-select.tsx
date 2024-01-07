@@ -4,6 +4,7 @@ import type { FocusEventHandler } from "react";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIconUrl } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 import {
   Avatar,
   CheckIcon,
@@ -36,6 +37,7 @@ export const WidgetIntegrationSelect = ({
   value: valueProp,
   ...props
 }: WidgetIntegrationSelectProps) => {
+  const t = useI18n();
   const value = valueProp ?? [];
 
   const combobox = useCombobox({
@@ -98,7 +100,9 @@ export const WidgetIntegrationSelect = ({
             {values.length > 0 ? (
               values
             ) : (
-              <Input.Placeholder>Pick one or more values</Input.Placeholder>
+              <Input.Placeholder>
+                {t("common.multiSelect.placeholder")}
+              </Input.Placeholder>
             )}
 
             <Combobox.EventsTarget>

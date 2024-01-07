@@ -3,6 +3,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { ManagedModal } from "mantine-modal-manager";
 
+import { useScopedI18n } from "@homarr/translation/client";
 import { Button, Group, Stack } from "@homarr/ui";
 
 import type { WidgetSort } from "..";
@@ -30,6 +31,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
   actions,
   innerProps,
 }) => {
+  const t = useScopedI18n("widget.editModal");
   const [value, setValue] = innerProps.state;
   const form = useForm({
     initialValues: value,
@@ -46,7 +48,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
         <Stack>
           {innerProps.integrationSupport && (
             <WidgetIntegrationSelect
-              label="Integrations"
+              label={t("integrations.label")}
               data={innerProps.integrationData}
               {...form.getInputProps("integrations")}
             />
