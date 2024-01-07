@@ -1,8 +1,15 @@
+import { Stack } from "@homarr/ui";
+
 import type { WidgetComponentProps } from "../definition";
 
 export default function ClockWidget({
   options,
-  integrations: _,
+  integrations,
 }: WidgetComponentProps<"clock">) {
-  return <pre>{JSON.stringify(options)}</pre>;
+  return (
+    <Stack>
+      <pre>{JSON.stringify(integrations)}</pre>
+      <pre>{JSON.stringify(options)}</pre>
+    </Stack>
+  );
 }

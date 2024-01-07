@@ -8,6 +8,7 @@ import type {
   inferOptionsFromDefinition,
   WidgetOptionsRecord,
 } from "./options";
+import type { IntegrationSelectOption } from "./widget-integration-select";
 
 export const createWidgetDefinition = <
   TSort extends WidgetSort,
@@ -45,8 +46,8 @@ export interface WidgetComponentProps<TSort extends WidgetSort> {
           url: string;
           kind: TSupportedIntegrations[number];
         }[]
-      : never[]
-    : never[];
+      : IntegrationSelectOption[]
+    : IntegrationSelectOption[];
 }
 
 export type WidgetOptionsRecordOf<TSort extends WidgetSort> =

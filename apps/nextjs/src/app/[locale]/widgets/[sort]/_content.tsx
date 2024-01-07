@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import type { WidgetOptionDefinition } from "node_modules/@homarr/widgets/src/options";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { ActionIcon, Affix, IconPencil } from "@homarr/ui";
-import { loadWidgetDynamic, widgetImports } from "@homarr/widgets";
 import type { WidgetSort } from "@homarr/widgets";
+import {
+  loadWidgetDynamic,
+  reduceWidgetOptionsWithDefaultValues,
+  widgetImports,
+} from "@homarr/widgets";
 
 import { modalEvents } from "../../modals";
 
@@ -23,19 +28,28 @@ export const WidgetPreviewPageContent = ({
   sort,
   integrationData,
 }: WidgetPreviewPageContentProps) => {
+  const currentDefinition = widgetImports[sort].definition;
+  const options = currentDefinition.options as Record<
+    string,
+    WidgetOptionDefinition
+  >;
   const [state, setState] = useState<{
     options: Record<string, unknown>;
-    integrations: { id: string }[];
-  }>({ options: {}, integrations: [] });
+    integrations: string[];
+  }>({
+    options: reduceWidgetOptionsWithDefaultValues(options),
+    integrations: [],
+  });
 
   const Comp = loadWidgetDynamic(sort);
-  const currentDefinition = widgetImports[sort].definition;
 
   return (
     <>
       <Comp
         options={state.options as never}
-        integrations={state.integrations as never[]}
+        integrations={state.integrations.map(
+          (id) => integrationData.find((x) => x.id === id)!,
+        )}
       />
       <Affix bottom={12} right={72}>
         <ActionIcon
@@ -56,6 +70,8 @@ export const WidgetPreviewPageContent = ({
                       (kind) => kind === integration.kind,
                     ),
                 ),
+                integrationSupport:
+                  "supportedIntegrations" in currentDefinition,
               },
             });
           }}

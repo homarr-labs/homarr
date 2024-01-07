@@ -3,30 +3,27 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { ManagedModal } from "mantine-modal-manager";
 
-import type { IntegrationKind } from "@homarr/definitions";
 import { Button, Group, Stack } from "@homarr/ui";
 
-import type { WidgetSort } from ".";
-import { getInputForType } from "./_inputs";
-import { FormProvider, useForm } from "./_inputs/form";
-import type { WidgetOptionsRecordOf } from "./definition";
-import type { WidgetOptionDefinition } from "./options";
+import type { WidgetSort } from "..";
+import { getInputForType } from "../_inputs";
+import { FormProvider, useForm } from "../_inputs/form";
+import type { WidgetOptionsRecordOf } from "../definition";
+import type { WidgetOptionDefinition } from "../options";
+import { WidgetIntegrationSelect } from "../widget-integration-select";
+import type { IntegrationSelectOption } from "../widget-integration-select";
 
 export interface WidgetEditModalState {
   options: Record<string, unknown>;
-  integrations: { id: string }[];
+  integrations: string[];
 }
 
 interface ModalProps<TSort extends WidgetSort> {
   sort: TSort;
   state: [WidgetEditModalState, Dispatch<SetStateAction<WidgetEditModalState>>];
   definition: WidgetOptionsRecordOf<TSort>;
-  integrationData: {
-    id: string;
-    name: string;
-    url: string;
-    kind: IntegrationKind;
-  }[];
+  integrationData: IntegrationSelectOption[];
+  integrationSupport: boolean;
 }
 
 export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
@@ -47,7 +44,13 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
     >
       <FormProvider form={form}>
         <Stack>
-          <pre>{JSON.stringify(innerProps.integrationData, null, 2)}</pre>
+          {innerProps.integrationSupport && (
+            <WidgetIntegrationSelect
+              label="Integrations"
+              data={innerProps.integrationData}
+              {...form.getInputProps("integrations")}
+            />
+          )}
           {Object.entries(innerProps.definition).map(
             ([key, value]: [string, WidgetOptionDefinition]) => {
               const Input = getInputForType(value.type);
