@@ -12,7 +12,7 @@ import { integrationSecretIcons } from "./_integration-secret-icons";
 interface IntegrationSecretInputProps {
   label?: string;
   kind: IntegrationSecretKind;
-  value: string;
+  value?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;

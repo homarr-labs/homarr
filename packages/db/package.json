@@ -18,7 +18,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "better-sqlite3": "^9.2.2",
-    "drizzle-orm": "^0.29.1"
+    "drizzle-orm": "^0.29.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -26,8 +26,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.8",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.20.6",
-    "eslint": "^8.53.0",
+    "drizzle-kit": "^0.20.9",
+    "eslint": "^8.56.0",
     "prettier": "^3.1.0",
     "typescript": "^5.3.3"
   },
