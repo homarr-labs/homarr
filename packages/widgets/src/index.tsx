@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import dynamic from "next/dynamic";
 import type { Loader } from "next/dynamic";
 
@@ -21,10 +22,22 @@ export type WidgetSort = (typeof widgetSorts)[number];
 export type WidgetImports = typeof widgetImports;
 export type WidgetImportKey = keyof WidgetImports;
 
-export const loadWidgetDynamic = <TSort extends WidgetSort>(sort: TSort) =>
-  dynamic<WidgetComponentProps<TSort>>(
+const loadedComponents = new Map<
+  WidgetSort,
+  ComponentType<WidgetComponentProps<WidgetSort>>
+>();
+
+export const loadWidgetDynamic = <TSort extends WidgetSort>(sort: TSort) => {
+  const existingComponent = loadedComponents.get(sort);
+  if (existingComponent) return existingComponent;
+
+  const newlyLoadedComponent = dynamic<WidgetComponentProps<TSort>>(
     widgetImports[sort].componentLoader as Loader<WidgetComponentProps<TSort>>,
     {
       loading: () => <UiLoader />,
     },
   );
+
+  loadedComponents.set(sort, newlyLoadedComponent);
+  return newlyLoadedComponent;
+};

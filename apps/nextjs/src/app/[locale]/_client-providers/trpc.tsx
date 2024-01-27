@@ -7,8 +7,9 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
+import { clientApi } from "@homarr/api/client";
+
 import { env } from "~/env.mjs";
-import { api } from "~/trpc/react";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -33,7 +34,7 @@ export function TRPCReactProvider(props: {
   );
 
   const [trpcClient] = useState(() =>
-    api.createClient({
+    clientApi.createClient({
       transformer: superjson,
       links: [
         loggerLink({
@@ -54,13 +55,13 @@ export function TRPCReactProvider(props: {
   );
 
   return (
-    <api.Provider client={trpcClient} queryClient={queryClient}>
+    <clientApi.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryStreamedHydration transformer={superjson}>
           {props.children}
         </ReactQueryStreamedHydration>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </api.Provider>
+    </clientApi.Provider>
   );
 }

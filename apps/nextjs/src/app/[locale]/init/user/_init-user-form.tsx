@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
+import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";
 import {
   showErrorNotification,
@@ -12,12 +13,11 @@ import { Button, PasswordInput, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { api } from "~/trpc/react";
-
 export const InitUserForm = () => {
   const router = useRouter();
   const t = useScopedI18n("user");
-  const { mutateAsync, error, isPending } = api.user.initUser.useMutation();
+  const { mutateAsync, error, isPending } =
+    clientApi.user.initUser.useMutation();
   const form = useForm<FormType>({
     validate: zodResolver(validation.user.init),
     validateInputOnBlur: true,

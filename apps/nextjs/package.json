@@ -40,12 +40,14 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "dayjs": "^1.11.10",
+    "fily-publish-gridstack": "^0.0.13",
     "jotai": "^2.6.1",
     "mantine-modal-manager": "^7.4.0",
     "next": "^14.0.4",
     "postcss-preset-mantine": "^1.12.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sass": "^1.70.0",
     "superjson": "2.2.1"
   },
   "devDependencies": {
