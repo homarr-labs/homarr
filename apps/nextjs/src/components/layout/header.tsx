@@ -12,14 +12,15 @@ import { HomarrLogoWithTitle } from "./logo/homarr-logo";
 interface Props {
   logo?: ReactNode;
   actions?: ReactNode;
+  hasNavigation?: boolean;
 }
 
-export const MainHeader = ({ logo, actions }: Props) => {
+export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
   return (
     <AppShellHeader>
       <Group h="100%" gap="xl" px="md" justify="apart" wrap="nowrap">
         <Group h="100%" align="center" style={{ flex: 1 }} wrap="nowrap">
-          <ClientBurger />
+          {hasNavigation && <ClientBurger />}
           <UnstyledButton component={Link} href="/">
             {logo ?? <HomarrLogoWithTitle size="md" />}
           </UnstyledButton>

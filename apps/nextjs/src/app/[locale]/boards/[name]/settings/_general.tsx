@@ -20,7 +20,8 @@ interface Props {
 
 export const GeneralSettingsContent = ({ board }: Props) => {
   const { updateBoard } = useUpdateBoard();
-  const { mutate } = clientApi.board.saveGeneralSettings.useMutation();
+  const { mutate, isPending } =
+    clientApi.board.saveGeneralSettings.useMutation();
   const form = useForm({
     initialValues: {
       pageTitle: board.pageTitle,
@@ -74,7 +75,9 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           </Grid.Col>
         </Grid>
         <Group justify="end">
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" loading={isPending}>
+            Save changes
+          </Button>
         </Group>
       </Stack>
     </form>

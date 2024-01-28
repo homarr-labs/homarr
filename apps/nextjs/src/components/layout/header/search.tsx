@@ -4,7 +4,7 @@ import { spotlight } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 import { IconSearch, TextInput, UnstyledButton } from "@homarr/ui";
 
-import { HeaderButton } from "~/app/[locale]/boards/_headerActions";
+import { HeaderButton } from "./button";
 import classes from "./search.module.css";
 
 export const DesktopSearchInput = () => {

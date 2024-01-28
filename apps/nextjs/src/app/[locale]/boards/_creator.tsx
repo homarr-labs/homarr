@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 import type { Metadata } from "next";
 
 import { capitalize } from "@homarr/common";
@@ -13,8 +13,6 @@ import type { Board } from "./_types";
 // This is placed here because it's used in the layout and the page and because it's here it's not needed to load it everywhere
 import "../../../styles/gridstack.scss";
 
-import { HeaderBoardActions } from "./_headerActions";
-
 type Params = Record<string, unknown>;
 
 interface Props<TParams extends Params> {
@@ -28,7 +26,8 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
     layout: async ({
       params,
       children,
-    }: PropsWithChildren<{ params: TParams }>) => {
+      headeractions,
+    }: PropsWithChildren<{ params: TParams; headeractions: ReactNode }>) => {
       const initialBoard = await getInitialBoard(params);
 
       return (
@@ -36,7 +35,8 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
           <ClientShell hasNavigation={false}>
             <MainHeader
               logo={<BoardLogoWithTitle size="md" />}
-              actions={<HeaderBoardActions />}
+              actions={headeractions}
+              hasNavigation={false}
             />
             <AppShellMain>{children}</AppShellMain>
           </ClientShell>

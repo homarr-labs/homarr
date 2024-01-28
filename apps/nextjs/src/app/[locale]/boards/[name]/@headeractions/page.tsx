@@ -1,13 +1,8 @@
 "use client";
 
-import type { ForwardedRef, ReactNode } from "react";
-import { forwardRef } from "react";
-import Link from "next/link";
 import { useAtom } from "jotai";
 
-import type { ActionIconProps } from "@homarr/ui";
 import {
-  ActionIcon,
   Group,
   IconBox,
   IconBoxAlignTop,
@@ -21,9 +16,10 @@ import {
 } from "@homarr/ui";
 
 import { editModeAtom } from "~/components/board/editMode";
-import { useRequiredBoard } from "./_context";
+import { HeaderButton } from "~/components/layout/header/button";
+import { useRequiredBoard } from "../../_context";
 
-export const HeaderBoardActions = () => {
+export default function BoardViewHeaderActions() {
   const [editMode, setEditMode] = useAtom(editModeAtom);
   const board = useRequiredBoard();
 
@@ -68,45 +64,4 @@ export const HeaderBoardActions = () => {
       </HeaderButton>
     </>
   );
-};
-
-type HeaderButtonProps = (
-  | {
-      onClick: () => void;
-    }
-  | {
-      href: string;
-    }
-) & {
-  children: ReactNode;
-} & Partial<ActionIconProps>;
-
-const headerButtonActionIconProps: ActionIconProps = {
-  variant: "subtle",
-  style: { border: "none" },
-  color: "gray",
-  size: "lg",
-};
-
-// eslint-disable-next-line react/display-name
-export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>(
-  (props, ref) => {
-    if ("onClick" in props) {
-      return (
-        <ActionIcon ref={ref} {...props} {...headerButtonActionIconProps}>
-          {props.children}
-        </ActionIcon>
-      );
-    }
-    return (
-      <ActionIcon
-        ref={ref as ForwardedRef<HTMLAnchorElement>}
-        component={Link}
-        {...props}
-        {...headerButtonActionIconProps}
-      >
-        {props.children}
-      </ActionIcon>
-    );
-  },
-);
+}
