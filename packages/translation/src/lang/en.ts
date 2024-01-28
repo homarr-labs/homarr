@@ -153,6 +153,25 @@ export default {
     },
     noResults: "No results found",
   },
+  section: {
+    category: {
+      action: {
+        create: "New category",
+        edit: "Rename category",
+        remove: "Remove category",
+        moveUp: "Move up",
+        moveDown: "Move down",
+        createAbove: "New category above",
+        createBelow: "New category below",
+      },
+      menu: {
+        label: {
+          create: "New category",
+          changePosition: "Change position",
+        },
+      },
+    },
+  },
   widget: {
     clock: {
       name: "Date and time",

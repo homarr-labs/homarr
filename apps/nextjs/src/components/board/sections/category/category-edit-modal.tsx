@@ -35,7 +35,11 @@ export const CategoryEditModal: ManagedModal<InnerProps> = ({
       })}
     >
       <Stack>
-        <TextInput label="Name" {...form.getInputProps("name")} />
+        <TextInput
+          label="Name"
+          data-autofocus
+          {...form.getInputProps("name")}
+        />
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             Cancel

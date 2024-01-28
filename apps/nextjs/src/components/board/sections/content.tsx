@@ -9,6 +9,8 @@ import { Item } from "~/app/[locale]/boards/_types";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 import { modalEvents } from "~/app/[locale]/modals";
 import { useItemActions } from "../items/item-actions";
+import { useAtomValue } from "jotai";
+import { editModeAtom } from "../editMode";
 
 interface Props {
   items: Item[];
@@ -55,9 +57,14 @@ const Item = ({
 };
 
 const ItemMenu = ({ offset, item }: { offset: number, item: Item }) => {
+  const isEditMode = useAtomValue(editModeAtom);
   const { updateItemOptions, removeItem } = useItemActions();
+
+  if (!isEditMode) return null;
+
   const openEditModal = () => {
     modalEvents.openManagedModal({
+      title: "New category",
       modal: 'widgetEditModal',
       innerProps: {
         kind: item.kind,

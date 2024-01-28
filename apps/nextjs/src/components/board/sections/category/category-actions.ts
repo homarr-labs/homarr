@@ -32,7 +32,7 @@ export const useCategoryActions = () => {
 
   const addCategory = useCallback(
     ({ name, position }: AddCategory) => {
-      if (position <= 0) {
+      if (position <= -1) {
         //Consola.error('Cannot add category before first section');
         return;
       }
