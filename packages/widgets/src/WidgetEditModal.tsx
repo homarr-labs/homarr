@@ -1,44 +1,40 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import type { ManagedModal } from "mantine-modal-manager";
 
 import type { WidgetKind } from "@homarr/definitions";
 import { Button, Group, Stack } from "@homarr/ui";
 
+import { widgetImports } from ".";
 import { getInputForType } from "./_inputs";
 import { FormProvider, useForm } from "./_inputs/form";
-import type { WidgetOptionsRecordOf } from "./definition";
 import type { WidgetOptionDefinition } from "./options";
 
 interface ModalProps<TKind extends WidgetKind> {
   kind: TKind;
-  state: [
-    Record<string, unknown>,
-    Dispatch<SetStateAction<Record<string, unknown>>>,
-  ];
-  definition: WidgetOptionsRecordOf<TKind>;
+  value: Record<string, unknown>;
+  onSuccessfulEdit: (value: Record<string, unknown>) => void;
 }
 
 export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
   actions,
   innerProps,
 }) => {
-  const [value, setValue] = innerProps.state;
   const form = useForm({
-    initialValues: value,
+    initialValues: innerProps.value,
   });
+  const { definition } = widgetImports[innerProps.kind];
 
   return (
     <form
       onSubmit={form.onSubmit((v) => {
-        setValue(v);
+        innerProps.onSuccessfulEdit(v);
         actions.closeModal();
       })}
     >
       <FormProvider form={form}>
         <Stack>
-          {Object.entries(innerProps.definition).map(
+          {Object.entries(definition.options).map(
             ([key, value]: [string, WidgetOptionDefinition]) => {
               const Input = getInputForType(value.type);
 

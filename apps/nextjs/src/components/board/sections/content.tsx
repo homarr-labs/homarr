@@ -2,11 +2,13 @@
 
 import type { RefObject } from "react";
 
-import { Card } from "@homarr/ui";
+import { ActionIcon, Card, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash, Menu } from "@homarr/ui";
 import { loadWidgetDynamic } from "@homarr/widgets";
 
 import { Item } from "~/app/[locale]/boards/_types";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
+import { modalEvents } from "~/app/[locale]/modals";
+import { useItemActions } from "../items/item-actions";
 
 interface Props {
   items: Item[];
@@ -31,7 +33,7 @@ export const SectionContent = ({ items, refs }: Props) => {
           gs-max-h={4}
           ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
         >
-          <Card className="grid-stack-item-content" withBorder>
+          <Card className="grid-stack-item-content"  withBorder>
             <Item item={item} />
           </Card>
         </div>
@@ -46,5 +48,43 @@ const Item = ({
   item: Item;
 }) => {
   const Comp = loadWidgetDynamic(item.kind);
-  return <Comp options={item.options} integrations={item.integrations} />; // TODO: reduceWidgetOptionsWithDefaultValues
+  return <>
+  <ItemMenu offset={8} item={item} />
+  <Comp options={item.options} integrations={item.integrations} /> 
+  </>; // TODO: reduceWidgetOptionsWithDefaultValues
 };
+
+const ItemMenu = ({offset, item}: {offset: number, item: Item}) => {
+  const {updateItemOptions} = useItemActions();
+  const openEditModal = () => {
+    modalEvents.openManagedModal({
+      modal: 'widgetEditModal',
+      innerProps: {
+        kind: item.kind,
+        value: item.options,
+        onSuccessfulEdit: (newOptions) => {
+          updateItemOptions({
+            itemId: item.id,
+            newOptions
+          })
+        }
+      }
+    })
+  }
+
+  return <Menu withinPortal withArrow position="right-start" arrowPosition="center">
+  <Menu.Target>
+  <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset}>
+  <IconDotsVertical />
+</ActionIcon>
+  </Menu.Target>
+  <Menu.Dropdown miw={128}>
+  <Menu.Label>Settings</Menu.Label>
+  <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>Edit item</Menu.Item>
+  <Menu.Item leftSection={<IconLayoutKanban size={16} />}>Move item</Menu.Item>
+  <Menu.Divider />
+  <Menu.Label c="red.6">Danger zone</Menu.Label>
+    <Menu.Item c="red.6" leftSection={<IconTrash size={16} />}>Remove item</Menu.Item>
+  </Menu.Dropdown>
+</Menu>
+}

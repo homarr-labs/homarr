@@ -34,8 +34,8 @@ export default function WidgetPreview(props: Props) {
               modal: "widgetEditModal",
               innerProps: {
                 kind,
-                definition: widgetImports[kind].definition.options,
-                state: [options, setOptions],
+                value: options,
+                onSuccessfulEdit: (options) => setOptions(options),
               },
             });
           }}
