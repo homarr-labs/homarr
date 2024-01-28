@@ -33,7 +33,7 @@ export const SectionContent = ({ items, refs }: Props) => {
           gs-max-h={4}
           ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
         >
-          <Card className="grid-stack-item-content"  withBorder>
+          <Card className="grid-stack-item-content" withBorder>
             <Item item={item} />
           </Card>
         </div>
@@ -49,13 +49,13 @@ const Item = ({
 }) => {
   const Comp = loadWidgetDynamic(item.kind);
   return <>
-  <ItemMenu offset={8} item={item} />
-  <Comp options={item.options} integrations={item.integrations} /> 
+    <ItemMenu offset={8} item={item} />
+    <Comp options={item.options} integrations={item.integrations} />
   </>; // TODO: reduceWidgetOptionsWithDefaultValues
 };
 
-const ItemMenu = ({offset, item}: {offset: number, item: Item}) => {
-  const {updateItemOptions} = useItemActions();
+const ItemMenu = ({ offset, item }: { offset: number, item: Item }) => {
+  const { updateItemOptions, removeItem } = useItemActions();
   const openEditModal = () => {
     modalEvents.openManagedModal({
       modal: 'widgetEditModal',
@@ -72,19 +72,32 @@ const ItemMenu = ({offset, item}: {offset: number, item: Item}) => {
     })
   }
 
+  const openRemoveModal = () => {
+    modalEvents.openConfirmModal({
+      title: 'Remove item',
+      children: 'Are you sure you want to remove this item?',
+      onConfirm: () => {
+        removeItem({ itemId: item.id });
+      },
+      confirmProps: {
+        color: "red"
+      }
+    });
+  }
+
   return <Menu withinPortal withArrow position="right-start" arrowPosition="center">
-  <Menu.Target>
-  <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset}>
-  <IconDotsVertical />
-</ActionIcon>
-  </Menu.Target>
-  <Menu.Dropdown miw={128}>
-  <Menu.Label>Settings</Menu.Label>
-  <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>Edit item</Menu.Item>
-  <Menu.Item leftSection={<IconLayoutKanban size={16} />}>Move item</Menu.Item>
-  <Menu.Divider />
-  <Menu.Label c="red.6">Danger zone</Menu.Label>
-    <Menu.Item c="red.6" leftSection={<IconTrash size={16} />}>Remove item</Menu.Item>
-  </Menu.Dropdown>
-</Menu>
+    <Menu.Target>
+      <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset}>
+        <IconDotsVertical />
+      </ActionIcon>
+    </Menu.Target>
+    <Menu.Dropdown miw={128}>
+      <Menu.Label>Settings</Menu.Label>
+      <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>Edit item</Menu.Item>
+      <Menu.Item leftSection={<IconLayoutKanban size={16} />}>Move item</Menu.Item>
+      <Menu.Divider />
+      <Menu.Label c="red.6">Danger zone</Menu.Label>
+      <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>Remove item</Menu.Item>
+    </Menu.Dropdown>
+  </Menu>
 }
