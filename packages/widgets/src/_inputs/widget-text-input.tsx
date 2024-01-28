@@ -8,10 +8,10 @@ import { useFormContext } from "./form";
 
 export const WidgetTextInput = ({
   property,
-  sort: widgetSort,
+  kind,
   options,
 }: CommonWidgetInputProps<"text">) => {
-  const t = useWidgetInputTranslation(widgetSort, property);
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (

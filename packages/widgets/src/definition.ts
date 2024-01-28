@@ -1,25 +1,26 @@
 import type { LoaderComponent } from "next/dynamic";
 
+import type { WidgetKind } from "@homarr/definitions";
 import type { TablerIconsProps } from "@homarr/ui";
 
-import type { WidgetImports, WidgetSort } from ".";
+import type { WidgetImports } from ".";
 import type {
   inferOptionsFromDefinition,
   WidgetOptionsRecord,
 } from "./options";
 
 export const createWidgetDefinition = <
-  TSort extends WidgetSort,
+  TKind extends WidgetKind,
   TDefinition extends Definition,
 >(
-  sort: TSort,
+  kind: TKind,
   definition: TDefinition,
 ) => ({
   withDynamicImport: (
-    componentLoader: () => LoaderComponent<WidgetComponentProps<TSort>>,
+    componentLoader: () => LoaderComponent<WidgetComponentProps<TKind>>,
   ) => ({
     definition: {
-      sort,
+      kind,
       ...definition,
     },
     componentLoader,
@@ -31,10 +32,10 @@ interface Definition {
   options: WidgetOptionsRecord;
 }
 
-export interface WidgetComponentProps<TSort extends WidgetSort> {
-  options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>;
+export interface WidgetComponentProps<TKind extends WidgetKind> {
+  options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TKind>>;
   integrations: unknown[];
 }
 
-export type WidgetOptionsRecordOf<TSort extends WidgetSort> =
-  WidgetImports[TSort]["definition"]["options"];
+export type WidgetOptionsRecordOf<TKind extends WidgetKind> =
+  WidgetImports[TKind]["definition"]["options"];

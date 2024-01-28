@@ -10,7 +10,7 @@ const getLinks = () => {
     return {
       href: `/widgets/${key}`,
       icon: value.definition.icon,
-      label: value.definition.sort,
+      label: value.definition.kind,
     };
   });
 };

@@ -4,22 +4,22 @@ import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { notFound } from "next/navigation";
 
+import type { WidgetKind } from "@homarr/definitions";
 import { ActionIcon, Affix, Center, IconPencil } from "@homarr/ui";
-import type { WidgetSort } from "@homarr/widgets";
 import { loadWidgetDynamic, widgetImports } from "@homarr/widgets";
 
 import { modalEvents } from "../../modals";
 
-type Props = PropsWithChildren<{ params: { sort: string } }>;
+type Props = PropsWithChildren<{ params: { kind: string } }>;
 
 export default function WidgetPreview(props: Props) {
   const [options, setOptions] = useState<Record<string, unknown>>({});
-  if (!(props.params.sort in widgetImports)) {
+  if (!(props.params.kind in widgetImports)) {
     notFound();
   }
 
-  const sort = props.params.sort as WidgetSort;
-  const Comp = loadWidgetDynamic(sort);
+  const kind = props.params.kind as WidgetKind;
+  const Comp = loadWidgetDynamic(kind);
 
   return (
     <Center h="100vh">
@@ -33,8 +33,8 @@ export default function WidgetPreview(props: Props) {
             return modalEvents.openManagedModal({
               modal: "widgetEditModal",
               innerProps: {
-                sort,
-                definition: widgetImports[sort].definition.options,
+                kind,
+                definition: widgetImports[kind].definition.options,
                 state: [options, setOptions],
               },
             });

@@ -3,10 +3,9 @@ import superjson from "superjson";
 
 import { db, eq } from "@homarr/db";
 import { boards } from "@homarr/db/schema/sqlite";
-import { integrationKinds } from "@homarr/definitions";
+import { integrationKinds, widgetKinds } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { z } from "@homarr/validation";
-import type { WidgetSort } from "@homarr/widgets";
-import { widgetSorts } from "@homarr/widgets";
 
 import {
   zodEnumFromArray,
@@ -102,13 +101,13 @@ const integrationSchema = z.object({
 
 // The following is a bit of a mess, it's providing us typesafe options matching the widget kind.
 // But I might be able to do this in a better way in the future.
-const forKind = <T extends WidgetSort>(kind: T) =>
+const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),
     options: z.custom<Partial<WidgetComponentProps<T>["options"]>>(),
   }) as UnionizeSpecificItemSchemaForWidgetKind<T>;
 
-type SpecificItemSchemaForWidgetKind<TKind extends WidgetSort> = z.ZodObject<{
+type SpecificItemSchemaForWidgetKind<TKind extends WidgetKind> = z.ZodObject<{
   kind: z.ZodLiteral<TKind>;
   options: z.ZodType<
     Partial<WidgetComponentProps<TKind>["options"]>,
@@ -117,12 +116,12 @@ type SpecificItemSchemaForWidgetKind<TKind extends WidgetSort> = z.ZodObject<{
   >;
 }>;
 
-type UnionizeSpecificItemSchemaForWidgetKind<T> = T extends WidgetSort
+type UnionizeSpecificItemSchemaForWidgetKind<T> = T extends WidgetKind
   ? SpecificItemSchemaForWidgetKind<T>
   : never;
 
 const itemSchema = zodUnionFromArray(
-  widgetSorts.map((sort) => forKind(sort)),
+  widgetKinds.map((kind) => forKind(kind)),
 ).and(
   z.object({
     id: z.string(),

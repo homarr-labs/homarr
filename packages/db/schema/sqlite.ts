@@ -18,8 +18,8 @@ import type {
   IntegrationKind,
   IntegrationSecretKind,
   SectionKind,
+  WidgetKind,
 } from "@homarr/definitions";
-import type { WidgetSort } from "@homarr/widgets";
 
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -174,7 +174,7 @@ export const items = sqliteTable("item", {
   sectionId: text("section_id")
     .notNull()
     .references(() => sections.id, { onDelete: "cascade" }),
-  kind: text("kind").$type<WidgetSort>().notNull(),
+  kind: text("kind").$type<WidgetKind>().notNull(),
   xOffset: int("x_offset").notNull(),
   yOffset: int("y_offset").notNull(),
   width: int("width").notNull(),

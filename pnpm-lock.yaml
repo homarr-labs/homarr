@@ -183,9 +183,6 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
-      '@homarr/widgets':
-        specifier: workspace:^0.1.0
-        version: link:../widgets
       '@trpc/client':
         specifier: next
         version: 11.0.0-alpha-next-2023-10-26-15-15-56.93(@trpc/server@11.0.0-alpha-next-2023-10-26-15-15-56.93)
@@ -302,9 +299,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/widgets':
-        specifier: workspace:^0.1.0
-        version: link:../widgets
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2

@@ -3,24 +3,24 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { ManagedModal } from "mantine-modal-manager";
 
+import type { WidgetKind } from "@homarr/definitions";
 import { Button, Group, Stack } from "@homarr/ui";
 
-import type { WidgetSort } from ".";
 import { getInputForType } from "./_inputs";
 import { FormProvider, useForm } from "./_inputs/form";
 import type { WidgetOptionsRecordOf } from "./definition";
 import type { WidgetOptionDefinition } from "./options";
 
-interface ModalProps<TSort extends WidgetSort> {
-  sort: TSort;
+interface ModalProps<TKind extends WidgetKind> {
+  kind: TKind;
   state: [
     Record<string, unknown>,
     Dispatch<SetStateAction<Record<string, unknown>>>,
   ];
-  definition: WidgetOptionsRecordOf<TSort>;
+  definition: WidgetOptionsRecordOf<TKind>;
 }
 
-export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
+export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
   actions,
   innerProps,
 }) => {
@@ -49,7 +49,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
               return (
                 <Input
                   key={key}
-                  sort={innerProps.sort}
+                  kind={innerProps.kind}
                   property={key}
                   options={value as never}
                 />
