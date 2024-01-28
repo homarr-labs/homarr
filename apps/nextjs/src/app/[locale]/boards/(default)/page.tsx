@@ -1,5 +1,7 @@
-import { ClientBoard } from "../_client";
+import definition from "./_definition";
 
-export default function BoardPage() {
-  return <ClientBoard />;
-}
+const { generateMetadata, page } = definition;
+
+export default page;
+
+export { generateMetadata };

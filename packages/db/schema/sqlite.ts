@@ -179,7 +179,7 @@ export const items = sqliteTable("item", {
   yOffset: int("y_offset").notNull(),
   width: int("width").notNull(),
   height: int("height").notNull(),
-  options: text("options").default("{}").notNull(),
+  options: text("options").default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const integrationItems = sqliteTable(

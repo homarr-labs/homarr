@@ -1,12 +1,5 @@
-import type { PropsWithChildren } from "react";
+import definition from "./_definition";
 
-import { api } from "~/trpc/server";
-import { BoardLayout } from "../_layout";
+const { layout } = definition;
 
-export default async function DefaultBoardLayout({
-  children,
-}: PropsWithChildren) {
-  const initialBoard = await api.board.default.query();
-
-  return <BoardLayout initialBoard={initialBoard}>{children}</BoardLayout>;
-}
+export default layout;

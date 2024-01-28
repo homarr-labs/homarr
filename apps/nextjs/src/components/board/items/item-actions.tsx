@@ -1,19 +1,20 @@
 import { useCallback } from "react";
 
 import { useUpdateBoard } from "~/app/[locale]/boards/_client";
+import type { Item } from "~/app/[locale]/boards/_types";
 
 interface MoveAndResizeItem {
   itemId: string;
-  x: number;
-  y: number;
+  xOffset: number;
+  yOffset: number;
   width: number;
   height: number;
 }
 interface MoveItemToSection {
   itemId: string;
   sectionId: string;
-  x: number;
-  y: number;
+  xOffset: number;
+  yOffset: number;
   width: number;
   height: number;
 }
@@ -24,7 +25,7 @@ interface RemoveItem {
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
   const moveAndResizeItem = useCallback(
-    ({ itemId, width, height, ...positionProps }: MoveAndResizeItem) => {
+    ({ itemId, ...positionProps }: MoveAndResizeItem) => {
       updateBoard((prev) => ({
         ...prev,
         sections: prev.sections.map((section) => {
@@ -37,12 +38,8 @@ export const useItemActions = () => {
               if (item.id !== itemId) return item;
               return {
                 ...item,
-                position: {
-                  ...positionProps,
-                  w: width,
-                  h: height,
-                },
-              };
+                ...positionProps,
+              } satisfies Item;
             }),
           };
         }),
@@ -52,13 +49,7 @@ export const useItemActions = () => {
   );
 
   const moveItemToSection = useCallback(
-    ({
-      itemId,
-      sectionId,
-      width,
-      height,
-      ...positionProps
-    }: MoveItemToSection) => {
+    ({ itemId, sectionId, ...positionProps }: MoveItemToSection) => {
       updateBoard((prev) => {
         const currentSection = prev.sections.find((section) =>
           section.items.some((item) => item.id === itemId),
@@ -76,7 +67,7 @@ export const useItemActions = () => {
           return prev;
         }
 
-        if (currentSection.id === sectionId && currentItem.position.x) {
+        if (currentSection.id === sectionId && currentItem.xOffset) {
           return prev;
         }
 
@@ -97,11 +88,7 @@ export const useItemActions = () => {
                 .filter((item) => item.id !== itemId)
                 .concat({
                   ...currentItem,
-                  position: {
-                    ...positionProps,
-                    w: width,
-                    h: height,
-                  },
+                  ...positionProps,
                 }),
             };
           }),

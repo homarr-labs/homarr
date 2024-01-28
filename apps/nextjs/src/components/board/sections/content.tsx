@@ -3,11 +3,10 @@
 import type { RefObject } from "react";
 
 import { Card } from "@homarr/ui";
-import type { WidgetSort } from "@homarr/widgets";
 import { loadWidgetDynamic } from "@homarr/widgets";
 
-import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 import { Item } from "~/app/[locale]/boards/_types";
+import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 
 interface Props {
   items: Item[];

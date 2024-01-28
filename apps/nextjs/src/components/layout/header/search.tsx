@@ -2,8 +2,9 @@
 
 import { spotlight } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
-import { ActionIcon, IconSearch, TextInput, UnstyledButton } from "@homarr/ui";
+import { IconSearch, TextInput, UnstyledButton } from "@homarr/ui";
 
+import { HeaderButton } from "~/app/[locale]/boards/_headerActions";
 import classes from "./search.module.css";
 
 export const DesktopSearchInput = () => {
@@ -25,13 +26,8 @@ export const DesktopSearchInput = () => {
 
 export const MobileSearchButton = () => {
   return (
-    <ActionIcon
-      className={classes.mobileSearch}
-      variant="subtle"
-      color="gray"
-      onClick={spotlight.open}
-    >
+    <HeaderButton onClick={spotlight.open} className={classes.mobileSearch}>
       <IconSearch size={20} stroke={1.5} />
-    </ActionIcon>
+    </HeaderButton>
   );
 };

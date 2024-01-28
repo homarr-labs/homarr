@@ -1,3 +1,7 @@
-export default function Test() {
-  return <pre>test</pre>;
-}
+import definition from "./_definition";
+
+const { generateMetadata, page } = definition;
+
+export default page;
+
+export { generateMetadata };

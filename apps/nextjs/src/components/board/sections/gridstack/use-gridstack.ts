@@ -65,8 +65,8 @@ export const useGridstack = ({
     // Updates the react-query state
     moveAndResizeItem({
       itemId,
-      x: changedNode.x!,
-      y: changedNode.y!,
+      xOffset: changedNode.x!,
+      yOffset: changedNode.y!,
       width: changedNode.w!,
       height: changedNode.h!,
     });
@@ -79,8 +79,8 @@ export const useGridstack = ({
     moveItemToSection({
       itemId,
       sectionId: section.id,
-      x: addedNode.x!,
-      y: addedNode.y!,
+      xOffset: addedNode.x!,
+      yOffset: addedNode.y!,
       width: addedNode.w!,
       height: addedNode.h!,
     });
