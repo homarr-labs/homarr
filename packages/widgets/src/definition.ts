@@ -11,7 +11,7 @@ import type {
 
 export const createWidgetDefinition = <
   TKind extends WidgetKind,
-  TDefinition extends Definition,
+  TDefinition extends WidgetDefinition,
 >(
   kind: TKind,
   definition: TDefinition,
@@ -27,7 +27,7 @@ export const createWidgetDefinition = <
   }),
 });
 
-interface Definition {
+export interface WidgetDefinition {
   icon: (props: TablerIconsProps) => JSX.Element;
   options: WidgetOptionsRecord;
 }

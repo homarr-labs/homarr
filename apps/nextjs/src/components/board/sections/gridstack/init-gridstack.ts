@@ -11,14 +11,12 @@ interface InitializeGridstackProps {
     items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
     gridstack: MutableRefObject<GridStack | undefined>;
   };
-  isEditMode: boolean;
   sectionColumnCount: number;
 }
 
 export const initializeGridstack = ({
   section,
   refs,
-  isEditMode,
   sectionColumnCount,
 }: InitializeGridstackProps) => {
   if (!refs.wrapper.current) return;
@@ -39,7 +37,7 @@ export const initializeGridstack = ({
       alwaysShowResizeHandle: "mobile",
       acceptWidgets: true,
       disableOneColumnMode: true,
-      staticGrid: !isEditMode,
+      staticGrid: true,
       minRow,
       animate: false,
     },

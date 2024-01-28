@@ -35,10 +35,12 @@ export const useUpdateBoard = () => {
 export const ClientBoard = () => {
   const board = useRequiredBoard();
 
-  const sectionsWithoutSidebars = board.sections.filter(
-    (section): section is CategorySection | EmptySection =>
-      section.kind !== "sidebar",
-  );
+  const sectionsWithoutSidebars = board.sections
+    .filter(
+      (section): section is CategorySection | EmptySection =>
+        section.kind !== "sidebar",
+    )
+    .sort((a, b) => a.position - b.position);
 
   const ref = useRef<HTMLDivElement>(null);
 

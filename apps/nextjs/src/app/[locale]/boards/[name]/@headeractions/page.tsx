@@ -15,19 +15,22 @@ import {
   Menu,
 } from "@homarr/ui";
 
+import { modalEvents } from "~/app/[locale]/modals";
 import { editModeAtom } from "~/components/board/editMode";
+import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { HeaderButton } from "~/components/layout/header/button";
 import { useRequiredBoard } from "../../_context";
 
 export default function BoardViewHeaderActions() {
   const [editMode, setEditMode] = useAtom(editModeAtom);
   const board = useRequiredBoard();
+  const { addCategoryToEnd } = useCategoryActions();
 
   return (
     <>
       <Menu position="bottom-end" withArrow>
         <Menu.Target>
-          <HeaderButton onClick={() => []} w="auto" px={4}>
+          <HeaderButton w="auto" px={4}>
             <Group gap={4} wrap="nowrap">
               <IconPlus stroke={1.5} />
               <IconChevronDown color="gray" size={16} />
@@ -35,14 +38,44 @@ export default function BoardViewHeaderActions() {
           </HeaderButton>
         </Menu.Target>
         <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
-          <Menu.Item leftSection={<IconBox size={20} />}>New Item</Menu.Item>
+          <Menu.Item
+            leftSection={<IconBox size={20} />}
+            onClick={() =>
+              modalEvents.openManagedModal({
+                title: "Choose item to add",
+                size: "xl",
+                modal: "itemSelectModal",
+                innerProps: {},
+              })
+            }
+          >
+            New Item
+          </Menu.Item>
           <Menu.Item leftSection={<IconPackageImport size={20} />}>
             Import Item
           </Menu.Item>
 
           <Menu.Divider />
 
-          <Menu.Item leftSection={<IconBoxAlignTop size={20} />}>
+          <Menu.Item
+            leftSection={<IconBoxAlignTop size={20} />}
+            onClick={() =>
+              modalEvents.openManagedModal({
+                title: "New Category",
+                modal: "categoryEditModal",
+                innerProps: {
+                  submitLabel: "Create category",
+                  category: {
+                    id: "new",
+                    name: "",
+                  },
+                  onSuccess({ name }) {
+                    addCategoryToEnd({ name });
+                  },
+                },
+              })
+            }
+          >
             New Category
           </Menu.Item>
         </Menu.Dropdown>

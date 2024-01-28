@@ -14,9 +14,9 @@ import {
   UnstyledButton,
 } from "@homarr/ui";
 
+import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { SectionContent } from "./content";
 import { useGridstack } from "./gridstack/use-gridstack";
-import type { CategorySection } from "./type";
 
 interface Props {
   section: CategorySection;

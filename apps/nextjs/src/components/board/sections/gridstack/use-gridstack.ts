@@ -1,5 +1,5 @@
-import { createRef, useEffect, useMemo, useRef } from "react";
 import type { MutableRefObject, RefObject } from "react";
+import { createRef, useCallback, useEffect, useMemo, useRef } from "react";
 import type {
   GridItemHTMLElement,
   GridStack,
@@ -58,33 +58,39 @@ export const useGridstack = ({
     gridRef.current?.setStatic(!isEditMode);
   }, [isEditMode]);
 
-  const onChange = (changedNode: GridStackNode) => {
-    const itemId = changedNode.el?.getAttribute("data-id");
-    if (!itemId) return;
+  const onChange = useCallback(
+    (changedNode: GridStackNode) => {
+      const itemId = changedNode.el?.getAttribute("data-id");
+      if (!itemId) return;
 
-    // Updates the react-query state
-    moveAndResizeItem({
-      itemId,
-      xOffset: changedNode.x!,
-      yOffset: changedNode.y!,
-      width: changedNode.w!,
-      height: changedNode.h!,
-    });
-  };
-  const onAdd = (addedNode: GridStackNode) => {
-    const itemId = addedNode.el?.getAttribute("data-id");
-    if (!itemId) return;
+      // Updates the react-query state
+      moveAndResizeItem({
+        itemId,
+        xOffset: changedNode.x!,
+        yOffset: changedNode.y!,
+        width: changedNode.w!,
+        height: changedNode.h!,
+      });
+    },
+    [moveAndResizeItem],
+  );
+  const onAdd = useCallback(
+    (addedNode: GridStackNode) => {
+      const itemId = addedNode.el?.getAttribute("data-id");
+      if (!itemId) return;
 
-    // Updates the react-query state
-    moveItemToSection({
-      itemId,
-      sectionId: section.id,
-      xOffset: addedNode.x!,
-      yOffset: addedNode.y!,
-      width: addedNode.w!,
-      height: addedNode.h!,
-    });
-  };
+      // Updates the react-query state
+      moveItemToSection({
+        itemId,
+        sectionId: section.id,
+        xOffset: addedNode.x!,
+        yOffset: addedNode.y!,
+        width: addedNode.w!,
+        height: addedNode.h!,
+      });
+    },
+    [moveItemToSection, section.id],
+  );
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -104,12 +110,11 @@ export const useGridstack = ({
       currentGrid?.off("change");
       currentGrid?.off("added");
     };
-  }, [isEditMode]);
+  }, [isEditMode, onAdd, onChange]);
 
   // initialize the gridstack
   useEffect(() => {
     initializeGridstack({
-      isEditMode,
       section,
       refs: {
         items: itemRefs,
@@ -118,7 +123,9 @@ export const useGridstack = ({
       },
       sectionColumnCount,
     });
-  }, [items.length, wrapperRef.current, sectionColumnCount]);
+    // Only run this effect when the section items change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length, section.items.length]);
 
   return {
     refs: {

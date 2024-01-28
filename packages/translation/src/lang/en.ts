@@ -155,6 +155,8 @@ export default {
   },
   widget: {
     clock: {
+      name: "Date and time",
+      description: "Displays the current date and time.",
       option: {
         is24HourFormat: {
           label: "24-hour format",
@@ -169,6 +171,9 @@ export default {
       },
     },
     weather: {
+      name: "Weather",
+      description:
+        "Displays the current weather information of a set location.",
       option: {
         location: {
           label: "Location",
@@ -178,6 +183,7 @@ export default {
         },
       },
     },
+    addToBoard: "Add to board",
   },
   management: {
     metaTitle: "Management",
