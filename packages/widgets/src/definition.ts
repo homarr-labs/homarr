@@ -36,18 +36,25 @@ interface Definition {
 
 export interface WidgetComponentProps<TSort extends WidgetSort> {
   options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>;
-  integrations: WidgetImports[TSort]["definition"] extends {
+  integrations: inferIntegrationsFromDefinition<
+    WidgetImports[TSort]["definition"]
+  >;
+}
+
+type inferIntegrationsFromDefinition<TDefinition extends Definition> =
+  TDefinition extends {
     supportedIntegrations: infer TSupportedIntegrations;
-  }
-    ? TSupportedIntegrations extends IntegrationKind[]
-      ? {
-          id: string;
-          name: string;
-          url: string;
-          kind: TSupportedIntegrations[number];
-        }[]
-      : IntegrationSelectOption[]
+  } // check if definition has supportedIntegrations
+    ? TSupportedIntegrations extends IntegrationKind[] // check if supportedIntegrations is an array of IntegrationKind
+      ? IntegrationSelectOptionFor<TSupportedIntegrations[number]>[] // if so, return an array of IntegrationSelectOptionFor
+      : IntegrationSelectOption[] // otherwise, return an array of IntegrationSelectOption without specifying the kind
     : IntegrationSelectOption[];
+
+interface IntegrationSelectOptionFor<TIntegration extends IntegrationKind> {
+  id: string;
+  name: string;
+  url: string;
+  kind: TIntegration[number];
 }
 
 export type WidgetOptionsRecordOf<TSort extends WidgetSort> =

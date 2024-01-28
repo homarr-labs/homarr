@@ -38,22 +38,24 @@ export const WidgetIntegrationSelect = ({
   ...props
 }: WidgetIntegrationSelectProps) => {
   const t = useI18n();
-  const value = valueProp ?? [];
+  const multiSelectValues = valueProp ?? [];
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
-  const handleValueSelect = (val: string) =>
+  const handleValueSelect = (selectedValue: string) =>
     onChange(
-      value.includes(val) ? value.filter((v) => v !== val) : [...value, val],
+      multiSelectValues.includes(selectedValue)
+        ? multiSelectValues.filter((v) => v !== selectedValue)
+        : [...multiSelectValues, selectedValue],
     );
 
   const handleValueRemove = (val: string) =>
-    onChange(value.filter((v) => v !== val));
+    onChange(multiSelectValues.filter((v) => v !== val));
 
-  const values = value.map((item) => (
+  const values = multiSelectValues.map((item) => (
     <IntegrationPill
       key={item}
       option={data.find((i) => i.id === item)!}
@@ -66,10 +68,10 @@ export const WidgetIntegrationSelect = ({
       <Combobox.Option
         value={item.id}
         key={item.id}
-        active={value.includes(item.id)}
+        active={multiSelectValues.includes(item.id)}
       >
         <Group gap="sm" align="center">
-          {value.includes(item.id) ? <CheckIcon size={12} /> : null}
+          {multiSelectValues.includes(item.id) ? <CheckIcon size={12} /> : null}
           <Group gap={7} align="center">
             <Avatar src={getIconUrl(item.kind)} size="sm" />
             <Stack gap={0}>
@@ -110,10 +112,12 @@ export const WidgetIntegrationSelect = ({
                 type="hidden"
                 onBlur={() => combobox.closeDropdown()}
                 onKeyDown={(event) => {
-                  if (event.key === "Backspace") {
-                    event.preventDefault();
-                    handleValueRemove(value[value.length - 1]!);
-                  }
+                  if (event.key !== "Backspace") return;
+
+                  event.preventDefault();
+                  handleValueRemove(
+                    multiSelectValues[multiSelectValues.length - 1]!,
+                  );
                 }}
               />
             </Combobox.EventsTarget>
