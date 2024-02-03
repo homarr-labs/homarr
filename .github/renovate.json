@@ -19,5 +19,7 @@
     "dev"
   ],
   "branchPrefix": "renovate/",
-  "autodiscover": true
+  "repositories": [
+    "homarr-labs/homarr"
+  ]
 }
