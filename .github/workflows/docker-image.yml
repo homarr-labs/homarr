@@ -12,6 +12,9 @@ permissions:
   contents: write
   packages: write
 
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+
 concurrency: production
 
 jobs:
