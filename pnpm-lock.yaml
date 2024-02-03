@@ -431,8 +431,8 @@ importers:
   packages/translation:
     dependencies:
       next-international:
-        specifier: ^1.1.4
-        version: 1.1.4
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -5189,8 +5189,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /next-international@1.1.4:
-    resolution: {integrity: sha512-peIJXXEC5lM7zZONCgN1uUxCkIHpSW1pZuHoRTp9ND14K7CDdHajDMz9RTxVCmQUGWXSaqruM6XVAuq4d+Gpxg==}
+  /next-international@1.2.3:
+    resolution: {integrity: sha512-pLHX6dIjg2bd/LHcBIylhQXsiv2CQgAEKXb1tlVMXIj+RxpxgB9ymgkNdm4OsEmEpVlleCoq4T3k4Pi9QXZ8wQ==}
     dependencies:
       client-only: 0.0.1
       international-types: 0.8.1
