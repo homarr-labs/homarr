@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 
 import type { RouterInputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -17,8 +18,6 @@ import {
   IconX,
   Loader,
 } from "@homarr/ui";
-
-import { api } from "~/trpc/react";
 
 interface UseTestConnectionDirtyProps {
   defaultDirty: boolean;
@@ -77,7 +76,7 @@ export const TestConnection = ({
 }: TestConnectionProps) => {
   const t = useScopedI18n("integration.testConnection");
   const { mutateAsync, ...mutation } =
-    api.integration.testConnection.useMutation();
+    clientApi.integration.testConnection.useMutation();
 
   return (
     <Group>

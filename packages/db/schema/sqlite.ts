@@ -1,8 +1,10 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { MantineColor } from "@mantine/core";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 import {
   index,
+  int,
   integer,
   primaryKey,
   sqliteTable,
@@ -10,8 +12,13 @@ import {
 } from "drizzle-orm/sqlite-core";
 
 import type {
+  BackgroundImageAttachment,
+  BackgroundImageRepeat,
+  BackgroundImageSize,
   IntegrationKind,
   IntegrationSecretKind,
+  SectionKind,
+  WidgetKind,
 } from "@homarr/definitions";
 
 export const users = sqliteTable("user", {
@@ -107,6 +114,91 @@ export const integrationSecrets = sqliteTable(
   }),
 );
 
+export const boards = sqliteTable("board", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  isPublic: int("is_public", { mode: "boolean" }).default(false).notNull(),
+  pageTitle: text("page_title"),
+  metaTitle: text("meta_title"),
+  logoImageUrl: text("logo_image_url"),
+  faviconImageUrl: text("favicon_image_url"),
+  backgroundImageUrl: text("background_image_url"),
+  backgroundImageAttachment: text("background_image_attachment")
+    .$type<BackgroundImageAttachment>()
+    .default("fixed")
+    .notNull(),
+  backgroundImageRepeat: text("background_image_repeat")
+    .$type<BackgroundImageRepeat>()
+    .default("no-repeat")
+    .notNull(),
+  backgroundImageSize: text("background_image_size")
+    .$type<BackgroundImageSize>()
+    .default("cover")
+    .notNull(),
+  primaryColor: text("primary_color")
+    .$type<MantineColor>()
+    .default("red")
+    .notNull(),
+  secondaryColor: text("secondary_color")
+    .$type<MantineColor>()
+    .default("orange")
+    .notNull(),
+  primaryShade: int("primary_shade").default(6).notNull(),
+  appOpacity: int("app_opacity").default(100).notNull(),
+  customCss: text("custom_css"),
+  showRightSidebar: int("show_right_sidebar", {
+    mode: "boolean",
+  })
+    .default(false)
+    .notNull(),
+  showLeftSidebar: int("show_left_sidebar", {
+    mode: "boolean",
+  })
+    .default(false)
+    .notNull(),
+  columnCount: int("column_count").default(10).notNull(),
+});
+
+export const sections = sqliteTable("section", {
+  id: text("id").notNull().primaryKey(),
+  boardId: text("board_id")
+    .notNull()
+    .references(() => boards.id, { onDelete: "cascade" }),
+  kind: text("kind").$type<SectionKind>().notNull(),
+  position: int("position").notNull(),
+  name: text("name"),
+});
+
+export const items = sqliteTable("item", {
+  id: text("id").notNull().primaryKey(),
+  sectionId: text("section_id")
+    .notNull()
+    .references(() => sections.id, { onDelete: "cascade" }),
+  kind: text("kind").$type<WidgetKind>().notNull(),
+  xOffset: int("x_offset").notNull(),
+  yOffset: int("y_offset").notNull(),
+  width: int("width").notNull(),
+  height: int("height").notNull(),
+  options: text("options").default('{"json": {}}').notNull(), // empty superjson object
+});
+
+export const integrationItems = sqliteTable(
+  "integration_item",
+  {
+    itemId: text("item_id")
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    integrationId: text("integration_id")
+      .notNull()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.itemId, table.integrationId],
+    }),
+  }),
+);
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -120,6 +212,7 @@ export const userRelations = relations(users, ({ many }) => ({
 
 export const integrationRelations = relations(integrations, ({ many }) => ({
   secrets: many(integrationSecrets),
+  items: many(integrationItems),
 }));
 
 export const integrationSecretRelations = relations(
@@ -128,6 +221,40 @@ export const integrationSecretRelations = relations(
     integration: one(integrations, {
       fields: [integrationSecrets.integrationId],
       references: [integrations.id],
+    }),
+  }),
+);
+
+export const boardRelations = relations(boards, ({ many }) => ({
+  sections: many(sections),
+}));
+
+export const sectionRelations = relations(sections, ({ many, one }) => ({
+  items: many(items),
+  board: one(boards, {
+    fields: [sections.boardId],
+    references: [boards.id],
+  }),
+}));
+
+export const itemRelations = relations(items, ({ one, many }) => ({
+  section: one(sections, {
+    fields: [items.sectionId],
+    references: [sections.id],
+  }),
+  integrations: many(integrationItems),
+}));
+
+export const integrationItemRelations = relations(
+  integrationItems,
+  ({ one }) => ({
+    integration: one(integrations, {
+      fields: [integrationItems.integrationId],
+      references: [integrations.id],
+    }),
+    item: one(items, {
+      fields: [integrationItems.itemId],
+      references: [items.id],
     }),
   }),
 );

@@ -1,4 +1,4 @@
-name: CI
+name: Code quality analysis
 
 on:
   pull_request:

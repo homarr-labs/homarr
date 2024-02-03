@@ -1,5 +1,5 @@
-import type { WidgetSort } from ".";
+import type { WidgetKind } from "@homarr/definitions";
 
 export type WidgetImportRecord = {
-  [K in WidgetSort]: unknown;
+  [K in WidgetKind]: unknown;
 };

@@ -1,6 +1,11 @@
 {
   "name": "@homarr/db",
   "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts",
+    "./client": "./client.ts",
+    "./schema/sqlite": "./schema/sqlite.ts"
+  },
   "private": true,
   "main": "./index.ts",
   "types": "./index.ts",
