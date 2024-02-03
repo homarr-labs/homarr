@@ -36,7 +36,10 @@ const createWithDynamicImport =
           : never)
     >,
   ) => ({
-    definition,
+    definition: {
+      ...definition,
+      kind,
+    },
     kind,
     serverDataLoader,
     componentLoader,
