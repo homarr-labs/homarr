@@ -181,45 +181,6 @@ export default {
         label: "Integrations",
       },
     },
-    app: {
-      name: "App",
-      description: "Displays a link to an external application",
-      option: {
-        name: {
-          label: "Name",
-        },
-        description: {
-          label: "Description",
-        },
-        internalUrl: {
-          label: "Internal URL",
-        },
-        externalUrl: {
-          label: "External URL",
-        },
-        iconUrl: {
-          label: "Icon URL",
-        },
-        openInNewTab: {
-          label: "Open in new tab",
-        },
-        fontSize: {
-          label: "Font size",
-        },
-        namePosition: {
-          label: "Name position",
-        },
-        nameStyle: {
-          label: "Name style",
-        },
-        nameLineClamp: {
-          label: "Name line clamp",
-        },
-        statusCodes: {
-          label: "Status codes",
-        },
-      },
-    },
     clock: {
       name: "Date and time",
       description: "Displays the current date and time.",
