@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "platform": "github",
   "extends": [
     "config:base"
   ],
@@ -13,5 +14,5 @@
   ],
   "updateInternalDeps": true,
   "rangeStrategy": "bump",
-  "automerge": true
+  "automerge": false
 }

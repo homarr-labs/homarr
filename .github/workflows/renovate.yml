@@ -1,0 +1,19 @@
+name: Renovate
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch: {}
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v40.0.2
+        with:
+          docker-cmd-file: .github/renovate-entrypoint.sh
+          docker-user: root
+          token: ${{ secrets.RENOVATE_TOKEN }}
