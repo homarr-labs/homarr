@@ -71,7 +71,7 @@ jobs:
             type=raw,value=${{ steps.githubTagAction.outputs.new_tag }}
       - name: Build and push
         id: buildPushAction
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64,linux/arm64,linux/riscv64,linux/arm/v7,linux/arm/v6
           context: .
