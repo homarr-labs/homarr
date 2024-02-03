@@ -55,6 +55,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
           DRY_RUN: true
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Image has been tagged as ${{ steps.githubTagAction.outputs.new_tag }}'
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
@@ -63,3 +69,21 @@ jobs:
           tags: |
             type=raw,value=latest
             type=raw,value=${{ steps.githubTagAction.outputs.new_tag }}
+      - name: Build and push
+        id: buildPushAction
+        uses: docker/build-push-action@v4
+        with:
+          platforms: linux/amd64,linux/arm64,linux/riscv64,linux/arm/v7,linux/arm/v6
+          context: .
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          network: host
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Image built with ID ${{ steps.buildPushAction.outputs.imageid }}'
