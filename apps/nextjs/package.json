@@ -43,7 +43,7 @@
     "@homarr/gridstack": "^1.0.0",
     "jotai": "^2.6.1",
     "mantine-modal-manager": "^7.5.1",
-    "next": "^14.0.4",
+    "next": "^14.1.0",
     "postcss-preset-mantine": "^1.12.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
