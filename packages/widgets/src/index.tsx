@@ -40,6 +40,6 @@ export const loadWidgetDynamic = <TKind extends WidgetKind>(kind: TKind) => {
     },
   );
 
-  loadedComponents.set(kind, newlyLoadedComponent);
+  loadedComponents.set(kind, newlyLoadedComponent as never);
   return newlyLoadedComponent;
 };

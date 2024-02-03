@@ -14,7 +14,7 @@ import {
 import { modalEvents } from "../../modals";
 
 interface WidgetPreviewPageContentProps {
-  sort: WidgetKind;
+  kind: WidgetKind;
   integrationData: {
     id: string;
     name: string;
@@ -24,10 +24,10 @@ interface WidgetPreviewPageContentProps {
 }
 
 export const WidgetPreviewPageContent = ({
-  sort,
+  kind,
   integrationData,
 }: WidgetPreviewPageContentProps) => {
-  const currentDefinition = widgetImports[sort].definition;
+  const currentDefinition = widgetImports[kind].definition;
   const options = currentDefinition.options as Record<
     string,
     WidgetOptionDefinition
@@ -36,11 +36,11 @@ export const WidgetPreviewPageContent = ({
     options: Record<string, unknown>;
     integrations: string[];
   }>({
-    options: reduceWidgetOptionsWithDefaultValues(options),
+    options: reduceWidgetOptionsWithDefaultValues(kind, options),
     integrations: [],
   });
 
-  const Comp = loadWidgetDynamic(sort);
+  const Comp = loadWidgetDynamic(kind);
 
   return (
     <>
@@ -59,9 +59,11 @@ export const WidgetPreviewPageContent = ({
             return modalEvents.openManagedModal({
               modal: "widgetEditModal",
               innerProps: {
-                sort,
-                definition: currentDefinition.options,
-                state: [state, setState],
+                kind,
+                value: state,
+                onSuccessfulEdit: (value) => {
+                  setState(value);
+                },
                 integrationData: integrationData.filter(
                   (integration) =>
                     "supportedIntegrations" in currentDefinition &&

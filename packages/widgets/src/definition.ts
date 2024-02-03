@@ -41,7 +41,7 @@ export interface WidgetComponentProps<TKind extends WidgetKind> {
   >;
 }
 
-type inferIntegrationsFromDefinition<TDefinition extends Definition> =
+type inferIntegrationsFromDefinition<TDefinition extends WidgetDefinition> =
   TDefinition extends {
     supportedIntegrations: infer TSupportedIntegrations;
   } // check if definition has supportedIntegrations

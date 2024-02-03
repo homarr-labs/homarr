@@ -199,36 +199,3 @@ export const useItemActions = () => {
     createItem,
   };
 };
-
-interface OpenRemoveItemModalProps {
-  name: string;
-  onConfirm: () => void;
-}
-
-export const openRemoveItemModal = ({
-  name,
-  onConfirm,
-}: OpenRemoveItemModalProps) => {
-  /*openConfirmModal({
-    title: (
-      <Title order={4}>
-        <Trans i18nKey="common:remove" />
-      </Title>
-    ),
-    children: (
-      <Trans
-        i18nKey="common:removeConfirm"
-        components={[<Text weight={500} />]}
-        values={{ item: name }}
-      />
-    ),
-    labels: {
-      cancel: <Trans i18nKey="common:cancel" />,
-      confirm: <Trans i18nKey="common:ok" />,
-    },
-    cancelProps: {
-      variant: "light",
-    },
-    onConfirm,
-  });*/
-};

@@ -1,16 +1,28 @@
-/* eslint-disable react/no-unknown-property */ // Ignored because of gridstack attributes
+/* eslint-disable react/no-unknown-property */
+// Ignored because of gridstack attributes
 
 import type { RefObject } from "react";
-
-import { ActionIcon, Card, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash, Menu } from "@homarr/ui";
-import { loadWidgetDynamic } from "@homarr/widgets";
-
-import { Item } from "~/app/[locale]/boards/_types";
-import type { UseGridstackRefs } from "./gridstack/use-gridstack";
-import { modalEvents } from "~/app/[locale]/modals";
-import { useItemActions } from "../items/item-actions";
 import { useAtomValue } from "jotai";
+
+import {
+  ActionIcon,
+  Card,
+  IconDotsVertical,
+  IconLayoutKanban,
+  IconPencil,
+  IconTrash,
+  Menu,
+} from "@homarr/ui";
+import {
+  loadWidgetDynamic,
+  reduceWidgetOptionsWithDefaultValues,
+} from "@homarr/widgets";
+
+import type { Item } from "~/app/[locale]/boards/_types";
+import { modalEvents } from "~/app/[locale]/modals";
 import { editModeAtom } from "../editMode";
+import { useItemActions } from "../items/item-actions";
+import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 
 interface Props {
   items: Item[];
@@ -36,7 +48,7 @@ export const SectionContent = ({ items, refs }: Props) => {
           ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
         >
           <Card className="grid-stack-item-content" withBorder>
-            <Item item={item} />
+            <BoardItem item={item} />
           </Card>
         </div>
       ))}
@@ -44,19 +56,23 @@ export const SectionContent = ({ items, refs }: Props) => {
   );
 };
 
-const Item = ({
-  item
-}: {
+interface ItemProps {
   item: Item;
-}) => {
+}
+
+const BoardItem = ({ item }: ItemProps) => {
   const Comp = loadWidgetDynamic(item.kind);
-  return <>
-    <ItemMenu offset={8} item={item} />
-    <Comp options={item.options} integrations={item.integrations} />
-  </>; // TODO: reduceWidgetOptionsWithDefaultValues
+  const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
+  const newItem = { ...item, options };
+  return (
+    <>
+      <ItemMenu offset={8} item={newItem} />
+      <Comp options={options as never} integrations={item.integrations} />
+    </>
+  );
 };
 
-const ItemMenu = ({ offset, item }: { offset: number, item: Item }) => {
+const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   const isEditMode = useAtomValue(editModeAtom);
   const { updateItemOptions, removeItem } = useItemActions();
 
@@ -65,46 +81,71 @@ const ItemMenu = ({ offset, item }: { offset: number, item: Item }) => {
   const openEditModal = () => {
     modalEvents.openManagedModal({
       title: "Edit item",
-      modal: 'widgetEditModal',
+      modal: "widgetEditModal",
       innerProps: {
         kind: item.kind,
-        value: item.options,
-        onSuccessfulEdit: (newOptions) => {
+        value: {
+          options: item.options,
+          integrations: item.integrations.map(({ id }) => id),
+        },
+        onSuccessfulEdit: ({ options, integrations: _ }) => {
           updateItemOptions({
             itemId: item.id,
-            newOptions
-          })
-        }
-      }
-    })
-  }
+            newOptions: options,
+          });
+        },
+        integrationData: [],
+        integrationSupport: false,
+      },
+    });
+  };
 
   const openRemoveModal = () => {
     modalEvents.openConfirmModal({
-      title: 'Remove item',
-      children: 'Are you sure you want to remove this item?',
+      title: "Remove item",
+      children: "Are you sure you want to remove this item?",
       onConfirm: () => {
         removeItem({ itemId: item.id });
       },
       confirmProps: {
-        color: "red"
-      }
+        color: "red",
+      },
     });
-  }
+  };
 
-  return <Menu withinPortal withArrow position="right-start" arrowPosition="center">
-    <Menu.Target>
-      <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset}>
-        <IconDotsVertical />
-      </ActionIcon>
-    </Menu.Target>
-    <Menu.Dropdown miw={128}>
-      <Menu.Label>Settings</Menu.Label>
-      <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>Edit item</Menu.Item>
-      <Menu.Item leftSection={<IconLayoutKanban size={16} />}>Move item</Menu.Item>
-      <Menu.Divider />
-      <Menu.Label c="red.6">Danger zone</Menu.Label>
-      <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>Remove item</Menu.Item>
-    </Menu.Dropdown>
-  </Menu>
-}
+  return (
+    <Menu withinPortal withArrow position="right-start" arrowPosition="center">
+      <Menu.Target>
+        <ActionIcon
+          variant="transparent"
+          pos="absolute"
+          top={offset}
+          right={offset}
+        >
+          <IconDotsVertical />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown miw={128}>
+        <Menu.Label>Settings</Menu.Label>
+        <Menu.Item
+          leftSection={<IconPencil size={16} />}
+          onClick={openEditModal}
+        >
+          Edit item
+        </Menu.Item>
+        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>
+          Move item
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Label c="red.6">Danger zone</Menu.Label>
+        <Menu.Item
+          c="red.6"
+          leftSection={<IconTrash size={16} />}
+          onClick={openRemoveModal}
+        >
+          Remove item
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
