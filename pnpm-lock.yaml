@@ -301,7 +301,7 @@ importers:
         version: 9.2.2
       drizzle-orm:
         specifier: ^0.29.3
-        version: 0.29.3(@types/better-sqlite3@7.6.8)(better-sqlite3@9.2.2)
+        version: 0.29.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.2.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -313,8 +313,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/better-sqlite3':
-        specifier: 7.6.8
-        version: 7.6.8
+        specifier: 7.6.9
+        version: 7.6.9
       dotenv-cli:
         specifier: ^7.3.0
         version: 7.3.0
@@ -2185,8 +2185,8 @@ packages:
       '@types/node': 18.18.13
     dev: true
 
-  /@types/better-sqlite3@7.6.8:
-    resolution: {integrity: sha512-ASndM4rdGrzk7iXXqyNC4fbwt4UEjpK0i3j4q4FyeQrLAthfB6s7EF135ZJE0qQxtKIMFwmyT6x0switET7uIw==}
+  /@types/better-sqlite3@7.6.9:
+    resolution: {integrity: sha512-FvktcujPDj9XKMJQWFcl2vVl7OdRIqsSRX9b0acWwTmwLK9CF2eqo/FRcmMLNpugKoX/avA6pb7TorDLmpgTnQ==}
     dependencies:
       '@types/node': 18.18.13
 
@@ -3315,7 +3315,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.3(@types/better-sqlite3@7.6.8)(better-sqlite3@9.2.2):
+  /drizzle-orm@0.29.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.2.2):
     resolution: {integrity: sha512-uSE027csliGSGYD0pqtM+SAQATMREb3eSM/U8s6r+Y0RFwTKwftnwwSkqx3oS65UBgqDOM0gMTl5UGNpt6lW0A==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -3386,7 +3386,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@types/better-sqlite3': 7.6.8
+      '@types/better-sqlite3': 7.6.9
       better-sqlite3: 9.2.2
     dev: false
 
