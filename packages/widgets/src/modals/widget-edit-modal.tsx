@@ -3,7 +3,7 @@
 import type { ManagedModal } from "mantine-modal-manager";
 
 import type { WidgetKind } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Group, Stack } from "@homarr/ui";
 
 import { widgetImports } from "..";
@@ -30,7 +30,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
   actions,
   innerProps,
 }) => {
-  const t = useScopedI18n("widget.editModal");
+  const t = useI18n();
   const form = useForm({
     initialValues: innerProps.value,
   });
@@ -48,7 +48,7 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
         <Stack>
           {innerProps.integrationSupport && (
             <WidgetIntegrationSelect
-              label={t("integrations.label")}
+              label={t("item.edit.field.integrations.label")}
               data={innerProps.integrationData}
               {...form.getInputProps("integrations")}
             />
@@ -73,10 +73,10 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
           )}
           <Group justify="right">
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
-              Close
+              {t("common.action.cancel")}
             </Button>
             <Button type="submit" color="teal">
-              Save
+              {t("common.action.saveChanges")}
             </Button>
           </Group>
         </Stack>

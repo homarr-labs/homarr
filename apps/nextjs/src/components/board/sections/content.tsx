@@ -4,6 +4,7 @@
 import type { RefObject } from "react";
 import { useAtomValue } from "jotai";
 
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
   Card,
@@ -73,6 +74,7 @@ const BoardItem = ({ item }: ItemProps) => {
 };
 
 const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
+  const t = useScopedI18n("item");
   const isEditMode = useAtomValue(editModeAtom);
   const { updateItemOptions, removeItem } = useItemActions();
 
@@ -80,7 +82,7 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
 
   const openEditModal = () => {
     modalEvents.openManagedModal({
-      title: "Edit item",
+      title: t("edit.title"),
       modal: "widgetEditModal",
       innerProps: {
         kind: item.kind,
@@ -102,8 +104,8 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
 
   const openRemoveModal = () => {
     modalEvents.openConfirmModal({
-      title: "Remove item",
-      children: "Are you sure you want to remove this item?",
+      title: t("remove.title"),
+      children: t("remove.message"),
       onConfirm: () => {
         removeItem({ itemId: item.id });
       },
@@ -126,24 +128,24 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
-        <Menu.Label>Settings</Menu.Label>
+        <Menu.Label>{t("menu.label.settings")}</Menu.Label>
         <Menu.Item
           leftSection={<IconPencil size={16} />}
           onClick={openEditModal}
         >
-          Edit item
+          {t("action.edit")}
         </Menu.Item>
         <Menu.Item leftSection={<IconLayoutKanban size={16} />}>
-          Move item
+          {t("action.move")}
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Label c="red.6">Danger zone</Menu.Label>
+        <Menu.Label c="red.6">{t("menu.label.dangerZone")}</Menu.Label>
         <Menu.Item
           c="red.6"
           leftSection={<IconTrash size={16} />}
           onClick={openRemoveModal}
         >
-          Remove item
+          {t("action.remove")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

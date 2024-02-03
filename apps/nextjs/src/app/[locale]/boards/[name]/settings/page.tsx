@@ -1,4 +1,5 @@
 import { capitalize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   Accordion,
   AccordionControl,
@@ -28,16 +29,17 @@ interface Props {
 
 export default async function BoardSettingsPage({ params }: Props) {
   const board = await api.board.byName.query({ name: params.name });
+  const t = useScopedI18n("board.setting");
 
   return (
     <Container>
       <Stack>
-        <Title>Settings for {capitalize(board.name)} Board</Title>
+        <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
         <Accordion variant="separated" defaultValue="general">
           <AccordionItem value="general">
             <AccordionControl icon={<IconSettings />}>
               <Text fw="bold" size="lg">
-                General
+                {t("section.general.title")}
               </Text>
             </AccordionControl>
             <AccordionPanel>
@@ -47,18 +49,18 @@ export default async function BoardSettingsPage({ params }: Props) {
           <AccordionItem value="layout">
             <AccordionControl icon={<IconLayout />}>
               <Text fw="bold" size="lg">
-                Layout
+                {t("section.layout.title")}
               </Text>
             </AccordionControl>
-            <AccordionPanel>Layout</AccordionPanel>
+            <AccordionPanel></AccordionPanel>
           </AccordionItem>
           <AccordionItem value="appearance">
             <AccordionControl icon={<IconBrush />}>
               <Text fw="bold" size="lg">
-                Appearance
+                {t("section.appearance.title")}
               </Text>
             </AccordionControl>
-            <AccordionPanel>Appearance</AccordionPanel>
+            <AccordionPanel></AccordionPanel>
           </AccordionItem>
           <AccordionItem
             value="danger"
@@ -70,7 +72,7 @@ export default async function BoardSettingsPage({ params }: Props) {
           >
             <AccordionControl icon={<IconAlertTriangle />}>
               <Text fw="bold" size="lg">
-                Danger zone
+                {t("section.dangerZone.title")}
               </Text>
             </AccordionControl>
             <AccordionPanel
@@ -81,41 +83,44 @@ export default async function BoardSettingsPage({ params }: Props) {
                 <Group justify="space-between" px="md">
                   <Stack gap={0}>
                     <Text fw="bold" size="sm">
-                      Rename board
+                      {t("section.dangerZone.action.rename.label")}
                     </Text>
                     <Text size="sm">
-                      Changing the name will break any links to this board.
+                      {t("section.dangerZone.action.rename.description")}
                     </Text>
                   </Stack>
                   <Button variant="subtle" color="red">
-                    Change name
+                    {t("section.dangerZone.action.rename.button")}
                   </Button>
                 </Group>
                 <Divider />
                 <Group justify="space-between" px="md">
                   <Stack gap={0}>
                     <Text fw="bold" size="sm">
-                      Change board visibility
+                      {t("section.dangerZone.action.visibility.label")}
                     </Text>
-                    <Text size="sm">This board is currently private.</Text>
+                    <Text size="sm">
+                      {t(
+                        "section.dangerZone.action.visibility.description.private",
+                      )}
+                    </Text>
                   </Stack>
                   <Button variant="subtle" color="red">
-                    Make public
+                    {t("section.dangerZone.action.visibility.button.private")}
                   </Button>
                 </Group>
                 <Divider />
                 <Group justify="space-between" px="md">
                   <Stack gap={0}>
                     <Text fw="bold" size="sm">
-                      Delete this board
+                      {t("section.dangerZone.action.delete.label")}
                     </Text>
                     <Text size="sm">
-                      Once you delete a board, there is no going back. Please be
-                      certain.
+                      {t("section.dangerZone.action.delete.description")}
                     </Text>
                   </Stack>
                   <Button variant="subtle" color="red">
-                    Delete this board
+                    {t("section.dangerZone.action.delete.button")}
                   </Button>
                 </Group>
               </Stack>

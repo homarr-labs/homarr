@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { modalEvents } from "~/app/[locale]/modals";
@@ -9,15 +10,17 @@ import { useCategoryActions } from "./category-actions";
 export const useCategoryMenuActions = (category: CategorySection) => {
   const { addCategory, moveCategory, removeCategory, renameCategory } =
     useCategoryActions();
+  const t = useI18n();
 
   const createCategoryAtPosition = useCallback(
     (position: number) => {
       modalEvents.openManagedModal({
+        title: t("section.category.create.title"),
         modal: "categoryEditModal",
         innerProps: {
           category: {
             id: createId(),
-            name: "New category",
+            name: t("section.category.create.title"),
           },
           onSuccess: (category) => {
             addCategory({
@@ -25,11 +28,11 @@ export const useCategoryMenuActions = (category: CategorySection) => {
               position,
             });
           },
-          submitLabel: "Add category",
+          submitLabel: t("section.category.create.submit"),
         },
       });
     },
-    [addCategory],
+    [addCategory, t],
   );
 
   // creates a new category above the current
@@ -61,8 +64,10 @@ export const useCategoryMenuActions = (category: CategorySection) => {
   // Removes the current category
   const remove = useCallback(() => {
     modalEvents.openConfirmModal({
-      title: "Remove category",
-      children: "Are you sure you want to remove this category?",
+      title: t("section.category.remove.title"),
+      children: t("section.category.remove.message", {
+        name: category.name,
+      }),
       onConfirm: () => {
         removeCategory({
           id: category.id,
@@ -72,15 +77,15 @@ export const useCategoryMenuActions = (category: CategorySection) => {
         color: "red",
       },
     });
-  }, [category.id, removeCategory]);
+  }, [category.id, category.name, removeCategory, t]);
 
   const edit = () => {
     modalEvents.openManagedModal({
       modal: "categoryEditModal",
-      title: "Rename category",
+      title: t("section.category.edit.title"),
       innerProps: {
         category,
-        submitLabel: "Rename category",
+        submitLabel: t("section.category.edit.submit"),
         onSuccess: (category) => {
           renameCategory({
             id: category.id,

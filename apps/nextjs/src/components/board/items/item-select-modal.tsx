@@ -1,7 +1,7 @@
 import type { ManagedModal } from "mantine-modal-manager";
 
 import type { WidgetKind } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Card, Center, Grid, Stack, Text } from "@homarr/ui";
 
 import { objectEntries } from "../../../../../../packages/common/src";
@@ -37,7 +37,7 @@ const WidgetItem = ({
   definition: WidgetDefinition;
   closeModal: () => void;
 }) => {
-  const t = useScopedI18n("widget");
+  const t = useI18n();
   const { createItem } = useItemActions();
   const handleAdd = (kind: WidgetKind) => {
     createItem({ kind });
@@ -53,7 +53,7 @@ const WidgetItem = ({
               <definition.icon />
             </Center>
             <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-              {t(`${kind}.name`)}
+              {t(`widget.${kind}.name`)}
             </Text>
             <Text
               lh={1.2}
@@ -62,7 +62,7 @@ const WidgetItem = ({
               ta="center"
               c="dimmed"
             >
-              {t(`${kind}.description`)}
+              {t(`widget.${kind}.description`)}
             </Text>
           </Stack>
           <Button
@@ -75,7 +75,7 @@ const WidgetItem = ({
             radius="md"
             fullWidth
           >
-            {t(`addToBoard`)}
+            {t(`item.create.addToBoard`)}
           </Button>
         </Stack>
       </Card>

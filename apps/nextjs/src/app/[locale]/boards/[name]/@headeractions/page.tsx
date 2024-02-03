@@ -7,6 +7,7 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import {
   Group,
   IconBox,
@@ -45,6 +46,7 @@ export default function BoardViewHeaderActions() {
 
 const AddMenu = () => {
   const { addCategoryToEnd } = useCategoryActions();
+  const t = useI18n();
 
   return (
     <Menu position="bottom-end" withArrow>
@@ -61,17 +63,17 @@ const AddMenu = () => {
           leftSection={<IconBox size={20} />}
           onClick={() =>
             modalEvents.openManagedModal({
-              title: "Choose item to add",
+              title: t("item.create.title"),
               size: "xl",
               modal: "itemSelectModal",
               innerProps: {},
             })
           }
         >
-          New Item
+          {t("item.action.create")}
         </Menu.Item>
         <Menu.Item leftSection={<IconPackageImport size={20} />}>
-          Import Item
+          {t("item.action.import")}
         </Menu.Item>
 
         <Menu.Divider />
@@ -80,10 +82,10 @@ const AddMenu = () => {
           leftSection={<IconBoxAlignTop size={20} />}
           onClick={() =>
             modalEvents.openManagedModal({
-              title: "New Category",
+              title: t("section.category.create.title"),
               modal: "categoryEditModal",
               innerProps: {
-                submitLabel: "Add category",
+                submitLabel: t("section.category.create.submit"),
                 category: {
                   id: "new",
                   name: "",
@@ -95,7 +97,7 @@ const AddMenu = () => {
             })
           }
         >
-          New Category
+          {t("section.category.action.create")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
@@ -105,18 +107,19 @@ const AddMenu = () => {
 const EditModeMenu = () => {
   const [isEditMode, setEditMode] = useAtom(editModeAtom);
   const board = useRequiredBoard();
+  const t = useScopedI18n("board.action.edit");
   const { mutate, isPending } = clientApi.board.save.useMutation({
     onSuccess() {
       showSuccessNotification({
-        title: "Success",
-        message: "Board saved",
+        title: t("notification.success.title"),
+        message: t("notification.success.message"),
       });
       setEditMode(false);
     },
     onError() {
       showErrorNotification({
-        title: "Error",
-        message: "Failed to save board",
+        title: t("notification.error.title"),
+        message: t("notification.error.message"),
       });
     },
   });

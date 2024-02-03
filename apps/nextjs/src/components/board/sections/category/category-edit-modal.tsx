@@ -1,6 +1,7 @@
 import type { ManagedModal } from "mantine-modal-manager";
 
 import { useForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Group, Stack, TextInput } from "@homarr/ui";
 
 interface Category {
@@ -18,6 +19,7 @@ export const CategoryEditModal: ManagedModal<InnerProps> = ({
   actions,
   innerProps,
 }) => {
+  const t = useI18n();
   const form = useForm({
     initialValues: {
       name: innerProps.category.name,
@@ -36,13 +38,13 @@ export const CategoryEditModal: ManagedModal<InnerProps> = ({
     >
       <Stack>
         <TextInput
-          label="Name"
+          label={t("section.category.field.name.label")}
           data-autofocus
           {...form.getInputProps("name")}
         />
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            Cancel
+            {t("common.action.cancel")}
           </Button>
           <Button type="submit" color="teal">
             {innerProps.submitLabel}

@@ -9,6 +9,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Grid, Group, Stack, TextInput } from "@homarr/ui";
 
 import { useUpdateBoard } from "../../_client";
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export const GeneralSettingsContent = ({ board }: Props) => {
+  const t = useI18n();
   const { updateBoard } = useUpdateBoard();
   const { mutate, isPending } =
     clientApi.board.saveGeneralSettings.useMutation();
@@ -51,32 +53,32 @@ export const GeneralSettingsContent = ({ board }: Props) => {
         <Grid>
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
-              label="Page title"
+              label={t("board.field.pageTitle.label")}
               {...form.getInputProps("pageTitle")}
             />
           </Grid.Col>
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
-              label="Meta title"
+              label={t("board.field.metaTitle.label")}
               {...form.getInputProps("metaTitle")}
             />
           </Grid.Col>
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
-              label="Logo image URL"
+              label={t("board.field.logoImageUrl.label")}
               {...form.getInputProps("logoImageUrl")}
             />
           </Grid.Col>
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
-              label="Favicon image URL"
+              label={t("board.field.faviconImageUrl.label")}
               {...form.getInputProps("faviconImageUrl")}
             />
           </Grid.Col>
         </Grid>
         <Group justify="end">
           <Button type="submit" loading={isPending}>
-            Save changes
+            {t("common.action.saveChanges")}
           </Button>
         </Group>
       </Stack>
