@@ -16,5 +16,6 @@
   "automerge": false,
   "baseBranches": [
     "dev"
-  ]
+  ],
+  "dependencyDashboard": false
 }
