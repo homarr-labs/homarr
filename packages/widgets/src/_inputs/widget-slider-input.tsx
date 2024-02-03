@@ -8,10 +8,10 @@ import { useFormContext } from "./form";
 
 export const WidgetSliderInput = ({
   property,
-  sort,
+  kind,
   options,
 }: CommonWidgetInputProps<"slider">) => {
-  const t = useWidgetInputTranslation(sort, property);
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (

@@ -1,5 +1,8 @@
 import { objectEntries } from "@homarr/common";
+import type { WidgetKind } from "@homarr/definitions";
 import type { z } from "@homarr/validation";
+
+import { widgetImports } from ".";
 
 interface CommonInput<TType> {
   defaultValue?: TType;
@@ -143,13 +146,16 @@ export const opt = {
 };
 
 export const reduceWidgetOptionsWithDefaultValues = (
-  optionsDefinition: Record<string, WidgetOptionDefinition>,
+  kind: WidgetKind,
   currentValue: Record<string, unknown> = {},
-) =>
-  objectEntries(optionsDefinition).reduce(
+) => {
+  const definition = widgetImports[kind].definition;
+  const options = definition.options as Record<string, WidgetOptionDefinition>;
+  return objectEntries(options).reduce(
     (prev, [key, value]) => ({
       ...prev,
       [key]: currentValue[key] ?? value.defaultValue,
     }),
     {} as Record<string, unknown>,
   );
+};

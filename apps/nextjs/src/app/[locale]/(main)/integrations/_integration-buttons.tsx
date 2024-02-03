@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
+import { clientApi } from "@homarr/api/client";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -9,7 +10,6 @@ import {
 import { useScopedI18n } from "@homarr/translation/client";
 import { ActionIcon, IconTrash } from "@homarr/ui";
 
-import { api } from "~/trpc/react";
 import { revalidatePathAction } from "../../../revalidatePathAction";
 import { modalEvents } from "../../modals";
 
@@ -24,7 +24,7 @@ export const DeleteIntegrationActionButton = ({
 }: DeleteIntegrationActionButtonProps) => {
   const t = useScopedI18n("integration.page.delete");
   const router = useRouter();
-  const { mutateAsync, isPending } = api.integration.delete.useMutation();
+  const { mutateAsync, isPending } = clientApi.integration.delete.useMutation();
 
   return (
     <ActionIcon

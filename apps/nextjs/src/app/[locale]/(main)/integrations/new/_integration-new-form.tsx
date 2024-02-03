@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getSecretKinds } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
@@ -15,7 +16,6 @@ import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { api } from "~/trpc/react";
 import { IntegrationSecretInput } from "../_integration-secret-inputs";
 import {
   TestConnection,
@@ -53,7 +53,7 @@ export const NewIntegrationForm = ({
     validate: zodResolver(validation.integration.create.omit({ kind: true })),
     onValuesChange,
   });
-  const { mutateAsync, isPending } = api.integration.create.useMutation();
+  const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
 
   const handleSubmit = async (values: FormType) => {
     if (isDirty) return;

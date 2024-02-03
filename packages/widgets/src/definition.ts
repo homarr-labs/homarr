@@ -1,9 +1,9 @@
 import type { LoaderComponent } from "next/dynamic";
 
-import type { IntegrationKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { TablerIconsProps } from "@homarr/ui";
 
-import type { WidgetImports, WidgetSort } from ".";
+import type { WidgetImports } from ".";
 import type {
   inferOptionsFromDefinition,
   WidgetOptionsRecord,
@@ -11,37 +11,37 @@ import type {
 import type { IntegrationSelectOption } from "./widget-integration-select";
 
 export const createWidgetDefinition = <
-  TSort extends WidgetSort,
-  TDefinition extends Definition,
+  TKind extends WidgetKind,
+  TDefinition extends WidgetDefinition,
 >(
-  sort: TSort,
+  kind: TKind,
   definition: TDefinition,
 ) => ({
   withDynamicImport: (
-    componentLoader: () => LoaderComponent<WidgetComponentProps<TSort>>,
+    componentLoader: () => LoaderComponent<WidgetComponentProps<TKind>>,
   ) => ({
     definition: {
-      sort,
+      kind,
       ...definition,
     },
     componentLoader,
   }),
 });
 
-interface Definition {
+export interface WidgetDefinition {
   icon: (props: TablerIconsProps) => JSX.Element;
   supportedIntegrations?: IntegrationKind[];
   options: WidgetOptionsRecord;
 }
 
-export interface WidgetComponentProps<TSort extends WidgetSort> {
-  options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>;
+export interface WidgetComponentProps<TKind extends WidgetKind> {
+  options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TKind>>;
   integrations: inferIntegrationsFromDefinition<
-    WidgetImports[TSort]["definition"]
+    WidgetImports[TKind]["definition"]
   >;
 }
 
-type inferIntegrationsFromDefinition<TDefinition extends Definition> =
+type inferIntegrationsFromDefinition<TDefinition extends WidgetDefinition> =
   TDefinition extends {
     supportedIntegrations: infer TSupportedIntegrations;
   } // check if definition has supportedIntegrations
@@ -57,5 +57,5 @@ interface IntegrationSelectOptionFor<TIntegration extends IntegrationKind> {
   kind: TIntegration[number];
 }
 
-export type WidgetOptionsRecordOf<TSort extends WidgetSort> =
-  WidgetImports[TSort]["definition"]["options"];
+export type WidgetOptionsRecordOf<TKind extends WidgetKind> =
+  WidgetImports[TKind]["definition"]["options"];
