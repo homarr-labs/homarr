@@ -192,8 +192,12 @@ const useCssVariableConfiguration = ({
     const widgetWidth = mainRef.current.clientWidth / sectionColumnCount;
     // widget width is used to define sizes of gridstack items within global.scss
     root?.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
+    console.log("widgetWidth", widgetWidth);
+    console.log(gridRef.current);
     gridRef.current?.cellHeight(widgetWidth);
-  }, [sectionColumnCount, root, section.kind, mainRef, gridRef]);
+    // gridRef.current is required otherwise the cellheight is run on production as undefined
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionColumnCount, root, section.kind, mainRef, gridRef.current]);
 
   // Define column count by using the sectionColumnCount
   useEffect(() => {
