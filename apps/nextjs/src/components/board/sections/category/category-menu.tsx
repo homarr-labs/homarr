@@ -11,7 +11,6 @@ import {
   IconEdit,
   IconRowInsertBottom,
   IconRowInsertTop,
-  IconShare3,
   IconTransitionBottom,
   IconTransitionTop,
   IconTrash,
@@ -29,6 +28,8 @@ interface Props {
 export const CategoryMenu = ({ category }: Props) => {
   const actions = useActions(category);
   const t = useScopedI18n("section.category");
+
+  if (actions.length === 0) return null;
 
   return (
     <Menu withArrow>
@@ -113,21 +114,9 @@ const useEditModeActions = (category: CategorySection) => {
   ] as const satisfies ActionDefinition[];
 };
 
-const useNonEditModeActions = (category: CategorySection) => {
+// TODO: once apps are added we can use this for the open many apps action
+const useNonEditModeActions = (_category: CategorySection) => {
   return [] as const satisfies ActionDefinition[];
-  /*const openAllApps = useOpenAllApps();
-  const apps = useMemo(
-    () => category.items.filter((x): x is AppItem => x.kind === 'app'),
-    [category.items.length]
-  );
-
-  return [
-    {
-      icon: IconShare3,
-      label: 'actions.category.openAllInNewTab',
-      onClick: openAllApps(apps),
-    },
-  ];*/
 };
 
 interface ActionDefinition {

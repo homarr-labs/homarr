@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default async function BoardSettingsPage({ params }: Props) {
-  const board = await api.board.byName.query(params.name);
+  const board = await api.board.byName.query({ name: params.name });
 
   return (
     <Container>

@@ -1,7 +1,12 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
+import { clientApi } from "@homarr/api/client";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
 import {
   Group,
   IconBox,
@@ -22,23 +27,14 @@ import { HeaderButton } from "~/components/layout/header/button";
 import { useRequiredBoard } from "../../_context";
 
 export default function BoardViewHeaderActions() {
-  const [editMode, setEditMode] = useAtom(editModeAtom);
+  const isEditMode = useAtomValue(editModeAtom);
   const board = useRequiredBoard();
 
   return (
     <>
-      {editMode && <AddMenu />}
-      <HeaderButton
-        onClick={() => {
-          setEditMode((em) => !em);
-        }}
-      >
-        {editMode ? (
-          <IconPencilOff stroke={1.5} />
-        ) : (
-          <IconPencil stroke={1.5} />
-        )}
-      </HeaderButton>
+      {isEditMode && <AddMenu />}
+
+      <EditModeMenu />
 
       <HeaderButton href={`/boards/${board.name}/settings`}>
         <IconSettings stroke={1.5} />
@@ -103,5 +99,40 @@ const AddMenu = () => {
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
+  );
+};
+
+const EditModeMenu = () => {
+  const [isEditMode, setEditMode] = useAtom(editModeAtom);
+  const board = useRequiredBoard();
+  const { mutate, isPending } = clientApi.board.save.useMutation({
+    onSuccess() {
+      showSuccessNotification({
+        title: "Success",
+        message: "Board saved",
+      });
+      setEditMode(false);
+    },
+    onError() {
+      showErrorNotification({
+        title: "Error",
+        message: "Failed to save board",
+      });
+    },
+  });
+
+  const toggle = () => {
+    if (isEditMode) return mutate(board);
+    setEditMode(true);
+  };
+
+  return (
+    <HeaderButton onClick={toggle} loading={isPending}>
+      {isEditMode ? (
+        <IconPencilOff stroke={1.5} />
+      ) : (
+        <IconPencil stroke={1.5} />
+      )}
+    </HeaderButton>
   );
 };

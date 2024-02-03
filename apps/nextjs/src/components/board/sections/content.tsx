@@ -64,7 +64,7 @@ const ItemMenu = ({ offset, item }: { offset: number, item: Item }) => {
 
   const openEditModal = () => {
     modalEvents.openManagedModal({
-      title: "New category",
+      title: "Edit item",
       modal: 'widgetEditModal',
       innerProps: {
         kind: item.kind,
