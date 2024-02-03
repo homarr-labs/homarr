@@ -18,7 +18,7 @@ export const WidgetTextInput = ({
     <TextInput
       label={t("label")}
       description={options.withDescription ? t("description") : undefined}
-      {...form.getInputProps(property)}
+      {...form.getInputProps(`options.${property}`)}
     />
   );
 };

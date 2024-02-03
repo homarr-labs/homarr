@@ -11,7 +11,9 @@ import type { WidgetComponentProps } from "./definition";
 import type { WidgetImportRecord } from "./import";
 import * as weather from "./weather";
 
-export { WidgetEditModal } from "./WidgetEditModal";
+export { reduceWidgetOptionsWithDefaultValues } from "./options";
+
+export { WidgetEditModal } from "./modals/widget-edit-modal";
 
 export const widgetImports = {
   clock,

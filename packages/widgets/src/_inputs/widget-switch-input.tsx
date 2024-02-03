@@ -18,7 +18,7 @@ export const WidgetSwitchInput = ({
     <Switch
       label={t("label")}
       description={options.withDescription ? t("description") : undefined}
-      {...form.getInputProps(property, { type: "checkbox" })}
+      {...form.getInputProps(`options.${property}`, { type: "checkbox" })}
     />
   );
 };

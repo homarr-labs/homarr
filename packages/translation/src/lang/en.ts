@@ -147,6 +147,9 @@ export default {
       cancel: "Cancel",
       confirm: "Confirm",
     },
+    multiSelect: {
+      placeholder: "Pick one or more values",
+    },
     search: {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
@@ -173,6 +176,11 @@ export default {
     },
   },
   widget: {
+    editModal: {
+      integrations: {
+        label: "Integrations",
+      },
+    },
     app: {
       name: "App",
       description: "Displays a link to an external application",

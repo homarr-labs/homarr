@@ -5,6 +5,7 @@ import { opt } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
+  supportedIntegrations: ["adGuardHome", "piHole"],
   options: opt.from(
     (fac) => ({
       is24HourFormat: fac.switch({

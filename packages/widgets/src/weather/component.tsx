@@ -1,7 +1,7 @@
 import type { WidgetComponentProps } from "../definition";
 
 export default function WeatherWidget({
-  options,
+  options: _options,
 }: WidgetComponentProps<"weather">) {
-  return <pre>WEATHER: {JSON.stringify(options)}</pre>;
+  return <div>WEATHER</div>;
 }
