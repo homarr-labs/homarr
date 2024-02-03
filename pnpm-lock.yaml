@@ -47,6 +47,9 @@ importers:
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
+      '@homarr/gridstack':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
@@ -110,9 +113,6 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
-      fily-publish-gridstack:
-        specifier: ^0.0.13
-        version: 0.0.13
       jotai:
         specifier: ^2.6.1
         version: 2.6.2(@types/react@18.2.52)(react@18.2.0)
@@ -1355,6 +1355,10 @@ packages:
 
   /@floating-ui/utils@0.1.6:
     resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
+    dev: false
+
+  /@homarr/gridstack@1.0.0:
+    resolution: {integrity: sha512-KM9024BipLD9BmtM6jHI8OKLZ1Iy4vZdTfU53ww4qEda/330XQYhIC2SBcQgkNnDB2MTkn/laNSO5gTy+lJg9Q==}
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:
@@ -4043,10 +4047,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       to-regex-range: 5.0.1
-
-  /fily-publish-gridstack@0.0.13:
-    resolution: {integrity: sha512-evN26y9qwzZcz63PJNCe1zqtf5yLG8UI/2FIBXrW1tcKCyyNIyC8+xkH0QoRalSpJETgAiqdBHgi3asVTU3umQ==}
-    dev: false
 
   /find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}

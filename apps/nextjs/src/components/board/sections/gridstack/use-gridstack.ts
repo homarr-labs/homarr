@@ -1,11 +1,12 @@
 import type { MutableRefObject, RefObject } from "react";
 import { createRef, useCallback, useEffect, useMemo, useRef } from "react";
+import { useAtomValue } from "jotai";
+
 import type {
   GridItemHTMLElement,
   GridStack,
   GridStackNode,
-} from "fily-publish-gridstack";
-import { useAtomValue } from "jotai";
+} from "@homarr/gridstack";
 
 import {
   useMarkSectionAsReady,
@@ -101,12 +102,11 @@ export const useGridstack = ({
     const currentGrid = gridRef.current;
     // Add listener for moving items around in a wrapper
     currentGrid?.on("change", (_, nodes) => {
-      (nodes as GridStackNode[]).forEach(onChange);
+      nodes.forEach(onChange);
     });
 
     // Add listener for moving items in config from one wrapper to another
-    currentGrid?.on("added", (_, el) => {
-      const nodes = el as GridStackNode[];
+    currentGrid?.on("added", (_, nodes) => {
       nodes.forEach((node) => onAdd(node));
     });
 
