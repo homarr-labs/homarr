@@ -5,7 +5,6 @@ import type { Loader } from "next/dynamic";
 import type { WidgetKind } from "@homarr/definitions";
 import { Loader as UiLoader } from "@homarr/ui";
 
-import * as app from "./app";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import type { WidgetImportRecord } from "./import";
@@ -18,7 +17,6 @@ export { WidgetEditModal } from "./modals/widget-edit-modal";
 export const widgetImports = {
   clock,
   weather,
-  app,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
