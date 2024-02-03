@@ -17,6 +17,7 @@ import {
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
+  useServerDataFor,
 } from "@homarr/widgets";
 
 import type { Item } from "~/app/[locale]/boards/_types";
@@ -62,13 +63,21 @@ interface ItemProps {
 }
 
 const BoardItem = ({ item }: ItemProps) => {
+  const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
   const newItem = { ...item, options };
+
+  if (!serverData?.isReady) return null;
+
   return (
     <>
       <ItemMenu offset={8} item={newItem} />
-      <Comp options={options as never} integrations={item.integrations} />
+      <Comp
+        options={options as never}
+        integrations={item.integrations}
+        serverData={serverData?.data as never}
+      />
     </>
   );
 };
