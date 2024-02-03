@@ -107,7 +107,7 @@ export const useGridstack = ({
     // Add listener for moving items in config from one wrapper to another
     currentGrid?.on("added", (_, el) => {
       const nodes = el as GridStackNode[];
-      nodes.forEach((n) => onAdd(n));
+      nodes.forEach((node) => onAdd(node));
     });
 
     return () => {
