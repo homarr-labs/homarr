@@ -1,5 +1,5 @@
 import { capitalize } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { getScopedI18n } from "@homarr/translation/server";
 import {
   Accordion,
   AccordionControl,
@@ -29,7 +29,7 @@ interface Props {
 
 export default async function BoardSettingsPage({ params }: Props) {
   const board = await api.board.byName.query({ name: params.name });
-  const t = useScopedI18n("board.setting");
+  const t = await getScopedI18n("board.setting");
 
   return (
     <Container>
