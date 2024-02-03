@@ -39,12 +39,12 @@ export const useItemActions = () => {
 
   const createItem = useCallback(
     ({ kind }: CreateItem) => {
-      updateBoard((prev) => {
-        const lastSection = prev.sections
+      updateBoard((previous) => {
+        const lastSection = previous.sections
           .filter((s): s is EmptySection => s.kind === "empty")
           .sort((a, b) => b.position - a.position)[0];
 
-        if (!lastSection) return prev;
+        if (!lastSection) return previous;
 
         const widget = {
           id: createId(),
@@ -58,8 +58,8 @@ export const useItemActions = () => {
         };
 
         return {
-          ...prev,
-          sections: prev.sections.map((section) => {
+          ...previous,
+          sections: previous.sections.map((section) => {
             // Return same section if item is not in it
             if (section.id !== lastSection.id) return section;
             return {
@@ -75,11 +75,11 @@ export const useItemActions = () => {
 
   const updateItemOptions = useCallback(
     ({ itemId, newOptions }: UpdateItemOptions) => {
-      updateBoard((prev) => {
-        if (!prev) return prev;
+      updateBoard((previous) => {
+        if (!previous) return previous;
         return {
-          ...prev,
-          sections: prev.sections.map((section) => {
+          ...previous,
+          sections: previous.sections.map((section) => {
             // Return same section if item is not in it
             if (!section.items.some((item) => item.id === itemId))
               return section;
@@ -103,9 +103,9 @@ export const useItemActions = () => {
 
   const moveAndResizeItem = useCallback(
     ({ itemId, ...positionProps }: MoveAndResizeItem) => {
-      updateBoard((prev) => ({
-        ...prev,
-        sections: prev.sections.map((section) => {
+      updateBoard((previous) => ({
+        ...previous,
+        sections: previous.sections.map((section) => {
           // Return same section if item is not in it
           if (!section.items.some((item) => item.id === itemId)) return section;
           return {
@@ -127,30 +127,30 @@ export const useItemActions = () => {
 
   const moveItemToSection = useCallback(
     ({ itemId, sectionId, ...positionProps }: MoveItemToSection) => {
-      updateBoard((prev) => {
-        const currentSection = prev.sections.find((section) =>
+      updateBoard((previous) => {
+        const currentSection = previous.sections.find((section) =>
           section.items.some((item) => item.id === itemId),
         );
 
         // If item is in the same section (on initial loading) don't do anything
         if (!currentSection) {
-          return prev;
+          return previous;
         }
 
         const currentItem = currentSection.items.find(
           (item) => item.id === itemId,
         );
         if (!currentItem) {
-          return prev;
+          return previous;
         }
 
         if (currentSection.id === sectionId && currentItem.xOffset) {
-          return prev;
+          return previous;
         }
 
         return {
-          ...prev,
-          sections: prev.sections.map((section) => {
+          ...previous,
+          sections: previous.sections.map((section) => {
             // Return sections without item if not section where it is moved to
             if (section.id !== sectionId)
               return {
@@ -177,11 +177,11 @@ export const useItemActions = () => {
 
   const removeItem = useCallback(
     ({ itemId }: RemoveItem) => {
-      updateBoard((prev) => {
+      updateBoard((previous) => {
         return {
-          ...prev,
+          ...previous,
           // Filter removed item out of items array
-          sections: prev.sections.map((section) => ({
+          sections: previous.sections.map((section) => ({
             ...section,
             items: section.items.filter((item) => item.id !== itemId),
           })),

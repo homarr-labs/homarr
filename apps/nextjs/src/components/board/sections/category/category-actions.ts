@@ -36,13 +36,13 @@ export const useCategoryActions = () => {
       if (position <= -1) {
         return;
       }
-      updateBoard((prev) => ({
-        ...prev,
+      updateBoard((previous) => ({
+        ...previous,
         sections: [
           // Ignore sidebar sections
-          ...prev.sections.filter((section) => section.kind === "sidebar"),
+          ...previous.sections.filter((section) => section.kind === "sidebar"),
           // Place sections before the new category
-          ...prev.sections.filter(
+          ...previous.sections.filter(
             (section) =>
               (section.kind === "category" || section.kind === "empty") &&
               section.position < position,
@@ -61,7 +61,7 @@ export const useCategoryActions = () => {
             items: [],
           },
           // Place sections after the new category
-          ...prev.sections
+          ...previous.sections
             .filter(
               (section): section is CategorySection | EmptySection =>
                 (section.kind === "category" || section.kind === "empty") &&
@@ -79,8 +79,8 @@ export const useCategoryActions = () => {
 
   const addCategoryToEnd = useCallback(
     ({ name }: { name: string }) => {
-      updateBoard((prev) => {
-        const lastSection = prev.sections
+      updateBoard((previous) => {
+        const lastSection = previous.sections
           .filter(
             (x): x is CategorySection | EmptySection =>
               x.kind === "empty" || x.kind === "category",
@@ -88,13 +88,13 @@ export const useCategoryActions = () => {
           .sort((a, b) => b.position - a.position)
           .at(0);
 
-        if (!lastSection) return prev;
+        if (!lastSection) return previous;
         const lastPosition = lastSection.position;
 
         return {
-          ...prev,
+          ...previous,
           sections: [
-            ...prev.sections,
+            ...previous.sections,
             {
               id: createId(),
               name,
@@ -117,9 +117,9 @@ export const useCategoryActions = () => {
 
   const renameCategory = useCallback(
     ({ id: categoryId, name }: RenameCategory) => {
-      updateBoard((prev) => ({
-        ...prev,
-        sections: prev.sections.map((section) => {
+      updateBoard((previous) => ({
+        ...previous,
+        sections: previous.sections.map((section) => {
           if (section.kind !== "category") return section;
           if (section.id !== categoryId) return section;
           return {
@@ -134,22 +134,23 @@ export const useCategoryActions = () => {
 
   const moveCategory = useCallback(
     ({ id, direction }: MoveCategory) => {
-      updateBoard((prev) => {
-        const currentCategory = prev.sections.find(
+      updateBoard((previous) => {
+        const currentCategory = previous.sections.find(
           (section): section is CategorySection =>
             section.kind === "category" && section.id === id,
         );
-        if (!currentCategory) return prev;
-        if (currentCategory?.position === 1 && direction === "up") return prev;
+        if (!currentCategory) return previous;
+        if (currentCategory?.position === 1 && direction === "up")
+          return previous;
         if (
-          currentCategory?.position === prev.sections.length - 2 &&
+          currentCategory?.position === previous.sections.length - 2 &&
           direction === "down"
         )
-          return prev;
+          return previous;
 
         return {
-          ...prev,
-          sections: prev.sections.map((section) => {
+          ...previous,
+          sections: previous.sections.map((section) => {
             if (section.kind !== "category" && section.kind !== "empty")
               return section;
             const offset = direction === "up" ? -2 : 2;
@@ -196,26 +197,26 @@ export const useCategoryActions = () => {
 
   const removeCategory = useCallback(
     ({ id: categoryId }: RemoveCategory) => {
-      updateBoard((prev) => {
-        const currentCategory = prev.sections.find(
+      updateBoard((previous) => {
+        const currentCategory = previous.sections.find(
           (section): section is CategorySection =>
             section.kind === "category" && section.id === categoryId,
         );
-        if (!currentCategory) return prev;
+        if (!currentCategory) return previous;
 
-        const aboveWrapper = prev.sections.find(
+        const aboveWrapper = previous.sections.find(
           (section): section is EmptySection =>
             section.kind === "empty" &&
             section.position === currentCategory.position - 1,
         );
 
-        const removedWrapper = prev.sections.find(
+        const removedWrapper = previous.sections.find(
           (section): section is EmptySection =>
             section.kind === "empty" &&
             section.position === currentCategory.position + 1,
         );
 
-        if (!aboveWrapper || !removedWrapper) return prev;
+        if (!aboveWrapper || !removedWrapper) return previous;
 
         // Calculate the yOffset for the items in the currentCategory and removedWrapper to add them with the same offset to the aboveWrapper
         const aboveYOffset = calculateYHeightWithOffset(aboveWrapper);
@@ -231,10 +232,12 @@ export const useCategoryActions = () => {
         }));
 
         return {
-          ...prev,
+          ...previous,
           sections: [
-            ...prev.sections.filter((section) => section.kind === "sidebar"),
-            ...prev.sections.filter(
+            ...previous.sections.filter(
+              (section) => section.kind === "sidebar",
+            ),
+            ...previous.sections.filter(
               (section) =>
                 (section.kind === "category" || section.kind === "empty") &&
                 section.position < currentCategory.position - 1,
@@ -247,7 +250,7 @@ export const useCategoryActions = () => {
                 ...previousBelowWrapperItems,
               ],
             },
-            ...prev.sections
+            ...previous.sections
               .filter(
                 (section): section is CategorySection | EmptySection =>
                   (section.kind === "category" || section.kind === "empty") &&

@@ -25,7 +25,9 @@ export const BoardProvider = ({
   });
 
   const markAsReady = useCallback((id: string) => {
-    setReadySections((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setReadySections((previous) =>
+      previous.includes(id) ? previous : [...previous, id],
+    );
   }, []);
 
   return (

@@ -20,8 +20,8 @@ export const useUpdateBoard = () => {
 
   const updateBoard = useCallback(
     (updaterWithoutUndefined: UpdateCallback) => {
-      utils.board.default.setData(undefined, (prev) =>
-        prev ? updaterWithoutUndefined(prev) : prev,
+      utils.board.default.setData(undefined, (previous) =>
+        previous ? updaterWithoutUndefined(previous) : previous,
       );
     },
     [utils],

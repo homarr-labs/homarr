@@ -32,8 +32,8 @@ export const GeneralSettingsContent = ({ board }: Props) => {
       faviconImageUrl: board.faviconImageUrl,
     },
     onValuesChange({ pageTitle }) {
-      updateBoard((prev) => ({
-        ...prev,
+      updateBoard((previous) => ({
+        ...previous,
         pageTitle,
       }));
     },
@@ -92,8 +92,8 @@ const useLogoPreview = (url: string | null) => {
 
   useEffect(() => {
     if (!logoDebounced.includes(".")) return;
-    updateBoard((prev) => ({
-      ...prev,
+    updateBoard((previous) => ({
+      ...previous,
       logoImageUrl: logoDebounced,
     }));
   }, [logoDebounced, updateBoard]);
