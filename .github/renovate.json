@@ -1,6 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "platform": "github",
   "extends": [
     "config:recommended"
   ],
@@ -17,9 +16,5 @@
   "automerge": false,
   "baseBranches": [
     "dev"
-  ],
-  "branchPrefix": "renovate/",
-  "repositories": [
-    "homarr-labs/homarr"
   ]
 }
