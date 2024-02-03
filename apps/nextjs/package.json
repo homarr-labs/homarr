@@ -40,7 +40,7 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "dayjs": "^1.11.10",
-    "fily-publish-gridstack": "^0.0.13",
+    "@homarr/gridstack": "^1.0.0",
     "jotai": "^2.6.1",
     "mantine-modal-manager": "^7.5.1",
     "next": "^14.0.4",

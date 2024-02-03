@@ -1,6 +1,7 @@
 import type { MutableRefObject, RefObject } from "react";
-import type { GridItemHTMLElement } from "fily-publish-gridstack";
-import { GridStack } from "fily-publish-gridstack";
+
+import type { GridItemHTMLElement } from "@homarr/gridstack";
+import { GridStack } from "@homarr/gridstack";
 
 import type { Section } from "~/app/[locale]/boards/_types";
 
@@ -36,11 +37,11 @@ export const initializeGridstack = ({
       float: true,
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
-      disableOneColumnMode: true,
       staticGrid: true,
       minRow,
       animate: false,
       styleInHead: true,
+      disableRemoveNodeOnDrop: true,
     },
     // selector of the gridstack item (it's eather category or wrapper)
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
