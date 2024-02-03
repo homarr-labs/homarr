@@ -7,7 +7,10 @@ import type {
 } from "fily-publish-gridstack";
 import { useAtomValue } from "jotai";
 
-import { useRequiredBoard } from "~/app/[locale]/boards/_context";
+import {
+  useMarkSectionAsReady,
+  useRequiredBoard,
+} from "~/app/[locale]/boards/_context";
 import type { Section } from "~/app/[locale]/boards/_types";
 import { editModeAtom } from "../../editMode";
 import { useItemActions } from "../../items/item-actions";
@@ -33,6 +36,7 @@ export const useGridstack = ({
   mainRef,
 }: UseGridstackProps): UseGristackReturnType => {
   const isEditMode = useAtomValue(editModeAtom);
+  const markAsReady = useMarkSectionAsReady();
   const { moveAndResizeItem, moveItemToSection } = useItemActions();
   // define reference for wrapper - is used to calculate the width of the wrapper
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -114,7 +118,7 @@ export const useGridstack = ({
 
   // initialize the gridstack
   useEffect(() => {
-    initializeGridstack({
+    const isReady = initializeGridstack({
       section,
       refs: {
         items: itemRefs,
@@ -123,6 +127,11 @@ export const useGridstack = ({
       },
       sectionColumnCount,
     });
+
+    if (isReady) {
+      markAsReady(section.id);
+    }
+
     // Only run this effect when the section items change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length, section.items.length]);

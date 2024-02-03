@@ -19,7 +19,7 @@ export const initializeGridstack = ({
   refs,
   sectionColumnCount,
 }: InitializeGridstackProps) => {
-  if (!refs.wrapper.current) return;
+  if (!refs.wrapper.current) return false;
   // calculates the currently available count of columns
   const columnCount = section.kind === "sidebar" ? 2 : sectionColumnCount;
   const minRow =
@@ -46,7 +46,7 @@ export const initializeGridstack = ({
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
   );
   const grid = newGrid.current;
-  if (!grid) return;
+  if (!grid) return false;
   // Must be used to update the column count after the initialization
   grid.column(columnCount, "none");
 
@@ -57,4 +57,5 @@ export const initializeGridstack = ({
     ref && grid.makeWidget(ref);
   });
   grid.batchUpdate(false);
+  return true;
 };

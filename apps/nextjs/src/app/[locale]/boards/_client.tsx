@@ -4,11 +4,11 @@ import { useCallback, useRef } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { Stack } from "@homarr/ui";
+import { Box, LoadingOverlay, Stack } from "@homarr/ui";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
-import { useRequiredBoard } from "./_context";
+import { useIsBoardReady, useRequiredBoard } from "./_context";
 import type { CategorySection, EmptySection } from "./_types";
 
 type UpdateCallback = (
@@ -34,6 +34,7 @@ export const useUpdateBoard = () => {
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
+  const isReady = useIsBoardReady();
 
   const sectionsWithoutSidebars = board.sections
     .filter(
@@ -45,8 +46,18 @@ export const ClientBoard = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <>
-      <Stack ref={ref}>
+    <Box h="100%" pos="relative">
+      <LoadingOverlay
+        visible={!isReady}
+        transitionProps={{ duration: 500 }}
+        loaderProps={{ size: "lg", variant: "bars" }}
+        h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
+      />
+      <Stack
+        ref={ref}
+        h="100%"
+        style={{ visibility: isReady ? "visible" : "hidden" }}
+      >
         {sectionsWithoutSidebars.map((section) =>
           section.kind === "empty" ? (
             <BoardEmptySection
@@ -63,6 +74,6 @@ export const ClientBoard = () => {
           ),
         )}
       </Stack>
-    </>
+    </Box>
   );
 };

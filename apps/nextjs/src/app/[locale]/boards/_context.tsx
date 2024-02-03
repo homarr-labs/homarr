@@ -1,19 +1,22 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
 const BoardContext = createContext<{
   board: RouterOutputs["board"]["default"];
+  isReady: boolean;
+  markAsReady: (id: string) => void;
 } | null>(null);
 
 export const BoardProvider = ({
   children,
   initialBoard,
 }: PropsWithChildren<{ initialBoard: RouterOutputs["board"]["default"] }>) => {
+  const [readySections, setReadySections] = useState<string[]>([]);
   const { data } = clientApi.board.default.useQuery(undefined, {
     initialData: initialBoard,
     refetchOnMount: false,
@@ -21,11 +24,41 @@ export const BoardProvider = ({
     refetchOnReconnect: false,
   });
 
+  const markAsReady = useCallback((id: string) => {
+    setReadySections((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  }, []);
+
   return (
-    <BoardContext.Provider value={{ board: data }}>
+    <BoardContext.Provider
+      value={{
+        board: data,
+        isReady: data.sections.length === readySections.length,
+        markAsReady,
+      }}
+    >
       {children}
     </BoardContext.Provider>
   );
+};
+
+export const useMarkSectionAsReady = () => {
+  const context = useContext(BoardContext);
+
+  if (!context) {
+    throw new Error("Board is required");
+  }
+
+  return context.markAsReady;
+};
+
+export const useIsBoardReady = () => {
+  const context = useContext(BoardContext);
+
+  if (!context) {
+    throw new Error("Board is required");
+  }
+
+  return context.isReady;
 };
 
 export const useRequiredBoard = () => {
