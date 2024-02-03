@@ -60,10 +60,17 @@ export const useCategoryMenuActions = (category: CategorySection) => {
 
   // Removes the current category
   const remove = useCallback(() => {
-    // TODO: contained apps are currently just deleted
-    // TODO: Add a confirmation modal
-    removeCategory({
-      id: category.id,
+    modalEvents.openConfirmModal({
+      title: "Remove category",
+      children: "Are you sure you want to remove this category?",
+      onConfirm: () => {
+        removeCategory({
+          id: category.id,
+        });
+      },
+      confirmProps: {
+        color: "red",
+      },
     });
   }, [category.id, removeCategory]);
 

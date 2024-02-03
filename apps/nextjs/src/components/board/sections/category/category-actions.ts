@@ -6,6 +6,7 @@ import { useUpdateBoard } from "~/app/[locale]/boards/_client";
 import type {
   CategorySection,
   EmptySection,
+  Section,
 } from "~/app/[locale]/boards/_types";
 
 interface AddCategory {
@@ -33,7 +34,6 @@ export const useCategoryActions = () => {
   const addCategory = useCallback(
     ({ name, position }: AddCategory) => {
       if (position <= -1) {
-        //Consola.error('Cannot add category before first section');
         return;
       }
       updateBoard((prev) => ({
@@ -203,6 +203,33 @@ export const useCategoryActions = () => {
         );
         if (!currentCategory) return prev;
 
+        const aboveWrapper = prev.sections.find(
+          (section): section is EmptySection =>
+            section.kind === "empty" &&
+            section.position === currentCategory.position - 1,
+        );
+
+        const removedWrapper = prev.sections.find(
+          (section): section is EmptySection =>
+            section.kind === "empty" &&
+            section.position === currentCategory.position + 1,
+        );
+
+        if (!aboveWrapper || !removedWrapper) return prev;
+
+        // Calculate the yOffset for the items in the currentCategory and removedWrapper to add them with the same offset to the aboveWrapper
+        const aboveYOffset = calculateYHeightWithOffset(aboveWrapper);
+        const categoryYOffset = calculateYHeightWithOffset(currentCategory);
+
+        const previousCategoryItems = currentCategory.items.map((item) => ({
+          ...item,
+          yOffset: item.yOffset + aboveYOffset,
+        }));
+        const previousBelowWrapperItems = removedWrapper.items.map((item) => ({
+          ...item,
+          yOffset: item.yOffset + aboveYOffset + categoryYOffset,
+        }));
+
         return {
           ...prev,
           sections: [
@@ -210,8 +237,16 @@ export const useCategoryActions = () => {
             ...prev.sections.filter(
               (section) =>
                 (section.kind === "category" || section.kind === "empty") &&
-                section.position < currentCategory.position,
+                section.position < currentCategory.position - 1,
             ),
+            {
+              ...aboveWrapper,
+              items: [
+                ...aboveWrapper.items,
+                ...previousCategoryItems,
+                ...previousBelowWrapperItems,
+              ],
+            },
             ...prev.sections
               .filter(
                 (section): section is CategorySection | EmptySection =>
@@ -237,3 +272,10 @@ export const useCategoryActions = () => {
     removeCategory,
   };
 };
+
+const calculateYHeightWithOffset = (section: Section) =>
+  section.items.reduce((acc, item) => {
+    const yHeightWithOffset = item.yOffset + item.height;
+    if (yHeightWithOffset > acc) return yHeightWithOffset;
+    return acc;
+  }, 0);
