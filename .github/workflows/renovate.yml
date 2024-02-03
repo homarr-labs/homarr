@@ -14,6 +14,5 @@ jobs:
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@v40.0.2
         with:
-          docker-cmd-file: .github/renovate-entrypoint.sh
-          docker-user: root
           token: ${{ secrets.RENOVATE_TOKEN }}
+          configurationFile: '.github/renovate.json'

@@ -15,5 +15,6 @@
   "updateInternalDeps": true,
   "rangeStrategy": "bump",
   "automerge": false,
-  "baseBranches": ["dev"]
+  "baseBranches": ["dev"],
+  "branchPrefix": "renovate/"
 }
