@@ -502,6 +502,12 @@ importers:
 
   packages/widgets:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../form

@@ -148,6 +148,9 @@ export default {
       cancel: "Abbrechen",
       confirm: "Bestätigen",
     },
+    multiSelect: {
+      placeholder: "Wähle eine oder mehrere Optionen aus",
+    },
     noResults: "Keine Ergebnisse gefunden",
     search: {
       placeholder: "Suche nach etwas...",
@@ -155,17 +158,23 @@ export default {
     },
   },
   widget: {
+    editModal: {
+      integrations: {
+        label: "Integrationen",
+      },
+    },
     clock: {
       option: {
         is24HourFormat: {
           label: "24-Stunden Format",
-          description: "Use 24-hour format instead of 12-hour format",
+          description:
+            "Verwende das 24-Stunden Format anstelle des 12-Stunden Formats",
         },
         isLocaleTime: {
-          label: "Use locale time",
+          label: "Lokale Zeit verwenden",
         },
         timezone: {
-          label: "Timezone",
+          label: "Zeitzone",
         },
       },
     },

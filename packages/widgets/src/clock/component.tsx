@@ -1,7 +1,8 @@
 import type { WidgetComponentProps } from "../definition";
 
 export default function ClockWidget({
-  options,
+  options: _options,
+  integrations: _integrations,
 }: WidgetComponentProps<"clock">) {
-  return <pre>{JSON.stringify(options)}</pre>;
+  return <div>CLOCK</div>;
 }

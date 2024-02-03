@@ -147,6 +147,9 @@ export default {
       cancel: "Cancel",
       confirm: "Confirm",
     },
+    multiSelect: {
+      placeholder: "Pick one or more values",
+    },
     search: {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
@@ -154,6 +157,11 @@ export default {
     noResults: "No results found",
   },
   widget: {
+    editModal: {
+      integrations: {
+        label: "Integrations",
+      },
+    },
     clock: {
       option: {
         is24HourFormat: {

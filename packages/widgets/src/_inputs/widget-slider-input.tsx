@@ -23,7 +23,7 @@ export const WidgetSliderInput = ({
         min={options.validate.minValue ?? undefined}
         max={options.validate.maxValue ?? undefined}
         step={options.step}
-        {...form.getInputProps(property)}
+        {...form.getInputProps(`options.${property}`)}
       />
     </InputWrapper>
   );
