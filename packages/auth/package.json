@@ -29,7 +29,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
-    "@types/cookies": "0.7.10",
+    "@types/cookies": "0.9.0",
     "eslint": "^8.56.0",
     "prettier": "^3.1.0",
     "typescript": "^5.3.3"
