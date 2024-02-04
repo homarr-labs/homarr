@@ -114,8 +114,8 @@ importers:
         specifier: ^1.11.10
         version: 1.11.10
       jotai:
-        specifier: ^2.6.1
-        version: 2.6.2(@types/react@18.2.52)(react@18.2.0)
+        specifier: ^2.6.4
+        version: 2.6.4(@types/react@18.2.52)(react@18.2.0)
       mantine-modal-manager:
         specifier: ^7.5.1
         version: 7.5.1(@mantine/core@7.5.1)(@mantine/hooks@7.5.1)(react-dom@18.2.0)(react@18.2.0)
@@ -4795,8 +4795,8 @@ packages:
     resolution: {integrity: sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==}
     dev: false
 
-  /jotai@2.6.2(@types/react@18.2.52)(react@18.2.0):
-    resolution: {integrity: sha512-kl4KguU1Fr+tFiLi3A3h9qPEzhvLTTDA10DO3QZAz6k7BEaQJ+qvSBwolzonnfNI4QzEovyQfUqVgnRxfnnQVQ==}
+  /jotai@2.6.4(@types/react@18.2.52)(react@18.2.0):
+    resolution: {integrity: sha512-RniwQPX4893YlNR1muOtyUGHYaTD1fhEN4qnOuZJSrDHj6xdEMrqlRSN/hCm2fshwk78ruecB/P2l+NCVWe6TQ==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=17.0.0'
