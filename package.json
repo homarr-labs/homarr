@@ -4,6 +4,7 @@
   "engines": {
     "node": ">=20.11.0"
   },
+  "type": "module",
   "packageManager": "pnpm@8.15.1",
   "scripts": {
     "build": "turbo build",
@@ -17,14 +18,22 @@
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
+    "test": "cross-env NODE_ENV=development vitest run --coverage.enabled",
+    "test:ui": "cross-env NODE_ENV=development vitest --ui --coverage.enabled",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@turbo/gen": "^1.12.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.2.2",
+    "@vitest/ui": "^1.2.2",
+    "cross-env": "^7.0.3",
     "prettier": "^3.2.4",
     "turbo": "^1.12.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite-tsconfig-paths": "^4.3.1",
+    "vitest": "^1.2.2"
   },
   "pnpm": {
     "overrides": {
