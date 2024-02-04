@@ -55,3 +55,14 @@ jobs:
 
       - name: Typecheck
         run: turbo typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Test
+        run: pnpm test
