@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1707041291385,
+      "tag": "0000_solid_gladiator",
+      "breakpoints": true
+    }
+  ]
+}
