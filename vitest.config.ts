@@ -5,10 +5,10 @@ import { configDefaults, defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   test: {
-    include: ["**/*.test.ts"],
+    include: ["**/*.spec.ts"],
     poolOptions: {
       threads: {
-        singleThread: true,
+        singleThread: false,
       },
     },
     coverage: {
