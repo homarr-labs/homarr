@@ -9,8 +9,7 @@ import { createDb } from "./_db";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", async () => {
   const mod = await import("@homarr/auth/security");
-  // eslint-disable-next-line @typescript-eslint/require-await
-  return { ...mod, auth: async () => ({}) as Session };
+  return { ...mod, auth: () => ({}) as Session };
 });
 
 describe("initUser should initialize the first user", () => {
