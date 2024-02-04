@@ -40,7 +40,7 @@ export const createSignInCallback =
     const sessionExpiry = expireDateAfter(sessionMaxAgeInSeconds);
 
     await adapter.createSession({
-      sessionToken: sessionToken,
+      sessionToken,
       userId: user.id,
       expires: sessionExpiry,
     });

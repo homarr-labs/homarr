@@ -5,8 +5,8 @@ import { objectEntries } from "@homarr/common";
 import { integrationDefs } from "../integration";
 
 describe("Icon url's of integrations should be valid and return 200", () => {
-  objectEntries(integrationDefs).map(([integration, { iconUrl }]) => {
-    it(`should return 200 for ${integration}`, async () => {
+  objectEntries(integrationDefs).forEach(([integration, { iconUrl }]) => {
+    it.concurrent(`should return 200 for ${integration}`, async () => {
       const res = await fetch(iconUrl);
       expect(res.status).toBe(200);
     });

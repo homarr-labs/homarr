@@ -85,11 +85,11 @@ vi.mock("next/headers", async (importOriginal) => {
 describe("createSignInCallback", () => {
   it("should return true if not credentials request", async () => {
     const isCredentialsRequest = false;
-    const callback = createSignInCallback(
+    const signInCallback = createSignInCallback(
       createAdapter(),
       isCredentialsRequest,
     );
-    const result = await callback({
+    const result = await signInCallback({
       user: { id: "1", emailVerified: new Date("2023-01-13") },
       account: {} as Account,
     });
@@ -98,11 +98,11 @@ describe("createSignInCallback", () => {
 
   it("should return true if no user", async () => {
     const isCredentialsRequest = true;
-    const callback = createSignInCallback(
+    const signInCallback = createSignInCallback(
       createAdapter(),
       isCredentialsRequest,
     );
-    const result = await callback({
+    const result = await signInCallback({
       user: undefined as unknown as User,
       account: {} as Account,
     });
@@ -111,12 +111,12 @@ describe("createSignInCallback", () => {
 
   it("should return false if no adapter.createSession", async () => {
     const isCredentialsRequest = true;
-    const callback = createSignInCallback(
+    const signInCallback = createSignInCallback(
       // https://github.com/nextauthjs/next-auth/issues/6106
       undefined as unknown as Adapter,
       isCredentialsRequest,
     );
-    const result = await callback({
+    const result = await signInCallback({
       user: { id: "1", emailVerified: new Date("2023-01-13") },
       account: {} as Account,
     });
@@ -126,10 +126,10 @@ describe("createSignInCallback", () => {
   it("should call adapter.createSession with correct input", async () => {
     const adapter = createAdapter();
     const isCredentialsRequest = true;
-    const callback = createSignInCallback(adapter, isCredentialsRequest);
+    const signInCallback = createSignInCallback(adapter, isCredentialsRequest);
     const user = { id: "1", emailVerified: new Date("2023-01-13") };
     const account = {} as Account;
-    await callback({ user, account });
+    await signInCallback({ user, account });
     expect(adapter.createSession).toHaveBeenCalledWith({
       sessionToken: mockSessionToken,
       userId: user.id,

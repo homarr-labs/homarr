@@ -14,7 +14,7 @@ import { credentialsConfiguration } from "../credentials";
 vi.mock("@homarr/db", async (importOriginal) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const mod = await importOriginal<typeof import("@homarr/db")>();
-  const sqlite = new Database(`:memory:`);
+  const sqlite = new Database(":memory:");
   const db = drizzle(sqlite, { schema: mod.schema });
   migrate(db, {
     migrationsFolder: "./packages/db/migrations",
@@ -87,7 +87,7 @@ describe("Credentials authorization", () => {
     });
   });
 
-  it(`should not authorize user for not existing user`, async () => {
+  it("should not authorize user for not existing user", async () => {
     const result = await credentialsConfiguration.authorize({
       name: "test",
       password: "test",
