@@ -22,7 +22,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "better-sqlite3": "^9.2.2",
+    "better-sqlite3": "^9.4.0",
     "drizzle-orm": "^0.29.3"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.56.0",
-    "prettier": "^3.1.0",
+    "prettier": "^3.2.4",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {
