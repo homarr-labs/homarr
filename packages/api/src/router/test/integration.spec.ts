@@ -4,6 +4,7 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 
+import type { RouterInputs } from "../../..";
 import { encryptSecret, integrationRouter } from "../integration";
 import { createDb } from "./_db";
 
@@ -285,5 +286,204 @@ describe("delete should delete an integration", () => {
     expect(dbIntegration).toBeUndefined();
     const dbSecrets = await db.query.integrationSecrets.findMany();
     expect(dbSecrets.length).toBe(0);
+  });
+});
+
+describe("testConnection should test the connection to an integration", () => {
+  it.each([
+    [
+      "nzbGet" as const,
+      [
+        { kind: "username" as const, value: null },
+        { kind: "password" as const, value: "Password123!" },
+      ],
+    ],
+    [
+      "nzbGet" as const,
+      [
+        { kind: "username" as const, value: "exampleUser" },
+        { kind: "password" as const, value: null },
+      ],
+    ],
+    ["sabNzbd" as const, [{ kind: "apiKey" as const, value: null }]],
+    [
+      "sabNzbd" as const,
+      [
+        { kind: "username" as const, value: "exampleUser" },
+        { kind: "password" as const, value: "Password123!" },
+      ],
+    ],
+  ])(
+    "should fail when a required secret is missing when creating %s integration",
+    async (kind, secrets) => {
+      const db = createDb();
+      const caller = integrationRouter.createCaller({
+        db,
+        session: null,
+      });
+
+      const input: RouterInputs["integration"]["testConnection"] = {
+        id: null,
+        kind,
+        url: `http://${kind}.local`,
+        secrets,
+      };
+
+      const act = async () => await caller.testConnection(input);
+      await expect(act()).rejects.toThrow("SECRETS_NOT_DEFINED");
+    },
+  );
+
+  it.each([
+    [
+      "nzbGet" as const,
+      [
+        { kind: "username" as const, value: "exampleUser" },
+        { kind: "password" as const, value: "Password123!" },
+      ],
+    ],
+    ["sabNzbd" as const, [{ kind: "apiKey" as const, value: "1234567890" }]],
+  ])(
+    "should be successful when all required secrets are defined for creation of %s integration",
+    async (kind, secrets) => {
+      const db = createDb();
+      const caller = integrationRouter.createCaller({
+        db,
+        session: null,
+      });
+
+      const input: RouterInputs["integration"]["testConnection"] = {
+        id: null,
+        kind,
+        url: `http://${kind}.local`,
+        secrets,
+      };
+
+      const act = async () => await caller.testConnection(input);
+      await expect(act()).resolves.toBeUndefined();
+    },
+  );
+
+  it("should be successful when all required secrets are defined for updating an nzbGet integration", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const input: RouterInputs["integration"]["testConnection"] = {
+      id: createId(),
+      kind: "nzbGet",
+      url: `http://nzbGet.local`,
+      secrets: [
+        { kind: "username", value: "exampleUser" },
+        { kind: "password", value: "Password123!" },
+      ],
+    };
+
+    const act = async () => await caller.testConnection(input);
+    await expect(act()).resolves.toBeUndefined();
+  });
+
+  it("should be successful when overriding one of the secrets for an existing nzbGet integration", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const integrationId = createId();
+    await db.insert(integrations).values({
+      id: integrationId,
+      name: "NZBGet",
+      kind: "nzbGet",
+      url: "http://nzbGet.local",
+    });
+
+    await db.insert(integrationSecrets).values([
+      {
+        kind: "username",
+        value: encryptSecret("exampleUser"),
+        integrationId,
+        updatedAt: new Date(),
+      },
+      {
+        kind: "password",
+        value: encryptSecret("Password123!"),
+        integrationId,
+        updatedAt: new Date(),
+      },
+    ]);
+
+    const input: RouterInputs["integration"]["testConnection"] = {
+      id: integrationId,
+      kind: "nzbGet",
+      url: "http://nzbGet.local",
+      secrets: [
+        { kind: "username", value: "newUser" },
+        { kind: "password", value: null },
+      ],
+    };
+
+    const act = async () => await caller.testConnection(input);
+    await expect(act()).resolves.toBeUndefined();
+  });
+
+  it("should fail when a required secret is missing for an existing nzbGet integration", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const integrationId = createId();
+    await db.insert(integrations).values({
+      id: integrationId,
+      name: "NZBGet",
+      kind: "nzbGet",
+      url: "http://nzbGet.local",
+    });
+
+    await db.insert(integrationSecrets).values([
+      {
+        kind: "username",
+        value: encryptSecret("exampleUser"),
+        integrationId,
+        updatedAt: new Date(),
+      },
+    ]);
+
+    const input: RouterInputs["integration"]["testConnection"] = {
+      id: integrationId,
+      kind: "nzbGet",
+      url: "http://nzbGet.local",
+      secrets: [
+        { kind: "username", value: "newUser" },
+        { kind: "apiKey", value: "1234567890" },
+      ],
+    };
+
+    const act = async () => await caller.testConnection(input);
+    await expect(act()).rejects.toThrow("SECRETS_NOT_DEFINED");
+  });
+
+  it("should fail when the updating integration does not exist", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const act = async () =>
+      await caller.testConnection({
+        id: createId(),
+        kind: "nzbGet",
+        url: "http://nzbGet.local",
+        secrets: [
+          { kind: "username", value: null },
+          { kind: "password", value: "Password123!" },
+        ],
+      });
+    await expect(act()).rejects.toThrow("SECRETS_NOT_DEFINED");
   });
 });

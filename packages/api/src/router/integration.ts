@@ -203,6 +203,17 @@ export const integrationRouter = createTRPCRouter({
             });
           }
         }
+
+        const everySecretDefined = secretKinds.every((secretKind) =>
+          secrets.some((secret) => secret.kind === secretKind),
+        );
+
+        if (!everySecretDefined) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "SECRETS_NOT_DEFINED",
+          });
+        }
       }
 
       // TODO: actually test the connection
