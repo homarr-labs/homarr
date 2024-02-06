@@ -24,13 +24,13 @@
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^1.12.2",
+    "@turbo/gen": "^1.12.3",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.2.2",
     "@vitest/ui": "^1.2.2",
     "cross-env": "^7.0.3",
     "prettier": "^3.2.4",
-    "turbo": "^1.12.2",
+    "turbo": "^1.12.3",
     "typescript": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.1",
     "vitest": "^1.2.2"
