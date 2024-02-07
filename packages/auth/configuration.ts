@@ -40,7 +40,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
 
         await adapter.createSession({
           sessionToken: sessionToken,
-          userId: user.id,
+          userId: user.id!,
           expires: sessionExpiry,
         });
 
