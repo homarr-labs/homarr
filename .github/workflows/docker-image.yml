@@ -30,7 +30,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Deployment of an image has been triggered'
+          args: "Deployment of an image has been triggered"
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
         with:
@@ -39,7 +39,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Build artifacts
@@ -60,7 +60,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Image has been tagged as ${{ steps.githubTagAction.outputs.new_tag }}'
+          args: "Image has been tagged as ${{ steps.githubTagAction.outputs.new_tag }}"
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -86,4 +86,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Image built with ID ${{ steps.buildPushAction.outputs.imageid }}'
+          args: "Image built with ID ${{ steps.buildPushAction.outputs.imageid }}"
