@@ -250,8 +250,8 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.70.0)
       next-auth:
-        specifier: 5.0.0-beta.8
-        version: 5.0.0-beta.8(next@14.1.0)(react@18.2.0)
+        specifier: 5.0.0-beta.9
+        version: 5.0.0-beta.9(next@14.1.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -648,32 +648,6 @@ packages:
     dependencies:
       "@jridgewell/gen-mapping": 0.3.3
       "@jridgewell/trace-mapping": 0.3.18
-
-  /@auth/core@0.26.2:
-    resolution:
-      {
-        integrity: sha512-BK+NaUDLcX8AMW/O32wxzk+SE9lr/xvjO4PsTgla9ToHHanoPMl+6pYu2/WoNKnZomdHBWOl/00LFfajuulIVA==,
-      }
-    peerDependencies:
-      "@simplewebauthn/browser": ^9.0.1
-      "@simplewebauthn/server": ^9.0.1
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      "@simplewebauthn/browser":
-        optional: true
-      "@simplewebauthn/server":
-        optional: true
-      nodemailer:
-        optional: true
-    dependencies:
-      "@panva/hkdf": 1.1.1
-      "@types/cookie": 0.6.0
-      cookie: 0.6.0
-      jose: 5.2.1
-      oauth4webapi: 2.10.3
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-    dev: false
 
   /@auth/core@0.26.3:
     resolution:
@@ -7899,11 +7873,8 @@ packages:
     engines: { node: ">= 0.4.0" }
     dev: true
 
-  /next-auth@5.0.0-beta.8(next@14.1.0)(react@18.2.0):
-    resolution:
-      {
-        integrity: sha512-KRO3VBngzuxnfHhacXvp4lKa9afoE73D3Q4EiMSuQIKrg2KVFfB/uTRVro4Pjnhr/TzLqYZoaiJBfGpyhgby2Q==,
-      }
+  /next-auth@5.0.0-beta.9(next@14.1.0)(react@18.2.0):
+    resolution: {integrity: sha512-BWFiwJ/wzfxWpHnGpAoFsXHSlVofWgFns6tjtIGeDrXfEf3D+afnBpmzCNyek2RNYDVgMHi8Q5uXzFoNBd2l5g==}
     peerDependencies:
       "@simplewebauthn/browser": ^9.0.1
       "@simplewebauthn/server": ^9.0.1
@@ -7918,7 +7889,7 @@ packages:
       nodemailer:
         optional: true
     dependencies:
-      "@auth/core": 0.26.2
+      '@auth/core': 0.26.3
       next: 14.1.0(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.70.0)
       react: 18.2.0
     dev: false
