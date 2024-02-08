@@ -1,21 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "^@homarr/"
-      ],
+      "matchPackagePatterns": ["^@homarr/"],
       "enabled": false
     }
   ],
   "updateInternalDeps": true,
   "rangeStrategy": "bump",
   "automerge": false,
-  "baseBranches": [
-    "dev"
-  ],
+  "baseBranches": ["dev"],
   "dependencyDashboard": false
 }
