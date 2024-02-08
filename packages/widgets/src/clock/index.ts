@@ -1,20 +1,20 @@
 import { IconClock } from "@homarr/ui";
 
 import { createWidgetDefinition } from "../definition";
-import { opt } from "../options";
+import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader, serverDataLoader } =
   createWidgetDefinition("clock", {
     icon: IconClock,
     supportedIntegrations: ["adGuardHome", "piHole"],
-    options: opt.from(
-      (fac) => ({
-        is24HourFormat: fac.switch({
+    options: optionsBuilder.from(
+      (factory) => ({
+        is24HourFormat: factory.switch({
           defaultValue: true,
           withDescription: true,
         }),
-        isLocaleTime: fac.switch({ defaultValue: true }),
-        timezone: fac.select({
+        isLocaleTime: factory.switch({ defaultValue: true }),
+        timezone: factory.select({
           options: ["Europe/Berlin", "Europe/London", "Europe/Moscow"] as const,
           defaultValue: "Europe/Berlin",
         }),
