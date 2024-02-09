@@ -363,5 +363,14 @@ export default {
         about: "About",
       },
     },
+    page: {
+      board: {
+        title: "Manage boards",
+        button: {
+          create: "Create board",
+          delete: "Delete board",
+        },
+      },
+    },
   },
 } as const;

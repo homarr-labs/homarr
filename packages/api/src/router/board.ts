@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import type { Database } from "@homarr/db";
-import { and, db, eq, inArray } from "@homarr/db";
+import { and, createId, db, eq, inArray } from "@homarr/db";
 import {
   boards,
   integrationItems,
@@ -47,6 +47,43 @@ const filterUpdatedItems = <TInput extends { id: string }>(
   );
 
 export const boardRouter = createTRPCRouter({
+  getAll: publicProcedure.query(async () => {
+    return await db.query.boards.findMany({
+      columns: {
+        id: true,
+        name: true,
+      },
+      with: {
+        sections: {
+          with: {
+            items: true,
+          },
+        },
+      },
+    });
+  }),
+  create: publicProcedure
+    .input(validation.board.create)
+    .mutation(async ({ ctx, input }) => {
+      const boardId = createId();
+      await ctx.db.transaction(async (transaction) => {
+        await transaction.insert(boards).values({
+          id: boardId,
+          name: input.name,
+        });
+        await transaction.insert(sections).values({
+          id: createId(),
+          kind: "empty",
+          position: 0,
+          boardId,
+        });
+      });
+    }),
+  delete: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(boards).where(eq(boards.id, input.id));
+    }),
   default: publicProcedure.query(async ({ ctx }) => {
     return await getFullBoardByName(ctx.db, "default");
   }),

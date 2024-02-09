@@ -116,7 +116,7 @@ export const integrationSecrets = sqliteTable(
 
 export const boards = sqliteTable("board", {
   id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").unique().notNull(),
   isPublic: int("is_public", { mode: "boolean" }).default(false).notNull(),
   pageTitle: text("page_title"),
   metaTitle: text("meta_title"),
