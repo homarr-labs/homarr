@@ -8,6 +8,10 @@ on:
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_AUTOMATIC_RELEASE }}
 
+permissions: 
+  contents: write
+  pull-requests: write
+
 jobs:
   merge:
     runs-on: ubuntu-latest
