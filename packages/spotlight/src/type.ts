@@ -1,11 +1,13 @@
+import type { TranslationFunction } from "@homarr/translation";
 import type { TablerIconsProps } from "@homarr/ui";
 
 interface BaseSpotlightAction {
   id: string;
-  title: string;
-  description: string;
+  title: string | ((t: TranslationFunction) => string);
+  description: string | ((t: TranslationFunction) => string);
   group: string;
   icon: ((props: TablerIconsProps) => JSX.Element) | string;
+  ignoreSearchAndOnlyShowInGroup?: boolean;
 }
 
 interface SpotlightActionLink extends BaseSpotlightAction {
@@ -18,4 +20,4 @@ interface SpotlightActionButton extends BaseSpotlightAction {
   onClick: () => void;
 }
 
-export type SpotlightActionProps = SpotlightActionLink | SpotlightActionButton;
+export type SpotlightActionData = SpotlightActionLink | SpotlightActionButton;

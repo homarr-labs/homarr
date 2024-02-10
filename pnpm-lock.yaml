@@ -433,6 +433,9 @@ importers:
 
   packages/spotlight:
     dependencies:
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
       '@homarr/ui':
         specifier: workspace:^0.1.0
         version: link:../ui

@@ -14,6 +14,7 @@ import {
   uiConfiguration,
 } from "@homarr/ui";
 
+import { JotaiProvider } from "./_client-providers/jotai";
 import { ModalsProvider } from "./_client-providers/modals";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { TRPCReactProvider } from "./_client-providers/trpc";
@@ -47,19 +48,21 @@ export default function Layout(props: {
         <ColorSchemeScript defaultColorScheme={colorScheme} />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
-        <TRPCReactProvider headers={headers()}>
-          <NextInternationalProvider locale={props.params.locale}>
-            <MantineProvider
-              defaultColorScheme={colorScheme}
-              {...uiConfiguration}
-            >
-              <ModalsProvider>
-                <Notifications />
-                {props.children}
-              </ModalsProvider>
-            </MantineProvider>
-          </NextInternationalProvider>
-        </TRPCReactProvider>
+        <JotaiProvider>
+          <TRPCReactProvider headers={headers()}>
+            <NextInternationalProvider locale={props.params.locale}>
+              <MantineProvider
+                defaultColorScheme={colorScheme}
+                {...uiConfiguration}
+              >
+                <ModalsProvider>
+                  <Notifications />
+                  {props.children}
+                </ModalsProvider>
+              </MantineProvider>
+            </NextInternationalProvider>
+          </TRPCReactProvider>
+        </JotaiProvider>
       </body>
     </html>
   );
