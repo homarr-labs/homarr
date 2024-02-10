@@ -26,25 +26,17 @@
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@turbo/gen": "^1.12.2",
+    "@turbo/gen": "^1.12.3",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.2.2",
     "@vitest/ui": "^1.2.2",
     "cross-env": "^7.0.3",
     "jsdom": "^24.0.0",
-    "prettier": "^3.2.4",
-    "turbo": "^1.12.2",
+    "prettier": "^3.2.5",
+    "turbo": "^1.12.3",
     "typescript": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.1",
     "vitest": "^1.2.2"
   },
-  "pnpm": {
-    "overrides": {
-      "@auth/core": "0.18.0"
-    }
-  },
-  "prettier": "@homarr/prettier-config",
-  "dependencies": {
-    "winston": "^3.11.0"
-  }
+  "prettier": "@homarr/prettier-config"
 }

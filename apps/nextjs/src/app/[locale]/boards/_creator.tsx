@@ -13,6 +13,8 @@ import type { Board } from "./_types";
 // This is placed here because it's used in the layout and the page and because it's here it's not needed to load it everywhere
 import "../../../styles/gridstack.scss";
 
+import { GlobalItemServerDataRunner } from "@homarr/widgets";
+
 type Params = Record<string, unknown>;
 
 interface Props<TParams extends Params> {
@@ -31,16 +33,18 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
       const initialBoard = await getInitialBoard(params);
 
       return (
-        <BoardProvider initialBoard={initialBoard}>
-          <ClientShell hasNavigation={false}>
-            <MainHeader
-              logo={<BoardLogoWithTitle size="md" />}
-              actions={headeractions}
-              hasNavigation={false}
-            />
-            <AppShellMain>{children}</AppShellMain>
-          </ClientShell>
-        </BoardProvider>
+        <GlobalItemServerDataRunner board={initialBoard}>
+          <BoardProvider initialBoard={initialBoard}>
+            <ClientShell hasNavigation={false}>
+              <MainHeader
+                logo={<BoardLogoWithTitle size="md" />}
+                actions={headeractions}
+                hasNavigation={false}
+              />
+              <AppShellMain>{children}</AppShellMain>
+            </ClientShell>
+          </BoardProvider>
+        </GlobalItemServerDataRunner>
       );
     },
     page: () => {

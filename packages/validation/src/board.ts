@@ -37,8 +37,11 @@ const saveSchema = z.object({
   sections: z.array(createSectionSchema(commonItemSchema)),
 });
 
+const createSchema = z.object({ name: z.string() });
+
 export const boardSchemas = {
   byName: byNameSchema,
   saveGeneralSettings: saveGeneralSettingsSchema,
   save: saveSchema,
+  create: createSchema,
 };

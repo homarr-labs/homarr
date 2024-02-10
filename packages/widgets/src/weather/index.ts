@@ -1,15 +1,15 @@
 import { IconCloud } from "@homarr/ui";
 
 import { createWidgetDefinition } from "../definition";
-import { opt } from "../options";
+import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition(
   "weather",
   {
     icon: IconCloud,
-    options: opt.from((fac) => ({
-      location: fac.location(),
-      showCity: fac.switch(),
+    options: optionsBuilder.from((factory) => ({
+      location: factory.location(),
+      showCity: factory.switch(),
     })),
   },
 ).withDynamicImport(() => import("./component"));

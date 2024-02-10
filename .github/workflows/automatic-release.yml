@@ -8,6 +8,10 @@ on:
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_AUTOMATIC_RELEASE }}
 
+permissions: 
+  contents: write
+  pull-requests: write
+
 jobs:
   merge:
     runs-on: ubuntu-latest
@@ -17,7 +21,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Preparing the automatic release...'
+          args: "Preparing the automatic release..."
       - uses: actions/checkout@v4
       - uses: peter-evans/create-pull-request@v6
         id: create-pull-request
@@ -38,4 +42,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Deployment pull request has been created at [${{ steps.create-pull-request.outputs.pull-request-number }}](${{ steps.create-pull-request.outputs.pull-request-url }})'
+          args: "Deployment pull request has been created at [${{ steps.create-pull-request.outputs.pull-request-number }}](${{ steps.create-pull-request.outputs.pull-request-url }})"

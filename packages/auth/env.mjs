@@ -20,5 +20,6 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_URL: process.env.AUTH_URL,
   },
-  skipValidation: !!process.env.CI || !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation:
+    Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION),
 });

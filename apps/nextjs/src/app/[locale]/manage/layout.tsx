@@ -101,7 +101,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   ];
 
   return (
-    <ClientShell hasNavigation={true}>
+    <ClientShell hasNavigation>
       <MainHeader></MainHeader>
       <MainNavigation links={navigationLinks}></MainNavigation>
       <AppShellMain>{children}</AppShellMain>

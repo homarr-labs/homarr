@@ -13,6 +13,8 @@ import * as weather from "./weather";
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
 export { WidgetEditModal } from "./modals/widget-edit-modal";
+export { GlobalItemServerDataRunner } from "./server/runner";
+export { useServerDataFor } from "./server/provider";
 
 export const widgetImports = {
   clock,
