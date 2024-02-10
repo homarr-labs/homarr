@@ -11,10 +11,10 @@ import {
   items,
   sections,
 } from "@homarr/db/schema/sqlite";
+import { createDb } from "@homarr/db/test";
 
 import type { RouterOutputs } from "../../..";
 import { boardRouter } from "../board";
-import { createDb } from "./_db";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
@@ -34,7 +34,7 @@ describe("default should return default board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const fullBoardProps = await createFullBoard(db, "default");
+    const fullBoardProps = await createFullBoardAsync(db, "default");
 
     const result = await caller.default();
 
@@ -52,7 +52,7 @@ describe("byName should return board by name", () => {
       const db = createDb();
       const caller = boardRouter.createCaller({ db, session: null });
 
-      const fullBoardProps = await createFullBoard(db, name);
+      const fullBoardProps = await createFullBoardAsync(db, name);
 
       const result = await caller.byName({ name });
 
@@ -76,7 +76,7 @@ describe("saveGeneralSettings should save general settings", () => {
     const newLogoImageUrl = "http://logo.image/url.png";
     const newFaviconImageUrl = "http://favicon.image/url.png";
 
-    const { boardId } = await createFullBoard(db, "default");
+    const { boardId } = await createFullBoardAsync(db, "default");
 
     await caller.saveGeneralSettings({
       pageTitle: newPageTitle,
@@ -109,7 +109,7 @@ describe("save should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const { boardId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
     await caller.save({
       boardId,
@@ -143,7 +143,10 @@ describe("save should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const { boardId, itemId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, itemId, sectionId } = await createFullBoardAsync(
+      db,
+      "default",
+    );
 
     await caller.save({
       boardId,
@@ -200,10 +203,8 @@ describe("save should save full board", () => {
       url: "http://localhost:3000",
     } as const;
 
-    const { boardId, itemId, integrationId, sectionId } = await createFullBoard(
-      db,
-      "default",
-    );
+    const { boardId, itemId, integrationId, sectionId } =
+      await createFullBoardAsync(db, "default");
     await db.insert(integrations).values(anotherIntegration);
 
     await caller.save({
@@ -264,7 +265,7 @@ describe("save should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const { boardId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
     const newSectionId = createId();
     await caller.save({
@@ -314,7 +315,7 @@ describe("save should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const { boardId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
     const newItemId = createId();
     await caller.save({
@@ -384,7 +385,10 @@ describe("save should save full board", () => {
       url: "http://plex.local",
     } as const;
 
-    const { boardId, itemId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, itemId, sectionId } = await createFullBoardAsync(
+      db,
+      "default",
+    );
     await db.insert(integrations).values(integration);
 
     await caller.save({
@@ -444,7 +448,7 @@ describe("save should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const { boardId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
     const newSectionId = createId();
     await db.insert(sections).values({
       id: newSectionId,
@@ -502,7 +506,10 @@ describe("save should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const { boardId, itemId, sectionId } = await createFullBoard(db, "default");
+    const { boardId, itemId, sectionId } = await createFullBoardAsync(
+      db,
+      "default",
+    );
 
     await caller.save({
       boardId,
@@ -572,7 +579,7 @@ describe("save should save full board", () => {
 
 const expectInputToBeFullBoardWithName = (
   input: RouterOutputs["board"]["default"],
-  props: { name: string } & Awaited<ReturnType<typeof createFullBoard>>,
+  props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,
 ) => {
   expect(input.id).toBe(props.boardId);
   expect(input.name).toBe(props.name);
@@ -592,7 +599,7 @@ const expectInputToBeFullBoardWithName = (
   expect(firstIntegration.kind).toBe("adGuardHome");
 };
 
-const createFullBoard = async (db: Database, name: string) => {
+const createFullBoardAsync = async (db: Database, name: string) => {
   const boardId = createId();
   await db.insert(boards).values({
     id: boardId,

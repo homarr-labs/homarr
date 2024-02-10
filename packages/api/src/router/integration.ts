@@ -134,7 +134,11 @@ export const integrationRouter = createTRPCRouter({
             value: changedSecret.value,
             kind: changedSecret.kind,
           };
-          if (!decryptedSecrets.some((x) => x.kind === changedSecret.kind)) {
+          if (
+            !decryptedSecrets.some(
+              (secret) => secret.kind === changedSecret.kind,
+            )
+          ) {
             await addSecret(ctx.db, secretInput);
           } else {
             await updateSecret(ctx.db, secretInput);

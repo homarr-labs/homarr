@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { schema } from "@homarr/db";
+import { createDb } from "@homarr/db/test";
 
 import { userRouter } from "../user";
-import { createDb } from "./_db";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", async () => {

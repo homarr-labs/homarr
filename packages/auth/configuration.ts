@@ -6,7 +6,7 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@homarr/db";
 
 import { createSignInCallback, sessionCallback } from "./callbacks";
-import { credentialsConfiguration } from "./providers/credentials";
+import { createCredentialsConfiguration } from "./providers/credentials";
 import { EmptyNextAuthProvider } from "./providers/empty";
 import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
 
@@ -15,7 +15,10 @@ const adapter = DrizzleAdapter(db);
 export const createConfiguration = (isCredentialsRequest: boolean) =>
   NextAuth({
     adapter,
-    providers: [Credentials(credentialsConfiguration), EmptyNextAuthProvider()],
+    providers: [
+      Credentials(createCredentialsConfiguration(db)),
+      EmptyNextAuthProvider(),
+    ],
     callbacks: {
       session: sessionCallback,
       signIn: createSignInCallback(adapter, isCredentialsRequest),

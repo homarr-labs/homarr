@@ -1,49 +1,15 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import type { SQLiteTableWithColumns } from "drizzle-orm/sqlite-core";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import type { TableConfig } from "@homarr/db";
-import { createId, db, schema } from "@homarr/db";
+import { createId } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
+import { createDb } from "@homarr/db/test";
 
 import { createSalt, hashPassword } from "../../security";
-import { credentialsConfiguration } from "../credentials";
-
-vi.mock("@homarr/db", async (importOriginal) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const mod = await importOriginal<typeof import("@homarr/db")>();
-  const sqlite = new Database(":memory:");
-  const db = drizzle(sqlite, { schema: mod.schema });
-  migrate(db, {
-    migrationsFolder: "./packages/db/migrations",
-  });
-  return { ...mod, db, sqlite };
-});
+import { createCredentialsConfiguration } from "../credentials";
 
 describe("Credentials authorization", () => {
-  afterEach(async () => {
-    const toDelete = Object.values(schema).filter(
-      (value) => "getSQL" in value,
-    ) as unknown as SQLiteTableWithColumns<TableConfig>[];
-    let maxIterations = toDelete.length * 4;
-
-    while (toDelete.length > 0 && maxIterations-- > 0) {
-      const next = toDelete.pop()!;
-      try {
-        await db.delete(next).execute();
-      } catch (e) {
-        toDelete.unshift(next);
-      }
-    }
-
-    if (maxIterations <= 0) {
-      throw new Error("Failed to delete all tables");
-    }
-  });
-
   it("should authorize user with correct credentials", async () => {
+    const db = createDb();
     const userId = createId();
     const salt = await createSalt();
     await db.insert(users).values({
@@ -52,7 +18,7 @@ describe("Credentials authorization", () => {
       password: await hashPassword("test", salt),
       salt,
     });
-    const result = await credentialsConfiguration.authorize({
+    const result = await createCredentialsConfiguration(db).authorize({
       name: "test",
       password: "test",
     });
@@ -70,6 +36,7 @@ describe("Credentials authorization", () => {
 
   passwordsThatShouldNotAuthorize.forEach((password) => {
     it(`should not authorize user with incorrect credentials (${password})`, async () => {
+      const db = createDb();
       const userId = createId();
       const salt = await createSalt();
       await db.insert(users).values({
@@ -78,7 +45,7 @@ describe("Credentials authorization", () => {
         password: await hashPassword("test", salt),
         salt,
       });
-      const result = await credentialsConfiguration.authorize({
+      const result = await createCredentialsConfiguration(db).authorize({
         name: "test",
         password,
       });
@@ -88,7 +55,8 @@ describe("Credentials authorization", () => {
   });
 
   it("should not authorize user for not existing user", async () => {
-    const result = await credentialsConfiguration.authorize({
+    const db = createDb();
+    const result = await createCredentialsConfiguration(db).authorize({
       name: "test",
       password: "test",
     });
