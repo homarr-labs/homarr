@@ -7,6 +7,7 @@ import { createDb } from "@homarr/db/test";
 
 import type { RouterInputs } from "../../..";
 import { encryptSecret, integrationRouter } from "../integration";
+import { expectToBeDefined } from "./board.spec";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
@@ -117,15 +118,18 @@ describe("byId should return an integration by id", () => {
 
     const result = await caller.byId({ id: "1" });
     expect(result.secrets.length).toBe(3);
-    expect(
-      result.secrets.find((secret) => secret.kind === "username")!.value,
-    ).not.toBeNull();
-    expect(
-      result.secrets.find((secret) => secret.kind === "password")!.value,
-    ).toBeNull();
-    expect(
-      result.secrets.find((secret) => secret.kind === "apiKey")!.value,
-    ).toBeNull();
+    const username = expectToBeDefined(
+      result.secrets.find((secret) => secret.kind === "username"),
+    );
+    expect(username.value).not.toBeNull();
+    const password = expectToBeDefined(
+      result.secrets.find((secret) => secret.kind === "password"),
+    );
+    expect(password.value).toBeNull();
+    const apiKey = expectToBeDefined(
+      result.secrets.find((secret) => secret.kind === "apiKey"),
+    );
+    expect(apiKey.value).toBeNull();
   });
 });
 
@@ -227,9 +231,15 @@ describe("update should update an integration", () => {
     expect(dbIntegration!.url).toBe(input.url);
 
     expect(dbSecrets.length).toBe(3);
-    const username = dbSecrets.find((secret) => secret.kind === "username")!;
-    const password = dbSecrets.find((secret) => secret.kind === "password")!;
-    const apiKey = dbSecrets.find((secret) => secret.kind === "apiKey")!;
+    const username = expectToBeDefined(
+      dbSecrets.find((secret) => secret.kind === "username"),
+    );
+    const password = expectToBeDefined(
+      dbSecrets.find((secret) => secret.kind === "password"),
+    );
+    const apiKey = expectToBeDefined(
+      dbSecrets.find((secret) => secret.kind === "apiKey"),
+    );
     expect(username.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(password.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(apiKey.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);

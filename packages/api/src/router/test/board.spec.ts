@@ -19,7 +19,7 @@ import { boardRouter } from "../board";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
-const expectToBeDefined = <T>(value: T) => {
+export const expectToBeDefined = <T>(value: T) => {
   if (value === undefined) {
     expect(value).toBeDefined();
   }
