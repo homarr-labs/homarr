@@ -374,7 +374,7 @@ describe("testConnection should test the connection to an integration", () => {
     const input: RouterInputs["integration"]["testConnection"] = {
       id: createId(),
       kind: "nzbGet",
-      url: `http://nzbGet.local`,
+      url: "http://nzbGet.local",
       secrets: [
         { kind: "username", value: "exampleUser" },
         { kind: "password", value: "Password123!" },

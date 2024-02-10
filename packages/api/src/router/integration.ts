@@ -164,7 +164,7 @@ export const integrationRouter = createTRPCRouter({
       const secretKinds = getSecretKinds(input.kind);
       const secrets = input.secrets.filter(
         (secret): secret is { kind: IntegrationSecretKind; value: string } =>
-          !!secret.value,
+          Boolean(secret.value),
       );
       const everyInputSecretDefined = secretKinds.every((secretKind) =>
         secrets.some((secret) => secret.kind === secretKind),
