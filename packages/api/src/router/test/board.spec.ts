@@ -19,6 +19,16 @@ import { createDb } from "./_db";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
+const expectToBeDefined = <T>(value: T) => {
+  if (value === undefined) {
+    expect(value).toBeDefined();
+  }
+  if (value === null) {
+    expect(value).not.toBeNull();
+  }
+  return value as Exclude<T, undefined | null>;
+};
+
 describe("default should return default board", () => {
   it("should return default board", async () => {
     const db = createDb();
@@ -124,9 +134,9 @@ describe("save should save full board", () => {
       where: eq(sections.id, sectionId),
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(1);
-    expect(board!.sections[0]?.id).not.toBe(sectionId);
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(1);
+    expect(definedBoard.sections[0]?.id).not.toBe(sectionId);
     expect(section).toBeUndefined();
   });
   it("should remove item when not present in input", async () => {
@@ -173,11 +183,11 @@ describe("save should save full board", () => {
       where: eq(items.id, itemId),
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(1);
-    const firstSection = board!.sections[0]!;
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(1);
+    const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    expect(firstSection.items[0]!.id).not.toBe(itemId);
+    expect(firstSection.items[0]?.id).not.toBe(itemId);
     expect(item).toBeUndefined();
   });
   it("should remove integration reference when not present in input", async () => {
@@ -238,13 +248,13 @@ describe("save should save full board", () => {
       where: eq(integrationItems.integrationId, integrationId),
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(1);
-    const firstSection = board!.sections[0]!;
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(1);
+    const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const firstItem = firstSection.items[0]!;
+    const firstItem = expectToBeDefined(firstSection.items[0]);
     expect(firstItem.integrations.length).toBe(1);
-    expect(firstItem.integrations[0]!.integrationId).not.toBe(integrationId);
+    expect(firstItem.integrations[0]?.integrationId).not.toBe(integrationId);
     expect(integration).toBeUndefined();
   });
   it.each([
@@ -286,17 +296,17 @@ describe("save should save full board", () => {
       where: eq(sections.id, newSectionId),
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(2);
-    const addedSection = board!.sections.find(
-      (section) => section.id === newSectionId,
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(2);
+    const addedSection = expectToBeDefined(
+      definedBoard.sections.find((section) => section.id === newSectionId),
     );
     expect(addedSection).toBeDefined();
-    expect(addedSection!.id).toBe(newSectionId);
-    expect(addedSection!.kind).toBe(partialSection.kind);
-    expect(addedSection!.position).toBe(1);
+    expect(addedSection.id).toBe(newSectionId);
+    expect(addedSection.kind).toBe(partialSection.kind);
+    expect(addedSection.position).toBe(1);
     if ("name" in partialSection) {
-      expect(addedSection!.name).toBe(partialSection.name);
+      expect(addedSection.name).toBe(partialSection.name);
     }
     expect(section).toBeDefined();
   });
@@ -345,21 +355,23 @@ describe("save should save full board", () => {
       where: eq(items.id, newItemId),
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(1);
-    const firstSection = board!.sections[0]!;
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(1);
+    const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const addedItem = firstSection.items.find((item) => item.id === newItemId);
+    const addedItem = expectToBeDefined(
+      firstSection.items.find((item) => item.id === newItemId),
+    );
     expect(addedItem).toBeDefined();
-    expect(addedItem!.id).toBe(newItemId);
-    expect(addedItem!.kind).toBe("clock");
-    expect(addedItem!.options).toBe(
+    expect(addedItem.id).toBe(newItemId);
+    expect(addedItem.kind).toBe("clock");
+    expect(addedItem.options).toBe(
       SuperJSON.stringify({ is24HourFormat: true }),
     );
-    expect(addedItem!.height).toBe(1);
-    expect(addedItem!.width).toBe(1);
-    expect(addedItem!.xOffset).toBe(3);
-    expect(addedItem!.yOffset).toBe(2);
+    expect(addedItem.height).toBe(1);
+    expect(addedItem.width).toBe(1);
+    expect(addedItem.xOffset).toBe(3);
+    expect(addedItem.yOffset).toBe(2);
     expect(item).toBeDefined();
   });
   it("should add integration reference when present in input", async () => {
@@ -417,16 +429,15 @@ describe("save should save full board", () => {
       where: eq(integrationItems.integrationId, integration.id),
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(1);
-    const firstSection = board!.sections[0]!;
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(1);
+    const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const firstItem = firstSection.items.find((item) => item.id === itemId)!;
+    const firstItem = expectToBeDefined(
+      firstSection.items.find((item) => item.id === itemId),
+    );
     expect(firstItem.integrations.length).toBe(1);
-    const firstIntegration = firstItem.integrations.find(
-      (itemIntegration) => itemIntegration.integrationId === integration.id,
-    )!;
-    expect(firstIntegration).toBeDefined();
+    expect(firstItem.integrations[0]?.integrationId).toBe(integration.id);
     expect(integrationItem).toBeDefined();
   });
   it("should update section when present in input", async () => {
@@ -470,18 +481,18 @@ describe("save should save full board", () => {
       },
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(2);
-    const firstSection = board!.sections.find(
-      (section) => section.id === sectionId,
-    )!;
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(2);
+    const firstSection = expectToBeDefined(
+      definedBoard.sections.find((section) => section.id === sectionId),
+    );
     expect(firstSection.id).toBe(sectionId);
     expect(firstSection.kind).toBe("empty");
     expect(firstSection.position).toBe(1);
     expect(firstSection.name).toBe(null);
-    const secondSection = board!.sections.find(
-      (section) => section.id === newSectionId,
-    )!;
+    const secondSection = expectToBeDefined(
+      definedBoard.sections.find((section) => section.id === newSectionId),
+    );
     expect(secondSection.id).toBe(newSectionId);
     expect(secondSection.kind).toBe("category");
     expect(secondSection.position).toBe(0);
@@ -527,11 +538,13 @@ describe("save should save full board", () => {
       },
     });
 
-    expect(board).toBeDefined();
-    expect(board!.sections.length).toBe(1);
-    const firstSection = board!.sections[0]!;
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(1);
+    const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const firstItem = firstSection.items.find((item) => item.id === itemId)!;
+    const firstItem = expectToBeDefined(
+      firstSection.items.find((item) => item.id === itemId),
+    );
     expect(firstItem.id).toBe(itemId);
     expect(firstItem.kind).toBe("clock");
     expect(
@@ -564,17 +577,17 @@ const expectInputToBeFullBoardWithName = (
   expect(input.id).toBe(props.boardId);
   expect(input.name).toBe(props.name);
   expect(input.sections.length).toBe(1);
-  const firstSection = input.sections[0]!;
+  const firstSection = expectToBeDefined(input.sections[0]);
   expect(firstSection.id).toBe(props.sectionId);
   expect(firstSection.items.length).toBe(1);
-  const firstItem = firstSection.items[0]!;
+  const firstItem = expectToBeDefined(firstSection.items[0]);
   expect(firstItem.id).toBe(props.itemId);
   expect(firstItem.kind).toBe("clock");
   if (firstItem.kind === "clock") {
     expect(firstItem.options.is24HourFormat).toBe(true);
   }
   expect(firstItem.integrations.length).toBe(1);
-  const firstIntegration = firstItem.integrations[0]!;
+  const firstIntegration = expectToBeDefined(firstItem.integrations[0]);
   expect(firstIntegration.id).toBe(props.integrationId);
   expect(firstIntegration.kind).toBe("adGuardHome");
 };
