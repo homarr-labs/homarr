@@ -141,6 +141,9 @@ const createOptions = <TOptions extends WidgetOptionsRecord>(
   };
 };
 
+type OptionsBuilder = typeof createOptions;
+export type OptionsBuilderResult = ReturnType<OptionsBuilder>;
+
 export const optionsBuilder = {
   from: createOptions,
 };
