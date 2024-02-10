@@ -13,7 +13,7 @@
     "db:push": "pnpm -F db push",
     "db:studio": "pnpm -F db studio",
     "db:migration:generate": "pnpm -F db migration:generate",
-    "dev": "turbo dev --parallel",
+    "dev": "node start.js",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
@@ -38,5 +38,8 @@
     "vite-tsconfig-paths": "^4.3.1",
     "vitest": "^1.2.2"
   },
-  "prettier": "@homarr/prettier-config"
+  "prettier": "@homarr/prettier-config",
+  "dependencies": {
+    "winston": "^3.11.0"
+  }
 }
