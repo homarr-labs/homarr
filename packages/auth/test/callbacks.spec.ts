@@ -2,7 +2,7 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
-import type { Account, Session, User } from "next-auth";
+import type { Account, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { describe, expect, it, vi } from "vitest";
 
@@ -10,12 +10,6 @@ import { createSignInCallback, sessionCallback } from "../callbacks";
 
 describe("session callback", () => {
   it("should add id and name to session user", async () => {
-    const session: Session = {
-      user: {
-        id: "whatever",
-      },
-      expires: "2023-05-01",
-    };
     const user: AdapterUser = {
       id: "id",
       name: "name",
@@ -24,7 +18,16 @@ describe("session callback", () => {
     };
     const token: JWT = {};
     const result = await sessionCallback({
-      session,
+      session: {
+        user: {
+          id: "no-id",
+          email: "no-email",
+          emailVerified: new Date("2023-01-13"),
+        },
+        expires: "2023-01-13" as Date & string,
+        sessionToken: "token",
+        userId: "no-id",
+      },
       user,
       token,
       trigger: "update",

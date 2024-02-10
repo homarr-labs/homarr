@@ -47,8 +47,8 @@ const filterUpdatedItems = <TInput extends { id: string }>(
   );
 
 export const boardRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async () => {
-    return await db.query.boards.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.boards.findMany({
       columns: {
         id: true,
         name: true,

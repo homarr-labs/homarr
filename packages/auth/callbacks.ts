@@ -41,7 +41,7 @@ export const createSignInCallback =
 
     await adapter.createSession({
       sessionToken,
-      userId: user.id,
+      userId: user.id!,
       expires: sessionExpiry,
     });
 
