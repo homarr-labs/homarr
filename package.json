@@ -12,7 +12,7 @@
     "clean:workspaces": "turbo clean",
     "db:push": "pnpm -F db push",
     "db:studio": "pnpm -F db studio",
-    "dev": "turbo dev --parallel",
+    "dev": "node logging.js && turbo dev --parallel",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
@@ -33,7 +33,8 @@
     "turbo": "^1.12.3",
     "typescript": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.1",
-    "vitest": "^1.2.2"
+    "vitest": "^1.2.2",
+    "winston": "^3.11.0"
   },
   "prettier": "@homarr/prettier-config"
 }

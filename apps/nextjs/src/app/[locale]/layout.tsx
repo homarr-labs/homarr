@@ -18,6 +18,8 @@ import { ModalsProvider } from "./_client-providers/modals";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 
+import logger from '../../../../../logging';
+
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -40,6 +42,30 @@ export default function Layout(props: {
   params: { locale: string };
 }) {
   const colorScheme = "dark";
+
+  console.log = function (...args) {
+    logger.info(args.join(' '));
+  }
+  
+  console.warn = function (...args) {
+    logger.warn(args.join(' '));
+  }
+  
+  console.error = function (...args) {
+    logger.error(args.join(' '));
+  }
+  
+  console.info = function (...args) {
+    logger.info(args.join(' '));
+  }
+  
+  console.trace = function (...args) {
+    logger.info(args.join(' '));
+  }
+  
+  console.debug = function (...args) {
+    logger.info(args.join(' '));
+  }
 
   return (
     <html lang="en">
