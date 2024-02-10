@@ -155,6 +155,15 @@ export default {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
     },
+    userAvatar: {
+      menu: {
+        switchToDarkMode: "Switch to dark mode",
+        switchToLightMode: "Switch to light mode",
+        management: "Management",
+        logout: "Logout",
+        navigateDefaultBoard: "Navigate to default board",
+      },
+    },
     noResults: "No results found",
   },
   section: {
