@@ -8,7 +8,7 @@ export const schema = sqliteSchema;
 
 export * from "drizzle-orm";
 
-const sqlite = new Database(process.env.DB_URL);
+export const sqlite = new Database(process.env.DB_URL);
 
 export const db = drizzle(sqlite, { schema });
 

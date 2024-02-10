@@ -1,6 +1,12 @@
 {
   "name": "@homarr/auth",
   "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts",
+    "./security": "./security.ts",
+    "./client": "./client.ts",
+    "./env.mjs": "./env.mjs"
+  },
   "private": true,
   "main": "./index.ts",
   "types": "./index.ts",

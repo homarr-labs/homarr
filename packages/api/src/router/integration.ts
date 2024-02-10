@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 
+import type { Database } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
@@ -128,18 +129,20 @@ export const integrationRouter = createTRPCRouter({
 
       if (changedSecrets.length > 0) {
         for (const changedSecret of changedSecrets) {
-          await ctx.db
-            .update(integrationSecrets)
-            .set({
-              value: encryptSecret(changedSecret.value),
-              updatedAt: new Date(),
-            })
-            .where(
-              and(
-                eq(integrationSecrets.integrationId, input.id),
-                eq(integrationSecrets.kind, changedSecret.kind),
-              ),
-            );
+          const secretInput = {
+            integrationId: input.id,
+            value: changedSecret.value,
+            kind: changedSecret.kind,
+          };
+          if (
+            !decryptedSecrets.some(
+              (secret) => secret.kind === changedSecret.kind,
+            )
+          ) {
+            await addSecret(ctx.db, secretInput);
+          } else {
+            await updateSecret(ctx.db, secretInput);
+          }
         }
       }
     }),
@@ -204,6 +207,17 @@ export const integrationRouter = createTRPCRouter({
             });
           }
         }
+
+        const everySecretDefined = secretKinds.every((secretKind) =>
+          secrets.some((secret) => secret.kind === secretKind),
+        );
+
+        if (!everySecretDefined) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "SECRETS_NOT_DEFINED",
+          });
+        }
       }
 
       // TODO: actually test the connection
@@ -223,7 +237,7 @@ const key = Buffer.from(
 ); // TODO: generate with const data = crypto.randomBytes(32).toString('hex')
 
 //Encrypting text
-function encryptSecret(text: string): `${string}.${string}` {
+export function encryptSecret(text: string): `${string}.${string}` {
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
   let encrypted = cipher.update(text);
@@ -241,3 +255,37 @@ function decryptSecret(value: `${string}.${string}`) {
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
 }
+
+interface UpdateSecretInput {
+  integrationId: string;
+  value: string;
+  kind: IntegrationSecretKind;
+}
+const updateSecret = async (db: Database, input: UpdateSecretInput) => {
+  await db
+    .update(integrationSecrets)
+    .set({
+      value: encryptSecret(input.value),
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(integrationSecrets.integrationId, input.integrationId),
+        eq(integrationSecrets.kind, input.kind),
+      ),
+    );
+};
+
+interface AddSecretInput {
+  integrationId: string;
+  value: string;
+  kind: IntegrationSecretKind;
+}
+const addSecret = async (db: Database, input: AddSecretInput) => {
+  await db.insert(integrationSecrets).values({
+    kind: input.kind,
+    value: encryptSecret(input.value),
+    updatedAt: new Date(),
+    integrationId: input.integrationId,
+  });
+};

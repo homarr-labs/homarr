@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
-import type { Database } from "@homarr/db";
-import { and, createId, db, eq, inArray } from "@homarr/db";
+import type { Database, SQL } from "@homarr/db";
+import { and, createId, eq, inArray } from "@homarr/db";
 import {
   boards,
   integrationItems,
@@ -47,8 +47,8 @@ const filterUpdatedItems = <TInput extends { id: string }>(
   );
 
 export const boardRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async () => {
-    return await db.query.boards.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.boards.findMany({
       columns: {
         id: true,
         name: true,
@@ -85,23 +85,45 @@ export const boardRouter = createTRPCRouter({
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
   default: publicProcedure.query(async ({ ctx }) => {
-    return await getFullBoardByName(ctx.db, "default");
+    return await getFullBoardWithWhere(ctx.db, eq(boards.name, "default"));
   }),
   byName: publicProcedure
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {
-      return await getFullBoardByName(ctx.db, input.name);
+      return await getFullBoardWithWhere(ctx.db, eq(boards.name, input.name));
     }),
   saveGeneralSettings: publicProcedure
     .input(validation.board.saveGeneralSettings)
-    .mutation(async ({ input }) => {
-      await db.update(boards).set(input).where(eq(boards.name, "default"));
+    .mutation(async ({ ctx, input }) => {
+      const board = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.boardId),
+      });
+
+      if (!board) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Board not found",
+        });
+      }
+
+      await ctx.db
+        .update(boards)
+        .set({
+          pageTitle: input.pageTitle,
+          metaTitle: input.metaTitle,
+          logoImageUrl: input.logoImageUrl,
+          faviconImageUrl: input.faviconImageUrl,
+        })
+        .where(eq(boards.id, input.boardId));
     }),
   save: publicProcedure
     .input(validation.board.save)
     .mutation(async ({ input, ctx }) => {
       await ctx.db.transaction(async (tx) => {
-        const dbBoard = await getFullBoardByName(tx, input.name);
+        const dbBoard = await getFullBoardWithWhere(
+          tx,
+          eq(boards.id, input.boardId),
+        );
 
         const addedSections = filterAddedItems(
           input.sections,
@@ -199,12 +221,17 @@ export const boardRouter = createTRPCRouter({
         );
 
         for (const section of updatedSections) {
+          const prev = dbBoard.sections.find(
+            (dbSection) => dbSection.id === section.id,
+          );
           await tx
             .update(sections)
             .set({
-              kind: section.kind,
               position: section.position,
-              name: "name" in section ? section.name : null,
+              name:
+                prev?.kind === "category" && "name" in section
+                  ? section.name
+                  : null,
             })
             .where(eq(sections.id, section.id));
         }
@@ -249,9 +276,9 @@ export const boardRouter = createTRPCRouter({
     }),
 });
 
-const getFullBoardByName = async (db: Database, name: string) => {
+const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
   const board = await db.query.boards.findFirst({
-    where: eq(boards.name, name),
+    where,
     with: {
       sections: {
         with: {
