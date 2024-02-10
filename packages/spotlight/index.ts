@@ -1,2 +1,7 @@
+import { spotlight } from "@mantine/spotlight";
+
+export { Spotlight } from "./src";
 export * from "./src";
-export { spotlight, Spotlight } from "@mantine/spotlight";
+const openSpotlight = spotlight.open;
+
+export { openSpotlight };

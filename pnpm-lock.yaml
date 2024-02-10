@@ -433,6 +433,9 @@ importers:
 
   packages/spotlight:
     dependencies:
+      '@homarr/ui':
+        specifier: workspace:^0.1.0
+        version: link:../ui
       '@mantine/spotlight':
         specifier: ^7.5.3
         version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)

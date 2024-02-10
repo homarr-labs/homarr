@@ -1,1 +1,1 @@
-export const name = "spotlight";
+export { Spotlight } from "./component";
