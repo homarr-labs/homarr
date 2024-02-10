@@ -43,5 +43,8 @@
       "@auth/core": "0.18.0"
     }
   },
-  "prettier": "@homarr/prettier-config"
+  "prettier": "@homarr/prettier-config",
+  "dependencies": {
+    "winston": "^3.11.0"
+  }
 }

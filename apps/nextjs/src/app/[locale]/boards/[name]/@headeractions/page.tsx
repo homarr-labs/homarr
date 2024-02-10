@@ -108,7 +108,7 @@ const EditModeMenu = () => {
   const [isEditMode, setEditMode] = useAtom(editModeAtom);
   const board = useRequiredBoard();
   const t = useScopedI18n("board.action.edit");
-  const { mutate, isPending } = clientApi.board.save.useMutation({
+  const { mutate: saveBoard, isPending } = clientApi.board.save.useMutation({
     onSuccess() {
       showSuccessNotification({
         title: t("notification.success.title"),
@@ -125,7 +125,11 @@ const EditModeMenu = () => {
   });
 
   const toggle = () => {
-    if (isEditMode) return mutate(board);
+    if (isEditMode)
+      return saveBoard({
+        boardId: board.id,
+        ...board,
+      });
     setEditMode(true);
   };
 

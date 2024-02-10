@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { createId } from "@homarr/db";
+import { createId, eq } from "@homarr/db";
 import {
   boards,
   integrationItems,
@@ -73,7 +73,487 @@ describe("saveGeneralSettings should save general settings", () => {
       metaTitle: newMetaTitle,
       logoImageUrl: newLogoImageUrl,
       faviconImageUrl: newFaviconImageUrl,
+      boardId,
     });
+  });
+
+  it("should throw error when board not found", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const act = async () =>
+      await caller.saveGeneralSettings({
+        pageTitle: "newPageTitle",
+        metaTitle: "newMetaTitle",
+        logoImageUrl: "http://logo.image/url.png",
+        faviconImageUrl: "http://favicon.image/url.png",
+        boardId: "nonExistentBoardId",
+      });
+
+    await expect(act()).rejects.toThrowError("Board not found");
+  });
+});
+
+describe("save should save full board", () => {
+  it("should remove section when not present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const { boardId, sectionId } = await createFullBoard(db, "default");
+
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: createId(),
+          kind: "empty",
+          position: 0,
+          items: [],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: true,
+      },
+    });
+
+    const section = await db.query.boards.findFirst({
+      where: eq(sections.id, sectionId),
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(1);
+    expect(board!.sections[0]?.id).not.toBe(sectionId);
+    expect(section).toBeUndefined();
+  });
+  it("should remove item when not present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const { boardId, itemId, sectionId } = await createFullBoard(db, "default");
+
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "empty",
+          position: 0,
+          items: [
+            {
+              id: createId(),
+              kind: "clock",
+              options: { is24HourFormat: true },
+              integrations: [],
+              height: 1,
+              width: 1,
+              xOffset: 0,
+              yOffset: 0,
+            },
+          ],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: {
+          with: {
+            items: true,
+          },
+        },
+      },
+    });
+
+    const item = await db.query.items.findFirst({
+      where: eq(items.id, itemId),
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(1);
+    const firstSection = board!.sections[0]!;
+    expect(firstSection.items.length).toBe(1);
+    expect(firstSection.items[0]!.id).not.toBe(itemId);
+    expect(item).toBeUndefined();
+  });
+  it("should remove integration reference when not present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+    const anotherIntegration = {
+      id: createId(),
+      kind: "adGuardHome",
+      name: "AdGuard Home",
+      url: "http://localhost:3000",
+    } as const;
+
+    const { boardId, itemId, integrationId, sectionId } = await createFullBoard(
+      db,
+      "default",
+    );
+    await db.insert(integrations).values(anotherIntegration);
+
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "empty",
+          position: 0,
+          items: [
+            {
+              id: itemId,
+              kind: "clock",
+              options: { is24HourFormat: true },
+              integrations: [anotherIntegration],
+              height: 1,
+              width: 1,
+              xOffset: 0,
+              yOffset: 0,
+            },
+          ],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: {
+          with: {
+            items: {
+              with: {
+                integrations: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const integration = await db.query.integrationItems.findFirst({
+      where: eq(integrationItems.integrationId, integrationId),
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(1);
+    const firstSection = board!.sections[0]!;
+    expect(firstSection.items.length).toBe(1);
+    const firstItem = firstSection.items[0]!;
+    expect(firstItem.integrations.length).toBe(1);
+    expect(firstItem.integrations[0]!.integrationId).not.toBe(integrationId);
+    expect(integration).toBeUndefined();
+  });
+  it.each([
+    [{ kind: "empty" as const }],
+    [{ kind: "category" as const, name: "My first category" }],
+  ])("should add section when present in input", async (partialSection) => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const { boardId, sectionId } = await createFullBoard(db, "default");
+
+    const newSectionId = createId();
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: newSectionId,
+          position: 1,
+          items: [],
+          ...partialSection,
+        },
+        {
+          id: sectionId,
+          kind: "empty",
+          position: 0,
+          items: [],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: true,
+      },
+    });
+
+    const section = await db.query.sections.findFirst({
+      where: eq(sections.id, newSectionId),
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(2);
+    const addedSection = board!.sections.find(
+      (section) => section.id === newSectionId,
+    );
+    expect(addedSection).toBeDefined();
+    expect(addedSection!.id).toBe(newSectionId);
+    expect(addedSection!.kind).toBe(partialSection.kind);
+    expect(addedSection!.position).toBe(1);
+    if ("name" in partialSection) {
+      expect(addedSection!.name).toBe(partialSection.name);
+    }
+    expect(section).toBeDefined();
+  });
+  it("should add item when present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const { boardId, sectionId } = await createFullBoard(db, "default");
+
+    const newItemId = createId();
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "empty",
+          position: 0,
+          items: [
+            {
+              id: newItemId,
+              kind: "clock",
+              options: { is24HourFormat: true },
+              integrations: [],
+              height: 1,
+              width: 1,
+              xOffset: 3,
+              yOffset: 2,
+            },
+          ],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: {
+          with: {
+            items: true,
+          },
+        },
+      },
+    });
+
+    const item = await db.query.items.findFirst({
+      where: eq(items.id, newItemId),
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(1);
+    const firstSection = board!.sections[0]!;
+    expect(firstSection.items.length).toBe(1);
+    const addedItem = firstSection.items.find((item) => item.id === newItemId);
+    expect(addedItem).toBeDefined();
+    expect(addedItem!.id).toBe(newItemId);
+    expect(addedItem!.kind).toBe("clock");
+    expect(addedItem!.options).toBe(
+      SuperJSON.stringify({ is24HourFormat: true }),
+    );
+    expect(addedItem!.height).toBe(1);
+    expect(addedItem!.width).toBe(1);
+    expect(addedItem!.xOffset).toBe(3);
+    expect(addedItem!.yOffset).toBe(2);
+    expect(item).toBeDefined();
+  });
+  it("should add integration reference when present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+    const integration = {
+      id: createId(),
+      kind: "plex",
+      name: "Plex",
+      url: "http://plex.local",
+    } as const;
+
+    const { boardId, itemId, sectionId } = await createFullBoard(db, "default");
+    await db.insert(integrations).values(integration);
+
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "empty",
+          position: 0,
+          items: [
+            {
+              id: itemId,
+              kind: "clock",
+              options: { is24HourFormat: true },
+              integrations: [integration],
+              height: 1,
+              width: 1,
+              xOffset: 0,
+              yOffset: 0,
+            },
+          ],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: {
+          with: {
+            items: {
+              with: {
+                integrations: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const integrationItem = await db.query.integrationItems.findFirst({
+      where: eq(integrationItems.integrationId, integration.id),
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(1);
+    const firstSection = board!.sections[0]!;
+    expect(firstSection.items.length).toBe(1);
+    const firstItem = firstSection.items.find((item) => item.id === itemId)!;
+    expect(firstItem.integrations.length).toBe(1);
+    const firstIntegration = firstItem.integrations.find(
+      (itemIntegration) => itemIntegration.integrationId === integration.id,
+    )!;
+    expect(firstIntegration).toBeDefined();
+    expect(integrationItem).toBeDefined();
+  });
+  it("should update section when present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const { boardId, sectionId } = await createFullBoard(db, "default");
+    const newSectionId = createId();
+    await db.insert(sections).values({
+      id: newSectionId,
+      kind: "category",
+      name: "Before",
+      position: 1,
+      boardId,
+    });
+
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "category",
+          position: 1,
+          name: "Test",
+          items: [],
+        },
+        {
+          id: newSectionId,
+          kind: "category",
+          name: "After",
+          position: 0,
+          items: [],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: true,
+      },
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(2);
+    const firstSection = board!.sections.find(
+      (section) => section.id === sectionId,
+    )!;
+    expect(firstSection.id).toBe(sectionId);
+    expect(firstSection.kind).toBe("empty");
+    expect(firstSection.position).toBe(1);
+    expect(firstSection.name).toBe(null);
+    const secondSection = board!.sections.find(
+      (section) => section.id === newSectionId,
+    )!;
+    expect(secondSection.id).toBe(newSectionId);
+    expect(secondSection.kind).toBe("category");
+    expect(secondSection.position).toBe(0);
+    expect(secondSection.name).toBe("After");
+  });
+  it("should update item when present in input", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const { boardId, itemId, sectionId } = await createFullBoard(db, "default");
+
+    await caller.save({
+      boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "empty",
+          position: 0,
+          items: [
+            {
+              id: itemId,
+              kind: "clock",
+              options: { is24HourFormat: false },
+              integrations: [],
+              height: 3,
+              width: 2,
+              xOffset: 7,
+              yOffset: 5,
+            },
+          ],
+        },
+      ],
+    });
+
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: {
+          with: {
+            items: true,
+          },
+        },
+      },
+    });
+
+    expect(board).toBeDefined();
+    expect(board!.sections.length).toBe(1);
+    const firstSection = board!.sections[0]!;
+    expect(firstSection.items.length).toBe(1);
+    const firstItem = firstSection.items.find((item) => item.id === itemId)!;
+    expect(firstItem.id).toBe(itemId);
+    expect(firstItem.kind).toBe("clock");
+    expect(
+      SuperJSON.parse<{ is24HourFormat: boolean }>(firstItem.options)
+        .is24HourFormat,
+    ).toBe(false);
+    expect(firstItem.height).toBe(3);
+    expect(firstItem.width).toBe(2);
+    expect(firstItem.xOffset).toBe(7);
+    expect(firstItem.yOffset).toBe(5);
+  });
+  it("should fail when board not found", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const act = async () =>
+      await caller.save({
+        boardId: "nonExistentBoardId",
+        sections: [],
+      });
+
+    await expect(act()).rejects.toThrowError("Board not found");
   });
 });
 

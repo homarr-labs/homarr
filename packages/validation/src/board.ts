@@ -29,10 +29,11 @@ const saveGeneralSettingsSchema = z.object({
     .string()
     .nullable()
     .transform((value) => (value?.trim().length === 0 ? null : value)),
+  boardId: z.string(),
 });
 
 const saveSchema = z.object({
-  name: boardNameSchema,
+  boardId: z.string(),
   sections: z.array(createSectionSchema(commonItemSchema)),
 });
 

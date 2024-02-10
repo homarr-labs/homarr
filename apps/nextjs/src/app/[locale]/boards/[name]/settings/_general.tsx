@@ -22,7 +22,7 @@ interface Props {
 export const GeneralSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { updateBoard } = useUpdateBoard();
-  const { mutate, isPending } =
+  const { mutate: saveGeneralSettings, isPending } =
     clientApi.board.saveGeneralSettings.useMutation();
   const form = useForm({
     initialValues: {
@@ -46,7 +46,10 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        mutate(values);
+        saveGeneralSettings({
+          boardId: board.id,
+          ...values,
+        });
       })}
     >
       <Stack>
