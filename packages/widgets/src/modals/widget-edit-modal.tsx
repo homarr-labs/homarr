@@ -9,7 +9,7 @@ import { Button, Group, Stack } from "@homarr/ui";
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
-import type { WidgetOptionDefinition } from "../options";
+import type { OptionsBuilderResult } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
 
@@ -54,10 +54,11 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
             />
           )}
           {Object.entries(definition.options).map(
-            ([key, value]: [string, WidgetOptionDefinition]) => {
+            ([key, value]: [string, OptionsBuilderResult[string]]) => {
+              console.log(value);
               const Input = getInputForType(value.type);
 
-              if (!Input) {
+              if (!Input || value.shouldHide?.(form.values.options as never)) {
                 return null;
               }
 
