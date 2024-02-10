@@ -238,16 +238,31 @@ export default {
       name: "Date and time",
       description: "Displays the current date and time.",
       option: {
+        customTitle: {
+          label: "Custom Title/City display",
+          description: "Show off a title or the name of the city on top of the clock. Leave empty if you don't want one.",
+        },
         is24HourFormat: {
           label: "24-hour format",
           description: "Use 24-hour format instead of 12-hour format",
         },
-        isLocaleTime: {
-          label: "Use locale time",
+        showSeconds: {
+          label: "Display seconds",
+        },
+        useCustomTimezone: {
+          label: "Use A different timezone",
         },
         timezone: {
           label: "Timezone",
+          description: "Choose the timezone from the IANA standard",
         },
+        showDate: {
+          label: "Show the date",
+        },
+        dateFormat: {
+          label: "Date Format",
+          description: "How the date should look like",
+        }
       },
     },
     weather: {
