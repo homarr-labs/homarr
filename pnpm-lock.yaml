@@ -328,11 +328,11 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       better-sqlite3:
-        specifier: ^9.4.0
-        version: 9.4.0
+        specifier: ^9.4.1
+        version: 9.4.1
       drizzle-orm:
         specifier: ^0.29.3
-        version: 0.29.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.0)(react@17.0.2)
+        version: 0.29.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.1)(react@17.0.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -3301,8 +3301,8 @@ packages:
       - supports-color
     dev: false
 
-  /better-sqlite3@9.4.0:
-    resolution: {integrity: sha512-5kynxekMxSjCMiFyUBLHggFcJkCmiZi6fUkiGz/B5GZOvdRWQJD0klqCx5/Y+bm2AKP7I/DHbSFx26AxjruWNg==}
+  /better-sqlite3@9.4.1:
+    resolution: {integrity: sha512-QpqiQeMI4WkE+dQ68zTMX5OzlPGc7lXIDP1iKUt4Omt9PdaVgzKYxHIJRIzt1E+RUBQoFmkip/IbvzyrxehAIg==}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -3985,7 +3985,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.0)(react@17.0.2):
+  /drizzle-orm@0.29.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.1)(react@17.0.2):
     resolution: {integrity: sha512-uSE027csliGSGYD0pqtM+SAQATMREb3eSM/U8s6r+Y0RFwTKwftnwwSkqx3oS65UBgqDOM0gMTl5UGNpt6lW0A==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4057,7 +4057,7 @@ packages:
         optional: true
     dependencies:
       '@types/better-sqlite3': 7.6.9
-      better-sqlite3: 9.4.0
+      better-sqlite3: 9.4.1
       react: 17.0.2
     dev: false
 
