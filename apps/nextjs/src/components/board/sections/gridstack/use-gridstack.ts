@@ -107,7 +107,7 @@ export const useGridstack = ({
 
     // Add listener for moving items in config from one wrapper to another
     currentGrid?.on("added", (_, nodes) => {
-      nodes.forEach((node) => onAdd(node));
+      nodes.forEach(onAdd);
     });
 
     return () => {
@@ -192,8 +192,6 @@ const useCssVariableConfiguration = ({
     const widgetWidth = mainRef.current.clientWidth / sectionColumnCount;
     // widget width is used to define sizes of gridstack items within global.scss
     root?.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
-    console.log("widgetWidth", widgetWidth);
-    console.log(gridRef.current);
     gridRef.current?.cellHeight(widgetWidth);
     // gridRef.current is required otherwise the cellheight is run on production as undefined
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,8 +3,8 @@ import { atom, useSetAtom } from "jotai";
 
 import type { SpotlightActionData } from "./type";
 
-const defaultGroups = ["all", "web", "action"];
-
+const defaultGroups = ["all", "web", "action"] as const;
+const reversedDefaultGroups = [...defaultGroups].reverse();
 const actionsAtom = atom<Record<string, SpotlightActionData[]>>({});
 export const actionsAtomRead = atom((get) =>
   Object.values(get(actionsAtom)).flatMap((item) => item),
@@ -17,15 +17,19 @@ export const groupsAtomRead = atom((get) =>
         .map((item) => item.group)
         .concat(...defaultGroups),
     ),
-  ).sort((groupA, groupB) => {
-    const groupAIndex = defaultGroups.indexOf(groupA);
-    const groupBIndex = defaultGroups.indexOf(groupB);
-    if (groupAIndex !== -1 && groupBIndex !== -1)
+  )
+    .sort((groupA, groupB) => {
+      const groupAIndex = reversedDefaultGroups.indexOf(groupA);
+      const groupBIndex = reversedDefaultGroups.indexOf(groupB);
+
+      // if both groups are not in the default groups, sort them by name (here reversed because we reverse the array afterwards)
+      if (groupAIndex === -1 && groupBIndex === -1) {
+        return groupB.localeCompare(groupA);
+      }
+
       return groupAIndex - groupBIndex;
-    if (groupAIndex !== -1) return -1;
-    if (groupBIndex !== -1) return 1;
-    return 0;
-  }),
+    })
+    .reverse(),
 );
 
 const registrations: Record<string, number> = {};
@@ -37,7 +41,6 @@ export const useRegisterSpotlightActions = (
   const setActions = useSetAtom(actionsAtom);
 
   useEffect(() => {
-    console.log("before", key, registrations);
     if (!registrations[key]) {
       setActions((prev) => ({
         ...prev,
@@ -45,10 +48,8 @@ export const useRegisterSpotlightActions = (
       }));
     }
     registrations[key] = (registrations[key] ?? 0) + 1;
-    console.log("after", key, registrations);
 
     return () => {
-      console.log("cleanup", key, registrations);
       if (registrations[key] === 1) {
         setActions((prev) => {
           const { [key]: _, ...rest } = prev;
@@ -60,7 +61,6 @@ export const useRegisterSpotlightActions = (
       if (registrations[key] === 0) {
         delete registrations[key];
       }
-      console.log("cleanup after", key, registrations);
     };
   }, [key]);
 };

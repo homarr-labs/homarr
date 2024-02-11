@@ -34,26 +34,31 @@ interface Props {
 export const SectionContent = ({ items, refs }: Props) => {
   return (
     <>
-      {items.map((item) => (
-        <div
-          key={item.id}
-          className="grid-stack-item"
-          data-id={item.id}
-          gs-x={item.xOffset}
-          gs-y={item.yOffset}
-          gs-w={item.width}
-          gs-h={item.height}
-          gs-min-w={1}
-          gs-min-h={1}
-          gs-max-w={4}
-          gs-max-h={4}
-          ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
-        >
-          <Card className="grid-stack-item-content" withBorder>
-            <BoardItem item={item} />
-          </Card>
-        </div>
-      ))}
+      {items.map((item) => {
+        if (item.id == "1") {
+          console.log(JSON.stringify(item));
+        }
+        return (
+          <div
+            key={item.id}
+            className="grid-stack-item"
+            data-id={item.id}
+            gs-x={item.xOffset}
+            gs-y={item.yOffset}
+            gs-w={item.width}
+            gs-h={item.height}
+            gs-min-w={1}
+            gs-min-h={1}
+            gs-max-w={4}
+            gs-max-h={4}
+            ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
+          >
+            <Card className="grid-stack-item-content" withBorder>
+              <BoardItem item={item} />
+            </Card>
+          </div>
+        );
+      })}
     </>
   );
 };

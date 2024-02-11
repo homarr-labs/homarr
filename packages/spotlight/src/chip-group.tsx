@@ -1,3 +1,4 @@
+import { useScopedI18n } from "@homarr/translation/client";
 import { Chip } from "@homarr/ui";
 
 import {
@@ -6,6 +7,7 @@ import {
   spotlightStore,
   triggerSelectedAction,
 } from "./spotlight-store";
+import type { SpotlightActionData } from "./type";
 
 const disableArrowUpAndDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (e.key === "ArrowDown") {
@@ -19,35 +21,34 @@ const disableArrowUpAndDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   }
 };
 
-const focusCurrentByDefault = (e: React.FocusEvent<HTMLInputElement>) => {
+const focusActiveByDefault = (e: React.FocusEvent<HTMLInputElement>) => {
   const relatedTarget = e.relatedTarget;
-  if (
-    !relatedTarget ||
-    !("type" in relatedTarget && relatedTarget.type === "radio")
-  ) {
-    const group = e.currentTarget.parentElement?.parentElement;
-    if (!group) return;
-    const checkedLabelInGroup = group.querySelector("label[data-checked]");
-    if (!checkedLabelInGroup) return;
-    if (!("focus" in checkedLabelInGroup)) return;
-    const label = checkedLabelInGroup as HTMLLabelElement;
-    label.focus();
-  }
+
+  const isPreviousTargetRadio =
+    relatedTarget && "type" in relatedTarget && relatedTarget.type === "radio";
+  if (isPreviousTargetRadio) return;
+
+  const group = e.currentTarget.parentElement?.parentElement;
+  if (!group) return;
+  const label = group.querySelector<HTMLLabelElement>("label[data-checked]");
+  if (!label) return;
+  label.focus();
 };
 
 interface Props {
-  group: string;
+  group: SpotlightActionData["group"];
 }
 
 export const GroupChip = ({ group }: Props) => {
+  const t = useScopedI18n("common.search.group");
   return (
     <Chip
       key={group}
       value={group}
-      onFocus={focusCurrentByDefault}
+      onFocus={focusActiveByDefault}
       onKeyDown={disableArrowUpAndDown}
     >
-      {group}
+      {t(group)}
     </Chip>
   );
 };

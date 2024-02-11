@@ -55,7 +55,6 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
           )}
           {Object.entries(definition.options).map(
             ([key, value]: [string, OptionsBuilderResult[string]]) => {
-              console.log(value);
               const Input = getInputForType(value.type);
 
               if (!Input || value.shouldHide?.(form.values.options as never)) {

@@ -30,7 +30,6 @@ export const InitUserForm = () => {
   });
 
   const handleSubmit = async (values: FormType) => {
-    console.log(values);
     await mutateAsync(values, {
       onSuccess: () => {
         showSuccessNotification({

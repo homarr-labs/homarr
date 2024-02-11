@@ -24,22 +24,8 @@ import { GroupChip } from "./chip-group";
 import classes from "./component.module.css";
 import { actionsAtomRead, groupsAtomRead } from "./data-store";
 import { setSelectedAction, spotlightStore } from "./spotlight-store";
+import type { SpotlightActionData } from "./type";
 import { useRegisterWebActions } from "./web-actions";
-
-const prepareHref = (href: string, query: string) => {
-  return href.replace("%s", query);
-};
-
-const translateIfNecessary = (
-  value: string | ((t: TranslationFunction) => string),
-  t: TranslationFunction,
-) => {
-  if (typeof value === "function") {
-    return value(t);
-  }
-
-  return value;
-};
 
 export const Spotlight = () => {
   const [query, setQuery] = useState("");
@@ -49,14 +35,13 @@ export const Spotlight = () => {
   const t = useI18n();
   useRegisterWebActions();
 
-  const items = actions
+  const preparedActions = actions.map((action) => prepareAction(action, t));
+  const items = preparedActions
     .filter(
       (item) =>
         (item.ignoreSearchAndOnlyShowInGroup
           ? item.group === group
-          : translateIfNecessary(item.title, t)
-              .toLowerCase()
-              .includes(query.toLowerCase().trim())) &&
+          : item.title.toLowerCase().includes(query.toLowerCase().trim())) &&
         (group === "all" || item.group === group),
     )
     .map((item) => {
@@ -81,7 +66,7 @@ export const Spotlight = () => {
                 {typeof item.icon === "string" && (
                   <img
                     src={item.icon}
-                    alt={translateIfNecessary(item.title, t)}
+                    alt={item.title}
                     width={24}
                     height={24}
                   />
@@ -90,11 +75,11 @@ export const Spotlight = () => {
             )}
 
             <Flex direction="column">
-              <Text>{translateIfNecessary(item.title, t)}</Text>
+              <Text>{item.title}</Text>
 
               {item.description && (
                 <Text opacity={0.6} size="xs">
-                  {translateIfNecessary(item.description, t)}
+                  {item.description}
                 </Text>
               )}
             </Flex>
@@ -119,7 +104,7 @@ export const Spotlight = () => {
       store={spotlightStore}
     >
       <MantineSpotlight.Search
-        placeholder="Search..."
+        placeholder={t("common.search.placeholder")}
         leftSection={<IconSearch stroke={1.5} />}
       />
 
@@ -138,9 +123,35 @@ export const Spotlight = () => {
         {items.length > 0 ? (
           items
         ) : (
-          <MantineSpotlight.Empty>Nothing found...</MantineSpotlight.Empty>
+          <MantineSpotlight.Empty>
+            {t("common.search.nothingFound")}
+          </MantineSpotlight.Empty>
         )}
       </MantineSpotlight.ActionsList>
     </MantineSpotlight.Root>
   );
 };
+
+const prepareHref = (href: string, query: string) => {
+  return href.replace("%s", query);
+};
+
+const translateIfNecessary = (
+  value: string | ((t: TranslationFunction) => string),
+  t: TranslationFunction,
+) => {
+  if (typeof value === "function") {
+    return value(t);
+  }
+
+  return value;
+};
+
+const prepareAction = (
+  action: SpotlightActionData,
+  t: TranslationFunction,
+) => ({
+  ...action,
+  title: translateIfNecessary(action.title, t),
+  description: translateIfNecessary(action.description, t),
+});
