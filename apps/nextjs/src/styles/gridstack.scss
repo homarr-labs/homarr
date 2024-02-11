@@ -17,6 +17,12 @@
   }
 }
 
+// Define min size for gridstack items
+.grid-stack > .grid-stack-item {
+  min-width: calc(100% / var(--gridstack-column-count));
+  min-height: calc(1px * var(--gridstack-widget-width));
+}
+
 // Styling for grid-stack main area
 @for $i from 1 to 96 {
   .grid-stack > .grid-stack-item[gs-w="#{$i}"] {
@@ -52,10 +58,6 @@
   .grid-stack > .grid-stack-item[gs-y="#{$i}"] {
     top: calc(#{$i}px * #{var(--gridstack-widget-width)});
   }
-}
-
-.grid-stack > .grid-stack-item {
-  min-width: #{var(--gridstack-widget-width)};
 }
 
 // Styling for sidebar grid-stack elements
