@@ -19,6 +19,7 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
+    "@homarr/gridstack": "^1.0.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/spotlight": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
@@ -40,15 +41,15 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "dayjs": "^1.11.10",
-    "@homarr/gridstack": "^1.0.0",
     "jotai": "^2.6.4",
     "mantine-modal-manager": "^7.5.2",
     "next": "^14.1.0",
     "postcss-preset-mantine": "^1.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sass": "^1.71.0",
-    "superjson": "2.2.1"
+    "superjson": "2.2.1",
+    "use-deep-compare-effect": "^1.8.1",
+    "sass": "^1.71.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
