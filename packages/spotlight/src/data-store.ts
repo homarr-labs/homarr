@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { atom, useSetAtom } from "jotai";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 import type { SpotlightActionData } from "./type";
 
 const defaultGroups = ["all", "web", "action"] as const;
 const reversedDefaultGroups = [...defaultGroups].reverse();
-const actionsAtom = atom<Record<string, SpotlightActionData[]>>({});
+const actionsAtom = atom<Record<string, readonly SpotlightActionData[]>>({});
 export const actionsAtomRead = atom((get) =>
   Object.values(get(actionsAtom)).flatMap((item) => item),
 );
@@ -32,35 +33,40 @@ export const groupsAtomRead = atom((get) =>
     .reverse(),
 );
 
-const registrations: Record<string, number> = {};
+const registrations = new Map<string, number>();
 
 export const useRegisterSpotlightActions = (
   key: string,
   actions: SpotlightActionData[],
+  dependencies: readonly unknown[] = [],
 ) => {
   const setActions = useSetAtom(actionsAtom);
 
-  useEffect(() => {
-    if (!registrations[key]) {
+  // Use deep compare effect if there are dependencies for the actions, this supports deep compare of the action dependencies
+  const useSpecificEffect =
+    dependencies.length >= 1 ? useDeepCompareEffect : useEffect;
+
+  useSpecificEffect(() => {
+    if (!registrations.has(key) || dependencies.length >= 1) {
       setActions((prev) => ({
         ...prev,
         [key]: actions,
       }));
     }
-    registrations[key] = (registrations[key] ?? 0) + 1;
+    registrations.set(key, (registrations.get(key) ?? 0) + 1);
 
     return () => {
-      if (registrations[key] === 1) {
+      if (registrations.get(key) === 1) {
         setActions((prev) => {
           const { [key]: _, ...rest } = prev;
           return rest;
         });
       }
 
-      registrations[key] = registrations[key]! - 1;
-      if (registrations[key] === 0) {
-        delete registrations[key];
+      registrations.set(key, (registrations.get(key) ?? 0) - 1);
+      if (registrations.get(key) === 0) {
+        registrations.delete(key);
       }
     };
-  }, [key]);
+  }, [key, dependencies.length >= 1 ? dependencies : undefined]);
 };

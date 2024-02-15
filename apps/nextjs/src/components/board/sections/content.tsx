@@ -35,9 +35,6 @@ export const SectionContent = ({ items, refs }: Props) => {
   return (
     <>
       {items.map((item) => {
-        if (item.id == "1") {
-          console.log(JSON.stringify(item));
-        }
         return (
           <div
             key={item.id}
