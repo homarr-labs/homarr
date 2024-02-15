@@ -173,7 +173,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.11.17
+        specifier: ^20.11.19
         version: 20.11.19
       '@types/react':
         specifier: ^18.2.55
