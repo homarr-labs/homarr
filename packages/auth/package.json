@@ -14,7 +14,7 @@
   "dependencies": {
     "@homarr/db": "workspace:^0.1.0",
     "@auth/core": "^0.19.0",
-    "@auth/drizzle-adapter": "^0.3.12",
+    "@auth/drizzle-adapter": "^0.7.0",
     "@t3-oss/env-nextjs": "^0.7.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
