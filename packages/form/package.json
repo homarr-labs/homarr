@@ -33,6 +33,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/form": "^7.5.2"
+    "@mantine/form": "^7.5.3"
   }
 }
