@@ -41,7 +41,7 @@
     "@trpc/server": "next",
     "dayjs": "^1.11.10",
     "jotai": "^2.6.1",
-    "mantine-modal-manager": "^7.4.0",
+    "mantine-modal-manager": "^7.5.2",
     "next": "^14.0.4",
     "postcss-preset-mantine": "^1.12.3",
     "react": "18.2.0",
