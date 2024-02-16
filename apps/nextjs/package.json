@@ -43,7 +43,7 @@
     "jotai": "^2.6.1",
     "mantine-modal-manager": "^7.4.0",
     "next": "^14.0.4",
-    "postcss-preset-mantine": "^1.12.3",
+    "postcss-preset-mantine": "^1.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "2.2.1"
