@@ -30,3 +30,5 @@ runs:
 
     - shell: bash
       run: pnpm install
+
+# Trigger workflow
