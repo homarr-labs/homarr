@@ -2,7 +2,7 @@
   "name": "homarr",
   "private": true,
   "engines": {
-    "node": ">=18.18.2"
+    "node": ">=18.19.1"
   },
   "packageManager": "pnpm@8.11.0",
   "scripts": {
