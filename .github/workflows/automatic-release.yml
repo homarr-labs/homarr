@@ -19,7 +19,7 @@ jobs:
         with:
           args: 'Preparing the automatic release...'
       - uses: actions/checkout@v4
-      - uses: peter-evans/create-pull-request@v5
+      - uses: peter-evans/create-pull-request@v6
         id: create-pull-request
         with:
           base: main
