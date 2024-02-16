@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^1.10.16",
+    "@turbo/gen": "^1.12.4",
     "prettier": "^3.1.0",
-    "turbo": "^1.10.16",
+    "turbo": "^1.12.4",
     "typescript": "^5.3.3"
   },
   "pnpm": {
