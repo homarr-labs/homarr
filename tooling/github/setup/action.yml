@@ -31,4 +31,4 @@ runs:
     - shell: bash
       run: pnpm install
 
-# Trigger workflow
+# Trigger workflow, took same amount of time, is it event worth it?
