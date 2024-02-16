@@ -1,17 +1,18 @@
-import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
 
 import { db } from "@homarr/db";
+import type { WidgetKind } from "@homarr/definitions";
 import { Center } from "@homarr/ui";
-import type { WidgetSort } from "@homarr/widgets";
 import { widgetImports } from "@homarr/widgets";
 
 import { WidgetPreviewPageContent } from "./_content";
 
-type Props = PropsWithChildren<{ params: { sort: string } }>;
+interface Props {
+  params: { kind: string };
+}
 
 export default async function WidgetPreview(props: Props) {
-  if (!(props.params.sort in widgetImports)) {
+  if (!(props.params.kind in widgetImports)) {
     notFound();
   }
 
@@ -24,11 +25,11 @@ export default async function WidgetPreview(props: Props) {
     },
   });
 
-  const sort = props.params.sort as WidgetSort;
+  const sort = props.params.kind as WidgetKind;
 
   return (
     <Center h="100vh">
-      <WidgetPreviewPageContent sort={sort} integrationData={integrationData} />
+      <WidgetPreviewPageContent kind={sort} integrationData={integrationData} />
     </Center>
   );
 }

@@ -144,6 +144,7 @@ export default {
       create: "Create",
       edit: "Edit",
       save: "Save",
+      saveChanges: "Save changes",
       cancel: "Cancel",
       confirm: "Confirm",
     },
@@ -154,15 +155,88 @@ export default {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
     },
-    noResults: "No results found",
-  },
-  widget: {
-    editModal: {
-      integrations: {
-        label: "Integrations",
+    userAvatar: {
+      menu: {
+        switchToDarkMode: "Switch to dark mode",
+        switchToLightMode: "Switch to light mode",
+        management: "Management",
+        logout: "Logout",
+        navigateDefaultBoard: "Navigate to default board",
       },
     },
+    noResults: "No results found",
+  },
+  section: {
+    category: {
+      field: {
+        name: {
+          label: "Name",
+        },
+      },
+      action: {
+        create: "New category",
+        edit: "Rename category",
+        remove: "Remove category",
+        moveUp: "Move up",
+        moveDown: "Move down",
+        createAbove: "New category above",
+        createBelow: "New category below",
+      },
+      create: {
+        title: "New category",
+        submit: "Add category",
+      },
+      remove: {
+        title: "Remove category",
+        message: "Are you sure you want to remove the category {name}?",
+      },
+      edit: {
+        title: "Rename category",
+        submit: "Rename category",
+      },
+      menu: {
+        label: {
+          create: "New category",
+          changePosition: "Change position",
+        },
+      },
+    },
+  },
+  item: {
+    action: {
+      create: "New item",
+      import: "Import item",
+      edit: "Edit item",
+      move: "Move item",
+      remove: "Remove item",
+    },
+    menu: {
+      label: {
+        settings: "Settings",
+        dangerZone: "Danger Zone",
+      },
+    },
+    create: {
+      title: "Choose item to add",
+      addToBoard: "Add to board",
+    },
+    edit: {
+      title: "Edit item",
+      field: {
+        integrations: {
+          label: "Integrations",
+        },
+      },
+    },
+    remove: {
+      title: "Remove item",
+      message: "Are you sure you want to remove this item?",
+    },
+  },
+  widget: {
     clock: {
+      name: "Date and time",
+      description: "Displays the current date and time.",
       option: {
         is24HourFormat: {
           label: "24-hour format",
@@ -177,12 +251,87 @@ export default {
       },
     },
     weather: {
+      name: "Weather",
+      description:
+        "Displays the current weather information of a set location.",
       option: {
         location: {
           label: "Location",
         },
         showCity: {
           label: "Show city",
+        },
+      },
+    },
+  },
+  board: {
+    action: {
+      edit: {
+        notification: {
+          success: {
+            title: "Changes applied successfully",
+            message: "The board was successfully saved",
+          },
+          error: {
+            title: "Unable to apply changes",
+            message: "The board could not be saved",
+          },
+        },
+      },
+    },
+    field: {
+      pageTitle: {
+        label: "Page title",
+      },
+      metaTitle: {
+        label: "Meta title",
+      },
+      logoImageUrl: {
+        label: "Logo image URL",
+      },
+      faviconImageUrl: {
+        label: "Favicon image URL",
+      },
+    },
+    setting: {
+      title: "Settings for {boardName} board",
+      section: {
+        general: {
+          title: "General",
+        },
+        layout: {
+          title: "Layout",
+        },
+        appearance: {
+          title: "Appearance",
+        },
+        dangerZone: {
+          title: "Danger Zone",
+          action: {
+            rename: {
+              label: "Rename board",
+              description:
+                "Changing the name will break any links to this board.",
+              button: "Change name",
+            },
+            visibility: {
+              label: "Change board visibility",
+              description: {
+                public: "This board is currently public.",
+                private: "This board is currently private.",
+              },
+              button: {
+                public: "Make private",
+                private: "Make public",
+              },
+            },
+            delete: {
+              label: "Delete this board",
+              description:
+                "Once you delete a board, there is no going back. Please be certain.",
+              button: "Delete this board",
+            },
+          },
         },
       },
     },
@@ -221,6 +370,15 @@ export default {
           },
         },
         about: "About",
+      },
+    },
+    page: {
+      board: {
+        title: "Manage boards",
+        button: {
+          create: "Create board",
+          delete: "Delete board",
+        },
       },
     },
   },

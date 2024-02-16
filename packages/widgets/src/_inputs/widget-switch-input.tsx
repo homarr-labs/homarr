@@ -8,10 +8,10 @@ import { useFormContext } from "./form";
 
 export const WidgetSwitchInput = ({
   property,
-  sort,
+  kind,
   options,
 }: CommonWidgetInputProps<"switch">) => {
-  const t = useWidgetInputTranslation(sort, property);
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (

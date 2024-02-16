@@ -1,47 +1,112 @@
 import type { LoaderComponent } from "next/dynamic";
 
-import type { IntegrationKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { TablerIconsProps } from "@homarr/ui";
 
-import type { WidgetImports, WidgetSort } from ".";
+import type { WidgetImports } from ".";
 import type {
   inferOptionsFromDefinition,
   WidgetOptionsRecord,
 } from "./options";
 import type { IntegrationSelectOption } from "./widget-integration-select";
 
-export const createWidgetDefinition = <
-  TSort extends WidgetSort,
-  TDefinition extends Definition,
->(
-  sort: TSort,
-  definition: TDefinition,
-) => ({
-  withDynamicImport: (
-    componentLoader: () => LoaderComponent<WidgetComponentProps<TSort>>,
+type ServerDataLoader<TKind extends WidgetKind> = () => Promise<{
+  default: (props: WidgetProps<TKind>) => Promise<Record<string, unknown>>;
+}>;
+
+const createWithDynamicImport =
+  <
+    TKind extends WidgetKind,
+    TDefinition extends WidgetDefinition,
+    TServerDataLoader extends ServerDataLoader<TKind> | undefined,
+  >(
+    kind: TKind,
+    definition: TDefinition,
+    serverDataLoader: TServerDataLoader,
+  ) =>
+  (
+    componentLoader: () => LoaderComponent<
+      WidgetComponentProps<TKind> &
+        (TServerDataLoader extends ServerDataLoader<TKind>
+          ? {
+              serverData: Awaited<
+                ReturnType<Awaited<ReturnType<TServerDataLoader>>["default"]>
+              >;
+            }
+          : never)
+    >,
   ) => ({
     definition: {
-      sort,
       ...definition,
+      kind,
     },
+    kind,
+    serverDataLoader,
     componentLoader,
-  }),
+  });
+
+const createWithServerData =
+  <TKind extends WidgetKind, TDefinition extends WidgetDefinition>(
+    kind: TKind,
+    definition: TDefinition,
+  ) =>
+  <TServerDataLoader extends ServerDataLoader<TKind>>(
+    serverDataLoader: TServerDataLoader,
+  ) => ({
+    definition: {
+      ...definition,
+      kind,
+    },
+    kind,
+    serverDataLoader,
+    withDynamicImport: createWithDynamicImport(
+      kind,
+      definition,
+      serverDataLoader,
+    ),
+  });
+
+export const createWidgetDefinition = <
+  TKind extends WidgetKind,
+  TDefinition extends WidgetDefinition,
+>(
+  kind: TKind,
+  definition: TDefinition,
+) => ({
+  withServerData: createWithServerData(kind, definition),
+  withDynamicImport: createWithDynamicImport(kind, definition, undefined),
 });
 
-interface Definition {
+export interface WidgetDefinition {
   icon: (props: TablerIconsProps) => JSX.Element;
   supportedIntegrations?: IntegrationKind[];
   options: WidgetOptionsRecord;
 }
 
-export interface WidgetComponentProps<TSort extends WidgetSort> {
-  options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TSort>>;
+export interface WidgetProps<TKind extends WidgetKind> {
+  options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TKind>>;
   integrations: inferIntegrationsFromDefinition<
-    WidgetImports[TSort]["definition"]
+    WidgetImports[TKind]["definition"]
   >;
 }
 
-type inferIntegrationsFromDefinition<TDefinition extends Definition> =
+type inferServerDataForKind<TKind extends WidgetKind> =
+  WidgetImports[TKind] extends { serverDataLoader: ServerDataLoader<TKind> }
+    ? Awaited<
+        ReturnType<
+          Awaited<
+            ReturnType<WidgetImports[TKind]["serverDataLoader"]>
+          >["default"]
+        >
+      >
+    : undefined;
+
+export type WidgetComponentProps<TKind extends WidgetKind> =
+  WidgetProps<TKind> & {
+    serverData?: inferServerDataForKind<TKind>;
+  };
+
+type inferIntegrationsFromDefinition<TDefinition extends WidgetDefinition> =
   TDefinition extends {
     supportedIntegrations: infer TSupportedIntegrations;
   } // check if definition has supportedIntegrations
@@ -57,5 +122,5 @@ interface IntegrationSelectOptionFor<TIntegration extends IntegrationKind> {
   kind: TIntegration[number];
 }
 
-export type WidgetOptionsRecordOf<TSort extends WidgetSort> =
-  WidgetImports[TSort]["definition"]["options"];
+export type WidgetOptionsRecordOf<TKind extends WidgetKind> =
+  WidgetImports[TKind]["definition"]["options"];

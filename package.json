@@ -2,35 +2,44 @@
   "name": "homarr",
   "private": true,
   "engines": {
-    "node": ">=18.18.2"
+    "node": ">=20.11.0"
   },
-  "packageManager": "pnpm@8.11.0",
+  "type": "module",
+  "packageManager": "pnpm@8.15.2",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
-    "postinstall": "pnpm lint:ws",
     "db:push": "pnpm -F db push",
     "db:studio": "pnpm -F db studio",
-    "dev": "turbo dev --parallel",
+    "db:migration:generate": "pnpm -F db migration:generate",
+    "dev": "node start.js",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
+    "test": "cross-env NODE_ENV=development vitest run --coverage.enabled",
+    "test:ui": "cross-env NODE_ENV=development vitest --ui --coverage.enabled",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^1.10.16",
-    "prettier": "^3.1.0",
-    "turbo": "^1.10.16",
-    "typescript": "^5.3.3"
+    "@testing-library/react-hooks": "^8.0.1",
+    "@turbo/gen": "^1.12.4",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.2.2",
+    "@vitest/ui": "^1.2.2",
+    "cross-env": "^7.0.3",
+    "jsdom": "^24.0.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.12.4",
+    "typescript": "^5.3.3",
+    "vite-tsconfig-paths": "^4.3.1",
+    "vitest": "^1.2.2"
   },
-  "pnpm": {
-    "overrides": {
-      "@auth/core": "0.18.0"
-    }
-  },
-  "prettier": "@homarr/prettier-config"
+  "prettier": "@homarr/prettier-config",
+  "dependencies": {
+    "winston": "^3.11.0"
+  }
 }

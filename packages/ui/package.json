@@ -35,8 +35,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/core": "^7.4.0",
-    "@mantine/dates": "^7.4.0",
-    "@tabler/icons-react": "^2.42.0"
+    "@mantine/core": "^7.5.2",
+    "@mantine/dates": "^7.5.2",
+    "@tabler/icons-react": "^2.47.0"
   }
 }
