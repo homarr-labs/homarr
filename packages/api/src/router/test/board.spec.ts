@@ -13,7 +13,7 @@ import {
 } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import type { RouterOutputs } from "../../..";
+import type { RouterOutputs } from "../..";
 import { boardRouter } from "../board";
 
 // Mock the auth module to return an empty session
