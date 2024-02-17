@@ -20,10 +20,10 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
       showSeconds: fac.switch({
         defaultValue: false,
       }),
-      useCustomTimezone: fac.switch({ defaultValue: true }),
+      useCustomTimezone: fac.switch({ defaultValue: false }),
       timezone: fac.select({
         options: Intl.supportedValuesOf("timeZone").map((value) => value),
-        defaultValue: "",
+        defaultValue: "Europe/London",
         searchable: true,
         withDescription: true,
       }),
@@ -55,5 +55,5 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
     },
   ),
 })
-    .withServerData(() => import("./serverData"))
-    .withDynamicImport(() => import("./component"));
+  .withServerData(() => import("./serverData"))
+  .withDynamicImport(() => import("./component"));
