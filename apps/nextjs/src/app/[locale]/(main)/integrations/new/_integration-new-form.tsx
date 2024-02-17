@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -167,18 +168,23 @@ const SecretKindsSegmentedControl = ({
     value: kinds.join("-"),
   }));
 
+  const onChange = useCallback(
+    (value: string) => {
+      const kinds = value.split("-") as IntegrationSecretKind[];
+      const secrets = kinds.map((kind) => ({
+        kind,
+        value: "",
+      }));
+      form.setFieldValue("secrets", secrets);
+    },
+    [form],
+  );
+
   return (
     <SegmentedControl
       fullWidth
       data={secretKindGroups}
-      onChange={(value) => {
-        const kinds = value.split("-") as IntegrationSecretKind[];
-        const secrets = kinds.map((kind) => ({
-          kind,
-          value: "",
-        }));
-        form.setFieldValue("secrets", secrets);
-      }}
+      onChange={onChange}
     ></SegmentedControl>
   );
 };
