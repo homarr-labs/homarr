@@ -7,7 +7,7 @@ import {
   spotlightStore,
   triggerSelectedAction,
 } from "./spotlight-store";
-import type { SpotlightActionData } from "./type";
+import type { SpotlightActionGroup } from "./type";
 
 const disableArrowUpAndDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (e.key === "ArrowDown") {
@@ -36,7 +36,7 @@ const focusActiveByDefault = (e: React.FocusEvent<HTMLInputElement>) => {
 };
 
 interface Props {
-  group: SpotlightActionData["group"];
+  group: SpotlightActionGroup;
 }
 
 export const GroupChip = ({ group }: Props) => {
