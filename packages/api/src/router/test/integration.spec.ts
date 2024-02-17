@@ -5,7 +5,7 @@ import { createId } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import type { RouterInputs } from "../../..";
+import type { RouterInputs } from "../..";
 import { encryptSecret, integrationRouter } from "../integration";
 import { expectToBeDefined } from "./board.spec";
 

@@ -2,7 +2,7 @@
   "name": "@homarr/api",
   "version": "0.1.0",
   "exports": {
-    ".": "./index.ts",
+    ".": "./src/index.ts",
     "./client": "./src/client.ts"
   },
   "private": true,
