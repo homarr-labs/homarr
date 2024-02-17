@@ -139,7 +139,7 @@ importers:
         version: 1.11.10
       jotai:
         specifier: ^2.6.4
-        version: 2.6.4(@types/react@18.2.55)(react@18.2.0)
+        version: 2.6.4(@types/react@18.2.56)(react@18.2.0)
       mantine-modal-manager:
         specifier: ^7.5.2
         version: 7.5.2(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
@@ -174,10 +174,10 @@ importers:
       "@types/node":
         specifier: ^20.11.19
         version: 20.11.19
-      "@types/react":
-        specifier: ^18.2.55
-        version: 18.2.55
-      "@types/react-dom":
+      '@types/react':
+        specifier: ^18.2.56
+        version: 18.2.56
+      '@types/react-dom':
         specifier: ^18.2.19
         version: 18.2.19
       dotenv-cli:
@@ -3286,14 +3286,11 @@ packages:
         integrity: sha512-aZvQL6uUbIJpjZk4U8JZGbau9KDeAwMfmhyWorxgBkqDIEf6ROjRozcmPIicqsUwPUjbkDfHKgGee1Lq65APcA==,
       }
     dependencies:
-      "@types/react": 18.2.55
+      '@types/react': 18.2.56
     dev: true
 
-  /@types/react@18.2.55:
-    resolution:
-      {
-        integrity: sha512-Y2Tz5P4yz23brwm2d7jNon39qoAtMMmalOQv6+fEFt1mT+FcM3D841wDpoUvFXhaYenuROCy3FZYqdTjM7qVyA==,
-      }
+  /@types/react@18.2.56:
+    resolution: {integrity: sha512-NpwHDMkS/EFZF2dONFQHgkPRwhvgq/OAvIaGQzxGSBmaeR++kTg6njr15Vatz0/2VcCEwJQFi6Jf4Q0qBu0rLA==}
     dependencies:
       "@types/prop-types": 15.7.11
       "@types/scheduler": 0.16.8
@@ -7181,12 +7178,9 @@ packages:
       }
     dev: false
 
-  /jotai@2.6.4(@types/react@18.2.55)(react@18.2.0):
-    resolution:
-      {
-        integrity: sha512-RniwQPX4893YlNR1muOtyUGHYaTD1fhEN4qnOuZJSrDHj6xdEMrqlRSN/hCm2fshwk78ruecB/P2l+NCVWe6TQ==,
-      }
-    engines: { node: ">=12.20.0" }
+  /jotai@2.6.4(@types/react@18.2.56)(react@18.2.0):
+    resolution: {integrity: sha512-RniwQPX4893YlNR1muOtyUGHYaTD1fhEN4qnOuZJSrDHj6xdEMrqlRSN/hCm2fshwk78ruecB/P2l+NCVWe6TQ==}
+    engines: {node: '>=12.20.0'}
     peerDependencies:
       "@types/react": ">=17.0.0"
       react: ">=17.0.0"
@@ -7196,7 +7190,7 @@ packages:
       react:
         optional: true
     dependencies:
-      "@types/react": 18.2.55
+      '@types/react': 18.2.56
       react: 18.2.0
     dev: false
 
