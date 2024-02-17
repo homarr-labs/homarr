@@ -94,7 +94,6 @@ export const Spotlight = () => {
     [setGroup, setSelectedAction],
   );
 
-  /*  {item.new && <Badge variant="default">new</Badge>} */
   return (
     <MantineSpotlight.Root
       query={query}
