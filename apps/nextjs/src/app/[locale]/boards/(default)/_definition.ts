@@ -3,6 +3,6 @@ import { createBoardPage } from "../_creator";
 
 export default createBoardPage<{ locale: string }>({
   async getInitialBoard() {
-    return await api.board.default.query();
+    return await api.board.default();
   },
 });
