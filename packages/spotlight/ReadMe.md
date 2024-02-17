@@ -111,3 +111,36 @@ const UserMenu = () => {
   return <div>Component implementation</div>;
 };
 ```
+
+##### Using dependency array
+
+```tsx
+"use client";
+
+import { IconUserCog } from "tabler-react";
+
+import { useRegisterSpotlightActions } from "@homarr/spotlight";
+
+const ColorSchemeButton = () => {
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
+  useRegisterSpotlightActions(
+    "toggle-color-scheme",
+    [
+      {
+        id: "toggle-color-scheme",
+        title: (t) => t("common.colorScheme.toggle.title"),
+        description: (t) =>
+          t(`common.colorScheme.toggle.${colorScheme}.description`),
+        icon: colorScheme === "light" ? IconSun : IconMoon,
+        group: "action",
+        type: "button",
+        onClick: toggleColorScheme,
+      },
+    ],
+    [colorScheme],
+  );
+
+  return <div>Component implementation</div>;
+};
+```
