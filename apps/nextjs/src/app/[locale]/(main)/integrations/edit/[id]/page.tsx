@@ -14,7 +14,7 @@ export default async function EditIntegrationPage({
   params,
 }: EditIntegrationPageProps) {
   const t = await getScopedI18n("integration.page.edit");
-  const integration = await api.integration.byId.query({ id: params.id });
+  const integration = await api.integration.byId({ id: params.id });
 
   return (
     <Container>

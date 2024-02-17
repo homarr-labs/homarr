@@ -1,5 +1,6 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -9,19 +10,7 @@ import superjson from "superjson";
 
 import { clientApi } from "@homarr/api/client";
 
-import { env } from "~/env.mjs";
-
-const getBaseUrl = () => {
-  if (typeof window !== "undefined") return ""; // browser should use relative url
-  if (env.VERCEL_URL) return env.VERCEL_URL; // SSR should use vercel url
-
-  return `http://localhost:${env.PORT}`; // dev SSR should use localhost
-};
-
-export function TRPCReactProvider(props: {
-  children: React.ReactNode;
-  headers?: Headers;
-}) {
+export function TRPCReactProvider(props: PropsWithChildren) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -35,7 +24,6 @@ export function TRPCReactProvider(props: {
 
   const [trpcClient] = useState(() =>
     clientApi.createClient({
-      transformer: superjson,
       links: [
         loggerLink({
           enabled: (opts) =>
@@ -43,11 +31,12 @@ export function TRPCReactProvider(props: {
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         unstable_httpBatchStreamLink({
-          url: `${getBaseUrl()}/api/trpc`,
+          transformer: superjson,
+          url: getBaseUrl() + "/api/trpc",
           headers() {
-            const headers = new Map(props.headers);
+            const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
-            return Object.fromEntries(headers);
+            return headers;
           },
         }),
       ],
@@ -64,4 +53,10 @@ export function TRPCReactProvider(props: {
       </QueryClientProvider>
     </clientApi.Provider>
   );
+}
+
+function getBaseUrl() {
+  if (typeof window !== "undefined") return window.location.origin;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return `http://localhost:${process.env.PORT ?? 3000}`;
 }
