@@ -303,6 +303,8 @@ export default {
       section: {
         general: {
           title: "General",
+          unrecognizedLink:
+            "The provided link is not recognized and won't preview, it might still work.",
         },
         layout: {
           title: "Layout",
