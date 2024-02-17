@@ -10,7 +10,7 @@ import { DeleteBoardButton } from "./_components/delete-board-button";
 export default async function ManageBoardsPage() {
   const t = await getScopedI18n("management.page.board");
 
-  const boards = await api.board.getAll.query();
+  const boards = await api.board.getAll();
 
   return (
     <>

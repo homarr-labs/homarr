@@ -154,6 +154,11 @@ export default {
     search: {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
+      group: {
+        all: "All",
+        web: "Web",
+        action: "Actions",
+      },
     },
     userAvatar: {
       menu: {

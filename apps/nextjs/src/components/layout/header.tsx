@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 
+import { Spotlight } from "@homarr/spotlight";
 import { AppShellHeader, Group, UnstyledButton } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
-import { ClientSpotlight } from "./header/spotlight";
 import { UserButton } from "./header/user";
 import { HomarrLogoWithTitle } from "./logo/homarr-logo";
 
@@ -38,7 +38,7 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
           <UserButton />
         </Group>
       </Group>
-      <ClientSpotlight />
+      <Spotlight />
     </AppShellHeader>
   );
 };

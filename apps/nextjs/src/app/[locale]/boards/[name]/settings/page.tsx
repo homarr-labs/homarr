@@ -28,7 +28,7 @@ interface Props {
 }
 
 export default async function BoardSettingsPage({ params }: Props) {
-  const board = await api.board.byName.query({ name: params.name });
+  const board = await api.board.byName({ name: params.name });
   const t = await getScopedI18n("board.setting");
 
   return (
