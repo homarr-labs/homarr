@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { atom, useSetAtom } from "jotai";
 import useDeepCompareEffect from "use-deep-compare-effect";
 
-import type { SpotlightActionData } from "./type";
+import type { SpoglightActionGroup, SpotlightActionData } from "./type";
 
 const defaultGroups = ["all", "web", "action"] as const;
 const reversedDefaultGroups = [...defaultGroups].reverse();
@@ -15,7 +15,7 @@ export const groupsAtomRead = atom((get) =>
   Array.from(
     new Set(
       get(actionsAtomRead)
-        .map((item) => item.group)
+        .map((item) => item.group as SpoglightActionGroup) // Allow "all" group to be included in the list of groups
         .concat(...defaultGroups),
     ),
   )

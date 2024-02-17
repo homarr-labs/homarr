@@ -25,7 +25,6 @@ import classes from "./component.module.css";
 import { actionsAtomRead, groupsAtomRead } from "./data-store";
 import { setSelectedAction, spotlightStore } from "./spotlight-store";
 import type { SpotlightActionData } from "./type";
-import { useRegisterWebActions } from "./web-actions";
 
 export const Spotlight = () => {
   const [query, setQuery] = useState("");
@@ -33,7 +32,6 @@ export const Spotlight = () => {
   const groups = useAtomValue(groupsAtomRead);
   const actions = useAtomValue(actionsAtomRead);
   const t = useI18n();
-  useRegisterWebActions();
 
   const preparedActions = actions.map((action) => prepareAction(action, t));
   const items = preparedActions

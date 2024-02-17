@@ -4,11 +4,14 @@ import type {
 } from "@homarr/translation";
 import type { TablerIconsProps } from "@homarr/ui";
 
+export type SpoglightActionGroup =
+  keyof TranslationObject["common"]["search"]["group"];
+
 interface BaseSpotlightAction {
   id: string;
   title: string | ((t: TranslationFunction) => string);
   description: string | ((t: TranslationFunction) => string);
-  group: keyof TranslationObject["common"]["search"]["group"];
+  group: Exclude<SpoglightActionGroup, "all">; // actions can not be assigned to the "all" group
   icon: ((props: TablerIconsProps) => JSX.Element) | string;
   ignoreSearchAndOnlyShowInGroup?: boolean;
 }
