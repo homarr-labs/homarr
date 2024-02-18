@@ -388,11 +388,11 @@ export default {
           createBoard: {
             field: {
               name: {
-                label: 'Name'
-              }
-            }
-          }
-        }
+                label: "Name",
+              },
+            },
+          },
+        },
       },
     },
   },
