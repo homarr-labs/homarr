@@ -1,46 +1,46 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import type { ManagedModal } from "mantine-modal-manager";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import type { WidgetKind } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Group, Stack } from "@homarr/ui";
 
-import type { WidgetSort } from "..";
+import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
-import type { WidgetOptionsRecordOf } from "../definition";
-import type { WidgetOptionDefinition } from "../options";
-import { WidgetIntegrationSelect } from "../widget-integration-select";
+import type { OptionsBuilderResult } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
+import { WidgetIntegrationSelect } from "../widget-integration-select";
 
 export interface WidgetEditModalState {
   options: Record<string, unknown>;
   integrations: string[];
 }
 
-interface ModalProps<TSort extends WidgetSort> {
-  sort: TSort;
-  state: [WidgetEditModalState, Dispatch<SetStateAction<WidgetEditModalState>>];
-  definition: WidgetOptionsRecordOf<TSort>;
+interface ModalProps<TSort extends WidgetKind> {
+  kind: TSort;
+  value: WidgetEditModalState;
+  onSuccessfulEdit: (value: WidgetEditModalState) => void;
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
 }
 
-export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
+export const WidgetEditModal: ManagedModal<ModalProps<WidgetKind>> = ({
   actions,
   innerProps,
 }) => {
-  const t = useScopedI18n("widget.editModal");
-  const [value, setValue] = innerProps.state;
+  const t = useI18n();
   const form = useForm({
-    initialValues: value,
+    initialValues: innerProps.value,
   });
+
+  const { definition } = widgetImports[innerProps.kind];
 
   return (
     <form
       onSubmit={form.onSubmit((v) => {
-        setValue(v);
+        innerProps.onSuccessfulEdit(v);
         actions.closeModal();
       })}
     >
@@ -48,23 +48,23 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
         <Stack>
           {innerProps.integrationSupport && (
             <WidgetIntegrationSelect
-              label={t("integrations.label")}
+              label={t("item.edit.field.integrations.label")}
               data={innerProps.integrationData}
               {...form.getInputProps("integrations")}
             />
           )}
-          {Object.entries(innerProps.definition).map(
-            ([key, value]: [string, WidgetOptionDefinition]) => {
+          {Object.entries(definition.options).map(
+            ([key, value]: [string, OptionsBuilderResult[string]]) => {
               const Input = getInputForType(value.type);
 
-              if (!Input) {
+              if (!Input || value.shouldHide?.(form.values.options as never)) {
                 return null;
               }
 
               return (
                 <Input
                   key={key}
-                  sort={innerProps.sort}
+                  kind={innerProps.kind}
                   property={key}
                   options={value as never}
                 />
@@ -73,10 +73,10 @@ export const WidgetEditModal: ManagedModal<ModalProps<WidgetSort>> = ({
           )}
           <Group justify="right">
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
-              Close
+              {t("common.action.cancel")}
             </Button>
             <Button type="submit" color="teal">
-              Save
+              {t("common.action.saveChanges")}
             </Button>
           </Group>
         </Stack>

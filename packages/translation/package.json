@@ -36,6 +36,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "next-international": "^1.1.4"
+    "next-international": "^1.2.4"
   }
 }

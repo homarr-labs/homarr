@@ -1,6 +1,12 @@
 {
   "name": "@homarr/db",
   "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts",
+    "./client": "./client.ts",
+    "./schema/sqlite": "./schema/sqlite.ts",
+    "./test": "./test/index.ts"
+  },
   "private": true,
   "main": "./index.ts",
   "types": "./index.ts",
@@ -9,6 +15,7 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "migration:generate": "drizzle-kit generate:sqlite",
     "push": "drizzle-kit push:sqlite",
     "studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"
@@ -17,18 +24,18 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "better-sqlite3": "^9.2.2",
+    "better-sqlite3": "^9.4.1",
     "drizzle-orm": "^0.29.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/better-sqlite3": "7.6.8",
+    "@types/better-sqlite3": "7.6.9",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.20.9",
+    "drizzle-kit": "^0.20.14",
     "eslint": "^8.56.0",
-    "prettier": "^3.1.0",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {

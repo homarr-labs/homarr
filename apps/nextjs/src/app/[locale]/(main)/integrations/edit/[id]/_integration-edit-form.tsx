@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { getSecretKinds } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
 import {
@@ -16,7 +17,6 @@ import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { modalEvents } from "~/app/[locale]/modals";
-import { api } from "~/trpc/react";
 import { SecretCard } from "../../_integration-secret-card";
 import { IntegrationSecretInput } from "../../_integration-secret-inputs";
 import {
@@ -55,7 +55,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     ),
     onValuesChange,
   });
-  const { mutateAsync, isPending } = api.integration.update.useMutation();
+  const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
 
   const secretsMap = new Map(
     integration.secrets.map((secret) => [secret.kind, secret]),

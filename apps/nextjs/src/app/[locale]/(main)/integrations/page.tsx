@@ -47,7 +47,7 @@ interface IntegrationsPageProps {
 export default async function IntegrationsPage({
   searchParams,
 }: IntegrationsPageProps) {
-  const integrations = await api.integration.all.query();
+  const integrations = await api.integration.all();
   const t = await getScopedI18n("integration");
 
   return (

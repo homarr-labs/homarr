@@ -1,7 +1,7 @@
 import { getScopedI18n } from "@homarr/translation/server";
 import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
-import { LogoWithTitle } from "~/components/layout/logo";
+import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
 
 export default async function Login() {
@@ -10,7 +10,7 @@ export default async function Login() {
   return (
     <Center>
       <Stack align="center" mt="xl">
-        <LogoWithTitle size="lg" />
+        <HomarrLogoWithTitle size="lg" />
         <Stack gap={6} align="center">
           <Title order={3} fw={400} ta="center">
             {t("title")}
