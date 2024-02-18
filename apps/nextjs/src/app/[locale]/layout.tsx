@@ -26,10 +26,12 @@ const fontSans = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("http://localhost:3000"),
   title: "Homarr",
-  description: "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+  description:
+    "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
   openGraph: {
     title: "Homarr Dashboard",
-    description: "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+    description:
+      "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
     url: "https://homarr.dev",
     siteName: "Homarr Documentation",
   },
