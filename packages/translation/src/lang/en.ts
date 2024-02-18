@@ -384,6 +384,15 @@ export default {
           create: "Create board",
           delete: "Delete board",
         },
+        modal: {
+          createBoard: {
+            field: {
+              name: {
+                label: 'Name'
+              }
+            }
+          }
+        }
       },
     },
   },

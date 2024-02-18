@@ -1,7 +1,7 @@
 import React from "react";
 
 import { getScopedI18n } from "@homarr/translation/server";
-import { Card, Grid, GridCol, Text, Title } from "@homarr/ui";
+import { Card, Grid, GridCol, Group, Text, Title } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
 import { CreateBoardButton } from "./_components/create-board-button";
@@ -14,17 +14,25 @@ export default async function ManageBoardsPage() {
 
   return (
     <>
-      <Title>{t("title")}</Title>
-
-      <CreateBoardButton />
+      <Group justify="space-between">
+        <Title mb="md">{t("title")}</Title>
+        <CreateBoardButton boardNames={boards.map((board) => board.name)} />
+      </Group>
 
       <Grid>
         {boards.map((board) => (
           <GridCol span={{ xs: 12, md: 4 }} key={board.id}>
             <Card>
-              <Text fw={500}>{board.name}</Text>
+              <Text fw="bolder" tt="uppercase">
+                {board.name}
+              </Text>
 
-              <Text size="sm" my="md" style={{ lineBreak: "anywhere" }}>
+              <Text
+                size="sm"
+                my="md"
+                c="dimmed"
+                style={{ lineBreak: "anywhere" }}
+              >
                 {JSON.stringify(board)}
               </Text>
 
