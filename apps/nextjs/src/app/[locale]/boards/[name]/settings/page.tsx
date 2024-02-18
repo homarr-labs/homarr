@@ -1,17 +1,19 @@
+import type { PropsWithChildren } from "react";
+
 import { capitalize } from "@homarr/common";
+import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
+import type { TablerIconsProps } from "@homarr/ui";
 import {
   Accordion,
   AccordionControl,
   AccordionItem,
   AccordionPanel,
-  Button,
   Container,
-  Divider,
-  Group,
   IconAlertTriangle,
   IconBrush,
   IconLayout,
+  IconPhoto,
   IconSettings,
   Stack,
   Text,
@@ -19,6 +21,9 @@ import {
 } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
+import { BackgroundSettingsContent } from "./_background";
+import { ColorSettingsContent } from "./_colors";
+import { DangerZoneSettingsContent } from "./_danger";
 import { GeneralSettingsContent } from "./_general";
 
 interface Props {
@@ -36,98 +41,73 @@ export default async function BoardSettingsPage({ params }: Props) {
       <Stack>
         <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
         <Accordion variant="separated" defaultValue="general">
-          <AccordionItem value="general">
-            <AccordionControl icon={<IconSettings />}>
-              <Text fw="bold" size="lg">
-                {t("section.general.title")}
-              </Text>
-            </AccordionControl>
-            <AccordionPanel>
-              <GeneralSettingsContent board={board} />
-            </AccordionPanel>
-          </AccordionItem>
-          <AccordionItem value="layout">
-            <AccordionControl icon={<IconLayout />}>
-              <Text fw="bold" size="lg">
-                {t("section.layout.title")}
-              </Text>
-            </AccordionControl>
-            <AccordionPanel></AccordionPanel>
-          </AccordionItem>
-          <AccordionItem value="appearance">
-            <AccordionControl icon={<IconBrush />}>
-              <Text fw="bold" size="lg">
-                {t("section.appearance.title")}
-              </Text>
-            </AccordionControl>
-            <AccordionPanel></AccordionPanel>
-          </AccordionItem>
-          <AccordionItem
-            value="danger"
-            styles={{
-              item: {
-                "--__item-border-color": "rgba(248,81,73,0.4)",
-              },
-            }}
+          <AccordionItemFor value="general" icon={IconSettings}>
+            <GeneralSettingsContent board={board} />
+          </AccordionItemFor>
+          <AccordionItemFor value="layout" icon={IconLayout}></AccordionItemFor>
+          <AccordionItemFor value="background" icon={IconPhoto}>
+            <BackgroundSettingsContent board={board} />
+          </AccordionItemFor>
+          <AccordionItemFor value="color" icon={IconBrush}>
+            <ColorSettingsContent board={board} />
+          </AccordionItemFor>
+          <AccordionItemFor
+            value="dangerZone"
+            icon={IconAlertTriangle}
+            danger
+            noPadding
           >
-            <AccordionControl icon={<IconAlertTriangle />}>
-              <Text fw="bold" size="lg">
-                {t("section.dangerZone.title")}
-              </Text>
-            </AccordionControl>
-            <AccordionPanel
-              styles={{ content: { paddingRight: 0, paddingLeft: 0 } }}
-            >
-              <Stack gap="sm">
-                <Divider />
-                <Group justify="space-between" px="md">
-                  <Stack gap={0}>
-                    <Text fw="bold" size="sm">
-                      {t("section.dangerZone.action.rename.label")}
-                    </Text>
-                    <Text size="sm">
-                      {t("section.dangerZone.action.rename.description")}
-                    </Text>
-                  </Stack>
-                  <Button variant="subtle" color="red">
-                    {t("section.dangerZone.action.rename.button")}
-                  </Button>
-                </Group>
-                <Divider />
-                <Group justify="space-between" px="md">
-                  <Stack gap={0}>
-                    <Text fw="bold" size="sm">
-                      {t("section.dangerZone.action.visibility.label")}
-                    </Text>
-                    <Text size="sm">
-                      {t(
-                        "section.dangerZone.action.visibility.description.private",
-                      )}
-                    </Text>
-                  </Stack>
-                  <Button variant="subtle" color="red">
-                    {t("section.dangerZone.action.visibility.button.private")}
-                  </Button>
-                </Group>
-                <Divider />
-                <Group justify="space-between" px="md">
-                  <Stack gap={0}>
-                    <Text fw="bold" size="sm">
-                      {t("section.dangerZone.action.delete.label")}
-                    </Text>
-                    <Text size="sm">
-                      {t("section.dangerZone.action.delete.description")}
-                    </Text>
-                  </Stack>
-                  <Button variant="subtle" color="red">
-                    {t("section.dangerZone.action.delete.button")}
-                  </Button>
-                </Group>
-              </Stack>
-            </AccordionPanel>
-          </AccordionItem>
+            <DangerZoneSettingsContent board={board} />
+          </AccordionItemFor>
         </Accordion>
       </Stack>
     </Container>
   );
 }
+
+type AccordionItemForProps = PropsWithChildren<{
+  value: keyof TranslationObject["board"]["setting"]["section"];
+  icon: (props: TablerIconsProps) => JSX.Element;
+  danger?: boolean;
+  noPadding?: boolean;
+}>;
+
+const AccordionItemFor = async ({
+  value,
+  children,
+  icon: Icon,
+  danger,
+  noPadding,
+}: AccordionItemForProps) => {
+  const t = await getScopedI18n("board.setting.section");
+  return (
+    <AccordionItem
+      value={value}
+      styles={
+        danger
+          ? {
+              item: {
+                "--__item-border-color": "rgba(248,81,73,0.4)",
+                borderWidth: 4,
+              },
+            }
+          : undefined
+      }
+    >
+      <AccordionControl icon={<Icon />}>
+        <Text fw="bold" size="lg">
+          {t(`${value}.title`)}
+        </Text>
+      </AccordionControl>
+      <AccordionPanel
+        styles={
+          noPadding
+            ? { content: { paddingRight: 0, paddingLeft: 0 } }
+            : undefined
+        }
+      >
+        {children}
+      </AccordionPanel>
+    </AccordionItem>
+  );
+};

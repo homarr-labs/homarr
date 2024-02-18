@@ -26,6 +26,7 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
+    "@mantine/colors-generator": "^7.5.3",
     "@mantine/hooks": "^7.5.3",
     "@mantine/modals": "^7.5.3",
     "@mantine/tiptap": "^7.5.3",
@@ -40,6 +41,7 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
+    "chroma-js": "^2.4.2",
     "dayjs": "^1.11.10",
     "jotai": "^2.6.4",
     "mantine-modal-manager": "^7.5.2",
@@ -47,9 +49,9 @@
     "postcss-preset-mantine": "^1.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sass": "^1.71.0",
     "superjson": "2.2.1",
-    "use-deep-compare-effect": "^1.8.1",
-    "sass": "^1.71.0"
+    "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

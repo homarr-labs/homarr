@@ -151,6 +151,12 @@ export default {
     multiSelect: {
       placeholder: "Pick one or more values",
     },
+    select: {
+      placeholder: "Pick value",
+      badge: {
+        recommended: "Recommended",
+      },
+    },
     search: {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
@@ -297,6 +303,75 @@ export default {
       faviconImageUrl: {
         label: "Favicon image URL",
       },
+      backgroundImageUrl: {
+        label: "Background image URL",
+      },
+      backgroundImageAttachment: {
+        label: "Background image attachment",
+        option: {
+          fixed: {
+            label: "Fixed",
+            description: "Background stays in the same position.",
+          },
+          scroll: {
+            label: "Scroll",
+            description: "Background scrolls with your mouse.",
+          },
+        },
+      },
+      backgroundImageRepeat: {
+        label: "Background image repeat",
+        option: {
+          repeat: {
+            label: "Repeat",
+            description:
+              "The image is repeated as much as needed to cover the whole background image painting area.",
+          },
+          "no-repeat": {
+            label: "No repeat",
+            description:
+              "The image is not repeated and may not fill the entire space.",
+          },
+          "repeat-x": {
+            label: "Repeat X",
+            description: "Same as 'Repeat' but only on horizontal axis.",
+          },
+          "repeat-y": {
+            label: "Repeat Y",
+            description: "Same as 'Repeat' but only on vertical axis.",
+          },
+        },
+      },
+      backgroundImageSize: {
+        label: "Background image size",
+        option: {
+          cover: {
+            label: "Cover",
+            description:
+              "Scales the image as small as possible to cover the entire window by cropping excessive space.",
+          },
+          contain: {
+            label: "Contain",
+            description:
+              "Scales the image as large as possible within its container without cropping or stretching the image.",
+          },
+        },
+      },
+      primaryColor: {
+        label: "Primary color",
+      },
+      secondaryColor: {
+        label: "Secondary color",
+      },
+      primaryShade: {
+        label: "Primary shade",
+      },
+      opacity: {
+        label: "Opacity",
+      },
+      customCss: {
+        label: "Custom CSS",
+      },
     },
     setting: {
       title: "Settings for {boardName} board",
@@ -309,8 +384,11 @@ export default {
         layout: {
           title: "Layout",
         },
-        appearance: {
-          title: "Appearance",
+        background: {
+          title: "Background",
+        },
+        color: {
+          title: "Colors",
         },
         dangerZone: {
           title: "Danger Zone",

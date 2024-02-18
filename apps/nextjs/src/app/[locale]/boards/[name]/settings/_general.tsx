@@ -31,8 +31,8 @@ interface Props {
 export const GeneralSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { updateBoard } = useUpdateBoard();
-  const { mutate: saveGeneralSettings, isPending } =
-    clientApi.board.saveGeneralSettings.useMutation();
+  const { mutate: savePartialSettings, isPending } =
+    clientApi.board.savePartialSettings.useMutation();
   const form = useForm({
     initialValues: {
       pageTitle: board.pageTitle ?? "",
@@ -55,7 +55,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        saveGeneralSettings({
+        savePartialSettings({
           boardId: board.id,
           ...values,
         });

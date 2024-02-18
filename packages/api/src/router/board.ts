@@ -92,8 +92,8 @@ export const boardRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       return await getFullBoardWithWhere(ctx.db, eq(boards.name, input.name));
     }),
-  saveGeneralSettings: publicProcedure
-    .input(validation.board.saveGeneralSettings)
+  savePartialSettings: publicProcedure
+    .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
       const board = await ctx.db.query.boards.findFirst({
         where: eq(boards.id, input.boardId),
@@ -109,10 +109,33 @@ export const boardRouter = createTRPCRouter({
       await ctx.db
         .update(boards)
         .set({
+          // general settings
           pageTitle: input.pageTitle,
           metaTitle: input.metaTitle,
           logoImageUrl: input.logoImageUrl,
           faviconImageUrl: input.faviconImageUrl,
+
+          // background settings
+          backgroundImageUrl: input.backgroundImageUrl,
+          backgroundImageAttachment: input.backgroundImageAttachment,
+          backgroundImageRepeat: input.backgroundImageRepeat,
+          backgroundImageSize: input.backgroundImageSize,
+
+          // color settings
+          primaryColor: input.primaryColor,
+          secondaryColor: input.secondaryColor,
+          primaryShade: input.primaryShade,
+
+          // widget settings
+          opacity: input.opacity,
+
+          // custom css
+          customCss: input.customCss,
+
+          // layout settings
+          showRightSidebar: input.showRightSidebar,
+          showLeftSidebar: input.showLeftSidebar,
+          columnCount: input.columnCount,
         })
         .where(eq(boards.id, input.boardId));
     }),

@@ -66,7 +66,7 @@ describe("byName should return board by name", () => {
   it("should throw error when not present");
 });
 
-describe("saveGeneralSettings should save general settings", () => {
+describe("savePartialSettings should save general settings", () => {
   it("should save general settings", async () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
@@ -78,7 +78,7 @@ describe("saveGeneralSettings should save general settings", () => {
 
     const { boardId } = await createFullBoardAsync(db, "default");
 
-    await caller.saveGeneralSettings({
+    await caller.savePartialSettings({
       pageTitle: newPageTitle,
       metaTitle: newMetaTitle,
       logoImageUrl: newLogoImageUrl,
@@ -92,7 +92,7 @@ describe("saveGeneralSettings should save general settings", () => {
     const caller = boardRouter.createCaller({ db, session: null });
 
     const act = async () =>
-      await caller.saveGeneralSettings({
+      await caller.savePartialSettings({
         pageTitle: "newPageTitle",
         metaTitle: "newMetaTitle",
         logoImageUrl: "http://logo.image/url.png",

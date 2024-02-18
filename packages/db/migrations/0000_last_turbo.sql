@@ -29,7 +29,7 @@ CREATE TABLE `board` (
 	`primary_color` text DEFAULT 'red' NOT NULL,
 	`secondary_color` text DEFAULT 'orange' NOT NULL,
 	`primary_shade` integer DEFAULT 6 NOT NULL,
-	`app_opacity` integer DEFAULT 100 NOT NULL,
+	`opacity` integer DEFAULT 100 NOT NULL,
 	`custom_css` text,
 	`show_right_sidebar` integer DEFAULT false NOT NULL,
 	`show_left_sidebar` integer DEFAULT false NOT NULL,
@@ -106,6 +106,7 @@ CREATE TABLE `verificationToken` (
 );
 --> statement-breakpoint
 CREATE INDEX `userId_idx` ON `account` (`userId`);--> statement-breakpoint
+CREATE UNIQUE INDEX `board_name_unique` ON `board` (`name`);--> statement-breakpoint
 CREATE INDEX `integration_secret__kind_idx` ON `integrationSecret` (`kind`);--> statement-breakpoint
 CREATE INDEX `integration_secret__updated_at_idx` ON `integrationSecret` (`updated_at`);--> statement-breakpoint
 CREATE INDEX `integration__kind_idx` ON `integration` (`kind`);--> statement-breakpoint

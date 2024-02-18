@@ -93,6 +93,9 @@ importers:
       '@homarr/widgets':
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
+      '@mantine/colors-generator':
+        specifier: ^7.5.3
+        version: 7.5.3(chroma-js@2.4.2)
       '@mantine/hooks':
         specifier: ^7.5.3
         version: 7.5.3(react@18.2.0)
@@ -135,6 +138,9 @@ importers:
       '@trpc/server':
         specifier: next
         version: 11.0.0-next-beta.289
+      chroma-js:
+        specifier: ^2.4.2
+        version: 2.4.2
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -175,6 +181,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/chroma-js':
+        specifier: ^2.4.4
+        version: 2.4.4
       '@types/node':
         specifier: ^20.11.19
         version: 20.11.19
@@ -1526,6 +1535,14 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@mantine/colors-generator@7.5.3(chroma-js@2.4.2):
+    resolution: {integrity: sha512-jWG9G53jq2htcNgR7b0KS3bL5yygJnhOQH6b/qcUw61I8cShwBg6xzNNnp4RHMmlRbzVRKCWXqttPwtmksMzSw==}
+    peerDependencies:
+      chroma-js: ^2.4.2
+    dependencies:
+      chroma-js: 2.4.2
+    dev: false
+
   /@mantine/core@7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Wvv6DJXI+GX9mmKG5HITTh/24sCZ0RoYQHdTHh0tOfGnEy+RleyhA82UjnMsp0n2NjfCISBwbiKgfya6b2iaFw==}
     peerDependencies:
@@ -2477,6 +2494,10 @@ packages:
       '@types/node': 20.11.19
     dev: true
 
+  /@types/chroma-js@2.4.4:
+    resolution: {integrity: sha512-/DTccpHTaKomqussrn+ciEvfW4k6NAHzNzs/sts1TCqg333qNxOhy8TNIoQCmbGG3Tl8KdEhkGAssb1n3mTXiQ==}
+    dev: true
+
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
@@ -3386,6 +3407,10 @@ packages:
   /chownr@2.0.0:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
+    dev: false
+
+  /chroma-js@2.4.2:
+    resolution: {integrity: sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A==}
     dev: false
 
   /clean-stack@2.2.0:
