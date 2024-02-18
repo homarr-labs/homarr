@@ -5,7 +5,7 @@ interface LogoProps {
   size: number;
 }
 
-export const homarrLogoPath = "/logo/homarr.png";
+export const homarrLogoPath = "/logo/logo.png";
 export const homarrPageTitle = "Homarr";
 
 const imageOptions = {
