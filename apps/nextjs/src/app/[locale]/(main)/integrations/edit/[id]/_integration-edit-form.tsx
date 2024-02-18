@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { getSecretKinds } from "@homarr/definitions";
+import {
+  getAllSecretKindOptions,
+  getDefaultSecretKinds,
+} from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
 import {
   showErrorNotification,
@@ -32,7 +35,10 @@ interface EditIntegrationForm {
 
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const t = useI18n();
-  const secretsKinds = getSecretKinds(integration.kind);
+  const secretsKinds =
+    getAllSecretKindOptions(integration.kind).find((x) =>
+      integration.secrets.every((y) => x.includes(y.kind)),
+    ) ?? getDefaultSecretKinds(integration.kind);
   const initialFormValues = {
     name: integration.name,
     url: integration.url,
