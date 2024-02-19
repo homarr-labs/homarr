@@ -1,6 +1,6 @@
 import { getScopedI18n } from "@homarr/translation/server";
 import { Title } from "@homarr/ui";
-import { logger } from '@homarr/log';
+import {logger} from '@homarr/log';
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
@@ -14,7 +14,9 @@ export async function generateMetadata() {
 export default async function ManagementPage() {
   const t = await getScopedI18n("management.title");
 
-  logger.info('test!!!');
+  logger.info('test!!!, info');
+  logger.warn('test!!!, warn');
+  logger.error('test!!, error');
 
   const dateNow = new Date();
   const timeOfDay =
@@ -23,6 +25,8 @@ export default async function ManagementPage() {
       : dateNow.getHours() < 17
         ? "afternoon"
         : "evening";
+
+
 
   return (
     <>
