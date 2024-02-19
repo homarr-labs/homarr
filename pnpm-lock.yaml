@@ -101,22 +101,22 @@ importers:
         version: 7.5.3(react@18.2.0)
       '@mantine/modals':
         specifier: ^7.5.3
-        version: 7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/tiptap':
         specifier: ^7.5.3
-        version: 7.5.3(@mantine/hooks@7.5.3)(@tiptap/extension-link@2.2.3)(@tiptap/react@2.2.3)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(@tiptap/extension-link@2.2.3)(@tiptap/react@2.2.3)(react-dom@18.2.0)(react@18.2.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.9.2
         version: 0.9.2(typescript@5.3.3)(zod@3.22.4)
       '@tanstack/react-query':
-        specifier: ^5.21.2
-        version: 5.21.2(react@18.2.0)
+        specifier: ^5.21.7
+        version: 5.21.7(react@18.2.0)
       '@tanstack/react-query-devtools':
-        specifier: ^5.21.3
-        version: 5.21.3(@tanstack/react-query@5.21.2)(react@18.2.0)
+        specifier: ^5.21.7
+        version: 5.21.7(@tanstack/react-query@5.21.7)(react@18.2.0)
       '@tanstack/react-query-next-experimental':
-        specifier: 5.21.2
-        version: 5.21.2(@tanstack/react-query@5.21.2)(next@14.1.1-canary.58)(react@18.2.0)
+        specifier: 5.21.7
+        version: 5.21.7(@tanstack/react-query@5.21.7)(next@14.1.1-canary.61)(react@18.2.0)
       '@tiptap/extension-link':
         specifier: ^2.2.3
         version: 2.2.3(@tiptap/core@2.2.3)(@tiptap/pm@2.2.3)
@@ -131,10 +131,10 @@ importers:
         version: 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-next-beta.289(@tanstack/react-query@5.21.2)(@trpc/client@11.0.0-next-beta.289)(@trpc/react-query@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(next@14.1.1-canary.58)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-next-beta.289(@tanstack/react-query@5.21.7)(@trpc/client@11.0.0-next-beta.289)(@trpc/react-query@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(next@14.1.1-canary.61)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-next-beta.289(@tanstack/react-query@5.21.2)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-next-beta.289(@tanstack/react-query@5.21.7)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
         specifier: next
         version: 11.0.0-next-beta.289
@@ -148,11 +148,11 @@ importers:
         specifier: ^2.6.4
         version: 2.6.4(@types/react@18.2.56)(react@18.2.0)
       mantine-modal-manager:
-        specifier: ^7.5.2
-        version: 7.5.2(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^7.5.3
+        version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: ^14.1.1-canary.58
-        version: 14.1.1-canary.58(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+        specifier: ^14.1.1-canary.61
+        version: 14.1.1-canary.61(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       postcss-preset-mantine:
         specifier: ^1.13.0
         version: 1.13.0(postcss@8.4.35)
@@ -181,9 +181,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@types/chroma-js':
-        specifier: ^2.4.4
-        version: 2.4.4
       '@types/node':
         specifier: ^20.11.19
         version: 20.11.19
@@ -270,11 +267,11 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       next:
-        specifier: ^14.1.1-canary.58
-        version: 14.1.1-canary.58(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+        specifier: ^14.1.1-canary.61
+        version: 14.1.1-canary.61(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       next-auth:
         specifier: 5.0.0-beta.11
-        version: 5.0.0-beta.11(next@14.1.1-canary.58)(react@18.2.0)
+        version: 5.0.0-beta.11(next@14.1.1-canary.61)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -497,7 +494,7 @@ importers:
     dependencies:
       '@mantine/core':
         specifier: ^7.5.3
-        version: 7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/dates':
         specifier: ^7.5.3
         version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
@@ -1543,7 +1540,7 @@ packages:
       chroma-js: 2.4.2
     dev: false
 
-  /@mantine/core@7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/core@7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Wvv6DJXI+GX9mmKG5HITTh/24sCZ0RoYQHdTHh0tOfGnEy+RleyhA82UjnMsp0n2NjfCISBwbiKgfya6b2iaFw==}
     peerDependencies:
       '@mantine/hooks': 7.5.3
@@ -1556,8 +1553,8 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-number-format: 5.3.1(react-dom@18.2.0)(react@18.2.0)
-      react-remove-scroll: 2.5.7(react@18.2.0)
-      react-textarea-autosize: 8.5.3(react@18.2.0)
+      react-remove-scroll: 2.5.7(@types/react@18.2.56)(react@18.2.0)
+      react-textarea-autosize: 8.5.3(@types/react@18.2.56)(react@18.2.0)
       type-fest: 3.13.1
     transitivePeerDependencies:
       - '@types/react'
@@ -1572,7 +1569,7 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.5.3(react@18.2.0)
       clsx: 2.0.0
       dayjs: 1.11.10
@@ -1598,7 +1595,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@mantine/modals@7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/modals@7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-SuPvv14nZmyBcNINqr9y2TLv9xIWXrRYeG8k7QCHM3mo2exW2IHP66Zx93AEpuKbgoDc78fcJcrTqv9C7dxUWQ==}
     peerDependencies:
       '@mantine/core': 7.5.3
@@ -1606,6 +1603,7 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.5.3(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -1619,7 +1617,7 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.5.3(react@18.2.0)
       '@mantine/store': 7.5.3(react@18.2.0)
       react: 18.2.0
@@ -1635,7 +1633,7 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.5.3(react@18.2.0)
       '@mantine/store': 7.5.3(react@18.2.0)
       react: 18.2.0
@@ -1650,7 +1648,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@mantine/tiptap@7.5.3(@mantine/hooks@7.5.3)(@tiptap/extension-link@2.2.3)(@tiptap/react@2.2.3)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/tiptap@7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(@tiptap/extension-link@2.2.3)(@tiptap/react@2.2.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-mCwW3Pe4fMGEc7NQBgfT/FO3IqHaSOCPj4bGfkw7U1uDp5u8SxR6pji0WlmpmYGN+NeEHH02vr6TazRnsqfdOg==}
     peerDependencies:
       '@mantine/core': 7.5.3
@@ -1660,6 +1658,7 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.5.3(react@18.2.0)
       '@tiptap/extension-link': 2.2.3(@tiptap/core@2.2.3)(@tiptap/pm@2.2.3)
       '@tiptap/react': 2.2.3(@tiptap/core@2.2.3)(@tiptap/pm@2.2.3)(react-dom@18.2.0)(react@18.2.0)
@@ -1685,8 +1684,8 @@ packages:
       - supports-color
     dev: false
 
-  /@next/env@14.1.1-canary.58:
-    resolution: {integrity: sha512-xMoPPiWVEIyIPoWaLhswlMq2Tnfkcv+XRmUAEhKkJgWdHIMFh45tiniWrZQLfrn4DAnF8gEAoejJaniNShFm7w==}
+  /@next/env@14.1.1-canary.61:
+    resolution: {integrity: sha512-vS5tg1qFIPyKGx7ZBDrOc7Iq2P2amhwTmlu/rzo99q5+5Gh0NvGmF4/vBw1PIP2WZAp8AqEwdL8klbW0wMmmJw==}
     dev: false
 
   /@next/eslint-plugin-next@14.1.0:
@@ -1695,8 +1694,8 @@ packages:
       glob: 10.3.10
     dev: false
 
-  /@next/swc-darwin-arm64@14.1.1-canary.58:
-    resolution: {integrity: sha512-exDpEe9ptK0NJEEyA+sThnR/6Oif/XaPK1y10fkcTNoQJkUCENL46nR1bCEYDAQrS5w03C1BHs3LSIOuoQcIag==}
+  /@next/swc-darwin-arm64@14.1.1-canary.61:
+    resolution: {integrity: sha512-Di/e/vfAbI8Ae2Wxuu2DZh2JBj5+DC8pl5C0XACO0Iu7j0qlUsNStk2SMFVfZpIANT0mF6Lz5T3ycaG86oUFSA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
@@ -1704,8 +1703,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-darwin-x64@14.1.1-canary.58:
-    resolution: {integrity: sha512-Q+38djBg+yaZjB8R6kst8kqHLIpTIM2RzuIvFGOflb8WaVI1ApXERTJKd345BOp42s0rIJ1UqynRplNCqYebeA==}
+  /@next/swc-darwin-x64@14.1.1-canary.61:
+    resolution: {integrity: sha512-EeT1cMyW+cECRVWkV1i26iPG+1EFToaL473YLUU/Q2EKSXQVw0T0F5pwIpZcSr+ecSvYYGbEdw2xdgGgNlqyDg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
@@ -1713,8 +1712,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-gnu@14.1.1-canary.58:
-    resolution: {integrity: sha512-wv2457qPqh7ENqQ3t8sCWCsNStEW/o8qejZ6Ywdwl3eKP1jnFNtn4OWfOuP2FUl1XmVEzbABozuOyiCGAtD63Q==}
+  /@next/swc-linux-arm64-gnu@14.1.1-canary.61:
+    resolution: {integrity: sha512-LArfX7VejoNhxAeu0prjnyFJaJBpsaVxL7SOu6PVwnrP6dvmDI/cNFraoJ28yzsfBXI9swYdtRLUD7rEOJSftQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -1722,8 +1721,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-musl@14.1.1-canary.58:
-    resolution: {integrity: sha512-xvfU/+mZfLpW/tRy743JtkNPlNI2t1dSkIzvDHHn/V28k1c+4YmsNxKMZRqqcxi73hwnuWYgor/96Sm4r9pmQQ==}
+  /@next/swc-linux-arm64-musl@14.1.1-canary.61:
+    resolution: {integrity: sha512-uJnXfyKNcNXgT2XCX3wIF1b/P58HK7V/+WlY0bUss3tVHdaMtvia/WZYDe60LzNsmQJEtQXoBtVw0Y+YIxyBVg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -1731,8 +1730,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-gnu@14.1.1-canary.58:
-    resolution: {integrity: sha512-OgayNv+ChIjsPYMkBit2LTI0tMJ72or4w5DfQe2i1M2Ccy09p/LSRCiOptkV3XKyO+Tz8+fAqN+PdLRxfxQiuQ==}
+  /@next/swc-linux-x64-gnu@14.1.1-canary.61:
+    resolution: {integrity: sha512-Nik6CNMgt57et+2dqhOCQHZGmMQ0ju0sWu4O19y0XsfJnyhzQD7FYXuT+3jIZ9fiwdBNSEAyyZ4vUDqEFLdO3w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -1740,8 +1739,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-musl@14.1.1-canary.58:
-    resolution: {integrity: sha512-6epwXWxSUyNKzOt0FSRW0QioPaWA9xlu8LM5N0c9eg8vaI3FvZmQegtHIzuzNc7RyWE1a5ZY4uDBVA1JaUJRow==}
+  /@next/swc-linux-x64-musl@14.1.1-canary.61:
+    resolution: {integrity: sha512-dirPIeN0So3WLOBmfjfGL4lwpZbEHf8Ez2M5U0tZ75ZWF4xd5sKXLJDBlZ/1YBDH9RI7yivqbT4Rr5QN/W3V1w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -1749,8 +1748,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-arm64-msvc@14.1.1-canary.58:
-    resolution: {integrity: sha512-Qa79WuVRcrkmbxzTXr/tmWvFHVMjUu9KpxNrKn+HO/DmrVEnR4NxmuzOOxc6QkCb+Rb86rfV7tttPQqw7YigBA==}
+  /@next/swc-win32-arm64-msvc@14.1.1-canary.61:
+    resolution: {integrity: sha512-akv1zuBx286ZF1t1qmB8HMftZUvry+1g2JmpkVbvmuOq50MaGxFPdKsDZOnTrmvLezGrQV12JxC8CUwcBpZKLw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
@@ -1758,8 +1757,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-ia32-msvc@14.1.1-canary.58:
-    resolution: {integrity: sha512-fuqdt6XKc4kvUpgOMh/LL2eqJ/eltxknClpaAg9Nt0dGTQIF0rjKEVm8NRwv832URZKKBbz9AtBp5TEmOquG9g==}
+  /@next/swc-win32-ia32-msvc@14.1.1-canary.61:
+    resolution: {integrity: sha512-heJt1MdizMmD1U2XzcolDaEaBg5SyHlA6+A0PSdVGvO3/PgA33YvxU48umlGwF0OQKIoeqj0d2m8vXdJGvLkZA==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
@@ -1767,8 +1766,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-x64-msvc@14.1.1-canary.58:
-    resolution: {integrity: sha512-P/DkKFiZo1mILb2UGt1YiurmuKo9LLvgC0l77YQ5g2b8jrTbYS9JeJJcdhLXnsHPPQrR/QgnEDJ2zWRtIhUJZA==}
+  /@next/swc-win32-x64-msvc@14.1.1-canary.61:
+    resolution: {integrity: sha512-5AhTzPf1Xn2j8OoAexC2LmDt4x1h5pCB8gjeZ8jYxm6Z8pSOUtowsrOFmqbZpxWHKMTTjM1LbzIcY0AYo+O+bA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -2012,43 +2011,43 @@ packages:
     resolution: {integrity: sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==}
     dev: false
 
-  /@tanstack/query-core@5.21.2:
-    resolution: {integrity: sha512-jg7OcDG44oLT3uuGQQ9BM65ZBIdAq9xNZXPEk7Gr6w1oM1wo2/95H3dPDjLVs0yZKwrmE/ORUOC2Pyi1sp2fDA==}
+  /@tanstack/query-core@5.21.7:
+    resolution: {integrity: sha512-z0NSWFsM75esVmkxeuDWeyo9Wv4CZ/WsLMZgu1Zz164S6Oc/57NMia88dTu/d51wdVowMTAcDMQgRmiWmyPMxQ==}
     dev: false
 
-  /@tanstack/query-devtools@5.21.3:
-    resolution: {integrity: sha512-tRJ3uYpF8mLqb+Na25DqPsqdsK38Ff1HIse3znQIEoGMzf7rJKTwV9HCn/9cPQTyTcAuSUZOajyCVz7hnbdCdQ==}
+  /@tanstack/query-devtools@5.21.5:
+    resolution: {integrity: sha512-A7rVpVP1GRcQBnB/GzXZfVhxmoP17J1f+RoYRu+DOV8Jp4QPIJRE/nFueEiiRPSVL7aNcNw4rTm0RmJZRI2fUA==}
     dev: false
 
-  /@tanstack/react-query-devtools@5.21.3(@tanstack/react-query@5.21.2)(react@18.2.0):
-    resolution: {integrity: sha512-xU6nSshTneHppN9xQnjLgIAy36GHsQsHp/aCa515dRzcgEqC99Ix4TdwbduPSRTk5ZATsUEO0kKMZzSbubO0Pg==}
+  /@tanstack/react-query-devtools@5.21.7(@tanstack/react-query@5.21.7)(react@18.2.0):
+    resolution: {integrity: sha512-SfGw5KErNfeC8beEfV3vg9QjxVUaJkDEkZGfjVEHdHR/H9owmf1SI8FLDH3GtWXMO0YczaKjDiFyvMSZUk2I1Q==}
     peerDependencies:
-      '@tanstack/react-query': ^5.21.2
+      '@tanstack/react-query': ^5.21.7
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-devtools': 5.21.3
-      '@tanstack/react-query': 5.21.2(react@18.2.0)
+      '@tanstack/query-devtools': 5.21.5
+      '@tanstack/react-query': 5.21.7(react@18.2.0)
       react: 18.2.0
     dev: false
 
-  /@tanstack/react-query-next-experimental@5.21.2(@tanstack/react-query@5.21.2)(next@14.1.1-canary.58)(react@18.2.0):
-    resolution: {integrity: sha512-IKx6MvXxUWe2uAONZJZAsYBGhDXNpVoN5B81+JsS7AdOADO4+EiASk+3VPPg8vtkdYioiqbJ6sNp9zRn7pOGTA==}
+  /@tanstack/react-query-next-experimental@5.21.7(@tanstack/react-query@5.21.7)(next@14.1.1-canary.61)(react@18.2.0):
+    resolution: {integrity: sha512-5XgnH2JK0iH28eNmjYicX9b1lGq01XkZWQ0DFI8jCHypnXLbmD7Uq/Kh2IQ+OS6G1o3CK4RG5p8tPDNzD1vdAw==}
     peerDependencies:
-      '@tanstack/react-query': ^5.21.2
+      '@tanstack/react-query': ^5.21.7
       next: ^13 || ^14
       react: ^18.0.0
     dependencies:
-      '@tanstack/react-query': 5.21.2(react@18.2.0)
-      next: 14.1.1-canary.58(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+      '@tanstack/react-query': 5.21.7(react@18.2.0)
+      next: 14.1.1-canary.61(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       react: 18.2.0
     dev: false
 
-  /@tanstack/react-query@5.21.2(react@18.2.0):
-    resolution: {integrity: sha512-/Vv1qTumNDDVA5EYk40kivHZ2kICs1w38GBLRvV6A/lrixUJR5bfqZMKqHA1S6ND3gR9hvSyAAYejBbjLrQnSA==}
+  /@tanstack/react-query@5.21.7(react@18.2.0):
+    resolution: {integrity: sha512-Op9nVL/L0Lg+aSPFSGbrymu6d3tzUoZ+FZ+rRIZpu5HkGasflqzhsXkL26Sa+MEwLyox7Q1erSFwNIRO3TYjXQ==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.21.2
+      '@tanstack/query-core': 5.21.7
       react: 18.2.0
     dev: false
 
@@ -2345,7 +2344,7 @@ packages:
       '@trpc/server': 11.0.0-next-beta.289
     dev: false
 
-  /@trpc/next@11.0.0-next-beta.289(@tanstack/react-query@5.21.2)(@trpc/client@11.0.0-next-beta.289)(@trpc/react-query@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(next@14.1.1-canary.58)(react-dom@18.2.0)(react@18.2.0):
+  /@trpc/next@11.0.0-next-beta.289(@tanstack/react-query@5.21.7)(@trpc/client@11.0.0-next-beta.289)(@trpc/react-query@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(next@14.1.1-canary.61)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-AKCrcbtHh/zFrld6lMG0RC37d/aac4ZisLDjJcViMnEmJXCo0J5nhoZa6f+G9N683NdMWZVmY2rmJidw9IX3QQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
@@ -2361,16 +2360,16 @@ packages:
       '@trpc/react-query':
         optional: true
     dependencies:
-      '@tanstack/react-query': 5.21.2(react@18.2.0)
+      '@tanstack/react-query': 5.21.7(react@18.2.0)
       '@trpc/client': 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
-      '@trpc/react-query': 11.0.0-next-beta.289(@tanstack/react-query@5.21.2)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/react-query': 11.0.0-next-beta.289(@tanstack/react-query@5.21.7)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 11.0.0-next-beta.289
-      next: 14.1.1-canary.58(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+      next: 14.1.1-canary.61(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/react-query@11.0.0-next-beta.289(@tanstack/react-query@5.21.2)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0):
+  /@trpc/react-query@11.0.0-next-beta.289(@tanstack/react-query@5.21.7)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-SAn09DmZ4eFYLS0cCHOVNvRHJhHZ2ssUj4LUTj56wym0MieaCSrcxTqiolnaMfF+mWc1SJlLOzebrxaTHPwJSw==}
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
@@ -2379,7 +2378,7 @@ packages:
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
     dependencies:
-      '@tanstack/react-query': 5.21.2(react@18.2.0)
+      '@tanstack/react-query': 5.21.7(react@18.2.0)
       '@trpc/client': 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
       '@trpc/server': 11.0.0-next-beta.289
       react: 18.2.0
@@ -2492,10 +2491,6 @@ packages:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 20.11.19
-    dev: true
-
-  /@types/chroma-js@2.4.4:
-    resolution: {integrity: sha512-/DTccpHTaKomqussrn+ciEvfW4k6NAHzNzs/sts1TCqg333qNxOhy8TNIoQCmbGG3Tl8KdEhkGAssb1n3mTXiQ==}
     dev: true
 
   /@types/connect@3.4.38:
@@ -5729,14 +5724,15 @@ packages:
   /make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
 
-  /mantine-modal-manager@7.5.2(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-MI2j7WQso2n+AxvyfMyRFjOHrfW1SVZKOUUd35/JxPks3dF5FbQAU3aLHPj2QtVuf2MUgFqH/yJKJlr1tfiQjw==}
+  /mantine-modal-manager@7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-PRdd+nb9XmIF+n7RbfwslQix1QKjHxANjTl3S2bbtFKQ/bbI2dcPnwlze9xLM9Nephcv0hY/ZsgRWQhF4ZLIww==}
     peerDependencies:
-      '@mantine/core': 7.5.2
-      '@mantine/hooks': 7.5.2
+      '@mantine/core': 7.5.3
+      '@mantine/hooks': 7.5.3
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.5.3(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -5929,7 +5925,7 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /next-auth@5.0.0-beta.11(next@14.1.1-canary.58)(react@18.2.0):
+  /next-auth@5.0.0-beta.11(next@14.1.1-canary.61)(react@18.2.0):
     resolution: {integrity: sha512-OrfOVyXBGC69O8lEe81ZwFzQuWnY3Bsqee7kawr1iBycgSD64oNCtoFvRXiOWe7R0jOaafqQQlpsOS0mARhT3Q==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
@@ -5946,7 +5942,7 @@ packages:
         optional: true
     dependencies:
       '@auth/core': 0.27.0
-      next: 14.1.1-canary.58(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+      next: 14.1.1-canary.61(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       react: 18.2.0
     dev: false
 
@@ -5962,8 +5958,8 @@ packages:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
     dev: true
 
-  /next@14.1.1-canary.58(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0):
-    resolution: {integrity: sha512-rL4Tmm5ldL4VA+lTz0sQfJcDOe3vXB7LItcWuILb8eDs/6X1wrXNF9KDtviJH0tq/jrrTOihN7aBCkkge85m6g==}
+  /next@14.1.1-canary.61(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0):
+    resolution: {integrity: sha512-QMePsaNHDLX3nBi05+2im7fLn/AWq6BYP7quQVqUI3zr+C6rkhr5Zs6+K+9JILh7y7Vdgb6Ajohj6SJfvfy8DQ==}
     engines: {node: '>=18.17.0'}
     hasBin: true
     peerDependencies:
@@ -5977,7 +5973,7 @@ packages:
       sass:
         optional: true
     dependencies:
-      '@next/env': 14.1.1-canary.58
+      '@next/env': 14.1.1-canary.61
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
       caniuse-lite: 1.0.30001587
@@ -5988,15 +5984,15 @@ packages:
       sass: 1.71.0
       styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.1.1-canary.58
-      '@next/swc-darwin-x64': 14.1.1-canary.58
-      '@next/swc-linux-arm64-gnu': 14.1.1-canary.58
-      '@next/swc-linux-arm64-musl': 14.1.1-canary.58
-      '@next/swc-linux-x64-gnu': 14.1.1-canary.58
-      '@next/swc-linux-x64-musl': 14.1.1-canary.58
-      '@next/swc-win32-arm64-msvc': 14.1.1-canary.58
-      '@next/swc-win32-ia32-msvc': 14.1.1-canary.58
-      '@next/swc-win32-x64-msvc': 14.1.1-canary.58
+      '@next/swc-darwin-arm64': 14.1.1-canary.61
+      '@next/swc-darwin-x64': 14.1.1-canary.61
+      '@next/swc-linux-arm64-gnu': 14.1.1-canary.61
+      '@next/swc-linux-arm64-musl': 14.1.1-canary.61
+      '@next/swc-linux-x64-gnu': 14.1.1-canary.61
+      '@next/swc-linux-x64-musl': 14.1.1-canary.61
+      '@next/swc-win32-arm64-msvc': 14.1.1-canary.61
+      '@next/swc-win32-ia32-msvc': 14.1.1-canary.61
+      '@next/swc-win32-x64-msvc': 14.1.1-canary.61
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -6768,7 +6764,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-remove-scroll-bar@2.3.4(react@18.2.0):
+  /react-remove-scroll-bar@2.3.4(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-63C4YQBUt0m6ALadE9XV56hV8BgJWDmmTPY758iIJjfQKt2nYwoUrPk0LXRXcB/yIj82T1/Ixfdpdk68LwIB0A==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -6778,12 +6774,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       react: 18.2.0
-      react-style-singleton: 2.2.1(react@18.2.0)
+      react-style-singleton: 2.2.1(@types/react@18.2.56)(react@18.2.0)
       tslib: 2.6.2
     dev: false
 
-  /react-remove-scroll@2.5.7(react@18.2.0):
+  /react-remove-scroll@2.5.7(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-FnrTWO4L7/Bhhf3CYBNArEG/yROV0tKmTv7/3h9QCFvH6sndeFf1wPqOcbFVu5VAulS5dV1wGT3GZZ/1GawqiA==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -6793,15 +6790,16 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       react: 18.2.0
-      react-remove-scroll-bar: 2.3.4(react@18.2.0)
-      react-style-singleton: 2.2.1(react@18.2.0)
+      react-remove-scroll-bar: 2.3.4(@types/react@18.2.56)(react@18.2.0)
+      react-style-singleton: 2.2.1(@types/react@18.2.56)(react@18.2.0)
       tslib: 2.6.2
-      use-callback-ref: 1.3.1(react@18.2.0)
-      use-sidecar: 1.1.2(react@18.2.0)
+      use-callback-ref: 1.3.1(@types/react@18.2.56)(react@18.2.0)
+      use-sidecar: 1.1.2(@types/react@18.2.56)(react@18.2.0)
     dev: false
 
-  /react-style-singleton@2.2.1(react@18.2.0):
+  /react-style-singleton@2.2.1(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -6811,13 +6809,14 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.6.2
     dev: false
 
-  /react-textarea-autosize@8.5.3(react@18.2.0):
+  /react-textarea-autosize@8.5.3(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-XT1024o2pqCuZSuBt9FwHlaDeNtVrtCXu0Rnz88t1jUGheCLa3PhjE1GH8Ctm2axEtvdCl5SUHYschyQ0L5QHQ==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -6826,7 +6825,7 @@ packages:
       '@babel/runtime': 7.23.9
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
-      use-latest: 1.2.1(react@18.2.0)
+      use-latest: 1.2.1(@types/react@18.2.56)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -7864,7 +7863,7 @@ packages:
       requires-port: 1.0.0
     dev: true
 
-  /use-callback-ref@1.3.1(react@18.2.0):
+  /use-callback-ref@1.3.1(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-Lg4Vx1XZQauB42Hw3kK7JM6yjVjgFmFC5/Ab797s79aARomD2nEErc4mCgM8EZrARLmmbWpi5DGCadmK50DcAQ==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -7874,6 +7873,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       react: 18.2.0
       tslib: 2.6.2
     dev: false
@@ -7897,7 +7897,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /use-isomorphic-layout-effect@1.1.2(react@18.2.0):
+  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
     peerDependencies:
       '@types/react': '*'
@@ -7906,10 +7906,11 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       react: 18.2.0
     dev: false
 
-  /use-latest@1.2.1(react@18.2.0):
+  /use-latest@1.2.1(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==}
     peerDependencies:
       '@types/react': '*'
@@ -7918,11 +7919,12 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       react: 18.2.0
-      use-isomorphic-layout-effect: 1.1.2(react@18.2.0)
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.56)(react@18.2.0)
     dev: false
 
-  /use-sidecar@1.1.2(react@18.2.0):
+  /use-sidecar@1.1.2(@types/react@18.2.56)(react@18.2.0):
     resolution: {integrity: sha512-epTbsLuzZ7lPClpz2TyryBfztm7m+28DlEv2ZCQ3MDr5ssiwyOwGH/e5F9CkfWjJ1t4clvI58yF822/GUkjjhw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -7932,6 +7934,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
+      '@types/react': 18.2.56
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.6.2

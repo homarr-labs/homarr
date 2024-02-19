@@ -1,18 +1,30 @@
 "use client";
 
+import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
-import type { IntegrationKind } from "@homarr/definitions";
-import { getSecretKinds } from "@homarr/definitions";
+import type {
+  IntegrationKind,
+  IntegrationSecretKind,
+} from "@homarr/definitions";
+import { getAllSecretKindOptions } from "@homarr/definitions";
+import type { UseFormReturnType } from "@homarr/form";
 import { useForm, zodResolver } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
-import { useI18n } from "@homarr/translation/client";
-import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import {
+  Button,
+  Fieldset,
+  Group,
+  SegmentedControl,
+  Stack,
+  TextInput,
+} from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
@@ -34,11 +46,11 @@ export const NewIntegrationForm = ({
   searchParams,
 }: NewIntegrationFormProps) => {
   const t = useI18n();
-  const secretKinds = getSecretKinds(searchParams.kind);
+  const secretKinds = getAllSecretKindOptions(searchParams.kind);
   const initialFormValues = {
     name: searchParams.name ?? "",
     url: searchParams.url ?? "",
-    secrets: secretKinds.map((kind) => ({
+    secrets: secretKinds[0].map((kind) => ({
       kind,
       value: "",
     })),
@@ -99,7 +111,13 @@ export const NewIntegrationForm = ({
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
-            {secretKinds.map((kind, index) => (
+            {secretKinds.length > 1 && (
+              <SecretKindsSegmentedControl
+                secretKinds={secretKinds}
+                form={form}
+              />
+            )}
+            {form.values.secrets.map(({ kind }, index) => (
               <IntegrationSecretInput
                 key={kind}
                 kind={kind}
@@ -131,6 +149,43 @@ export const NewIntegrationForm = ({
         </Group>
       </Stack>
     </form>
+  );
+};
+
+interface SecretKindsSegmentedControlProps {
+  secretKinds: IntegrationSecretKind[][];
+  form: UseFormReturnType<FormType, (values: FormType) => FormType>;
+}
+
+const SecretKindsSegmentedControl = ({
+  secretKinds,
+  form,
+}: SecretKindsSegmentedControlProps) => {
+  const t = useScopedI18n("integration.secrets");
+
+  const secretKindGroups = secretKinds.map((kinds) => ({
+    label: kinds.map((kind) => t(`kind.${kind}.label`)).join(" & "),
+    value: kinds.join("-"),
+  }));
+
+  const onChange = useCallback(
+    (value: string) => {
+      const kinds = value.split("-") as IntegrationSecretKind[];
+      const secrets = kinds.map((kind) => ({
+        kind,
+        value: "",
+      }));
+      form.setFieldValue("secrets", secrets);
+    },
+    [form],
+  );
+
+  return (
+    <SegmentedControl
+      fullWidth
+      data={secretKindGroups}
+      onChange={onChange}
+    ></SegmentedControl>
   );
 };
 
