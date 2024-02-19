@@ -176,6 +176,10 @@ export default {
       },
     },
     noResults: "No results found",
+    preview: {
+      show: "Show preview",
+      hide: "Hide preview",
+    },
   },
   section: {
     category: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { generateColorsMap } from "@mantine/colors-generator";
+import { generateColors, generateColorsMap } from "@mantine/colors-generator";
 import { useDisclosure } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,11 +9,13 @@ import { useI18n } from "@homarr/translation/client";
 import {
   Anchor,
   Button,
+  CheckIcon,
   Collapse,
   ColorInput,
   ColorSwatch,
   Grid,
   Group,
+  InputWrapper,
   isLightColor,
   Stack,
   Text,
@@ -59,7 +61,11 @@ export const ColorSettingsContent = ({ board }: Props) => {
                 swatches={Object.values(theme.colors).map((color) => color[6])}
                 {...form.getInputProps("primaryColor")}
               />
-              <Anchor onClick={toggle}>Show preview</Anchor>
+              <Anchor onClick={toggle}>
+                {showPreview
+                  ? t("common.preview.hide")
+                  : t("common.preview.show")}
+              </Anchor>
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
@@ -78,8 +84,14 @@ export const ColorSettingsContent = ({ board }: Props) => {
               </Stack>
             </Collapse>
           </Grid.Col>
+          <Grid.Col span={12}>
+            <ShadeSelector
+              label={t("board.field.primaryShade.label")}
+              primaryColor={form.values.primaryColor}
+              {...form.getInputProps("primaryShade")}
+            />
+          </Grid.Col>
         </Grid>
-
         <Group justify="end">
           <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
@@ -87,6 +99,46 @@ export const ColorSettingsContent = ({ board }: Props) => {
         </Group>
       </Stack>
     </form>
+  );
+};
+
+interface ShadeSelectorProps {
+  primaryColor: string;
+  label: string;
+  value?: number;
+  onChange: (value: number) => void;
+}
+
+const ShadeSelector = ({
+  primaryColor,
+  label,
+  value,
+  onChange,
+}: ShadeSelectorProps) => {
+  const colors = generateColors(primaryColor);
+
+  return (
+    <InputWrapper label={label}>
+      <Group gap="sm">
+        {colors.map((color, index) => (
+          <ColorSwatch
+            key={color}
+            component="button"
+            type="button"
+            color={color}
+            style={{ cursor: "pointer" }}
+            onClick={() => onChange(index)}
+          >
+            {value === index && (
+              <CheckIcon
+                color={isLightColor(color) ? "black" : "white"}
+                size={"0.75rem"}
+              />
+            )}
+          </ColorSwatch>
+        ))}
+      </Group>
+    </InputWrapper>
   );
 };
 
