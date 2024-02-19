@@ -40,6 +40,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "winston": "^3.11.0"
+    "@homarr/log": "0.1.0"
   }
 }

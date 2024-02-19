@@ -1,21 +1,5 @@
 import childProcess from "child_process";
-
-import winston from "winston";
-
-const logMessageFormat = winston.format.printf(
-  ({ level, message, timestamp }) => {
-    return `${timestamp} ${level}: ${message}`;
-  },
-);
-
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp(),
-    logMessageFormat,
-  ),
-  transports: [new winston.transports.Console()],
-});
+import { logger } from './packages/log/src/logger-config.js';
 
 const turboProcess = childProcess.exec("turbo dev --parallel");
 
