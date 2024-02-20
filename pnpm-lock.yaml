@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      winston:
-        specifier: ^3.11.0
-        version: 3.11.0
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -75,6 +71,9 @@ importers:
       '@homarr/gridstack':
         specifier: ^1.0.0
         version: 1.0.0
+      '@homarr/log':
+        specifier: workspace:^
+        version: link:../../packages/log
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
@@ -409,6 +408,28 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/log:
+    dependencies:
+      winston:
+        specifier: 3.11.0
+        version: 3.11.0
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   packages/notifications:
     dependencies:
       '@homarr/ui':
@@ -495,6 +516,9 @@ importers:
       '@tabler/icons-react':
         specifier: ^2.47.0
         version: 2.47.0(react@18.2.0)
+      mantine-react-table:
+        specifier: 2.0.0-alpha.17
+        version: 2.0.0-alpha.17(@mantine/core@7.5.3)(@mantine/dates@7.5.3)(@mantine/hooks@7.5.3)(@tabler/icons-react@2.47.0)(clsx@2.0.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1997,6 +2021,13 @@ packages:
     resolution: {integrity: sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==}
     dev: false
 
+  /@tanstack/match-sorter-utils@8.11.8:
+    resolution: {integrity: sha512-3VPh0SYMGCa5dWQEqNab87UpCMk+ANWHDP4ALs5PeEW9EpfTAbrezzaOk/OiM52IESViefkoAOYuxdoa04p6aA==}
+    engines: {node: '>=12'}
+    dependencies:
+      remove-accents: 0.4.2
+    dev: false
+
   /@tanstack/query-core@5.21.7:
     resolution: {integrity: sha512-z0NSWFsM75esVmkxeuDWeyo9Wv4CZ/WsLMZgu1Zz164S6Oc/57NMia88dTu/d51wdVowMTAcDMQgRmiWmyPMxQ==}
     dev: false
@@ -2035,6 +2066,38 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.21.7
       react: 18.2.0
+    dev: false
+
+  /@tanstack/react-table@8.11.8(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-NEwvIq4iSiDQozEyvbdiSdCOiLa+g5xHmdEnvwDb98FObcK6YkBOkRrs/CNqrKdDy+/lqoIllIWHk+M80GW6+g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/table-core': 8.11.8
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/react-virtual@3.0.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-tiqKW/e2MJVCr7/pRUXulpkyxllaOclkHNfhKTo4pmHjJIqnhMfwIjc1Q1R0Un3PI3kQywywu/791c8z9u0qeA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/table-core@8.11.8:
+    resolution: {integrity: sha512-DECHvtq4YW4U/gqg6etup7ydt/RB1Bi1pJaMpHUXl65ooW1d71Nv7BzD66rUdHrBSNdyiW3PLTPUQlpXjAgDeA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /@tanstack/virtual-core@3.0.0:
+    resolution: {integrity: sha512-SYXOBTjJb05rXa2vl55TTwO40A6wKu0R5i1qQwhJYNDIqaIGF7D0HsLw+pJAyi2OvntlEIVusx3xtbbgSUi6zg==}
     dev: false
 
   /@testing-library/react-hooks@8.0.1(react@17.0.2):
@@ -5720,6 +5783,32 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /mantine-react-table@2.0.0-alpha.17(@mantine/core@7.5.3)(@mantine/dates@7.5.3)(@mantine/hooks@7.5.3)(@tabler/icons-react@2.47.0)(clsx@2.0.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-DnB1+c/IiTH2ptVqSEoaiBZ003wa8J5AlYK//apkhZE18M45lJ1iw12LCl1X5kRWx36P2D6O1yw8QW7SZZfQqQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@mantine/core': ^7.3
+      '@mantine/dates': ^7.3
+      '@mantine/hooks': ^7.3
+      '@tabler/icons-react': '>=2.23.0'
+      clsx: '>=2'
+      dayjs: '>=1.11'
+      react: '>=18.0'
+      react-dom: '>=18.0'
+    dependencies:
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.57)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/dates': 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.5.3(react@18.2.0)
+      '@tabler/icons-react': 2.47.0(react@18.2.0)
+      '@tanstack/match-sorter-utils': 8.11.8
+      '@tanstack/react-table': 8.11.8(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-virtual': 3.0.4(react-dom@18.2.0)(react@18.2.0)
+      clsx: 2.0.0
+      dayjs: 1.11.10
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /markdown-it@14.0.0:
     resolution: {integrity: sha512-seFjF0FIcPt4P9U39Bq1JYblX0KZCjDLFFQPHpL5AzHpqPEKtosxmdq/LTVZnjfH7tjt9BxStm+wXcDBNuYmzw==}
     hasBin: true
@@ -6894,6 +6983,10 @@ packages:
     dependencies:
       rc: 1.2.8
     dev: true
+
+  /remove-accents@0.4.2:
+    resolution: {integrity: sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==}
+    dev: false
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
