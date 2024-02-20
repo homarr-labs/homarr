@@ -348,6 +348,10 @@ export default {
       afternoon: "Good afternoon, {username}",
       evening: "Good evening, {username}",
     },
+    notFound: {
+      title: "Not Found",
+      text: "Could not find requested resource",
+    },
     navbar: {
       items: {
         home: "Home",
