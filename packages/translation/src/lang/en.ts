@@ -147,6 +147,8 @@ export default {
       saveChanges: "Save changes",
       cancel: "Cancel",
       confirm: "Confirm",
+      previous: "Previous",
+      next: "Next",
     },
     multiSelect: {
       placeholder: "Pick one or more values",
@@ -391,6 +393,50 @@ export default {
                 label: "Name",
               },
             },
+          },
+        },
+      },
+      user: {
+        list: {
+          metaTitle: "Manage users",
+          title: "Users",
+        },
+        edit: {
+          metaTitle: "Edit user {username}",
+        },
+        create: {
+          metaTitle: "Create user",
+          title: "Create new user",
+          step: {
+            personalInformation: {
+              label: "Personal information",
+              field: {
+                username: {
+                  label: "Username",
+                },
+                email: {
+                  label: "E-Mail",
+                },
+              },
+            },
+            preferences: {
+              label: "Preferences",
+              description: "Coming soon",
+            },
+            permissions: {
+              label: "Permissions",
+              description: "Coming soon",
+            },
+            review: {
+              label: "Review",
+            },
+            completed: {
+              title: "User created",
+            },
+          },
+          buttons: {
+            createAnother: "Create another user",
+            return: "Return to the user list",
           },
         },
       },
