@@ -30,6 +30,7 @@ export const createCredentialsConfiguration = (db: Database) =>
       });
 
       if (!user?.password) {
+        console.log(`user ${data.name} was not found`);
         return null;
       }
 
