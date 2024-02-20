@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      winston:
-        specifier: ^3.11.0
-        version: 3.11.0
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -75,6 +71,9 @@ importers:
       '@homarr/gridstack':
         specifier: ^1.0.0
         version: 1.0.0
+      '@homarr/log':
+        specifier: workspace:^
+        version: link:../../packages/log
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
@@ -392,6 +391,28 @@ importers:
       '@mantine/form':
         specifier: ^7.5.3
         version: 7.5.3(react@18.2.0)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/log:
+    dependencies:
+      winston:
+        specifier: 3.11.0
+        version: 3.11.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
