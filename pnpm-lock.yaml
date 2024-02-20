@@ -144,7 +144,7 @@ importers:
         specifier: ^7.5.3
         version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: ^14.1.1-canary.62
+        specifier: ^14.1.1-canary.63
         version: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       postcss-preset-mantine:
         specifier: ^1.13.0
@@ -260,7 +260,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       next:
-        specifier: ^14.1.1-canary.62
+        specifier: ^14.1.1-canary.63
         version: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
       next-auth:
         specifier: 5.0.0-beta.13
