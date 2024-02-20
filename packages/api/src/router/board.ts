@@ -125,8 +125,6 @@ export const boardRouter = createTRPCRouter({
           primaryColor: input.primaryColor,
           secondaryColor: input.secondaryColor,
           primaryShade: input.primaryShade,
-
-          // widget settings
           opacity: input.opacity,
 
           // custom css

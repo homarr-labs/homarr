@@ -17,6 +17,7 @@ import {
   Group,
   InputWrapper,
   isLightColor,
+  Slider,
   Stack,
   Text,
   useMantineTheme,
@@ -34,6 +35,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
       primaryColor: board.primaryColor,
       secondaryColor: board.secondaryColor,
       primaryShade: board.primaryShade,
+      opacity: board.opacity,
     },
   });
   const [showPreview, { toggle }] = useDisclosure(false);
@@ -84,12 +86,24 @@ export const ColorSettingsContent = ({ board }: Props) => {
               </Stack>
             </Collapse>
           </Grid.Col>
-          <Grid.Col span={12}>
+          <Grid.Col span={{ sm: 12, md: 6 }}>
             <ShadeSelector
               label={t("board.field.primaryShade.label")}
               primaryColor={form.values.primaryColor}
               {...form.getInputProps("primaryShade")}
             />
+          </Grid.Col>
+          <Grid.Col span={{ sm: 12, md: 6 }}>
+            <InputWrapper label={t("board.field.opacity.label")}>
+              <Slider
+                my={6}
+                min={0}
+                max={100}
+                step={5}
+                label={(value) => `${value}%`}
+                {...form.getInputProps("opacity")}
+              />
+            </InputWrapper>
           </Grid.Col>
         </Grid>
         <Group justify="end">
