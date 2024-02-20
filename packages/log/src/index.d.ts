@@ -1,3 +1,4 @@
 import type { Logger } from "winston";
 
-export const logger: Logger;
+// The following is just to make prettier happy
+export const logger: Logger = undefined as unknown as Logger;
