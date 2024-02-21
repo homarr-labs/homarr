@@ -145,7 +145,7 @@ importers:
         version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       next:
         specifier: ^14.1.1-canary.63
-        version: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+        version: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
       postcss-preset-mantine:
         specifier: ^1.13.0
         version: 1.13.0(postcss@8.4.35)
@@ -156,8 +156,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       sass:
-        specifier: ^1.71.0
-        version: 1.71.0
+        specifier: ^1.71.1
+        version: 1.71.1
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -261,7 +261,7 @@ importers:
         version: 0.9.1
       next:
         specifier: ^14.1.1-canary.63
-        version: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+        version: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
       next-auth:
         specifier: 5.0.0-beta.13
         version: 5.0.0-beta.13(next@14.1.1-canary.63)(react@18.2.0)
@@ -2055,7 +2055,7 @@ packages:
       react: ^18.0.0
     dependencies:
       '@tanstack/react-query': 5.22.2(react@18.2.0)
-      next: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+      next: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
       react: 18.2.0
     dev: false
 
@@ -2413,7 +2413,7 @@ packages:
       '@trpc/client': 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
       '@trpc/react-query': 11.0.0-next-beta.289(@tanstack/react-query@5.22.2)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 11.0.0-next-beta.289
-      next: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+      next: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -6013,7 +6013,7 @@ packages:
         optional: true
     dependencies:
       '@auth/core': 0.27.0
-      next: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+      next: 14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
       react: 18.2.0
     dev: false
 
@@ -6029,7 +6029,7 @@ packages:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
     dev: true
 
-  /next@14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0):
+  /next@14.1.1-canary.63(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1):
     resolution: {integrity: sha512-2gDV0kHY34eOsUJMQWV+B5SFPzdunNxRGNaPzlEIpvdz6fS23r7ozgeKI9XhtA6cHUF2OXEF6mjl40dxSG8EOw==}
     engines: {node: '>=18.17.0'}
     hasBin: true
@@ -6052,7 +6052,7 @@ packages:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      sass: 1.71.0
+      sass: 1.71.1
       styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.1.1-canary.63
@@ -7120,8 +7120,8 @@ packages:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
     dev: true
 
-  /sass@1.71.0:
-    resolution: {integrity: sha512-HKKIKf49Vkxlrav3F/w6qRuPcmImGVbIXJ2I3Kg0VMA+3Bav+8yE9G5XmP5lMj6nl4OlqbPftGAscNaNu28b8w==}
+  /sass@1.71.1:
+    resolution: {integrity: sha512-wovtnV2PxzteLlfNzbgm1tFXPLoZILYAMJtvoXXkD7/+1uP41eKkIt1ypWq5/q2uT94qHjXehEYfmjKOvjL9sg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
