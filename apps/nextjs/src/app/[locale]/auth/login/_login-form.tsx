@@ -40,7 +40,7 @@ export const LoginForm = () => {
       callbackUrl: "/",
     })
       .then((response) => {
-        if (!response?.ok) {
+        if (!response?.ok || response.error) {
           throw response?.error;
         }
 
