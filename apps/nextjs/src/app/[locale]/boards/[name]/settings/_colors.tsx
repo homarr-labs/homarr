@@ -29,6 +29,8 @@ interface Props {
   board: Board;
 }
 
+const hexRegex = /^#[0-9a-fA-F]{6}$/;
+
 export const ColorSettingsContent = ({ board }: Props) => {
   const form = useForm({
     initialValues: {
@@ -129,7 +131,9 @@ const ShadeSelector = ({
   value,
   onChange,
 }: ShadeSelectorProps) => {
-  const colors = generateColors(primaryColor);
+  const colors = hexRegex.test(primaryColor)
+    ? generateColors(primaryColor)
+    : generateColors("#000000");
 
   return (
     <InputWrapper label={label}>
@@ -161,8 +165,11 @@ interface ColorsPreviewProps {
 }
 
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
-  const { colors, baseColorIndex } = generateColorsMap(previewColor);
   const theme = useMantineTheme();
+
+  const { colors, baseColorIndex } = hexRegex.test(previewColor)
+    ? generateColorsMap(previewColor)
+    : generateColorsMap("#000000");
 
   return (
     <Group gap={0}>

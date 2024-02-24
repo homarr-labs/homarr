@@ -180,6 +180,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/chroma-js':
+        specifier: 2.4.4
+        version: 2.4.4
       '@types/node':
         specifier: ^20.11.19
         version: 20.11.19
@@ -2554,6 +2557,10 @@ packages:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 20.11.19
+    dev: true
+
+  /@types/chroma-js@2.4.4:
+    resolution: {integrity: sha512-/DTccpHTaKomqussrn+ciEvfW4k6NAHzNzs/sts1TCqg333qNxOhy8TNIoQCmbGG3Tl8KdEhkGAssb1n3mTXiQ==}
     dev: true
 
   /@types/connect@3.4.38:
