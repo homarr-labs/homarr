@@ -37,7 +37,7 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
           <BoardProvider initialBoard={initialBoard}>
             <ClientShell hasNavigation={false}>
               <MainHeader
-                logo={<BoardLogoWithTitle size="md" />}
+                logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
                 actions={headeractions}
                 hasNavigation={false}
               />
