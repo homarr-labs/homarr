@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   useDebouncedValue,
   useDocumentTitle,
@@ -30,7 +30,12 @@ interface Props {
 
 export const GeneralSettingsContent = ({ board }: Props) => {
   const t = useI18n();
+  const ref = useRef({
+    pageTitle: board.pageTitle,
+    logoImageUrl: board.logoImageUrl,
+  });
   const { updateBoard } = useUpdateBoard();
+
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
   const form = useForm({
@@ -52,9 +57,25 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   const faviconStatus = useFaviconPreview(form.values.faviconImageUrl);
   const logoStatus = useLogoPreview(form.values.logoImageUrl);
 
+  // Cleanup for not applied changes of the page title and logo image URL
+  useEffect(() => {
+    return () => {
+      updateBoard((previous) => ({
+        ...previous,
+        pageTitle: ref.current.pageTitle,
+        logoImageUrl: ref.current.logoImageUrl,
+      }));
+    };
+  }, [updateBoard]);
+
   return (
     <form
       onSubmit={form.onSubmit((values) => {
+        // Save the current values to the ref so that it does not reset if the form is submitted
+        ref.current = {
+          pageTitle: values.pageTitle,
+          logoImageUrl: values.logoImageUrl,
+        };
         savePartialSettings({
           boardId: board.id,
           ...values,
