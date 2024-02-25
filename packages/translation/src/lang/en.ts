@@ -396,6 +396,9 @@ export default {
         color: {
           title: "Colors",
         },
+        customCss: {
+          title: "Custom css",
+        },
         dangerZone: {
           title: "Danger Zone",
           action: {

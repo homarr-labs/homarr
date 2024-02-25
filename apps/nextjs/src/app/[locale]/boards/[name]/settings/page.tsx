@@ -12,6 +12,7 @@ import {
   Container,
   IconAlertTriangle,
   IconBrush,
+  IconFileTypeCss,
   IconLayout,
   IconPhoto,
   IconSettings,
@@ -23,6 +24,7 @@ import {
 import { api } from "~/trpc/server";
 import { BackgroundSettingsContent } from "./_background";
 import { ColorSettingsContent } from "./_colors";
+import { CustomCssSettingsContent } from "./_customCss";
 import { DangerZoneSettingsContent } from "./_danger";
 import { GeneralSettingsContent } from "./_general";
 import { LayoutSettingsContent } from "./_layout";
@@ -53,6 +55,9 @@ export default async function BoardSettingsPage({ params }: Props) {
           </AccordionItemFor>
           <AccordionItemFor value="color" icon={IconBrush}>
             <ColorSettingsContent board={board} />
+          </AccordionItemFor>
+          <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
+            <CustomCssSettingsContent />
           </AccordionItemFor>
           <AccordionItemFor
             value="dangerZone"
