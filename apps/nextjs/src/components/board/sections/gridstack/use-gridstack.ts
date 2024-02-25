@@ -134,7 +134,7 @@ export const useGridstack = ({
 
     // Only run this effect when the section items change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items.length, section.items.length]);
+  }, [items.length, section.items.length, sectionColumnCount]);
 
   return {
     refs: {

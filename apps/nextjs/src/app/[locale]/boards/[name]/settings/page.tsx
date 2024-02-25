@@ -25,6 +25,7 @@ import { BackgroundSettingsContent } from "./_background";
 import { ColorSettingsContent } from "./_colors";
 import { DangerZoneSettingsContent } from "./_danger";
 import { GeneralSettingsContent } from "./_general";
+import { LayoutSettingsContent } from "./_layout";
 
 interface Props {
   params: {
@@ -44,7 +45,9 @@ export default async function BoardSettingsPage({ params }: Props) {
           <AccordionItemFor value="general" icon={IconSettings}>
             <GeneralSettingsContent board={board} />
           </AccordionItemFor>
-          <AccordionItemFor value="layout" icon={IconLayout}></AccordionItemFor>
+          <AccordionItemFor value="layout" icon={IconLayout}>
+            <LayoutSettingsContent board={board} />
+          </AccordionItemFor>
           <AccordionItemFor value="background" icon={IconPhoto}>
             <BackgroundSettingsContent board={board} />
           </AccordionItemFor>
