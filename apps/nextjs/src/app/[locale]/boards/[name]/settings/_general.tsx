@@ -7,7 +7,6 @@ import {
   useFavicon,
 } from "@mantine/hooks";
 
-import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import {
@@ -23,6 +22,7 @@ import {
 
 import { useUpdateBoard } from "../../_client";
 import type { Board } from "../../_types";
+import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {
   board: Board;
@@ -32,7 +32,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { updateBoard } = useUpdateBoard();
   const { mutate: savePartialSettings, isPending } =
-    clientApi.board.savePartialSettings.useMutation();
+    useSavePartialSettingsMutation(board);
   const form = useForm({
     initialValues: {
       pageTitle: board.pageTitle ?? "",

@@ -1,6 +1,5 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
 import {
   backgroundImageAttachments,
   backgroundImageRepeats,
@@ -20,6 +19,7 @@ import {
 } from "@homarr/ui";
 
 import type { Board } from "../../_types";
+import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {
   board: Board;
@@ -27,7 +27,7 @@ interface Props {
 export const BackgroundSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { mutate: savePartialSettings, isPending } =
-    clientApi.board.savePartialSettings.useMutation();
+    useSavePartialSettingsMutation(board);
   const form = useForm({
     initialValues: {
       backgroundImageUrl: board.backgroundImageUrl ?? "",

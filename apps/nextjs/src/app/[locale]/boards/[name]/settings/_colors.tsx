@@ -3,7 +3,6 @@
 import { generateColors, generateColorsMap } from "@mantine/colors-generator";
 import { useDisclosure } from "@mantine/hooks";
 
-import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import {
@@ -24,6 +23,7 @@ import {
 } from "@homarr/ui";
 
 import type { Board } from "../../_types";
+import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {
   board: Board;
@@ -44,8 +44,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const theme = useMantineTheme();
   const { mutate: savePartialSettings, isPending } =
-    clientApi.board.savePartialSettings.useMutation();
-
+    useSavePartialSettingsMutation(board);
   return (
     <form
       onSubmit={form.onSubmit((values) => {
