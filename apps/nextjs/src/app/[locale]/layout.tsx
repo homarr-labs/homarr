@@ -6,11 +6,7 @@ import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 
 import { Notifications } from "@homarr/notifications";
-import {
-  ColorSchemeScript,
-  MantineProvider,
-  uiConfiguration,
-} from "@homarr/ui";
+import { ColorSchemeScript, MantineProvider } from "@homarr/ui";
 
 import { JotaiProvider } from "./_client-providers/jotai";
 import { ModalsProvider } from "./_client-providers/modals";
@@ -64,8 +60,10 @@ export default function Layout(props: {
     (innerProps) => (
       <MantineProvider
         {...innerProps}
-        defaultColorScheme={colorScheme}
-        {...uiConfiguration}
+        defaultColorScheme="dark"
+        theme={{
+          primaryColor: "red",
+        }}
       />
     ),
     (innerProps) => <ModalsProvider {...innerProps} />,
