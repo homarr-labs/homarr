@@ -423,9 +423,13 @@ export default {
                 },
               },
             },
-            preferences: {
-              label: "Preferences",
-              description: "Coming soon",
+            security: {
+              label: "Security",
+              field: {
+                password: {
+                  label: "Password"
+                }
+              }
             },
             permissions: {
               label: "Permissions",

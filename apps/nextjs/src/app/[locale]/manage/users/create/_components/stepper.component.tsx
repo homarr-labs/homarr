@@ -9,13 +9,14 @@ import {
   Avatar,
   Card,
   IconUserCheck,
+  PasswordInput,
   Stack,
   Stepper,
   Text,
   TextInput,
   Title,
 } from "@homarr/ui";
-import { z } from "@homarr/validation";
+import { validation, z } from "@homarr/validation";
 
 import { StepperNavigationComponent } from "./stepper-navigation.component";
 
@@ -48,7 +49,20 @@ export const UserCreateStepperComponent = () => {
     validateInputOnChange: true,
   });
 
-  const allForms = [generalForm];
+  const securityForm = useForm({
+    initialValues: {
+      password: "",
+    },
+    validate: zodResolver(
+      z.object({
+        password: validation.user.password
+      }),
+    ),
+    validateInputOnBlur: true,
+    validateInputOnChange: true,
+  });
+
+  const allForms = [generalForm, securityForm];
 
   const canNavigateToNextStep = allForms[active]?.isValid() ?? true;
 
@@ -104,12 +118,22 @@ export const UserCreateStepperComponent = () => {
           </form>
         </Stepper.Step>
         <Stepper.Step
-          label={t("step.preferences.label")}
-          description={t("step.preferences.description")}
+          label={t("step.security.label")}
           allowStepSelect={false}
           allowStepClick={false}
         >
-          Step 2
+          <form>
+            <Card p="xl">
+              <Stack gap="md">
+                <PasswordInput
+                  label={t("step.security.field.password.label")}
+                  variant="filled"
+                  withAsterisk
+                  {...securityForm.getInputProps("password")}
+                />
+              </Stack>
+            </Card>
+          </form>
         </Stepper.Step>
         <Stepper.Step
           label={t("step.permissions.label")}
