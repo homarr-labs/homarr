@@ -4,27 +4,22 @@ import type { PropsWithChildren } from "react";
 import { generateColors } from "@mantine/colors-generator";
 
 import type { MantineColorShade } from "@homarr/ui";
-import { MantineProvider } from "@homarr/ui";
+import { createTheme, MantineProvider } from "@homarr/ui";
 
 import { useRequiredBoard } from "./_context";
 
 export const BoardMantineProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
 
-  console.log("board", board);
+  const theme = createTheme({
+    colors: {
+      primaryColor: generateColors(board.primaryColor), // TODO: add fallbacks
+      secondaryColor: generateColors(board.secondaryColor),
+    },
+    primaryColor: "primaryColor",
+    primaryShade: board.primaryShade as MantineColorShade,
+    autoContrast: true,
+  });
 
-  return (
-    <MantineProvider
-      theme={{
-        colors: {
-          primary: generateColors(board.primaryColor),
-          secondary: generateColors(board.secondaryColor),
-        },
-        primaryColor: "primary",
-        primaryShade: board.primaryShade as MantineColorShade,
-      }}
-    >
-      {children}
-    </MantineProvider>
-  );
+  return <MantineProvider theme={theme}>{children}</MantineProvider>;
 };
