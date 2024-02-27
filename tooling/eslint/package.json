@@ -26,10 +26,10 @@
     "eslint-plugin-react-hooks": "^4.6.0"
   },
   "devDependencies": {
-    "@types/eslint": "^8.56.3",
+    "@types/eslint": "^8.56.4",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {
