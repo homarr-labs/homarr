@@ -8,6 +8,7 @@ import { Box, LoadingOverlay, Stack } from "@homarr/ui";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
+import { BoardBackgroundVideo } from "~/components/layout/background";
 import { useIsBoardReady, useRequiredBoard } from "./_context";
 import type { CategorySection, EmptySection } from "./_types";
 
@@ -46,34 +47,37 @@ export const ClientBoard = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <Box h="100%" pos="relative">
-      <LoadingOverlay
-        visible={!isReady}
-        transitionProps={{ duration: 500 }}
-        loaderProps={{ size: "lg", variant: "bars" }}
-        h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
-      />
-      <Stack
-        ref={ref}
-        h="100%"
-        style={{ visibility: isReady ? "visible" : "hidden" }}
-      >
-        {sectionsWithoutSidebars.map((section) =>
-          section.kind === "empty" ? (
-            <BoardEmptySection
-              key={section.id}
-              section={section}
-              mainRef={ref}
-            />
-          ) : (
-            <BoardCategorySection
-              key={section.id}
-              section={section}
-              mainRef={ref}
-            />
-          ),
-        )}
-      </Stack>
-    </Box>
+    <div>
+      <Box h="100%" pos="relative">
+        <BoardBackgroundVideo />
+        <LoadingOverlay
+          visible={!isReady}
+          transitionProps={{ duration: 500 }}
+          loaderProps={{ size: "lg" }}
+          h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
+        />
+        <Stack
+          ref={ref}
+          h="100%"
+          style={{ visibility: isReady ? "visible" : "hidden" }}
+        >
+          {sectionsWithoutSidebars.map((section) =>
+            section.kind === "empty" ? (
+              <BoardEmptySection
+                key={section.id}
+                section={section}
+                mainRef={ref}
+              />
+            ) : (
+              <BoardCategorySection
+                key={section.id}
+                section={section}
+                mainRef={ref}
+              />
+            ),
+          )}
+        </Stack>
+      </Box>
+    </div>
   );
 };
