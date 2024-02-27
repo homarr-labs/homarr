@@ -24,7 +24,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "better-sqlite3": "^9.4.1",
+    "better-sqlite3": "^9.4.3",
     "drizzle-orm": "^0.29.4"
   },
   "devDependencies": {
