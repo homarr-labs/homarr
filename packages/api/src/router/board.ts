@@ -79,6 +79,16 @@ export const boardRouter = createTRPCRouter({
         });
       });
     }),
+  rename: publicProcedure
+    .input(validation.board.rename)
+    .mutation(async ({ ctx, input }) => {
+      await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
+
+      await ctx.db
+        .update(boards)
+        .set({ name: input.name })
+        .where(eq(boards.id, input.id));
+    }),
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -96,7 +106,7 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
       const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.boardId),
+        where: eq(boards.id, input.id),
       });
 
       if (!board) {
@@ -135,7 +145,7 @@ export const boardRouter = createTRPCRouter({
           showLeftSidebar: input.showLeftSidebar,
           columnCount: input.columnCount,
         })
-        .where(eq(boards.id, input.boardId));
+        .where(eq(boards.id, input.id));
     }),
   save: publicProcedure
     .input(validation.board.save)
@@ -143,7 +153,7 @@ export const boardRouter = createTRPCRouter({
       await ctx.db.transaction(async (tx) => {
         const dbBoard = await getFullBoardWithWhere(
           tx,
-          eq(boards.id, input.boardId),
+          eq(boards.id, input.id),
         );
 
         const addedSections = filterAddedItems(
@@ -296,6 +306,32 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 });
+
+const noBoardWithSimilarName = async (
+  db: Database,
+  name: string,
+  ignoredIds: string[] = [],
+) => {
+  const boards = await db.query.boards.findMany({
+    columns: {
+      id: true,
+      name: true,
+    },
+  });
+
+  const board = boards.find(
+    (board) =>
+      board.name.toLowerCase() === name.toLowerCase() &&
+      !ignoredIds.includes(board.id),
+  );
+
+  if (board) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Board with similar name already exists",
+    });
+  }
+};
 
 const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
   const board = await db.query.boards.findFirst({

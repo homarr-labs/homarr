@@ -49,7 +49,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
     <form
       onSubmit={form.onSubmit((values) => {
         savePartialSettings({
-          boardId: board.id,
+          id: board.id,
           ...values,
         });
       })}

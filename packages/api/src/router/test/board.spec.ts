@@ -83,7 +83,7 @@ describe("savePartialSettings should save general settings", () => {
       metaTitle: newMetaTitle,
       logoImageUrl: newLogoImageUrl,
       faviconImageUrl: newFaviconImageUrl,
-      boardId,
+      id: boardId,
     });
   });
 
@@ -97,7 +97,7 @@ describe("savePartialSettings should save general settings", () => {
         metaTitle: "newMetaTitle",
         logoImageUrl: "http://logo.image/url.png",
         faviconImageUrl: "http://favicon.image/url.png",
-        boardId: "nonExistentBoardId",
+        id: "nonExistentBoardId",
       });
 
     await expect(act()).rejects.toThrowError("Board not found");

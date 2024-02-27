@@ -1,16 +1,20 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useScopedI18n } from "@homarr/translation/client";
 import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
 
+import { modalEvents } from "~/app/[locale]/modals";
 import type { Board } from "../../_types";
 
 interface Props {
   board: Board;
 }
 
-export const DangerZoneSettingsContent = ({ board: _ }: Props) => {
+export const DangerZoneSettingsContent = ({ board }: Props) => {
   const t = useScopedI18n("board.setting");
+  const router = useRouter();
 
   return (
     <Stack gap="sm">
@@ -24,7 +28,22 @@ export const DangerZoneSettingsContent = ({ board: _ }: Props) => {
             {t("section.dangerZone.action.rename.description")}
           </Text>
         </Stack>
-        <Button variant="subtle" color="red">
+        <Button
+          variant="subtle"
+          color="red"
+          onClick={() =>
+            modalEvents.openManagedModal({
+              modal: "boardRenameModal",
+              innerProps: {
+                id: board.id,
+                previousName: board.name,
+                onSuccess: (name) => {
+                  router.push(`/boards/${name}/settings`);
+                },
+              },
+            })
+          }
+        >
           {t("section.dangerZone.action.rename.button")}
         </Button>
       </Group>

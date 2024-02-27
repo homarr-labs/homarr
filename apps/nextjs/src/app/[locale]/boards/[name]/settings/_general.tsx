@@ -77,7 +77,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           logoImageUrl: values.logoImageUrl,
         };
         savePartialSettings({
-          boardId: board.id,
+          id: board.id,
           ...values,
         });
       })}

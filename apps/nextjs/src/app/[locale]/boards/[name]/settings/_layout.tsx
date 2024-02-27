@@ -38,7 +38,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
       onSubmit={form.onSubmit((values) => {
         savePartialSettings(
           {
-            boardId: board.id,
+            id: board.id,
             ...values,
           },
           {

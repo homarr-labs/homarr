@@ -20,6 +20,11 @@ const byNameSchema = z.object({
   name: boardNameSchema,
 });
 
+const renameSchema = z.object({
+  id: z.string(),
+  name: boardNameSchema,
+});
+
 const trimmedNullableString = z
   .string()
   .nullable()
@@ -47,23 +52,21 @@ const savePartialSettingsSchema = z
   .partial()
   .and(
     z.object({
-      boardId: z.string(),
+      id: z.string(),
     }),
   );
 
-const saveAppearanceSettingsSchema = z.object({});
-
 const saveSchema = z.object({
-  boardId: z.string(),
+  id: z.string(),
   sections: z.array(createSectionSchema(commonItemSchema)),
 });
 
-const createSchema = z.object({ name: z.string() });
+const createSchema = z.object({ name: boardNameSchema });
 
 export const boardSchemas = {
   byName: byNameSchema,
   savePartialSettings: savePartialSettingsSchema,
-  saveAppearanceSettings: saveAppearanceSettingsSchema,
   save: saveSchema,
   create: createSchema,
+  rename: renameSchema,
 };
