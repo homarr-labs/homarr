@@ -6,7 +6,7 @@ import { and, createId, eq } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
-  getSecretKinds,
+  getAllSecretKindOptions,
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
@@ -165,22 +165,27 @@ export const integrationRouter = createTRPCRouter({
   testConnection: publicProcedure
     .input(validation.integration.testConnection)
     .mutation(async ({ ctx, input }) => {
-      const secretKinds = getSecretKinds(input.kind);
       const secrets = input.secrets.filter(
         (secret): secret is { kind: IntegrationSecretKind; value: string } =>
           Boolean(secret.value),
       );
-      const everyInputSecretDefined = secretKinds.every((secretKind) =>
-        secrets.some((secret) => secret.kind === secretKind),
+
+      // Find any matching secret kinds
+      let secretKinds = getAllSecretKindOptions(input.kind).find(
+        (secretKinds) =>
+          secretKinds.every((secretKind) =>
+            secrets.some((secret) => secret.kind === secretKind),
+          ),
       );
-      if (!everyInputSecretDefined && input.id === null) {
+
+      if (!secretKinds && input.id === null) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "SECRETS_NOT_DEFINED",
         });
       }
 
-      if (!everyInputSecretDefined && input.id !== null) {
+      if (!secretKinds && input.id !== null) {
         const integration = await ctx.db.query.integrations.findFirst({
           where: eq(integrations.id, input.id),
           with: {
@@ -208,11 +213,13 @@ export const integrationRouter = createTRPCRouter({
           }
         }
 
-        const everySecretDefined = secretKinds.every((secretKind) =>
-          secrets.some((secret) => secret.kind === secretKind),
+        secretKinds = getAllSecretKindOptions(input.kind).find((secretKinds) =>
+          secretKinds.every((secretKind) =>
+            secrets.some((secret) => secret.kind === secretKind),
+          ),
         );
 
-        if (!everySecretDefined) {
+        if (!secretKinds) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "SECRETS_NOT_DEFINED",

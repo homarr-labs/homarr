@@ -14,7 +14,7 @@ export const UserAvatar = async ({ size }: UserAvatarProps) => {
     color: "primaryColor",
   } satisfies Partial<AvatarProps>;
 
-  if (!currentSession) return <Avatar {...commonProps} />;
+  if (!currentSession?.user) return <Avatar {...commonProps} />;
   if (currentSession.user.image)
     return (
       <Avatar

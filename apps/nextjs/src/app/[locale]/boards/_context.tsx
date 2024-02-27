@@ -1,7 +1,13 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -23,6 +29,15 @@ export const BoardProvider = ({
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+
+  useEffect(() => {
+    setReadySections((previous) =>
+      previous.filter((id) =>
+        data.sections.some((section) => section.id === id),
+      ),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.sections.length, setReadySections]);
 
   const markAsReady = useCallback((id: string) => {
     setReadySections((previous) =>
