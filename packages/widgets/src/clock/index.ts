@@ -8,29 +8,29 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
   options: optionsBuilder.from(
-    (fac) => ({
-      customTitle: fac.text({
+    (factory) => ({
+      customTitle: factory.text({
         defaultValue: "",
         withDescription: true,
       }),
-      is24HourFormat: fac.switch({
+      is24HourFormat: factory.switch({
         defaultValue: true,
         withDescription: true,
       }),
-      showSeconds: fac.switch({
+      showSeconds: factory.switch({
         defaultValue: false,
       }),
-      useCustomTimezone: fac.switch({ defaultValue: false }),
-      timezone: fac.select({
+      useCustomTimezone: factory.switch({ defaultValue: false }),
+      timezone: factory.select({
         options: Intl.supportedValuesOf("timeZone").map((value) => value),
         defaultValue: "Europe/London",
         searchable: true,
         withDescription: true,
       }),
-      showDate: fac.switch({
+      showDate: factory.switch({
         defaultValue: true,
       }),
-      dateFormat: fac.select({
+      dateFormat: factory.select({
         options: [
           { value: "dddd, MMMM D", label: dayjs().format("dddd, MMMM D") },
           { value: "dddd, D MMMM", label: dayjs().format("dddd, D MMMM") },

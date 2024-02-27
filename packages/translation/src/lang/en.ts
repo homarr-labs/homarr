@@ -257,11 +257,11 @@ export default {
           label: "Display seconds",
         },
         useCustomTimezone: {
-          label: "Use A different timezone",
+          label: "Use a fixed timezone",
         },
         timezone: {
           label: "Timezone",
-          description: "Choose the timezone from the IANA standard",
+          description: "Choose the timezone following the IANA standard",
         },
         showDate: {
           label: "Show the date",
