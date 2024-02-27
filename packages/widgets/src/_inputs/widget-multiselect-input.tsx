@@ -5,20 +5,7 @@ import { MultiSelect } from "@homarr/ui";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
-
-export type SelectOption =
-  | {
-      value: string;
-      label: string;
-    }
-  | string;
-
-export type inferSelectOptionValue<TOption extends SelectOption> =
-  TOption extends {
-    value: infer TValue;
-  }
-    ? TValue
-    : TOption;
+import type { SelectOption } from "./widget-select-input";
 
 export const WidgetMultiSelectInput = ({
   property,

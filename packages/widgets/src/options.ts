@@ -3,7 +3,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import type { z } from "@homarr/validation";
 
 import { widgetImports } from ".";
-import {
+import type {
   inferSelectOptionValue,
   SelectOption,
 } from "./_inputs/widget-select-input";
