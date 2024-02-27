@@ -517,8 +517,8 @@ importers:
         specifier: ^2.47.0
         version: 2.47.0(react@18.2.0)
       mantine-react-table:
-        specifier: 2.0.0-alpha.17
-        version: 2.0.0-alpha.17(@mantine/core@7.5.3)(@mantine/dates@7.5.3)(@mantine/hooks@7.5.3)(@tabler/icons-react@2.47.0)(clsx@2.0.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 2.0.0-beta.0
+        version: 2.0.0-beta.0(@mantine/core@7.5.3)(@mantine/dates@7.5.3)(@mantine/hooks@7.5.3)(@tabler/icons-react@2.47.0)(clsx@2.0.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2068,36 +2068,36 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@tanstack/react-table@8.11.8(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-NEwvIq4iSiDQozEyvbdiSdCOiLa+g5xHmdEnvwDb98FObcK6YkBOkRrs/CNqrKdDy+/lqoIllIWHk+M80GW6+g==}
+  /@tanstack/react-table@8.12.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-LlEQ1Gpz4bfpiET+qmle4BhKDgKN3Y/sssc+O/wLqX8HRtjV+nhusYbllZlutZfMR8oeef83whKTj/VhaV8EeA==}
     engines: {node: '>=12'}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
     dependencies:
-      '@tanstack/table-core': 8.11.8
+      '@tanstack/table-core': 8.12.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/react-virtual@3.0.4(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-tiqKW/e2MJVCr7/pRUXulpkyxllaOclkHNfhKTo4pmHjJIqnhMfwIjc1Q1R0Un3PI3kQywywu/791c8z9u0qeA==}
+  /@tanstack/react-virtual@3.1.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-qibmxtctgOZo2I+3Rw5GR9kXgaa15U5r3/idDY1ItUKW15UK7GhCfyIfE6qYuJ1fxQF6dJDsD8SbpPyuJgpxuA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@tanstack/virtual-core': 3.0.0
+      '@tanstack/virtual-core': 3.1.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/table-core@8.11.8:
-    resolution: {integrity: sha512-DECHvtq4YW4U/gqg6etup7ydt/RB1Bi1pJaMpHUXl65ooW1d71Nv7BzD66rUdHrBSNdyiW3PLTPUQlpXjAgDeA==}
+  /@tanstack/table-core@8.12.0:
+    resolution: {integrity: sha512-cq/ylWVrOwixmwNXQjgZaQw1Izf7+nPxjczum7paAnMtwPg1S2qRAJU+Jb8rEBUWm69voC/zcChmePlk2hc6ug==}
     engines: {node: '>=12'}
     dev: false
 
-  /@tanstack/virtual-core@3.0.0:
-    resolution: {integrity: sha512-SYXOBTjJb05rXa2vl55TTwO40A6wKu0R5i1qQwhJYNDIqaIGF7D0HsLw+pJAyi2OvntlEIVusx3xtbbgSUi6zg==}
+  /@tanstack/virtual-core@3.1.2:
+    resolution: {integrity: sha512-DATZJs8iejkIUqXZe6ruDAnjFo78BKnIIgqQZrc7CmEFqfLEN/TPD91n4hRfo6hpRB6xC00bwKxv7vdjFNEmOg==}
     dev: false
 
   /@testing-library/react-hooks@8.0.1(react@17.0.2):
@@ -5783,13 +5783,13 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /mantine-react-table@2.0.0-alpha.17(@mantine/core@7.5.3)(@mantine/dates@7.5.3)(@mantine/hooks@7.5.3)(@tabler/icons-react@2.47.0)(clsx@2.0.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-DnB1+c/IiTH2ptVqSEoaiBZ003wa8J5AlYK//apkhZE18M45lJ1iw12LCl1X5kRWx36P2D6O1yw8QW7SZZfQqQ==}
+  /mantine-react-table@2.0.0-beta.0(@mantine/core@7.5.3)(@mantine/dates@7.5.3)(@mantine/hooks@7.5.3)(@tabler/icons-react@2.47.0)(clsx@2.0.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-KZOr7nzoSt4aF0hyWKJJBK9/dxVWB3tdg2fFSNnqns9cbPFlLTGXDKguLSoNE8WkzjWE0ThpYJknIAoraL/7ug==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@mantine/core': ^7.3
-      '@mantine/dates': ^7.3
-      '@mantine/hooks': ^7.3
+      '@mantine/core': ^7.5
+      '@mantine/dates': ^7.5
+      '@mantine/hooks': ^7.5
       '@tabler/icons-react': '>=2.23.0'
       clsx: '>=2'
       dayjs: '>=1.11'
@@ -5801,8 +5801,8 @@ packages:
       '@mantine/hooks': 7.5.3(react@18.2.0)
       '@tabler/icons-react': 2.47.0(react@18.2.0)
       '@tanstack/match-sorter-utils': 8.11.8
-      '@tanstack/react-table': 8.11.8(react-dom@18.2.0)(react@18.2.0)
-      '@tanstack/react-virtual': 3.0.4(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-table': 8.12.0(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-virtual': 3.1.2(react-dom@18.2.0)(react@18.2.0)
       clsx: 2.0.0
       dayjs: 1.11.10
       react: 18.2.0
