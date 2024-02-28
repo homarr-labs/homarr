@@ -42,7 +42,7 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "dayjs": "^1.11.10",
-    "jotai": "^2.6.5",
+    "jotai": "^2.7.0",
     "mantine-modal-manager": "^7.5.3",
     "next": "^14.1.1-canary.63",
     "postcss-preset-mantine": "^1.13.0",
