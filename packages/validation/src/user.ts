@@ -8,6 +8,7 @@ const initUserSchema = z
     username: usernameSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
+    email: z.string().email().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],

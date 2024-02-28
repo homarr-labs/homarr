@@ -32,7 +32,7 @@ export const UserCreateStepperComponent = () => {
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
-  const { mutateAsync, isPending } = clientApi.user.create.useMutation();
+  const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
 
   const generalForm = useForm({
     initialValues: {
@@ -52,25 +52,36 @@ export const UserCreateStepperComponent = () => {
   const securityForm = useForm({
     initialValues: {
       password: "",
+      confirmPassword: "",
     },
     validate: zodResolver(
-      z.object({
-        password: validation.user.password
-      }),
+      z
+        .object({
+          password: validation.user.password,
+          confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+          path: ["confirmPassword"],
+          message: "Passwords do not match",
+        }),
     ),
     validateInputOnBlur: true,
     validateInputOnChange: true,
   });
 
   const allForms = [generalForm, securityForm];
-
-  const canNavigateToNextStep = allForms[active]?.isValid() ?? true;
+  const isCurrentFormValid = allForms[active]
+    ? (allForms[active]!.isValid satisfies () => boolean)
+    : () => true;
+  const canNavigateToNextStep: boolean = isCurrentFormValid();
 
   const controlledGoToNextStep = async () => {
     if (active + 1 === stepperMax) {
       await mutateAsync({
-        name: generalForm.values.username,
+        username: generalForm.values.username,
         email: generalForm.values.email,
+        password: securityForm.values.password,
+        confirmPassword: securityForm.values.confirmPassword,
       });
     }
     nextStep();
@@ -130,6 +141,12 @@ export const UserCreateStepperComponent = () => {
                   variant="filled"
                   withAsterisk
                   {...securityForm.getInputProps("password")}
+                />
+                <PasswordInput
+                  label={t("step.security.field.confirmPassword.label")}
+                  variant="filled"
+                  withAsterisk
+                  {...securityForm.getInputProps("confirmPassword")}
                 />
               </Stack>
             </Card>

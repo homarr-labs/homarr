@@ -62,18 +62,4 @@ export const userRouter = createTRPCRouter({
         where: eq(users.id, input.userId),
       });
     }),
-  create: publicProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        email: z.string().email().or(z.string().length(0).optional()),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await db.insert(users).values({
-        id: createId(),
-        name: input.name,
-        email: input.email,
-      });
-    }),
 });

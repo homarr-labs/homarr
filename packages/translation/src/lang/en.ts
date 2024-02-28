@@ -427,9 +427,12 @@ export default {
               label: "Security",
               field: {
                 password: {
-                  label: "Password"
-                }
-              }
+                  label: "Password",
+                },
+                confirmPassword: {
+                  label: "Confirm password",
+                },
+              },
             },
             permissions: {
               label: "Permissions",
@@ -445,6 +448,7 @@ export default {
           buttons: {
             createAnother: "Create another user",
             return: "Return to the user list",
+            tooltipValidationErrors: "Unable to continue:",
           },
         },
       },
