@@ -1,10 +1,9 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { generateColors } from "@mantine/colors-generator";
 
-import type { MantineColorShade } from "@homarr/ui";
-import { createTheme, MantineProvider } from "@homarr/ui";
+import type { MantineColorsTuple } from "@homarr/ui";
+import { createTheme, darken, lighten, MantineProvider } from "@homarr/ui";
 
 import { useRequiredBoard } from "./_context";
 
@@ -13,13 +12,39 @@ export const BoardMantineProvider = ({ children }: PropsWithChildren) => {
 
   const theme = createTheme({
     colors: {
-      primaryColor: generateColors(board.primaryColor), // TODO: add fallbacks
+      primaryColor: generateColors(board.primaryColor),
       secondaryColor: generateColors(board.secondaryColor),
     },
     primaryColor: "primaryColor",
-    primaryShade: board.primaryShade as MantineColorShade,
     autoContrast: true,
   });
 
   return <MantineProvider theme={theme}>{children}</MantineProvider>;
+};
+
+export const generateColors = (hex: string) => {
+  const lightnessForColors = [
+    -0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2,
+  ] as const;
+  const rgbaColors = lightnessForColors.map((lightness) => {
+    if (lightness < 0) {
+      return lighten(hex, -lightness);
+    }
+    return darken(hex, lightness);
+  });
+
+  return rgbaColors.map((color) => {
+    return (
+      "#" +
+      color
+        .split("(")[1]!
+        .replaceAll(" ", "")
+        .replace(")", "")
+        .split(",")
+        .map((c) => parseInt(c, 10))
+        .slice(0, 3)
+        .map((c) => c.toString(16).padStart(2, "0"))
+        .join("")
+    );
+  }) as unknown as MantineColorsTuple;
 };

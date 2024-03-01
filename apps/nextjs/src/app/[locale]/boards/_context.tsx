@@ -21,14 +21,17 @@ const BoardContext = createContext<{
 export const BoardProvider = ({
   children,
   initialBoard,
-}: PropsWithChildren<{ initialBoard: RouterOutputs["board"]["default"] }>) => {
+}: PropsWithChildren<{ initialBoard: RouterOutputs["board"]["byName"] }>) => {
   const [readySections, setReadySections] = useState<string[]>([]);
-  const { data } = clientApi.board.default.useQuery(undefined, {
-    initialData: initialBoard,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.board.byName.useQuery(
+    { name: initialBoard.name },
+    {
+      initialData: initialBoard,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
   useEffect(() => {
     setReadySections((previous) =>

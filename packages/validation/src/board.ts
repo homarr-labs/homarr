@@ -25,6 +25,11 @@ const renameSchema = z.object({
   name: boardNameSchema,
 });
 
+const changeVisibilitySchema = z.object({
+  id: z.string(),
+  visibility: z.enum(["public", "private"]),
+});
+
 const trimmedNullableString = z
   .string()
   .nullable()
@@ -69,4 +74,5 @@ export const boardSchemas = {
   save: saveSchema,
   create: createSchema,
   rename: renameSchema,
+  changeVisibility: changeVisibilitySchema,
 };

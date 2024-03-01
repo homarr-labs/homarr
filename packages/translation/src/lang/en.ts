@@ -378,6 +378,9 @@ export default {
       customCss: {
         label: "Custom CSS",
       },
+      name: {
+        label: "Name",
+      },
     },
     setting: {
       title: "Settings for {boardName} board",
@@ -407,6 +410,9 @@ export default {
               description:
                 "Changing the name will break any links to this board.",
               button: "Change name",
+              modal: {
+                title: "Rename board",
+              },
             },
             visibility: {
               label: "Change board visibility",
@@ -418,12 +424,29 @@ export default {
                 public: "Make private",
                 private: "Make public",
               },
+              confirm: {
+                public: {
+                  title: "Make board private",
+                  description:
+                    "Are you sure you want to make this board private? This will hide the board from the public.",
+                },
+                private: {
+                  title: "Make board public",
+                  description:
+                    "Are you sure you want to make this board public? This will make the board accessible to everyone.",
+                },
+              },
             },
             delete: {
               label: "Delete this board",
               description:
                 "Once you delete a board, there is no going back. Please be certain.",
               button: "Delete this board",
+              confirm: {
+                title: "Delete board",
+                description:
+                  "Are you sure you want to delete this board? This will permanently delete the board and all its content.",
+              },
             },
           },
         },

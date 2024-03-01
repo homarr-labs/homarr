@@ -89,6 +89,14 @@ export const boardRouter = createTRPCRouter({
         .set({ name: input.name })
         .where(eq(boards.id, input.id));
     }),
+  changeVisibility: publicProcedure
+    .input(validation.board.changeVisibility)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(boards)
+        .set({ isPublic: input.visibility === "public" })
+        .where(eq(boards.id, input.id));
+    }),
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {

@@ -5,7 +5,6 @@ import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
 import type { TablerIconsProps } from "@homarr/ui";
 import {
-  Accordion,
   AccordionControl,
   AccordionItem,
   AccordionPanel,
@@ -22,6 +21,7 @@ import {
 } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
+import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
 import { BackgroundSettingsContent } from "./_background";
 import { ColorSettingsContent } from "./_colors";
 import { CustomCssSettingsContent } from "./_customCss";
@@ -33,9 +33,15 @@ interface Props {
   params: {
     name: string;
   };
+  searchParams: {
+    tab?: keyof TranslationObject["board"]["setting"]["section"];
+  };
 }
 
-export default async function BoardSettingsPage({ params }: Props) {
+export default async function BoardSettingsPage({
+  params,
+  searchParams,
+}: Props) {
   const board = await api.board.byName({ name: params.name });
   const t = await getScopedI18n("board.setting");
 
@@ -43,7 +49,10 @@ export default async function BoardSettingsPage({ params }: Props) {
     <Container>
       <Stack>
         <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
-        <Accordion variant="separated" defaultValue="general">
+        <ActiveTabAccordion
+          variant="separated"
+          defaultValue={searchParams.tab ?? "general"}
+        >
           <AccordionItemFor value="general" icon={IconSettings}>
             <GeneralSettingsContent board={board} />
           </AccordionItemFor>
@@ -65,9 +74,9 @@ export default async function BoardSettingsPage({ params }: Props) {
             danger
             noPadding
           >
-            <DangerZoneSettingsContent board={board} />
+            <DangerZoneSettingsContent />
           </AccordionItemFor>
-        </Accordion>
+        </ActiveTabAccordion>
       </Stack>
     </Container>
   );

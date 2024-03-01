@@ -4,6 +4,7 @@ import type { ManagedModal } from "mantine-modal-manager";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 import { Button, Group, Stack, TextInput } from "@homarr/ui";
 import type { validation, z } from "@homarr/validation";
 
@@ -17,7 +18,14 @@ export const BoardRenameModal: ManagedModal<InnerProps> = ({
   actions,
   innerProps,
 }) => {
-  const { mutate, isPending } = clientApi.board.rename.useMutation();
+  const utils = clientApi.useUtils();
+  const t = useI18n();
+  const { mutate, isPending } = clientApi.board.rename.useMutation({
+    onSettled() {
+      void utils.board.byName.invalidate({ name: innerProps.previousName });
+      void utils.board.default.invalidate();
+    },
+  });
   const form = useForm<FormType>({
     initialValues: {
       name: innerProps.previousName,
@@ -42,11 +50,17 @@ export const BoardRenameModal: ManagedModal<InnerProps> = ({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput {...form.getInputProps("name")} data-autofocus />
-        <Group align="end">
-          <Button onClick={actions.closeModal}>Cancel</Button>
+        <TextInput
+          label={t("board.field.name.label")}
+          {...form.getInputProps("name")}
+          data-autofocus
+        />
+        <Group justify="end">
+          <Button variant="subtle" color="gray" onClick={actions.closeModal}>
+            {t("common.action.cancel")}
+          </Button>
           <Button type="submit" loading={isPending}>
-            Rename
+            {t("common.action.confirm")}
           </Button>
         </Group>
       </Stack>

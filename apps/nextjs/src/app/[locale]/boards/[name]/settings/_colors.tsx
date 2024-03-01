@@ -1,6 +1,5 @@
 "use client";
 
-import { generateColors, generateColorsMap } from "@mantine/colors-generator";
 import { useDisclosure } from "@mantine/hooks";
 
 import { useForm } from "@homarr/form";
@@ -8,7 +7,6 @@ import { useI18n } from "@homarr/translation/client";
 import {
   Anchor,
   Button,
-  CheckIcon,
   Collapse,
   ColorInput,
   ColorSwatch,
@@ -22,6 +20,7 @@ import {
   useMantineTheme,
 } from "@homarr/ui";
 
+import { generateColors } from "../../_theme";
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
 
@@ -88,13 +87,6 @@ export const ColorSettingsContent = ({ board }: Props) => {
             </Collapse>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
-            <ShadeSelector
-              label={t("board.field.primaryShade.label")}
-              primaryColor={form.values.primaryColor}
-              {...form.getInputProps("primaryShade")}
-            />
-          </Grid.Col>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
             <InputWrapper label={t("board.field.opacity.label")}>
               <Slider
                 my={6}
@@ -117,48 +109,6 @@ export const ColorSettingsContent = ({ board }: Props) => {
   );
 };
 
-interface ShadeSelectorProps {
-  primaryColor: string;
-  label: string;
-  value?: number;
-  onChange: (value: number) => void;
-}
-
-const ShadeSelector = ({
-  primaryColor,
-  label,
-  value,
-  onChange,
-}: ShadeSelectorProps) => {
-  const colors = hexRegex.test(primaryColor)
-    ? generateColors(primaryColor)
-    : generateColors("#000000");
-
-  return (
-    <InputWrapper label={label}>
-      <Group gap="sm">
-        {colors.map((color, index) => (
-          <ColorSwatch
-            key={color}
-            component="button"
-            type="button"
-            color={color}
-            style={{ cursor: "pointer" }}
-            onClick={() => onChange(index)}
-          >
-            {value === index && (
-              <CheckIcon
-                color={isLightColor(color) ? "black" : "white"}
-                size={"0.75rem"}
-              />
-            )}
-          </ColorSwatch>
-        ))}
-      </Group>
-    </InputWrapper>
-  );
-};
-
 interface ColorsPreviewProps {
   previewColor: string;
 }
@@ -166,30 +116,30 @@ interface ColorsPreviewProps {
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
   const theme = useMantineTheme();
 
-  const { colors, baseColorIndex } = hexRegex.test(previewColor)
-    ? generateColorsMap(previewColor)
-    : generateColorsMap("#000000");
+  const colors = hexRegex.test(previewColor)
+    ? generateColors(previewColor)
+    : generateColors("#000000");
 
   return (
     <Group gap={0}>
       {colors.map((color, index) => (
         <ColorSwatch
-          key={color.hex()}
-          color={color.hex()}
-          w={index === baseColorIndex ? "12.25%" : "9.75%"}
-          pb={index === baseColorIndex ? "12.25%" : "9.75%"}
-          c={isLightColor(color.hex()) ? "black" : "white"}
+          key={index}
+          color={color}
+          w={index === 5 ? "12.25%" : "9.75%"}
+          pb={index === 5 ? "12.25%" : "9.75%"}
+          c={isLightColor(color) ? "black" : "white"}
           radius={0}
           styles={{
             colorOverlay: {
               borderTopLeftRadius:
-                index === 0 || index === baseColorIndex ? theme.radius.md : 0,
+                index === 0 || index === 5 ? theme.radius.md : 0,
               borderBottomLeftRadius:
-                index === 0 || index === baseColorIndex ? theme.radius.md : 0,
+                index === 0 || index === 5 ? theme.radius.md : 0,
               borderTopRightRadius:
-                index === 9 || index === baseColorIndex ? theme.radius.md : 0,
+                index === 9 || index === 5 ? theme.radius.md : 0,
               borderBottomRightRadius:
-                index === 9 || index === baseColorIndex ? theme.radius.md : 0,
+                index === 9 || index === 5 ? theme.radius.md : 0,
             },
           }}
         >
@@ -198,7 +148,7 @@ const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
               {index}
             </Text>
             <Text visibleFrom="md" fw={500} size="xs" tt="uppercase">
-              {color.hex()}
+              {color}
             </Text>
           </Stack>
         </ColorSwatch>
