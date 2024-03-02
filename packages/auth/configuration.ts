@@ -14,6 +14,19 @@ const adapter = DrizzleAdapter(db);
 
 export const createConfiguration = (isCredentialsRequest: boolean) =>
   NextAuth({
+    logger: {
+      error: (code, ...message) => {
+        // Remove the big error message for failed login attempts
+        // as it is not useful for the user.
+        if (code.name === "CredentialsSignin") {
+          console.warn("The login attempt of a user was not successful.");
+          return;
+        }
+
+        console.error(code, ...message);
+      },
+    },
+    trustHost: true,
     adapter,
     providers: [
       Credentials(createCredentialsConfiguration(db)),

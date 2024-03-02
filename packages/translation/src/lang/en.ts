@@ -469,6 +469,10 @@ export default {
       afternoon: "Good afternoon, {username}",
       evening: "Good evening, {username}",
     },
+    notFound: {
+      title: "Not Found",
+      text: "Could not find requested resource",
+    },
     navbar: {
       items: {
         home: "Home",
@@ -538,9 +542,13 @@ export default {
                 },
               },
             },
-            preferences: {
-              label: "Preferences",
-              description: "Coming soon",
+            security: {
+              label: "Security",
+              field: {
+                password: {
+                  label: "Password"
+                }
+              }
             },
             permissions: {
               label: "Permissions",
