@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "d8881d1a-5702-4af8-8ea6-8ec4d030582f",
+  "id": "ac559cff-7c96-4d97-97bc-524709c2cb13",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -210,7 +210,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'red'"
+          "default": "'#fa5252'"
         },
         "secondary_color": {
           "name": "secondary_color",
@@ -218,15 +218,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'orange'"
-        },
-        "primary_shade": {
-          "name": "primary_shade",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 6
+          "default": "'#fd7e14'"
         },
         "opacity": {
           "name": "opacity",
