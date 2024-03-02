@@ -427,9 +427,9 @@ export default {
               label: "Security",
               field: {
                 password: {
-                  label: "Password"
-                }
-              }
+                  label: "Password",
+                },
+              },
             },
             permissions: {
               label: "Permissions",
