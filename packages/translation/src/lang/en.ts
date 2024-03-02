@@ -28,6 +28,26 @@ export default {
       create: "Create user",
     },
   },
+  app: {
+    page: {
+      list: {
+        title: "Apps",
+      },
+      create: {
+        title: "New app",
+        notification: {
+          success: {
+            title: "Creation successful",
+            message: "The app was successfully created",
+          },
+          error: {
+            title: "Creation failed",
+            message: "The app could not be created",
+          },
+        },
+      },
+    },
+  },
   integration: {
     page: {
       list: {
