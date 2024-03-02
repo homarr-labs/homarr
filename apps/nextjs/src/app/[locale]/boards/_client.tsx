@@ -48,37 +48,35 @@ export const ClientBoard = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
-      <Box h="100%" pos="relative">
-        <BoardBackgroundVideo />
-        <LoadingOverlay
-          visible={!isReady}
-          transitionProps={{ duration: 500 }}
-          loaderProps={{ size: "lg" }}
-          h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
-        />
-        <Stack
-          ref={ref}
-          h="100%"
-          style={{ visibility: isReady ? "visible" : "hidden" }}
-        >
-          {sectionsWithoutSidebars.map((section) =>
-            section.kind === "empty" ? (
-              <BoardEmptySection
-                key={section.id}
-                section={section}
-                mainRef={ref}
-              />
-            ) : (
-              <BoardCategorySection
-                key={section.id}
-                section={section}
-                mainRef={ref}
-              />
-            ),
-          )}
-        </Stack>
-      </Box>
-    </div>
+    <Box h="100%" pos="relative">
+      <BoardBackgroundVideo />
+      <LoadingOverlay
+        visible={!isReady}
+        transitionProps={{ duration: 500 }}
+        loaderProps={{ size: "lg" }}
+        h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
+      />
+      <Stack
+        ref={ref}
+        h="100%"
+        style={{ visibility: isReady ? "visible" : "hidden" }}
+      >
+        {sectionsWithoutSidebars.map((section) =>
+          section.kind === "empty" ? (
+            <BoardEmptySection
+              key={section.id}
+              section={section}
+              mainRef={ref}
+            />
+          ) : (
+            <BoardCategorySection
+              key={section.id}
+              section={section}
+              mainRef={ref}
+            />
+          ),
+        )}
+      </Stack>
+    </Box>
   );
 };
