@@ -429,6 +429,9 @@ export default {
                 password: {
                   label: "Password",
                 },
+                confirmPassword: {
+                  label: "Confirm password",
+                },
               },
             },
             permissions: {

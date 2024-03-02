@@ -3,6 +3,7 @@ import "server-only";
 import { TRPCError } from "@trpc/server";
 
 import { createSalt, hashPassword } from "@homarr/auth";
+import type { Database } from "@homarr/db";
 import { createId, db, eq, schema } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
@@ -26,16 +27,12 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      const salt = await createSalt();
-      const hashedPassword = await hashPassword(input.password, salt);
-
-      const userId = createId();
-      await ctx.db.insert(schema.users).values({
-        id: userId,
-        name: input.username,
-        password: hashedPassword,
-        salt,
-      });
+      await createUser(ctx.db, input);
+    }),
+  create: publicProcedure
+    .input(validation.user.create)
+    .mutation(async ({ ctx, input }) => {
+      await createUser(ctx.db, input);
     }),
   getAll: publicProcedure.query(async () => {
     return db.query.users.findMany({
@@ -62,18 +59,20 @@ export const userRouter = createTRPCRouter({
         where: eq(users.id, input.userId),
       });
     }),
-  create: publicProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        email: z.string().email().or(z.string().length(0).optional()),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await db.insert(users).values({
-        id: createId(),
-        name: input.name,
-        email: input.email,
-      });
-    }),
 });
+
+const createUser = async (
+  db: Database,
+  input: z.infer<typeof validation.user.create>,
+) => {
+  const salt = await createSalt();
+  const hashedPassword = await hashPassword(input.password, salt);
+
+  const userId = createId();
+  await db.insert(schema.users).values({
+    id: userId,
+    name: input.username,
+    password: hashedPassword,
+    salt,
+  });
+};
