@@ -1,6 +1,6 @@
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { UserCreateStepperComponent } from "./_components/stepper.component";
+import { UserCreateStepperComponent } from "./_components/create-user-stepper";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management.page.user.create");

@@ -32,7 +32,7 @@ export const UserCreateStepperComponent = () => {
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
-  const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
+  const { mutateAsync, isPending } = clientApi.user.create.useMutation();
 
   const generalForm = useForm({
     initialValues: {

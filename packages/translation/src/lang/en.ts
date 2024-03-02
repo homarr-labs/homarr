@@ -448,7 +448,6 @@ export default {
           buttons: {
             createAnother: "Create another user",
             return: "Return to the user list",
-            tooltipValidationErrors: "Unable to continue:",
           },
         },
       },
