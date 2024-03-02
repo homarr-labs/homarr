@@ -87,12 +87,14 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.pageTitle.label")}
+              placeholder="Homarr"
               {...form.getInputProps("pageTitle")}
             />
           </Grid.Col>
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.metaTitle.label")}
+              placeholder="Default Board | Homarr"
               rightSection={<PendingOrInvalidIndicator {...metaTitleStatus} />}
               {...form.getInputProps("metaTitle")}
             />
@@ -100,6 +102,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.logoImageUrl.label")}
+              placeholder="/logo/logo.png"
               rightSection={<PendingOrInvalidIndicator {...logoStatus} />}
               {...form.getInputProps("logoImageUrl")}
             />
@@ -107,13 +110,14 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.faviconImageUrl.label")}
+              placeholder="/logo/logo.png"
               rightSection={<PendingOrInvalidIndicator {...faviconStatus} />}
               {...form.getInputProps("faviconImageUrl")}
             />
           </Grid.Col>
         </Grid>
         <Group justify="end">
-          <Button type="submit" loading={isPending}>
+          <Button type="submit" loading={isPending} color="teal">
             {t("common.action.saveChanges")}
           </Button>
         </Group>

@@ -83,7 +83,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
           </Grid.Col>
         </Grid>
         <Group justify="end">
-          <Button type="submit" loading={isPending}>
+          <Button type="submit" loading={isPending} color="teal">
             {t("common.action.saveChanges")}
           </Button>
         </Group>

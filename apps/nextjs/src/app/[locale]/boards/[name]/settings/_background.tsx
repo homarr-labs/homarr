@@ -91,7 +91,7 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
         </Grid>
 
         <Group justify="end">
-          <Button type="submit" loading={isPending}>
+          <Button type="submit" loading={isPending} color="teal">
             {t("common.action.saveChanges")}
           </Button>
         </Group>
