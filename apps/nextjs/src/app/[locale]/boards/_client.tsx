@@ -21,7 +21,8 @@ export const useUpdateBoard = () => {
 
   const updateBoard = useCallback(
     (updaterWithoutUndefined: UpdateCallback) => {
-      utils.board.default.setData(undefined, (previous) =>
+      // TODO: read the name from somewhere else
+      utils.board.byName.setData({ name: "default" }, (previous) =>
         previous ? updaterWithoutUndefined(previous) : previous,
       );
     },
