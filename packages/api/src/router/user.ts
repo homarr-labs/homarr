@@ -27,12 +27,12 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      await createPlayer(ctx.db, input);
+      await createUser(ctx.db, input);
     }),
   create: publicProcedure
     .input(validation.user.create)
     .mutation(async ({ ctx, input }) => {
-      await createPlayer(ctx.db, input);
+      await createUser(ctx.db, input);
     }),
   getAll: publicProcedure.query(async () => {
     return db.query.users.findMany({
@@ -61,7 +61,7 @@ export const userRouter = createTRPCRouter({
     }),
 });
 
-const createPlayer = async (
+const createUser = async (
   db: Database,
   input: z.infer<typeof validation.user.create>,
 ) => {
