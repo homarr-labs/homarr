@@ -12,6 +12,12 @@ import { BoardBackgroundVideo } from "~/components/layout/background";
 import { useIsBoardReady, useRequiredBoard } from "./_context";
 import type { CategorySection, EmptySection } from "./_types";
 
+let boardName: string | null = null;
+
+export const updateBoardName = (name: string | null) => {
+  boardName = name;
+};
+
 type UpdateCallback = (
   prev: RouterOutputs["board"]["default"],
 ) => RouterOutputs["board"]["default"];
@@ -21,8 +27,10 @@ export const useUpdateBoard = () => {
 
   const updateBoard = useCallback(
     (updaterWithoutUndefined: UpdateCallback) => {
-      // TODO: read the name from somewhere else
-      utils.board.byName.setData({ name: "default" }, (previous) =>
+      if (!boardName) {
+        throw new Error("Board name is not set");
+      }
+      utils.board.byName.setData({ name: boardName }, (previous) =>
         previous ? updaterWithoutUndefined(previous) : previous,
       );
     },

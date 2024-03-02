@@ -120,7 +120,7 @@ const EditModeMenu = () => {
       void revalidatePathAction(`/boards/${board.name}`);
       setEditMode(false);
     },
-    onError(err) {
+    onError() {
       showErrorNotification({
         title: t("notification.error.title"),
         message: t("notification.error.message"),

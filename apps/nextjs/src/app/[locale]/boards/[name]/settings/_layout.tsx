@@ -1,6 +1,5 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import {
@@ -22,7 +21,6 @@ interface Props {
 }
 export const LayoutSettingsContent = ({ board }: Props) => {
   const t = useI18n();
-  const utils = clientApi.useUtils();
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
   const form = useForm({
@@ -36,33 +34,25 @@ export const LayoutSettingsContent = ({ board }: Props) => {
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        savePartialSettings(
-          {
-            id: board.id,
-            ...values,
-          },
-          {
-            onSuccess: () => {
-              void utils.board.byName.invalidate({ name: board.name });
-              void utils.board.default.invalidate();
-            },
-          },
-        );
+        savePartialSettings({
+          id: board.id,
+          ...values,
+        });
       })}
     >
       <Stack>
         <Grid>
           <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Fieldset legend="Sidebar">
+            <Fieldset legend={t("board.setting.section.layout.sidebar.legend")}>
               <Stack>
                 <Checkbox
-                  label="Left sidebar enabled"
+                  label={t("board.field.showLeftSidebar.label")}
                   {...form.getInputProps("showLeftSidebar", {
                     type: "checkbox",
                   })}
                 />
                 <Checkbox
-                  label="Right sidebar enabled"
+                  label={t("board.field.showRightSidebar.label")}
                   {...form.getInputProps("showRightSidebar", {
                     type: "checkbox",
                   })}
@@ -71,7 +61,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
             </Fieldset>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Input.Wrapper label="Column count">
+            <Input.Wrapper label={t("board.field.columnCount.label")}>
               <Slider
                 mt="xs"
                 min={1}

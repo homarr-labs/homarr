@@ -375,6 +375,15 @@ export default {
       customCss: {
         label: "Custom CSS",
       },
+      showLeftSidebar: {
+        label: "Show left sidebar",
+      },
+      showRightSidebar: {
+        label: "Show right sidebar",
+      },
+      columnCount: {
+        label: "Column count",
+      },
       name: {
         label: "Name",
       },
@@ -389,6 +398,9 @@ export default {
         },
         layout: {
           title: "Layout",
+          sidebar: {
+            legend: "Sidebar",
+          },
         },
         background: {
           title: "Background",

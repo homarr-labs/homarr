@@ -13,6 +13,8 @@ import { usePathname } from "next/navigation";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
+import { updateBoardName } from "./_client";
+
 const BoardContext = createContext<{
   board: RouterOutputs["board"]["default"];
   isReady: boolean;
@@ -35,6 +37,8 @@ export const BoardProvider = ({
       refetchOnReconnect: false,
     },
   );
+  // Update the board name so it can be used within updateBoard method
+  updateBoardName(initialBoard.name);
 
   // Invalidate the board when the pathname changes
   // This allows to refetch the board when it might have changed - e.g. if someone else added an item
