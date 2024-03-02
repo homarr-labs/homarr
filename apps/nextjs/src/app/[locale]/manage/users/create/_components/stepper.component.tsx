@@ -70,10 +70,11 @@ export const UserCreateStepperComponent = () => {
   });
 
   const allForms = [generalForm, securityForm];
+
   const isCurrentFormValid = allForms[active]
     ? (allForms[active]!.isValid satisfies () => boolean)
     : () => true;
-  const canNavigateToNextStep: boolean = isCurrentFormValid();
+  const canNavigateToNextStep = isCurrentFormValid();
 
   const controlledGoToNextStep = async () => {
     if (active + 1 === stepperMax) {
