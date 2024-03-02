@@ -1,6 +1,7 @@
 "use client";
 
 import { Text } from "@mantine/core";
+
 import type { SelectWithCustomItemsProps } from "./select-with-custom-items";
 import { SelectWithCustomItems } from "./select-with-custom-items";
 
@@ -12,7 +13,12 @@ export interface SelectItemWithDescription {
 type Props = SelectWithCustomItemsProps<SelectItemWithDescription>;
 
 export const SelectWithDescription = (props: Props) => {
-    return <SelectWithCustomItems<SelectItemWithDescription> {...props} SelectOption={SelectOption} />
+  return (
+    <SelectWithCustomItems<SelectItemWithDescription>
+      {...props}
+      SelectOption={SelectOption}
+    />
+  );
 };
 
 const SelectOption = ({ label, description }: SelectItemWithDescription) => {
