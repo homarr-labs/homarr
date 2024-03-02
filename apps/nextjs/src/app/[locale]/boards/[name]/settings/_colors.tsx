@@ -30,6 +30,8 @@ interface Props {
 
 const hexRegex = /^#[0-9a-fA-F]{6}$/;
 
+const progressPercentageLabel = (value: number) => `${value}%`;
+
 export const ColorSettingsContent = ({ board }: Props) => {
   const form = useForm({
     initialValues: {
@@ -94,7 +96,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
                 min={0}
                 max={100}
                 step={5}
-                label={(value) => `${value}%`}
+                label={progressPercentageLabel}
                 {...form.getInputProps("opacity")}
               />
             </InputWrapper>

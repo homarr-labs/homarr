@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Combobox, Input, InputBase, useCombobox } from "@mantine/core";
 import { useUncontrolled } from "@mantine/hooks";
@@ -56,18 +56,24 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
     </Combobox.Option>
   ));
 
+  const toggle = useCallback(() => combobox.toggleDropdown(), [combobox]);
+  const onOptionSubmit = useCallback(
+    (val: string) => {
+      setValue(
+        val,
+        data.find((item) => item.value === val),
+      );
+      console.log(val);
+      combobox.closeDropdown();
+    },
+    [setValue, data, combobox],
+  );
+
   return (
     <Combobox
       store={combobox}
       withinPortal={false}
-      onOptionSubmit={(val) => {
-        setValue(
-          val,
-          data.find((item) => item.value === val),
-        );
-        console.log(val);
-        combobox.closeDropdown();
-      }}
+      onOptionSubmit={onOptionSubmit}
     >
       <Combobox.Target>
         <InputBase
@@ -76,7 +82,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
           type="button"
           pointer
           rightSection={<Combobox.Chevron />}
-          onClick={() => combobox.toggleDropdown()}
+          onClick={toggle}
           rightSectionPointerEvents="none"
           multiline
         >

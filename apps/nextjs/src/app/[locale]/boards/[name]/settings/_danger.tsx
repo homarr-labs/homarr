@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
@@ -21,6 +22,78 @@ export const DangerZoneSettingsContent = () => {
   const utils = clientApi.useUtils();
   const visibility = board.isPublic ? "public" : "private";
 
+  const onRenameClick = useCallback(
+    () =>
+      modalEvents.openManagedModal({
+        modal: "boardRenameModal",
+        title: t("section.dangerZone.action.rename.modal.title"),
+        innerProps: {
+          id: board.id,
+          previousName: board.name,
+          onSuccess: (name) => {
+            router.push(`/boards/${name}/settings`);
+          },
+        },
+      }),
+    [board.id, board.name, router, t],
+  );
+
+  const onVisibilityClick = useCallback(() => {
+    modalEvents.openConfirmModal({
+      title: t(
+        `section.dangerZone.action.visibility.confirm.${visibility}.title`,
+      ),
+      children: t(
+        `section.dangerZone.action.visibility.confirm.${visibility}.description`,
+      ),
+      confirmProps: {
+        color: "red.9",
+      },
+      onConfirm: () => {
+        changeVisibility(
+          {
+            id: board.id,
+            visibility: visibility === "public" ? "private" : "public",
+          },
+          {
+            onSettled() {
+              void utils.board.byName.invalidate({ name: board.name });
+              void utils.board.default.invalidate();
+            },
+          },
+        );
+      },
+    });
+  }, [
+    board.id,
+    board.name,
+    changeVisibility,
+    t,
+    utils.board.byName,
+    utils.board.default,
+    visibility,
+  ]);
+
+  const onDeleteClick = useCallback(() => {
+    modalEvents.openConfirmModal({
+      title: t("section.dangerZone.action.delete.confirm.title"),
+      children: t("section.dangerZone.action.delete.confirm.description"),
+      confirmProps: {
+        color: "red.9",
+      },
+      onConfirm: () => {
+        deleteBoard(
+          { id: board.id },
+          {
+            onSettled: () => {
+              router.push("/");
+            },
+          },
+        );
+      },
+    });
+  }, [board.id, deleteBoard, router, t]);
+
   return (
     <Stack gap="sm">
       <Divider />
@@ -28,19 +101,7 @@ export const DangerZoneSettingsContent = () => {
         label={t("section.dangerZone.action.rename.label")}
         description={t("section.dangerZone.action.rename.description")}
         buttonText={t("section.dangerZone.action.rename.button")}
-        onClick={() =>
-          modalEvents.openManagedModal({
-            modal: "boardRenameModal",
-            title: t("section.dangerZone.action.rename.modal.title"),
-            innerProps: {
-              id: board.id,
-              previousName: board.name,
-              onSuccess: (name) => {
-                router.push(`/boards/${name}/settings`);
-              },
-            },
-          })
-        }
+        onClick={onRenameClick}
       />
       <Divider />
       <DangerZoneRow
@@ -51,30 +112,7 @@ export const DangerZoneSettingsContent = () => {
         buttonText={t(
           `section.dangerZone.action.visibility.button.${visibility}`,
         )}
-        onClick={() => {
-          modalEvents.openConfirmModal({
-            title: t(
-              `section.dangerZone.action.visibility.confirm.${visibility}.title`,
-            ),
-            children: t(
-              `section.dangerZone.action.visibility.confirm.${visibility}.description`,
-            ),
-            onConfirm: () => {
-              changeVisibility(
-                {
-                  id: board.id,
-                  visibility: visibility === "public" ? "private" : "public",
-                },
-                {
-                  onSettled() {
-                    void utils.board.byName.invalidate({ name: board.name });
-                    void utils.board.default.invalidate();
-                  },
-                },
-              );
-            },
-          });
-        }}
+        onClick={onVisibilityClick}
         isPending={isChangeVisibilityPending}
       />
       <Divider />
@@ -82,25 +120,7 @@ export const DangerZoneSettingsContent = () => {
         label={t("section.dangerZone.action.delete.label")}
         description={t("section.dangerZone.action.delete.description")}
         buttonText={t("section.dangerZone.action.delete.button")}
-        onClick={() => {
-          modalEvents.openConfirmModal({
-            title: t("section.dangerZone.action.delete.confirm.title"),
-            children: t("section.dangerZone.action.delete.confirm.description"),
-            confirmProps: {
-              color: "red.9",
-            },
-            onConfirm: () => {
-              deleteBoard(
-                { id: board.id },
-                {
-                  onSettled: () => {
-                    router.push("/");
-                  },
-                },
-              );
-            },
-          });
-        }}
+        onClick={onDeleteClick}
         isPending={isDeletePending}
       />
     </Stack>
