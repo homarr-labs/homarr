@@ -8,6 +8,7 @@ import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
 
 import { modalEvents } from "~/app/[locale]/modals";
 import { useRequiredBoard } from "../../_context";
+import classes from "./danger.module.css";
 
 export const DangerZoneSettingsContent = () => {
   const board = useRequiredBoard();
@@ -122,21 +123,23 @@ const DangerZoneRow = ({
   isPending,
 }: DangerZoneRowProps) => {
   return (
-    <Group justify="space-between" px="md">
+    <Group justify="space-between" px="md" className={classes.dangerZoneGroup}>
       <Stack gap={0}>
         <Text fw="bold" size="sm">
           {label}
         </Text>
         <Text size="sm">{description}</Text>
       </Stack>
-      <Button
-        variant="subtle"
-        color="red"
-        loading={isPending}
-        onClick={onClick}
-      >
-        {buttonText}
-      </Button>
+      <Group justify="end" w={{ base: "100%", xs: "auto" }}>
+        <Button
+          variant="subtle"
+          color="red"
+          loading={isPending}
+          onClick={onClick}
+        >
+          {buttonText}
+        </Button>
+      </Group>
     </Group>
   );
 };
