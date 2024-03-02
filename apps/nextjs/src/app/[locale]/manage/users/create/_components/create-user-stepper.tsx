@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";
@@ -25,10 +25,15 @@ export const UserCreateStepperComponent = () => {
 
   const stepperMax = 4;
   const [active, setActive] = useState(0);
-  const nextStep = () =>
-    setActive((current) => (current < stepperMax ? current + 1 : current));
-  const prevStep = () =>
-    setActive((current) => (current > 0 ? current - 1 : current));
+  const nextStep = useCallback(
+    () =>
+      setActive((current) => (current < stepperMax ? current + 1 : current)),
+    [setActive],
+  );
+  const prevStep = useCallback(
+    () => setActive((current) => (current > 0 ? current - 1 : current)),
+    [setActive],
+  );
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
@@ -69,14 +74,17 @@ export const UserCreateStepperComponent = () => {
     validateInputOnChange: true,
   });
 
-  const allForms = [generalForm, securityForm];
+  const allForms = useMemo(
+    () => [generalForm, securityForm],
+    [generalForm, securityForm],
+  );
 
   const isCurrentFormValid = allForms[active]
     ? (allForms[active]!.isValid satisfies () => boolean)
     : () => true;
   const canNavigateToNextStep = isCurrentFormValid();
 
-  const controlledGoToNextStep = async () => {
+  const controlledGoToNextStep = useCallback(async () => {
     if (active + 1 === stepperMax) {
       await mutateAsync({
         username: generalForm.values.username,
@@ -86,14 +94,14 @@ export const UserCreateStepperComponent = () => {
       });
     }
     nextStep();
-  };
+  }, [active, generalForm, mutateAsync, securityForm, nextStep]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setActive(0);
     allForms.forEach((form) => {
       form.reset();
     });
-  };
+  }, [allForms]);
 
   return (
     <>
