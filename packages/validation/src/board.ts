@@ -49,8 +49,6 @@ const savePartialSettingsSchema = z
     secondaryColor: hexColorSchema,
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
-    showRightSidebar: z.boolean(),
-    showLeftSidebar: z.boolean(),
     columnCount: z.number().min(1).max(24),
   })
   .partial()

@@ -375,12 +375,6 @@ export default {
       customCss: {
         label: "Custom CSS",
       },
-      showLeftSidebar: {
-        label: "Show left sidebar",
-      },
-      showRightSidebar: {
-        label: "Show right sidebar",
-      },
       columnCount: {
         label: "Column count",
       },
@@ -398,9 +392,6 @@ export default {
         },
         layout: {
           title: "Layout",
-          sidebar: {
-            legend: "Sidebar",
-          },
         },
         background: {
           title: "Background",
@@ -437,7 +428,7 @@ export default {
                 public: {
                   title: "Make board private",
                   description:
-                    "Are you sure you want to make this board private? This will hide the board from the public.",
+                    "Are you sure you want to make this board private? This will hide the board from the public. Links for guest users will break.",
                 },
                 private: {
                   title: "Make board public",

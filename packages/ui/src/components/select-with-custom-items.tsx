@@ -16,8 +16,8 @@ export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
     "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder"
   > {
   data: TSelectItem[];
-  onBlur?: (ev: React.FocusEvent<HTMLButtonElement>) => void;
-  onFocus?: (ev: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
 }
 
 type Props<TSelectItem extends BaseSelectItem> =
@@ -58,12 +58,12 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
 
   const toggle = useCallback(() => combobox.toggleDropdown(), [combobox]);
   const onOptionSubmit = useCallback(
-    (val: string) => {
+    (value: string) => {
       setValue(
-        val,
-        data.find((item) => item.value === val),
+        value,
+        data.find((item) => item.value === value),
       );
-      console.log(val);
+      console.log(value);
       combobox.closeDropdown();
     },
     [setValue, data, combobox],

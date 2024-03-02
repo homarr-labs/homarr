@@ -2,16 +2,7 @@
 
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import {
-  Button,
-  Checkbox,
-  Fieldset,
-  Grid,
-  Group,
-  Input,
-  Slider,
-  Stack,
-} from "@homarr/ui";
+import { Button, Grid, Group, Input, Slider, Stack } from "@homarr/ui";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -25,8 +16,6 @@ export const LayoutSettingsContent = ({ board }: Props) => {
     useSavePartialSettingsMutation(board);
   const form = useForm({
     initialValues: {
-      showRightSidebar: board.showRightSidebar,
-      showLeftSidebar: board.showLeftSidebar,
       columnCount: board.columnCount,
     },
   });
@@ -42,24 +31,6 @@ export const LayoutSettingsContent = ({ board }: Props) => {
     >
       <Stack>
         <Grid>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Fieldset legend={t("board.setting.section.layout.sidebar.legend")}>
-              <Stack>
-                <Checkbox
-                  label={t("board.field.showLeftSidebar.label")}
-                  {...form.getInputProps("showLeftSidebar", {
-                    type: "checkbox",
-                  })}
-                />
-                <Checkbox
-                  label={t("board.field.showRightSidebar.label")}
-                  {...form.getInputProps("showRightSidebar", {
-                    type: "checkbox",
-                  })}
-                />
-              </Stack>
-            </Fieldset>
-          </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
             <Input.Wrapper label={t("board.field.columnCount.label")}>
               <Slider

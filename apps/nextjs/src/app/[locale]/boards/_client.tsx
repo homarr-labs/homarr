@@ -10,7 +10,6 @@ import { BoardCategorySection } from "~/components/board/sections/category-secti
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { useIsBoardReady, useRequiredBoard } from "./_context";
-import type { CategorySection, EmptySection } from "./_types";
 
 let boardName: string | null = null;
 
@@ -46,12 +45,7 @@ export const ClientBoard = () => {
   const board = useRequiredBoard();
   const isReady = useIsBoardReady();
 
-  const sectionsWithoutSidebars = board.sections
-    .filter(
-      (section): section is CategorySection | EmptySection =>
-        section.kind !== "sidebar",
-    )
-    .sort((a, b) => a.position - b.position);
+  const sortedSections = board.sections.sort((a, b) => a.position - b.position);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -69,7 +63,7 @@ export const ClientBoard = () => {
         h="100%"
         style={{ visibility: isReady ? "visible" : "hidden" }}
       >
-        {sectionsWithoutSidebars.map((section) =>
+        {sortedSections.map((section) =>
           section.kind === "empty" ? (
             <BoardEmptySection
               key={section.id}

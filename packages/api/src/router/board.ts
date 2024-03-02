@@ -148,8 +148,6 @@ export const boardRouter = createTRPCRouter({
           customCss: input.customCss,
 
           // layout settings
-          showRightSidebar: input.showRightSidebar,
-          showLeftSidebar: input.showLeftSidebar,
           columnCount: input.columnCount,
         })
         .where(eq(boards.id, input.id));

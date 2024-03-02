@@ -30,8 +30,6 @@ CREATE TABLE `board` (
 	`secondary_color` text DEFAULT '#fd7e14' NOT NULL,
 	`opacity` integer DEFAULT 100 NOT NULL,
 	`custom_css` text,
-	`show_right_sidebar` integer DEFAULT false NOT NULL,
-	`show_left_sidebar` integer DEFAULT false NOT NULL,
 	`column_count` integer DEFAULT 10 NOT NULL
 );
 --> statement-breakpoint

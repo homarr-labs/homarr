@@ -143,16 +143,6 @@ export const boards = sqliteTable("board", {
   secondaryColor: text("secondary_color").default("#fd7e14").notNull(),
   opacity: int("opacity").default(100).notNull(),
   customCss: text("custom_css"),
-  showRightSidebar: int("show_right_sidebar", {
-    mode: "boolean",
-  })
-    .default(false)
-    .notNull(),
-  showLeftSidebar: int("show_left_sidebar", {
-    mode: "boolean",
-  })
-    .default(false)
-    .notNull(),
   columnCount: int("column_count").default(10).notNull(),
 });
 

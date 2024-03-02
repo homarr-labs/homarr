@@ -41,9 +41,9 @@ export const generateColors = (hex: string) => {
         .replaceAll(" ", "")
         .replace(")", "")
         .split(",")
-        .map((c) => parseInt(c, 10))
+        .map((color) => parseInt(color, 10))
         .slice(0, 3)
-        .map((c) => c.toString(16).padStart(2, "0"))
+        .map((color) => color.toString(16).padStart(2, "0"))
         .join("")
     );
   }) as unknown as MantineColorsTuple;
