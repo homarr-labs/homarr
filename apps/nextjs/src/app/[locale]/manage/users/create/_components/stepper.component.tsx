@@ -55,7 +55,7 @@ export const UserCreateStepperComponent = () => {
     },
     validate: zodResolver(
       z.object({
-        password: validation.user.password
+        password: validation.user.password,
       }),
     ),
     validateInputOnBlur: true,
@@ -64,7 +64,10 @@ export const UserCreateStepperComponent = () => {
 
   const allForms = [generalForm, securityForm];
 
-  const canNavigateToNextStep = allForms[active]?.isValid() ?? true;
+  const isCurrentFormValid = allForms[active]
+    ? (allForms[active]!.isValid satisfies () => boolean)
+    : () => true;
+  const canNavigateToNextStep = isCurrentFormValid();
 
   const controlledGoToNextStep = async () => {
     if (active + 1 === stepperMax) {
