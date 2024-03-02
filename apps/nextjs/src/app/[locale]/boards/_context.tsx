@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -22,6 +23,8 @@ export const BoardProvider = ({
   children,
   initialBoard,
 }: PropsWithChildren<{ initialBoard: RouterOutputs["board"]["byName"] }>) => {
+  const pathname = usePathname();
+  const utils = clientApi.useUtils();
   const [readySections, setReadySections] = useState<string[]>([]);
   const { data } = clientApi.board.byName.useQuery(
     { name: initialBoard.name },
@@ -32,6 +35,15 @@ export const BoardProvider = ({
       refetchOnReconnect: false,
     },
   );
+
+  // Invalidate the board when the pathname changes
+  // This allows to refetch the board when it might have changed - e.g. if someone else added an item
+  useEffect(() => {
+    return () => {
+      setReadySections([]);
+      void utils.board.byName.invalidate({ name: initialBoard.name });
+    };
+  }, [pathname, utils, initialBoard.name]);
 
   useEffect(() => {
     setReadySections((previous) =>

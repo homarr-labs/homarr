@@ -22,6 +22,7 @@ import {
 } from "@homarr/ui";
 
 import { modalEvents } from "~/app/[locale]/modals";
+import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { editModeAtom } from "~/components/board/editMode";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { HeaderButton } from "~/components/layout/header/button";
@@ -107,6 +108,7 @@ const AddMenu = () => {
 const EditModeMenu = () => {
   const [isEditMode, setEditMode] = useAtom(editModeAtom);
   const board = useRequiredBoard();
+  const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
   const { mutate: saveBoard, isPending } = clientApi.board.save.useMutation({
     onSuccess() {
@@ -114,9 +116,11 @@ const EditModeMenu = () => {
         title: t("notification.success.title"),
         message: t("notification.success.message"),
       });
+      void utils.board.byName.invalidate({ name: board.name });
+      void revalidatePathAction(`/boards/${board.name}`);
       setEditMode(false);
     },
-    onError() {
+    onError(err) {
       showErrorNotification({
         title: t("notification.error.title"),
         message: t("notification.error.message"),
@@ -125,11 +129,7 @@ const EditModeMenu = () => {
   });
 
   const toggle = () => {
-    if (isEditMode)
-      return saveBoard({
-        boardId: board.id,
-        ...board,
-      });
+    if (isEditMode) return saveBoard(board);
     setEditMode(true);
   };
 
