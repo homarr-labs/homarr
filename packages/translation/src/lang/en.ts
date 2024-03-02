@@ -369,9 +369,6 @@ export default {
       secondaryColor: {
         label: "Secondary color",
       },
-      primaryShade: {
-        label: "Primary shade",
-      },
       opacity: {
         label: "Opacity",
       },

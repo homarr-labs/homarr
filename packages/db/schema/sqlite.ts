@@ -141,7 +141,6 @@ export const boards = sqliteTable("board", {
     .notNull(),
   primaryColor: text("primary_color").default("#fa5252").notNull(),
   secondaryColor: text("secondary_color").default("#fd7e14").notNull(),
-  primaryShade: int("primary_shade").default(6).notNull(),
   opacity: int("opacity").default(100).notNull(),
   customCss: text("custom_css"),
   showRightSidebar: int("show_right_sidebar", {

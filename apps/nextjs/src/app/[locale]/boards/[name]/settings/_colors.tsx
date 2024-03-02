@@ -35,7 +35,6 @@ export const ColorSettingsContent = ({ board }: Props) => {
     initialValues: {
       primaryColor: board.primaryColor,
       secondaryColor: board.secondaryColor,
-      primaryShade: board.primaryShade,
       opacity: board.opacity,
     },
   });
@@ -63,11 +62,6 @@ export const ColorSettingsContent = ({ board }: Props) => {
                 swatches={Object.values(theme.colors).map((color) => color[6])}
                 {...form.getInputProps("primaryColor")}
               />
-              <Anchor onClick={toggle}>
-                {showPreview
-                  ? t("common.preview.hide")
-                  : t("common.preview.show")}
-              </Anchor>
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
@@ -77,6 +71,13 @@ export const ColorSettingsContent = ({ board }: Props) => {
               swatches={Object.values(theme.colors).map((color) => color[6])}
               {...form.getInputProps("secondaryColor")}
             />
+          </Grid.Col>
+          <Grid.Col span={12}>
+            <Anchor onClick={toggle}>
+              {showPreview
+                ? t("common.preview.hide")
+                : t("common.preview.show")}
+            </Anchor>
           </Grid.Col>
           <Grid.Col span={12}>
             <Collapse in={showPreview}>
@@ -100,7 +101,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
           </Grid.Col>
         </Grid>
         <Group justify="end">
-          <Button type="submit" loading={isPending}>
+          <Button type="submit" loading={isPending} color="teal">
             {t("common.action.saveChanges")}
           </Button>
         </Group>
@@ -121,25 +122,21 @@ const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
     : generateColors("#000000");
 
   return (
-    <Group gap={0}>
+    <Group gap={0} wrap="nowrap">
       {colors.map((color, index) => (
         <ColorSwatch
           key={index}
           color={color}
-          w={index === 5 ? "12.25%" : "9.75%"}
-          pb={index === 5 ? "12.25%" : "9.75%"}
+          w="10%"
+          pb="10%"
           c={isLightColor(color) ? "black" : "white"}
           radius={0}
           styles={{
             colorOverlay: {
-              borderTopLeftRadius:
-                index === 0 || index === 5 ? theme.radius.md : 0,
-              borderBottomLeftRadius:
-                index === 0 || index === 5 ? theme.radius.md : 0,
-              borderTopRightRadius:
-                index === 9 || index === 5 ? theme.radius.md : 0,
-              borderBottomRightRadius:
-                index === 9 || index === 5 ? theme.radius.md : 0,
+              borderTopLeftRadius: index === 0 ? theme.radius.md : 0,
+              borderBottomLeftRadius: index === 0 ? theme.radius.md : 0,
+              borderTopRightRadius: index === 9 ? theme.radius.md : 0,
+              borderBottomRightRadius: index === 9 ? theme.radius.md : 0,
             },
           }}
         >

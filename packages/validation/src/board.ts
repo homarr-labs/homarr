@@ -47,7 +47,6 @@ const savePartialSettingsSchema = z
     backgroundImageSize: z.enum(backgroundImageSizes.values),
     primaryColor: hexColorSchema,
     secondaryColor: hexColorSchema,
-    primaryShade: z.number().min(0).max(9),
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     showRightSidebar: z.boolean(),
