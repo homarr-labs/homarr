@@ -1,22 +1,25 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { WinstonModule } from 'nest-winston';
-import { logger } from '@homarr/log';
+import { NestFactory } from "@nestjs/core";
+import { WinstonModule } from "nest-winston";
+
+import { logger } from "@homarr/log";
+
+import { AppModule } from "./app.module";
 
 const winstonLoggerModule = WinstonModule.createLogger({
   instance: logger,
 });
 
-// @ts-expect-error
-if (import.meta.env.PROD) {
-  async function bootstrap() {
-    const app = await NestFactory.create(AppModule, {
-      logger: winstonLoggerModule,
-    });
-    await app.listen(3001);
-  }
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    logger: winstonLoggerModule,
+  });
+  await app.listen(3100);
+}
 
-  bootstrap();
+// @ts-expect-error this has no type yet
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+if (import.meta.env.PROD) {
+  void bootstrap();
 }
 
 export const viteNodeApp = NestFactory.create(AppModule, {
