@@ -63,7 +63,6 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
         value,
         data.find((item) => item.value === value),
       );
-      console.log(value);
       combobox.closeDropdown();
     },
     [setValue, data, combobox],
