@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useColorScheme } from "@mantine/hooks";
 
 import type { RouterOutputs } from "@homarr/api";
 import { getI18n } from "@homarr/translation/server";
@@ -105,7 +106,7 @@ const AppNoResults = async () => {
   return (
     <Card withBorder bg="transparent">
       <Stack align="center" gap="sm">
-        <IconApps size="2rem" color="#aaa" />
+        <IconApps size="2rem" />
         <Text fw={500} size="lg">
           {t("app.page.list.noResults.title")}
         </Text>
