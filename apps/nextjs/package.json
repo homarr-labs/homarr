@@ -45,7 +45,7 @@
     "chroma-js": "^2.4.2",
     "dayjs": "^1.11.10",
     "jotai": "^2.7.0",
-    "mantine-modal-manager": "^7.5.3",
+    "mantine-modal-manager": "^7.6.1",
     "next": "^14.1.1",
     "postcss-preset-mantine": "^1.13.0",
     "react": "18.2.0",
