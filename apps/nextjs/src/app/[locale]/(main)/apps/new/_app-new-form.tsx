@@ -45,7 +45,7 @@ export const AppNewForm = () => {
 
   return (
     <AppForm
-      action="create"
+      submitButtonTranslation={(t) => t("common.action.create")}
       handleSubmit={handleSubmit}
       isPending={isPending}
     />

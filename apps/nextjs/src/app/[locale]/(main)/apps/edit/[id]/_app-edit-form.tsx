@@ -53,7 +53,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
 
   return (
     <AppForm
-      action="edit"
+      submitButtonTranslation={(t) => t("common.action.save")}
       initialValues={app}
       handleSubmit={handleSubmit}
       isPending={isPending}

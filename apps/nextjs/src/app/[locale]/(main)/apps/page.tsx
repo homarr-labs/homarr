@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
+import { getI18n } from "@homarr/translation/server";
 import {
   ActionIcon,
   ActionIconGroup,
@@ -10,6 +11,7 @@ import {
   Card,
   Container,
   Group,
+  IconApps,
   IconPencil,
   IconTrash,
   Stack,
@@ -18,6 +20,7 @@ import {
 } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
+import { AppDeleteButton } from "./_app-delete-button";
 
 export default async function AppsPage() {
   const apps = await api.app.all();
@@ -31,11 +34,14 @@ export default async function AppsPage() {
             New app
           </Button>
         </Group>
-        <Stack gap="sm">
-          {apps.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
-        </Stack>
+        {apps.length === 0 && <AppNoResults />}
+        {apps.length > 0 && (
+          <Stack gap="sm">
+            {apps.map((app) => (
+              <AppCard key={app.id} app={app} />
+            ))}
+          </Stack>
+        )}
       </Stack>
     </Container>
   );
@@ -78,19 +84,35 @@ const AppCard = ({ app }: AppCardProps) => {
           <ActionIconGroup>
             <ActionIcon
               component={Link}
-              href={`/apps/edit/<id>`}
+              href={`/apps/edit/${app.id}`}
               variant="subtle"
               color="gray"
               aria-label="Edit app"
             >
               <IconPencil size={16} stroke={1.5} />
             </ActionIcon>
-            <ActionIcon variant="subtle" color="red" aria-label="Delete app">
-              <IconTrash color="red" size={16} stroke={1.5} />
-            </ActionIcon>
+            <AppDeleteButton app={app} />
           </ActionIconGroup>
         </Group>
       </Group>
+    </Card>
+  );
+};
+
+const AppNoResults = async () => {
+  const t = await getI18n();
+
+  return (
+    <Card withBorder bg="transparent">
+      <Stack align="center" gap="sm">
+        <IconApps size="2rem" color="#aaa" />
+        <Text fw={500} size="lg">
+          {t("app.page.list.noResults.title")}
+        </Text>
+        <Anchor href="/apps/new">
+          {t("app.page.list.noResults.description")}
+        </Anchor>
+      </Stack>
     </Card>
   );
 };

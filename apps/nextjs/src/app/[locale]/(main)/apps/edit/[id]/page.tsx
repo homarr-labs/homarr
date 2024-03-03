@@ -1,3 +1,4 @@
+import { getI18n } from "@homarr/translation/server";
 import { Container, Stack, Title } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
@@ -9,11 +10,12 @@ interface AppEditPageProps {
 
 export default async function AppEditPage({ params }: AppEditPageProps) {
   const app = await api.app.byId({ id: params.id });
+  const t = await getI18n();
 
   return (
     <Container>
       <Stack>
-        <Title>Edit app</Title>
+        <Title>{t("app.page.edit.title")}</Title>
         <AppEditForm app={app} />
       </Stack>
     </Container>

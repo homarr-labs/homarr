@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { useForm, zodResolver } from "@homarr/form";
+import { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { Button, Group, Stack, Textarea, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
@@ -12,14 +13,14 @@ import { validation } from "@homarr/validation";
 type FormType = z.infer<typeof validation.app.manage>;
 
 interface AppFormProps {
-  action: "create" | "edit";
+  submitButtonTranslation: (t: TranslationFunction) => string;
   initialValues?: FormType;
   handleSubmit: (values: FormType) => void;
   isPending: boolean;
 }
 
 export const AppForm = ({
-  action,
+  submitButtonTranslation,
   initialValues,
   handleSubmit,
   isPending,
@@ -53,7 +54,7 @@ export const AppForm = ({
             {t("common.action.backToOverview")}
           </Button>
           <Button type="submit" loading={isPending}>
-            {t(`common.action.${action}`)}
+            {submitButtonTranslation(t)}
           </Button>
         </Group>
       </Stack>

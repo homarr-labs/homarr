@@ -42,11 +42,19 @@ export const appRouter = createTRPCRouter({
   edit: publicProcedure
     .input(validation.app.edit)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.update(apps).set({
-        name: input.name,
-        description: input.description,
-        iconUrl: input.iconUrl,
-        href: input.href,
-      });
+      await ctx.db
+        .update(apps)
+        .set({
+          name: input.name,
+          description: input.description,
+          iconUrl: input.iconUrl,
+          href: input.href,
+        })
+        .where(eq(apps.id, input.id));
+    }),
+  delete: publicProcedure
+    .input(validation.app.byId)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(apps).where(eq(apps.id, input.id));
     }),
 });
