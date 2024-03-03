@@ -1,13 +1,13 @@
 import { Container, Stack, Title } from "@homarr/ui";
 
-import { NewAppForm } from "./_form";
+import { AppNewForm } from "./_app-new-form";
 
-export default function NewAppPage() {
+export default function AppNewPage() {
   return (
     <Container>
       <Stack>
         <Title>New app</Title>
-        <NewAppForm />
+        <AppNewForm />
       </Stack>
     </Container>
   );

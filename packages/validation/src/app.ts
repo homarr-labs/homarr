@@ -1,12 +1,18 @@
 import { z } from "zod";
 
-const createAppSchema = z.object({
+const manageAppSchema = z.object({
   name: z.string().min(1).max(64),
   description: z.string().max(512).nullable(),
   iconUrl: z.string().min(1),
   href: z.string().nullable(),
 });
 
+const editAppSchema = manageAppSchema.and(z.object({ id: z.string() }));
+
+const byIdSchema = z.object({ id: z.string() });
+
 export const appSchemas = {
-  create: createAppSchema,
+  manage: manageAppSchema,
+  edit: editAppSchema,
+  byId: byIdSchema,
 };
