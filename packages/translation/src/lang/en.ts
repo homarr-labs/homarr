@@ -517,6 +517,36 @@ export default {
         },
         edit: {
           metaTitle: "Edit user {username}",
+          section: {
+            profile: {
+              title: "Profile",
+              form: {
+                username: {
+                  label: "Username",
+                },
+                email: {
+                  label: "E-Mail",
+                },
+              },
+            },
+            preferences: {
+              title: "Preferences",
+            },
+            security: {
+              title: "Security",
+            },
+            dangerZone: {
+              title: "Danger zone",
+              action: {
+                delete: {
+                  label: "Delete user permanently",
+                  description:
+                    "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
+                  button: "Delete",
+                },
+              },
+            },
+          },
         },
         create: {
           metaTitle: "Create user",

@@ -22,9 +22,21 @@ const signInSchema = z.object({
   password: z.string(),
 });
 
+const editProfileSchema = z.object({
+  name: usernameSchema,
+  email: z
+    .string()
+    .email()
+    .or(z.literal(""))
+    .transform((value) => (value === "" ? null : value))
+    .optional()
+    .nullable(),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   init: initUserSchema,
   create: createUserSchema,
   password: passwordSchema,
+  editProfile: editProfileSchema,
 };
