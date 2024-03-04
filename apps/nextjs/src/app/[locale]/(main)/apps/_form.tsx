@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { useForm, zodResolver } from "@homarr/form";
-import { TranslationFunction } from "@homarr/translation";
+import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { Button, Group, Stack, Textarea, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
@@ -19,12 +19,9 @@ interface AppFormProps {
   isPending: boolean;
 }
 
-export const AppForm = ({
-  submitButtonTranslation,
-  initialValues,
-  handleSubmit,
-  isPending,
-}: AppFormProps) => {
+export const AppForm = (props: AppFormProps) => {
+  const { submitButtonTranslation, handleSubmit, initialValues, isPending } =
+    props;
   const t = useI18n();
 
   const form = useForm({

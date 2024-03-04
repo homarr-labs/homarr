@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useColorScheme } from "@mantine/hooks";
 
 import type { RouterOutputs } from "@homarr/api";
 import { getI18n } from "@homarr/translation/server";
@@ -14,7 +13,6 @@ import {
   Group,
   IconApps,
   IconPencil,
-  IconTrash,
   Stack,
   Text,
   Title,

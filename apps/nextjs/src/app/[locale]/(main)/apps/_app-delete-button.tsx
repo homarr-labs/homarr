@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterOutputs } from "@homarr/api";
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   showErrorNotification,
