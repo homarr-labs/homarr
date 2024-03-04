@@ -5,7 +5,6 @@ import { DatabaseService } from "./db/database.service";
 @Injectable()
 export class AppService {
   constructor(
-    // @ts-expect-error decorators are not correctly handled yet
     @Inject(DatabaseService) private readonly databaseService: DatabaseService,
   ) {}
 
