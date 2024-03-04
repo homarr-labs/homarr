@@ -23,7 +23,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
   const t = useScopedI18n("app.page.edit.notification");
   const router = useRouter();
 
-  const { mutate, isPending } = clientApi.app.edit.useMutation({
+  const { mutate, isPending } = clientApi.app.update.useMutation({
     onSuccess: () => {
       showSuccessNotification({
         title: t("success.title"),
