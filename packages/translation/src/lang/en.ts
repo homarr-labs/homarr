@@ -28,6 +28,57 @@ export default {
       create: "Create user",
     },
   },
+  app: {
+    page: {
+      list: {
+        title: "Apps",
+        noResults: {
+          title: "There aren't any apps.",
+          description: "Create your first app",
+        },
+      },
+      create: {
+        title: "New app",
+        notification: {
+          success: {
+            title: "Creation successful",
+            message: "The app was successfully created",
+          },
+          error: {
+            title: "Creation failed",
+            message: "The app could not be created",
+          },
+        },
+      },
+      edit: {
+        title: "Edit app",
+        notification: {
+          success: {
+            title: "Changes applied successfully",
+            message: "The app was successfully saved",
+          },
+          error: {
+            title: "Unable to apply changes",
+            message: "The app could not be saved",
+          },
+        },
+      },
+      delete: {
+        title: "Delete app",
+        message: "Are you sure you want to delete the app {name}?",
+        notification: {
+          success: {
+            title: "Deletion successful",
+            message: "The app was successfully deleted",
+          },
+          error: {
+            title: "Deletion failed",
+            message: "Unable to delete the app",
+          },
+        },
+      },
+    },
+  },
   integration: {
     page: {
       list: {

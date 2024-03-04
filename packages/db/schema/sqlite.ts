@@ -169,6 +169,14 @@ export const items = sqliteTable("item", {
   options: text("options").default('{"json": {}}').notNull(), // empty superjson object
 });
 
+export const apps = sqliteTable("app", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  iconUrl: text("icon_url").notNull(),
+  href: text("href"),
+});
+
 export const integrationItems = sqliteTable(
   "integration_item",
   {
