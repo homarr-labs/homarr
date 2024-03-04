@@ -59,7 +59,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node": "^20.11.24",
-    "@types/react": "^18.2.61",
+    "@types/react": "^18.2.62",
     "@types/react-dom": "^18.2.19",
     "@types/chroma-js": "2.4.4",
     "dotenv-cli": "^7.3.0",
