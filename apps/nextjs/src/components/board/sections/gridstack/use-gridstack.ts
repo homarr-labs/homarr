@@ -48,7 +48,7 @@ export const useGridstack = ({
 
   useCssVariableConfiguration({ section, mainRef, gridRef });
 
-  const sectionColumnCount = useSectionColumnCount(section.kind);
+  const board = useRequiredBoard();
 
   const items = useMemo(() => section.items, [section.items]);
 
@@ -125,7 +125,7 @@ export const useGridstack = ({
         wrapper: wrapperRef,
         gridstack: gridRef,
       },
-      sectionColumnCount,
+      sectionColumnCount: board.columnCount,
     });
 
     if (isReady) {
@@ -134,7 +134,7 @@ export const useGridstack = ({
 
     // Only run this effect when the section items change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items.length, section.items.length]);
+  }, [items.length, section.items.length, board.columnCount]);
 
   return {
     refs: {
@@ -143,19 +143,6 @@ export const useGridstack = ({
       gridstack: gridRef,
     },
   };
-};
-
-/**
- * Get the column count for the section
- * For the sidebar it's always 2 otherwise it's the column count of the board
- * @param sectionKind kind of the section
- * @returns count of columns
- */
-const useSectionColumnCount = (sectionKind: Section["kind"]) => {
-  const board = useRequiredBoard();
-  if (sectionKind === "sidebar") return 2;
-
-  return board.columnCount;
 };
 
 interface UseCssVariableConfiguration {
@@ -177,7 +164,7 @@ const useCssVariableConfiguration = ({
   mainRef,
   gridRef,
 }: UseCssVariableConfiguration) => {
-  const sectionColumnCount = useSectionColumnCount(section.kind);
+  const board = useRequiredBoard();
 
   // Get reference to the :root element
   const typeofDocument = typeof document;
@@ -188,20 +175,20 @@ const useCssVariableConfiguration = ({
 
   // Define widget-width by calculating the width of one column with mainRef width and column count
   useEffect(() => {
-    if (section.kind === "sidebar" || !mainRef?.current) return;
-    const widgetWidth = mainRef.current.clientWidth / sectionColumnCount;
+    if (!mainRef?.current) return;
+    const widgetWidth = mainRef.current.clientWidth / board.columnCount;
     // widget width is used to define sizes of gridstack items within global.scss
     root?.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
     gridRef.current?.cellHeight(widgetWidth);
     // gridRef.current is required otherwise the cellheight is run on production as undefined
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionColumnCount, root, section.kind, mainRef, gridRef.current]);
+  }, [board.columnCount, root, section.kind, mainRef, gridRef.current]);
 
   // Define column count by using the sectionColumnCount
   useEffect(() => {
     root?.style.setProperty(
       "--gridstack-column-count",
-      sectionColumnCount.toString(),
+      board.columnCount.toString(),
     );
-  }, [sectionColumnCount, root]);
+  }, [board.columnCount, root]);
 };

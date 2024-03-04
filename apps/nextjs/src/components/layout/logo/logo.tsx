@@ -34,15 +34,27 @@ export interface LogoWithTitleProps {
   size: keyof typeof logoWithTitleSizes;
   title: string;
   image: Omit<LogoProps, "size">;
+  hideTitleOnMobile?: boolean;
 }
 
-export const LogoWithTitle = ({ size, title, image }: LogoWithTitleProps) => {
+export const LogoWithTitle = ({
+  size,
+  title,
+  image,
+  hideTitleOnMobile,
+}: LogoWithTitleProps) => {
   const { logoSize, titleOrder } = logoWithTitleSizes[size];
 
   return (
     <Group gap="xs" wrap="nowrap">
       <Logo {...image} size={logoSize} />
-      <Title order={titleOrder}>{title}</Title>
+      <Title
+        order={titleOrder}
+        visibleFrom={hideTitleOnMobile ? "sm" : undefined}
+        textWrap="nowrap"
+      >
+        {title}
+      </Title>
     </Group>
   );
 };

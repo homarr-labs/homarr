@@ -204,6 +204,12 @@ export default {
     multiSelect: {
       placeholder: "Pick one or more values",
     },
+    select: {
+      placeholder: "Pick value",
+      badge: {
+        recommended: "Recommended",
+      },
+    },
     search: {
       placeholder: "Search for anything...",
       nothingFound: "Nothing found",
@@ -223,6 +229,10 @@ export default {
       },
     },
     noResults: "No results found",
+    preview: {
+      show: "Show preview",
+      hide: "Hide preview",
+    },
   },
   section: {
     category: {
@@ -350,18 +360,98 @@ export default {
       faviconImageUrl: {
         label: "Favicon image URL",
       },
+      backgroundImageUrl: {
+        label: "Background image URL",
+      },
+      backgroundImageAttachment: {
+        label: "Background image attachment",
+        option: {
+          fixed: {
+            label: "Fixed",
+            description: "Background stays in the same position.",
+          },
+          scroll: {
+            label: "Scroll",
+            description: "Background scrolls with your mouse.",
+          },
+        },
+      },
+      backgroundImageRepeat: {
+        label: "Background image repeat",
+        option: {
+          repeat: {
+            label: "Repeat",
+            description:
+              "The image is repeated as much as needed to cover the whole background image painting area.",
+          },
+          "no-repeat": {
+            label: "No repeat",
+            description:
+              "The image is not repeated and may not fill the entire space.",
+          },
+          "repeat-x": {
+            label: "Repeat X",
+            description: "Same as 'Repeat' but only on horizontal axis.",
+          },
+          "repeat-y": {
+            label: "Repeat Y",
+            description: "Same as 'Repeat' but only on vertical axis.",
+          },
+        },
+      },
+      backgroundImageSize: {
+        label: "Background image size",
+        option: {
+          cover: {
+            label: "Cover",
+            description:
+              "Scales the image as small as possible to cover the entire window by cropping excessive space.",
+          },
+          contain: {
+            label: "Contain",
+            description:
+              "Scales the image as large as possible within its container without cropping or stretching the image.",
+          },
+        },
+      },
+      primaryColor: {
+        label: "Primary color",
+      },
+      secondaryColor: {
+        label: "Secondary color",
+      },
+      opacity: {
+        label: "Opacity",
+      },
+      customCss: {
+        label: "Custom CSS",
+      },
+      columnCount: {
+        label: "Column count",
+      },
+      name: {
+        label: "Name",
+      },
     },
     setting: {
       title: "Settings for {boardName} board",
       section: {
         general: {
           title: "General",
+          unrecognizedLink:
+            "The provided link is not recognized and won't preview, it might still work.",
         },
         layout: {
           title: "Layout",
         },
-        appearance: {
-          title: "Appearance",
+        background: {
+          title: "Background",
+        },
+        color: {
+          title: "Colors",
+        },
+        customCss: {
+          title: "Custom css",
         },
         dangerZone: {
           title: "Danger Zone",
@@ -371,6 +461,9 @@ export default {
               description:
                 "Changing the name will break any links to this board.",
               button: "Change name",
+              modal: {
+                title: "Rename board",
+              },
             },
             visibility: {
               label: "Change board visibility",
@@ -382,12 +475,29 @@ export default {
                 public: "Make private",
                 private: "Make public",
               },
+              confirm: {
+                public: {
+                  title: "Make board private",
+                  description:
+                    "Are you sure you want to make this board private? This will hide the board from the public. Links for guest users will break.",
+                },
+                private: {
+                  title: "Make board public",
+                  description:
+                    "Are you sure you want to make this board public? This will make the board accessible to everyone.",
+                },
+              },
             },
             delete: {
               label: "Delete this board",
               description:
                 "Once you delete a board, there is no going back. Please be certain.",
               button: "Delete this board",
+              confirm: {
+                title: "Delete board",
+                description:
+                  "Are you sure you want to delete this board? This will permanently delete the board and all its content.",
+              },
             },
           },
         },

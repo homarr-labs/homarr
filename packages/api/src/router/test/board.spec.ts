@@ -66,7 +66,7 @@ describe("byName should return board by name", () => {
   it("should throw error when not present");
 });
 
-describe("saveGeneralSettings should save general settings", () => {
+describe("savePartialSettings should save general settings", () => {
   it("should save general settings", async () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
@@ -78,12 +78,12 @@ describe("saveGeneralSettings should save general settings", () => {
 
     const { boardId } = await createFullBoardAsync(db, "default");
 
-    await caller.saveGeneralSettings({
+    await caller.savePartialSettings({
       pageTitle: newPageTitle,
       metaTitle: newMetaTitle,
       logoImageUrl: newLogoImageUrl,
       faviconImageUrl: newFaviconImageUrl,
-      boardId,
+      id: boardId,
     });
   });
 
@@ -92,12 +92,12 @@ describe("saveGeneralSettings should save general settings", () => {
     const caller = boardRouter.createCaller({ db, session: null });
 
     const act = async () =>
-      await caller.saveGeneralSettings({
+      await caller.savePartialSettings({
         pageTitle: "newPageTitle",
         metaTitle: "newMetaTitle",
         logoImageUrl: "http://logo.image/url.png",
         faviconImageUrl: "http://favicon.image/url.png",
-        boardId: "nonExistentBoardId",
+        id: "nonExistentBoardId",
       });
 
     await expect(act()).rejects.toThrowError("Board not found");
@@ -112,7 +112,7 @@ describe("save should save full board", () => {
     const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: createId(),
@@ -149,7 +149,7 @@ describe("save should save full board", () => {
     );
 
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: sectionId,
@@ -208,7 +208,7 @@ describe("save should save full board", () => {
     await db.insert(integrations).values(anotherIntegration);
 
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: sectionId,
@@ -269,7 +269,7 @@ describe("save should save full board", () => {
 
     const newSectionId = createId();
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: newSectionId,
@@ -319,7 +319,7 @@ describe("save should save full board", () => {
 
     const newItemId = createId();
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: sectionId,
@@ -392,7 +392,7 @@ describe("save should save full board", () => {
     await db.insert(integrations).values(integration);
 
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: sectionId,
@@ -459,7 +459,7 @@ describe("save should save full board", () => {
     });
 
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: sectionId,
@@ -512,7 +512,7 @@ describe("save should save full board", () => {
     );
 
     await caller.save({
-      boardId,
+      id: boardId,
       sections: [
         {
           id: sectionId,
@@ -569,7 +569,7 @@ describe("save should save full board", () => {
 
     const act = async () =>
       await caller.save({
-        boardId: "nonExistentBoardId",
+        id: "nonExistentBoardId",
         sections: [],
       });
 
