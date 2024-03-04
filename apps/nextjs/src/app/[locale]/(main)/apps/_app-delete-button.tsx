@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback } from "react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
@@ -20,37 +22,39 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   const t = useScopedI18n("app.page.delete");
   const { mutate, isPending } = clientApi.app.delete.useMutation();
 
+  const onClick = useCallback(() => {
+    modalEvents.openConfirmModal({
+      title: t("title"),
+      children: t("message", app),
+      onConfirm: () => {
+        mutate(
+          { id: app.id },
+          {
+            onSuccess: () => {
+              showSuccessNotification({
+                title: t("notification.success.title"),
+                message: t("notification.success.message"),
+              });
+              void revalidatePathAction("/apps");
+            },
+            onError: () => {
+              showErrorNotification({
+                title: t("notification.error.title"),
+                message: t("notification.error.message"),
+              });
+            },
+          },
+        );
+      },
+    });
+  }, [app, mutate, t]);
+
   return (
     <ActionIcon
       loading={isPending}
       variant="subtle"
       color="red"
-      onClick={() => {
-        modalEvents.openConfirmModal({
-          title: t("title"),
-          children: t("message", app),
-          onConfirm: () => {
-            mutate(
-              { id: app.id },
-              {
-                onSuccess: () => {
-                  showSuccessNotification({
-                    title: t("notification.success.title"),
-                    message: t("notification.success.message"),
-                  });
-                  void revalidatePathAction("/apps");
-                },
-                onError: () => {
-                  showErrorNotification({
-                    title: t("notification.error.title"),
-                    message: t("notification.error.message"),
-                  });
-                },
-              },
-            );
-          },
-        });
-      }}
+      onClick={onClick}
       aria-label="Delete app"
     >
       <IconTrash color="red" size={16} stroke={1.5} />

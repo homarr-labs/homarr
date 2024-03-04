@@ -8,6 +8,7 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
+import type { TranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { validation, z } from "@homarr/validation";
 
@@ -43,9 +44,14 @@ export const AppNewForm = () => {
     [mutate],
   );
 
+  const submitButtonTranslation = useCallback(
+    (t: TranslationFunction) => t("common.action.create"),
+    [],
+  );
+
   return (
     <AppForm
-      submitButtonTranslation={(t) => t("common.action.create")}
+      submitButtonTranslation={submitButtonTranslation}
       handleSubmit={handleSubmit}
       isPending={isPending}
     />
