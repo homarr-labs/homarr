@@ -15,6 +15,8 @@ import "../../../styles/gridstack.scss";
 
 import { GlobalItemServerDataRunner } from "@homarr/widgets";
 
+import { BoardMantineProvider } from "./_theme";
+
 type Params = Record<string, unknown>;
 
 interface Props<TParams extends Params> {
@@ -35,14 +37,16 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
       return (
         <GlobalItemServerDataRunner board={initialBoard}>
           <BoardProvider initialBoard={initialBoard}>
-            <ClientShell hasNavigation={false}>
-              <MainHeader
-                logo={<BoardLogoWithTitle size="md" />}
-                actions={headeractions}
-                hasNavigation={false}
-              />
-              <AppShellMain>{children}</AppShellMain>
-            </ClientShell>
+            <BoardMantineProvider>
+              <ClientShell hasNavigation={false}>
+                <MainHeader
+                  logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                  actions={headeractions}
+                  hasNavigation={false}
+                />
+                <AppShellMain>{children}</AppShellMain>
+              </ClientShell>
+            </BoardMantineProvider>
           </BoardProvider>
         </GlobalItemServerDataRunner>
       );

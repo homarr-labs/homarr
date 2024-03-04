@@ -21,24 +21,18 @@ export const initializeGridstack = ({
   sectionColumnCount,
 }: InitializeGridstackProps) => {
   if (!refs.wrapper.current) return false;
-  // calculates the currently available count of columns
-  const columnCount = section.kind === "sidebar" ? 2 : sectionColumnCount;
-  const minRow =
-    section.kind !== "sidebar"
-      ? 1
-      : Math.floor(refs.wrapper.current.offsetHeight / 128);
   // initialize gridstack
   const newGrid = refs.gridstack;
   newGrid.current = GridStack.init(
     {
-      column: columnCount,
-      margin: section.kind === "sidebar" ? 5 : 10,
+      column: sectionColumnCount,
+      margin: 10,
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
       staticGrid: true,
-      minRow,
+      minRow: 1,
       animate: false,
       styleInHead: true,
       disableRemoveNodeOnDrop: true,
@@ -49,7 +43,7 @@ export const initializeGridstack = ({
   const grid = newGrid.current;
   if (!grid) return false;
   // Must be used to update the column count after the initialization
-  grid.column(columnCount, "none");
+  grid.column(sectionColumnCount, "none");
 
   grid.batchUpdate();
   grid.removeAll(false);

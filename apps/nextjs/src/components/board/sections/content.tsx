@@ -2,6 +2,7 @@
 // Ignored because of gridstack attributes
 
 import type { RefObject } from "react";
+import cx from "clsx";
 import { useAtomValue } from "jotai";
 
 import { useScopedI18n } from "@homarr/translation/client";
@@ -20,11 +21,13 @@ import {
   useServerDataFor,
 } from "@homarr/widgets";
 
+import { useRequiredBoard } from "~/app/[locale]/boards/_context";
 import type { Item } from "~/app/[locale]/boards/_types";
 import { modalEvents } from "~/app/[locale]/modals";
 import { editModeAtom } from "../editMode";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
+import classes from "./item.module.css";
 
 interface Props {
   items: Item[];
@@ -32,6 +35,8 @@ interface Props {
 }
 
 export const SectionContent = ({ items, refs }: Props) => {
+  const board = useRequiredBoard();
+
   return (
     <>
       {items.map((item) => {
@@ -50,7 +55,15 @@ export const SectionContent = ({ items, refs }: Props) => {
             gs-max-h={4}
             ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
           >
-            <Card className="grid-stack-item-content" withBorder>
+            <Card
+              className={cx(classes.itemCard, "grid-stack-item-content")}
+              withBorder
+              styles={{
+                root: {
+                  "--opacity": board.opacity / 100,
+                },
+              }}
+            >
               <BoardItem item={item} />
             </Card>
           </div>
