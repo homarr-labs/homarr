@@ -178,16 +178,16 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
       '@mantine/colors-generator':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(chroma-js@2.4.2)
       '@mantine/hooks':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(react@18.2.0)
       '@mantine/modals':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(@mantine/core@7.6.1)(@mantine/hooks@7.6.1)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/tiptap':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(@mantine/core@7.6.1)(@mantine/hooks@7.6.1)(@tiptap/extension-link@2.2.4)(@tiptap/react@2.2.4)(react-dom@18.2.0)(react@18.2.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.9.2
@@ -483,7 +483,7 @@ importers:
   packages/form:
     dependencies:
       '@mantine/form':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
@@ -530,7 +530,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../ui
       '@mantine/notifications':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(@mantine/core@7.6.1)(@mantine/hooks@7.6.1)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
@@ -558,7 +558,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../ui
       '@mantine/spotlight':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(@mantine/core@7.6.1)(@mantine/hooks@7.6.1)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
@@ -602,10 +602,10 @@ importers:
   packages/ui:
     dependencies:
       '@mantine/core':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(@mantine/hooks@7.6.1)(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/dates':
-        specifier: ^7.5.3
+        specifier: ^7.6.1
         version: 7.6.1(@mantine/core@7.6.1)(@mantine/hooks@7.6.1)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
       '@tabler/icons-react':
         specifier: ^2.47.0
