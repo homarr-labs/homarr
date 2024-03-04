@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "c9ea435a-5bbf-4439-84a1-55d3e2581b13",
+  "id": "7ba12cbf-d8eb-4469-b7c5-7f31acb7717d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -201,7 +201,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'red'"
+          "default": "'#fa5252'"
         },
         "secondary_color": {
           "name": "secondary_color",
@@ -209,18 +209,10 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'orange'"
+          "default": "'#fd7e14'"
         },
-        "primary_shade": {
-          "name": "primary_shade",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 6
-        },
-        "app_opacity": {
-          "name": "app_opacity",
+        "opacity": {
+          "name": "opacity",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -234,22 +226,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "show_right_sidebar": {
-          "name": "show_right_sidebar",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "show_left_sidebar": {
-          "name": "show_left_sidebar",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
         "column_count": {
           "name": "column_count",
           "type": "integer",
@@ -259,7 +235,13 @@
           "default": 10
         }
       },
-      "indexes": {},
+      "indexes": {
+        "board_name_unique": {
+          "name": "board_name_unique",
+          "columns": ["name"],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}

@@ -8,8 +8,14 @@ import { Box, LoadingOverlay, Stack } from "@homarr/ui";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
+import { BoardBackgroundVideo } from "~/components/layout/background";
 import { useIsBoardReady, useRequiredBoard } from "./_context";
-import type { CategorySection, EmptySection } from "./_types";
+
+let boardName: string | null = null;
+
+export const updateBoardName = (name: string | null) => {
+  boardName = name;
+};
 
 type UpdateCallback = (
   prev: RouterOutputs["board"]["default"],
@@ -20,7 +26,10 @@ export const useUpdateBoard = () => {
 
   const updateBoard = useCallback(
     (updaterWithoutUndefined: UpdateCallback) => {
-      utils.board.default.setData(undefined, (previous) =>
+      if (!boardName) {
+        throw new Error("Board name is not set");
+      }
+      utils.board.byName.setData({ name: boardName }, (previous) =>
         previous ? updaterWithoutUndefined(previous) : previous,
       );
     },
@@ -36,21 +45,17 @@ export const ClientBoard = () => {
   const board = useRequiredBoard();
   const isReady = useIsBoardReady();
 
-  const sectionsWithoutSidebars = board.sections
-    .filter(
-      (section): section is CategorySection | EmptySection =>
-        section.kind !== "sidebar",
-    )
-    .sort((a, b) => a.position - b.position);
+  const sortedSections = board.sections.sort((a, b) => a.position - b.position);
 
   const ref = useRef<HTMLDivElement>(null);
 
   return (
     <Box h="100%" pos="relative">
+      <BoardBackgroundVideo />
       <LoadingOverlay
         visible={!isReady}
         transitionProps={{ duration: 500 }}
-        loaderProps={{ size: "lg", variant: "bars" }}
+        loaderProps={{ size: "lg" }}
         h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
       />
       <Stack
@@ -58,7 +63,7 @@ export const ClientBoard = () => {
         h="100%"
         style={{ visibility: isReady ? "visible" : "hidden" }}
       >
-        {sectionsWithoutSidebars.map((section) =>
+        {sortedSections.map((section) =>
           section.kind === "empty" ? (
             <BoardEmptySection
               key={section.id}
