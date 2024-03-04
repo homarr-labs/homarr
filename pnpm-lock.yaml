@@ -100,7 +100,7 @@ importers:
         specifier: ^1.4.2
         version: 1.4.2
       '@types/express':
-        specifier: ^4.17.13
+        specifier: ^4.17.21
         version: 4.17.21
       '@types/node':
         specifier: ^20.11.24
