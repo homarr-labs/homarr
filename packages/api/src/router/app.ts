@@ -39,9 +39,20 @@ export const appRouter = createTRPCRouter({
         href: input.href,
       });
     }),
-  edit: publicProcedure
+  update: publicProcedure
     .input(validation.app.edit)
     .mutation(async ({ ctx, input }) => {
+      const app = await ctx.db.query.apps.findFirst({
+        where: eq(apps.id, input.id),
+      });
+
+      if (!app) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "App not found",
+        });
+      }
+
       await ctx.db
         .update(apps)
         .set({
