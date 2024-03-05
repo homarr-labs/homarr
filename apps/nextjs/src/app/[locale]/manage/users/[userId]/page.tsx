@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Title } from "@homarr/ui";
-
-import { api } from "~/trpc/server";
 
 interface Props {
   params: {
