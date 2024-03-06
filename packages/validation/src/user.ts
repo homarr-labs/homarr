@@ -33,10 +33,16 @@ const editProfileSchema = z.object({
     .nullable(),
 });
 
+const changePasswordSchema = z.object({
+  userId: z.string(),
+  password: passwordSchema,
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   init: initUserSchema,
   create: createUserSchema,
   password: passwordSchema,
   editProfile: editProfileSchema,
+  changePassword: changePasswordSchema,
 };
