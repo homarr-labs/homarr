@@ -427,8 +427,8 @@ importers:
         specifier: ^9.4.3
         version: 9.4.3
       drizzle-orm:
-        specifier: ^0.29.4
-        version: 0.29.4(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(react@17.0.2)
+        specifier: ^0.29.5
+        version: 0.29.5(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(react@17.0.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -4768,8 +4768,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.4(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(react@17.0.2):
-    resolution: {integrity: sha512-ZnSM8TAxFhzH7p1s3+w3pRE/eKaOeNkH9SKitm717pubDVVcV2I0BCDBPGKV+pe02+wMfw37ntlTcCyo2rA3IA==}
+  /drizzle-orm@0.29.5(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(react@17.0.2):
+    resolution: {integrity: sha512-jS3+uyzTz4P0Y2CICx8FmRQ1eplURPaIMWDn/yq6k4ShRFj9V7vlJk67lSf2kyYPzQ60GkkNGXcJcwrxZ6QCRw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
