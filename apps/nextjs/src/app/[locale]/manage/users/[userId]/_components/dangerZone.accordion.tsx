@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
-
-import { revalidatePathAction } from "~/app/revalidatePathAction";
 
 interface DangerZoneAccordionProps {
   user: NonNullable<RouterOutputs["user"]["getById"]>;
@@ -19,9 +17,8 @@ export const DangerZoneAccordion = ({ user }: DangerZoneAccordionProps) => {
   const router = useRouter();
   const { mutateAsync: mutateUserDeletionAsync } =
     clientApi.user.delete.useMutation({
-      onSettled: async () => {
-        await router.push("/manage/users");
-        await revalidatePathAction("/manage/users");
+      onSettled: () => {
+        router.push("/manage/users");
       },
     });
 

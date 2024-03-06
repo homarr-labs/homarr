@@ -20,6 +20,7 @@ import {
 import { api } from "~/trpc/server";
 import { DangerZoneAccordion } from "./_components/dangerZone.accordion";
 import { ProfileAccordion } from "./_components/profile.accordion";
+import { SecurityAccordionComponent } from "./_components/security.accordion";
 
 interface Props {
   params: {
@@ -80,12 +81,14 @@ export default async function EditUserPage({ params }: Props) {
               {t("section.security.title")}
             </Text>
           </AccordionControl>
-          <AccordionPanel></AccordionPanel>
+          <AccordionPanel>
+            <SecurityAccordionComponent user={user} />
+          </AccordionPanel>
         </AccordionItem>
         <AccordionItem
           styles={{
             item: {
-              "--__item-border-color": "rgba(248,81,73,0.4)",
+              borderColor: "rgba(248,81,73,0.4)",
               borderWidth: 4,
             },
           }}

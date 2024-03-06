@@ -87,6 +87,18 @@ export const userRouter = createTRPCRouter({
   delete: publicProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
     await ctx.db.delete(users).where(eq(users.id, input));
   }),
+  changePassword: publicProcedure
+    .input(validation.user.changePassword)
+    .mutation(async ({ ctx, input }) => {
+      const salt = await createSalt();
+      const hashedPassword = await hashPassword(input.password, salt);
+      await ctx.db
+        .update(users)
+        .set({
+          password: hashedPassword,
+        })
+        .where(eq(users.id, input.userId));
+    }),
 });
 
 const createUser = async (

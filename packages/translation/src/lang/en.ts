@@ -585,6 +585,17 @@ export default {
             },
             security: {
               title: "Security",
+              changePassword: {
+                title: "Change password",
+                form: {
+                  password: {
+                    label: "Password",
+                  },
+                },
+                message: {
+                  passwordUpdated: "Updated password",
+                },
+              },
             },
             dangerZone: {
               title: "Danger zone",
