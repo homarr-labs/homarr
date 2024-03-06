@@ -387,21 +387,8 @@ const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
 const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),
-    options: z.custom<Partial<WidgetComponentProps<T>["options"]>>(),
-  }) as UnionizeSpecificItemSchemaForWidgetKind<T>;
-
-type SpecificItemSchemaForWidgetKind<TKind extends WidgetKind> = z.ZodObject<{
-  kind: z.ZodLiteral<TKind>;
-  options: z.ZodType<
-    Partial<WidgetComponentProps<TKind>["options"]>,
-    z.ZodTypeDef,
-    Partial<WidgetComponentProps<TKind>["options"]>
-  >;
-}>;
-
-type UnionizeSpecificItemSchemaForWidgetKind<T> = T extends WidgetKind
-  ? SpecificItemSchemaForWidgetKind<T>
-  : never;
+    options: z.record(z.unknown()),
+  });
 
 const outputItemSchema = zodUnionFromArray(
   widgetKinds.map((kind) => forKind(kind)),

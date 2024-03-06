@@ -78,6 +78,7 @@ interface ItemProps {
 }
 
 const BoardItem = ({ item }: ItemProps) => {
+  const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
@@ -92,6 +93,7 @@ const BoardItem = ({ item }: ItemProps) => {
         options={options as never}
         integrations={item.integrations}
         serverData={serverData?.data as never}
+        isEditMode={editMode}
       />
     </>
   );

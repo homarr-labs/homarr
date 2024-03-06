@@ -104,6 +104,10 @@ type inferServerDataForKind<TKind extends WidgetKind> =
 export type WidgetComponentProps<TKind extends WidgetKind> =
   WidgetProps<TKind> & {
     serverData?: inferServerDataForKind<TKind>;
+  } & {
+    isEditMode: boolean;
+    width: number;
+    height: number;
   };
 
 type inferIntegrationsFromDefinition<TDefinition extends WidgetDefinition> =

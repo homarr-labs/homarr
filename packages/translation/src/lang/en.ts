@@ -302,6 +302,21 @@ export default {
     },
   },
   widget: {
+    app: {
+      name: "App",
+      description: "Embeds an app into the board.",
+      option: {
+        appId: {
+          label: "Choose app",
+        },
+        openInNewTab: {
+          label: "Open in new tab",
+        },
+        showDescriptionTooltip: {
+          label: "Show description tooltip",
+        },
+      },
+    },
     clock: {
       name: "Date and time",
       description: "Displays the current date and time.",
