@@ -54,8 +54,8 @@ export default function AppWidget({
     return (
       <Tooltip.Floating label="You have no valid app selected">
         <Stack gap="xs" align="center" justify="center" h="100%" w="100%">
-          <IconDeviceDesktopX size={width >= 128 ? "2rem" : "1.5rem"} />
-          {width >= 128 && (
+          <IconDeviceDesktopX size={width >= 96 ? "2rem" : "1.5rem"} />
+          {width >= 96 && (
             <Text ta="center" size="sm">
               No app
             </Text>
