@@ -16,8 +16,6 @@ dayjs.extend(timezones);
 
 export default function ClockWidget({
   options,
-  integrations: _integrations,
-  serverData: _serverData,
 }: WidgetComponentProps<"clock">) {
   const secondsFormat = options.showSeconds ? ":ss" : "";
   const timeFormat = options.is24HourFormat

@@ -32,12 +32,13 @@ interface ItemDataLoaderProps {
   item: Board["sections"][number]["items"][number];
 }
 
-const ItemDataLoader = async ({ item }: ItemDataLoaderProps) => {
+const ItemDataLoader = /*async*/ ({ item }: ItemDataLoaderProps) => {
   const widgetImport = widgetImports[item.kind];
   if (!("serverDataLoader" in widgetImport)) {
     return <ClientServerDataInitalizer id={item.id} serverData={undefined} />;
   }
-  const loader = await widgetImport.serverDataLoader();
-  const data = await loader.default(item as never);
-  return <ClientServerDataInitalizer id={item.id} serverData={data} />;
+  //const loader = await widgetImport.serverDataLoader();
+  //const data = await loader.default(item as never);
+  //return <ClientServerDataInitalizer id={item.id} serverData={data} />;
+  return null;
 };

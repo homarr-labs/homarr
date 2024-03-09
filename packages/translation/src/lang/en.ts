@@ -308,7 +308,8 @@ export default {
       option: {
         customTitle: {
           label: "Custom Title/City display",
-          description: "Show off a title or the name of the city on top of the clock. Leave empty if you don't want one.",
+          description:
+            "Show off a title or the name of the city on top of the clock. Leave empty if you don't want one.",
         },
         is24HourFormat: {
           label: "24-hour format",
@@ -330,7 +331,7 @@ export default {
         dateFormat: {
           label: "Date Format",
           description: "How the date should look like",
-        }
+        },
       },
     },
     weather: {

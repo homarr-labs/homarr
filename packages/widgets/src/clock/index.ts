@@ -54,6 +54,4 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
       },
     },
   ),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));
