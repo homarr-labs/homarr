@@ -39,8 +39,6 @@ export const useCategoryActions = () => {
       updateBoard((previous) => ({
         ...previous,
         sections: [
-          // Ignore sidebar sections
-          ...previous.sections.filter((section) => section.kind === "sidebar"),
           // Place sections before the new category
           ...previous.sections.filter(
             (section) =>
@@ -235,12 +233,7 @@ export const useCategoryActions = () => {
           ...previous,
           sections: [
             ...previous.sections.filter(
-              (section) => section.kind === "sidebar",
-            ),
-            ...previous.sections.filter(
-              (section) =>
-                (section.kind === "category" || section.kind === "empty") &&
-                section.position < currentCategory.position - 1,
+              (section) => section.position < currentCategory.position - 1,
             ),
             {
               ...aboveWrapper,
@@ -253,7 +246,6 @@ export const useCategoryActions = () => {
             ...previous.sections
               .filter(
                 (section): section is CategorySection | EmptySection =>
-                  (section.kind === "category" || section.kind === "empty") &&
                   section.position >= currentCategory.position + 2,
               )
               .map((section) => ({

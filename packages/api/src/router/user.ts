@@ -3,7 +3,8 @@ import "server-only";
 import { TRPCError } from "@trpc/server";
 
 import { createSalt, hashPassword } from "@homarr/auth";
-import { createId, db, eq, schema } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { createId, eq, schema } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
@@ -26,19 +27,15 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      const salt = await createSalt();
-      const hashedPassword = await hashPassword(input.password, salt);
-
-      const userId = createId();
-      await ctx.db.insert(schema.users).values({
-        id: userId,
-        name: input.username,
-        password: hashedPassword,
-        salt,
-      });
+      await createUser(ctx.db, input);
     }),
-  getAll: publicProcedure.query(async () => {
-    return db.query.users.findMany({
+  create: publicProcedure
+    .input(validation.user.create)
+    .mutation(async ({ ctx, input }) => {
+      await createUser(ctx.db, input);
+    }),
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.users.findMany({
       columns: {
         id: true,
         name: true,
@@ -50,8 +47,8 @@ export const userRouter = createTRPCRouter({
   }),
   getById: publicProcedure
     .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
-      return db.query.users.findFirst({
+    .query(async ({ input, ctx }) => {
+      return ctx.db.query.users.findFirst({
         columns: {
           id: true,
           name: true,
@@ -62,18 +59,60 @@ export const userRouter = createTRPCRouter({
         where: eq(users.id, input.userId),
       });
     }),
-  create: publicProcedure
+  editProfile: publicProcedure
     .input(
       z.object({
-        name: z.string(),
-        email: z.string().email().or(z.string().length(0).optional()),
+        form: validation.user.editProfile,
+        userId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
-      await db.insert(users).values({
-        id: createId(),
-        name: input.name,
-        email: input.email,
-      });
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.id, input.userId))
+        .limit(1);
+
+      const emailDirty =
+        input.form.email && user[0]?.email !== input.form.email;
+      await ctx.db
+        .update(users)
+        .set({
+          name: input.form.name,
+          email: emailDirty === true ? input.form.email : undefined,
+          emailVerified: emailDirty === true ? null : undefined,
+        })
+        .where(eq(users.id, input.userId));
+    }),
+  delete: publicProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
+    await ctx.db.delete(users).where(eq(users.id, input));
+  }),
+  changePassword: publicProcedure
+    .input(validation.user.changePassword)
+    .mutation(async ({ ctx, input }) => {
+      const salt = await createSalt();
+      const hashedPassword = await hashPassword(input.password, salt);
+      await ctx.db
+        .update(users)
+        .set({
+          password: hashedPassword,
+        })
+        .where(eq(users.id, input.userId));
     }),
 });
+
+const createUser = async (
+  db: Database,
+  input: z.infer<typeof validation.user.create>,
+) => {
+  const salt = await createSalt();
+  const hashedPassword = await hashPassword(input.password, salt);
+
+  const userId = createId();
+  await db.insert(schema.users).values({
+    id: userId,
+    name: input.username,
+    password: hashedPassword,
+    salt,
+  });
+};

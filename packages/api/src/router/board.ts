@@ -79,6 +79,24 @@ export const boardRouter = createTRPCRouter({
         });
       });
     }),
+  rename: publicProcedure
+    .input(validation.board.rename)
+    .mutation(async ({ ctx, input }) => {
+      await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
+
+      await ctx.db
+        .update(boards)
+        .set({ name: input.name })
+        .where(eq(boards.id, input.id));
+    }),
+  changeVisibility: publicProcedure
+    .input(validation.board.changeVisibility)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(boards)
+        .set({ isPublic: input.visibility === "public" })
+        .where(eq(boards.id, input.id));
+    }),
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -92,11 +110,11 @@ export const boardRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       return await getFullBoardWithWhere(ctx.db, eq(boards.name, input.name));
     }),
-  saveGeneralSettings: publicProcedure
-    .input(validation.board.saveGeneralSettings)
+  savePartialSettings: publicProcedure
+    .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
       const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.boardId),
+        where: eq(boards.id, input.id),
       });
 
       if (!board) {
@@ -109,12 +127,30 @@ export const boardRouter = createTRPCRouter({
       await ctx.db
         .update(boards)
         .set({
+          // general settings
           pageTitle: input.pageTitle,
           metaTitle: input.metaTitle,
           logoImageUrl: input.logoImageUrl,
           faviconImageUrl: input.faviconImageUrl,
+
+          // background settings
+          backgroundImageUrl: input.backgroundImageUrl,
+          backgroundImageAttachment: input.backgroundImageAttachment,
+          backgroundImageRepeat: input.backgroundImageRepeat,
+          backgroundImageSize: input.backgroundImageSize,
+
+          // color settings
+          primaryColor: input.primaryColor,
+          secondaryColor: input.secondaryColor,
+          opacity: input.opacity,
+
+          // custom css
+          customCss: input.customCss,
+
+          // layout settings
+          columnCount: input.columnCount,
         })
-        .where(eq(boards.id, input.boardId));
+        .where(eq(boards.id, input.id));
     }),
   save: publicProcedure
     .input(validation.board.save)
@@ -122,7 +158,7 @@ export const boardRouter = createTRPCRouter({
       await ctx.db.transaction(async (tx) => {
         const dbBoard = await getFullBoardWithWhere(
           tx,
-          eq(boards.id, input.boardId),
+          eq(boards.id, input.id),
         );
 
         const addedSections = filterAddedItems(
@@ -275,6 +311,32 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 });
+
+const noBoardWithSimilarName = async (
+  db: Database,
+  name: string,
+  ignoredIds: string[] = [],
+) => {
+  const boards = await db.query.boards.findMany({
+    columns: {
+      id: true,
+      name: true,
+    },
+  });
+
+  const board = boards.find(
+    (board) =>
+      board.name.toLowerCase() === name.toLowerCase() &&
+      !ignoredIds.includes(board.id),
+  );
+
+  if (board) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Board with similar name already exists",
+    });
+  }
+};
 
 const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
   const board = await db.query.boards.findFirst({

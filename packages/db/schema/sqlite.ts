@@ -1,5 +1,4 @@
 import type { AdapterAccount } from "@auth/core/adapters";
-import type { MantineColor } from "@mantine/core";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 import {
@@ -11,6 +10,11 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -125,37 +129,20 @@ export const boards = sqliteTable("board", {
   backgroundImageUrl: text("background_image_url"),
   backgroundImageAttachment: text("background_image_attachment")
     .$type<BackgroundImageAttachment>()
-    .default("fixed")
+    .default(backgroundImageAttachments.defaultValue)
     .notNull(),
   backgroundImageRepeat: text("background_image_repeat")
     .$type<BackgroundImageRepeat>()
-    .default("no-repeat")
+    .default(backgroundImageRepeats.defaultValue)
     .notNull(),
   backgroundImageSize: text("background_image_size")
     .$type<BackgroundImageSize>()
-    .default("cover")
+    .default(backgroundImageSizes.defaultValue)
     .notNull(),
-  primaryColor: text("primary_color")
-    .$type<MantineColor>()
-    .default("red")
-    .notNull(),
-  secondaryColor: text("secondary_color")
-    .$type<MantineColor>()
-    .default("orange")
-    .notNull(),
-  primaryShade: int("primary_shade").default(6).notNull(),
-  appOpacity: int("app_opacity").default(100).notNull(),
+  primaryColor: text("primary_color").default("#fa5252").notNull(),
+  secondaryColor: text("secondary_color").default("#fd7e14").notNull(),
+  opacity: int("opacity").default(100).notNull(),
   customCss: text("custom_css"),
-  showRightSidebar: int("show_right_sidebar", {
-    mode: "boolean",
-  })
-    .default(false)
-    .notNull(),
-  showLeftSidebar: int("show_left_sidebar", {
-    mode: "boolean",
-  })
-    .default(false)
-    .notNull(),
   columnCount: int("column_count").default(10).notNull(),
 });
 
@@ -180,6 +167,14 @@ export const items = sqliteTable("item", {
   width: int("width").notNull(),
   height: int("height").notNull(),
   options: text("options").default('{"json": {}}').notNull(), // empty superjson object
+});
+
+export const apps = sqliteTable("app", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  iconUrl: text("icon_url").notNull(),
+  href: text("href"),
 });
 
 export const integrationItems = sqliteTable(

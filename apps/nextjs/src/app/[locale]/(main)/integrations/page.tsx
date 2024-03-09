@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
 import { objectEntries } from "@homarr/common";
-import { getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import {
   AccordionControl,
@@ -33,7 +33,7 @@ import {
 } from "@homarr/ui";
 
 import { api } from "~/trpc/server";
-import { IntegrationGroupAccordion } from "./_integration-accordion";
+import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { IntegrationAvatar } from "./_integration-avatar";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
@@ -112,7 +112,7 @@ const IntegrationList = async ({
   );
 
   return (
-    <IntegrationGroupAccordion activeTab={activeTab}>
+    <ActiveTabAccordion defaultValue={activeTab} variant="separated">
       {objectEntries(grouppedIntegrations).map(([kind, integrations]) => (
         <AccordionItem key={kind} value={kind}>
           <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} />}>
@@ -170,6 +170,6 @@ const IntegrationList = async ({
           </AccordionPanel>
         </AccordionItem>
       ))}
-    </IntegrationGroupAccordion>
+    </ActiveTabAccordion>
   );
 };

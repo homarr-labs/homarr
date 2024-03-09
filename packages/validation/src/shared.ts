@@ -48,21 +48,6 @@ const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(
     items: z.array(itemSchema),
   });
 
-const createSidebarSchema = <TItemSchema extends z.ZodTypeAny>(
-  itemSchema: TItemSchema,
-) =>
-  z.object({
-    id: z.string(),
-    kind: z.literal("sidebar"),
-    position: z.union([z.literal(0), z.literal(1)]),
-    items: z.array(itemSchema),
-  });
-
 export const createSectionSchema = <TItemSchema extends z.ZodTypeAny>(
   itemSchema: TItemSchema,
-) =>
-  z.union([
-    createCategorySchema(itemSchema),
-    createEmptySchema(itemSchema),
-    createSidebarSchema(itemSchema),
-  ]);
+) => z.union([createCategorySchema(itemSchema), createEmptySchema(itemSchema)]);

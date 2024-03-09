@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { schema } from "@homarr/db";
+import { createId, eq, schema } from "@homarr/db";
 import { createDb } from "@homarr/db/test";
 
 import { userRouter } from "../user";
@@ -90,5 +90,141 @@ describe("initUser should initialize the first user", () => {
       });
 
     await expect(act()).rejects.toThrow("too_small");
+  });
+
+  test("editProfile should update users and not update emailVerified when email not dirty", async () => {
+    // arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const id = createId();
+    const emailVerified = new Date(2024, 0, 5);
+
+    await db.insert(schema.users).values({
+      id,
+      name: "TEST 1",
+      email: "abc@gmail.com",
+      emailVerified,
+    });
+
+    // act
+    await caller.editProfile({
+      userId: id,
+      form: {
+        name: "ABC",
+        email: "",
+      },
+    });
+
+    // assert
+    const user = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, id));
+
+    expect(user).toHaveLength(1);
+    expect(user[0]).toStrictEqual({
+      id,
+      name: "ABC",
+      email: "abc@gmail.com",
+      emailVerified,
+      salt: null,
+      password: null,
+      image: null,
+    });
+  });
+
+  test("editProfile should update users and update emailVerified when email dirty", async () => {
+    // arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const id = createId();
+
+    await db.insert(schema.users).values({
+      id,
+      name: "TEST 1",
+      email: "abc@gmail.com",
+      emailVerified: new Date(2024, 0, 5),
+    });
+
+    // act
+    await caller.editProfile({
+      userId: id,
+      form: {
+        name: "ABC",
+        email: "myNewEmail@gmail.com",
+      },
+    });
+
+    // assert
+    const user = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, id));
+
+    expect(user).toHaveLength(1);
+    expect(user[0]).toStrictEqual({
+      id,
+      name: "ABC",
+      email: "myNewEmail@gmail.com",
+      emailVerified: null,
+      salt: null,
+      password: null,
+      image: null,
+    });
+  });
+
+  test("delete should delete user", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const userToDelete = createId();
+
+    const initialUsers = [
+      {
+        id: createId(),
+        name: "User 1",
+        email: null,
+        emailVerified: null,
+        image: null,
+        password: null,
+        salt: null,
+      },
+      {
+        id: userToDelete,
+        name: "User 2",
+        email: null,
+        emailVerified: null,
+        image: null,
+        password: null,
+        salt: null,
+      },
+      {
+        id: createId(),
+        name: "User 3",
+        email: null,
+        emailVerified: null,
+        image: null,
+        password: null,
+        salt: null,
+      },
+    ];
+
+    await db.insert(schema.users).values(initialUsers);
+
+    await caller.delete(userToDelete);
+
+    const usersInDb = await db.select().from(schema.users);
+    expect(usersInDb).toStrictEqual([initialUsers[0], initialUsers[2]]);
   });
 });

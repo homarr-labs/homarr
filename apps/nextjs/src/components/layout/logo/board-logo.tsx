@@ -25,14 +25,19 @@ export const BoardLogo = ({ size }: LogoProps) => {
 
 interface CommonLogoWithTitleProps {
   size: LogoWithTitleProps["size"];
+  hideTitleOnMobile?: boolean;
 }
 
-export const BoardLogoWithTitle = ({ size }: CommonLogoWithTitleProps) => {
+export const BoardLogoWithTitle = ({
+  size,
+  hideTitleOnMobile,
+}: CommonLogoWithTitleProps) => {
   const board = useRequiredBoard();
   const imageOptions = useImageOptions();
   return (
     <LogoWithTitle
       size={size}
+      hideTitleOnMobile={hideTitleOnMobile}
       title={board.pageTitle ?? homarrPageTitle}
       image={imageOptions}
     />

@@ -26,7 +26,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
     "eslint": "^8.57.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "eslintConfig": {
     "extends": [
@@ -35,8 +35,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/core": "^7.5.3",
-    "@mantine/dates": "^7.5.3",
+    "@mantine/core": "^7.6.1",
+    "@mantine/dates": "^7.6.1",
     "@tabler/icons-react": "^2.47.0",
     "mantine-react-table": "2.0.0-beta.0"
   }
