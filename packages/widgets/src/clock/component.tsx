@@ -34,7 +34,7 @@ export default function ClockWidget({
       h="100%"
     >
       <Stack classNames={{ root: "clock-text-stack" }} align="center" gap="xs">
-        {options.customTitle && (
+        {options.customTitleToggle && (
           <Text classNames={{ root: "clock-customTitle-text" }}>
             {options.customTitle}
           </Text>

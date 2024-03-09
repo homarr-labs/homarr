@@ -9,9 +9,12 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
   options: optionsBuilder.from(
     (factory) => ({
+      customTitleToggle: factory.switch({
+        defaultValue: false,
+        withDescription: true,
+      }),
       customTitle: factory.text({
         defaultValue: "",
-        withDescription: true,
       }),
       is24HourFormat: factory.switch({
         defaultValue: true,
@@ -46,6 +49,9 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
       }),
     }),
     {
+      customTitle: {
+        shouldHide: (options) => !options.customTitleToggle,
+      },
       timezone: {
         shouldHide: (options) => !options.useCustomTimezone,
       },

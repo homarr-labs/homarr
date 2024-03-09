@@ -306,10 +306,13 @@ export default {
       name: "Date and time",
       description: "Displays the current date and time.",
       option: {
-        customTitle: {
+        customTitleToggle: {
           label: "Custom Title/City display",
           description:
-            "Show off a title or the name of the city on top of the clock. Leave empty if you don't want one.",
+            "Show off a custom title or the name of the city/country on top of the clock.",
+        },
+        customTitle: {
+          label: "Title",
         },
         is24HourFormat: {
           label: "24-hour format",
