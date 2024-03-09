@@ -1,5 +1,3 @@
-import "server-only";
-
 import Database from "better-sqlite3";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
@@ -17,11 +15,9 @@ const init = async () => {
       case "mysql2":
         await initMySQL2();
         break;
-      case "better-sqlite3":
+      default:
         initBetterSqlite();
         break;
-      default:
-        throw new Error("Invalid driver");
     }
   }
 };

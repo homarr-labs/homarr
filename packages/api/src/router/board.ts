@@ -19,7 +19,6 @@ import {
 } from "@homarr/validation";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
-import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 const filterAddedItems = <TInput extends { id: string }>(
