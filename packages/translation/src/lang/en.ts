@@ -306,15 +306,34 @@ export default {
       name: "Date and time",
       description: "Displays the current date and time.",
       option: {
+        customTitleToggle: {
+          label: "Custom Title/City display",
+          description:
+            "Show off a custom title or the name of the city/country on top of the clock.",
+        },
+        customTitle: {
+          label: "Title",
+        },
         is24HourFormat: {
           label: "24-hour format",
           description: "Use 24-hour format instead of 12-hour format",
         },
-        isLocaleTime: {
-          label: "Use locale time",
+        showSeconds: {
+          label: "Display seconds",
+        },
+        useCustomTimezone: {
+          label: "Use a fixed timezone",
         },
         timezone: {
           label: "Timezone",
+          description: "Choose the timezone following the IANA standard",
+        },
+        showDate: {
+          label: "Show the date",
+        },
+        dateFormat: {
+          label: "Date Format",
+          description: "How the date should look like",
         },
       },
     },
@@ -568,6 +587,47 @@ export default {
         },
         edit: {
           metaTitle: "Edit user {username}",
+          section: {
+            profile: {
+              title: "Profile",
+              form: {
+                username: {
+                  label: "Username",
+                },
+                email: {
+                  label: "E-Mail",
+                },
+              },
+            },
+            preferences: {
+              title: "Preferences",
+            },
+            security: {
+              title: "Security",
+              changePassword: {
+                title: "Change password",
+                form: {
+                  password: {
+                    label: "Password",
+                  },
+                },
+                message: {
+                  passwordUpdated: "Updated password",
+                },
+              },
+            },
+            dangerZone: {
+              title: "Danger zone",
+              action: {
+                delete: {
+                  label: "Delete user permanently",
+                  description:
+                    "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
+                  button: "Delete",
+                },
+              },
+            },
+          },
         },
         create: {
           metaTitle: "Create user",

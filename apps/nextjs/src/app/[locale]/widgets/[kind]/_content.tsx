@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { WidgetOptionDefinition } from "node_modules/@homarr/widgets/src/options";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { ActionIcon, Affix, IconPencil } from "@homarr/ui";
@@ -28,15 +27,11 @@ export const WidgetPreviewPageContent = ({
   integrationData,
 }: WidgetPreviewPageContentProps) => {
   const currentDefinition = widgetImports[kind].definition;
-  const options = currentDefinition.options as Record<
-    string,
-    WidgetOptionDefinition
-  >;
   const [state, setState] = useState<{
     options: Record<string, unknown>;
     integrations: string[];
   }>({
-    options: reduceWidgetOptionsWithDefaultValues(kind, options),
+    options: reduceWidgetOptionsWithDefaultValues(kind, {}),
     integrations: [],
   });
 
@@ -67,7 +62,7 @@ export const WidgetPreviewPageContent = ({
                 integrationData: integrationData.filter(
                   (integration) =>
                     "supportedIntegrations" in currentDefinition &&
-                    currentDefinition.supportedIntegrations.some(
+                    (currentDefinition.supportedIntegrations as string[]).some(
                       (kind) => kind === integration.kind,
                     ),
                 ),
