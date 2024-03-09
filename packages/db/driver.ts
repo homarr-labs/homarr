@@ -2,18 +2,18 @@ import Database from "better-sqlite3";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
+import mysql from "mysql2";
 
 import * as mysqlSchema from "./schema/mysql";
 import * as sqliteSchema from "./schema/sqlite";
 
 type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 
-const init = async () => {
+const init = () => {
   if (!connection) {
     switch (process.env.DB_DRIVER) {
       case "mysql2":
-        await initMySQL2();
+        initMySQL2();
         break;
       default:
         initBetterSqlite();
@@ -30,11 +30,11 @@ const initBetterSqlite = () => {
   database = drizzleSqlite(connection, { schema: sqliteSchema });
 };
 
-const initMySQL2 = async () => {
+const initMySQL2 = () => {
   if (process.env.DB_URL) {
-    connection = await mysql.createConnection({ uri: process.env.DB_URL });
+    connection = mysql.createConnection({ uri: process.env.DB_URL });
   } else {
-    connection = await mysql.createConnection({
+    connection = mysql.createConnection({
       host: process.env.DB_HOST!,
       database: process.env.DB_NAME!,
       port: Number(process.env.DB_PORT),
@@ -49,4 +49,4 @@ const initMySQL2 = async () => {
   }) as unknown as HomarrDatabase;
 };
 
-await init();
+init();
