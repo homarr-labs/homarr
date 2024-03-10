@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { showSuccessNotification } from "@homarr/notifications";
@@ -36,7 +36,10 @@ export const WidgetPreviewPageContent = ({
   kind,
   integrationData,
 }: WidgetPreviewPageContentProps) => {
-  const currentDefinition = widgetImports[kind].definition;
+  const currentDefinition = useMemo(
+    () => widgetImports[kind].definition,
+    [kind],
+  );
   const [editMode, setEditMode] = useState(false);
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: 128,
@@ -51,6 +54,45 @@ export const WidgetPreviewPageContent = ({
   });
 
   const Comp = loadWidgetDynamic(kind);
+
+  const openWitgetEditModal = useCallback(() => {
+    return modalEvents.openManagedModal({
+      modal: "widgetEditModal",
+      innerProps: {
+        kind,
+        value: state,
+        onSuccessfulEdit: (value) => {
+          setState(value);
+        },
+        integrationData: integrationData.filter(
+          (integration) =>
+            "supportedIntegrations" in currentDefinition &&
+            (currentDefinition.supportedIntegrations as string[]).some(
+              (kind) => kind === integration.kind,
+            ),
+        ),
+        integrationSupport: "supportedIntegrations" in currentDefinition,
+      },
+    });
+  }, [kind, state, integrationData, currentDefinition]);
+
+  const toggleEditMode = useCallback(() => {
+    setEditMode((editMode) => !editMode);
+    showSuccessNotification({
+      message: `Edit mode ${!editMode ? "enabled" : "disabled"}`,
+    });
+  }, [editMode]);
+
+  const openDimensionsModal = useCallback(() => {
+    modalEvents.openManagedModal({
+      modal: "dimensionsModal",
+      title: "Change dimensions",
+      innerProps: {
+        dimensions,
+        setDimensions,
+      },
+    });
+  }, [dimensions]);
 
   return (
     <>
@@ -75,27 +117,7 @@ export const WidgetPreviewPageContent = ({
           size={48}
           variant="default"
           radius="xl"
-          onClick={() => {
-            return modalEvents.openManagedModal({
-              modal: "widgetEditModal",
-              innerProps: {
-                kind,
-                value: state,
-                onSuccessfulEdit: (value) => {
-                  setState(value);
-                },
-                integrationData: integrationData.filter(
-                  (integration) =>
-                    "supportedIntegrations" in currentDefinition &&
-                    (currentDefinition.supportedIntegrations as string[]).some(
-                      (kind) => kind === integration.kind,
-                    ),
-                ),
-                integrationSupport:
-                  "supportedIntegrations" in currentDefinition,
-              },
-            });
-          }}
+          onClick={openWitgetEditModal}
         >
           <IconPencil size={24} />
         </ActionIcon>
@@ -105,12 +127,7 @@ export const WidgetPreviewPageContent = ({
           size={48}
           variant="default"
           radius="xl"
-          onClick={() => {
-            setEditMode((editMode) => !editMode);
-            showSuccessNotification({
-              message: `Edit mode ${!editMode ? "enabled" : "disabled"}`,
-            });
-          }}
+          onClick={toggleEditMode}
         >
           {editMode ? (
             <IconToggleLeft size={24} />
@@ -124,16 +141,7 @@ export const WidgetPreviewPageContent = ({
           size={48}
           variant="default"
           radius="xl"
-          onClick={() => {
-            modalEvents.openManagedModal({
-              modal: "dimensionsModal",
-              title: "Change dimensions",
-              innerProps: {
-                dimensions,
-                setDimensions,
-              },
-            });
-          }}
+          onClick={openDimensionsModal}
         >
           <IconDimensions size={24} />
         </ActionIcon>

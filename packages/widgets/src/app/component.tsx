@@ -37,7 +37,7 @@ export default function AppWidget({
     {
       initialData:
         // We need to check if the id's match because otherwise the same initialData for a changed id will be used
-        serverData?.app.id == options.appId ? serverData?.app : undefined,
+        serverData?.app.id === options.appId ? serverData?.app : undefined,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -71,7 +71,7 @@ export default function AppWidget({
     <AppLink
       href={app?.href ?? ""}
       openInNewTab={options.openInNewTab}
-      enabled={!!app?.href && !isEditMode}
+      enabled={Boolean(app?.href) && !isEditMode}
     >
       <Flex align="center" justify="center" h="100%">
         <Tooltip.Floating
