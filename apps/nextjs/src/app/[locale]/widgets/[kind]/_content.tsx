@@ -59,7 +59,12 @@ export const WidgetPreviewPageContent = ({
 
   return (
     <>
-      <Card withBorder w={dimensions.width} h={dimensions.height}>
+      <Card
+        withBorder
+        w={dimensions.width}
+        h={dimensions.height}
+        p={dimensions.height >= 96 ? undefined : 4}
+      >
         <Comp
           options={state.options as never}
           integrations={state.integrations.map(

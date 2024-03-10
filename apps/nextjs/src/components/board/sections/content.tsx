@@ -67,6 +67,7 @@ export const SectionContent = ({ items, refs }: Props) => {
                   "--opacity": board.opacity / 100,
                 },
               }}
+              p={width >= 96 ? undefined : "xs"}
             >
               <BoardItem item={item} width={width + 32} height={height + 32} />
             </Card>

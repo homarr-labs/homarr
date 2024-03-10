@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 
 import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   Center,
   Flex,
@@ -22,8 +23,9 @@ export default function AppWidget({
   serverData,
   isEditMode,
   width,
-  height: _h,
+  height,
 }: WidgetComponentProps<"app">) {
+  const t = useScopedI18n("widget.app");
   const {
     data: app,
     isPending,
@@ -52,12 +54,12 @@ export default function AppWidget({
 
   if (isError) {
     return (
-      <Tooltip.Floating label="You have no valid app selected">
+      <Tooltip.Floating label={t("error.notFound.tooltip")}>
         <Stack gap="xs" align="center" justify="center" h="100%" w="100%">
           <IconDeviceDesktopX size={width >= 96 ? "2rem" : "1.5rem"} />
           {width >= 96 && (
             <Text ta="center" size="sm">
-              No app
+              {t("error.notFound.label")}
             </Text>
           )}
         </Stack>
@@ -76,7 +78,7 @@ export default function AppWidget({
           label={app?.description}
           position="right-start"
           multiline
-          disabled={!options.showDescriptionTooltip}
+          disabled={!options.showDescriptionTooltip || !app?.description}
           styles={{ tooltip: { maxWidth: 300 } }}
         >
           <Flex
@@ -89,9 +91,11 @@ export default function AppWidget({
               flexGrow: 5,
             }}
           >
-            <Text fw={700} ta="center">
-              {app?.name}
-            </Text>
+            {height >= 96 && (
+              <Text fw={700} ta="center">
+                {app?.name}
+              </Text>
+            )}
             <img
               src={app?.iconUrl}
               alt={app?.name}

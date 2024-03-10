@@ -316,6 +316,12 @@ export default {
           label: "Show description tooltip",
         },
       },
+      error: {
+        notFound: {
+          label: "No app",
+          tooltip: "You have no valid app selected",
+        },
+      },
     },
     clock: {
       name: "Date and time",
