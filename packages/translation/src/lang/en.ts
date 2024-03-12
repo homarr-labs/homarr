@@ -288,6 +288,16 @@ export default {
       title: "Choose item to add",
       addToBoard: "Add to board",
     },
+    move: {
+      field: {
+        width: {
+          label: "Width",
+        },
+        height: {
+          label: "Height",
+        },
+      },
+    },
     edit: {
       title: "Edit item",
       field: {
@@ -370,6 +380,15 @@ export default {
           label: "Show city",
         },
       },
+    },
+  },
+  widgetPreview: {
+    toggle: {
+      enabled: "Edit mode enabled",
+      disabled: "Edit mode disabled",
+    },
+    dimensions: {
+      title: "Change dimensions",
     },
   },
   board: {

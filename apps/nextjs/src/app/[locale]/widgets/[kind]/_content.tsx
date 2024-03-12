@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { showSuccessNotification } from "@homarr/notifications";
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
   Affix,
@@ -36,6 +37,7 @@ export const WidgetPreviewPageContent = ({
   kind,
   integrationData,
 }: WidgetPreviewPageContentProps) => {
+  const t = useScopedI18n("widgetPreview");
   const currentDefinition = useMemo(
     () => widgetImports[kind].definition,
     [kind],
@@ -79,20 +81,20 @@ export const WidgetPreviewPageContent = ({
   const toggleEditMode = useCallback(() => {
     setEditMode((editMode) => !editMode);
     showSuccessNotification({
-      message: `Edit mode ${!editMode ? "enabled" : "disabled"}`,
+      message: editMode ? t("toggle.disabled") : t("toggle.enabled"),
     });
-  }, [editMode]);
+  }, [editMode, t]);
 
   const openDimensionsModal = useCallback(() => {
     modalEvents.openManagedModal({
       modal: "dimensionsModal",
-      title: "Change dimensions",
+      title: t("dimensions.title"),
       innerProps: {
         dimensions,
         setDimensions,
       },
     });
-  }, [dimensions]);
+  }, [dimensions, t]);
 
   return (
     <>

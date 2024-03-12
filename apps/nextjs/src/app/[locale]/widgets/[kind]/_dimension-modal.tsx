@@ -28,7 +28,7 @@ export const PreviewDimensionsModal: ManagedModal<InnerProps> = ({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <InputWrapper label="Width">
+        <InputWrapper label={t("item.move.field.width.label")}>
           <Slider
             min={64}
             max={1024}
@@ -36,7 +36,7 @@ export const PreviewDimensionsModal: ManagedModal<InnerProps> = ({
             {...form.getInputProps("width")}
           />
         </InputWrapper>
-        <InputWrapper label="Height">
+        <InputWrapper label={t("item.move.field.height.label")}>
           <Slider
             min={64}
             max={1024}
