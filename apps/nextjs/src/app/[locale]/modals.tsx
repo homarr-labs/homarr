@@ -8,6 +8,7 @@ import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { AddBoardModal } from "~/components/manage/boards/add-board-modal";
+import { PreviewDimensionsModal } from "./widgets/[kind]/_dimension-modal";
 
 export const [ModalsManager, modalEvents] = createModalManager({
   categoryEditModal: CategoryEditModal,
@@ -15,4 +16,5 @@ export const [ModalsManager, modalEvents] = createModalManager({
   itemSelectModal: ItemSelectModal,
   addBoardModal: AddBoardModal,
   boardRenameModal: BoardRenameModal,
+  dimensionsModal: PreviewDimensionsModal,
 });

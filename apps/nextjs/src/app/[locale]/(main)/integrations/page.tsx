@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
@@ -32,7 +33,6 @@ import {
   Title,
 } from "@homarr/ui";
 
-import { api } from "~/trpc/server";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { IntegrationAvatar } from "./_integration-avatar";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
