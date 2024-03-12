@@ -288,6 +288,16 @@ export default {
       title: "Choose item to add",
       addToBoard: "Add to board",
     },
+    move: {
+      field: {
+        width: {
+          label: "Width",
+        },
+        height: {
+          label: "Height",
+        },
+      },
+    },
     edit: {
       title: "Edit item",
       field: {
@@ -302,6 +312,27 @@ export default {
     },
   },
   widget: {
+    app: {
+      name: "App",
+      description: "Embeds an app into the board.",
+      option: {
+        appId: {
+          label: "Choose app",
+        },
+        openInNewTab: {
+          label: "Open in new tab",
+        },
+        showDescriptionTooltip: {
+          label: "Show description tooltip",
+        },
+      },
+      error: {
+        notFound: {
+          label: "No app",
+          tooltip: "You have no valid app selected",
+        },
+      },
+    },
     clock: {
       name: "Date and time",
       description: "Displays the current date and time.",
@@ -349,6 +380,15 @@ export default {
           label: "Show city",
         },
       },
+    },
+  },
+  widgetPreview: {
+    toggle: {
+      enabled: "Edit mode enabled",
+      disabled: "Edit mode disabled",
+    },
+    dimensions: {
+      title: "Change dimensions",
     },
   },
   board: {

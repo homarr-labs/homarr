@@ -1,6 +1,6 @@
+import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { api } from "~/trpc/server";
 import { UserListComponent } from "./_components/user-list.component";
 
 export async function generateMetadata() {

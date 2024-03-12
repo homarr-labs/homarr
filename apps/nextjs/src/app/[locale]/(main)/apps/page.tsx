@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
 import { getI18n } from "@homarr/translation/server";
 import {
   ActionIcon,
@@ -18,7 +19,6 @@ import {
   Title,
 } from "@homarr/ui";
 
-import { api } from "~/trpc/server";
 import { AppDeleteButton } from "./_app-delete-button";
 
 export default async function AppsPage() {

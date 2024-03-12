@@ -2,6 +2,7 @@
 // Ignored because of gridstack attributes
 
 import type { RefObject } from "react";
+import { useElementSize } from "@mantine/hooks";
 import cx from "clsx";
 import { useAtomValue } from "jotai";
 
@@ -36,6 +37,8 @@ interface Props {
 
 export const SectionContent = ({ items, refs }: Props) => {
   const board = useRequiredBoard();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { ref, width, height } = useElementSize<HTMLDivElement>();
 
   return (
     <>
@@ -56,6 +59,7 @@ export const SectionContent = ({ items, refs }: Props) => {
             ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
           >
             <Card
+              ref={ref as RefObject<HTMLDivElement>}
               className={cx(classes.itemCard, "grid-stack-item-content")}
               withBorder
               styles={{
@@ -63,8 +67,9 @@ export const SectionContent = ({ items, refs }: Props) => {
                   "--opacity": board.opacity / 100,
                 },
               }}
+              p={width >= 96 ? undefined : "xs"}
             >
-              <BoardItem item={item} />
+              <BoardItem item={item} width={width + 32} height={height + 32} />
             </Card>
           </div>
         );
@@ -75,9 +80,12 @@ export const SectionContent = ({ items, refs }: Props) => {
 
 interface ItemProps {
   item: Item;
+  width: number;
+  height: number;
 }
 
-const BoardItem = ({ item }: ItemProps) => {
+const BoardItem = ({ item, ...dimensions }: ItemProps) => {
+  const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
@@ -92,6 +100,8 @@ const BoardItem = ({ item }: ItemProps) => {
         options={options as never}
         integrations={item.integrations}
         serverData={serverData?.data as never}
+        isEditMode={editMode}
+        {...dimensions}
       />
     </>
   );

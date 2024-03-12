@@ -1,9 +1,9 @@
 import React from "react";
 
+import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Card, Grid, GridCol, Group, Text, Title } from "@homarr/ui";
 
-import { api } from "~/trpc/server";
 import { CreateBoardButton } from "./_components/create-board-button";
 import { DeleteBoardButton } from "./_components/delete-board-button";
 

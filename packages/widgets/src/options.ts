@@ -104,6 +104,11 @@ const optionsFactory = {
     defaultValue: input?.defaultValue ?? [],
     withDescription: input?.withDescription ?? false,
   }),
+  app: (input?: Omit<CommonInput<string>, "defaultValue">) => ({
+    type: "app" as const,
+    defaultValue: "",
+    withDescription: input?.withDescription ?? false,
+  }),
 };
 
 type WidgetOptionFactory = typeof optionsFactory;
