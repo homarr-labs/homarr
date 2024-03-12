@@ -1,30 +1,63 @@
+import dayjs from "dayjs";
+
 import { IconClock } from "@homarr/ui";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-export const { definition, componentLoader, serverDataLoader } =
-  createWidgetDefinition("clock", {
-    icon: IconClock,
-    supportedIntegrations: ["adGuardHome", "piHole"],
-    options: optionsBuilder.from(
-      (factory) => ({
-        is24HourFormat: factory.switch({
-          defaultValue: true,
-          withDescription: true,
-        }),
-        isLocaleTime: factory.switch({ defaultValue: true }),
-        timezone: factory.select({
-          options: ["Europe/Berlin", "Europe/London", "Europe/Moscow"] as const,
-          defaultValue: "Europe/Berlin",
-        }),
+export const { definition, componentLoader } = createWidgetDefinition("clock", {
+  icon: IconClock,
+  options: optionsBuilder.from(
+    (factory) => ({
+      customTitleToggle: factory.switch({
+        defaultValue: false,
+        withDescription: true,
       }),
-      {
-        timezone: {
-          shouldHide: (options) => options.isLocaleTime,
-        },
+      customTitle: factory.text({
+        defaultValue: "",
+      }),
+      is24HourFormat: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
+      showSeconds: factory.switch({
+        defaultValue: false,
+      }),
+      useCustomTimezone: factory.switch({ defaultValue: false }),
+      timezone: factory.select({
+        options: Intl.supportedValuesOf("timeZone").map((value) => value),
+        defaultValue: "Europe/London",
+        searchable: true,
+        withDescription: true,
+      }),
+      showDate: factory.switch({
+        defaultValue: true,
+      }),
+      dateFormat: factory.select({
+        options: [
+          { value: "dddd, MMMM D", label: dayjs().format("dddd, MMMM D") },
+          { value: "dddd, D MMMM", label: dayjs().format("dddd, D MMMM") },
+          { value: "MMM D", label: dayjs().format("MMM D") },
+          { value: "D MMM", label: dayjs().format("D MMM") },
+          { value: "DD/MM/YYYY", label: dayjs().format("DD/MM/YYYY") },
+          { value: "MM/DD/YYYY", label: dayjs().format("MM/DD/YYYY") },
+          { value: "DD/MM", label: dayjs().format("DD/MM") },
+          { value: "MM/DD", label: dayjs().format("MM/DD") },
+        ],
+        defaultValue: "dddd, MMMM D",
+        withDescription: true,
+      }),
+    }),
+    {
+      customTitle: {
+        shouldHide: (options) => !options.customTitleToggle,
       },
-    ),
-  })
-    .withServerData(() => import("./serverData"))
-    .withDynamicImport(() => import("./component"));
+      timezone: {
+        shouldHide: (options) => !options.useCustomTimezone,
+      },
+      dateFormat: {
+        shouldHide: (options) => !options.showDate,
+      },
+    },
+  ),
+}).withDynamicImport(() => import("./component"));

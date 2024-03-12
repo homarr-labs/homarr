@@ -46,7 +46,7 @@ export const useGridstack = ({
   // reference of the gridstack object for modifications after initialization
   const gridRef = useRef<GridStack>();
 
-  useCssVariableConfiguration({ section, mainRef, gridRef });
+  useCssVariableConfiguration({ mainRef, gridRef });
 
   const board = useRequiredBoard();
 
@@ -146,7 +146,6 @@ export const useGridstack = ({
 };
 
 interface UseCssVariableConfiguration {
-  section: Section;
   mainRef?: RefObject<HTMLDivElement>;
   gridRef: UseGridstackRefs["gridstack"];
 }
@@ -155,12 +154,10 @@ interface UseCssVariableConfiguration {
  * This hook is used to configure the css variables for the gridstack
  * Those css variables are used to define the size of the gridstack items
  * @see gridstack.scss
- * @param section section of the board
  * @param mainRef reference to the main div wrapping all sections
  * @param gridRef reference to the gridstack object
  */
 const useCssVariableConfiguration = ({
-  section,
   mainRef,
   gridRef,
 }: UseCssVariableConfiguration) => {
@@ -175,14 +172,25 @@ const useCssVariableConfiguration = ({
 
   // Define widget-width by calculating the width of one column with mainRef width and column count
   useEffect(() => {
-    if (!mainRef?.current) return;
-    const widgetWidth = mainRef.current.clientWidth / board.columnCount;
-    // widget width is used to define sizes of gridstack items within global.scss
-    root?.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
-    gridRef.current?.cellHeight(widgetWidth);
-    // gridRef.current is required otherwise the cellheight is run on production as undefined
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board.columnCount, root, section.kind, mainRef, gridRef.current]);
+    if (typeof document === "undefined") return;
+    const onResize = () => {
+      if (!mainRef?.current) return;
+      const widgetWidth = mainRef.current.clientWidth / board.columnCount;
+      // widget width is used to define sizes of gridstack items within global.scss
+      root?.style.setProperty(
+        "--gridstack-widget-width",
+        widgetWidth.toString(),
+      );
+      gridRef.current?.cellHeight(widgetWidth);
+    };
+    onResize();
+    if (typeof window === "undefined") return;
+    window.addEventListener("resize", onResize);
+    return () => {
+      if (typeof window === "undefined") return;
+      window.removeEventListener("resize", onResize);
+    };
+  }, [board.columnCount, mainRef, root, gridRef]);
 
   // Define column count by using the sectionColumnCount
   useEffect(() => {

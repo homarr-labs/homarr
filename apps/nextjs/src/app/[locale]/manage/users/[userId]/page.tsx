@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import {
   Accordion,
@@ -17,7 +18,6 @@ import {
   Title,
 } from "@homarr/ui";
 
-import { api } from "~/trpc/server";
 import { DangerZoneAccordion } from "./_components/dangerZone.accordion";
 import { ProfileAccordion } from "./_components/profile.accordion";
 import { SecurityAccordionComponent } from "./_components/security.accordion";
