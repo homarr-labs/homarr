@@ -1,7 +1,7 @@
 import type { LoaderComponent } from "next/dynamic";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import type { TablerIconsProps } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetImports } from ".";
 import type {
@@ -78,7 +78,7 @@ export const createWidgetDefinition = <
 });
 
 export interface WidgetDefinition {
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: TablerIcon;
   supportedIntegrations?: IntegrationKind[];
   options: WidgetOptionsRecord;
 }

@@ -4,7 +4,7 @@ import { api } from "@homarr/api/server";
 import { capitalize } from "@homarr/common";
 import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
-import type { TablerIconsProps } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
 import {
   AccordionControl,
   AccordionItem,
@@ -84,7 +84,7 @@ export default async function BoardSettingsPage({
 
 type AccordionItemForProps = PropsWithChildren<{
   value: keyof TranslationObject["board"]["setting"]["section"];
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: TablerIcon;
   danger?: boolean;
   noPadding?: boolean;
 }>;

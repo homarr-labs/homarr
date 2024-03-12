@@ -1,4 +1,4 @@
-import type { TablerIconsProps } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
 import { AppShellNavbar, AppShellSection, ScrollArea } from "@homarr/ui";
 
 import type { ClientNavigationLink } from "./navigation-link";
@@ -51,7 +51,7 @@ export const MainNavigation = ({
 
 interface CommonNavigationLinkProps {
   label: string;
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: TablerIcon;
 }
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {

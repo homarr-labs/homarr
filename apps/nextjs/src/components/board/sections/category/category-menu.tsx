@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { useAtomValue } from "jotai";
 
 import { useScopedI18n } from "@homarr/translation/client";
-import type { TablerIconsProps } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
 import {
   ActionIcon,
   IconDotsVertical,
@@ -120,7 +120,7 @@ const useNonEditModeActions = (_category: CategorySection) => {
 };
 
 interface ActionDefinition {
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: TablerIcon;
   label: string;
   onClick: () => void;
   color?: string;
