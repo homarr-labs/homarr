@@ -37,7 +37,6 @@ interface Props {
 
 export const SectionContent = ({ items, refs }: Props) => {
   const board = useRequiredBoard();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { ref, width, height } = useElementSize<HTMLDivElement>();
 
   return (
@@ -59,7 +58,7 @@ export const SectionContent = ({ items, refs }: Props) => {
             ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
           >
             <Card
-              ref={ref as RefObject<HTMLDivElement>}
+              ref={ref}
               className={cx(classes.itemCard, "grid-stack-item-content")}
               withBorder
               styles={{
