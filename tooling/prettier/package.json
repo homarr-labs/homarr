@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.0",
     "prettier": "^3.2.5"
   },
   "devDependencies": {
