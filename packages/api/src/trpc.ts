@@ -12,6 +12,7 @@ import superjson from "superjson";
 import type { Session } from "@homarr/auth";
 import { auth } from "@homarr/auth";
 import { db } from "@homarr/db";
+import { logger } from "@homarr/log";
 import { ZodError } from "@homarr/validation";
 
 /**
@@ -33,7 +34,10 @@ export const createTRPCContext = async (opts: {
   const session = opts.session ?? (await auth());
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
-  console.log(">>> tRPC Request from", source, "by", session?.user);
+  logger.info(
+    `tRPC request from ${source} by user '${session?.user.id}'`,
+    session?.user,
+  );
 
   return {
     session,

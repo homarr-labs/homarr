@@ -2,6 +2,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
 import { auth } from "@homarr/auth";
+import { logger } from "@homarr/log";
 
 /**
  * Configure basic CORS headers
@@ -29,8 +30,10 @@ const handler = auth(async (req) => {
     req,
     createContext: () =>
       createTRPCContext({ session: req.auth, headers: req.headers }),
-    onError({ error, path }) {
-      console.error(`>>> tRPC Error on '${path}'`, error);
+    onError({ error, path, type }) {
+      logger.error(
+        `tRPC Error with ${type} on '${path}': (${error.code}) - ${error.message}`,
+      );
     },
   });
 

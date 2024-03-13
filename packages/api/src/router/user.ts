@@ -1,6 +1,5 @@
-import "server-only";
-
 import { TRPCError } from "@trpc/server";
+import { observable } from "@trpc/server/observable";
 
 import { createSalt, hashPassword } from "@homarr/auth";
 import type { Database } from "@homarr/db";
@@ -99,6 +98,15 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
+  test: publicProcedure.subscription(() => {
+    return observable<number>((emit) => {
+      let counter = 0;
+      setInterval(() => {
+        counter = counter + 1;
+        emit.next(counter);
+      }, 1000);
+    });
+  }),
 });
 
 const createUser = async (

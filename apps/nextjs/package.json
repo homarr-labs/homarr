@@ -2,6 +2,7 @@
   "name": "@homarr/nextjs",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
@@ -38,7 +39,7 @@
     "@tiptap/extension-link": "^2.2.4",
     "@tiptap/react": "^2.2.4",
     "@tiptap/starter-kit": "^2.2.4",
-    "@trpc/client": "next",
+    "@trpc/client": "11.0.0-next-beta.316",
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
@@ -63,8 +64,10 @@
     "@types/react-dom": "^18.2.22",
     "@types/chroma-js": "2.4.4",
     "dotenv-cli": "^7.4.1",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
+    "tsx": "^4.7.1",
     "typescript": "^5.4.2"
   },
   "eslintConfig": {
