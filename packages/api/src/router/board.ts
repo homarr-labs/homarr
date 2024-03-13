@@ -4,6 +4,7 @@ import superjson from "superjson";
 import type { Database, SQL } from "@homarr/db";
 import { and, createId, eq, inArray } from "@homarr/db";
 import {
+  boardPermissions,
   boards,
   integrationItems,
   items,
@@ -308,6 +309,36 @@ export const boardRouter = createTRPCRouter({
         if (sectionIds.length > 0) {
           await tx.delete(sections).where(inArray(sections.id, sectionIds));
         }
+      });
+    }),
+
+  permissions: publicProcedure
+    .input(validation.board.permissions)
+    .query(async ({ input, ctx }) => {
+      return await ctx.db.query.boardPermissions.findMany({
+        where: eq(boardPermissions.boardId, input.id),
+        with: {
+          user: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+    }),
+  savePermissions: publicProcedure
+    .input(validation.board.savePermissions)
+    .mutation(async ({ input, ctx }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.delete(boardPermissions).where(eq(boards.id, input.id));
+        await tx.insert(boardPermissions).values(
+          input.permissions.map((permission) => ({
+            userId: permission.userId,
+            permission: permission.permission,
+            boardId: input.id,
+          })),
+        );
       });
     }),
 });

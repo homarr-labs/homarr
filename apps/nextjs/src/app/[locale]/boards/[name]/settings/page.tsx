@@ -15,6 +15,7 @@ import {
   IconLayout,
   IconPhoto,
   IconSettings,
+  IconUser,
   Stack,
   Text,
   Title,
@@ -22,6 +23,7 @@ import {
 
 import { api } from "~/trpc/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
+import { AccessSettingsContent } from "./_access";
 import { BackgroundSettingsContent } from "./_background";
 import { ColorSettingsContent } from "./_colors";
 import { CustomCssSettingsContent } from "./_customCss";
@@ -67,6 +69,9 @@ export default async function BoardSettingsPage({
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
             <CustomCssSettingsContent />
+          </AccordionItemFor>
+          <AccordionItemFor value="access" icon={IconUser}>
+            <AccessSettingsContent board={board} />
           </AccordionItemFor>
           <AccordionItemFor
             value="dangerZone"
