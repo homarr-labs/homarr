@@ -37,7 +37,7 @@
   "dependencies": {
     "@mantine/core": "^7.6.2",
     "@mantine/dates": "^7.6.2",
-    "@tabler/icons-react": "^3.0.1",
+    "@tabler/icons-react": "^3.0.3",
     "mantine-react-table": "2.0.0-beta.0"
   }
 }
