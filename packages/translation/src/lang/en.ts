@@ -453,6 +453,19 @@ export default {
         customCss: {
           title: "Custom css",
         },
+        access: {
+          title: "Access control",
+          permission: {
+            item: {
+              "board-view": {
+                label: "View board",
+              },
+              "board-change": {
+                label: "Change board",
+              },
+            },
+          },
+        },
         dangerZone: {
           title: "Danger Zone",
           action: {

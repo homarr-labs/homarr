@@ -331,7 +331,12 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
       await ctx.db.transaction(async (tx) => {
-        await tx.delete(boardPermissions).where(eq(boards.id, input.id));
+        await tx
+          .delete(boardPermissions)
+          .where(eq(boardPermissions.boardId, input.id));
+        if (input.permissions.length == 0) {
+          return;
+        }
         await tx.insert(boardPermissions).values(
           input.permissions.map((permission) => ({
             userId: permission.userId,
