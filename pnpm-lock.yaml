@@ -611,11 +611,11 @@ importers:
         specifier: ^7.6.2
         version: 7.6.2(@mantine/core@7.6.2)(@mantine/hooks@7.6.2)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
       '@tabler/icons-react':
-        specifier: ^3.0.1
-        version: 3.0.1(react@18.2.0)
+        specifier: ^3.0.3
+        version: 3.0.3(react@18.2.0)
       mantine-react-table:
         specifier: 2.0.0-beta.0
-        version: 2.0.0-beta.0(@mantine/core@7.6.2)(@mantine/dates@7.6.2)(@mantine/hooks@7.6.2)(@tabler/icons-react@3.0.1)(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.0.0-beta.0(@mantine/core@7.6.2)(@mantine/dates@7.6.2)(@mantine/hooks@7.6.2)(@tabler/icons-react@3.0.3)(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2579,17 +2579,17 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /@tabler/icons-react@3.0.1(react@18.2.0):
-    resolution: {integrity: sha512-CaB72mZo3t+DCYfwelPHBp3dCfghocSKESau0AZZGKLozNnh7nOtVk4riH0+UBN2Gu0hKq9DZzIU4dUW8uq+mw==}
+  /@tabler/icons-react@3.0.3(react@18.2.0):
+    resolution: {integrity: sha512-3YUafkLCmdJ0Nr/2vWO8++nWhLe1OeAka0lGr9rvZIoaUMwPyNGQJFPe/zYUyICOANqMnKpovUSeHNEyizk6Mw==}
     peerDependencies:
       react: '>= 16'
     dependencies:
-      '@tabler/icons': 3.0.1
+      '@tabler/icons': 3.0.3
       react: 18.2.0
     dev: false
 
-  /@tabler/icons@3.0.1:
-    resolution: {integrity: sha512-K/ZgJkxWcrMWdkgvS7VmgZ4F6SXM5UPolh2Y/dPTJnRpjMSySzfi93+XvfP2YfAzH7bd4ilqmTp7TADPLHrn0A==}
+  /@tabler/icons@3.0.3:
+    resolution: {integrity: sha512-jcumpc/BqyAitWVzgZ0GgDmA915h4RbWIALcSEWbzdxEZRSMmuJdUPEoPZayUd57x374viFSCkwk0CMuMQFeJw==}
     dev: false
 
   /@tanstack/match-sorter-utils@8.11.8:
@@ -7031,7 +7031,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /mantine-react-table@2.0.0-beta.0(@mantine/core@7.6.2)(@mantine/dates@7.6.2)(@mantine/hooks@7.6.2)(@tabler/icons-react@3.0.1)(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+  /mantine-react-table@2.0.0-beta.0(@mantine/core@7.6.2)(@mantine/dates@7.6.2)(@mantine/hooks@7.6.2)(@tabler/icons-react@3.0.3)(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-KZOr7nzoSt4aF0hyWKJJBK9/dxVWB3tdg2fFSNnqns9cbPFlLTGXDKguLSoNE8WkzjWE0ThpYJknIAoraL/7ug==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -7047,7 +7047,7 @@ packages:
       '@mantine/core': 7.6.2(@mantine/hooks@7.6.2)(@types/react@18.2.65)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/dates': 7.6.2(@mantine/core@7.6.2)(@mantine/hooks@7.6.2)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.6.2(react@18.2.0)
-      '@tabler/icons-react': 3.0.1(react@18.2.0)
+      '@tabler/icons-react': 3.0.3(react@18.2.0)
       '@tanstack/match-sorter-utils': 8.11.8
       '@tanstack/react-table': 8.12.0(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-virtual': 3.1.2(react-dom@18.2.0)(react@18.2.0)
