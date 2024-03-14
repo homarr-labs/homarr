@@ -10,7 +10,9 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
+  "type": "module",
   "scripts": {
+    "dev": "pnpm tsx ./src/wssDevServer.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -18,17 +20,20 @@
   },
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",
-    "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^",
     "@homarr/validation": "workspace:^0.1.0",
     "@trpc/client": "next",
     "@trpc/server": "next",
-    "superjson": "2.2.1"
+    "superjson": "2.2.1",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/ws": "^8.5.10",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.2"

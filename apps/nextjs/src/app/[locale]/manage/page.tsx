@@ -1,6 +1,8 @@
 import { getScopedI18n } from "@homarr/translation/server";
 import { Title } from "@homarr/ui";
 
+import { Test } from "./test";
+
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
   const metaTitle = `${t("metaTitle")} • Homarr`;
@@ -24,6 +26,7 @@ export default async function ManagementPage() {
   return (
     <>
       <Title>{t(timeOfDay, { username: "admin" })}</Title>
+      <Test />
     </>
   );
 }
