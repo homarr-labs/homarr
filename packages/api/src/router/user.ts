@@ -45,6 +45,14 @@ export const userRouter = createTRPCRouter({
       },
     });
   }),
+  selectable: publicProcedure.query(async () => {
+    return db.query.users.findMany({
+      columns: {
+        id: true,
+        name: true,
+      },
+    });
+  }),
   getById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ input }) => {
