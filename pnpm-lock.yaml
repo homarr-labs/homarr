@@ -159,6 +159,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^
         version: link:../../packages/log
+      '@homarr/modals':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/modals
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
@@ -519,6 +522,31 @@ importers:
         version: link:../../tooling/typescript
       eslint:
         specifier: ^8.57.0
+        version: 8.57.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/modals:
+    dependencies:
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
+      '@homarr/ui':
+        specifier: workspace:^0.1.0
+        version: link:../ui
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.56.0
         version: 8.57.0
       typescript:
         specifier: ^5.3.3

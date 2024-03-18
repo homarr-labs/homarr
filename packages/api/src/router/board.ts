@@ -315,7 +315,7 @@ export const boardRouter = createTRPCRouter({
   permissions: publicProcedure
     .input(validation.board.permissions)
     .query(async ({ input, ctx }) => {
-      return await ctx.db.query.boardPermissions.findMany({
+      const permissions = await ctx.db.query.boardPermissions.findMany({
         where: eq(boardPermissions.boardId, input.id),
         with: {
           user: {
@@ -326,6 +326,17 @@ export const boardRouter = createTRPCRouter({
           },
         },
       });
+      return permissions
+        .map((permission) => ({
+          user: {
+            id: permission.userId,
+            name: permission.user.name ?? "",
+          },
+          permission: permission.permission,
+        }))
+        .sort((a, b) => {
+          return a.user.name.localeCompare(b.user.name);
+        });
     }),
   savePermissions: publicProcedure
     .input(validation.board.savePermissions)
@@ -339,7 +350,7 @@ export const boardRouter = createTRPCRouter({
         }
         await tx.insert(boardPermissions).values(
           input.permissions.map((permission) => ({
-            userId: permission.userId,
+            userId: permission.user.id,
             permission: permission.permission,
             boardId: input.id,
           })),
@@ -378,6 +389,12 @@ const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
   const board = await db.query.boards.findFirst({
     where,
     with: {
+      creator: {
+        columns: {
+          id: true,
+          name: true,
+        },
+      },
       sections: {
         with: {
           items: {

@@ -5,6 +5,7 @@ import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 
+import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@homarr/ui";
 
@@ -67,6 +68,7 @@ export default function Layout(props: {
         })}
       />
     ),
+    (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <ModalsProvider {...innerProps} />,
   ]);
 

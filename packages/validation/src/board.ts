@@ -75,7 +75,10 @@ const savePermissionsSchema = z.object({
   id: z.string(),
   permissions: z.array(
     z.object({
-      userId: z.string(),
+      user: z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
       permission: zodEnumFromArray(boardPermissions),
     }),
   ),
