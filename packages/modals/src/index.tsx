@@ -15,26 +15,10 @@ import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { getDefaultZIndex, Modal } from "@homarr/ui";
 
+import type { ConfirmModalProps } from "./confirm-modal";
+import { ConfirmModal } from "./confirm-modal";
 import { modalReducer } from "./reducer";
-import type {
-  CreateModalOptions,
-  inferInnerProps,
-  ModalComponent,
-  ModalDefinition,
-} from "./type";
-
-export const createModal = <TInnerProps,>(
-  component: ModalComponent<TInnerProps>,
-) => {
-  return {
-    withOptions: (options: Partial<CreateModalOptions>) => {
-      return {
-        component,
-        options,
-      };
-    },
-  };
-};
+import type { inferInnerProps, ModalDefinition } from "./type";
 
 interface ModalContextProps {
   openModalInner: <TModal extends ModalDefinition>(props: {
@@ -139,5 +123,14 @@ export const useModalAction = <TModal extends ModalDefinition>(
     ) => {
       context.openModalInner({ modal, innerProps, options: options ?? {} });
     },
+  };
+};
+
+export const useConfirmModal = () => {
+  const { openModal } = useModalAction(ConfirmModal);
+
+  return {
+    openConfirmModal: (props: ConfirmModalProps) =>
+      openModal(props, { title: props.title }),
   };
 };

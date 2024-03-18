@@ -10,6 +10,7 @@ import {
   getDefaultSecretKinds,
 } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
+import { useConfirmModal } from "@homarr/modals";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -19,7 +20,6 @@ import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { modalEvents } from "~/app/[locale]/modals";
 import { SecretCard } from "../../_integration-secret-card";
 import { IntegrationSecretInput } from "../../_integration-secret-inputs";
 import {
@@ -35,6 +35,7 @@ interface EditIntegrationForm {
 
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const t = useI18n();
+  const { openConfirmModal } = useConfirmModal();
   const secretsKinds =
     getAllSecretKindOptions(integration.kind).find((x) =>
       integration.secrets.every((y) => x.includes(y.kind)),
@@ -128,7 +129,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                     ) {
                       return res(true);
                     }
-                    modalEvents.openConfirmModal({
+                    openConfirmModal({
                       title: t("integration.secrets.reset.title"),
                       children: t("integration.secrets.reset.message"),
                       onCancel: () => res(false),

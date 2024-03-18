@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { WidgetOptionDefinition } from "node_modules/@homarr/widgets/src/options";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import { useModalAction } from "@homarr/modals";
 import { ActionIcon, Affix, IconPencil } from "@homarr/ui";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
+  WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
-
-import { modalEvents } from "../../modals";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
@@ -32,6 +32,7 @@ export const WidgetPreviewPageContent = ({
     string,
     WidgetOptionDefinition
   >;
+  const { openModal } = useModalAction(WidgetEditModal);
   const [state, setState] = useState<{
     options: Record<string, unknown>;
     integrations: string[];
@@ -39,6 +40,24 @@ export const WidgetPreviewPageContent = ({
     options: reduceWidgetOptionsWithDefaultValues(kind, options),
     integrations: [],
   });
+
+  const handleOpenEditWidgetModal = useCallback(() => {
+    openModal({
+      kind,
+      value: state,
+      onSuccessfulEdit: (value) => {
+        setState(value);
+      },
+      integrationData: integrationData.filter(
+        (integration) =>
+          "supportedIntegrations" in currentDefinition &&
+          currentDefinition.supportedIntegrations.some(
+            (kind) => kind === integration.kind,
+          ),
+      ),
+      integrationSupport: "supportedIntegrations" in currentDefinition,
+    });
+  }, [currentDefinition, integrationData, kind, openModal, state]);
 
   const Comp = loadWidgetDynamic(kind);
 
@@ -55,27 +74,7 @@ export const WidgetPreviewPageContent = ({
           size={48}
           variant="default"
           radius="xl"
-          onClick={() => {
-            return modalEvents.openManagedModal({
-              modal: "widgetEditModal",
-              innerProps: {
-                kind,
-                value: state,
-                onSuccessfulEdit: (value) => {
-                  setState(value);
-                },
-                integrationData: integrationData.filter(
-                  (integration) =>
-                    "supportedIntegrations" in currentDefinition &&
-                    currentDefinition.supportedIntegrations.some(
-                      (kind) => kind === integration.kind,
-                    ),
-                ),
-                integrationSupport:
-                  "supportedIntegrations" in currentDefinition,
-              },
-            });
-          }}
+          onClick={handleOpenEditWidgetModal}
         >
           <IconPencil size={24} />
         </ActionIcon>

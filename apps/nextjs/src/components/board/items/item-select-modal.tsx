@@ -1,6 +1,5 @@
-import type { ManagedModal } from "mantine-modal-manager";
-
 import type { WidgetKind } from "@homarr/definitions";
+import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { Button, Card, Center, Grid, Stack, Text } from "@homarr/ui";
 
@@ -9,9 +8,7 @@ import { widgetImports } from "../../../../../../packages/widgets/src";
 import type { WidgetDefinition } from "../../../../../../packages/widgets/src/definition";
 import { useItemActions } from "./item-actions";
 
-export const ItemSelectModal: ManagedModal<Record<string, never>> = ({
-  actions,
-}) => {
+export const ItemSelectModal = createModal<void>(({ actions }) => {
   return (
     <Grid>
       {objectEntries(widgetImports).map(([key, value]) => {
@@ -26,7 +23,10 @@ export const ItemSelectModal: ManagedModal<Record<string, never>> = ({
       })}
     </Grid>
   );
-};
+}).withOptions({
+  defaultTitle: (t) => t("item.create.title"),
+  size: "xl",
+});
 
 const WidgetItem = ({
   kind,

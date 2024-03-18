@@ -1,23 +1,24 @@
 import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
-import { modalEvents } from "~/app/[locale]/modals";
 import { useCategoryActions } from "./category-actions";
+import { CategoryEditModal } from "./category-edit-modal";
 
 export const useCategoryMenuActions = (category: CategorySection) => {
+  const { openModal } = useModalAction(CategoryEditModal);
+  const { openConfirmModal } = useConfirmModal();
   const { addCategory, moveCategory, removeCategory, renameCategory } =
     useCategoryActions();
   const t = useI18n();
 
   const createCategoryAtPosition = useCallback(
     (position: number) => {
-      modalEvents.openManagedModal({
-        title: t("section.category.create.title"),
-        modal: "categoryEditModal",
-        innerProps: {
+      openModal(
+        {
           category: {
             id: createId(),
             name: t("section.category.create.title"),
@@ -30,9 +31,12 @@ export const useCategoryMenuActions = (category: CategorySection) => {
           },
           submitLabel: t("section.category.create.submit"),
         },
-      });
+        {
+          title: (t) => t("section.category.create.title"),
+        },
+      );
     },
-    [addCategory, t],
+    [addCategory, t, openModal],
   );
 
   // creates a new category above the current
@@ -63,7 +67,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
 
   // Removes the current category
   const remove = useCallback(() => {
-    modalEvents.openConfirmModal({
+    openConfirmModal({
       title: t("section.category.remove.title"),
       children: t("section.category.remove.message", {
         name: category.name,
@@ -73,17 +77,12 @@ export const useCategoryMenuActions = (category: CategorySection) => {
           id: category.id,
         });
       },
-      confirmProps: {
-        color: "red",
-      },
     });
-  }, [category.id, category.name, removeCategory, t]);
+  }, [category.id, category.name, removeCategory, t, openConfirmModal]);
 
-  const edit = () => {
-    modalEvents.openManagedModal({
-      modal: "categoryEditModal",
-      title: t("section.category.edit.title"),
-      innerProps: {
+  const edit = useCallback(() => {
+    openModal(
+      {
         category,
         submitLabel: t("section.category.edit.submit"),
         onSuccess: (category) => {
@@ -93,8 +92,11 @@ export const useCategoryMenuActions = (category: CategorySection) => {
           });
         },
       },
-    });
-  };
+      {
+        title: (t) => t("section.category.edit.title"),
+      },
+    );
+  }, [category, openModal, renameCategory, t]);
 
   return {
     addCategoryAbove,

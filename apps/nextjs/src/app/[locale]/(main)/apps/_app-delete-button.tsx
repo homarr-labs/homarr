@@ -4,6 +4,7 @@ import { useCallback } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useConfirmModal } from "@homarr/modals";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -12,7 +13,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { revalidatePathAction } from "../../../revalidatePathAction";
-import { modalEvents } from "../../modals";
 
 interface AppDeleteButtonProps {
   app: RouterOutputs["app"]["all"][number];
@@ -20,10 +20,11 @@ interface AppDeleteButtonProps {
 
 export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   const t = useScopedI18n("app.page.delete");
+  const { openConfirmModal } = useConfirmModal();
   const { mutate, isPending } = clientApi.app.delete.useMutation();
 
   const onClick = useCallback(() => {
-    modalEvents.openConfirmModal({
+    openConfirmModal({
       title: t("title"),
       children: t("message", app),
       onConfirm: () => {
@@ -47,7 +48,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
         );
       },
     });
-  }, [app, mutate, t]);
+  }, [app, mutate, t, openConfirmModal]);
 
   return (
     <ActionIcon
