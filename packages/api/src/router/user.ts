@@ -44,8 +44,8 @@ export const userRouter = createTRPCRouter({
       },
     });
   }),
-  selectable: publicProcedure.query(async () => {
-    return db.query.users.findMany({
+  selectable: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.users.findMany({
       columns: {
         id: true,
         name: true,

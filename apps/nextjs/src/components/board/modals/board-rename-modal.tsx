@@ -1,6 +1,5 @@
 "use client";
 
-
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";

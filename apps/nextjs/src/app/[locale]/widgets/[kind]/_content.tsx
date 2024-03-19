@@ -1,29 +1,29 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { ActionIcon, Affix, IconPencil } from "@homarr/ui";
-import { useMemo } from "react";
-
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
+  ActionIcon,
+  Affix,
   Card,
   IconDimensions,
+  IconPencil,
   IconToggleLeft,
-  IconToggleRight
+  IconToggleRight,
 } from "@homarr/ui";
 import {
-  WidgetEditModal,
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
+  WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
 
-import { PreviewDimensionsModal  } from "./_dimension-modal";
-import type {Dimensions} from "./_dimension-modal";
+import { PreviewDimensionsModal } from "./_dimension-modal";
+import type { Dimensions } from "./_dimension-modal";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
@@ -41,7 +41,9 @@ export const WidgetPreviewPageContent = ({
 }: WidgetPreviewPageContentProps) => {
   const t = useScopedI18n("widgetPreview");
   const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
-  const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
+  const { openModal: openPreviewDimensionsModal } = useModalAction(
+    PreviewDimensionsModal,
+  );
   const currentDefinition = useMemo(
     () => widgetImports[kind].definition,
     [kind],
@@ -89,8 +91,8 @@ export const WidgetPreviewPageContent = ({
   const openDimensionsModal = useCallback(() => {
     openPreviewDimensionsModal({
       dimensions,
-      setDimensions
-    })
+      setDimensions,
+    });
   }, [dimensions, openPreviewDimensionsModal]);
 
   return (

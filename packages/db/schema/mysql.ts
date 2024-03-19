@@ -15,6 +15,7 @@ import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
   BackgroundImageSize,
+  BoardPermission,
   IntegrationKind,
   IntegrationSecretKind,
   SectionKind,
@@ -127,6 +128,9 @@ export const boards = mysqlTable("board", {
   id: varchar("id", { length: 256 }).notNull().primaryKey(),
   name: varchar("name", { length: 256 }).unique().notNull(),
   isPublic: boolean("is_public").default(false).notNull(),
+  creatorId: text("creator_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
   pageTitle: text("page_title"),
   metaTitle: text("meta_title"),
   logoImageUrl: text("logo_image_url"),
@@ -150,6 +154,24 @@ export const boards = mysqlTable("board", {
   customCss: text("custom_css"),
   columnCount: int("column_count").default(10).notNull(),
 });
+
+export const boardPermissions = mysqlTable(
+  "boardPermission",
+  {
+    boardId: text("board_id")
+      .notNull()
+      .references(() => boards.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    permission: text("permission").$type<BoardPermission>().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.boardId, table.userId, table.permission],
+    }),
+  }),
+);
 
 export const sections = mysqlTable("section", {
   id: varchar("id", { length: 256 }).notNull().primaryKey(),
@@ -208,7 +230,24 @@ export const accountRelations = relations(accounts, ({ one }) => ({
 
 export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+
+  boards: many(boards),
+  boardPermissions: many(boardPermissions),
 }));
+
+export const boardPermissionRelations = relations(
+  boardPermissions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [boardPermissions.userId],
+      references: [users.id],
+    }),
+    board: one(boards, {
+      fields: [boardPermissions.boardId],
+      references: [boards.id],
+    }),
+  }),
+);
 
 export const integrationRelations = relations(integrations, ({ many }) => ({
   secrets: many(integrationSecrets),
@@ -225,8 +264,13 @@ export const integrationSecretRelations = relations(
   }),
 );
 
-export const boardRelations = relations(boards, ({ many }) => ({
+export const boardRelations = relations(boards, ({ many, one }) => ({
   sections: many(sections),
+  creator: one(users, {
+    fields: [boards.creatorId],
+    references: [users.id],
+  }),
+  permissions: many(boardPermissions),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({

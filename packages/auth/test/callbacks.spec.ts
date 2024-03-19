@@ -54,12 +54,12 @@ const createAdapter = () => {
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type SessionExport = typeof import("../session");
-const mockSessionToken = "e9ef3010-6981-4a81-b9d6-8495d09cf3b5" as const;
+const mockSessionToken = "e9ef3010-6981-4a81-b9d6-8495d09cf3b5";
 const mockSessionExpiry = new Date("2023-07-01");
 vi.mock("../session", async (importOriginal) => {
   const mod = await importOriginal<SessionExport>();
 
-  const generateSessionToken = () => mockSessionToken;
+  const generateSessionToken = (): typeof mockSessionToken => mockSessionToken;
   const expireDateAfter = (_seconds: number) => mockSessionExpiry;
 
   return {

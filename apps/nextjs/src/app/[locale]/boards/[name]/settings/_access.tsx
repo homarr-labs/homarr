@@ -9,7 +9,7 @@ import { boardPermissions } from "@homarr/definitions";
 import { useForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import type { SelectProps, TablerIconsProps } from "@homarr/ui";
+import type { SelectProps, TablerIcon } from "@homarr/ui";
 import {
   Button,
   Flex,
@@ -61,16 +61,24 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
     },
   });
   const { mutate, isPending } = clientApi.board.savePermissions.useMutation();
+  const utils = clientApi.useUtils();
   const { openModal } = useModalAction(UserSelectModal);
 
   const handleSubmit = useCallback(
     (v: FormType) => {
-      mutate({
-        id: board.id,
-        permissions: v.permissions,
-      });
+      mutate(
+        {
+          id: board.id,
+          permissions: v.permissions,
+        },
+        {
+          onSuccess: () => {
+            void utils.board.permissions.invalidate();
+          },
+        },
+      );
     },
-    [board.id, mutate],
+    [board.id, mutate, utils.board.permissions],
   );
 
   const handleAddUser = useCallback(() => {
@@ -199,7 +207,7 @@ const CreatorRow = ({ user }: CreatorRowProps) => {
 const icons = {
   "board-change": IconPencil,
   "board-view": IconEye,
-} satisfies Record<BoardPermission, (props: TablerIconsProps) => JSX.Element>;
+} satisfies Record<BoardPermission, TablerIcon>;
 
 const iconProps = {
   stroke: 1.5,

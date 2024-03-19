@@ -51,7 +51,7 @@ test("schemas should match", () => {
       },
     );
 
-    const mysqlTable = mysqlSchema[tableName as keyof typeof mysqlSchema];
+    const mysqlTable = mysqlSchema[tableName];
     const sqliteForeignKeys = sqliteTable[
       Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable
     ] as SqliteForeignKey[] | undefined;
