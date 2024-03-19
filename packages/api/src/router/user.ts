@@ -1,10 +1,9 @@
-import "server-only";
-
 import { TRPCError } from "@trpc/server";
+import { observable } from "@trpc/server/observable";
 
 import { createSalt, hashPassword } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { createId, db, eq, schema } from "@homarr/db";
+import { createId, eq, schema } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
@@ -34,8 +33,8 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await createUser(ctx.db, input);
     }),
-  getAll: publicProcedure.query(async () => {
-    return db.query.users.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.users.findMany({
       columns: {
         id: true,
         name: true,
@@ -55,8 +54,8 @@ export const userRouter = createTRPCRouter({
   }),
   getById: publicProcedure
     .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
-      return db.query.users.findFirst({
+    .query(async ({ input, ctx }) => {
+      return ctx.db.query.users.findFirst({
         columns: {
           id: true,
           name: true,
@@ -67,6 +66,55 @@ export const userRouter = createTRPCRouter({
         where: eq(users.id, input.userId),
       });
     }),
+  editProfile: publicProcedure
+    .input(
+      z.object({
+        form: validation.user.editProfile,
+        userId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.id, input.userId))
+        .limit(1);
+
+      const emailDirty =
+        input.form.email && user[0]?.email !== input.form.email;
+      await ctx.db
+        .update(users)
+        .set({
+          name: input.form.name,
+          email: emailDirty === true ? input.form.email : undefined,
+          emailVerified: emailDirty === true ? null : undefined,
+        })
+        .where(eq(users.id, input.userId));
+    }),
+  delete: publicProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
+    await ctx.db.delete(users).where(eq(users.id, input));
+  }),
+  changePassword: publicProcedure
+    .input(validation.user.changePassword)
+    .mutation(async ({ ctx, input }) => {
+      const salt = await createSalt();
+      const hashedPassword = await hashPassword(input.password, salt);
+      await ctx.db
+        .update(users)
+        .set({
+          password: hashedPassword,
+        })
+        .where(eq(users.id, input.userId));
+    }),
+  test: publicProcedure.subscription(() => {
+    return observable<number>((emit) => {
+      let counter = 0;
+      setInterval(() => {
+        counter = counter + 1;
+        emit.next(counter);
+      }, 1000);
+    });
+  }),
 });
 
 const createUser = async (

@@ -48,7 +48,7 @@ export const AddBoardModal = createModal<InnerProps>(
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
               {t("common.action.cancel")}
             </Button>
-            <Button disabled={form.isValid()} type="submit" color="teal">
+            <Button disabled={!form.isValid()} type="submit" color="teal">
               {t("common.action.create")}
             </Button>
           </Group>

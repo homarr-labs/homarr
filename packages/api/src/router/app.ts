@@ -12,6 +12,16 @@ export const appRouter = createTRPCRouter({
       orderBy: asc(apps.name),
     });
   }),
+  selectable: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.apps.findMany({
+      columns: {
+        id: true,
+        name: true,
+        iconUrl: true,
+      },
+      orderBy: asc(apps.name),
+    });
+  }),
   byId: publicProcedure
     .input(validation.app.byId)
     .query(async ({ ctx, input }) => {

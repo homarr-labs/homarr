@@ -10,15 +10,15 @@ The [SpotlightActionData](./src/type.ts) is the data structure that is used to d
 
 #### Common properties
 
-| Name                           | Type                                                                                       | Description                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| id                             | `string`                                                                                   | The id of the action.                                                               |
-| title                          | `string \| (t: TranslationFunction) => string`                                             | The title of the action. Either static or generated with translation function       |
-| description                    | `string \| (t: TranslationFunction) => string`                                             | The description of the action. Either static or generated with translation function |
-| icon                           | `string                                        \| (props: TablerIconProps) => JSX.Element` | The icon of the action. Either a url to an image or a TablerIcon                    |
-| group                          | `string`                                                                                   | The group of the action. By default the groups all, web and action exist.           |
-| ignoreSearchAndOnlyShowInGroup | `boolean`                                                                                  | If true, the action will only be shown in the group and not in the search results.  |
-| type                           | `'link' \| 'button'`                                                                       | The type of the action. Either link or button                                       |
+| Name                           | Type                                                          | Description                                                                         |
+| ------------------------------ | ------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| id                             | `string`                                                      | The id of the action.                                                               |
+| title                          | `string \| (t: TranslationFunction) => string`                | The title of the action. Either static or generated with translation function       |
+| description                    | `string \| (t: TranslationFunction) => string`                | The description of the action. Either static or generated with translation function |
+| icon                           | `string                                        \| TablerIcon` | The icon of the action. Either a url to an image or a TablerIcon                    |
+| group                          | `string`                                                      | The group of the action. By default the groups all, web and action exist.           |
+| ignoreSearchAndOnlyShowInGroup | `boolean`                                                     | If true, the action will only be shown in the group and not in the search results.  |
+| type                           | `'link' \| 'button'`                                          | The type of the action. Either link or button                                       |
 
 #### Properties for links
 

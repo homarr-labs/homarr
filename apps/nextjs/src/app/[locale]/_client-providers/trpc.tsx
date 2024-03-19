@@ -5,10 +5,20 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import {
+  createWSClient,
+  loggerLink,
+  unstable_httpBatchStreamLink,
+  wsLink,
+} from "@trpc/client";
 import superjson from "superjson";
 
+import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+
+const wsClient = createWSClient({
+  url: "ws://localhost:3001",
+});
 
 export function TRPCReactProvider(props: PropsWithChildren) {
   const [queryClient] = useState(
@@ -22,26 +32,39 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       }),
   );
 
-  const [trpcClient] = useState(() =>
-    clientApi.createClient({
+  const [trpcClient] = useState(() => {
+    return clientApi.createClient({
       links: [
         loggerLink({
           enabled: (opts) =>
             process.env.NODE_ENV === "development" ||
             (opts.direction === "down" && opts.result instanceof Error),
         }),
-        unstable_httpBatchStreamLink({
-          transformer: superjson,
-          url: getBaseUrl() + "/api/trpc",
-          headers() {
-            const headers = new Headers();
-            headers.set("x-trpc-source", "nextjs-react");
-            return headers;
-          },
-        }),
+        (args) => {
+          return ({ op, next }) => {
+            console.log("op", op.type, op.input, op.path, op.id);
+            if (op.type === "subscription") {
+              const link = wsLink<AppRouter>({
+                client: wsClient,
+                transformer: superjson,
+              });
+              return link(args)({ op, next });
+            }
+
+            return unstable_httpBatchStreamLink({
+              transformer: superjson,
+              url: `${getBaseUrl()}/api/trpc`,
+              headers() {
+                const headers = new Headers();
+                headers.set("x-trpc-source", "nextjs-react");
+                return headers;
+              },
+            })(args)({ op, next });
+          };
+        },
       ],
-    }),
-  );
+    });
+  });
 
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>

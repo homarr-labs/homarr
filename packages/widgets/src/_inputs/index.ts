@@ -1,4 +1,5 @@
 import type { WidgetOptionType } from "../options";
+import { WidgetAppInput } from "./widget-app-input";
 import { WidgetMultiSelectInput } from "./widget-multiselect-input";
 import { WidgetNumberInput } from "./widget-number-input";
 import { WidgetSelectInput } from "./widget-select-input";
@@ -15,6 +16,7 @@ const mapping = {
   select: WidgetSelectInput,
   slider: WidgetSliderInput,
   switch: WidgetSwitchInput,
+  app: WidgetAppInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(

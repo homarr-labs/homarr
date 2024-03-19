@@ -3,6 +3,10 @@ import type { WidgetKind } from "@homarr/definitions";
 import type { z } from "@homarr/validation";
 
 import { widgetImports } from ".";
+import type {
+  inferSelectOptionValue,
+  SelectOption,
+} from "./_inputs/widget-select-input";
 
 interface CommonInput<TType> {
   defaultValue?: TType;
@@ -10,17 +14,19 @@ interface CommonInput<TType> {
 }
 
 interface TextInput extends CommonInput<string> {
-  validate: z.ZodType<string>;
+  validate?: z.ZodType<string>;
 }
 
-interface MultiSelectInput<TOptions extends string[]>
-  extends CommonInput<TOptions[number][]> {
+interface MultiSelectInput<TOptions extends SelectOption[]>
+  extends CommonInput<inferSelectOptionValue<TOptions[number]>[]> {
   options: TOptions;
+  searchable?: boolean;
 }
 
-interface SelectInput<TOptions extends readonly [string, ...string[]]>
-  extends CommonInput<TOptions[number]> {
+interface SelectInput<TOptions extends readonly SelectOption[]>
+  extends CommonInput<inferSelectOptionValue<TOptions[number]>> {
   options: TOptions;
+  searchable?: boolean;
 }
 
 interface NumberInput extends CommonInput<number | ""> {
@@ -51,20 +57,23 @@ const optionsFactory = {
     withDescription: input?.withDescription ?? false,
     validate: input?.validate,
   }),
-  multiSelect: <TOptions extends string[]>(
+  multiSelect: <const TOptions extends SelectOption[]>(
     input: MultiSelectInput<TOptions>,
   ) => ({
     type: "multiSelect" as const,
     defaultValue: input.defaultValue ?? [],
     options: input.options,
+    searchable: input.searchable ?? false,
     withDescription: input.withDescription ?? false,
   }),
-  select: <TOptions extends readonly [string, ...string[]]>(
+  select: <const TOptions extends SelectOption[]>(
     input: SelectInput<TOptions>,
   ) => ({
     type: "select" as const,
-    defaultValue: input.defaultValue ?? input.options[0],
+    defaultValue: (input.defaultValue ??
+      input.options[0]) as inferSelectOptionValue<TOptions[number]>,
     options: input.options,
+    searchable: input.searchable ?? false,
     withDescription: input.withDescription ?? false,
   }),
   number: (input: NumberInput) => ({
@@ -93,6 +102,11 @@ const optionsFactory = {
   multiText: (input?: CommonInput<string[]>) => ({
     type: "multiText" as const,
     defaultValue: input?.defaultValue ?? [],
+    withDescription: input?.withDescription ?? false,
+  }),
+  app: (input?: Omit<CommonInput<string>, "defaultValue">) => ({
+    type: "app" as const,
+    defaultValue: "",
     withDescription: input?.withDescription ?? false,
   }),
 };
