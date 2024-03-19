@@ -82,16 +82,17 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
   );
 
   const handleAddUser = useCallback(() => {
+    const presentUserIds = form.values.permissions.map((p) => p.user.id);
+
     openModal({
-      presentUserIds: [
-        ...form.values.permissions.map((p) => p.user.id),
-        board.creatorId!,
-      ],
+      presentUserIds: board.creatorId
+        ? presentUserIds.concat(board.creatorId)
+        : presentUserIds,
       onSelect: (user) => {
         form.setFieldValue("permissions", [
           ...form.values.permissions,
           {
-            user: user,
+            user,
             permission: "board-view",
           },
         ]);

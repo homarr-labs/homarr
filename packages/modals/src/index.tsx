@@ -69,6 +69,11 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
     [dispatch],
   );
 
+  const handleCloseModal = useCallback(
+    () => state.current && closeModal(state.current.id),
+    [closeModal, state.current?.id],
+  );
+
   const activeModals = state.modals.filter(
     (modal) => modal.id === state.current?.id || modal.props.keepMounted,
   );
@@ -93,7 +98,7 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
           {...modal.reference.modalProps}
           title={translateIfNecessary(t, modal.props.defaultTitle)}
           opened={state.modals.length > 0}
-          onClose={() => closeModal(state.current!.id)}
+          onClose={handleCloseModal}
         >
           {modal.reference.content}
         </Modal>

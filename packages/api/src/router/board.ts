@@ -344,7 +344,7 @@ export const boardRouter = createTRPCRouter({
         await tx
           .delete(boardPermissions)
           .where(eq(boardPermissions.boardId, input.id));
-        if (input.permissions.length == 0) {
+        if (input.permissions.length === 0) {
           return;
         }
         await tx.insert(boardPermissions).values(

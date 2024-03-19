@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import type {
@@ -52,20 +53,25 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(
       labels?.confirm ??
       ((t: TranslationFunction) => t("common.action.confirm"));
 
-    const handleCancel = async (event: React.MouseEvent<HTMLButtonElement>) => {
-      typeof cancelProps?.onClick === "function" && cancelProps?.onClick(event);
-      typeof onCancel === "function" && (await onCancel());
-      closeOnCancel && actions.closeModal();
-    };
+    const handleCancel = useCallback(
+      async (event: React.MouseEvent<HTMLButtonElement>) => {
+        typeof cancelProps?.onClick === "function" &&
+          cancelProps?.onClick(event);
+        typeof onCancel === "function" && (await onCancel());
+        closeOnCancel && actions.closeModal();
+      },
+      [cancelProps?.onClick, onCancel, actions.closeModal],
+    );
 
-    const handleConfirm = async (
-      event: React.MouseEvent<HTMLButtonElement>,
-    ) => {
-      typeof confirmProps?.onClick === "function" &&
-        confirmProps?.onClick(event);
-      typeof onConfirm === "function" && (await onConfirm());
-      closeOnConfirm && actions.closeModal();
-    };
+    const handleConfirm = useCallback(
+      async (event: React.MouseEvent<HTMLButtonElement>) => {
+        typeof confirmProps?.onClick === "function" &&
+          confirmProps?.onClick(event);
+        typeof onConfirm === "function" && (await onConfirm());
+        closeOnConfirm && actions.closeModal();
+      },
+      [confirmProps?.onClick, onConfirm, actions.closeModal],
+    );
 
     return (
       <>
