@@ -55,7 +55,7 @@ export const modalReducer = (
       };
     }
     case "CLOSE": {
-      const modal = state.modals.find((m) => m.id === action.modalId);
+      const modal = state.modals.find((modal) => modal.id === action.modalId);
       if (!modal) {
         return state;
       }
@@ -63,7 +63,7 @@ export const modalReducer = (
       modal.props.onClose?.();
 
       const remainingModals = state.modals.filter(
-        (m) => m.id !== action.modalId,
+        (modal) => modal.id !== action.modalId,
       );
 
       return {

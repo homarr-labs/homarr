@@ -333,8 +333,8 @@ export const boardRouter = createTRPCRouter({
           },
           permission: permission.permission,
         }))
-        .sort((a, b) => {
-          return a.user.name.localeCompare(b.user.name);
+        .sort((permissionA, permissionB) => {
+          return permissionA.user.name.localeCompare(permissionB.user.name);
         });
     }),
   savePermissions: publicProcedure

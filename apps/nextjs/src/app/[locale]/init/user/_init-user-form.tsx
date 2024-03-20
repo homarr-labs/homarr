@@ -51,7 +51,7 @@ export const InitUserForm = () => {
     <Stack gap="xl">
       <form
         onSubmit={form.onSubmit(
-          (v) => void handleSubmit(v),
+          (values) => void handleSubmit(values),
           (err) => console.log(err),
         )}
       >

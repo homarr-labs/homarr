@@ -48,17 +48,17 @@ export const WidgetIntegrationSelect = ({
   const handleValueSelect = (selectedValue: string) =>
     onChange(
       multiSelectValues.includes(selectedValue)
-        ? multiSelectValues.filter((v) => v !== selectedValue)
+        ? multiSelectValues.filter((value) => value !== selectedValue)
         : [...multiSelectValues, selectedValue],
     );
 
-  const handleValueRemove = (val: string) =>
-    onChange(multiSelectValues.filter((v) => v !== val));
+  const handleValueRemove = (valueToRemove: string) =>
+    onChange(multiSelectValues.filter((value) => value !== valueToRemove));
 
   const values = multiSelectValues.map((item) => (
     <IntegrationPill
       key={item}
-      option={data.find((i) => i.id === item)!}
+      option={data.find((integration) => integration.id === item)!}
       onRemove={() => handleValueRemove(item)}
     />
   ));

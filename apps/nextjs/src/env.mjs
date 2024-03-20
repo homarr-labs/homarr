@@ -10,7 +10,7 @@ export const env = createEnv({
     VERCEL_URL: z
       .string()
       .optional()
-      .transform((v) => (v ? `https://${v}` : undefined)),
+      .transform((url) => (url ? `https://${url}` : undefined)),
     PORT: z.coerce.number().default(3000),
   },
   /**

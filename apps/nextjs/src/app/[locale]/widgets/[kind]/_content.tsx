@@ -106,7 +106,8 @@ export const WidgetPreviewPageContent = ({
         <Comp
           options={state.options as never}
           integrations={state.integrations.map(
-            (id) => integrationData.find((x) => x.id === id)!,
+            (id) =>
+              integrationData.find((integration) => integration.id === id)!,
           )}
           width={dimensions.width}
           height={dimensions.height}

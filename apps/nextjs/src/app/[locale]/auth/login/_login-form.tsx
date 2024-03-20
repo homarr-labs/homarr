@@ -54,7 +54,7 @@ export const LoginForm = () => {
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
+      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
         <Stack gap="lg">
           <TextInput
             label={t("field.username.label")}

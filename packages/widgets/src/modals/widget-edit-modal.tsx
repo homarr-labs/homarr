@@ -36,8 +36,8 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(
 
     return (
       <form
-        onSubmit={form.onSubmit((v) => {
-          innerProps.onSuccessfulEdit(v);
+        onSubmit={form.onSubmit((values) => {
+          innerProps.onSuccessfulEdit(values);
           actions.closeModal();
         })}
       >

@@ -25,10 +25,10 @@ export const CategoryEditModal = createModal<InnerProps>(
 
     return (
       <form
-        onSubmit={form.onSubmit((v) => {
+        onSubmit={form.onSubmit((values) => {
           void innerProps.onSuccess({
             ...innerProps.category,
-            name: v.name,
+            name: values.name,
           });
           actions.closeModal();
         })}

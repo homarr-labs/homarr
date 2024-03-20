@@ -37,8 +37,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
   const secretsKinds =
-    getAllSecretKindOptions(integration.kind).find((x) =>
-      integration.secrets.every((y) => x.includes(y.kind)),
+    getAllSecretKindOptions(integration.kind).find((secretKinds) =>
+      integration.secrets.every((secret) => secretKinds.includes(secret.kind)),
     ) ?? getDefaultSecretKinds(integration.kind);
   const initialFormValues = {
     name: integration.name,
@@ -100,7 +100,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   };
 
   return (
-    <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
+    <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
       <Stack>
         <TestConnectionNoticeAlert />
 

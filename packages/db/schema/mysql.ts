@@ -98,8 +98,8 @@ export const integrations = mysqlTable(
     url: text("url").notNull(),
     kind: varchar("kind", { length: 128 }).$type<IntegrationKind>().notNull(),
   },
-  (i) => ({
-    kindIdx: index("integration__kind_idx").on(i.kind),
+  (integrations) => ({
+    kindIdx: index("integration__kind_idx").on(integrations.kind),
   }),
 );
 

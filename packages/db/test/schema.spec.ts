@@ -97,7 +97,9 @@ test("schemas should match", () => {
 
       sqliteForeignKey.reference().foreignColumns.forEach((column) => {
         expect(
-          mysqlForeignKey!.reference().foreignColumns.map((x) => x.name),
+          mysqlForeignKey!
+            .reference()
+            .foreignColumns.map((column) => column.name),
           `expect foreign key (${sqliteForeignKey.getName()}) columns to be the same for both schemas`,
         ).toContainEqual(column.name);
       });

@@ -53,10 +53,10 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
   const t = useI18n();
   const form = useForm<FormType>({
     initialValues: {
-      permissions: permissions.sort((a, b) => {
-        if (a.user.id === board.creatorId) return -1;
-        if (b.user.id === board.creatorId) return 1;
-        return a.user.name.localeCompare(b.user.name);
+      permissions: permissions.sort((permissionA, permissionB) => {
+        if (permissionA.user.id === board.creatorId) return -1;
+        if (permissionB.user.id === board.creatorId) return 1;
+        return permissionA.user.name.localeCompare(permissionB.user.name);
       }),
     },
   });
@@ -82,7 +82,9 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
   );
 
   const handleAddUser = useCallback(() => {
-    const presentUserIds = form.values.permissions.map((p) => p.user.id);
+    const presentUserIds = form.values.permissions.map(
+      (permission) => permission.user.id,
+    );
 
     openModal({
       presentUserIds: board.creatorId
@@ -273,7 +275,7 @@ export const UserSelectModal = createModal<InnerProps>(
             limit={5}
             data={users
               ?.filter((user) => !innerProps.presentUserIds.includes(user.id))
-              .map((u) => ({ value: u.id, label: u.name ?? "" }))}
+              .map((user) => ({ value: user.id, label: user.name ?? "" }))}
           />
           <Group justify="end">
             <Button onClick={actions.closeModal}>

@@ -95,8 +95,8 @@ export const integrations = sqliteTable(
     url: text("url").notNull(),
     kind: text("kind").$type<IntegrationKind>().notNull(),
   },
-  (i) => ({
-    kindIdx: index("integration__kind_idx").on(i.kind),
+  (integrations) => ({
+    kindIdx: index("integration__kind_idx").on(integrations.kind),
   }),
 );
 
