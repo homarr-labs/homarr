@@ -3,7 +3,7 @@
 
 import type { RefObject } from "react";
 import { useElementSize } from "@mantine/hooks";
-import cx from "clsx";
+import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
 
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -60,7 +60,10 @@ export const SectionContent = ({ items, refs }: Props) => {
           >
             <Card
               ref={ref}
-              className={cx(classes.itemCard, "grid-stack-item-content")}
+              className={combineClasses(
+                classes.itemCard,
+                "grid-stack-item-content",
+              )}
               withBorder
               styles={{
                 root: {

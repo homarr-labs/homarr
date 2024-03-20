@@ -65,11 +65,11 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
   const { openModal } = useModalAction(UserSelectModal);
 
   const handleSubmit = useCallback(
-    (v: FormType) => {
+    (values: FormType) => {
       mutate(
         {
           id: board.id,
-          permissions: v.permissions,
+          permissions: values.permissions,
         },
         {
           onSuccess: () => {
@@ -250,8 +250,8 @@ export const UserSelectModal = createModal<InnerProps>(
     const t = useI18n();
     const { data: users } = clientApi.user.selectable.useQuery();
     const form = useForm<UserSelectFormType>();
-    const handleSubmit = (v: UserSelectFormType) => {
-      const currentUser = users?.find((user) => user.id === v.userId);
+    const handleSubmit = (values: UserSelectFormType) => {
+      const currentUser = users?.find((user) => user.id === values.userId);
       if (!currentUser) return;
       innerProps.onSelect({
         id: currentUser.id,
