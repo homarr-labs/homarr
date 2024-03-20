@@ -39,7 +39,7 @@
     "@tiptap/extension-link": "^2.2.4",
     "@tiptap/react": "^2.2.4",
     "@tiptap/starter-kit": "^2.2.4",
-    "@trpc/client": "11.0.0-next-beta.316",
+    "@trpc/client": "11.0.0-next-beta.318",
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
