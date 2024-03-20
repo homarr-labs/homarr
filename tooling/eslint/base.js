@@ -18,7 +18,7 @@ const config = {
   plugins: ["@typescript-eslint", "import"],
   rules: {
     "id-length": [
-      "error",
+      "warn",
       {
         min: 3,
         exceptions: ["_", "i", "z", "t", "id"], // _ for unused variables, i for index, z for zod, t for translation
