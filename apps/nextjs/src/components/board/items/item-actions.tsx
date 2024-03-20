@@ -41,8 +41,12 @@ export const useItemActions = () => {
     ({ kind }: CreateItem) => {
       updateBoard((previous) => {
         const lastSection = previous.sections
-          .filter((s): s is EmptySection => s.kind === "empty")
-          .sort((a, b) => b.position - a.position)[0];
+          .filter(
+            (section): section is EmptySection => section.kind === "empty",
+          )
+          .sort(
+            (sectionA, sectionB) => sectionB.position - sectionA.position,
+          )[0];
 
         if (!lastSection) return previous;
 

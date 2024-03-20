@@ -6,6 +6,7 @@ import { useElementSize } from "@mantine/hooks";
 import cx from "clsx";
 import { useAtomValue } from "jotai";
 
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
@@ -20,11 +21,11 @@ import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
   useServerDataFor,
+  WidgetEditModal,
 } from "@homarr/widgets";
 
 import { useRequiredBoard } from "~/app/[locale]/boards/_context";
 import type { Item } from "~/app/[locale]/boards/_types";
-import { modalEvents } from "~/app/[locale]/modals";
 import { editModeAtom } from "../editMode";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
@@ -108,42 +109,37 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
 
 const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   const t = useScopedI18n("item");
+  const { openModal } = useModalAction(WidgetEditModal);
+  const { openConfirmModal } = useConfirmModal();
   const isEditMode = useAtomValue(editModeAtom);
   const { updateItemOptions, removeItem } = useItemActions();
 
   if (!isEditMode) return null;
 
   const openEditModal = () => {
-    modalEvents.openManagedModal({
-      title: t("edit.title"),
-      modal: "widgetEditModal",
-      innerProps: {
-        kind: item.kind,
-        value: {
-          options: item.options,
-          integrations: item.integrations.map(({ id }) => id),
-        },
-        onSuccessfulEdit: ({ options, integrations: _ }) => {
-          updateItemOptions({
-            itemId: item.id,
-            newOptions: options,
-          });
-        },
-        integrationData: [],
-        integrationSupport: false,
+    openModal({
+      kind: item.kind,
+      value: {
+        options: item.options,
+        integrations: item.integrations.map(({ id }) => id),
       },
+      onSuccessfulEdit: ({ options, integrations: _ }) => {
+        updateItemOptions({
+          itemId: item.id,
+          newOptions: options,
+        });
+      },
+      integrationData: [],
+      integrationSupport: false,
     });
   };
 
   const openRemoveModal = () => {
-    modalEvents.openConfirmModal({
+    openConfirmModal({
       title: t("remove.title"),
       children: t("remove.message"),
       onConfirm: () => {
         removeItem({ itemId: item.id });
-      },
-      confirmProps: {
-        color: "red",
       },
     });
   };

@@ -13,6 +13,10 @@ import type { Board } from "./_types";
 // This is placed here because it's used in the layout and the page and because it's here it's not needed to load it everywhere
 import "../../../styles/gridstack.scss";
 
+import { notFound } from "next/navigation";
+
+import { auth } from "@homarr/auth";
+import { and, db, eq, schema } from "@homarr/db";
 import { GlobalItemServerDataRunner } from "@homarr/widgets";
 
 import { BoardMantineProvider } from "./_theme";
@@ -51,10 +55,14 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
         </GlobalItemServerDataRunner>
       );
     },
-    page: () => {
-      // TODO: Add check if board is private and user is not logged in
+    page: async ({ params }: { params: TParams }) => {
+      const board = await getInitialBoard(params);
 
-      return <ClientBoard />;
+      if (await canAccessBoardAsync(board)) {
+        return <ClientBoard />;
+      }
+
+      return notFound();
     },
     generateMetadata: async ({
       params,
@@ -62,6 +70,10 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
       params: TParams;
     }): Promise<Metadata> => {
       const board = await getInitialBoard(params);
+
+      if (!(await canAccessBoardAsync(board))) {
+        return {};
+      }
 
       return {
         title: board.metaTitle ?? `${capitalize(board.name)} board | Homarr`,
@@ -71,4 +83,31 @@ export const createBoardPage = <TParams extends Record<string, unknown>>({
       };
     },
   };
+};
+
+const canAccessBoardAsync = async (board: Board) => {
+  const session = await auth();
+
+  if (board.isPublic) {
+    return true; // Public boards can be accessed by anyone
+  }
+
+  if (!session) {
+    return false; // Not logged in users can't access private boards
+  }
+
+  if (board.creatorId === session?.user.id) {
+    return true; // Creators can access their own private boards
+  }
+
+  const permissions = await db.query.boardPermissions.findMany({
+    where: and(
+      eq(schema.boardPermissions.userId, session.user.id),
+      eq(schema.boardPermissions.boardId, board.id),
+    ),
+  });
+
+  return ["board-view", "board-change"].some((key) =>
+    permissions.some(({ permission }) => key === permission),
+  ); // Allow access for all with any board permission
 };

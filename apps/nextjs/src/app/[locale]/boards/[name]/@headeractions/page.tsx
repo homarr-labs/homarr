@@ -1,8 +1,10 @@
 "use client";
 
+import { useCallback } from "react";
 import { useAtom, useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
+import { useModalAction } from "@homarr/modals";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -21,10 +23,11 @@ import {
   Menu,
 } from "@homarr/ui";
 
-import { modalEvents } from "~/app/[locale]/modals";
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { editModeAtom } from "~/components/board/editMode";
+import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
+import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { HeaderButton } from "~/components/layout/header/button";
 import { useRequiredBoard } from "../../_context";
 
@@ -46,8 +49,35 @@ export default function BoardViewHeaderActions() {
 }
 
 const AddMenu = () => {
+  const { openModal: openCategoryEditModal } =
+    useModalAction(CategoryEditModal);
+  const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { addCategoryToEnd } = useCategoryActions();
   const t = useI18n();
+
+  const handleAddCategory = useCallback(
+    () =>
+      openCategoryEditModal(
+        {
+          category: {
+            id: "new",
+            name: "",
+          },
+          onSuccess({ name }) {
+            addCategoryToEnd({ name });
+          },
+          submitLabel: t("section.category.create.submit"),
+        },
+        {
+          title: (t) => t("section.category.create.title"),
+        },
+      ),
+    [addCategoryToEnd, openCategoryEditModal, t],
+  );
+
+  const handleSelectItem = useCallback(() => {
+    openItemSelectModal();
+  }, [openItemSelectModal]);
 
   return (
     <Menu position="bottom-end" withArrow>
@@ -62,14 +92,7 @@ const AddMenu = () => {
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
         <Menu.Item
           leftSection={<IconBox size={20} />}
-          onClick={() =>
-            modalEvents.openManagedModal({
-              title: t("item.create.title"),
-              size: "xl",
-              modal: "itemSelectModal",
-              innerProps: {},
-            })
-          }
+          onClick={handleSelectItem}
         >
           {t("item.action.create")}
         </Menu.Item>
@@ -81,22 +104,7 @@ const AddMenu = () => {
 
         <Menu.Item
           leftSection={<IconBoxAlignTop size={20} />}
-          onClick={() =>
-            modalEvents.openManagedModal({
-              title: t("section.category.create.title"),
-              modal: "categoryEditModal",
-              innerProps: {
-                submitLabel: t("section.category.create.submit"),
-                category: {
-                  id: "new",
-                  name: "",
-                },
-                onSuccess({ name }) {
-                  addCategoryToEnd({ name });
-                },
-              },
-            })
-          }
+          onClick={handleAddCategory}
         >
           {t("section.category.action.create")}
         </Menu.Item>

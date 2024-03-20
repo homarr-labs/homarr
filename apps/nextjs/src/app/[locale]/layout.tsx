@@ -5,11 +5,11 @@ import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 
+import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@homarr/ui";
 
 import { JotaiProvider } from "./_client-providers/jotai";
-import { ModalsProvider } from "./_client-providers/modals";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { composeWrappers } from "./compose";
@@ -67,7 +67,7 @@ export default function Layout(props: {
         })}
       />
     ),
-    (innerProps) => <ModalsProvider {...innerProps} />,
+    (innerProps) => <ModalProvider {...innerProps} />,
   ]);
 
   return (

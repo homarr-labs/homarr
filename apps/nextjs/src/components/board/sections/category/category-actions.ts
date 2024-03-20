@@ -80,10 +80,10 @@ export const useCategoryActions = () => {
       updateBoard((previous) => {
         const lastSection = previous.sections
           .filter(
-            (x): x is CategorySection | EmptySection =>
-              x.kind === "empty" || x.kind === "category",
+            (section): section is CategorySection | EmptySection =>
+              section.kind === "empty" || section.kind === "category",
           )
-          .sort((a, b) => b.position - a.position)
+          .sort((sectionA, sectionB) => sectionB.position - sectionA.position)
           .at(0);
 
         if (!lastSection) return previous;

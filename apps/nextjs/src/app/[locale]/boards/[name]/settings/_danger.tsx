@@ -4,10 +4,11 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
 
-import { modalEvents } from "~/app/[locale]/modals";
+import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import { useRequiredBoard } from "../../_context";
 import classes from "./danger.module.css";
 
@@ -15,6 +16,8 @@ export const DangerZoneSettingsContent = () => {
   const board = useRequiredBoard();
   const t = useScopedI18n("board.setting");
   const router = useRouter();
+  const { openConfirmModal } = useConfirmModal();
+  const { openModal } = useModalAction(BoardRenameModal);
   const { mutate: changeVisibility, isPending: isChangeVisibilityPending } =
     clientApi.board.changeVisibility.useMutation();
   const { mutate: deleteBoard, isPending: isDeletePending } =
@@ -24,31 +27,22 @@ export const DangerZoneSettingsContent = () => {
 
   const onRenameClick = useCallback(
     () =>
-      modalEvents.openManagedModal({
-        modal: "boardRenameModal",
-        title: t("section.dangerZone.action.rename.modal.title"),
-        innerProps: {
-          id: board.id,
-          previousName: board.name,
-          onSuccess: (name) => {
-            router.push(`/boards/${name}/settings`);
-          },
-        },
+      openModal({
+        id: board.id,
+        previousName: board.name,
+        onSuccess: (name) => router.push(`/boards/${name}/settings`),
       }),
-    [board.id, board.name, router, t],
+    [board.id, board.name, router, openModal],
   );
 
   const onVisibilityClick = useCallback(() => {
-    modalEvents.openConfirmModal({
+    openConfirmModal({
       title: t(
         `section.dangerZone.action.visibility.confirm.${visibility}.title`,
       ),
       children: t(
         `section.dangerZone.action.visibility.confirm.${visibility}.description`,
       ),
-      confirmProps: {
-        color: "red.9",
-      },
       onConfirm: () => {
         changeVisibility(
           {
@@ -72,15 +66,13 @@ export const DangerZoneSettingsContent = () => {
     utils.board.byName,
     utils.board.default,
     visibility,
+    openConfirmModal,
   ]);
 
   const onDeleteClick = useCallback(() => {
-    modalEvents.openConfirmModal({
+    openConfirmModal({
       title: t("section.dangerZone.action.delete.confirm.title"),
       children: t("section.dangerZone.action.delete.confirm.description"),
-      confirmProps: {
-        color: "red.9",
-      },
       onConfirm: () => {
         deleteBoard(
           { id: board.id },
@@ -92,7 +84,7 @@ export const DangerZoneSettingsContent = () => {
         );
       },
     });
-  }, [board.id, deleteBoard, router, t]);
+  }, [board.id, deleteBoard, router, t, openConfirmModal]);
 
   return (
     <Stack gap="sm">
