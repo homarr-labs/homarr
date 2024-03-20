@@ -45,6 +45,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
   const theme = useMantineTheme();
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
+
   return (
     <form
       onSubmit={form.onSubmit((values) => {

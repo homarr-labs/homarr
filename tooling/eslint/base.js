@@ -17,6 +17,14 @@ const config = {
   },
   plugins: ["@typescript-eslint", "import"],
   rules: {
+    "id-length": [
+      "warn",
+      {
+        min: 3,
+        exceptions: ["_", "i", "z", "t", "id"], // _ for unused variables, i for index, z for zod, t for translation
+        properties: "never", // This allows for example the use of <Grid.Col span={{ sm: 12, md: 6 }}> as sm and md would be too short
+      },
+    ],
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "turbo/no-undeclared-env-vars": "off",
     "@typescript-eslint/no-unused-vars": [
