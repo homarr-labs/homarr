@@ -191,9 +191,11 @@ export default {
   },
   common: {
     action: {
+      add: "Add",
       backToOverview: "Back to overview",
       create: "Create",
       edit: "Edit",
+      remove: "Remove",
       save: "Save",
       saveChanges: "Save changes",
       cancel: "Cancel",
@@ -511,6 +513,35 @@ export default {
         },
         customCss: {
           title: "Custom css",
+        },
+        access: {
+          title: "Access control",
+          permission: {
+            userSelect: {
+              title: "Add user permission",
+              label: "Select user",
+              notFound: "No user found",
+            },
+            field: {
+              user: {
+                label: "User",
+              },
+              permission: {
+                label: "Permission",
+              },
+            },
+            item: {
+              "board-view": {
+                label: "View board",
+              },
+              "board-change": {
+                label: "Change board",
+              },
+              "board-full": {
+                label: "Full access",
+              },
+            },
+          },
         },
         dangerZone: {
           title: "Danger Zone",

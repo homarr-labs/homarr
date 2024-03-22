@@ -33,7 +33,7 @@ export const IntegrationCreateDropdownContent = () => {
         leftSection={<IconSearch stroke={1.5} size={20} />}
         placeholder={t("integration.page.list.search")}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(event) => setSearch(event.target.value)}
       />
 
       {filteredKinds.length > 0 ? (

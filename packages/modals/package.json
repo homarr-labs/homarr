@@ -1,5 +1,5 @@
 {
-  "name": "@homarr/widgets",
+  "name": "@homarr/modals",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -19,6 +19,10 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@homarr/ui": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0"
+  },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
@@ -31,16 +35,5 @@
       "@homarr/eslint-config/base"
     ]
   },
-  "prettier": "@homarr/prettier-config",
-  "dependencies": {
-    "@homarr/common": "workspace:^0.1.0",
-    "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/form": "workspace:^0.1.0",
-    "@homarr/api": "workspace:^0.1.0",
-    "@homarr/modals": "workspace:^0.1.0",
-    "@homarr/notifications": "workspace:^0.1.0",
-    "@homarr/translation": "workspace:^0.1.0",
-    "@homarr/ui": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0"
-  }
+  "prettier": "@homarr/prettier-config"
 }

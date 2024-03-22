@@ -4,8 +4,10 @@ import {
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
+  boardPermissions,
 } from "@homarr/definitions";
 
+import { zodEnumFromArray } from "./enums";
 import { commonItemSchema, createSectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
@@ -65,6 +67,23 @@ const saveSchema = z.object({
 
 const createSchema = z.object({ name: boardNameSchema });
 
+const permissionsSchema = z.object({
+  id: z.string(),
+});
+
+const savePermissionsSchema = z.object({
+  id: z.string(),
+  permissions: z.array(
+    z.object({
+      user: z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+      permission: zodEnumFromArray(boardPermissions),
+    }),
+  ),
+});
+
 export const boardSchemas = {
   byName: byNameSchema,
   savePartialSettings: savePartialSettingsSchema,
@@ -72,4 +91,6 @@ export const boardSchemas = {
   create: createSchema,
   rename: renameSchema,
   changeVisibility: changeVisibilitySchema,
+  permissions: permissionsSchema,
+  savePermissions: savePermissionsSchema,
 };

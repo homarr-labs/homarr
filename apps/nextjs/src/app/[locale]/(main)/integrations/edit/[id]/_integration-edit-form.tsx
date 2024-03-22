@@ -10,6 +10,7 @@ import {
   getDefaultSecretKinds,
 } from "@homarr/definitions";
 import { useForm, zodResolver } from "@homarr/form";
+import { useConfirmModal } from "@homarr/modals";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -19,7 +20,6 @@ import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { modalEvents } from "~/app/[locale]/modals";
 import { SecretCard } from "../../_integration-secret-card";
 import { IntegrationSecretInput } from "../../_integration-secret-inputs";
 import {
@@ -35,9 +35,10 @@ interface EditIntegrationForm {
 
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const t = useI18n();
+  const { openConfirmModal } = useConfirmModal();
   const secretsKinds =
-    getAllSecretKindOptions(integration.kind).find((x) =>
-      integration.secrets.every((y) => x.includes(y.kind)),
+    getAllSecretKindOptions(integration.kind).find((secretKinds) =>
+      integration.secrets.every((secret) => secretKinds.includes(secret.kind)),
     ) ?? getDefaultSecretKinds(integration.kind);
   const initialFormValues = {
     name: integration.name,
@@ -99,7 +100,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   };
 
   return (
-    <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
+    <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
       <Stack>
         <TestConnectionNoticeAlert />
 
@@ -128,7 +129,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                     ) {
                       return res(true);
                     }
-                    modalEvents.openConfirmModal({
+                    openConfirmModal({
                       title: t("integration.secrets.reset.title"),
                       children: t("integration.secrets.reset.message"),
                       onCancel: () => res(false),

@@ -45,7 +45,9 @@ export const ClientBoard = () => {
   const board = useRequiredBoard();
   const isReady = useIsBoardReady();
 
-  const sortedSections = board.sections.sort((a, b) => a.position - b.position);
+  const sortedSections = board.sections.sort(
+    (sectionA, sectionB) => sectionA.position - sectionB.position,
+  );
 
   const ref = useRef<HTMLDivElement>(null);
 

@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import { useCallback } from "react";
 
 import { clientApi } from "@homarr/api/client";
+import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { Button, IconCategoryPlus } from "@homarr/ui";
 
-import { modalEvents } from "~/app/[locale]/modals";
 import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { AddBoardModal } from "~/components/manage/boards/add-board-modal";
 
 interface CreateBoardButtonProps {
   boardNames: string[];
@@ -15,6 +16,7 @@ interface CreateBoardButtonProps {
 
 export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
   const t = useI18n();
+  const { openModal } = useModalAction(AddBoardModal);
 
   const { mutateAsync, isPending } = clientApi.board.create.useMutation({
     onSettled: async () => {
@@ -22,20 +24,16 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
     },
   });
 
-  const onClick = React.useCallback(() => {
-    modalEvents.openManagedModal({
-      modal: "addBoardModal",
-      title: t("management.page.board.button.create"),
-      innerProps: {
-        onSuccess: async (values) => {
-          await mutateAsync({
-            name: values.name,
-          });
-        },
-        boardNames,
+  const onClick = useCallback(() => {
+    openModal({
+      onSuccess: async (values) => {
+        await mutateAsync({
+          name: values.name,
+        });
       },
+      boardNames,
     });
-  }, [mutateAsync, t, boardNames]);
+  }, [mutateAsync, boardNames, openModal]);
 
   return (
     <Button

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
+import { useConfirmModal } from "@homarr/modals";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -11,7 +12,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { revalidatePathAction } from "../../../revalidatePathAction";
-import { modalEvents } from "../../modals";
 
 interface DeleteIntegrationActionButtonProps {
   count: number;
@@ -24,6 +24,7 @@ export const DeleteIntegrationActionButton = ({
 }: DeleteIntegrationActionButtonProps) => {
   const t = useScopedI18n("integration.page.delete");
   const router = useRouter();
+  const { openConfirmModal } = useConfirmModal();
   const { mutateAsync, isPending } = clientApi.integration.delete.useMutation();
 
   return (
@@ -32,7 +33,7 @@ export const DeleteIntegrationActionButton = ({
       variant="subtle"
       color="red"
       onClick={() => {
-        modalEvents.openConfirmModal({
+        openConfirmModal({
           title: t("title"),
           children: t("message", integration),
           onConfirm: () => {

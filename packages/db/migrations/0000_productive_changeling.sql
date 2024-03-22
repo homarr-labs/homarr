@@ -14,10 +14,28 @@ CREATE TABLE `account` (
 	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
+CREATE TABLE `app` (
+	`id` text PRIMARY KEY NOT NULL,
+	`name` text NOT NULL,
+	`description` text,
+	`icon_url` text NOT NULL,
+	`href` text
+);
+--> statement-breakpoint
+CREATE TABLE `boardPermission` (
+	`board_id` text NOT NULL,
+	`user_id` text NOT NULL,
+	`permission` text NOT NULL,
+	PRIMARY KEY(`board_id`, `permission`, `user_id`),
+	FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
 CREATE TABLE `board` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`is_public` integer DEFAULT false NOT NULL,
+	`creator_id` text,
 	`page_title` text,
 	`meta_title` text,
 	`logo_image_url` text,
@@ -30,7 +48,8 @@ CREATE TABLE `board` (
 	`secondary_color` text DEFAULT '#fd7e14' NOT NULL,
 	`opacity` integer DEFAULT 100 NOT NULL,
 	`custom_css` text,
-	`column_count` integer DEFAULT 10 NOT NULL
+	`column_count` integer DEFAULT 10 NOT NULL,
+	FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
 CREATE TABLE `integration_item` (

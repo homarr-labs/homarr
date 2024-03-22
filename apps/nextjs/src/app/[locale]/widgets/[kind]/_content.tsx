@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
@@ -17,10 +18,11 @@ import {
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
+  WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
 
-import { modalEvents } from "../../modals";
+import { PreviewDimensionsModal } from "./_dimension-modal";
 import type { Dimensions } from "./_dimension-modal";
 
 interface WidgetPreviewPageContentProps {
@@ -38,6 +40,10 @@ export const WidgetPreviewPageContent = ({
   integrationData,
 }: WidgetPreviewPageContentProps) => {
   const t = useScopedI18n("widgetPreview");
+  const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
+  const { openModal: openPreviewDimensionsModal } = useModalAction(
+    PreviewDimensionsModal,
+  );
   const currentDefinition = useMemo(
     () => widgetImports[kind].definition,
     [kind],
@@ -55,28 +61,25 @@ export const WidgetPreviewPageContent = ({
     integrations: [],
   });
 
-  const Comp = loadWidgetDynamic(kind);
-
-  const openWitgetEditModal = useCallback(() => {
-    return modalEvents.openManagedModal({
-      modal: "widgetEditModal",
-      innerProps: {
-        kind,
-        value: state,
-        onSuccessfulEdit: (value) => {
-          setState(value);
-        },
-        integrationData: integrationData.filter(
-          (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some(
-              (kind) => kind === integration.kind,
-            ),
-        ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
+  const handleOpenEditWidgetModal = useCallback(() => {
+    openWidgetEditModal({
+      kind,
+      value: state,
+      onSuccessfulEdit: (value) => {
+        setState(value);
       },
+      integrationData: integrationData.filter(
+        (integration) =>
+          "supportedIntegrations" in currentDefinition &&
+          (currentDefinition.supportedIntegrations as string[]).some(
+            (kind) => kind === integration.kind,
+          ),
+      ),
+      integrationSupport: "supportedIntegrations" in currentDefinition,
     });
-  }, [kind, state, integrationData, currentDefinition]);
+  }, [currentDefinition, integrationData, kind, openWidgetEditModal, state]);
+
+  const Comp = loadWidgetDynamic(kind);
 
   const toggleEditMode = useCallback(() => {
     setEditMode((editMode) => !editMode);
@@ -86,15 +89,11 @@ export const WidgetPreviewPageContent = ({
   }, [editMode, t]);
 
   const openDimensionsModal = useCallback(() => {
-    modalEvents.openManagedModal({
-      modal: "dimensionsModal",
-      title: t("dimensions.title"),
-      innerProps: {
-        dimensions,
-        setDimensions,
-      },
+    openPreviewDimensionsModal({
+      dimensions,
+      setDimensions,
     });
-  }, [dimensions, t]);
+  }, [dimensions, openPreviewDimensionsModal]);
 
   return (
     <>
@@ -107,7 +106,8 @@ export const WidgetPreviewPageContent = ({
         <Comp
           options={state.options as never}
           integrations={state.integrations.map(
-            (id) => integrationData.find((x) => x.id === id)!,
+            (id) =>
+              integrationData.find((integration) => integration.id === id)!,
           )}
           width={dimensions.width}
           height={dimensions.height}
@@ -119,7 +119,7 @@ export const WidgetPreviewPageContent = ({
           size={48}
           variant="default"
           radius="xl"
-          onClick={openWitgetEditModal}
+          onClick={handleOpenEditWidgetModal}
         >
           <IconPencil size={24} />
         </ActionIcon>

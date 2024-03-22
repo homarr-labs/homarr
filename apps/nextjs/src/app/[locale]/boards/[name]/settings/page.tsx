@@ -16,12 +16,14 @@ import {
   IconLayout,
   IconPhoto,
   IconSettings,
+  IconUser,
   Stack,
   Text,
   Title,
 } from "@homarr/ui";
 
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
+import { AccessSettingsContent } from "./_access";
 import { BackgroundSettingsContent } from "./_background";
 import { ColorSettingsContent } from "./_colors";
 import { CustomCssSettingsContent } from "./_customCss";
@@ -43,6 +45,7 @@ export default async function BoardSettingsPage({
   searchParams,
 }: Props) {
   const board = await api.board.byName({ name: params.name });
+  const permissions = await api.board.permissions({ id: board.id });
   const t = await getScopedI18n("board.setting");
 
   return (
@@ -67,6 +70,12 @@ export default async function BoardSettingsPage({
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
             <CustomCssSettingsContent />
+          </AccordionItemFor>
+          <AccordionItemFor value="access" icon={IconUser}>
+            <AccessSettingsContent
+              board={board}
+              initialPermissions={permissions}
+            />
           </AccordionItemFor>
           <AccordionItemFor
             value="dangerZone"

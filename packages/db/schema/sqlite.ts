@@ -19,6 +19,7 @@ import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
   BackgroundImageSize,
+  BoardPermission,
   IntegrationKind,
   IntegrationSecretKind,
   SectionKind,
@@ -94,8 +95,8 @@ export const integrations = sqliteTable(
     url: text("url").notNull(),
     kind: text("kind").$type<IntegrationKind>().notNull(),
   },
-  (i) => ({
-    kindIdx: index("integration__kind_idx").on(i.kind),
+  (integrations) => ({
+    kindIdx: index("integration__kind_idx").on(integrations.kind),
   }),
 );
 
@@ -122,6 +123,9 @@ export const boards = sqliteTable("board", {
   id: text("id").notNull().primaryKey(),
   name: text("name").unique().notNull(),
   isPublic: int("is_public", { mode: "boolean" }).default(false).notNull(),
+  creatorId: text("creator_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
   pageTitle: text("page_title"),
   metaTitle: text("meta_title"),
   logoImageUrl: text("logo_image_url"),
@@ -145,6 +149,24 @@ export const boards = sqliteTable("board", {
   customCss: text("custom_css"),
   columnCount: int("column_count").default(10).notNull(),
 });
+
+export const boardPermissions = sqliteTable(
+  "boardPermission",
+  {
+    boardId: text("board_id")
+      .notNull()
+      .references(() => boards.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    permission: text("permission").$type<BoardPermission>().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.boardId, table.userId, table.permission],
+    }),
+  }),
+);
 
 export const sections = sqliteTable("section", {
   id: text("id").notNull().primaryKey(),
@@ -203,7 +225,23 @@ export const accountRelations = relations(accounts, ({ one }) => ({
 
 export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  boards: many(boards),
+  boardPermissions: many(boardPermissions),
 }));
+
+export const boardPermissionRelations = relations(
+  boardPermissions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [boardPermissions.userId],
+      references: [users.id],
+    }),
+    board: one(boards, {
+      fields: [boardPermissions.boardId],
+      references: [boards.id],
+    }),
+  }),
+);
 
 export const integrationRelations = relations(integrations, ({ many }) => ({
   secrets: many(integrationSecrets),
@@ -220,8 +258,13 @@ export const integrationSecretRelations = relations(
   }),
 );
 
-export const boardRelations = relations(boards, ({ many }) => ({
+export const boardRelations = relations(boards, ({ many, one }) => ({
   sections: many(sections),
+  creator: one(users, {
+    fields: [boards.creatorId],
+    references: [users.id],
+  }),
+  permissions: many(boardPermissions),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({
