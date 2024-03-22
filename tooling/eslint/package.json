@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@next/eslint-plugin-next": "^14.1.4",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "^1.12.5",
     "eslint-plugin-import": "^2.29.1",
@@ -26,7 +26,7 @@
     "eslint-plugin-react-hooks": "^4.6.0"
   },
   "devDependencies": {
-    "@types/eslint": "^8.56.5",
+    "@types/eslint": "^8.56.6",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^8.57.0",

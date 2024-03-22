@@ -278,7 +278,7 @@ importers:
         specifier: ^20.11.30
         version: 20.11.30
       '@types/react':
-        specifier: ^18.2.66
+        specifier: ^18.2.67
         version: 18.2.67
       '@types/react-dom':
         specifier: ^18.2.22
@@ -451,8 +451,8 @@ importers:
         specifier: ^0.20.14
         version: 0.20.14
       drizzle-orm:
-        specifier: ^0.30.2
-        version: 0.30.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.2)(react@17.0.2)
+        specifier: ^0.30.4
+        version: 0.30.4(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.2)(react@17.0.2)
       mysql2:
         specifier: ^3.9.2
         version: 3.9.2
@@ -759,10 +759,10 @@ importers:
         specifier: ^14.1.4
         version: 14.1.4
       '@typescript-eslint/eslint-plugin':
-        specifier: ^7.2.0
+        specifier: ^7.3.1
         version: 7.3.1(@typescript-eslint/parser@7.3.1)(eslint@8.57.0)(typescript@5.4.2)
       '@typescript-eslint/parser':
-        specifier: ^7.2.0
+        specifier: ^7.3.1
         version: 7.3.1(eslint@8.57.0)(typescript@5.4.2)
       eslint-config-prettier:
         specifier: ^9.1.0
@@ -790,8 +790,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../typescript
       '@types/eslint':
-        specifier: ^8.56.5
-        version: 8.56.5
+        specifier: ^8.56.6
+        version: 8.56.6
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -3359,12 +3359,12 @@ packages:
   /@types/eslint-scope@3.7.7:
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
     dependencies:
-      '@types/eslint': 8.56.5
+      '@types/eslint': 8.56.6
       '@types/estree': 1.0.5
     dev: true
 
-  /@types/eslint@8.56.5:
-    resolution: {integrity: sha512-u5/YPJHo1tvkSF2CE0USEkxon82Z5DBy2xR+qfyYNszpX9qcs4sT6uq2kBbj4BXY1+DBGDPnrhMZV3pKWGNukw==}
+  /@types/eslint@8.56.6:
+    resolution: {integrity: sha512-ymwc+qb1XkjT/gfoQwxIeHZ6ixH23A+tCT2ADSA/DPVKzAjwYkTXBMCQ/f6fe4wEa85Lhp26VPeUxI7wMhAi7A==}
     dependencies:
       '@types/estree': 1.0.5
       '@types/json-schema': 7.0.15
@@ -5097,8 +5097,8 @@ packages:
       - supports-color
     dev: false
 
-  /drizzle-orm@0.30.3(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.2)(react@17.0.2):
-    resolution: {integrity: sha512-tmIUPy71Ca7BUD5M7Tn9bvXESDWoj66d6lTdKCdf30V26xDFFjbx7DMamhOiWU+H1fflBk5rCdtGyt2SiFPgRg==}
+  /drizzle-orm@0.30.4(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.2)(react@17.0.2):
+    resolution: {integrity: sha512-kWoSMGbrOFkmkAweLTFtHJMpN+nwhx89q0mLELqT2aEU+1szNV8jrnBmJwZ0WGNp7J7yQn/ezEtxBI/qzTSElQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -5112,6 +5112,7 @@ packages:
       '@types/react': '>=18'
       '@types/sql.js': '*'
       '@vercel/postgres': '*'
+      '@xata.io/client': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       expo-sqlite: '>=13.2.0'
@@ -5147,6 +5148,8 @@ packages:
       '@types/sql.js':
         optional: true
       '@vercel/postgres':
+        optional: true
+      '@xata.io/client':
         optional: true
       better-sqlite3:
         optional: true
