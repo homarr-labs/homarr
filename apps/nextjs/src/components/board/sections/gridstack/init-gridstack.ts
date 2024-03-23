@@ -25,13 +25,13 @@ export const initializeGridstack = ({
   const newGrid = refs.gridstack;
   newGrid.current = GridStack.init(
     {
-      column: sectionColumnCount,
-      margin: 10,
+      column: section.kind === "empty" ? 4 : sectionColumnCount,
+      margin: section.kind === "outer" ? 0 : 10,
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
-      staticGrid: true,
+      staticGrid: false,
       minRow: 1,
       animate: false,
       styleInHead: true,
@@ -43,7 +43,7 @@ export const initializeGridstack = ({
   const grid = newGrid.current;
   if (!grid) return false;
   // Must be used to update the column count after the initialization
-  grid.column(sectionColumnCount, "none");
+  grid.column(section.kind === "empty" ? 4 : sectionColumnCount, "none");
 
   grid.batchUpdate();
   grid.removeAll(false);

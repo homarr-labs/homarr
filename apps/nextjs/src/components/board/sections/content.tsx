@@ -40,6 +40,8 @@ export const SectionContent = ({ items, refs }: Props) => {
   const board = useRequiredBoard();
   const { ref, width, height } = useElementSize<HTMLDivElement>();
 
+  console.log("content");
+
   return (
     <>
       {items.map((item) => {
