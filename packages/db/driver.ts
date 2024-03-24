@@ -26,7 +26,6 @@ export let connection: Database.Database | mysql.Connection;
 export let database: HomarrDatabase;
 
 const initBetterSqlite = () => {
-  console.log(process.env);
   connection = new Database(process.env.DB_URL);
   database = drizzleSqlite(connection, { schema: sqliteSchema });
 };

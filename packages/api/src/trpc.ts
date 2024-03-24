@@ -30,7 +30,6 @@ export const createTRPCContext = (opts: {
   headers: Headers;
   session: Session | null;
 }) => {
-  // If the flag is set from the websocket server, we don't want to fallback to the auth method as it is not supported there
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 

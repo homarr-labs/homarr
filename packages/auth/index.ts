@@ -17,4 +17,4 @@ export * from "./security";
 export const createHandlers = (isCredentialsRequest: boolean) =>
   createConfiguration(isCredentialsRequest);
 export const { auth } = createConfiguration(false);
-export { getSessionFromToken } from "./session";
+export { getSessionFromToken, sessionTokenCookieName } from "./session";

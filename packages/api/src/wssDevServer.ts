@@ -1,7 +1,7 @@
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { WebSocketServer } from "ws";
 
-import { getSessionFromToken } from "@homarr/auth";
+import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
 import { parseCookies } from "@homarr/common";
 import { db } from "@homarr/db";
 import { logger } from "@homarr/log";
@@ -27,7 +27,7 @@ const handler = applyWSSHandler({
       const nextHeaders = new Headers(headers);
 
       const store = parseCookies(nextHeaders.get("cookie") ?? "");
-      const sessionToken = store["authjs.session-token"];
+      const sessionToken = store[sessionTokenCookieName];
 
       const session = await getSessionFromToken(db, sessionToken);
 

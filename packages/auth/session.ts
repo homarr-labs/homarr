@@ -2,9 +2,6 @@ import { randomUUID } from "crypto";
 import type { Session } from "next-auth";
 
 import type { Database } from "@homarr/db";
-import { eq } from "@homarr/db";
-
-import { sessions } from "../db/schema/mysql";
 
 export const sessionMaxAgeInSeconds = 30 * 24 * 60 * 60; // 30 days
 export const sessionTokenCookieName = "next-auth.session-token";
@@ -26,7 +23,7 @@ export const getSessionFromToken = async (
   }
 
   const session = await db.query.sessions.findFirst({
-    where: eq(sessions.sessionToken, token),
+    where: ({ sessionToken }, { eq }) => eq(sessionToken, token),
     columns: {
       expires: true,
     },
