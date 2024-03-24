@@ -29,10 +29,10 @@ describe("AppController", () => {
         .mockReturnValueOnce(Promise.resolve("ABC"));
 
       // act
-      const a = await appController.getHello();
+      const app = await appController.getHello();
 
       // assert
-      expect(a).toBe("ABC");
+      expect(app).toBe("ABC");
       expect(appService.getHello).toHaveBeenCalledTimes(1);
     });
   });

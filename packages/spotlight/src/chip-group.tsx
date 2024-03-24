@@ -9,26 +9,28 @@ import {
 } from "./spotlight-store";
 import type { SpotlightActionGroup } from "./type";
 
-const disableArrowUpAndDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (e.key === "ArrowDown") {
+const disableArrowUpAndDown = (
+  event: React.KeyboardEvent<HTMLInputElement>,
+) => {
+  if (event.key === "ArrowDown") {
     selectNextAction(spotlightStore);
-    e.preventDefault();
-  } else if (e.key === "ArrowUp") {
+    event.preventDefault();
+  } else if (event.key === "ArrowUp") {
     selectPreviousAction(spotlightStore);
-    e.preventDefault();
-  } else if (e.key === "Enter") {
+    event.preventDefault();
+  } else if (event.key === "Enter") {
     triggerSelectedAction(spotlightStore);
   }
 };
 
-const focusActiveByDefault = (e: React.FocusEvent<HTMLInputElement>) => {
-  const relatedTarget = e.relatedTarget;
+const focusActiveByDefault = (event: React.FocusEvent<HTMLInputElement>) => {
+  const relatedTarget = event.relatedTarget;
 
   const isPreviousTargetRadio =
     relatedTarget && "type" in relatedTarget && relatedTarget.type === "radio";
   if (isPreviousTargetRadio) return;
 
-  const group = e.currentTarget.parentElement?.parentElement;
+  const group = event.currentTarget.parentElement?.parentElement;
   if (!group) return;
   const label = group.querySelector<HTMLLabelElement>("label[data-checked]");
   if (!label) return;
