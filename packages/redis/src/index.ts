@@ -3,11 +3,12 @@ import superjson from 'superjson';
 
 const subscriber = new Redis();
 const publisher = new Redis();
+const lastDataClient = new Redis();
 
 const createChannel = <TData>(name: string) => {
     return {
         subscribe: (callback: (data: TData) => void) => {
-            void subscriber.get(`last-${name}`).then((data) => {
+            void lastDataClient.get(`last-${name}`).then((data) => {
                 if (data) {
                     callback(superjson.parse(data))
                 }
@@ -25,7 +26,7 @@ const createChannel = <TData>(name: string) => {
             });
         },
         publish: async (data: TData) => {
-            await publisher.set(`last-${name}`, superjson.stringify(data))
+            await lastDataClient.set(`last-${name}`, superjson.stringify(data))
             await publisher.publish(name, superjson.stringify(data))
         }
     }
