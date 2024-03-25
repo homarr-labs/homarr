@@ -12,14 +12,16 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "pnpm tsx ./src/wssDevServer.ts",
+    "dev": "pnpm with-env tsx ./src/wssDevServer.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",

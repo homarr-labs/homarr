@@ -82,8 +82,10 @@ export const verificationTokens = sqliteTable(
     token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verificationToken) => ({
+    compoundKey: primaryKey({
+      columns: [verificationToken.identifier, verificationToken.token],
+    }),
   }),
 );
 
@@ -110,12 +112,14 @@ export const integrationSecrets = sqliteTable(
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
   },
-  (is) => ({
+  (integrationSecret) => ({
     compoundKey: primaryKey({
-      columns: [is.integrationId, is.kind],
+      columns: [integrationSecret.integrationId, integrationSecret.kind],
     }),
-    kindIdx: index("integration_secret__kind_idx").on(is.kind),
-    updatedAtIdx: index("integration_secret__updated_at_idx").on(is.updatedAt),
+    kindIdx: index("integration_secret__kind_idx").on(integrationSecret.kind),
+    updatedAtIdx: index("integration_secret__updated_at_idx").on(
+      integrationSecret.updatedAt,
+    ),
   }),
 );
 
@@ -227,6 +231,13 @@ export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   boards: many(boards),
   boardPermissions: many(boardPermissions),
+}));
+
+export const sessionRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
 }));
 
 export const boardPermissionRelations = relations(
