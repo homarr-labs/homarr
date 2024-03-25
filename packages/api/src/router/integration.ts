@@ -245,19 +245,27 @@ const key = Buffer.from(
 
 //Encrypting text
 export function encryptSecret(text: string): `${string}.${string}` {
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
+  const initializationVector = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv(
+    algorithm,
+    Buffer.from(key),
+    initializationVector,
+  );
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return `${encrypted.toString("hex")}.${iv.toString("hex")}`;
+  return `${encrypted.toString("hex")}.${initializationVector.toString("hex")}`;
 }
 
 // Decrypting text
 function decryptSecret(value: `${string}.${string}`) {
   const [data, dataIv] = value.split(".") as [string, string];
-  const iv = Buffer.from(dataIv, "hex");
+  const initializationVector = Buffer.from(dataIv, "hex");
   const encryptedText = Buffer.from(data, "hex");
-  const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
+  const decipher = crypto.createDecipheriv(
+    algorithm,
+    Buffer.from(key),
+    initializationVector,
+  );
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();

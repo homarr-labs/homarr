@@ -158,9 +158,9 @@ export const boardRouter = createTRPCRouter({
   save: publicProcedure
     .input(validation.board.save)
     .mutation(async ({ input, ctx }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (transaction) => {
         const dbBoard = await getFullBoardWithWhere(
-          tx,
+          transaction,
           eq(boards.id, input.id),
         );
 
@@ -170,7 +170,7 @@ export const boardRouter = createTRPCRouter({
         );
 
         if (addedSections.length > 0) {
-          await tx.insert(sections).values(
+          await transaction.insert(sections).values(
             addedSections.map((section) => ({
               id: section.id,
               kind: section.kind,
@@ -196,7 +196,7 @@ export const boardRouter = createTRPCRouter({
         const addedItems = filterAddedItems(inputItems, dbItems);
 
         if (addedItems.length > 0) {
-          await tx.insert(items).values(
+          await transaction.insert(items).values(
             addedItems.map((item) => ({
               id: item.id,
               kind: item.kind,
@@ -234,7 +234,7 @@ export const boardRouter = createTRPCRouter({
         );
 
         if (addedIntegrationRelations.length > 0) {
-          await tx.insert(integrationItems).values(
+          await transaction.insert(integrationItems).values(
             addedIntegrationRelations.map((relation) => ({
               itemId: relation.itemId,
               integrationId: relation.integrationId,
@@ -245,7 +245,7 @@ export const boardRouter = createTRPCRouter({
         const updatedItems = filterUpdatedItems(inputItems, dbItems);
 
         for (const item of updatedItems) {
-          await tx
+          await transaction
             .update(items)
             .set({
               kind: item.kind,
@@ -265,7 +265,10 @@ export const boardRouter = createTRPCRouter({
         );
 
         for (const section of updatedSections) {
-          await tx
+          const prev = dbBoard.sections.find(
+            (dbSection) => dbSection.id === section.id,
+          );
+          await transaction
             .update(sections)
             .set({
               xOffset: section.xOffset,
@@ -288,7 +291,7 @@ export const boardRouter = createTRPCRouter({
         );
 
         for (const relation of removedIntegrationRelations) {
-          await tx
+          await transaction
             .delete(integrationItems)
             .where(
               and(
@@ -302,7 +305,7 @@ export const boardRouter = createTRPCRouter({
 
         const itemIds = removedItems.map((item) => item.id);
         if (itemIds.length > 0) {
-          await tx.delete(items).where(inArray(items.id, itemIds));
+          await transaction.delete(items).where(inArray(items.id, itemIds));
         }
 
         const removedSections = filterRemovedItems(
@@ -312,7 +315,9 @@ export const boardRouter = createTRPCRouter({
         const sectionIds = removedSections.map((section) => section.id);
 
         if (sectionIds.length > 0) {
-          await tx.delete(sections).where(inArray(sections.id, sectionIds));
+          await transaction
+            .delete(sections)
+            .where(inArray(sections.id, sectionIds));
         }
       });
     }),
@@ -346,14 +351,14 @@ export const boardRouter = createTRPCRouter({
   savePermissions: publicProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      await ctx.db.transaction(async (tx) => {
-        await tx
+      await ctx.db.transaction(async (transaction) => {
+        await transaction
           .delete(boardPermissions)
           .where(eq(boardPermissions.boardId, input.id));
         if (input.permissions.length === 0) {
           return;
         }
-        await tx.insert(boardPermissions).values(
+        await transaction.insert(boardPermissions).values(
           input.permissions.map((permission) => ({
             userId: permission.user.id,
             permission: permission.permission,
