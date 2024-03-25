@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import type { ChangeEvent } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { Button, Stack, Text, TextInput } from "@homarr/ui";
@@ -8,22 +9,29 @@ import { Button, Stack, Text, TextInput } from "@homarr/ui";
 export const Test = () => {
   const [value, setValue] = useState("");
   const [message, setMessage] = useState<string>("Hello, world!");
-  const {mutate} = clientApi.user.setMessage.useMutation();
+  const { mutate } = clientApi.user.setMessage.useMutation();
   clientApi.user.test.useSubscription(undefined, {
-    onData({message}) {
+    onData({ message }) {
       setMessage(message);
     },
     onError(err) {
       alert(err);
     },
   });
+
+  const onChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => setValue(event.target.value),
+    [setValue],
+  );
+  const onClick = useCallback(() => {
+    mutate(value);
+    setValue("");
+  }, [mutate, value]);
+
   return (
     <Stack>
-      <TextInput label="Update message" value={value} onChange={e => setValue(e.target.value)} />
-      <Button onClick={() => {
-        mutate(value);
-        setValue("");
-      }}>Update message</Button>
+      <TextInput label="Update message" value={value} onChange={onChange} />
+      <Button onClick={onClick}>Update message</Button>
       <Text>This message gets through subscription: {message}</Text>
     </Stack>
   );

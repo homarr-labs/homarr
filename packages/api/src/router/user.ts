@@ -5,10 +5,10 @@ import { createSalt, hashPassword } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { createId, eq, schema } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
+import { exampleChannel } from "@homarr/redis";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { exampleChannel } from "@homarr/redis";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure
@@ -107,13 +107,11 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  setMessage: publicProcedure
-    .input(z.string())
-    .mutation(async ({ input }) => {
-      await exampleChannel.publish({message: input});
-    }),
+  setMessage: publicProcedure.input(z.string()).mutation(async ({ input }) => {
+    await exampleChannel.publish({ message: input });
+  }),
   test: publicProcedure.subscription(() => {
-    return observable<{message: string}>((emit) => {
+    return observable<{ message: string }>((emit) => {
       exampleChannel.subscribe((message) => {
         emit.next(message);
       });
