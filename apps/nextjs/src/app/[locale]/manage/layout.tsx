@@ -11,6 +11,7 @@ import {
   IconHome,
   IconInfoSmall,
   IconLayoutDashboard,
+  IconLogs,
   IconMailForward,
   IconQuestionMark,
   IconTool,
@@ -61,6 +62,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
         },
+        {
+          label: t("items.tools.items.logs"),
+          icon: IconLogs,
+          href: "/manage/tools/logs"
+        }
       ],
     },
     {

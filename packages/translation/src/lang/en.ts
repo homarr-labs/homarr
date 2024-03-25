@@ -620,6 +620,7 @@ export default {
           label: "Tools",
           items: {
             docker: "Docker",
+            logs: "Logs"
           },
         },
         help: {
