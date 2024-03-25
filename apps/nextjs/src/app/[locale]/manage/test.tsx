@@ -3,13 +3,15 @@
 import { useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
-import { Stack, Text } from "@homarr/ui";
+import { Button, Stack, Text, TextInput } from "@homarr/ui";
 
 export const Test = () => {
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState("");
+  const [message, setMessage] = useState<string>("Hello, world!");
+  const {mutate} = clientApi.user.setMessage.useMutation();
   clientApi.user.test.useSubscription(undefined, {
-    onData(data) {
-      setValue(data);
+    onData({message}) {
+      setMessage(message);
     },
     onError(err) {
       alert(err);
@@ -17,7 +19,12 @@ export const Test = () => {
   });
   return (
     <Stack>
-      <Text>This will change after one second: {value}</Text>
+      <TextInput label="Update message" value={value} onChange={e => setValue(e.target.value)} />
+      <Button onClick={() => {
+        mutate(value);
+        setValue("");
+      }}>Update message</Button>
+      <Text>This message gets through subscription: {message}</Text>
     </Stack>
   );
 };

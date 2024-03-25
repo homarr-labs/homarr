@@ -1,0 +1,14 @@
+############################
+#
+#  This compose file is only for development.
+#  Do not use this in production.
+#
+############################
+
+name: development-docker-compose
+services:
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
