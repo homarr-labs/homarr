@@ -6,7 +6,8 @@ import { GridStack } from "@homarr/gridstack";
 import type { Section } from "~/app/[locale]/boards/_types";
 
 interface InitializeGridstackProps {
-  section: Section;
+  section: Omit<Section, "items">;
+  items: { id: string }[];
   refs: {
     wrapper: RefObject<HTMLDivElement>;
     items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
@@ -17,6 +18,7 @@ interface InitializeGridstackProps {
 
 export const initializeGridstack = ({
   section,
+  items,
   refs,
   sectionColumnCount,
 }: InitializeGridstackProps) => {
@@ -47,7 +49,7 @@ export const initializeGridstack = ({
 
   grid.batchUpdate();
   grid.removeAll(false);
-  section.items.forEach(({ id }) => {
+  items.forEach(({ id }) => {
     const ref = refs.items.current[id]?.current;
     ref && grid.makeWidget(ref);
   });

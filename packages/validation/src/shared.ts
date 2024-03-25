@@ -27,27 +27,40 @@ export const commonItemSchema = z
   })
   .and(sharedItemSchema);
 
-const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(
+const createRootSectionSchema = <TItemSchema extends z.ZodTypeAny>(
   itemSchema: TItemSchema,
 ) =>
   z.object({
     id: z.string(),
-    name: z.string(),
-    kind: z.literal("category"),
-    position: z.number(),
+    kind: z.literal("root"),
+    xOffset: z.number(),
+    yOffset: z.number(),
+    height: z.number(),
+    width: z.number(),
+    parentSectionId: z.null(),
+    columnCount: z.number(),
     items: z.array(itemSchema),
   });
 
-const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(
+const createCardSectionSchema = <TItemSchema extends z.ZodTypeAny>(
   itemSchema: TItemSchema,
 ) =>
   z.object({
     id: z.string(),
-    kind: z.literal("empty"),
-    position: z.number(),
+    kind: z.literal("card"),
+    xOffset: z.number(),
+    yOffset: z.number(),
+    height: z.number(),
+    width: z.number(),
+    parentSectionId: z.string(),
+    columnCount: z.number(),
     items: z.array(itemSchema),
   });
 
 export const createSectionSchema = <TItemSchema extends z.ZodTypeAny>(
   itemSchema: TItemSchema,
-) => z.union([createCategorySchema(itemSchema), createEmptySchema(itemSchema)]);
+) =>
+  z.union([
+    createRootSectionSchema(itemSchema),
+    createCardSectionSchema(itemSchema),
+  ]);

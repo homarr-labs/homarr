@@ -73,8 +73,11 @@ export const boardRouter = createTRPCRouter({
         });
         await transaction.insert(sections).values({
           id: createId(),
-          kind: "empty",
-          position: 0,
+          kind: "root",
+          xOffset: 0,
+          yOffset: 0,
+          width: 1,
+          height: 1,
           boardId,
         });
       });
@@ -171,8 +174,13 @@ export const boardRouter = createTRPCRouter({
             addedSections.map((section) => ({
               id: section.id,
               kind: section.kind,
-              position: section.position,
-              name: "name" in section ? section.name : null,
+              xOffset: section.xOffset,
+              yOffset: section.yOffset,
+              width: section.width,
+              height: section.height,
+              parentSectionId:
+                "parentSectionId" in section ? section.parentSectionId : null,
+              // TODO: Add name when that is added
               boardId: dbBoard.id,
             })),
           );
@@ -257,17 +265,15 @@ export const boardRouter = createTRPCRouter({
         );
 
         for (const section of updatedSections) {
-          const prev = dbBoard.sections.find(
-            (dbSection) => dbSection.id === section.id,
-          );
           await tx
             .update(sections)
             .set({
-              position: section.position,
-              name:
-                prev?.kind === "category" && "name" in section
-                  ? section.name
-                  : null,
+              xOffset: section.xOffset,
+              yOffset: section.yOffset,
+              width: section.width,
+              height: section.height,
+              parentSectionId:
+                "parentSectionId" in section ? section.parentSectionId : null,
             })
             .where(eq(sections.id, section.id));
         }

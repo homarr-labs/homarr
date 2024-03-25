@@ -1,6 +1,7 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import {
   index,
   int,
@@ -10,11 +11,6 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -24,6 +20,11 @@ import type {
   IntegrationSecretKind,
   SectionKind,
   WidgetKind,
+} from "@homarr/definitions";
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
 } from "@homarr/definitions";
 
 export const users = sqliteTable("user", {
@@ -174,8 +175,18 @@ export const sections = sqliteTable("section", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text("kind").$type<SectionKind>().notNull(),
-  position: int("position").notNull(),
+  xOffset: int("x_offset").notNull(),
+  yOffset: int("y_offset").notNull(),
+  width: int("width").notNull(),
+  height: int("height").notNull(),
+  columnCount: int("column_count").notNull().default(10),
   name: text("name"),
+  parentSectionId: text("parent_section_id").references(
+    (): AnySQLiteColumn => sections.id,
+    {
+      onDelete: "cascade",
+    },
+  ),
 });
 
 export const items = sqliteTable("item", {

@@ -4,7 +4,7 @@ import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
 
 import { useUpdateBoard } from "~/app/[locale]/boards/_client";
-import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
+import type { Item } from "~/app/[locale]/boards/_types";
 
 interface MoveAndResizeItem {
   itemId: string;
@@ -40,15 +40,11 @@ export const useItemActions = () => {
   const createItem = useCallback(
     ({ kind }: CreateItem) => {
       updateBoard((previous) => {
-        const lastSection = previous.sections
-          .filter(
-            (section): section is EmptySection => section.kind === "empty",
-          )
-          .sort(
-            (sectionA, sectionB) => sectionB.position - sectionA.position,
-          )[0];
+        const rootSection = previous.sections.find(
+          (section) => section.kind === "root",
+        );
 
-        if (!lastSection) return previous;
+        if (!rootSection) return previous;
 
         const widget = {
           id: createId(),
@@ -65,7 +61,7 @@ export const useItemActions = () => {
           ...previous,
           sections: previous.sections.map((section) => {
             // Return same section if item is not in it
-            if (section.id !== lastSection.id) return section;
+            if (section.id !== rootSection.id) return section;
             return {
               ...section,
               items: section.items.concat(widget as unknown as Item),
@@ -121,6 +117,27 @@ export const useItemActions = () => {
                 ...item,
                 ...positionProps,
               } satisfies Item;
+            }),
+          };
+        }),
+      }));
+    },
+    [updateBoard],
+  );
+
+  const moveAndResizeItemCallback = useCallback(
+    (itemId: string, callback: (prevItem: Item) => Item) => {
+      updateBoard((previous) => ({
+        ...previous,
+        sections: previous.sections.map((section) => {
+          // Return same section if item is not in it
+          if (!section.items.some((item) => item.id === itemId)) return section;
+          return {
+            ...section,
+            items: section.items.map((item) => {
+              // Return same item if item is not the one we're moving
+              if (item.id !== itemId) return item;
+              return callback(item);
             }),
           };
         }),
@@ -197,6 +214,7 @@ export const useItemActions = () => {
 
   return {
     moveAndResizeItem,
+    moveAndResizeItemCallback,
     moveItemToSection,
     removeItem,
     updateItemOptions,

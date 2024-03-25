@@ -10,6 +10,7 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
+  Box,
   Card,
   IconDotsVertical,
   IconLayoutKanban,
@@ -87,7 +88,7 @@ interface ItemProps {
   height: number;
 }
 
-const BoardItem = ({ item, ...dimensions }: ItemProps) => {
+export const BoardItem = ({ item, ...dimensions }: ItemProps) => {
   const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
@@ -99,13 +100,15 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
   return (
     <>
       <ItemMenu offset={8} item={newItem} />
-      <Comp
-        options={options as never}
-        integrations={item.integrations}
-        serverData={serverData?.data as never}
-        isEditMode={editMode}
-        {...dimensions}
-      />
+      <Box h="100%" w="100%" style={{ pointerEvents: "none" }}>
+        <Comp
+          options={options as never}
+          integrations={item.integrations}
+          serverData={serverData?.data as never}
+          isEditMode={editMode}
+          {...dimensions}
+        />
+      </Box>
     </>
   );
 };
