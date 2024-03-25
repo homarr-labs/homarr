@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent, PropsWithChildren } from "react";
-import React, { useCallback, useRef } from "react";
+import React, { createContext, useCallback } from "react";
 import { useClickOutside, useElementSize, useMergedRef } from "@mantine/hooks";
 import combineClasses from "clsx";
 import { useAtom, useAtomValue } from "jotai";
@@ -9,6 +9,7 @@ import { useAtom, useAtomValue } from "jotai";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { SectionKind, WidgetKind } from "@homarr/definitions";
+import type { BoxProps } from "@homarr/ui";
 import { Box, Card, LoadingOverlay } from "@homarr/ui";
 
 import { editModeAtom } from "~/components/board/editMode";
@@ -53,30 +54,73 @@ export const useUpdateBoard = () => {
   };
 };
 
+interface SectionContextProps {
+  section: Section;
+  innerSections: Section[];
+  refs: UseGridstackRefs;
+}
+
+const SectionContext = createContext<SectionContextProps | null>(null);
+
+const useSectionContext = () => {
+  const context = React.useContext(SectionContext);
+  if (!context) {
+    throw new Error("useSectionContext must be used within a SectionContext");
+  }
+  return context;
+};
+
+interface GridStackProps extends BoxProps {
+  section: Section;
+}
+
+const GridStack = ({
+  section,
+  children,
+  ...props
+}: PropsWithChildren<GridStackProps>) => {
+  const board = useRequiredBoard();
+  const innerSections = board.sections.filter(
+    (innerSection) => innerSection.parentSectionId === section.id,
+  );
+
+  const { refs } = useGridstack({
+    section,
+    items: section.items
+      .map((item) => ({ id: item.id }))
+      .concat(innerSections.map((section) => ({ id: section.id }))),
+  });
+
+  return (
+    <SectionContext.Provider value={{ section, innerSections, refs }}>
+      <Box
+        {...props}
+        data-kind={section.kind}
+        data-section-id={section.id}
+        className={combineClasses(
+          `grid-stack grid-stack-${section.kind}`,
+          props.className,
+        )}
+        ref={refs.wrapper}
+      >
+        {children}
+      </Box>
+    </SectionContext.Provider>
+  );
+};
+
 export const ClientBoard = () => {
   const board = useRequiredBoard();
   const isReady = useIsBoardReady();
 
   const rootSection = board.sections.find((section) => section.kind === "root");
-  const rootSectionSections = board.sections.filter(
-    (section) => section.parentSectionId === rootSection?.id,
-  );
 
   if (!rootSection) {
     throw new Error("Root section not found");
   }
 
-  const ref = useRef<HTMLDivElement>(null);
-  const { refs } = useGridstack({
-    section: rootSection,
-    items: rootSection.items
-      .map((item) => ({ id: item.id }))
-      .concat(rootSectionSections.map((section) => ({ id: section.id }))),
-    mainRef: ref,
-  });
-
   return (
-    <Box h="100%" pos="relative" ref={ref}>
+    <Box h="100%" pos="relative">
       <BoardBackgroundVideo />
       <LoadingOverlay
         visible={!isReady}
@@ -84,20 +128,13 @@ export const ClientBoard = () => {
         loaderProps={{ size: "lg" }}
         h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
       />
-      <Box
+      <GridStack
         h="100%"
         style={{ visibility: isReady ? "visible" : "hidden" }}
-        data-root
-        data-section-id={rootSection.id}
-        className="grid-stack grid-stack-root"
-        ref={refs.wrapper}
+        section={rootSection}
       >
-        <SectionContent
-          items={rootSection.items}
-          innerSections={rootSectionSections}
-          refs={refs}
-        />
-      </Box>
+        <SectionContent />
+      </GridStack>
     </Box>
   );
 };
@@ -106,20 +143,12 @@ const getItemRef = (refs: UseGridstackRefs, id: string) => {
   return refs.items.current[id] as React.RefObject<HTMLDivElement>;
 };
 
-interface SectionContentProps {
-  items: Section["items"];
-  innerSections: Section[];
-  refs: UseGridstackRefs;
-}
+const SectionContent = () => {
+  const { section, innerSections, refs } = useSectionContext();
 
-const SectionContent = ({
-  items,
-  innerSections,
-  refs,
-}: SectionContentProps) => {
   return (
     <>
-      {items.map((item) => (
+      {section.items.map((item) => (
         <GridStackItem
           key={item.id}
           refs={refs}
@@ -139,46 +168,13 @@ const SectionContent = ({
           innerRef={getItemRef(refs, section.id)}
         >
           <Card withBorder className="grid-stack-item-content">
-            <CardSection mainRef={refs.wrapper} section={section} />
+            <GridStack section={section} h="100%">
+              <SectionContent />
+            </GridStack>
           </Card>
         </GridStackItem>
       ))}
     </>
-  );
-};
-
-interface CardSectionProps {
-  section: Section;
-  mainRef: UseGridstackRefs["wrapper"];
-}
-
-const CardSection = ({ section, mainRef }: CardSectionProps) => {
-  const board = useRequiredBoard();
-  const innerSections = board.sections.filter(
-    (innerSection) => innerSection.parentSectionId === section.id,
-  );
-  const { refs } = useGridstack({
-    section,
-    items: section.items
-      .map((item) => ({ id: item.id }))
-      .concat(innerSections.map((section) => ({ id: section.id }))),
-    mainRef,
-  });
-
-  return (
-    <Box
-      h="100%"
-      data-card
-      data-section-id={section.id}
-      className="grid-stack grid-stack-card"
-      ref={refs.wrapper}
-    >
-      <SectionContent
-        items={section.items}
-        innerSections={innerSections}
-        refs={refs}
-      />
-    </Box>
   );
 };
 

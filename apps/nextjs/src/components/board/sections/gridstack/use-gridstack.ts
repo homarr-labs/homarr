@@ -31,13 +31,11 @@ interface UseGristackReturnType {
 interface UseGridstackProps {
   section: Omit<Section, "items">;
   items: { id: string }[];
-  mainRef?: RefObject<HTMLDivElement>;
 }
 
 export const useGridstack = ({
   section,
   items,
-  mainRef,
 }: UseGridstackProps): UseGristackReturnType => {
   const isEditMode = useAtomValue(editModeAtom);
   const markAsReady = useMarkSectionAsReady();
@@ -52,7 +50,6 @@ export const useGridstack = ({
 
   useCssVariableConfiguration({
     section,
-    mainRef,
     gridRef,
     wrapperRef,
     width,
