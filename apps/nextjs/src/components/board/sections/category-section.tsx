@@ -14,7 +14,7 @@ import {
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { CategoryMenu } from "./category/category-menu";
-import { SectionContent } from "./content";
+import { SectionContent } from "./content-old";
 import { useGridstack } from "./gridstack/use-gridstack";
 
 interface Props {

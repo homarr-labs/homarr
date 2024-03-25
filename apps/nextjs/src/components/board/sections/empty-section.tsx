@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { editModeAtom } from "../editMode";
-import { SectionContent } from "./content";
+import { SectionContent } from "./content-old";
 import { useGridstack } from "./gridstack/use-gridstack";
 
 interface Props {
