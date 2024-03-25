@@ -1,3 +1,4 @@
+import { logger } from '@homarr/log';
 import { Redis } from 'ioredis';
 import superjson from 'superjson';
 
@@ -15,7 +16,7 @@ const createChannel = <TData>(name: string) => {
             });
             void subscriber.subscribe(name, (err) => {
                 if (err) {
-                    console.error(err)
+                    logger.error(`Error with channel '${name}': ${err.name} (${err.message})`);
                     return
                 }
             });
