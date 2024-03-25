@@ -36,4 +36,6 @@ const createChannel = <TData>(name: string) => {
   };
 };
 
+export const loggingChannel = createChannel<{ message: string }>("logging");
+
 export const exampleChannel = createChannel<{ message: string }>("example");
