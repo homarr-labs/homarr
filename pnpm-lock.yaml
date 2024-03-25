@@ -67,7 +67,7 @@ importers:
         version: 10.3.5(@nestjs/common@10.3.5)(@nestjs/core@10.3.5)
       nest-winston:
         specifier: ^1.9.4
-        version: 1.9.4(@nestjs/common@10.3.5)(winston@3.12.0)
+        version: 1.9.4(@nestjs/common@10.3.5)(winston@3.13.0)
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.1
@@ -532,8 +532,8 @@ importers:
   packages/log:
     dependencies:
       winston:
-        specifier: 3.12.0
-        version: 3.12.0
+        specifier: 3.13.0
+        version: 3.13.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -7790,7 +7790,7 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /nest-winston@1.9.4(@nestjs/common@10.3.5)(winston@3.12.0):
+  /nest-winston@1.9.4(@nestjs/common@10.3.5)(winston@3.13.0):
     resolution: {integrity: sha512-ilEmHuuYSAI6aMNR120fLBl42EdY13QI9WRggHdEizt9M7qZlmXJwpbemVWKW/tqRmULjSx/otKNQ3GMQbfoUQ==}
     peerDependencies:
       '@nestjs/common': ^5.0.0 || ^6.6.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -7798,7 +7798,7 @@ packages:
     dependencies:
       '@nestjs/common': 10.3.5(reflect-metadata@0.2.1)(rxjs@7.8.1)
       fast-safe-stringify: 2.1.1
-      winston: 3.12.0
+      winston: 3.13.0
     dev: false
 
   /netmask@2.0.2:
@@ -10589,8 +10589,8 @@ packages:
       triple-beam: 1.4.1
     dev: false
 
-  /winston@3.12.0:
-    resolution: {integrity: sha512-OwbxKaOlESDi01mC9rkM0dQqQt2I8DAUMRLZ/HpbwvDXm85IryEHgoogy5fziQy38PntgZsLlhAYHz//UPHZ5w==}
+  /winston@3.13.0:
+    resolution: {integrity: sha512-rwidmA1w3SE4j0E5MuIufFhyJPBDG7Nu71RkZor1p2+qHvJSZ9GYDA81AyleQcZbh/+V6HjeBdfnTZJm9rSeQQ==}
     engines: {node: '>= 12.0.0'}
     dependencies:
       '@colors/colors': 1.6.0
