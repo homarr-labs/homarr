@@ -36,6 +36,12 @@ const createChannel = <TData>(name: string) => {
   };
 };
 
-export const loggingChannel = createChannel<{ message: string }>("logging");
+export interface LoggerMessage {
+  message: string;
+  level: string;
+  timestamp: string;
+}
+
+export const loggingChannel = createChannel<LoggerMessage>("logging");
 
 export const exampleChannel = createChannel<{ message: string }>("example");

@@ -28,7 +28,7 @@ export class RedisTransport extends Transport {
 
     redis
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      .publish("logging", superjson.stringify({ message: info.message }))
+      .publish("logging", superjson.stringify({ message: info.message, timestamp: info.timestamp, level: info.level }))
       .then(() => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         callback();

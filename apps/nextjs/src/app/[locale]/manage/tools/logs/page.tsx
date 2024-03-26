@@ -1,6 +1,6 @@
 import { getScopedI18n } from "@homarr/translation/server";
 
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 import dynamic from "next/dynamic";
 
