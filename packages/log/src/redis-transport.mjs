@@ -9,8 +9,11 @@ const redis = new Redis();
 // of the base functionality and `.exceptions.handle()`.
 //
 export class RedisTransport extends Transport {
+  /**
+   * Constructor
+   * @param {Transport.TransportStreamOptions | undefined} opts
+   */
   constructor(opts) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     super(opts);
 
     // Consume any custom options here. e.g.:
@@ -19,15 +22,17 @@ export class RedisTransport extends Transport {
     //   logentries, etc.).
   }
 
+  /**
+   * Log the info to the Redis channel
+   * @param {{ message: string; timestamp: string; level: string; }} info
+   * @param {() => void} callback
+   */
   log(info, callback) {
     setImmediate(() => {
       this.emit("logged", info);
     });
 
-    // console.log(JSON.stringify(info));
-
     redis
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       .publish(
         "logging",
         superjson.stringify({
@@ -37,10 +42,10 @@ export class RedisTransport extends Transport {
         }),
       )
       .then(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         callback();
       })
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      .catch(() => {});
+      .catch(() => {
+        // Ignore errors
+      });
   }
 }
