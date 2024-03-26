@@ -1,4 +1,5 @@
 import { getScopedI18n } from "@homarr/translation/server";
+import { Box } from "@homarr/ui";
 
 import "@xterm/xterm/css/xterm.css";
 
@@ -20,7 +21,9 @@ const ClientSideTerminalComponent = dynamic(() => import("./terminal"), {
 export default function LogsManagementPage() {
   return (
     <div>
-      <ClientSideTerminalComponent />
+      <Box style={{ borderRadius: 6 }} p="md" bg="black">
+        <ClientSideTerminalComponent />
+      </Box>
     </div>
   );
 }
