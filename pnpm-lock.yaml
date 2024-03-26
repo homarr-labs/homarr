@@ -231,9 +231,6 @@ importers:
       '@xterm/addon-canvas':
         specifier: ^0.6.0
         version: 0.6.0(@xterm/xterm@5.4.0)
-      '@xterm/addon-fit':
-        specifier: ^0.9.0
-        version: 0.9.0(@xterm/xterm@5.4.0)
       '@xterm/xterm':
         specifier: ^5.4.0
         version: 5.4.0
@@ -251,7 +248,7 @@ importers:
         version: 2.7.1(@types/react@18.2.70)(react@18.2.0)
       next:
         specifier: ^14.1.4
-        version: 14.1.4(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0)
+        version: 14.1.4(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0)
       postcss-preset-mantine:
         specifier: ^1.13.0
         version: 1.13.0(postcss@8.4.38)
@@ -3058,7 +3055,7 @@ packages:
       react: ^18.0.0
     dependencies:
       '@tanstack/react-query': 5.28.8(react@18.2.0)
-      next: 14.1.4(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0)
+      next: 14.1.4(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0)
       react: 18.2.0
     dev: false
 
@@ -3424,7 +3421,7 @@ packages:
       '@trpc/client': 11.0.0-next-beta.318(@trpc/server@11.0.0-next-beta.289)
       '@trpc/react-query': 11.0.0-next-beta.289(@tanstack/react-query@5.28.8)(@trpc/client@11.0.0-next-beta.318)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 11.0.0-next-beta.289
-      next: 14.1.4(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0)
+      next: 14.1.4(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -4146,14 +4143,6 @@ packages:
 
   /@xterm/addon-canvas@0.6.0(@xterm/xterm@5.4.0):
     resolution: {integrity: sha512-+nj2x595vItxfuAFxzXp46Izrh4EnEyS0Z60hX1iy6OFliP5OQu8Wu7n59m7m1vT6Q4nIWoN1WiH+VLAk4D9jQ==}
-    peerDependencies:
-      '@xterm/xterm': ^5.0.0
-    dependencies:
-      '@xterm/xterm': 5.4.0
-    dev: false
-
-  /@xterm/addon-fit@0.9.0(@xterm/xterm@5.4.0):
-    resolution: {integrity: sha512-hDlPPbTVPYyvwXu/asW8HbJkI/2RMi0cMaJnBZYVeJB0SWP2NeESMCNr+I7CvBlyI0sAxpxOg8Wk4OMkxBz9WA==}
     peerDependencies:
       '@xterm/xterm': ^5.0.0
     dependencies:
@@ -7996,6 +7985,46 @@ packages:
       - babel-plugin-macros
     dev: false
 
+  /next@14.1.4(react-dom@18.2.0)(react@18.2.0)(sass@1.72.0):
+    resolution: {integrity: sha512-1WTaXeSrUwlz/XcnhGTY7+8eiaFvdet5z9u3V2jb+Ek1vFo0VhHKSAIJvDWfQpttWjnyw14kBeq28TPq7bTeEQ==}
+    engines: {node: '>=18.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 14.1.4
+      '@swc/helpers': 0.5.2
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001587
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      sass: 1.72.0
+      styled-jsx: 5.1.1(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.1.4
+      '@next/swc-darwin-x64': 14.1.4
+      '@next/swc-linux-arm64-gnu': 14.1.4
+      '@next/swc-linux-arm64-musl': 14.1.4
+      '@next/swc-linux-x64-gnu': 14.1.4
+      '@next/swc-linux-x64-musl': 14.1.4
+      '@next/swc-win32-arm64-msvc': 14.1.4
+      '@next/swc-win32-ia32-msvc': 14.1.4
+      '@next/swc-win32-x64-msvc': 14.1.4
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+    dev: false
+
   /no-case@2.3.2:
     resolution: {integrity: sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==}
     dependencies:
@@ -9633,6 +9662,23 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.23.9
+      client-only: 0.0.1
+      react: 18.2.0
+    dev: false
+
+  /styled-jsx@5.1.1(react@18.2.0):
+    resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
+    engines: {node: '>= 12.0.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      babel-plugin-macros: '*'
+      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      babel-plugin-macros:
+        optional: true
+    dependencies:
       client-only: 0.0.1
       react: 18.2.0
     dev: false

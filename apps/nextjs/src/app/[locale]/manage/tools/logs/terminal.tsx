@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { Terminal } from "@xterm/xterm";
 import { CanvasAddon } from "@xterm/addon-canvas";
-import { FitAddon } from "@xterm/addon-fit";
 
 import { clientApi } from "@homarr/api/client";
 
@@ -30,19 +29,14 @@ export default function TerminalComponent() {
       return;
     }
 
-    // const fitAddon = new FitAddon();
-    // const canvasAddon = new CanvasAddon();
-    // terminalRef.current.loadAddon(fitAddon);
+    const canvasAddon = new CanvasAddon();
 
     if (terminalRef.current.element) {
       return;
     }
 
     terminalRef.current.open(ref.current);
-    
-    // terminalRef.current.loadAddon(canvasAddon);
-
-    // fitAddon.fit();
+    terminalRef.current.loadAddon(canvasAddon);
 
     console.log('created on ref', ref.current);
 
