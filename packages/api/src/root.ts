@@ -10,7 +10,7 @@ export const appRouter = createTRPCRouter({
   integration: integrationRouter,
   board: boardRouter,
   app: innerAppRouter,
-  log: logRouter
+  log: logRouter,
 });
 
 // export type definition of API

@@ -65,8 +65,8 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.tools.items.logs"),
           icon: IconLogs,
-          href: "/manage/tools/logs"
-        }
+          href: "/manage/tools/logs",
+        },
       ],
     },
     {

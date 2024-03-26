@@ -1,4 +1,5 @@
 import winston, { format, transports } from "winston";
+
 import { RedisTransport } from "./redis-transport.mjs";
 
 const logMessageFormat = format.printf(({ level, message, timestamp }) => {
