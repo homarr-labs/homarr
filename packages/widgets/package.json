@@ -33,12 +33,13 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@homarr/api": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
-    "@homarr/api": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0"

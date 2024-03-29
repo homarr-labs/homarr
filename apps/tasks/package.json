@@ -1,18 +1,16 @@
 {
-  "name": "@homarr/api",
+  "name": "@homarr/tasks",
   "version": "0.1.0",
-  "exports": {
-    ".": "./src/index.ts",
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts"
-  },
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./src/main.ts",
+  "types": "./src/main.ts",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "pnpm with-env tsx ./src/wssDevServer.ts",
+    "dev": "pnpm with-env tsx ./src/main.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -20,26 +18,25 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
-    "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^",
     "@homarr/redis": "workspace:^0.1.0",
-    "@homarr/tasks": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@trpc/client": "next",
-    "@trpc/server": "next",
-    "superjson": "2.2.1",
-    "ws": "^8.16.0"
+    "@homarr/log": "workspace:^",
+    "@types/node-cron": "^3.0.11",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/ws": "^8.5.10",
+    "@types/node": "^20.11.30",
+    "dotenv-cli": "^7.4.1",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
+    "tsx": "^4.7.1",
     "typescript": "^5.4.3"
   },
   "eslintConfig": {
