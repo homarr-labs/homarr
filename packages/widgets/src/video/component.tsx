@@ -5,7 +5,15 @@ import combineClasses from "clsx";
 import videojs from "video.js";
 
 import { useI18n } from "@homarr/translation/client";
-import { Center, Group, IconDeviceCctvOff, Stack, Title } from "@homarr/ui";
+import {
+  Anchor,
+  Center,
+  Group,
+  IconBrandYoutube,
+  IconDeviceCctvOff,
+  Stack,
+  Title,
+} from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
@@ -19,6 +27,10 @@ export default function VideoWidget({
     return <NoUrl />;
   }
 
+  if (options.feedUrl.trim().startsWith("https://www.youtube.com/watch")) {
+    return <ForYoutubeUseIframe />;
+  }
+
   return <Feed options={options} />;
 }
 
@@ -30,6 +42,22 @@ const NoUrl = () => {
       <Stack align="center">
         <IconDeviceCctvOff />
         <Title order={4}>{t("widget.video.error.noUrl")}</Title>
+      </Stack>
+    </Center>
+  );
+};
+
+const ForYoutubeUseIframe = () => {
+  const t = useI18n();
+
+  return (
+    <Center h="100%">
+      <Stack align="center" gap="xs">
+        <IconBrandYoutube />
+        <Title order={4}>{t("widget.video.error.forYoutubeUseIframe")}</Title>
+        <Anchor href="https://homarr.dev/docs/widgets/iframe/">
+          {t("common.action.checkoutDocs")}
+        </Anchor>
       </Stack>
     </Center>
   );

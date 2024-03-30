@@ -202,6 +202,7 @@ export default {
       confirm: "Confirm",
       previous: "Previous",
       next: "Next",
+      checkoutDocs: "Check out the documentation",
     },
     multiSelect: {
       placeholder: "Pick one or more values",
@@ -404,6 +405,7 @@ export default {
       },
       error: {
         noUrl: "No Video URL provided",
+        forYoutubeUseIframe: "For YouTube videos use the iframe option",
       },
     },
   },
