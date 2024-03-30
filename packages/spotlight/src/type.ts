@@ -19,6 +19,7 @@ interface BaseSpotlightAction {
 interface SpotlightActionLink extends BaseSpotlightAction {
   type: "link";
   href: string;
+  openInNewTab?: boolean;
 }
 
 type MaybePromise<T> = T | Promise<T>;
