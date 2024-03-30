@@ -383,6 +383,29 @@ export default {
         },
       },
     },
+    video: {
+      name: "Video Stream",
+      description: "Embed a video stream or video from a camera or a website",
+      option: {
+        feedUrl: {
+          label: "Feed URL",
+        },
+        hasAutoPlay: {
+          label: "Autoplay",
+          description:
+            "Autoplay only works when muted because of browser restrictions",
+        },
+        isMuted: {
+          label: "Muted",
+        },
+        hasControls: {
+          label: "Show controls",
+        },
+      },
+      error: {
+        noUrl: "No Video URL provided",
+      },
+    },
   },
   widgetPreview: {
     toggle: {

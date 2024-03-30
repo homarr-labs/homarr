@@ -23,6 +23,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/video.js": "^7.3.57",
     "eslint": "^8.57.0",
     "typescript": "^5.4.3"
   },
@@ -42,6 +43,7 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0"
+    "@homarr/validation": "workspace:^0.1.0",
+    "video.js": "^8.10.0"
   }
 }
