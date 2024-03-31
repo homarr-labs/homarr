@@ -88,6 +88,7 @@ interface ItemProps {
 }
 
 const BoardItem = ({ item, ...dimensions }: ItemProps) => {
+  const board = useRequiredBoard();
   const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
@@ -104,6 +105,8 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
         integrations={item.integrations}
         serverData={serverData?.data as never}
         isEditMode={editMode}
+        boardId={board.id}
+        itemId={item.id}
         {...dimensions}
       />
     </>

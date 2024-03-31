@@ -105,6 +105,8 @@ export type WidgetComponentProps<TKind extends WidgetKind> =
   WidgetProps<TKind> & {
     serverData?: inferServerDataForKind<TKind>;
   } & {
+    itemId: string; // undefined when in preview mode
+    boardId: string | undefined; // undefined when in preview mode
     isEditMode: boolean;
     width: number;
     height: number;
