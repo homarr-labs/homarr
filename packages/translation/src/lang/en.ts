@@ -370,6 +370,45 @@ export default {
         },
       },
     },
+    iframe: {
+      name: "iFrame",
+      description:
+        "Embed any content from the internet. Some websites may restrict access.",
+      option: {
+        embedUrl: {
+          label: "Embed URL",
+        },
+        allowFullScreen: {
+          label: "Allow full screen",
+        },
+        allowTransparency: {
+          label: "Allow transparency",
+        },
+        allowScrolling: {
+          label: "Allow scrolling",
+        },
+        allowPayment: {
+          label: "Allow payment",
+        },
+        allowAutoPlay: {
+          label: "Allow auto play",
+        },
+        allowMicrophone: {
+          label: "Allow microphone",
+        },
+        allowCamera: {
+          label: "Allow camera",
+        },
+        allowGeolocation: {
+          label: "Allow geolocation",
+        },
+      },
+      error: {
+        noUrl: "No iFrame URL provided",
+        noBrowerSupport:
+          "Your Browser does not support iframes. Please update your browser.",
+      },
+    },
     weather: {
       name: "Weather",
       description:
