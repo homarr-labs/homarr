@@ -5,5 +5,10 @@
     }
   ],
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "js/ts.implicitProjectConfig.experimentalDecorators": true
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+  "cSpell.words": [
+    "superjson",
+    "homarr",
+    "trpc"
+  ]
 }
