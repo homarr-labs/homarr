@@ -2,13 +2,14 @@ import { Redis } from "ioredis";
 import superjson from "superjson";
 import Transport from "winston-transport";
 
-const redis = new Redis();
-
 //
 // Inherit from `winston-transport` so you can take advantage
 // of the base functionality and `.exceptions.handle()`.
 //
 export class RedisTransport extends Transport {
+  /** @type {Redis} */
+  redis;
+
   /**
    * Constructor
    * @param {Transport.TransportStreamOptions | undefined} opts
@@ -32,7 +33,12 @@ export class RedisTransport extends Transport {
       this.emit("logged", info);
     });
 
-    redis
+    if (!this.redis) {
+      // Is only initialized here because it did not work when initialized in the constructor or outside the class
+      this.redis = new Redis();
+    }
+
+    this.redis
       .publish(
         "logging",
         superjson.stringify({
