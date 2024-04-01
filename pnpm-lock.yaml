@@ -457,8 +457,8 @@ importers:
         specifier: ^0.20.14
         version: 0.20.14
       drizzle-orm:
-        specifier: ^0.30.4
-        version: 0.30.4(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.3)(react@17.0.2)
+        specifier: ^0.30.6
+        version: 0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.3)(react@17.0.2)
       mysql2:
         specifier: ^3.9.3
         version: 3.9.3
@@ -5320,11 +5320,12 @@ packages:
       - supports-color
     dev: false
 
-  /drizzle-orm@0.30.4(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.3)(react@17.0.2):
-    resolution: {integrity: sha512-kWoSMGbrOFkmkAweLTFtHJMpN+nwhx89q0mLELqT2aEU+1szNV8jrnBmJwZ0WGNp7J7yQn/ezEtxBI/qzTSElQ==}
+  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.3)(react@17.0.2):
+    resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
+      '@electric-sql/pglite': '>=0.1.1'
       '@libsql/client': '*'
       '@neondatabase/serverless': '>=0.1'
       '@op-engineering/op-sqlite': '>=2'
@@ -5351,6 +5352,8 @@ packages:
       '@aws-sdk/client-rds-data':
         optional: true
       '@cloudflare/workers-types':
+        optional: true
+      '@electric-sql/pglite':
         optional: true
       '@libsql/client':
         optional: true
