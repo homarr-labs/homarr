@@ -11,19 +11,6 @@ export class RedisTransport extends Transport {
   redis;
 
   /**
-   * Constructor
-   * @param {Transport.TransportStreamOptions | undefined} opts
-   */
-  constructor(opts) {
-    super(opts);
-
-    // Consume any custom options here. e.g.:
-    // - Connection information for databases
-    // - Authentication information for APIs (e.g. loggly, papertrail,
-    //   logentries, etc.).
-  }
-
-  /**
    * Log the info to the Redis channel
    * @param {{ message: string; timestamp: string; level: string; }} info
    * @param {() => void} callback

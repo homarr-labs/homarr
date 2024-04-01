@@ -22,13 +22,14 @@ export default function TerminalComponent() {
       terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
     },
     onError(err) {
+      // This makes sense as logging might cause an infinite loop
       alert(err);
     },
   });
 
   useEffect(() => {
     if (!ref.current) {
-      return;
+      return () => undefined;
     }
 
     const canvasAddon = new CanvasAddon();
