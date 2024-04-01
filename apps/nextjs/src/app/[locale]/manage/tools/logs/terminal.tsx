@@ -3,27 +3,23 @@
 import { useEffect, useRef } from "react";
 import { CanvasAddon } from "@xterm/addon-canvas";
 import { Terminal } from "@xterm/xterm";
+import { FitAddon } from "xterm-addon-fit";
 
 import { clientApi } from "@homarr/api/client";
+import { Box } from "@homarr/ui";
+
+import classes from "./terminal.module.css";
 
 export default function TerminalComponent() {
   const ref = useRef<HTMLDivElement>(null);
-  const renderedBeforeRef = useRef<boolean>(false);
 
-  const terminalRef = useRef<Terminal>(
-    new Terminal({
-      cursorBlink: false,
-      disableStdin: true,
-      convertEol: true,
-    }),
-  );
-
+  const terminalRef = useRef<Terminal>();
   clientApi.log.subscribe.useSubscription(undefined, {
     onData(data) {
-      terminalRef.current.writeln(
+      terminalRef.current?.writeln(
         `${data.timestamp} ${data.level} ${data.message}`,
       );
-      terminalRef.current.refresh(0, terminalRef.current.rows - 1);
+      terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
     },
     onError(err) {
       alert(err);
@@ -37,26 +33,33 @@ export default function TerminalComponent() {
 
     const canvasAddon = new CanvasAddon();
 
-    if (terminalRef.current.element) {
-      return;
-    }
-
+    terminalRef.current = new Terminal({
+      cursorBlink: false,
+      disableStdin: true,
+      convertEol: true,
+    });
     terminalRef.current.open(ref.current);
     terminalRef.current.loadAddon(canvasAddon);
 
+    // This is a hack to make sure the terminal is rendered before we try to fit it
+    // You can blame @Meierschlumpf for this
+    setTimeout(() => {
+      const fitAddon = new FitAddon();
+      terminalRef.current?.loadAddon(fitAddon);
+      fitAddon.fit();
+    });
+
     return () => {
-      if (renderedBeforeRef.current) {
-        terminalRef.current.dispose();
-        canvasAddon.dispose();
-      }
-      renderedBeforeRef.current = true;
+      terminalRef.current?.dispose();
+      canvasAddon.dispose();
     };
   }, []);
   return (
-    <div
+    <Box
       ref={ref}
       id="terminal"
-      style={{ height: 400, backgroundColor: "red" }}
-    ></div>
+      className={classes.outerTerminal}
+      h="100%"
+    ></Box>
   );
 }

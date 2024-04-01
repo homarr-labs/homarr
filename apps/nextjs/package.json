@@ -56,7 +56,8 @@
     "react-dom": "18.2.0",
     "sass": "^1.72.0",
     "superjson": "2.2.1",
-    "use-deep-compare-effect": "^1.8.1"
+    "use-deep-compare-effect": "^1.8.1",
+    "xterm-addon-fit": "^0.8.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
