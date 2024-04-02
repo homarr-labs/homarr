@@ -251,7 +251,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.12.0
+        specifier: ^20.12.2
         version: 20.12.2
       '@types/node-cron':
         specifier: ^3.0.11
