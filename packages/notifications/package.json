@@ -28,7 +28,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "@mantine/notifications": "^7.6.2",
+    "@mantine/notifications": "^7.7.1",
     "@homarr/ui": "workspace:^0.1.0"
   },
   "eslintConfig": {
