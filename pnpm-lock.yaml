@@ -234,9 +234,6 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
-      '@types/node-cron':
-        specifier: ^3.0.11
-        version: 3.0.11
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -254,8 +251,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.11.30
+        specifier: ^20.12.0
         version: 20.12.2
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
       dotenv-cli:
         specifier: ^7.4.1
         version: 7.4.1
@@ -3094,7 +3094,7 @@ packages:
 
   /@types/node-cron@3.0.11:
     resolution: {integrity: sha512-0ikrnug3/IyneSHqCBeslAhlK2aBfYek1fGo4bP4QnZPmiqSGRK+Oy7ZMisLWkesffJvQ1cqAcBnJC+8+nxIAg==}
-    dev: false
+    dev: true
 
   /@types/node@20.12.2:
     resolution: {integrity: sha512-zQ0NYO87hyN6Xrclcqp7f8ZbXNbRfoGWNcMvHTPQp9UUrwI0mI7XBz+cu7/W6/VClYo2g63B0cjull/srU7LgQ==}
