@@ -366,8 +366,8 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
       '@auth/drizzle-adapter':
-        specifier: ^0.8.1
-        version: 0.8.1
+        specifier: ^0.8.2
+        version: 0.8.2
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -960,7 +960,19 @@ packages:
   /@auth/drizzle-adapter@0.8.1:
     resolution: {integrity: sha512-WILvFJ6tOUjSy2azJY3l2xnLNV7P5jDw970e4wg3ug6sIWLATBr0MN6w+xJBuXVSoDz7jSWTlyWkfiiT0l0Ugg==}
     dependencies:
-      '@auth/core': 0.28.1
+      '@panva/hkdf': 1.1.1
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      jose: 5.2.2
+      oauth4webapi: 2.10.3
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+    dev: false
+
+  /@auth/drizzle-adapter@0.8.2:
+    resolution: {integrity: sha512-IrySrHLr427+J5CjiM5fI6XFDmH5R2G7wd4E26z+J64C3t2aegdZdlfMAUerLjeoxAXnMas7bECtOYRO33EfKA==}
+    dependencies:
+      '@auth/core': 0.28.2
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
