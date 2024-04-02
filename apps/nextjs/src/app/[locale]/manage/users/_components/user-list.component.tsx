@@ -9,18 +9,13 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
-  ActionIcon,
   Avatar,
   Button,
-  Flex,
   Group,
   IconCheck,
-  IconEdit,
-  IconTrash,
   Text,
   ThemeIcon,
   Title,
-  Tooltip,
 } from "@homarr/ui";
 
 interface UserListComponentProps {
