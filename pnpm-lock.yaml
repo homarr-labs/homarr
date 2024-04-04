@@ -440,10 +440,10 @@ importers:
         version: 0.20.14
       drizzle-orm:
         specifier: ^0.30.6
-        version: 0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.3)(react@17.0.2)
+        version: 0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.2)(react@17.0.2)
       mysql2:
-        specifier: ^3.9.3
-        version: 3.9.3
+        specifier: 3.9.2
+        version: 3.9.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -4471,7 +4471,7 @@ packages:
       - supports-color
     dev: false
 
-  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.3)(react@17.0.2):
+  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.3)(mysql2@3.9.2)(react@17.0.2):
     resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4553,7 +4553,7 @@ packages:
     dependencies:
       '@types/better-sqlite3': 7.6.9
       better-sqlite3: 9.4.3
-      mysql2: 3.9.3
+      mysql2: 3.9.2
       react: 17.0.2
     dev: false
 
@@ -6619,8 +6619,8 @@ packages:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
     dev: true
 
-  /mysql2@3.9.3:
-    resolution: {integrity: sha512-+ZaoF0llESUy7BffccHG+urErHcWPZ/WuzYAA9TEeLaDYyke3/3D+VQDzK9xzRnXpd0eMtRf0WNOeo4Q1Baung==}
+  /mysql2@3.9.2:
+    resolution: {integrity: sha512-3Cwg/UuRkAv/wm6RhtPE5L7JlPB877vwSF6gfLAS68H+zhH+u5oa3AieqEd0D0/kC3W7qIhYbH419f7O9i/5nw==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0
