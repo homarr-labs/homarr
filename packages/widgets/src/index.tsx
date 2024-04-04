@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
-import dynamic from "next/dynamic";
 import type { Loader } from "next/dynamic";
+import dynamic from "next/dynamic";
 
 import type { WidgetKind } from "@homarr/definitions";
 import { Loader as UiLoader } from "@homarr/ui";
@@ -14,8 +14,8 @@ import * as weather from "./weather";
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
 export { WidgetEditModal } from "./modals/widget-edit-modal";
-export { GlobalItemServerDataRunner } from "./server/runner";
 export { useServerDataFor } from "./server/provider";
+export { GlobalItemServerDataRunner } from "./server/runner";
 
 export const widgetImports = {
   clock,

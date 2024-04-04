@@ -26,6 +26,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
     "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/tasks": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@trpc/client": "next",
     "@trpc/server": "next",
