@@ -15,4 +15,4 @@ export interface LoggerMessage {
   timestamp: string;
 }
 
-export const loggingChannel = createQueueChannel<LoggerMessage>("logging");
+export const loggingChannel = createSubPubChannel<LoggerMessage>("logging");
