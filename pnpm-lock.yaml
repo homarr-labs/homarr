@@ -141,11 +141,11 @@ importers:
         specifier: next
         version: 11.0.0-next-beta.289
       '@xterm/addon-canvas':
-        specifier: ^0.6.0
-        version: 0.6.0(@xterm/xterm@5.4.0)
+        specifier: ^0.7.0
+        version: 0.7.0(@xterm/xterm@5.5.0)
       '@xterm/xterm':
-        specifier: ^5.4.0
-        version: 5.4.0
+        specifier: ^5.5.0
+        version: 5.5.0
       chroma-js:
         specifier: ^2.4.2
         version: 2.4.2
@@ -3442,16 +3442,16 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
-  /@xterm/addon-canvas@0.6.0(@xterm/xterm@5.4.0):
-    resolution: {integrity: sha512-+nj2x595vItxfuAFxzXp46Izrh4EnEyS0Z60hX1iy6OFliP5OQu8Wu7n59m7m1vT6Q4nIWoN1WiH+VLAk4D9jQ==}
+  /@xterm/addon-canvas@0.7.0(@xterm/xterm@5.5.0):
+    resolution: {integrity: sha512-LF5LYcfvefJuJ7QotNRdRSPc9YASAVDeoT5uyXS/nZshZXjYplGXRECBGiznwvhNL2I8bq1Lf5MzRwstsYQ2Iw==}
     peerDependencies:
       '@xterm/xterm': ^5.0.0
     dependencies:
-      '@xterm/xterm': 5.4.0
+      '@xterm/xterm': 5.5.0
     dev: false
 
-  /@xterm/xterm@5.4.0:
-    resolution: {integrity: sha512-GlyzcZZ7LJjhFevthHtikhiDIl8lnTSgol6eTM4aoSNLcuXu3OEhnbqdCVIjtIil3jjabf3gDtb1S8FGahsuEw==}
+  /@xterm/xterm@5.5.0:
+    resolution: {integrity: sha512-hqJHYaQb5OptNunnyAnkHyM8aCjZ1MEIDTQu1iIbbTD/xops91NB5yq1ZK/dC2JDbVWtF23zUtl9JE2NqwT87A==}
     dev: false
 
   /abbrev@1.1.1:
@@ -9124,6 +9124,7 @@ packages:
 
   /xterm@5.3.0:
     resolution: {integrity: sha512-8QqjlekLUFTrU6x7xck1MsPzPA571K5zNqWm0M0oroYEWVOptZ0+ubQSkQ3uxIEhcIHRujJy6emDWX4A7qyFzg==}
+    deprecated: This package is now deprecated. Move to @xterm/xterm instead.
     dev: false
 
   /y18n@5.0.8:
