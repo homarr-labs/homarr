@@ -112,6 +112,8 @@ export const WidgetPreviewPageContent = ({
           width={dimensions.width}
           height={dimensions.height}
           isEditMode={editMode}
+          boardId={undefined}
+          itemId={undefined}
         />
       </Card>
       <Affix bottom={12} right={72}>
