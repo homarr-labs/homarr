@@ -3,6 +3,7 @@
 import type { ChangeEvent } from "react";
 import { useCallback } from "react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -163,8 +164,6 @@ const LocationSearchModal = createModal<LocationSearchInnerProps>(
       throw error;
     }
 
-    const formatter = Intl.NumberFormat("en", { notation: "compact" });
-
     return (
       <Stack>
         <Table striped>
@@ -190,56 +189,12 @@ const LocationSearchModal = createModal<LocationSearchInnerProps>(
               </Table.Tr>
             )}
             {data?.results.map((city) => (
-              <Table.Tr key={city.id}>
-                <Table.Td>
-                  <Text style={{ whiteSpace: "nowrap" }}>{city.name}</Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text style={{ whiteSpace: "nowrap" }}>{city.country}</Text>
-                </Table.Td>
-                <Table.Td>
-                  <Anchor
-                    target="_blank"
-                    href={`https://www.google.com/maps/place/${city.latitude},${city.longitude}`}
-                  >
-                    <Text style={{ whiteSpace: "nowrap" }}>
-                      {city.latitude}, {city.longitude}
-                    </Text>
-                  </Anchor>
-                </Table.Td>
-                <Table.Td>
-                  {city.population ? (
-                    <Text style={{ whiteSpace: "nowrap" }}>
-                      {formatter.format(city.population)}
-                    </Text>
-                  ) : (
-                    <Text c="gray"> {t("population.fallback")}</Text>
-                  )}
-                </Table.Td>
-                <Table.Td>
-                  <Tooltip
-                    label={t("action.select", {
-                      city: city.name,
-                      countryCode: city.country_code,
-                    })}
-                  >
-                    <ActionIcon
-                      color="red"
-                      variant="subtle"
-                      onClick={() => {
-                        innerProps.onLocationSelect({
-                          name: city.name,
-                          latitude: city.latitude,
-                          longitude: city.longitude,
-                        });
-                        actions.closeModal();
-                      }}
-                    >
-                      <IconClick size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-                </Table.Td>
-              </Table.Tr>
+              <LocationSelectTableRow
+                key={city.id}
+                city={city}
+                onLocationSelect={innerProps.onLocationSelect}
+                closeModal={actions.closeModal}
+              />
             ))}
           </Table.Tbody>
         </Table>
@@ -257,3 +212,69 @@ const LocationSearchModal = createModal<LocationSearchInnerProps>(
   },
   size: "xl",
 });
+
+interface LocationSearchTableRowProps {
+  city: RouterOutputs["location"]["searchCity"]["results"][number];
+  onLocationSelect: (location: OptionLocation) => void;
+  closeModal: () => void;
+}
+
+const LocationSelectTableRow = ({
+  city,
+  onLocationSelect,
+  closeModal,
+}: LocationSearchTableRowProps) => {
+  const t = useScopedI18n("widget.common.location.table");
+  const onSelect = useCallback(() => {
+    onLocationSelect({
+      name: city.name,
+      latitude: city.latitude,
+      longitude: city.longitude,
+    });
+    closeModal();
+  }, [city, onLocationSelect, closeModal]);
+
+  const formatter = Intl.NumberFormat("en", { notation: "compact" });
+
+  return (
+    <Table.Tr>
+      <Table.Td>
+        <Text style={{ whiteSpace: "nowrap" }}>{city.name}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Text style={{ whiteSpace: "nowrap" }}>{city.country}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Anchor
+          target="_blank"
+          href={`https://www.google.com/maps/place/${city.latitude},${city.longitude}`}
+        >
+          <Text style={{ whiteSpace: "nowrap" }}>
+            {city.latitude}, {city.longitude}
+          </Text>
+        </Anchor>
+      </Table.Td>
+      <Table.Td>
+        {city.population ? (
+          <Text style={{ whiteSpace: "nowrap" }}>
+            {formatter.format(city.population)}
+          </Text>
+        ) : (
+          <Text c="gray"> {t("population.fallback")}</Text>
+        )}
+      </Table.Td>
+      <Table.Td>
+        <Tooltip
+          label={t("action.select", {
+            city: city.name,
+            countryCode: city.country_code,
+          })}
+        >
+          <ActionIcon color="red" variant="subtle" onClick={onSelect}>
+            <IconClick size={16} />
+          </ActionIcon>
+        </Tooltip>
+      </Table.Td>
+    </Table.Tr>
+  );
+};

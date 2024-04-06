@@ -174,8 +174,8 @@ function Forecast({ weather, options, width }: ForecastProps) {
           0,
           Math.min(options.forecastDayCount, width / (width < 300 ? 64 : 92)),
         )
-        .map((time, index: number) => (
-          <Card key={index}>
+        .map((time, index) => (
+          <Card key={time}>
             <Flex direction="column" align="center">
               <Text fw={700} lh="1.25rem">
                 {new Date(time).getDate().toString().padStart(2, "0")}
