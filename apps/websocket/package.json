@@ -34,7 +34,7 @@
     "@types/ws": "^8.5.10",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.4"
   },
   "eslintConfig": {
     "root": true,
