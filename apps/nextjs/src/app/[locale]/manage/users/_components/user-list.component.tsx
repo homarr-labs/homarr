@@ -9,17 +9,13 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
-  ActionIcon,
+  Avatar,
   Button,
-  Flex,
   Group,
   IconCheck,
-  IconEdit,
-  IconTrash,
   Text,
   ThemeIcon,
   Title,
-  Tooltip,
 } from "@homarr/ui";
 
 interface UserListComponentProps {
@@ -41,6 +37,15 @@ export const UserListComponent = ({
       {
         accessorKey: "name",
         header: "Name",
+        grow: 100,
+        Cell: ({ renderedCellValue, row }) => (
+          <Link href={`/manage/users/${row.original.id}`}>
+            <Group>
+              <Avatar size="sm"></Avatar>
+              {renderedCellValue}
+            </Group>
+          </Link>
+        ),
       },
       {
         accessorKey: "email",
@@ -66,27 +71,11 @@ export const UserListComponent = ({
     enableRowSelection: true,
     enableColumnOrdering: true,
     enableGlobalFilter: false,
-    enableRowActions: true,
+    enableRowActions: false,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
+    layoutMode: "grid-no-grow",
     getRowId: (row) => row.id,
-    renderRowActions: ({ row }) => (
-      <Flex gap="md">
-        <Tooltip label="Edit">
-          <ActionIcon
-            component={Link}
-            href={`/manage/users/${row.original.id}`}
-          >
-            <IconEdit size="1rem" />
-          </ActionIcon>
-        </Tooltip>
-        <Tooltip label="Delete">
-          <ActionIcon color="red">
-            <IconTrash size="1rem" />
-          </ActionIcon>
-        </Tooltip>
-      </Flex>
-    ),
     renderTopToolbarCustomActions: () => (
       <Button component={Link} href="/manage/users/create">
         Create New User
