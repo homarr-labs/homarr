@@ -196,24 +196,24 @@ export function Notebook({
         });
         editor.view.dispatch(tr);
         setContent(editor.getHTML());
-        handleConfigUpdate(editor.getHTML());
+        handleContentUpdate(editor.getHTML());
       }
     });
   };
 
   addEventListener("onReadOnlyCheck", handleOnReadOnlyCheck);
 
-  const handleEditToggle = (previous: boolean) => {
+  const handleEditToggleCallback = (previous: boolean) => {
     const current = !previous;
     if (!editor) return current;
     editor.setEditable(current);
 
-    handleConfigUpdate(content);
+    handleContentUpdate(content);
 
     return current;
   };
 
-  const handleEditCancel = () => {
+  const handleEditCancelCallback = () => {
     if (!editor) return false;
     editor.setEditable(false);
 
@@ -223,13 +223,21 @@ export function Notebook({
     return false;
   };
 
-  const handleConfigUpdate = (contentUpdate: string) => {
+  const handleEditCancel = useCallback(() => {
+    setIsEditing(handleEditCancelCallback);
+  }, [setIsEditing, handleEditCancelCallback]);
+
+  const handleContentUpdate = (contentUpdate: string) => {
     setToSaveContent(contentUpdate);
     // This is not available in preview mode
     if (boardId && itemId) {
       void mutateAsync({ boardId, itemId, content: contentUpdate });
     }
   };
+
+  const handleEditToggle = useCallback(() => {
+    setIsEditing(handleEditToggleCallback);
+  }, [setIsEditing, handleEditToggleCallback]);
 
   return (
     <>
@@ -373,7 +381,7 @@ export function Notebook({
             variant="light"
             size={30}
             radius={"md"}
-            onClick={() => setIsEditing(handleEditToggle)}
+            onClick={handleEditToggle}
           >
             {isEditing ? (
               <IconDeviceFloppy {...iconProps} />
@@ -394,7 +402,7 @@ export function Notebook({
               variant="light"
               size={30}
               radius={"md"}
-              onClick={() => setIsEditing(handleEditCancel)}
+              onClick={handleEditCancel}
             >
               <IconX {...iconProps} />
             </ActionIcon>
@@ -410,19 +418,26 @@ function TextHighlightControl() {
   const { editor } = useRichTextEditorContext();
   const defaultColor = "transparent";
 
+  const getCurrent = useCallback(() => {
+    return editor?.getAttributes("highlight").color as string | undefined;
+  }, [editor]);
+
+  const update = useCallback(
+    (value: string) => {
+      if (value === defaultColor) {
+        editor?.chain().focus().unsetHighlight().run();
+        return;
+      }
+      editor?.chain().focus().setHighlight({ color: value }).run();
+    },
+    [editor, defaultColor],
+  );
+
   return (
     <ColorControl
       defaultColor={defaultColor}
-      getCurrent={() =>
-        editor?.getAttributes("highlight").color as string | undefined
-      }
-      update={(value) => {
-        if (value === defaultColor) {
-          editor?.chain().focus().unsetHighlight().run();
-          return;
-        }
-        editor?.chain().focus().setHighlight({ color: value }).run();
-      }}
+      getCurrent={getCurrent}
+      update={update}
       icon={IconHighlight}
       ariaLabel={tControls("colorHighlight")}
     />
@@ -436,19 +451,26 @@ function TextColorControl() {
   const { colorScheme } = useMantineColorScheme();
   const defaultColor = colorScheme === "dark" ? colors.dark[0] : black;
 
+  const getCurrent = useCallback(() => {
+    return editor?.getAttributes("textStyle").color as string | undefined;
+  }, [editor]);
+
+  const update = useCallback(
+    (value: string) => {
+      if (value === defaultColor) {
+        editor?.chain().focus().unsetColor().run();
+        return;
+      }
+      editor?.chain().focus().setColor(value).run();
+    },
+    [editor, defaultColor],
+  );
+
   return (
     <ColorControl
       defaultColor={defaultColor}
-      getCurrent={() =>
-        editor?.getAttributes("textStyle").color as string | undefined
-      }
-      update={(value) => {
-        if (value === defaultColor) {
-          editor?.chain().focus().unsetColor().run();
-          return;
-        }
-        editor?.chain().focus().setColor(value).run();
-      }}
+      getCurrent={getCurrent}
+      update={update}
       icon={IconLetterA}
       ariaLabel={tControls("colorText")}
     />
@@ -459,15 +481,24 @@ function ColorCellControl() {
   const tControls = useScopedI18n("widget.notebook.controls");
   const { editor } = useRichTextEditorContext();
 
+  const getCurrent = useCallback(() => {
+    return editor?.getAttributes("tableCell").backgroundColor as
+      | string
+      | undefined;
+  }, [editor]);
+
+  const update = useCallback(
+    (value: string) => {
+      editor?.chain().focus().setCellAttribute("backgroundColor", value).run();
+    },
+    [editor],
+  );
+
   return (
     <ColorControl
       defaultColor="transparent"
-      getCurrent={() =>
-        editor?.getAttributes("tableCell").backgroundColor as string | undefined
-      }
-      update={(value) =>
-        editor?.chain().focus().setCellAttribute("backgroundColor", value).run()
-      }
+      getCurrent={getCurrent}
+      update={update}
       icon={IconLayoutGrid}
       ariaLabel={tControls("colorCell")}
     />
@@ -529,6 +560,17 @@ const ColorControl = ({
     };
   });
 
+  const handleApplyColor = useCallback(() => {
+    update(color);
+    close();
+  }, [color, update, close]);
+
+  const handleClearColor = useCallback(() => {
+    update(defaultColor);
+    setColor(defaultColor);
+    close();
+  }, [update, setColor, close, defaultColor]);
+
   return (
     <Popover
       opened={opened}
@@ -567,21 +609,14 @@ const ColorControl = ({
             <ActionIcon
               title={t("common.action.apply")}
               variant="default"
-              onClick={() => {
-                update(color);
-                close();
-              }}
+              onClick={handleApplyColor}
             >
               <IconCheck stroke={1.5} size="1rem" />
             </ActionIcon>
             <ActionIcon
               title={t("widget.notebook.popover.clearColor")}
               variant="default"
-              onClick={() => {
-                update(defaultColor);
-                setColor(defaultColor);
-                close();
-              }}
+              onClick={handleClearColor}
             >
               <IconCircleOff stroke={1.5} size="1rem" />
             </ActionIcon>
@@ -606,6 +641,11 @@ function EmbedImage() {
     },
   });
 
+  const handleOpen = useCallback(() => {
+    form.reset();
+    open();
+  }, [form, open]);
+
   const handleSubmit = useCallback(
     (values: { src: string; width: string }) => {
       editor?.commands.insertContent({
@@ -625,14 +665,8 @@ function EmbedImage() {
   return (
     <Popover
       opened={opened}
-      onClose={() => {
-        close();
-        form.reset();
-      }}
-      onOpen={() => {
-        form.reset();
-        open();
-      }}
+      onClose={close}
+      onOpen={handleOpen}
       position="left"
       styles={{
         dropdown: {
@@ -676,11 +710,14 @@ function EmbedImage() {
 function TaskListToggle() {
   const { editor } = useRichTextEditorContext();
   const tControls = useScopedI18n("widget.notebook.controls");
+  const handleToggleTaskList = useCallback(() => {
+    editor?.chain().focus().toggleTaskList().run();
+  }, [editor]);
 
   return (
     <RichTextEditor.Control
       title={tControls("checkList")}
-      onClick={() => editor?.chain().focus().toggleTaskList().run()}
+      onClick={handleToggleTaskList}
       active={editor?.isActive("taskList")}
     >
       <IconListCheck stroke={1.5} size="1rem" />
@@ -692,6 +729,9 @@ function ListIndentIncrease() {
   const { editor } = useRichTextEditorContext();
   const [itemType, setItemType] = useState("listItem");
   const tControls = useScopedI18n("widget.notebook.controls");
+  const handleIncreaseIndent = useCallback(() => {
+    editor?.chain().focus().sinkListItem(itemType).run();
+  }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
     setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
@@ -700,7 +740,7 @@ function ListIndentIncrease() {
   return (
     <RichTextEditor.Control
       title={tControls("increaseIndent")}
-      onClick={() => editor?.chain().focus().sinkListItem(itemType).run()}
+      onClick={handleIncreaseIndent}
       interactive={editor?.can().sinkListItem(itemType)}
     >
       <IconIndentIncrease stroke={1.5} size="1rem" />
@@ -713,6 +753,10 @@ function ListIndentDecrease() {
   const [itemType, setItemType] = useState("listItem");
   const tControls = useScopedI18n("widget.notebook.controls");
 
+  const handleDecreaseIndent = useCallback(() => {
+    editor?.chain().focus().liftListItem(itemType).run();
+  }, [editor, itemType]);
+
   editor?.on("selectionUpdate", ({ editor }) => {
     setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
   });
@@ -720,7 +764,7 @@ function ListIndentDecrease() {
   return (
     <RichTextEditor.Control
       title={tControls("decreaseIndent")}
-      onClick={() => editor?.chain().focus().liftListItem(itemType).run()}
+      onClick={handleDecreaseIndent}
       interactive={editor?.can().liftListItem(itemType)}
     >
       <IconIndentDecrease stroke={1.5} size="1rem" />
@@ -830,11 +874,14 @@ const TableControl = ({ title, onClick, icon: Icon }: TableControlProps) => {
 function TableToggleMerge() {
   const { editor } = useRichTextEditorContext();
   const tControls = useScopedI18n("widget.notebook.controls");
+  const handleToggleMerge = useCallback(() => {
+    editor?.commands.mergeOrSplit();
+  }, [editor]);
 
   return (
     <RichTextEditor.Control
       title={tControls("mergeCell")}
-      onClick={() => editor?.commands.mergeOrSplit()}
+      onClick={handleToggleMerge}
       active={editor?.getAttributes("tableCell").colspan > 1}
     >
       <svg
