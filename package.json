@@ -2,7 +2,7 @@
   "name": "homarr",
   "private": true,
   "engines": {
-    "node": ">=20.12.0"
+    "node": ">=20.12.1"
   },
   "type": "module",
   "packageManager": "pnpm@8.15.6",
@@ -36,7 +36,7 @@
     "jsdom": "^24.0.0",
     "prettier": "^3.2.5",
     "turbo": "^1.13.2",
-    "typescript": "^5.4.3",
+    "typescript": "^5.4.4",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.4.0"
   },
