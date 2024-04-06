@@ -13,11 +13,12 @@
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
+    "build": "esbuild migrate.ts --bundle --platform=node --outfile=migrate.cjs",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "migration:generate": "drizzle-kit generate:sqlite",
-    "migration:run": "node ./migrate.mjs",
+    "migration:run": "tsx ./migrate.ts",
     "push": "drizzle-kit push:sqlite",
     "studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"

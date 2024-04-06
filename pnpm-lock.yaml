@@ -281,6 +281,61 @@ importers:
         specifier: ^5.4.3
         version: 5.4.3
 
+  apps/websocket:
+    dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/api
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/auth
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/common
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/definitions
+      '@homarr/log':
+        specifier: workspace:^
+        version: link:../../packages/log
+      '@homarr/redis':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/redis
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/validation
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      ws:
+        specifier: ^8.16.0
+        version: 8.16.0
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      '@types/ws':
+        specifier: ^8.5.10
+        version: 8.5.10
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      typescript:
+        specifier: ^5.4.3
+        version: 5.4.3
+
   packages/api:
     dependencies:
       '@homarr/auth':
@@ -316,9 +371,6 @@ importers:
       superjson:
         specifier: 2.2.1
         version: 2.2.1
-      ws:
-        specifier: ^8.16.0
-        version: 8.16.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -329,9 +381,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@types/ws':
-        specifier: ^8.5.10
-        version: 8.5.10
       eslint:
         specifier: ^8.57.0
         version: 8.57.0

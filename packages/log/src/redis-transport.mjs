@@ -27,7 +27,7 @@ export class RedisTransport extends Transport {
 
     this.redis
       .publish(
-        "logging",
+        "pubSub:logging",
         superjson.stringify({
           message: info.message,
           timestamp: info.timestamp,
