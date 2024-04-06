@@ -9,6 +9,7 @@ import { Box, LoadingOverlay, Stack } from "@homarr/ui";
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardBackgroundVideo } from "~/components/layout/background";
+import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { useIsBoardReady, useRequiredBoard } from "./_context";
 
 let boardName: string | null = null;
@@ -58,7 +59,7 @@ export const ClientBoard = () => {
         visible={!isReady}
         transitionProps={{ duration: 500 }}
         loaderProps={{ size: "lg" }}
-        h="calc(100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding))"
+        h={fullHeightWithoutHeaderAndFooter}
       />
       <Stack
         ref={ref}

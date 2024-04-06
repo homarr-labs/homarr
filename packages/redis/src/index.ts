@@ -8,3 +8,11 @@ export const queueChannel = createQueueChannel<{
   executionDate: Date;
   data: unknown;
 }>("common-queue");
+
+export interface LoggerMessage {
+  message: string;
+  level: string;
+  timestamp: string;
+}
+
+export const loggingChannel = createSubPubChannel<LoggerMessage>("logging");
