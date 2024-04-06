@@ -4,8 +4,8 @@ import "@mantine/tiptap/styles.css";
 
 import type { WidgetComponentProps } from "../definition";
 
-const Editor = dynamic(
-  () => import("./editor").then((module) => module.Editor),
+const Notebook = dynamic(
+  () => import("./notebook").then((module) => module.Notebook),
   {
     ssr: false,
   },
@@ -14,5 +14,5 @@ const Editor = dynamic(
 export default function NotebookWidget(
   props: WidgetComponentProps<"notebook">,
 ) {
-  return <Editor {...props} />;
+  return <Notebook {...props} />;
 }

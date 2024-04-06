@@ -55,12 +55,14 @@ import TaskList from "@tiptap/extension-task-list";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
+import type { Editor } from "@tiptap/react";
 import { BubbleMenu, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import type { Node } from "prosemirror-model";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
+import type { TranslationObject } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -76,7 +78,7 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-export function Editor({
+export function Notebook({
   options,
   isEditMode,
   boardId,
@@ -276,10 +278,10 @@ export function Editor({
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H1 title={tControls("heading", { level: "1" })} />
-            <RichTextEditor.H2 title={tControls("heading", { level: "2" })} />
-            <RichTextEditor.H3 title={tControls("heading", { level: "3" })} />
-            <RichTextEditor.H4 title={tControls("heading", { level: "4" })} />
+            <RichTextEditor.H1 title={tControls("heading", { level: 1 })} />
+            <RichTextEditor.H2 title={tControls("heading", { level: 2 })} />
+            <RichTextEditor.H3 title={tControls("heading", { level: 3 })} />
+            <RichTextEditor.H4 title={tControls("heading", { level: 4 })} />
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup>
@@ -726,89 +728,104 @@ function ListIndentDecrease() {
   );
 }
 
-function TableAddColumnBefore() {
+const handleAddColumnBefore = (editor: Editor) => {
+  editor.commands.addColumnBefore();
+};
+
+const TableAddColumnBefore = () => (
+  <TableControl
+    title="addColumnLeft"
+    onClick={handleAddColumnBefore}
+    icon={IconColumnInsertLeft}
+  />
+);
+
+const handleAddColumnAfter = (editor: Editor) => {
+  editor.commands.addColumnAfter();
+};
+
+const TableAddColumnAfter = () => (
+  <TableControl
+    title="addColumnRight"
+    onClick={handleAddColumnAfter}
+    icon={IconColumnInsertRight}
+  />
+);
+
+const handleRemoveColumn = (editor: Editor) => {
+  editor.commands.deleteColumn();
+};
+
+const TableRemoveColumn = () => (
+  <TableControl
+    title="deleteColumn"
+    onClick={handleRemoveColumn}
+    icon={IconColumnRemove}
+  />
+);
+
+const handleAddRowBefore = (editor: Editor) => {
+  editor.commands.addRowBefore();
+};
+
+const TableAddRowBefore = () => (
+  <TableControl
+    title="addRowTop"
+    onClick={handleAddRowBefore}
+    icon={IconRowInsertTop}
+  />
+);
+
+const handleAddRowAfter = (editor: Editor) => {
+  editor.commands.addRowAfter();
+};
+
+const TableAddRowAfter = () => (
+  <TableControl
+    title="addRowBelow"
+    onClick={handleAddRowAfter}
+    icon={IconRowInsertBottom}
+  />
+);
+
+const handleRemoveRow = (editor: Editor) => {
+  editor.commands.deleteRow();
+};
+
+const TableRemoveRow = () => (
+  <TableControl
+    title="deleteRow"
+    onClick={handleRemoveRow}
+    icon={IconRowRemove}
+  />
+);
+
+interface TableControlProps {
+  title: Exclude<
+    keyof TranslationObject["widget"]["notebook"]["controls"],
+    "align" | "heading"
+  >;
+  onClick: (editor: Editor) => void;
+  icon: TablerIcon;
+}
+
+const TableControl = ({ title, onClick, icon: Icon }: TableControlProps) => {
   const { editor } = useRichTextEditorContext();
   const tControls = useScopedI18n("widget.notebook.controls");
+  const handleControlClick = useCallback(() => {
+    if (!editor) return;
+    onClick(editor);
+  }, [editor, onClick]);
 
   return (
     <RichTextEditor.Control
-      title={tControls("addColumnLeft")}
-      onClick={() => editor?.commands.addColumnBefore()}
+      title={tControls(title)}
+      onClick={handleControlClick}
     >
-      <IconColumnInsertLeft stroke={1.5} size="1.25rem" />
+      <Icon {...controlIconProps} />
     </RichTextEditor.Control>
   );
-}
-
-function TableAddColumnAfter() {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
-
-  return (
-    <RichTextEditor.Control
-      title={tControls("addColumnRight")}
-      onClick={() => editor?.commands.addColumnAfter()}
-    >
-      <IconColumnInsertRight stroke={1.5} size="1.25rem" />
-    </RichTextEditor.Control>
-  );
-}
-
-function TableRemoveColumn() {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
-
-  return (
-    <RichTextEditor.Control
-      title={tControls("deleteColumn")}
-      onClick={() => editor?.commands.deleteColumn()}
-    >
-      <IconColumnRemove stroke={1.5} size="1.25rem" />
-    </RichTextEditor.Control>
-  );
-}
-
-function TableAddRowBefore() {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
-
-  return (
-    <RichTextEditor.Control
-      title={tControls("addRowTop")}
-      onClick={() => editor?.commands.addRowBefore()}
-    >
-      <IconRowInsertTop stroke={1.5} size="1.25rem" />
-    </RichTextEditor.Control>
-  );
-}
-
-function TableAddRowAfter() {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
-
-  return (
-    <RichTextEditor.Control
-      title={tControls("addRowBelow")}
-      onClick={() => editor?.commands.addRowAfter()}
-    >
-      <IconRowInsertBottom stroke={1.5} size="1.25rem" />
-    </RichTextEditor.Control>
-  );
-}
-
-function TableRemoveRow() {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
-
-  return (
-    <RichTextEditor.Control
-      title={tControls("deleteRow")}
-      onClick={() => editor?.commands.deleteRow()}
-    >
-      <IconRowRemove stroke={1.5} size="1.25rem" />
-    </RichTextEditor.Control>
-  );
-}
+};
 
 function TableToggleMerge() {
   const { editor } = useRichTextEditorContext();
@@ -855,6 +872,11 @@ function TableToggle() {
     },
   });
 
+  const handleOpen = useCallback(() => {
+    form.reset();
+    open();
+  }, [form, open]);
+
   const handleSubmit = useCallback(
     (values: { rows: number; cols: number }) => {
       editor?.commands.insertTable({ ...values, withHeaderRow: false });
@@ -863,13 +885,18 @@ function TableToggle() {
     [editor, close],
   );
 
+  const handleControlClick = useCallback(() => {
+    if (isActive) {
+      editor?.commands.deleteTable();
+    } else {
+      toggle();
+    }
+  }, [isActive, editor, toggle]);
+
   return (
     <Popover
       opened={opened}
-      onOpen={() => {
-        form.reset();
-        open();
-      }}
+      onOpen={handleOpen}
       onClose={close}
       styles={{
         dropdown: {
@@ -882,9 +909,7 @@ function TableToggle() {
         <RichTextEditor.Control
           title={tControls(isActive ? "deleteTable" : "addTable")}
           active={isActive}
-          onClick={
-            isActive ? () => editor?.commands.deleteTable() : () => toggle()
-          }
+          onClick={handleControlClick}
         >
           {isActive ? (
             <IconTableOff stroke={1.5} size="1rem" />
