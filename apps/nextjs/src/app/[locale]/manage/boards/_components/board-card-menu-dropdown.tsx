@@ -10,6 +10,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { IconSettings, IconTrash, Menu } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { useBoardPermissions } from "~/components/board/permissions/client";
 
 const iconProps = {
   size: 16,
@@ -17,7 +18,10 @@ const iconProps = {
 };
 
 interface BoardCardMenuDropdownProps {
-  board: Pick<RouterOutputs["board"]["getAll"][number], "id" | "name">;
+  board: Pick<
+    RouterOutputs["board"]["getAll"][number],
+    "id" | "name" | "creator" | "permissions"
+  >;
 }
 
 export const BoardCardMenuDropdown = ({
@@ -25,6 +29,11 @@ export const BoardCardMenuDropdown = ({
 }: BoardCardMenuDropdownProps) => {
   const t = useScopedI18n("management.page.board.action");
   const tCommon = useScopedI18n("common");
+
+  const { hasFullAccess, hasChangeAccess } = useBoardPermissions({
+    creatorId: board.creator?.id ?? null,
+    permissions: board.permissions.map(({ permission }) => permission),
+  });
 
   const { openConfirmModal } = useConfirmModal();
 
@@ -51,26 +60,31 @@ export const BoardCardMenuDropdown = ({
   return (
     <Menu.Dropdown>
       <Menu.Item>Item 1</Menu.Item>
-      <Menu.Item
-        component={Link}
-        href={`/boards/${board.name}/settings`}
-        leftSection={<IconSettings {...iconProps} />}
-      >
-        {t("settings.label")}
-      </Menu.Item>
-
-      <Menu.Divider />
-      <Menu.Label c="red.7">
-        {tCommon("menu.section.dangerZone.title")}
-      </Menu.Label>
-      <Menu.Item
-        c="red.7"
-        leftSection={<IconTrash {...iconProps} />}
-        onClick={handleDeletion}
-        disabled={isPending}
-      >
-        {t("delete.label")}
-      </Menu.Item>
+      {hasChangeAccess && (
+        <Menu.Item
+          component={Link}
+          href={`/boards/${board.name}/settings`}
+          leftSection={<IconSettings {...iconProps} />}
+        >
+          {t("settings.label")}
+        </Menu.Item>
+      )}
+      {hasFullAccess && (
+        <>
+          <Menu.Divider />
+          <Menu.Label c="red.7">
+            {tCommon("menu.section.dangerZone.title")}
+          </Menu.Label>
+          <Menu.Item
+            c="red.7"
+            leftSection={<IconTrash {...iconProps} />}
+            onClick={handleDeletion}
+            disabled={isPending}
+          >
+            {t("delete.label")}
+          </Menu.Item>
+        </>
+      )}
     </Menu.Dropdown>
   );
 };

@@ -20,8 +20,8 @@ import {
   useMantineTheme,
 } from "@homarr/ui";
 
-import { generateColors } from "../../_theme";
 import type { Board } from "../../_types";
+import { generateColors } from "../../(content)/_theme";
 import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {

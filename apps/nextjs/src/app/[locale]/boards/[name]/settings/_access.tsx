@@ -225,9 +225,9 @@ const RenderOption: SelectProps["renderOption"] = ({ option, checked }) => {
     <Group flex="1" gap="xs">
       <Icon {...iconProps} />
       {option.label}
-      {checked && (
+      {checked ? (
         <IconCheck style={{ marginInlineStart: "auto" }} {...iconProps} />
-      )}
+      ) : null}
     </Group>
   );
 };

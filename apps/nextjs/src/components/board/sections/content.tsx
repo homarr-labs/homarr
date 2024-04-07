@@ -24,8 +24,8 @@ import {
   WidgetEditModal,
 } from "@homarr/widgets";
 
-import { useRequiredBoard } from "~/app/[locale]/boards/_context";
 import type { Item } from "~/app/[locale]/boards/_types";
+import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { editModeAtom } from "../editMode";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";

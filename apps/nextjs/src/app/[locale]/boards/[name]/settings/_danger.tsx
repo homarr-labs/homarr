@@ -9,7 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
 
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
-import { useRequiredBoard } from "../../_context";
+import { useRequiredBoard } from "../../(content)/_context";
 import classes from "./danger.module.css";
 
 export const DangerZoneSettingsContent = () => {

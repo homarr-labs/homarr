@@ -2,7 +2,7 @@ import { usePathname } from "next/navigation";
 
 import type { AppShellProps } from "@homarr/ui";
 
-import { useOptionalBoard } from "~/app/[locale]/boards/_context";
+import { useOptionalBoard } from "~/app/[locale]/boards/(content)/_context";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
 const isVideo = (url: string) =>
