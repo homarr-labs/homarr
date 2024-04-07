@@ -121,10 +121,10 @@ importers:
         version: 5.29.0(@tanstack/react-query@5.29.0)(next@14.1.4)(react@18.2.0)
       '@tiptap/extension-link':
         specifier: ^2.2.5
-        version: 2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)
+        version: 2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)
       '@tiptap/react':
         specifier: ^2.2.5
-        version: 2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)
       '@tiptap/starter-kit':
         specifier: ^2.2.5
         version: 2.2.5(@tiptap/pm@2.2.4)
@@ -281,6 +281,61 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
 
+  apps/websocket:
+    dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/api
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/auth
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/common
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/definitions
+      '@homarr/log':
+        specifier: workspace:^
+        version: link:../../packages/log
+      '@homarr/redis':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/redis
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/validation
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      ws:
+        specifier: ^8.16.0
+        version: 8.16.0
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      '@types/ws':
+        specifier: ^8.5.10
+        version: 8.5.10
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      typescript:
+        specifier: ^5.4.4
+        version: 5.4.4
+
   packages/api:
     dependencies:
       '@homarr/auth':
@@ -316,9 +371,6 @@ importers:
       superjson:
         specifier: 2.2.1
         version: 2.2.1
-      ws:
-        specifier: ^8.16.0
-        version: 8.16.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -329,9 +381,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@types/ws':
-        specifier: ^8.5.10
-        version: 8.5.10
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -2155,8 +2204,8 @@ packages:
     dependencies:
       '@mantine/core': 7.7.1(@mantine/hooks@7.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.7.1(react@18.2.0)
-      '@tiptap/extension-link': 2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)
-      '@tiptap/react': 2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap/extension-link': 2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)
+      '@tiptap/react': 2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2600,14 +2649,6 @@ packages:
       react-error-boundary: 3.1.4(react@17.0.2)
     dev: true
 
-  /@tiptap/core@2.2.4(@tiptap/pm@2.2.4):
-    resolution: {integrity: sha512-cRrI8IlLIhCE1hacBQzXIC8dsRvGq6a4lYWQK/BaHuZg21CG7szp3Vd8Ix+ra1f5v0xPOT+Hy+QFNQooRMKMCw==}
-    peerDependencies:
-      '@tiptap/pm': ^2.0.0
-    dependencies:
-      '@tiptap/pm': 2.2.4
-    dev: false
-
   /@tiptap/core@2.2.5(@tiptap/pm@2.2.4):
     resolution: {integrity: sha512-BgF6tiXhwph0Ig16ZNppMmg30t22Z/yjZ+KnS8EALdJere3ACNw8THz9q/8iQqBWjjBOHUvhrQOgER4BJxfmGA==}
     peerDependencies:
@@ -2632,13 +2673,13 @@ packages:
       '@tiptap/core': 2.2.5(@tiptap/pm@2.2.4)
     dev: false
 
-  /@tiptap/extension-bubble-menu@2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4):
+  /@tiptap/extension-bubble-menu@2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4):
     resolution: {integrity: sha512-JFeFaUyin93SL/DZZqfoz/DWvMxtqcZLnPPd60hZBczxcLghRZCyDH5nqVHJybrkcs/xNNPennJ1Hqft+WEHbA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
     dependencies:
-      '@tiptap/core': 2.2.4(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.2.5(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       tippy.js: 6.3.7
     dev: false
@@ -2687,13 +2728,13 @@ packages:
       '@tiptap/pm': 2.2.4
     dev: false
 
-  /@tiptap/extension-floating-menu@2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4):
+  /@tiptap/extension-floating-menu@2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4):
     resolution: {integrity: sha512-/PfS9QHEHQsoV6ZqolJ6Rq6ZC6drD7IPJRgywuJi0zTTH0YCbLmJKrc3K2Qj69xbfwcANL8gBdsexv5zOjKAXA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
     dependencies:
-      '@tiptap/core': 2.2.4(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.2.5(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       tippy.js: 6.3.7
     dev: false
@@ -2752,13 +2793,13 @@ packages:
       '@tiptap/core': 2.2.5(@tiptap/pm@2.2.4)
     dev: false
 
-  /@tiptap/extension-link@2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4):
+  /@tiptap/extension-link@2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4):
     resolution: {integrity: sha512-3UyEdD7eOzb31Ro9zh02EIvZhgSFKV+/rSKgAf4wU17QUFid0cYRqaXcVjG0UOSznHqccxGQKD7nNT0jxTg+cw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
     dependencies:
-      '@tiptap/core': 2.2.4(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.2.5(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       linkifyjs: 4.1.3
     dev: false
@@ -2826,7 +2867,7 @@ packages:
       prosemirror-view: 1.33.1
     dev: false
 
-  /@tiptap/react@2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0):
+  /@tiptap/react@2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-kpEnkvTXUnr6npLt1mQCBhdgle/ZkttGgKwtwSLdM74zPzPwj8XVeCp+3kyVBK4ME7DXWIo5dPbU0nUi/FyE+g==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
@@ -2834,9 +2875,9 @@ packages:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     dependencies:
-      '@tiptap/core': 2.2.4(@tiptap/pm@2.2.4)
-      '@tiptap/extension-bubble-menu': 2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-floating-menu': 2.2.5(@tiptap/core@2.2.4)(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.2.5(@tiptap/pm@2.2.4)
+      '@tiptap/extension-bubble-menu': 2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)
+      '@tiptap/extension-floating-menu': 2.2.5(@tiptap/core@2.2.5)(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

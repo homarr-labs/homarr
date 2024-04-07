@@ -37,7 +37,7 @@ export const createSubPubChannel = <TData>(name: string) => {
         );
       });
       subscriber.on("message", (channel, message) => {
-        if (channel !== channelName) return;
+        if (channel !== channelName) return; // TODO: check if this is necessary - it should be handled by the redis client
 
         callback(superjson.parse(message));
       });

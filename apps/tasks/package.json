@@ -11,6 +11,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm with-env tsx ./src/main.ts",
+    "build": "esbuild src/main.ts --bundle --platform=node --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -20,10 +21,10 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
-    "@homarr/redis": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
+    "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3"
   },
