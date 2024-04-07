@@ -755,9 +755,6 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
-      '@homarr/spotlight':
-        specifier: workspace:^
-        version: link:../spotlight
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
