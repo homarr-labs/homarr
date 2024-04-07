@@ -27,6 +27,7 @@ export default function AppWidget({
   height,
 }: WidgetComponentProps<"app">) {
   const t = useScopedI18n("widget.app");
+  const isQueryEnabled = Boolean(options.appId);
   const {
     data: app,
     isPending,
@@ -38,10 +39,11 @@ export default function AppWidget({
     {
       initialData:
         // We need to check if the id's match because otherwise the same initialData for a changed id will be used
-        serverData?.app.id === options.appId ? serverData?.app : undefined,
+        serverData?.app?.id === options.appId ? serverData?.app : undefined,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      enabled: isQueryEnabled,
     },
   );
 
@@ -64,7 +66,7 @@ export default function AppWidget({
     [app, options.appId, options.openInNewTab],
   );
 
-  if (isPending) {
+  if (isPending && isQueryEnabled) {
     return (
       <Center h="100%">
         <Loader />
@@ -72,7 +74,7 @@ export default function AppWidget({
     );
   }
 
-  if (isError) {
+  if (isError || !isQueryEnabled) {
     return (
       <Tooltip.Floating label={t("error.notFound.tooltip")}>
         <Stack gap="xs" align="center" justify="center" h="100%" w="100%">
