@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRegisterSpotlightActions } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
   Center,
@@ -42,6 +43,25 @@ export default function AppWidget({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
+  );
+
+  useRegisterSpotlightActions(
+    `app-${options.appId}`,
+    app?.href
+      ? [
+          {
+            id: `app-${options.appId}`,
+            title: app?.name,
+            description: app?.description ?? "",
+            icon: app?.iconUrl,
+            group: "app",
+            type: "link",
+            href: app?.href,
+            openInNewTab: options.openInNewTab,
+          },
+        ]
+      : [],
+    [app, options.appId, options.openInNewTab],
   );
 
   if (isPending) {
