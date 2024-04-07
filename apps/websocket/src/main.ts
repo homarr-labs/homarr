@@ -1,13 +1,11 @@
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { WebSocketServer } from "ws";
 
+import { appRouter, createTRPCContext } from "@homarr/api/websocket";
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
 import { parseCookies } from "@homarr/common";
 import { db } from "@homarr/db";
 import { logger } from "@homarr/log";
-
-import { appRouter } from "./root";
-import { createTRPCContext } from "./trpc";
 
 const wss = new WebSocketServer({
   port: 3001,
