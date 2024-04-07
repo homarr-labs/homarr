@@ -1,5 +1,11 @@
-import definition from "./_definition";
+import { api } from "@homarr/api/server";
 
-const { layout } = definition;
+import { BoardOtherHeaderActions } from "../_header-actions";
+import { createBoardLayout } from "../_layout-creator";
 
-export default layout;
+export default createBoardLayout<{ locale: string; name: string }>({
+  headerActions: <BoardOtherHeaderActions />,
+  async getInitialBoard({ name }) {
+    return await api.board.byName({ name });
+  },
+});

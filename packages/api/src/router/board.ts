@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
+import type { Session } from "@homarr/auth";
 import type { Database, SQL } from "@homarr/db";
-import { and, createId, eq, inArray } from "@homarr/db";
+import { and, createId, eq, inArray, or } from "@homarr/db";
 import {
   boardPermissions,
   boards,
@@ -10,7 +11,7 @@ import {
   items,
   sections,
 } from "@homarr/db/schema/sqlite";
-import type { WidgetKind } from "@homarr/definitions";
+import type { BoardPermission, WidgetKind } from "@homarr/definitions";
 import { widgetKinds } from "@homarr/definitions";
 import {
   createSectionSchema,
@@ -20,7 +21,7 @@ import {
 } from "@homarr/validation";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 const filterAddedItems = <TInput extends { id: string }>(
   inputArray: TInput[],
@@ -48,22 +49,37 @@ const filterUpdatedItems = <TInput extends { id: string }>(
 
 export const boardRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.boards.findMany({
+    const myPermissions = await ctx.db.query.boardPermissions.findMany({
+      where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+    });
+    const boardIds = myPermissions.map((permission) => permission.boardId);
+    const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
         id: true,
         name: true,
         isPublic: true,
       },
       with: {
-        sections: {
-          with: {
-            items: true,
+        creator: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
           },
         },
+        permissions: {
+          where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+        },
       },
+      where: or(
+        eq(boards.isPublic, true),
+        eq(boards.creatorId, ctx.session?.user.id ?? ""),
+        boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
+      ),
     });
+    return dbBoards;
   }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
@@ -71,6 +87,7 @@ export const boardRouter = createTRPCRouter({
         await transaction.insert(boards).values({
           id: boardId,
           name: input.name,
+          creatorId: ctx.session.user.id,
         });
         await transaction.insert(sections).values({
           id: createId(),
@@ -83,6 +100,19 @@ export const boardRouter = createTRPCRouter({
   rename: publicProcedure
     .input(validation.board.rename)
     .mutation(async ({ ctx, input }) => {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "full-access",
+      );
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to rename this board",
+        });
+      }
+
       await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
 
       await ctx.db
@@ -93,35 +123,100 @@ export const boardRouter = createTRPCRouter({
   changeVisibility: publicProcedure
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "full-access",
+      );
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to change the visibility of this board",
+        });
+      }
+
       await ctx.db
         .update(boards)
         .set({ isPublic: input.visibility === "public" })
         .where(eq(boards.id, input.id));
     }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "full-access",
+      );
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to delete this board",
+        });
+      }
+
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
   default: publicProcedure.query(async ({ ctx }) => {
-    return await getFullBoardWithWhere(ctx.db, eq(boards.name, "default"));
+    const boardWhere = eq(boards.name, "default");
+    const canAccessBoard = await canAccessBoardAsync(
+      ctx.db,
+      boardWhere,
+      ctx.session,
+      "board-view",
+    );
+    if (!canAccessBoard) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not allowed to access the default board",
+      });
+    }
+
+    return await getFullBoardWithWhere(
+      ctx.db,
+      boardWhere,
+      ctx.session?.user.id ?? null,
+    );
   }),
   byName: publicProcedure
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {
-      return await getFullBoardWithWhere(ctx.db, eq(boards.name, input.name));
+      const boardWhere = eq(boards.name, input.name);
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        boardWhere,
+        ctx.session,
+        "board-view",
+      );
+
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to access this board",
+        });
+      }
+
+      return await getFullBoardWithWhere(
+        ctx.db,
+        boardWhere,
+        ctx.session?.user.id ?? null,
+      );
     }),
   savePartialSettings: publicProcedure
     .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
-      const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.id),
-      });
-
-      if (!board) {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "board-change",
+      );
+      if (!canAccessBoard) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Board not found",
+          code: "FORBIDDEN",
+          message: "You are not allowed to change the settings of this board",
         });
       }
 
@@ -153,13 +248,27 @@ export const boardRouter = createTRPCRouter({
         })
         .where(eq(boards.id, input.id));
     }),
-  save: publicProcedure
+  save: protectedProcedure
     .input(validation.board.save)
     .mutation(async ({ input, ctx }) => {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "board-change",
+      );
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to change the content of this board",
+        });
+      }
+
       await ctx.db.transaction(async (transaction) => {
         const dbBoard = await getFullBoardWithWhere(
           transaction,
           eq(boards.id, input.id),
+          ctx.session.user.id,
         );
 
         const addedSections = filterAddedItems(
@@ -314,9 +423,22 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 
-  permissions: publicProcedure
+  permissions: protectedProcedure
     .input(validation.board.permissions)
     .query(async ({ input, ctx }) => {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "full-access",
+      );
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to view the permissions of this board",
+        });
+      }
+
       const permissions = await ctx.db.query.boardPermissions.findMany({
         where: eq(boardPermissions.boardId, input.id),
         with: {
@@ -343,6 +465,20 @@ export const boardRouter = createTRPCRouter({
   savePermissions: publicProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
+      const canAccessBoard = await canAccessBoardAsync(
+        ctx.db,
+        eq(boards.id, input.id),
+        ctx.session,
+        "full-access",
+      );
+      if (!canAccessBoard) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "You are not allowed to change the permissions of this board",
+        });
+      }
+
       await ctx.db.transaction(async (transaction) => {
         await transaction
           .delete(boardPermissions)
@@ -387,7 +523,11 @@ const noBoardWithSimilarName = async (
   }
 };
 
-const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
+const getFullBoardWithWhere = async (
+  db: Database,
+  where: SQL<unknown>,
+  userId: string | null,
+) => {
   const board = await db.query.boards.findFirst({
     where,
     with: {
@@ -408,6 +548,12 @@ const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
               },
             },
           },
+        },
+      },
+      permissions: {
+        where: eq(boardPermissions.userId, userId ?? ""),
+        columns: {
+          permission: true,
         },
       },
     },
@@ -437,8 +583,60 @@ const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
   };
 };
 
-// The following is a bit of a mess, it's providing us typesafe options matching the widget kind.
-// But I might be able to do this in a better way in the future.
+const canAccessBoardAsync = async (
+  db: Database,
+  boardWhere: SQL<unknown>,
+  session: Session | null,
+  permission: "full-access" | BoardPermission,
+) => {
+  const board = await db.query.boards.findFirst({
+    where: boardWhere,
+    columns: {
+      id: true,
+      creatorId: true,
+      isPublic: true,
+    },
+    with: {
+      permissions: {
+        where: eq(boardPermissions.userId, session?.user.id ?? ""),
+      },
+    },
+  });
+
+  if (!board) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Board not found",
+    });
+  }
+
+  if (board.isPublic) {
+    return true; // Public boards can be accessed by anyone
+  }
+
+  if (!session) {
+    return false; // Not logged in users can't access private boards
+  }
+
+  if (board.creatorId === session?.user.id) {
+    return true; // Creators can access their own private boards
+  }
+
+  if (permission === "full-access") {
+    return false; // Only creators can have full access
+  }
+
+  if (permission === "board-view") {
+    return ["board-view", "board-change"].some((key) =>
+      board.permissions.some(({ permission }) => key === permission),
+    ); // For view access, allow if user has any board permission
+  }
+
+  return board.permissions.some(
+    ({ permission }) => permission === "board-change",
+  ); // When change is required, only allow if user has change permission
+};
+
 const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),
