@@ -24,6 +24,7 @@ export const createBoardContentPage = <
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
+      isContentPage: true,
       headerActions: <BoardContentHeaderActions />,
       getInitialBoard,
     }),

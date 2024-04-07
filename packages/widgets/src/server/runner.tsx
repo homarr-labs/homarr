@@ -10,10 +10,19 @@ import { GlobalItemServerDataProvider } from "./provider";
 type Board = RouterOutputs["board"]["default"];
 
 type Props = PropsWithChildren<{
+  shouldRun: boolean;
   board: Board;
 }>;
 
-export const GlobalItemServerDataRunner = ({ board, children }: Props) => {
+export const GlobalItemServerDataRunner = ({
+  shouldRun,
+  board,
+  children,
+}: Props) => {
+  if (!shouldRun) {
+    return children;
+  }
+
   const allItems = board.sections.flatMap((section) => section.items);
 
   return (
