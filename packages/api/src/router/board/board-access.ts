@@ -33,20 +33,20 @@ export const canAccessBoardAsync = async (
     });
   }
 
-  if (board.isPublic) {
-    return true; // Public boards can be accessed by anyone
-  }
-
-  if (!session) {
-    return false; // Not logged in users can't access private boards
-  }
-
   if (board.creatorId === session?.user.id) {
     return true; // Creators can access their own private boards
   }
 
   if (permission === "full-access") {
     return false; // Only creators can have full access
+  }
+
+  if (board.isPublic && permission === "board-view") {
+    return true; // Public boards can be accessed by anyone
+  }
+
+  if (!session) {
+    return false; // Not logged in users can't access private boards
   }
 
   if (permission === "board-view") {
