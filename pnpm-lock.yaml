@@ -397,8 +397,8 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
       '@auth/drizzle-adapter':
-        specifier: ^0.8.2
-        version: 0.8.2
+        specifier: ^0.9.0
+        version: 0.9.0
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -957,10 +957,33 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/drizzle-adapter@0.8.2:
-    resolution: {integrity: sha512-IrySrHLr427+J5CjiM5fI6XFDmH5R2G7wd4E26z+J64C3t2aegdZdlfMAUerLjeoxAXnMas7bECtOYRO33EfKA==}
+  /@auth/core@0.29.0:
+    resolution: {integrity: sha512-MdfEjU6WRjUnPG1+XeBWrTIlAsLZU6V0imCIqVDDDPxLI6UZWldXVqAA2EsDazGofV78jqiCLHaN85mJITDqdg==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
     dependencies:
-      '@auth/core': 0.28.2
+      '@panva/hkdf': 1.1.1
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      jose: 5.2.2
+      oauth4webapi: 2.10.3
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+    dev: false
+
+  /@auth/drizzle-adapter@0.9.0:
+    resolution: {integrity: sha512-6ec+ecH+R24xzXto9mvk31CM4vrrcieLrHo0r7Hv3ItEY93aBB4Z78AHPmA1HqYT6zEmDWfezo7fOv/6Ydgh6Q==}
+    dependencies:
+      '@auth/core': 0.29.0
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
