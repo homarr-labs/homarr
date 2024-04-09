@@ -36,7 +36,7 @@ export const UserListComponent = ({
     () => [
       {
         accessorKey: "name",
-        header: "Name",
+        header: "Name", // TODO: translate
         grow: 100,
         Cell: ({ renderedCellValue, row }) => (
           <Link href={`/manage/users/${row.original.id}`}>
@@ -49,7 +49,7 @@ export const UserListComponent = ({
       },
       {
         accessorKey: "email",
-        header: "Email",
+        header: "Email", // TODO: translate
         Cell: ({ renderedCellValue, row }) => (
           <Group>
             {row.original.email ? renderedCellValue : <Text>-</Text>}
