@@ -45,6 +45,7 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "@xterm/addon-canvas": "^0.7.0",
+    "@xterm/addon-fit": "0.10.0",
     "@xterm/xterm": "^5.5.0",
     "chroma-js": "^2.4.2",
     "dayjs": "^1.11.10",
@@ -56,8 +57,7 @@
     "react-dom": "18.2.0",
     "sass": "^1.74.1",
     "superjson": "2.2.1",
-    "use-deep-compare-effect": "^1.8.1",
-    "xterm-addon-fit": "^0.8.0"
+    "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -69,7 +69,6 @@
     "@types/chroma-js": "2.4.4",
     "dotenv-cli": "^7.4.1",
     "concurrently": "^8.2.2",
-    "dotenv-cli": "^7.4.1",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "tsx": "^4.7.2",
