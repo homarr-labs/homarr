@@ -5,7 +5,7 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import type { SpotlightActionData, SpotlightActionGroup } from "./type";
 
 const defaultGroups = ["all", "web", "action"] as const;
-const reversedDefaultGroups = [...defaultGroups].reverse();
+const reversedDefaultGroups = [...defaultGroups].reverse() as string[];
 const actionsAtom = atom<Record<string, readonly SpotlightActionData[]>>({});
 export const actionsAtomRead = atom((get) =>
   Object.values(get(actionsAtom)).flatMap((item) => item),
