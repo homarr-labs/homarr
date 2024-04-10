@@ -222,6 +222,7 @@ export default {
         all: "All",
         web: "Web",
         action: "Actions",
+        app: "Apps",
       },
     },
     userAvatar: {
