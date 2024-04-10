@@ -65,9 +65,7 @@ const ChangePasswordForm = ({
             )}
           </Title>
           <PasswordInput
-            label={t(
-              "management.page.user.edit.section.security.changePassword.form.password.label",
-            )}
+            label={t("user.field.password.label")}
             {...form.getInputProps("password")}
           />
         </Stack>

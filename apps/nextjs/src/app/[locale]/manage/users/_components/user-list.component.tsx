@@ -7,7 +7,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import {
   Avatar,
   Button,
@@ -25,7 +25,8 @@ interface UserListComponentProps {
 export const UserListComponent = ({
   initialUserList,
 }: UserListComponentProps) => {
-  const t = useScopedI18n("management.page.user.list");
+  const tUserList = useScopedI18n("management.page.user.list");
+  const t = useI18n();
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
     initialData: initialUserList,
   });
@@ -36,7 +37,7 @@ export const UserListComponent = ({
     () => [
       {
         accessorKey: "name",
-        header: "Name", // TODO: translate
+        header: t("user.field.username.label"),
         grow: 100,
         Cell: ({ renderedCellValue, row }) => (
           <Link href={`/manage/users/${row.original.id}`}>
@@ -49,7 +50,7 @@ export const UserListComponent = ({
       },
       {
         accessorKey: "email",
-        header: "Email", // TODO: translate
+        header: t("user.field.email.label"),
         Cell: ({ renderedCellValue, row }) => (
           <Group>
             {row.original.email ? renderedCellValue : <Text>-</Text>}
@@ -62,7 +63,7 @@ export const UserListComponent = ({
         ),
       },
     ],
-    [],
+    [t],
   );
 
   const table = useMantineReactTable({
@@ -88,7 +89,7 @@ export const UserListComponent = ({
 
   return (
     <>
-      <Title mb="md">{t("title")}</Title>
+      <Title mb="md">{tUserList("title")}</Title>
       <MantineReactTable table={table} />
     </>
   );

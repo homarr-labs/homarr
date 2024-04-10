@@ -41,7 +41,7 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
       onClick={onClick}
       loading={isPending}
     >
-      {t("management.page.board.button.create")}
+      {t("management.page.board.action.create.label")}
     </Button>
   );
 };

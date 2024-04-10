@@ -22,6 +22,7 @@ import { StepperNavigationComponent } from "./stepper-navigation.component";
 
 export const UserCreateStepperComponent = () => {
   const t = useScopedI18n("management.page.user.create");
+  const tUserField = useScopedI18n("user.field");
 
   const stepperMax = 4;
   const [active, setActive] = useState(0);
@@ -67,7 +68,7 @@ export const UserCreateStepperComponent = () => {
         })
         .refine((data) => data.password === data.confirmPassword, {
           path: ["confirmPassword"],
-          message: "Passwords do not match",
+          message: "Passwords do not match", // TODO: translate
         }),
     ),
     validateInputOnBlur: true,
@@ -122,14 +123,14 @@ export const UserCreateStepperComponent = () => {
             <Card p="xl">
               <Stack gap="md">
                 <TextInput
-                  label={t("step.personalInformation.field.username.label")}
+                  label={tUserField("username.label")}
                   variant="filled"
                   withAsterisk
                   {...generalForm.getInputProps("username")}
                 />
 
                 <TextInput
-                  label={t("step.personalInformation.field.email.label")}
+                  label={tUserField("email.label")}
                   variant="filled"
                   {...generalForm.getInputProps("email")}
                 />
@@ -146,13 +147,13 @@ export const UserCreateStepperComponent = () => {
             <Card p="xl">
               <Stack gap="md">
                 <PasswordInput
-                  label={t("step.security.field.password.label")}
+                  label={tUserField("password.label")}
                   variant="filled"
                   withAsterisk
                   {...securityForm.getInputProps("password")}
                 />
                 <PasswordInput
-                  label={t("step.security.field.confirmPassword.label")}
+                  label={tUserField("passwordConfirm.label")}
                   variant="filled"
                   withAsterisk
                   {...securityForm.getInputProps("confirmPassword")}

@@ -28,7 +28,7 @@ export const DeleteBoardButton = ({ id }: Props) => {
 
   return (
     <Button onClick={onClick} loading={isPending} color="red">
-      {t("management.page.board.button.delete")}
+      {t("management.page.board.action.delete.label")}
     </Button>
   );
 };

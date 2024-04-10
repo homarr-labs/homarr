@@ -13,6 +13,9 @@ export default {
       },
     },
     field: {
+      email: {
+        label: "E-Mail",
+      },
       username: {
         label: "Username",
       },
@@ -638,17 +641,12 @@ export default {
     page: {
       board: {
         title: "Manage boards",
-        button: {
-          create: "Create board",
-          delete: "Delete board",
-        },
-        modal: {
-          createBoard: {
-            field: {
-              name: {
-                label: "Name",
-              },
-            },
+        action: {
+          create: {
+            label: "Create board",
+          },
+          delete: {
+            label: "Delete board",
           },
         },
       },
@@ -662,14 +660,6 @@ export default {
           section: {
             profile: {
               title: "Profile",
-              form: {
-                username: {
-                  label: "Username",
-                },
-                email: {
-                  label: "E-Mail",
-                },
-              },
             },
             preferences: {
               title: "Preferences",
@@ -678,11 +668,6 @@ export default {
               title: "Security",
               changePassword: {
                 title: "Change password",
-                form: {
-                  password: {
-                    label: "Password",
-                  },
-                },
                 message: {
                   passwordUpdated: "Updated password",
                 },
@@ -707,25 +692,9 @@ export default {
           step: {
             personalInformation: {
               label: "Personal information",
-              field: {
-                username: {
-                  label: "Username",
-                },
-                email: {
-                  label: "E-Mail",
-                },
-              },
             },
             security: {
               label: "Security",
-              field: {
-                password: {
-                  label: "Password",
-                },
-                confirmPassword: {
-                  label: "Confirm password",
-                },
-              },
             },
             permissions: {
               label: "Permissions",
@@ -738,9 +707,9 @@ export default {
               title: "User created",
             },
           },
-          buttons: {
+          action: {
             createAnother: "Create another user",
-            return: "Return to the user list",
+            back: "Return to the user list",
           },
         },
         invite: {
