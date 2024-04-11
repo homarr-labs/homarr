@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto";
+import { TRPCError } from "@trpc/server";
 
-import { createId, desc, eq } from "@homarr/db";
+import { asc, createId, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema/sqlite";
 import { z } from "@homarr/validation";
 
@@ -9,7 +10,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 export const inviteRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const dbInvites = await ctx.db.query.invites.findMany({
-      orderBy: desc(invites.expirationDate),
+      orderBy: asc(invites.expirationDate),
       columns: {
         token: false,
       },
@@ -53,6 +54,17 @@ export const inviteRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const dbInvite = await ctx.db.query.invites.findFirst({
+        where: eq(invites.id, input.id),
+      });
+
+      if (!dbInvite) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invite not found",
+        });
+      }
+
       await ctx.db.delete(invites).where(eq(invites.id, input.id));
     }),
 });
