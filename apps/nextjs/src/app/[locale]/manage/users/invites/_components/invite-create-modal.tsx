@@ -29,7 +29,7 @@ export const InviteCreateModal = createModal<void>(({ actions }) => {
   const form = useForm<FormType>({
     initialValues: {
       expirationDate: dayjs().add(4, "hours").toDate(),
-    }, // TODO: add validation
+    },
   });
 
   const handleSubmit = (values: FormType) => {

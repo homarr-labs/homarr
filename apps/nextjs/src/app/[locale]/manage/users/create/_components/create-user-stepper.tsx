@@ -68,7 +68,7 @@ export const UserCreateStepperComponent = () => {
         })
         .refine((data) => data.password === data.confirmPassword, {
           path: ["confirmPassword"],
-          message: "Passwords do not match", // TODO: translate
+          message: "Passwords do not match",
         }),
     ),
     validateInputOnBlur: true,

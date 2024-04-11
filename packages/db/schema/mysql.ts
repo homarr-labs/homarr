@@ -92,6 +92,15 @@ export const verificationTokens = mysqlTable(
   }),
 );
 
+export const invites = mysqlTable("invite", {
+  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  token: varchar("token", { length: 512 }).notNull().unique(),
+  expirationDate: timestamp("expiration_date").notNull(),
+  creatorId: varchar("creator_id", { length: 256 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
 export const integrations = mysqlTable(
   "integration",
   {
@@ -236,6 +245,14 @@ export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   boards: many(boards),
   boardPermissions: many(boardPermissions),
+  invites: many(invites),
+}));
+
+export const inviteRelations = relations(invites, ({ one }) => ({
+  creator: one(users, {
+    fields: [invites.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
