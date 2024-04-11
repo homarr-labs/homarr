@@ -52,7 +52,7 @@
     "dotenv": "^16.4.5",
     "jotai": "^2.7.2",
     "next": "^14.1.4",
-    "postcss-preset-mantine": "^1.13.0",
+    "postcss-preset-mantine": "^1.14.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.74.1",

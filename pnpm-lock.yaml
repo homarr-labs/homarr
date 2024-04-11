@@ -165,8 +165,8 @@ importers:
         specifier: ^14.1.4
         version: 14.1.4(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.74.1)
       postcss-preset-mantine:
-        specifier: ^1.13.0
-        version: 1.13.0(postcss@8.4.38)
+        specifier: ^1.14.4
+        version: 1.14.4(postcss@8.4.38)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -7218,8 +7218,8 @@ packages:
       postcss-selector-parser: 6.0.15
     dev: false
 
-  /postcss-preset-mantine@1.13.0(postcss@8.4.38):
-    resolution: {integrity: sha512-1bv/mQz2K+/FixIMxYd83BYH7PusDZaI7LpUtKbb1l/5N5w6t1p/V9ONHfRJeeAZyfa6Xc+AtR+95VKdFXRH1g==}
+  /postcss-preset-mantine@1.14.4(postcss@8.4.38):
+    resolution: {integrity: sha512-T1K3MVhU1hA9mJWfqoGvMcK5WKcHpVi4JUX6AYTbESvp78WneB/KFONUi+eXDG9Lpw62W/KNxEYl1ic3Dpm88w==}
     peerDependencies:
       postcss: '>=8.0.0'
     dependencies:
