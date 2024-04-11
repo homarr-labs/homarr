@@ -70,7 +70,7 @@ export const InviteListComponent = ({
     getRowId: (row) => row.id,
     renderTopToolbarCustomActions: RenderTopToolbarCustomActions,
     state: {
-      isLoading: isLoading,
+      isLoading,
     },
     initialState: {
       sorting: [{ id: "expirationDate", desc: false }],

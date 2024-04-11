@@ -83,7 +83,7 @@ export const UserListComponent = ({
       </Button>
     ),
     state: {
-      isLoading: isLoading,
+      isLoading,
     },
   });
 
