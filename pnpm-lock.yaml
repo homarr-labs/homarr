@@ -470,14 +470,14 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       better-sqlite3:
-        specifier: ^9.4.5
-        version: 9.4.5
+        specifier: ^9.5.0
+        version: 9.5.0
       drizzle-kit:
         specifier: ^0.20.14
         version: 0.20.14
       drizzle-orm:
         specifier: ^0.30.7
-        version: 0.30.7(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.5)(mysql2@3.9.2)(react@17.0.2)
+        version: 0.30.7(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.2)(react@17.0.2)
       mysql2:
         specifier: 3.9.2
         version: 3.9.2
@@ -4011,8 +4011,8 @@ packages:
       - supports-color
     dev: false
 
-  /better-sqlite3@9.4.5:
-    resolution: {integrity: sha512-uFVyoyZR9BNcjSca+cp3MWCv6upAv+tbMC4SWM51NIMhoQOm4tjIkyxFO/ZsYdGAF61WJBgdzyJcz4OokJi0gQ==}
+  /better-sqlite3@9.5.0:
+    resolution: {integrity: sha512-01qVcM4gPNwE+PX7ARNiHINwzVuD6nx0gdldaAAcu+MrzyIAukQ31ZDKEpzRO/CNA9sHpxoTZ8rdjoyAin4dyg==}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -4729,7 +4729,7 @@ packages:
       - supports-color
     dev: false
 
-  /drizzle-orm@0.30.7(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.5)(mysql2@3.9.2)(react@17.0.2):
+  /drizzle-orm@0.30.7(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.2)(react@17.0.2):
     resolution: {integrity: sha512-9qefSZQlu2fO2qv24piHyWFWcxcOY15//0v4j8qomMqaxzipNoG+fUBrQ7Ftk7PY7APRbRdn/nkEXWxiI4a8mw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4810,7 +4810,7 @@ packages:
         optional: true
     dependencies:
       '@types/better-sqlite3': 7.6.9
-      better-sqlite3: 9.4.5
+      better-sqlite3: 9.5.0
       mysql2: 3.9.2
       react: 17.0.2
     dev: false
