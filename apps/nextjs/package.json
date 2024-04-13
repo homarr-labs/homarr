@@ -52,7 +52,7 @@
     "postcss-preset-mantine": "^1.14.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sass": "^1.74.1",
+    "sass": "^1.75.0",
     "superjson": "2.2.1",
     "use-deep-compare-effect": "^1.8.1"
   },
