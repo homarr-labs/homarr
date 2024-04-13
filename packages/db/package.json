@@ -28,7 +28,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "better-sqlite3": "^9.5.0",
-    "drizzle-orm": "^0.30.7",
+    "drizzle-orm": "^0.30.8",
     "mysql2": "3.9.2",
     "drizzle-kit": "^0.20.14"
   },

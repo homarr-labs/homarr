@@ -476,8 +476,8 @@ importers:
         specifier: ^0.20.14
         version: 0.20.14
       drizzle-orm:
-        specifier: ^0.30.7
-        version: 0.30.7(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.2)(react@17.0.2)
+        specifier: ^0.30.8
+        version: 0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.2)(react@17.0.2)
       mysql2:
         specifier: 3.9.2
         version: 3.9.2
@@ -4729,8 +4729,8 @@ packages:
       - supports-color
     dev: false
 
-  /drizzle-orm@0.30.7(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.2)(react@17.0.2):
-    resolution: {integrity: sha512-9qefSZQlu2fO2qv24piHyWFWcxcOY15//0v4j8qomMqaxzipNoG+fUBrQ7Ftk7PY7APRbRdn/nkEXWxiI4a8mw==}
+  /drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.2)(react@17.0.2):
+    resolution: {integrity: sha512-9pBJA0IjnpPpzZ6s9jlS1CQAbKoBmbn2GJesPhXaVblAA/joOJ4AWWevYcqvLGj9SvThBAl7WscN8Zwgg5mnTw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
