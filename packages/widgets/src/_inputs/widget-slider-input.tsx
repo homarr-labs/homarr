@@ -16,10 +16,11 @@ export const WidgetSliderInput = ({
 
   return (
     <InputWrapper
+      label={t("label")}
       description={options.withDescription ? t("description") : undefined}
+      inputWrapperOrder={["label", "input", "description", "error"]}
     >
       <Slider
-        label={t("label")}
         min={options.validate.minValue ?? undefined}
         max={options.validate.maxValue ?? undefined}
         step={options.step}

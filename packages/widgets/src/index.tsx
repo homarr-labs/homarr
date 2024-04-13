@@ -10,6 +10,7 @@ import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as video from "./video";
 import * as weather from "./weather";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
@@ -23,6 +24,7 @@ export const widgetImports = {
   weather,
   app,
   iframe,
+  video,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
