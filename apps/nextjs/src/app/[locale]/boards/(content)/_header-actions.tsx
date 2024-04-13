@@ -143,10 +143,10 @@ const EditModeMenu = () => {
     },
   });
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     if (isEditMode) return saveBoard(board);
     setEditMode(true);
-  };
+  }, [board, isEditMode, saveBoard, setEditMode]);
 
   return (
     <HeaderButton onClick={toggle} loading={isPending}>

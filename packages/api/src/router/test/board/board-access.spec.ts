@@ -134,7 +134,7 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
   });
 
   test.each([["board-view" as const], ["board-change" as const]])(
-    `with permission %s should return true when board-view is required`,
+    "with permission %s should return true when board-view is required",
     async (permission) => {
       // Arrange
       const db = createDb();
@@ -171,7 +171,7 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
     ["board-view" as const, false],
     ["board-change" as const, true],
   ])(
-    `with permission %s permission should return %s when board-change is required`,
+    "with permission %s permission should return %s when board-change is required",
     async (permission, expectedResult) => {
       // Arrange
       const db = createDb();
