@@ -234,6 +234,13 @@ export default {
         navigateDefaultBoard: "Navigate to default board",
       },
     },
+    menu: {
+      section: {
+        dangerZone: {
+          title: "Danger Zone",
+        },
+      },
+    },
     noResults: "No results found",
     preview: {
       show: "Show preview",
@@ -816,10 +823,28 @@ export default {
     },
     page: {
       board: {
-        title: "Manage boards",
-        button: {
-          create: "Create board",
-          delete: "Delete board",
+        title: "Your boards",
+        action: {
+          new: {
+            label: "New board",
+          },
+          open: {
+            label: "Open board",
+          },
+          settings: {
+            label: "Settings",
+          },
+          delete: {
+            label: "Delete permanently",
+            confirm: {
+              title: "Delete board",
+              description: "Are you sure you want to delete the {name} board?",
+            },
+          },
+        },
+        visibility: {
+          public: "This board is public",
+          private: "This board is private",
         },
         modal: {
           createBoard: {

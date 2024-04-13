@@ -5,12 +5,14 @@ import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 
+import { auth } from "@homarr/auth";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@homarr/ui";
 
 import { JotaiProvider } from "./_client-providers/jotai";
 import { NextInternationalProvider } from "./_client-providers/next-international";
+import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { composeWrappers } from "./compose";
 
@@ -52,6 +54,10 @@ export default function Layout(props: {
   const colorScheme = "dark";
 
   const StackedProvider = composeWrappers([
+    async (innerProps) => {
+      const session = await auth();
+      return <AuthProvider session={session} {...innerProps} />;
+    },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
     (innerProps) => (
