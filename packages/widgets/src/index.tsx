@@ -9,6 +9,7 @@ import * as app from "./app";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import type { WidgetImportRecord } from "./import";
+import * as video from "./video";
 import * as weather from "./weather";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
@@ -21,6 +22,7 @@ export const widgetImports = {
   clock,
   weather,
   app,
+  video,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
