@@ -4,5 +4,6 @@ export const widgetKinds = [
   "app",
   "iframe",
   "video",
+  "notebook",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
