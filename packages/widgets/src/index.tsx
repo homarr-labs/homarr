@@ -10,6 +10,7 @@ import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as notebook from "./notebook";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -23,6 +24,7 @@ export const widgetImports = {
   clock,
   weather,
   app,
+  notebook,
   iframe,
   video,
 } satisfies WidgetImportRecord;
