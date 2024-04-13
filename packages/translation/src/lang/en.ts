@@ -376,11 +376,62 @@ export default {
       description:
         "Displays the current weather information of a set location.",
       option: {
+        isFormatFahrenheit: {
+          label: "Temperature in Fahrenheit",
+        },
         location: {
-          label: "Location",
+          label: "Weather location",
         },
         showCity: {
           label: "Show city",
+        },
+        hasForecast: {
+          label: "Show forecast",
+        },
+        forecastDayCount: {
+          label: "Amount of forecast days",
+          description:
+            "When the widget is not wide enough, less days are shown",
+        },
+      },
+      kind: {
+        clear: "Clear",
+        mainlyClear: "Mainly clear",
+        fog: "Fog",
+        drizzle: "Drizzle",
+        freezingDrizzle: "Freezing drizzle",
+        rain: "Rain",
+        freezingRain: "Freezing rain",
+        snowFall: "Snow fall",
+        snowGrains: "Snow grains",
+        rainShowers: "Rain showers",
+        snowShowers: "Snow showers",
+        thunderstorm: "Thunderstorm",
+        thunderstormWithHail: "Thunderstorm with hail",
+        unknown: "Unknown",
+      },
+    },
+    common: {
+      location: {
+        query: "City / Postal code",
+        latitude: "Latitude",
+        longitude: "Longitude",
+        disabledTooltip: "Please enter a city or postal code",
+        unknownLocation: "Unknown location",
+        search: "Search",
+        table: {
+          header: {
+            city: "City",
+            country: "Country",
+            coordinates: "Coordinates",
+            population: "Population",
+          },
+          action: {
+            select: "Select {city}, {countryCode}",
+          },
+          population: {
+            fallback: "Unknown",
+          },
         },
       },
     },

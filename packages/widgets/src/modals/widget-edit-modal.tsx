@@ -88,4 +88,6 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(
       </form>
     );
   },
-).withOptions({});
+).withOptions({
+  keepMounted: true,
+});
