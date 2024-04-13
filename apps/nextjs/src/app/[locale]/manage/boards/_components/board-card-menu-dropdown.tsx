@@ -50,7 +50,6 @@ export const BoardCardMenuDropdown = ({
 
   return (
     <Menu.Dropdown>
-      <Menu.Item>Item 1</Menu.Item>
       <Menu.Item
         component={Link}
         href={`/boards/${board.name}/settings`}
