@@ -202,6 +202,7 @@ export default {
       confirm: "Confirm",
       previous: "Previous",
       next: "Next",
+      checkoutDocs: "Check out the documentation",
     },
     multiSelect: {
       placeholder: "Pick one or more values",
@@ -433,6 +434,30 @@ export default {
             fallback: "Unknown",
           },
         },
+      },
+    },
+    video: {
+      name: "Video Stream",
+      description: "Embed a video stream or video from a camera or a website",
+      option: {
+        feedUrl: {
+          label: "Feed URL",
+        },
+        hasAutoPlay: {
+          label: "Autoplay",
+          description:
+            "Autoplay only works when muted because of browser restrictions",
+        },
+        isMuted: {
+          label: "Muted",
+        },
+        hasControls: {
+          label: "Show controls",
+        },
+      },
+      error: {
+        noUrl: "No Video URL provided",
+        forYoutubeUseIframe: "For YouTube videos use the iframe option",
       },
     },
   },
