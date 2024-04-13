@@ -57,5 +57,5 @@ export const AddBoardModal = createModal<InnerProps>(
     );
   },
 ).withOptions({
-  defaultTitle: (t) => t("management.page.board.button.create"),
+  defaultTitle: (t) => t("management.page.board.action.new.label"),
 });

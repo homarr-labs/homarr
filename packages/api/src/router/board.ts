@@ -52,6 +52,7 @@ export const boardRouter = createTRPCRouter({
       columns: {
         id: true,
         name: true,
+        isPublic: true,
       },
       with: {
         sections: {

@@ -192,9 +192,11 @@ export default {
   common: {
     action: {
       add: "Add",
+      apply: "Apply",
       backToOverview: "Back to overview",
       create: "Create",
       edit: "Edit",
+      insert: "Insert",
       remove: "Remove",
       save: "Save",
       saveChanges: "Save changes",
@@ -202,6 +204,7 @@ export default {
       confirm: "Confirm",
       previous: "Previous",
       next: "Next",
+      checkoutDocs: "Check out the documentation",
     },
     multiSelect: {
       placeholder: "Pick one or more values",
@@ -229,6 +232,13 @@ export default {
         management: "Management",
         logout: "Logout",
         navigateDefaultBoard: "Navigate to default board",
+      },
+    },
+    menu: {
+      section: {
+        dangerZone: {
+          title: "Danger Zone",
+        },
       },
     },
     noResults: "No results found",
@@ -371,17 +381,192 @@ export default {
         },
       },
     },
+    notebook: {
+      name: "Notebook",
+      description: "A simple notebook widget that supports markdown",
+      option: {
+        showToolbar: {
+          label: "Show the toolbar to help you write markdown",
+        },
+        allowReadOnlyCheck: {
+          label: "Allow check in read only mode",
+        },
+        content: {
+          label: "The content of the notebook",
+        },
+      },
+      controls: {
+        bold: "Bold",
+        italic: "Italic",
+        strikethrough: "Strikethrough",
+        underline: "Underline",
+        colorText: "Color text",
+        colorHighlight: "Colored highlight text",
+        code: "Code",
+        clear: "Clear formatting",
+        heading: "Heading {level}",
+        align: "Align text: {position}",
+        blockquote: "Blockquote",
+        horizontalLine: "Horizontal line",
+        bulletList: "Bullet list",
+        orderedList: "Ordered list",
+        checkList: "Check list",
+        increaseIndent: "Increase Indent",
+        decreaseIndent: "Decrease Indent",
+        link: "Link",
+        unlink: "Remove link",
+        image: "Embed Image",
+        addTable: "Add table",
+        deleteTable: "Delete Table",
+        colorCell: "Color Cell",
+        mergeCell: "Toggle cell merging",
+        addColumnLeft: "Add column before",
+        addColumnRight: "Add column after",
+        deleteColumn: "Delete column",
+        addRowTop: "Add row before",
+        addRowBelow: "Add row after",
+        deleteRow: "Delete row",
+      },
+      align: {
+        left: "Left",
+        center: "Center",
+        right: "Right",
+      },
+      popover: {
+        clearColor: "Clear color",
+        source: "Source",
+        widthPlaceholder: "Value in % or pixels",
+        columns: "Columns",
+        rows: "Rows",
+        width: "Width",
+        height: "Height",
+      },
+    },
+    iframe: {
+      name: "iFrame",
+      description:
+        "Embed any content from the internet. Some websites may restrict access.",
+      option: {
+        embedUrl: {
+          label: "Embed URL",
+        },
+        allowFullScreen: {
+          label: "Allow full screen",
+        },
+        allowTransparency: {
+          label: "Allow transparency",
+        },
+        allowScrolling: {
+          label: "Allow scrolling",
+        },
+        allowPayment: {
+          label: "Allow payment",
+        },
+        allowAutoPlay: {
+          label: "Allow auto play",
+        },
+        allowMicrophone: {
+          label: "Allow microphone",
+        },
+        allowCamera: {
+          label: "Allow camera",
+        },
+        allowGeolocation: {
+          label: "Allow geolocation",
+        },
+      },
+      error: {
+        noUrl: "No iFrame URL provided",
+        noBrowerSupport:
+          "Your Browser does not support iframes. Please update your browser.",
+      },
+    },
     weather: {
       name: "Weather",
       description:
         "Displays the current weather information of a set location.",
       option: {
+        isFormatFahrenheit: {
+          label: "Temperature in Fahrenheit",
+        },
         location: {
-          label: "Location",
+          label: "Weather location",
         },
         showCity: {
           label: "Show city",
         },
+        hasForecast: {
+          label: "Show forecast",
+        },
+        forecastDayCount: {
+          label: "Amount of forecast days",
+          description:
+            "When the widget is not wide enough, less days are shown",
+        },
+      },
+      kind: {
+        clear: "Clear",
+        mainlyClear: "Mainly clear",
+        fog: "Fog",
+        drizzle: "Drizzle",
+        freezingDrizzle: "Freezing drizzle",
+        rain: "Rain",
+        freezingRain: "Freezing rain",
+        snowFall: "Snow fall",
+        snowGrains: "Snow grains",
+        rainShowers: "Rain showers",
+        snowShowers: "Snow showers",
+        thunderstorm: "Thunderstorm",
+        thunderstormWithHail: "Thunderstorm with hail",
+        unknown: "Unknown",
+      },
+    },
+    common: {
+      location: {
+        query: "City / Postal code",
+        latitude: "Latitude",
+        longitude: "Longitude",
+        disabledTooltip: "Please enter a city or postal code",
+        unknownLocation: "Unknown location",
+        search: "Search",
+        table: {
+          header: {
+            city: "City",
+            country: "Country",
+            coordinates: "Coordinates",
+            population: "Population",
+          },
+          action: {
+            select: "Select {city}, {countryCode}",
+          },
+          population: {
+            fallback: "Unknown",
+          },
+        },
+      },
+    },
+    video: {
+      name: "Video Stream",
+      description: "Embed a video stream or video from a camera or a website",
+      option: {
+        feedUrl: {
+          label: "Feed URL",
+        },
+        hasAutoPlay: {
+          label: "Autoplay",
+          description:
+            "Autoplay only works when muted because of browser restrictions",
+        },
+        isMuted: {
+          label: "Muted",
+        },
+        hasControls: {
+          label: "Show controls",
+        },
+      },
+      error: {
+        noUrl: "No Video URL provided",
+        forYoutubeUseIframe: "For YouTube videos use the iframe option",
       },
     },
   },
@@ -638,10 +823,28 @@ export default {
     },
     page: {
       board: {
-        title: "Manage boards",
-        button: {
-          create: "Create board",
-          delete: "Delete board",
+        title: "Your boards",
+        action: {
+          new: {
+            label: "New board",
+          },
+          open: {
+            label: "Open board",
+          },
+          settings: {
+            label: "Settings",
+          },
+          delete: {
+            label: "Delete permanently",
+            confirm: {
+              title: "Delete board",
+              description: "Are you sure you want to delete the {name} board?",
+            },
+          },
+        },
+        visibility: {
+          public: "This board is public",
+          private: "This board is private",
         },
         modal: {
           createBoard: {

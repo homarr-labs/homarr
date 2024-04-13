@@ -12,6 +12,9 @@ export const env = createEnv({
       .optional()
       .transform((url) => (url ? `https://${url}` : undefined)),
     PORT: z.coerce.number().default(3000),
+    NODE_ENV: z
+      .enum(["development", "production", "test"])
+      .default("development"),
   },
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app isn't
@@ -49,6 +52,7 @@ export const env = createEnv({
     DB_NAME: process.env.DB_NAME,
     DB_PORT: process.env.DB_PORT,
     DB_DRIVER: process.env.DB_DRIVER,
+    NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:

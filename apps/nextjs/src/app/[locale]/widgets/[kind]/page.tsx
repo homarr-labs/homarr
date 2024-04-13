@@ -5,6 +5,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import { Center } from "@homarr/ui";
 import { widgetImports } from "@homarr/widgets";
 
+import { env } from "~/env.mjs";
 import { WidgetPreviewPageContent } from "./_content";
 
 interface Props {
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export default async function WidgetPreview(props: Props) {
-  if (!(props.params.kind in widgetImports)) {
+  if (!(props.params.kind in widgetImports || env.NODE_ENV !== "development")) {
     notFound();
   }
 
