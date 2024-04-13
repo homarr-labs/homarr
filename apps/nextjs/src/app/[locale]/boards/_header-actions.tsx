@@ -3,9 +3,9 @@
 import { IconLayoutBoard } from "@homarr/ui";
 
 import { HeaderButton } from "~/components/layout/header/button";
-import { useRequiredBoard } from "../../../_context";
+import { useRequiredBoard } from "./(content)/_context";
 
-export default function BoardViewLayout() {
+export const BoardOtherHeaderActions = () => {
   const board = useRequiredBoard();
 
   return (
@@ -13,4 +13,4 @@ export default function BoardViewLayout() {
       <IconLayoutBoard stroke={1.5} />
     </HeaderButton>
   );
-}
+};

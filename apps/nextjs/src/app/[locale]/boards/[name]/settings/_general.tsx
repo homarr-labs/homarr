@@ -20,8 +20,8 @@ import {
   Tooltip,
 } from "@homarr/ui";
 
-import { useUpdateBoard } from "../../_client";
 import type { Board } from "../../_types";
+import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {

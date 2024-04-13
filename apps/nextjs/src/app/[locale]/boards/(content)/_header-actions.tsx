@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useAtom, useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import {
   showErrorNotification,
@@ -29,11 +30,17 @@ import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { HeaderButton } from "~/components/layout/header/button";
-import { useRequiredBoard } from "../../_context";
+import { useRequiredBoard } from "./_context";
 
-export default function BoardViewHeaderActions() {
+export const BoardContentHeaderActions = () => {
   const isEditMode = useAtomValue(editModeAtom);
   const board = useRequiredBoard();
+  const { data: session } = useSession();
+
+  // TODO: use board permissions
+  if (!session || board.creatorId !== session.user?.id) {
+    return null; // Hide actions for user without access
+  }
 
   return (
     <>
@@ -46,7 +53,7 @@ export default function BoardViewHeaderActions() {
       </HeaderButton>
     </>
   );
-}
+};
 
 const AddMenu = () => {
   const { openModal: openCategoryEditModal } =
