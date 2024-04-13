@@ -36,6 +36,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
       session: sessionCallback,
       signIn: createSignInCallback(adapter, isCredentialsRequest),
     },
+    secret: "secret-is-not-defined-yet", // TODO: This should be added later
     session: {
       strategy: "database",
       maxAge: sessionMaxAgeInSeconds,

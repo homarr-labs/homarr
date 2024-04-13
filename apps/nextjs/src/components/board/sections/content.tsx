@@ -99,7 +99,7 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
 
   return (
     <>
-      <ItemMenu offset={8} item={newItem} />
+      <ItemMenu offset={4} item={newItem} />
       <Comp
         options={options as never}
         integrations={item.integrations}
@@ -158,6 +158,7 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
           pos="absolute"
           top={offset}
           right={offset}
+          style={{ zIndex: 1 }}
         >
           <IconDotsVertical />
         </ActionIcon>

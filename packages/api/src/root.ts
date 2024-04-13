@@ -1,6 +1,7 @@
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { integrationRouter } from "./router/integration";
+import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { userRouter } from "./router/user";
 import { widgetRouter } from "./router/widgets";
@@ -12,6 +13,7 @@ export const appRouter = createTRPCRouter({
   board: boardRouter,
   app: innerAppRouter,
   widget: widgetRouter,
+  location: locationRouter,
   log: logRouter,
 });
 

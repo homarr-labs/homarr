@@ -26,7 +26,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
     "eslint": "^8.57.0",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "eslintConfig": {
     "extends": [
