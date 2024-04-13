@@ -4,7 +4,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
-    "./server": "./src/server.ts"
+    "./server": "./src/server.ts",
+    "./websocket": "./src/websocket.ts"
   },
   "private": true,
   "main": "./index.ts",
@@ -12,12 +13,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "pnpm with-env tsx ./src/wssDevServer.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",
@@ -30,17 +29,15 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@trpc/client": "next",
     "@trpc/server": "next",
-    "superjson": "2.2.1",
-    "ws": "^8.16.0"
+    "superjson": "2.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/ws": "^8.5.10",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "eslintConfig": {
     "root": true,
