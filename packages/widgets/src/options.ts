@@ -39,7 +39,7 @@ interface SliderInput extends CommonInput<number> {
   step?: number;
 }
 
-interface OptLocation {
+export interface OptionLocation {
   name: string;
   latitude: number;
   longitude: number;
@@ -90,7 +90,7 @@ const optionsFactory = {
     withDescription: input.withDescription ?? false,
     validate: input.validate,
   }),
-  location: (input?: CommonInput<OptLocation>) => ({
+  location: (input?: CommonInput<OptionLocation>) => ({
     type: "location" as const,
     defaultValue: input?.defaultValue ?? {
       name: "",

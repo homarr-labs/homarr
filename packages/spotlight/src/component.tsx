@@ -25,8 +25,10 @@ import classes from "./component.module.css";
 import { actionsAtomRead, groupsAtomRead } from "./data-store";
 import { setSelectedAction, spotlightStore } from "./spotlight-store";
 import type { SpotlightActionData } from "./type";
+import { useWebSearchEngines } from "./web-search-engines";
 
 export const Spotlight = () => {
+  useWebSearchEngines();
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState("all");
   const groups = useAtomValue(groupsAtomRead);
@@ -46,7 +48,11 @@ export const Spotlight = () => {
       const renderRoot =
         item.type === "link"
           ? (props: Record<string, unknown>) => (
-              <Link href={prepareHref(item.href, query)} {...props} />
+              <Link
+                href={prepareHref(item.href, query)}
+                target={item.openInNewTab ? "_blank" : undefined}
+                {...props}
+              />
             )
           : undefined;
 
