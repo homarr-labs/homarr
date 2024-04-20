@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
@@ -13,16 +13,16 @@ importers:
         version: link:tooling/prettier
       '@testing-library/react-hooks':
         specifier: ^8.0.1
-        version: 8.0.1(react@17.0.2)
+        version: 8.0.1(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@turbo/gen':
         specifier: ^1.13.2
         version: 1.13.2(@types/node@20.12.7)(typescript@5.4.5)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.2.6)
+        version: 4.2.1(vite@5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)))
       '@vitest/coverage-v8':
         specifier: ^1.5.0
-        version: 1.5.0(vitest@1.5.0)
+        version: 1.5.0(vitest@1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)))
       '@vitest/ui':
         specifier: ^1.5.0
         version: 1.5.0(vitest@1.5.0)
@@ -43,10 +43,10 @@ importers:
         version: 5.4.5
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.2.6)
+        version: 4.3.2(typescript@5.4.5)(vite@5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)))
       vitest:
         specifier: ^1.5.0
-        version: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)
+        version: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
 
   apps/nextjs:
     dependencies:
@@ -103,10 +103,10 @@ importers:
         version: 7.8.0(react@18.2.0)
       '@mantine/modals':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/tiptap':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(@tiptap/extension-link@2.2.6)(@tiptap/react@2.2.6)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(@tiptap/extension-link@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4))(@tiptap/react@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.9.2
         version: 0.9.2(typescript@5.4.5)(zod@3.22.5)
@@ -115,22 +115,22 @@ importers:
         version: 5.29.2(react@18.2.0)
       '@tanstack/react-query-devtools':
         specifier: ^5.29.2
-        version: 5.29.2(@tanstack/react-query@5.29.2)(react@18.2.0)
+        version: 5.29.2(@tanstack/react-query@5.29.2(react@18.2.0))(react@18.2.0)
       '@tanstack/react-query-next-experimental':
         specifier: 5.29.2
-        version: 5.29.2(@tanstack/react-query@5.29.2)(next@14.2.2)(react@18.2.0)
+        version: 5.29.2(@tanstack/react-query@5.29.2(react@18.2.0))(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 11.0.0-rc.334
-        version: 11.0.0-rc.334(@trpc/server@11.0.0-next-beta.289)
+        specifier: 11.0.0-rc.345
+        version: 11.0.0-rc.345(@trpc/server@11.0.0-rc.345)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-next-beta.289(@tanstack/react-query@5.29.2)(@trpc/client@11.0.0-rc.334)(@trpc/react-query@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(next@14.2.2)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/react-query@11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/server@11.0.0-rc.345)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@11.0.0-rc.345)(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-next-beta.289(@tanstack/react-query@5.29.2)(@trpc/client@11.0.0-rc.334)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/server@11.0.0-rc.345)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-next-beta.289
+        version: 11.0.0-rc.345
       '@xterm/addon-canvas':
         specifier: ^0.7.0
         version: 0.7.0(@xterm/xterm@5.5.0)
@@ -154,7 +154,7 @@ importers:
         version: 2.8.0(@types/react@18.2.78)(react@18.2.0)
       next:
         specifier: ^14.2.2
-        version: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.75.0)
+        version: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)
       postcss-preset-mantine:
         specifier: ^1.14.4
         version: 1.14.4(postcss@8.4.38)
@@ -352,10 +352,10 @@ importers:
         version: link:../validation
       '@trpc/client':
         specifier: next
-        version: 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
+        version: 11.0.0-rc.345(@trpc/server@11.0.0-rc.345)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-next-beta.289
+        version: 11.0.0-rc.345
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -401,10 +401,10 @@ importers:
         version: 0.9.1
       next:
         specifier: ^14.2.2
-        version: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.75.0)
+        version: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)
       next-auth:
         specifier: 5.0.0-beta.16
-        version: 5.0.0-beta.16(next@14.2.2)(react@18.2.0)
+        version: 5.0.0-beta.16(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -477,7 +477,7 @@ importers:
         version: 0.20.14
       drizzle-orm:
         specifier: ^0.30.8
-        version: 0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.6)(react@17.0.2)
+        version: 0.30.8(@types/better-sqlite3@7.6.9)(@types/react@18.2.78)(better-sqlite3@9.5.0)(mysql2@3.9.6)(react@18.2.0)
       mysql2:
         specifier: 3.9.6
         version: 3.9.6
@@ -611,7 +611,7 @@ importers:
         version: link:../ui
       '@mantine/notifications':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -670,7 +670,7 @@ importers:
         version: link:../ui
       '@mantine/spotlight':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -714,16 +714,16 @@ importers:
     dependencies:
       '@mantine/core':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/dates':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@tabler/icons-react':
         specifier: ^3.2.0
         version: 3.2.0(react@18.2.0)
       mantine-react-table:
         specifier: 2.0.0-beta.1
-        version: 2.0.0-beta.1(@mantine/core@7.8.0)(@mantine/dates@7.8.0)(@mantine/hooks@7.8.0)(@tabler/icons-react@3.2.0)(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.0.0-beta.1(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(@tabler/icons-react@3.2.0(react@18.2.0))(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -806,46 +806,46 @@ importers:
         version: link:../validation
       '@tiptap/extension-color':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)(@tiptap/extension-text-style@2.2.5)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4)))
       '@tiptap/extension-highlight':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-image':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-link':
         specifier: ^2.2.5
-        version: 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
+        version: 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/extension-table':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/extension-table-cell':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-table-header':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-table-row':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-task-item':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/extension-task-list':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-text-align':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-text-style':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/extension-underline':
         specifier: 2.2.5
-        version: 2.2.5(@tiptap/core@2.2.6)
+        version: 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
       '@tiptap/react':
         specifier: ^2.2.5
-        version: 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@tiptap/starter-kit':
         specifier: ^2.2.5
         version: 2.2.6(@tiptap/pm@2.2.4)
@@ -879,7 +879,7 @@ importers:
         version: 14.2.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.6.0
-        version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)(typescript@5.4.5)
+        version: 7.6.0(@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/parser':
         specifier: ^7.6.0
         version: 7.6.0(eslint@8.57.0)(typescript@5.4.5)
@@ -891,7 +891,7 @@ importers:
         version: 1.13.2(eslint@8.57.0)
       eslint-plugin-import:
         specifier: ^2.29.1
-        version: 2.29.1(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)
+        version: 2.29.1(@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)
       eslint-plugin-jsx-a11y:
         specifier: ^6.8.0
         version: 6.8.0(eslint@8.57.0)
@@ -2183,23 +2183,18 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@trpc/client@11.0.0-next-beta.289':
-    resolution: {integrity: sha512-jqBzRRXNO9xn+onayc8BH6CDBDFA3NWGxXkuppTm2yu3r7wcbl5S7S5y6SvGGmyVqISoQT3u0t4dz9AZOuETHQ==}
+  '@trpc/client@11.0.0-rc.345':
+    resolution: {integrity: sha512-nyzah76jukBuH0P2jDEoQTgFzFReDSLDXui27sFFaccF6lwyR2ZdLrBbWDQqA1TG/rBWc+AeHpF0eHbTT9/ZiA==}
     peerDependencies:
-      '@trpc/server': 11.0.0-next-beta.289+27a9183d8
+      '@trpc/server': 11.0.0-rc.345+6e01a29cf
 
-  '@trpc/client@11.0.0-rc.334':
-    resolution: {integrity: sha512-nVKOxCfhKxBXvs1MwjfNNsWHQH/rHWzS4SxYPtYld7zqANTfNqn8cuClHMKlkeMKljObFiCfWhbdrBamKO/dDw==}
+  '@trpc/next@11.0.0-rc.345':
+    resolution: {integrity: sha512-l/MB/4ZZ6xp3D/Tsc3cv0Ew/2BnJSQdGYOdE4uTl0Jos9l1ySzuj2G7gU53TWk/Dr4WJNsD6V+ux+kW4uJn9uA==}
     peerDependencies:
-      '@trpc/server': 11.0.0-rc.334+fdf26e552
-
-  '@trpc/next@11.0.0-next-beta.289':
-    resolution: {integrity: sha512-AKCrcbtHh/zFrld6lMG0RC37d/aac4ZisLDjJcViMnEmJXCo0J5nhoZa6f+G9N683NdMWZVmY2rmJidw9IX3QQ==}
-    peerDependencies:
-      '@tanstack/react-query': ^5.0.0
-      '@trpc/client': 11.0.0-next-beta.289+27a9183d8
-      '@trpc/react-query': 11.0.0-next-beta.289+27a9183d8
-      '@trpc/server': 11.0.0-next-beta.289+27a9183d8
+      '@tanstack/react-query': ^5.25.0
+      '@trpc/client': 11.0.0-rc.345+6e01a29cf
+      '@trpc/react-query': 11.0.0-rc.345+6e01a29cf
+      '@trpc/server': 11.0.0-rc.345+6e01a29cf
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -2209,17 +2204,17 @@ packages:
       '@trpc/react-query':
         optional: true
 
-  '@trpc/react-query@11.0.0-next-beta.289':
-    resolution: {integrity: sha512-SAn09DmZ4eFYLS0cCHOVNvRHJhHZ2ssUj4LUTj56wym0MieaCSrcxTqiolnaMfF+mWc1SJlLOzebrxaTHPwJSw==}
+  '@trpc/react-query@11.0.0-rc.345':
+    resolution: {integrity: sha512-93YgC+1tHF0c2t4r+MkLdNQmajwYkVNtZr+aIsDKqz6vf0JdoPwxFsOAXHs8IoPmGHU+PZZmOyaxsIuOuurpiA==}
     peerDependencies:
-      '@tanstack/react-query': ^5.0.0
-      '@trpc/client': 11.0.0-next-beta.289+27a9183d8
-      '@trpc/server': 11.0.0-next-beta.289+27a9183d8
+      '@tanstack/react-query': ^5.25.0
+      '@trpc/client': 11.0.0-rc.345+6e01a29cf
+      '@trpc/server': 11.0.0-rc.345+6e01a29cf
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
 
-  '@trpc/server@11.0.0-next-beta.289':
-    resolution: {integrity: sha512-HfBVYUShvktA6M78jrCsRLyeE6l2NdaPJxKg095h4vk0bgWVfz0MgEOCQR/hjGdw0EFLEVcZANhqTZaHEzr36w==}
+  '@trpc/server@11.0.0-rc.345':
+    resolution: {integrity: sha512-l8+qoZ/8RG9ferhGkBPi+m9SxmpQF0N5+DUTvomZhdCaJUA3RL+YnHEmwxF7YaPbNWKhCiLqvOy8nIO8nf9GKA==}
 
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -4789,10 +4784,6 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
-  react@17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
-    engines: {node: '>=0.10.0'}
-
   react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -6231,15 +6222,15 @@ snapshots:
       '@floating-ui/core': 1.6.0
       '@floating-ui/utils': 0.2.1
 
-  '@floating-ui/react-dom@2.0.8(react-dom@18.2.0)(react@18.2.0)':
+  '@floating-ui/react-dom@2.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@floating-ui/dom': 1.6.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@floating-ui/react@0.26.9(react-dom@18.2.0)(react@18.2.0)':
+  '@floating-ui/react@0.26.9(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@floating-ui/react-dom': 2.0.8(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react-dom': 2.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@floating-ui/utils': 0.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -6316,23 +6307,23 @@ snapshots:
     dependencies:
       chroma-js: 2.4.2
 
-  '@mantine/core@7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)':
+  '@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@floating-ui/react': 0.26.9(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react': 0.26.9(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      react-number-format: 5.3.1(react-dom@18.2.0)(react@18.2.0)
+      react-number-format: 5.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-remove-scroll: 2.5.7(@types/react@18.2.78)(react@18.2.0)
       react-textarea-autosize: 8.5.3(@types/react@18.2.78)(react@18.2.0)
       type-fest: 4.12.0
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/dates@7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)':
+  '@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
       clsx: 2.1.0
       dayjs: 1.11.10
@@ -6349,25 +6340,25 @@ snapshots:
     dependencies:
       react: 18.2.0
 
-  '@mantine/modals@7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)':
+  '@mantine/modals@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@mantine/notifications@7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)':
+  '@mantine/notifications@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
       '@mantine/store': 7.8.0(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      react-transition-group: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+      react-transition-group: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@mantine/spotlight@7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)':
+  '@mantine/spotlight@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
       '@mantine/store': 7.8.0(react@18.2.0)
       react: 18.2.0
@@ -6377,12 +6368,12 @@ snapshots:
     dependencies:
       react: 18.2.0
 
-  '@mantine/tiptap@7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(@tiptap/extension-link@2.2.6)(@tiptap/react@2.2.6)(react-dom@18.2.0)(react@18.2.0)':
+  '@mantine/tiptap@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(@tiptap/extension-link@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4))(@tiptap/react@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
-      '@tiptap/extension-link': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/react': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap/extension-link': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/react': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
@@ -6533,14 +6524,16 @@ snapshots:
 
   '@t3-oss/env-core@0.9.2(typescript@5.4.5)(zod@3.22.5)':
     dependencies:
-      typescript: 5.4.5
       zod: 3.22.5
+    optionalDependencies:
+      typescript: 5.4.5
 
   '@t3-oss/env-nextjs@0.9.2(typescript@5.4.5)(zod@3.22.5)':
     dependencies:
       '@t3-oss/env-core': 0.9.2(typescript@5.4.5)(zod@3.22.5)
-      typescript: 5.4.5
       zod: 3.22.5
+    optionalDependencies:
+      typescript: 5.4.5
 
   '@tabler/icons-react@3.2.0(react@18.2.0)':
     dependencies:
@@ -6557,16 +6550,16 @@ snapshots:
 
   '@tanstack/query-devtools@5.28.10': {}
 
-  '@tanstack/react-query-devtools@5.29.2(@tanstack/react-query@5.29.2)(react@18.2.0)':
+  '@tanstack/react-query-devtools@5.29.2(@tanstack/react-query@5.29.2(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/query-devtools': 5.28.10
       '@tanstack/react-query': 5.29.2(react@18.2.0)
       react: 18.2.0
 
-  '@tanstack/react-query-next-experimental@5.29.2(@tanstack/react-query@5.29.2)(next@14.2.2)(react@18.2.0)':
+  '@tanstack/react-query-next-experimental@5.29.2(@tanstack/react-query@5.29.2(react@18.2.0))(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 5.29.2(react@18.2.0)
-      next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.75.0)
+      next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)
       react: 18.2.0
 
   '@tanstack/react-query@5.29.2(react@18.2.0)':
@@ -6574,13 +6567,13 @@ snapshots:
       '@tanstack/query-core': 5.29.0
       react: 18.2.0
 
-  '@tanstack/react-table@8.15.0(react-dom@18.2.0)(react@18.2.0)':
+  '@tanstack/react-table@8.15.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/table-core': 8.14.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@tanstack/react-virtual@3.2.0(react-dom@18.2.0)(react@18.2.0)':
+  '@tanstack/react-virtual@3.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/virtual-core': 3.2.0
       react: 18.2.0
@@ -6590,159 +6583,162 @@ snapshots:
 
   '@tanstack/virtual-core@3.2.0': {}
 
-  '@testing-library/react-hooks@8.0.1(react@17.0.2)':
+  '@testing-library/react-hooks@8.0.1(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.23.9
-      react: 17.0.2
-      react-error-boundary: 3.1.4(react@17.0.2)
+      react: 18.2.0
+      react-error-boundary: 3.1.4(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.78
+      react-dom: 18.2.0(react@18.2.0)
 
   '@tiptap/core@2.2.6(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-blockquote@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-blockquote@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-bold@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-bold@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-bubble-menu@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-      tippy.js: 6.3.7
-
-  '@tiptap/extension-bullet-list@2.2.6(@tiptap/core@2.2.6)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-code-block@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-
-  '@tiptap/extension-code@2.2.6(@tiptap/core@2.2.6)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-color@2.2.5(@tiptap/core@2.2.6)(@tiptap/extension-text-style@2.2.5)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/extension-text-style': 2.2.5(@tiptap/core@2.2.6)
-
-  '@tiptap/extension-document@2.2.6(@tiptap/core@2.2.6)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-dropcursor@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-
-  '@tiptap/extension-floating-menu@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-bubble-menu@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       tippy.js: 6.3.7
 
-  '@tiptap/extension-gapcursor@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-bullet-list@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-code-block@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-hard-break@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-code@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-heading@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-color@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4)))':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+      '@tiptap/extension-text-style': 2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+
+  '@tiptap/extension-document@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-highlight@2.2.5(@tiptap/core@2.2.6)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-history@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-
-  '@tiptap/extension-horizontal-rule@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-dropcursor@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-image@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-floating-menu@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+      tippy.js: 6.3.7
+
+  '@tiptap/extension-gapcursor@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+
+  '@tiptap/extension-hard-break@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-italic@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-heading@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-link@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-highlight@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-history@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+
+  '@tiptap/extension-horizontal-rule@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+
+  '@tiptap/extension-image@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-italic@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-link@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       linkifyjs: 4.1.3
 
-  '@tiptap/extension-list-item@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-list-item@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-ordered-list@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-ordered-list@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-paragraph@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-paragraph@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-strike@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-strike@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table-cell@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-table-cell@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table-header@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-table-header@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table-row@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-table-row@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table@2.2.5(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-
-  '@tiptap/extension-task-item@2.2.5(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-table@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-task-list@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-task-item@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+
+  '@tiptap/extension-task-list@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-text-align@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-text-align@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-text-style@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-text-style@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-text@2.2.6(@tiptap/core@2.2.6)':
+  '@tiptap/extension-text@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-underline@2.2.5(@tiptap/core@2.2.6)':
+  '@tiptap/extension-underline@2.2.5(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
 
@@ -6767,11 +6763,11 @@ snapshots:
       prosemirror-transform: 1.8.0
       prosemirror-view: 1.33.1
 
-  '@tiptap/react@2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)(react-dom@18.2.0)(react@18.2.0)':
+  '@tiptap/react@2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/extension-bubble-menu': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-floating-menu': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
+      '@tiptap/extension-bubble-menu': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-floating-menu': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -6779,56 +6775,53 @@ snapshots:
   '@tiptap/starter-kit@2.2.6(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.4)
-      '@tiptap/extension-blockquote': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-bold': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-bullet-list': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-code': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-code-block': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-document': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-dropcursor': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-gapcursor': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-hard-break': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-heading': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-history': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-horizontal-rule': 2.2.6(@tiptap/core@2.2.6)(@tiptap/pm@2.2.4)
-      '@tiptap/extension-italic': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-list-item': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-ordered-list': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-paragraph': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-strike': 2.2.6(@tiptap/core@2.2.6)
-      '@tiptap/extension-text': 2.2.6(@tiptap/core@2.2.6)
+      '@tiptap/extension-blockquote': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-bold': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-bullet-list': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-code': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-code-block': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-document': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-dropcursor': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-gapcursor': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-hard-break': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-heading': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-history': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-horizontal-rule': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-italic': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-list-item': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-ordered-list': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-paragraph': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-strike': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
+      '@tiptap/extension-text': 2.2.6(@tiptap/core@2.2.6(@tiptap/pm@2.2.4))
     transitivePeerDependencies:
       - '@tiptap/pm'
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trpc/client@11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)':
+  '@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345)':
     dependencies:
-      '@trpc/server': 11.0.0-next-beta.289
+      '@trpc/server': 11.0.0-rc.345
 
-  '@trpc/client@11.0.0-rc.334(@trpc/server@11.0.0-next-beta.289)':
+  '@trpc/next@11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/react-query@11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/server@11.0.0-rc.345)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@11.0.0-rc.345)(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@trpc/server': 11.0.0-next-beta.289
+      '@trpc/client': 11.0.0-rc.345(@trpc/server@11.0.0-rc.345)
+      '@trpc/server': 11.0.0-rc.345
+      next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    optionalDependencies:
+      '@tanstack/react-query': 5.29.2(react@18.2.0)
+      '@trpc/react-query': 11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/server@11.0.0-rc.345)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@trpc/next@11.0.0-next-beta.289(@tanstack/react-query@5.29.2)(@trpc/client@11.0.0-rc.334)(@trpc/react-query@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(next@14.2.2)(react-dom@18.2.0)(react@18.2.0)':
+  '@trpc/react-query@11.0.0-rc.345(@tanstack/react-query@5.29.2(react@18.2.0))(@trpc/client@11.0.0-rc.345(@trpc/server@11.0.0-rc.345))(@trpc/server@11.0.0-rc.345)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 5.29.2(react@18.2.0)
-      '@trpc/client': 11.0.0-rc.334(@trpc/server@11.0.0-next-beta.289)
-      '@trpc/react-query': 11.0.0-next-beta.289(@tanstack/react-query@5.29.2)(@trpc/client@11.0.0-rc.334)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/server': 11.0.0-next-beta.289
-      next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.75.0)
+      '@trpc/client': 11.0.0-rc.345(@trpc/server@11.0.0-rc.345)
+      '@trpc/server': 11.0.0-rc.345
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@trpc/react-query@11.0.0-next-beta.289(@tanstack/react-query@5.29.2)(@trpc/client@11.0.0-rc.334)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)':
-    dependencies:
-      '@tanstack/react-query': 5.29.2(react@18.2.0)
-      '@trpc/client': 11.0.0-rc.334(@trpc/server@11.0.0-next-beta.289)
-      '@trpc/server': 11.0.0-next-beta.289
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  '@trpc/server@11.0.0-next-beta.289': {}
+  '@trpc/server@11.0.0-rc.345': {}
 
   '@tsconfig/node10@1.0.9': {}
 
@@ -7023,7 +7016,7 @@ snapshots:
     dependencies:
       '@types/node': 20.12.7
 
-  '@typescript-eslint/eslint-plugin@7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)(typescript@5.4.5)':
+  '@typescript-eslint/eslint-plugin@7.6.0(@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)':
     dependencies:
       '@eslint-community/regexpp': 4.10.0
       '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
@@ -7038,6 +7031,7 @@ snapshots:
       natural-compare: 1.4.0
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.4.5)
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -7050,6 +7044,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 7.6.0
       debug: 4.3.4
       eslint: 8.57.0
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -7066,6 +7061,7 @@ snapshots:
       debug: 4.3.4
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.4.5)
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -7082,6 +7078,7 @@ snapshots:
       minimatch: 9.0.4
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.4.5)
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -7136,18 +7133,18 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.2.1(vite@5.2.6)':
+  '@vitejs/plugin-react@4.2.1(vite@5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)))':
     dependencies:
       '@babel/core': 7.23.9
       '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.23.9)
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.9)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.2.6(@types/node@20.12.7)
+      vite: 5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@1.5.0(vitest@1.5.0)':
+  '@vitest/coverage-v8@1.5.0(vitest@1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)))':
     dependencies:
       '@ampproject/remapping': 2.2.1
       '@bcoe/v8-coverage': 0.2.3
@@ -7162,7 +7159,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.0.0
       test-exclude: 6.0.0
-      vitest: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)
+      vitest: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
     transitivePeerDependencies:
       - supports-color
 
@@ -7197,7 +7194,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.0
       sirv: 2.0.4
-      vitest: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)
+      vitest: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
 
   '@vitest/utils@1.5.0':
     dependencies:
@@ -7853,12 +7850,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.6)(react@17.0.2):
-    dependencies:
+  drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(@types/react@18.2.78)(better-sqlite3@9.5.0)(mysql2@3.9.6)(react@18.2.0):
+    optionalDependencies:
       '@types/better-sqlite3': 7.6.9
+      '@types/react': 18.2.78
       better-sqlite3: 9.5.0
       mysql2: 3.9.6
-      react: 17.0.2
+      react: 18.2.0
 
   eastasianwidth@0.2.0: {}
 
@@ -8103,18 +8101,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.6.0)(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
     dependencies:
-      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       debug: 3.2.7
+    optionalDependencies:
+      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.6.0)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0):
     dependencies:
-      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       array-includes: 3.1.7
       array.prototype.findlastindex: 1.2.4
       array.prototype.flat: 1.3.2
@@ -8123,7 +8121,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.6.0)(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
       hasown: 2.0.1
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -8133,6 +8131,8 @@ snapshots:
       object.values: 1.1.7
       semver: 6.3.1
       tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -8897,7 +8897,7 @@ snapshots:
   jose@5.2.2: {}
 
   jotai@2.8.0(@types/react@18.2.78)(react@18.2.0):
-    dependencies:
+    optionalDependencies:
       '@types/react': 18.2.78
       react: 18.2.0
 
@@ -9104,15 +9104,15 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  mantine-react-table@2.0.0-beta.1(@mantine/core@7.8.0)(@mantine/dates@7.8.0)(@mantine/hooks@7.8.0)(@tabler/icons-react@3.2.0)(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+  mantine-react-table@2.0.0-beta.1(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(@tabler/icons-react@3.2.0(react@18.2.0))(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/dates': 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@mantine/dates': 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.78)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.0(react@18.2.0))(dayjs@1.11.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 7.8.0(react@18.2.0)
       '@tabler/icons-react': 3.2.0(react@18.2.0)
       '@tanstack/match-sorter-utils': 8.11.8
-      '@tanstack/react-table': 8.15.0(react-dom@18.2.0)(react@18.2.0)
-      '@tanstack/react-virtual': 3.2.0(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-table': 8.15.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@tanstack/react-virtual': 3.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.0
       dayjs: 1.11.10
       react: 18.2.0
@@ -9265,10 +9265,10 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-auth@5.0.0-beta.16(next@14.2.2)(react@18.2.0):
+  next-auth@5.0.0-beta.16(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0))(react@18.2.0):
     dependencies:
       '@auth/core': 0.28.1
-      next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.75.0)
+      next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)
       react: 18.2.0
 
   next-international@1.2.4:
@@ -9279,7 +9279,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.75.0):
+  next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0):
     dependencies:
       '@next/env': 14.2.2
       '@swc/helpers': 0.5.5
@@ -9289,7 +9289,6 @@ snapshots:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      sass: 1.75.0
       styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.2
@@ -9301,6 +9300,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.2
       '@next/swc-win32-ia32-msvc': 14.2.2
       '@next/swc-win32-x64-msvc': 14.2.2
+      sass: 1.75.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -9791,16 +9791,16 @@ snapshots:
       react: 18.2.0
       scheduler: 0.23.0
 
-  react-error-boundary@3.1.4(react@17.0.2):
+  react-error-boundary@3.1.4(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.23.9
-      react: 17.0.2
+      react: 18.2.0
 
   react-is@16.13.1: {}
 
   react-is@18.2.0: {}
 
-  react-number-format@5.3.1(react-dom@18.2.0)(react@18.2.0):
+  react-number-format@5.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       prop-types: 15.8.1
       react: 18.2.0
@@ -9810,28 +9810,31 @@ snapshots:
 
   react-remove-scroll-bar@2.3.4(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       react: 18.2.0
       react-style-singleton: 2.2.1(@types/react@18.2.78)(react@18.2.0)
       tslib: 2.6.2
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   react-remove-scroll@2.5.7(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       react: 18.2.0
       react-remove-scroll-bar: 2.3.4(@types/react@18.2.78)(react@18.2.0)
       react-style-singleton: 2.2.1(@types/react@18.2.78)(react@18.2.0)
       tslib: 2.6.2
       use-callback-ref: 1.3.1(@types/react@18.2.78)(react@18.2.0)
       use-sidecar: 1.1.2(@types/react@18.2.78)(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   react-style-singleton@2.2.1(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.6.2
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   react-textarea-autosize@8.5.3(@types/react@18.2.78)(react@18.2.0):
     dependencies:
@@ -9842,7 +9845,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):
+  react-transition-group@4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.23.9
       dom-helpers: 5.2.1
@@ -9850,11 +9853,6 @@ snapshots:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-
-  react@17.0.2:
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
 
   react@18.2.0:
     dependencies:
@@ -10204,9 +10202,10 @@ snapshots:
 
   styled-jsx@5.1.1(@babel/core@7.23.9)(react@18.2.0):
     dependencies:
-      '@babel/core': 7.23.9
       client-only: 0.0.1
       react: 18.2.0
+    optionalDependencies:
+      '@babel/core': 7.23.9
 
   sugarss@4.0.1(postcss@8.4.38):
     dependencies:
@@ -10356,7 +10355,7 @@ snapshots:
       yn: 3.1.1
 
   tsconfck@3.0.3(typescript@5.4.5):
-    dependencies:
+    optionalDependencies:
       typescript: 5.4.5
 
   tsconfig-paths@3.15.0:
@@ -10507,9 +10506,10 @@ snapshots:
 
   use-callback-ref@1.3.1(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       react: 18.2.0
       tslib: 2.6.2
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   use-composed-ref@1.3.0(react@18.2.0):
     dependencies:
@@ -10523,21 +10523,24 @@ snapshots:
 
   use-isomorphic-layout-effect@1.1.2(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       react: 18.2.0
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   use-latest@1.2.1(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       react: 18.2.0
       use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.78)(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   use-sidecar@1.1.2(@types/react@18.2.78)(react@18.2.0):
     dependencies:
-      '@types/react': 18.2.78
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.6.2
+    optionalDependencies:
+      '@types/react': 18.2.78
 
   util-deprecate@1.0.2: {}
 
@@ -10577,13 +10580,13 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@1.5.0(@types/node@20.12.7):
+  vite-node@1.5.0(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.6(@types/node@20.12.7)
+      vite: 5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -10594,39 +10597,39 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.2.6):
+  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.4.5)
-      vite: 5.2.6(@types/node@20.12.7)
+    optionalDependencies:
+      vite: 5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.2.6(@types/node@20.12.7):
+  vite@5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)):
     dependencies:
-      '@types/node': 20.12.7
       esbuild: 0.20.2
       postcss: 8.4.38
       rollup: 4.13.0
     optionalDependencies:
-      fsevents: 2.3.3
-
-  vitest@1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0):
-    dependencies:
       '@types/node': 20.12.7
+      fsevents: 2.3.3
+      sass: 1.75.0
+      sugarss: 4.0.1(postcss@8.4.38)
+
+  vitest@1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38)):
+    dependencies:
       '@vitest/expect': 1.5.0
       '@vitest/runner': 1.5.0
       '@vitest/snapshot': 1.5.0
       '@vitest/spy': 1.5.0
-      '@vitest/ui': 1.5.0(vitest@1.5.0)
       '@vitest/utils': 1.5.0
       acorn-walk: 8.3.2
       chai: 4.4.1
       debug: 4.3.4
       execa: 8.0.1
-      jsdom: 24.0.0
       local-pkg: 0.5.0
       magic-string: 0.30.7
       pathe: 1.1.2
@@ -10635,9 +10638,13 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.3
-      vite: 5.2.6(@types/node@20.12.7)
-      vite-node: 1.5.0(@types/node@20.12.7)
+      vite: 5.2.6(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
+      vite-node: 1.5.0(@types/node@20.12.7)(sass@1.75.0)(sugarss@4.0.1(postcss@8.4.38))
       why-is-node-running: 2.2.2
+    optionalDependencies:
+      '@types/node': 20.12.7
+      '@vitest/ui': 1.5.0(vitest@1.5.0)
+      jsdom: 24.0.0
     transitivePeerDependencies:
       - less
       - lightningcss
