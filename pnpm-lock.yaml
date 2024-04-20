@@ -554,8 +554,8 @@ importers:
   packages/log:
     dependencies:
       ioredis:
-        specifier: 5.3.2
-        version: 5.3.2
+        specifier: 5.4.1
+        version: 5.4.1
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -641,8 +641,8 @@ importers:
         specifier: workspace:^
         version: link:../log
       ioredis:
-        specifier: 5.3.2
-        version: 5.3.2
+        specifier: 5.4.1
+        version: 5.4.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -3727,8 +3727,8 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
-  ioredis@5.3.2:
-    resolution: {integrity: sha512-1DKMMzlIHM02eBBVOFQ1+AolGjs6+xEcM4PDL7NqOS6szq7H9jSaEkIUH6/a5Hl241LzW6JLSiAbNvTQjUupUA==}
+  ioredis@5.4.1:
+    resolution: {integrity: sha512-2YZsvl7jopIa1gaePkeMtd9rAcSjOOjPtpcLlOeusyO+XH2SK5ZcT+UCrElPP+WVIInh2TzeI4XW9ENaSLVVHA==}
     engines: {node: '>=12.22.0'}
 
   ip-address@9.0.5:
@@ -8700,7 +8700,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  ioredis@5.3.2:
+  ioredis@5.4.1:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
