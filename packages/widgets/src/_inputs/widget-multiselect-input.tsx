@@ -1,6 +1,6 @@
 "use client";
 
-import { MultiSelect } from "@homarr/ui";
+import { MultiSelect } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

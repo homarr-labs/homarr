@@ -1,11 +1,11 @@
 "use client";
 
 import type { ChangeEventHandler, FocusEventHandler } from "react";
+import { PasswordInput, TextInput } from "@mantine/core";
 
 import { integrationSecretKindObject } from "@homarr/definitions";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { PasswordInput, TextInput } from "@homarr/ui";
 
 import { integrationSecretIcons } from "./_integration-secret-icons";
 

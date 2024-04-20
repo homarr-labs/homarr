@@ -1,5 +1,6 @@
+import { Title } from "@mantine/core";
+
 import { getScopedI18n } from "@homarr/translation/server";
-import { Title } from "@homarr/ui";
 
 import { Test } from "./test";
 

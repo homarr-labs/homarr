@@ -1,9 +1,8 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-
-import type { MantineColorsTuple } from "@homarr/ui";
-import { createTheme, darken, lighten, MantineProvider } from "@homarr/ui";
+import type { MantineColorsTuple } from "@mantine/core";
+import { createTheme, darken, lighten, MantineProvider } from "@mantine/core";
 
 import { useRequiredBoard } from "./_context";
 

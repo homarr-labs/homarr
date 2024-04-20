@@ -1,4 +1,4 @@
-import { Container, Stack, Title } from "@homarr/ui";
+import { Container, Stack, Title } from "@mantine/core";
 
 import { AppNewForm } from "./_app-new-form";
 

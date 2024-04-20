@@ -2,23 +2,16 @@
 
 import { useCallback, useState } from "react";
 import Link from "next/link";
+import { Center, Chip, Divider, Flex, Group, Text } from "@mantine/core";
 import {
   Spotlight as MantineSpotlight,
   SpotlightAction,
 } from "@mantine/spotlight";
+import { IconSearch } from "@tabler/icons-react";
 import { useAtomValue } from "jotai";
 
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import {
-  Center,
-  Chip,
-  Divider,
-  Flex,
-  Group,
-  IconSearch,
-  Text,
-} from "@homarr/ui";
 
 import { GroupChip } from "./chip-group";
 import classes from "./component.module.css";

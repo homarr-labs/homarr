@@ -1,15 +1,13 @@
 import Link from "next/link";
-
-import { useI18n } from "@homarr/translation/client";
+import { Button, Card, Group } from "@mantine/core";
 import {
-  Button,
-  Card,
-  Group,
   IconArrowBackUp,
   IconArrowLeft,
   IconArrowRight,
   IconRotate,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+
+import { useI18n } from "@homarr/translation/client";
 
 interface StepperNavigationComponentProps {
   hasPrevious: boolean;

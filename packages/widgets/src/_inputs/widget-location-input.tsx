@@ -2,19 +2,12 @@
 
 import type { ChangeEvent } from "react";
 import { useCallback } from "react";
-
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
-import { createModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
   Anchor,
   Button,
   Fieldset,
   Group,
-  IconClick,
-  IconListSearch,
   Loader,
   NumberInput,
   Stack,
@@ -22,7 +15,13 @@ import {
   Text,
   TextInput,
   Tooltip,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconClick, IconListSearch } from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import { createModal, useModalAction } from "@homarr/modals";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { OptionLocation } from "../options";
 import type { CommonWidgetInputProps } from "./common";

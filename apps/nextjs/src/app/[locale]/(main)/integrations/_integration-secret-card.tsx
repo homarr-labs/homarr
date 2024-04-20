@@ -2,13 +2,6 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-
-import type { RouterOutputs } from "@homarr/api";
-import { integrationSecretKindObject } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
   Avatar,
@@ -16,12 +9,18 @@ import {
   Card,
   Collapse,
   Group,
-  IconEye,
-  IconEyeOff,
   Kbd,
   Stack,
   Text,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+import type { RouterOutputs } from "@homarr/api";
+import { integrationSecretKindObject } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import { integrationSecretIcons } from "./_integration-secret-icons";
 

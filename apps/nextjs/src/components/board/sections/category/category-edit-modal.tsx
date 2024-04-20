@@ -1,7 +1,8 @@
+import { Button, Group, Stack, TextInput } from "@mantine/core";
+
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack, TextInput } from "@homarr/ui";
 
 interface Category {
   id: string;

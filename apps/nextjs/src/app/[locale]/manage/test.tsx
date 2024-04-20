@@ -2,9 +2,9 @@
 
 import { useCallback, useState } from "react";
 import type { ChangeEvent } from "react";
+import { Button, Stack, Text, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { Button, Stack, Text, TextInput } from "@homarr/ui";
 
 export const Test = () => {
   const [value, setValue] = useState("");

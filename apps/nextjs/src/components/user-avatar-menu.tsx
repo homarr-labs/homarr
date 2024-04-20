@@ -2,17 +2,16 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-
-import { useScopedI18n } from "@homarr/translation/client";
+import { Menu, useMantineColorScheme } from "@mantine/core";
 import {
   IconDashboard,
   IconLogout,
   IconMoon,
   IconSun,
   IconTool,
-  Menu,
-  useMantineColorScheme,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface UserAvatarMenuProps {
   children: ReactNode;

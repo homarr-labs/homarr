@@ -1,4 +1,5 @@
-import { IconCloud } from "@homarr/ui";
+import { IconCloud } from "@tabler/icons-react";
+
 import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";

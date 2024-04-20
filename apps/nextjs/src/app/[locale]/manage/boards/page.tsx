@@ -1,8 +1,4 @@
 import Link from "next/link";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
 import {
   ActionIcon,
   Button,
@@ -11,15 +7,17 @@ import {
   Grid,
   GridCol,
   Group,
-  IconDotsVertical,
-  IconLock,
-  IconWorld,
   Menu,
   MenuTarget,
   Text,
   Title,
   Tooltip,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconDotsVertical, IconLock, IconWorld } from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";

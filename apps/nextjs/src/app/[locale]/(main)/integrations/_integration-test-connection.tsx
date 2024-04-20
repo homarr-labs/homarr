@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Alert, Anchor, Group, Loader } from "@mantine/core";
+import { IconCheck, IconInfoCircle, IconX } from "@tabler/icons-react";
 
 import type { RouterInputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -9,15 +11,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import {
-  Alert,
-  Anchor,
-  Group,
-  IconCheck,
-  IconInfoCircle,
-  IconX,
-  Loader,
-} from "@homarr/ui";
 
 interface UseTestConnectionDirtyProps {
   defaultDirty: boolean;

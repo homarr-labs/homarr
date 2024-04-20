@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Flex, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezones from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-
-import { Flex, Stack, Text } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 

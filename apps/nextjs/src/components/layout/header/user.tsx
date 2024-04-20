@@ -1,4 +1,4 @@
-import { UnstyledButton } from "@homarr/ui";
+import { UnstyledButton } from "@mantine/core";
 
 import { UserAvatar } from "~/components/user-avatar";
 import { UserAvatarMenu } from "~/components/user-avatar-menu";

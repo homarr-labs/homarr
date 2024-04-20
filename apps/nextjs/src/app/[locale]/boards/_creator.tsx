@@ -1,8 +1,8 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import type { Metadata } from "next";
+import { AppShellMain } from "@mantine/core";
 
 import { capitalize } from "@homarr/common";
-import { AppShellMain } from "@homarr/ui";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";

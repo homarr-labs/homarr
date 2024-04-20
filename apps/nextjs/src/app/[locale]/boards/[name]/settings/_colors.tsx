@@ -1,9 +1,5 @@
 "use client";
 
-import { useDisclosure } from "@mantine/hooks";
-
-import { useForm } from "@homarr/form";
-import { useI18n } from "@homarr/translation/client";
 import {
   Anchor,
   Button,
@@ -18,7 +14,11 @@ import {
   Stack,
   Text,
   useMantineTheme,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+
+import { useForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 
 import { generateColors } from "../../_theme";
 import type { Board } from "../../_types";

@@ -2,18 +2,11 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { Group, Menu, ScrollArea, Stack, Text, TextInput } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
 
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import {
-  Group,
-  IconSearch,
-  Menu,
-  ScrollArea,
-  Stack,
-  Text,
-  TextInput,
-} from "@homarr/ui";
 
 import { IntegrationAvatar } from "../_integration-avatar";
 
