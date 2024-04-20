@@ -80,29 +80,33 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <ModalContext.Provider value={{ openModalInner, closeModal }}>
-      {activeModals.map((modal) => (
-        <Modal
-          key={modal.id}
-          zIndex={getDefaultZIndex("modal") + 1}
-          display={modal.id === state.current?.id ? undefined : "none"}
-          style={{
-            userSelect: modal.id === state.current?.id ? undefined : "none",
-          }}
-          styles={{
-            title: {
-              fontSize: "1.25rem",
-              fontWeight: 500,
-            },
-          }}
-          trapFocus={modal.id === state.current?.id}
-          {...modal.reference.modalProps}
-          title={translateIfNecessary(t, modal.props.defaultTitle)}
-          opened={state.modals.length > 0}
-          onClose={handleCloseModal}
-        >
-          {modal.reference.content}
-        </Modal>
-      ))}
+      {activeModals.map((modal) => {
+        const { defaultTitle: _ignored, ...otherModalProps } =
+          modal.reference.modalProps;
+        return (
+          <Modal
+            key={modal.id}
+            zIndex={getDefaultZIndex("modal") + 1}
+            display={modal.id === state.current?.id ? undefined : "none"}
+            style={{
+              userSelect: modal.id === state.current?.id ? undefined : "none",
+            }}
+            styles={{
+              title: {
+                fontSize: "1.25rem",
+                fontWeight: 500,
+              },
+            }}
+            trapFocus={modal.id === state.current?.id}
+            {...otherModalProps}
+            title={translateIfNecessary(t, modal.props.defaultTitle)}
+            opened={state.modals.length > 0}
+            onClose={handleCloseModal}
+          >
+            {modal.reference.content}
+          </Modal>
+        );
+      })}
 
       {children}
     </ModalContext.Provider>
