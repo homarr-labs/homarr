@@ -17,6 +17,7 @@ import {
   IconTool,
   IconUser,
   IconUsers,
+  IconUsersGroup,
 } from "@homarr/ui";
 
 import { MainHeader } from "~/components/layout/header";
@@ -50,6 +51,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.users.items.invites"),
           icon: IconMailForward,
           href: "/manage/users/invites",
+        },
+        {
+          label: t("items.users.items.groups"),
+          icon: IconUsersGroup,
+          href: "/manage/users/groups",
         },
       ],
     },
