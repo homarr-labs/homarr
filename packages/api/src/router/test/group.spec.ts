@@ -1,8 +1,13 @@
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { createId } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema/sqlite";
+import { createId, eq } from "@homarr/db";
+import {
+  groupMembers,
+  groupPermissions,
+  groups,
+  users,
+} from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
 import { groupRouter } from "../groups";
@@ -76,14 +81,7 @@ describe("paginated should return a list of groups with pagination", () => {
     const db = createDb();
     const caller = groupRouter.createCaller({ db, session: defaultSession });
 
-    const user = {
-      id: createId(),
-      name: "username",
-      email: "user@gmail.com",
-      image: "example",
-      password: "secret",
-      salt: "secret",
-    };
+    const user = createDummyUser();
     await db.insert(users).values(user);
     const groupId = createId();
     await db.insert(groups).values({
@@ -140,4 +138,228 @@ describe("paginated should return a list of groups with pagination", () => {
   );
 });
 
-describe("byId should return group by id including members and permissions", () => {});
+describe("byId should return group by id including members and permissions", () => {
+  test('should return group with id "1" with members and permissions', async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const user = createDummyUser();
+    const groupId = "1";
+    await db.insert(users).values(user);
+    await db.insert(groups).values([
+      {
+        id: groupId,
+        name: "Group",
+      },
+      {
+        id: createId(),
+        name: "Another group",
+      },
+    ]);
+    await db.insert(groupMembers).values({
+      userId: user.id,
+      groupId,
+    });
+    await db.insert(groupPermissions).values({
+      groupId,
+      permission: "admin",
+    });
+
+    // Act
+    const result = await caller.byId({
+      id: groupId,
+    });
+
+    // Assert
+    expect(result.id).toBe(groupId);
+    expect(result.members.length).toBe(1);
+
+    const userKeys = Object.keys(result?.members[0] ?? {});
+    expect(userKeys.length).toBe(4);
+    expect(
+      ["id", "name", "email", "image"].some((key) => userKeys.includes(key)),
+    );
+    expect(result.permissions.length).toBe(1);
+    expect(result.permissions[0]).toBe("admin");
+  });
+
+  test("with group id 1 and group 2 in database it should throw NOT_FOUND error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(groups).values({
+      id: "2",
+      name: "Group",
+    });
+
+    // Act
+    const act = async () => await caller.byId({ id: "1" });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
+  });
+});
+
+describe("create should create group in database", () => {
+  test("with valid input (64 character name) and non existing name it should be successful", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const name = "a".repeat(64);
+    await db.insert(users).values(defaultSession.user);
+
+    // Act
+    const result = await caller.create({
+      name,
+    });
+
+    // Assert
+    const item = await db.query.groups.findFirst({
+      where: eq(groups.id, result),
+    });
+
+    expect(item).toBeDefined();
+    expect(item?.id).toBe(result);
+    expect(item?.creatorId).toBe(defaultCreatorId);
+    expect(item?.name).toBe(name);
+  });
+
+  test("with more than 64 characters name it should fail while validation", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+    const longName = "a".repeat(65);
+
+    // Act
+    const act = async () =>
+      await caller.create({
+        name: longName,
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("too_big");
+  });
+
+  test.each([
+    ["test", "Test"],
+    ["test", "Test "],
+    ["test", "test"],
+    ["test", " TeSt"],
+  ])(
+    "with similar name %s it should fail to create %s",
+    async (similarName, nameToCreate) => {
+      // Arrange
+      const db = createDb();
+      const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+      await db.insert(groups).values({
+        id: createId(),
+        name: similarName,
+      });
+
+      // Act
+      const act = async () => await caller.create({ name: nameToCreate });
+
+      // Assert
+      await expect(act()).rejects.toThrow("similar name");
+    },
+  );
+});
+
+describe("update should update name with value that is no duplicate", () => {
+  test.each([
+    ["first", "second ", "second"],
+    ["first", " first", "first"],
+  ])(
+    "update should update name from %s to %s normalized",
+    async (initialValue, updateValue, expectedValue) => {
+      // Arrange
+      const db = createDb();
+      const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+      const groupId = createId();
+      await db.insert(groups).values([
+        {
+          id: groupId,
+          name: initialValue,
+        },
+        {
+          id: createId(),
+          name: "Third",
+        },
+      ]);
+
+      // Act
+      await caller.update({
+        id: groupId,
+        name: updateValue,
+      });
+
+      // Assert
+      const value = await db.query.groups.findFirst({
+        where: eq(groups.id, groupId),
+      });
+      expect(value?.name).toBe(expectedValue);
+    },
+  );
+
+  test.each([
+    ["Second ", "second"],
+    [" seCond", "second"],
+  ])(
+    "with similar name %s it should fail to update %s",
+    async (updateValue, initialDuplicate) => {
+      // Arrange
+      const db = createDb();
+      const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+      const groupId = createId();
+      await db.insert(groups).values([
+        {
+          id: groupId,
+          name: "Something",
+        },
+        {
+          id: createId(),
+          name: initialDuplicate,
+        },
+      ]);
+
+      // Act
+      const act = async () =>
+        await caller.update({
+          id: groupId,
+          name: updateValue,
+        });
+
+      // Assert
+      await expect(act()).rejects.toThrow("similar name");
+    },
+  );
+
+  test("with non existing id it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(groups).values({
+      id: createId(),
+      name: "something",
+    });
+
+    // Act
+    const act = async () => await caller.update({});
+  });
+});
+
+const createDummyUser = () => ({
+  id: createId(),
+  name: "username",
+  email: "user@gmail.com",
+  image: "example",
+  password: "secret",
+  salt: "secret",
+});

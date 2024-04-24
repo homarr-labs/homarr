@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
-import { and, createId, eq, like, sql } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { and, createId, eq, like, not, sql } from "@homarr/db";
 import {
   groupMembers,
   groupPermissions,
@@ -96,10 +97,13 @@ export const groupRouter = createTRPCRouter({
   create: protectedProcedure
     .input(validation.group.create)
     .mutation(async ({ input, ctx }) => {
+      const normalizedName = normalizeName(input.name);
+      await checkSimilarNameAndThrow(ctx.db, normalizedName);
+
       const id = createId();
       await ctx.db.insert(groups).values({
         id,
-        name: input.name,
+        name: normalizedName,
         creatorId: ctx.session.user.id,
       });
 
@@ -108,10 +112,13 @@ export const groupRouter = createTRPCRouter({
   update: protectedProcedure
     .input(validation.group.update)
     .mutation(async ({ input, ctx }) => {
+      const normalizedName = normalizeName(input.name);
+      await checkSimilarNameAndThrow(ctx.db, normalizedName, input.id);
+
       await ctx.db
         .update(groups)
         .set({
-          name: input.name,
+          name: normalizedName,
         })
         .where(eq(groups.id, input.id));
     }),
@@ -186,3 +193,25 @@ export const groupRouter = createTRPCRouter({
         );
     }),
 });
+
+const normalizeName = (name: string) => name.trim();
+
+const checkSimilarNameAndThrow = async (
+  db: Database,
+  name: string,
+  ignoreId?: string,
+) => {
+  const similar = await db.query.groups.findFirst({
+    where: and(
+      like(groups.name, `${name}`),
+      not(eq(groups.id, ignoreId ?? "")),
+    ),
+  });
+
+  if (similar) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Found group with similar name",
+    });
+  }
+};
