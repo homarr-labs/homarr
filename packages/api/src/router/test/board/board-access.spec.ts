@@ -5,7 +5,7 @@ import { createId, eq } from "@homarr/db";
 import { boardPermissions, boards, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { canAccessBoardAsync } from "../../board/board-access";
+import { throwIfActionForbiddenAsync } from "../../board/board-access";
 
 const defaultCreatorId = createId();
 const defaultSession = {
@@ -13,6 +13,17 @@ const defaultSession = {
   expires: new Date().toISOString(),
 } satisfies Session;
 
+const expectActToBe = async (act: () => Promise<void>, success: boolean) => {
+  if (!success) {
+    await expect(act()).rejects.toThrow("Board not found");
+    return;
+  }
+
+  await expect(act()).resolves.toBeUndefined();
+};
+
+// TODO: most of this test can be used for constructBoardPermissions
+// TODO: the tests for the board-access can be reduced to about 4 tests (as the unit has shrunk)
 describe("canAccessBoardAsync should check access to board and return boolean", () => {
   test.each([
     ["full-access" as const, false],
@@ -33,15 +44,15 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
       });
 
       // Act
-      const result = await canAccessBoardAsync(
-        db,
-        eq(boards.id, boardId),
-        null,
-        permission,
-      );
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: null },
+          eq(boards.id, boardId),
+          permission,
+        );
 
       // Assert
-      expect(result).toBe(expectedResult);
+      await expectActToBe(act, expectedResult);
     },
   );
 
@@ -64,15 +75,15 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
       });
 
       // Act
-      const result = await canAccessBoardAsync(
-        db,
-        eq(boards.id, boardId),
-        null,
-        permission,
-      );
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: null },
+          eq(boards.id, boardId),
+          permission,
+        );
 
       // Assert
-      expect(result).toBe(false);
+      await expectActToBe(act, false);
     },
   );
 
@@ -95,15 +106,15 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
       });
 
       // Act
-      const result = await canAccessBoardAsync(
-        db,
-        eq(boards.id, boardId),
-        defaultSession,
-        permission,
-      );
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: defaultSession },
+          eq(boards.id, boardId),
+          permission,
+        );
 
       // Assert
-      expect(result).toBe(true);
+      await expectActToBe(act, true);
     },
   );
 
@@ -122,15 +133,15 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
     });
 
     // Act
-    const result = await canAccessBoardAsync(
-      db,
-      eq(boards.id, boardId),
-      defaultSession,
-      "full-access",
-    );
+    const act = () =>
+      throwIfActionForbiddenAsync(
+        { db, session: defaultSession },
+        eq(boards.id, boardId),
+        "full-access",
+      );
 
     // Assert
-    expect(result).toBe(false);
+    await expectActToBe(act, false);
   });
 
   test.each([["board-view" as const], ["board-change" as const]])(
@@ -155,15 +166,15 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
       });
 
       // Act
-      const result = await canAccessBoardAsync(
-        db,
-        eq(boards.id, boardId),
-        defaultSession,
-        "board-view",
-      );
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: defaultSession },
+          eq(boards.id, boardId),
+          "board-view",
+        );
 
       // Assert
-      expect(result).toBe(true);
+      await expectActToBe(act, true);
     },
   );
 
@@ -192,15 +203,16 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
       });
 
       // Act
-      const result = await canAccessBoardAsync(
-        db,
-        eq(boards.id, boardId),
-        defaultSession,
-        "board-change",
-      );
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: defaultSession },
+          eq(boards.id, boardId),
+
+          "board-change",
+        );
 
       // Assert
-      expect(result).toBe(expectedResult);
+      await expectActToBe(act, expectedResult);
     },
   );
 });

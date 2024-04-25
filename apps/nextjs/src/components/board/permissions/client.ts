@@ -1,9 +1,8 @@
 import { useSession } from "@homarr/auth/client";
+import type { BoardPermissionsProps } from "@homarr/auth/shared";
+import { constructBoardPermissions } from "@homarr/auth/shared";
 
-import type { BoardPermissionsProps } from "./shared";
-import { constructPermissions } from "./shared";
-
-export const useBoardPermissions = (props: BoardPermissionsProps) => {
+export const useBoardPermissions = (board: BoardPermissionsProps) => {
   const { data: session } = useSession();
-  return constructPermissions(props, session);
+  return constructBoardPermissions(board, session);
 };

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { capitalize } from "@homarr/common";
 
-// This is placed here because it's used in the layout and the page and because it's here it's not needed to load it everywhere
+// Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
 
 import { createBoardLayout } from "../_layout-creator";

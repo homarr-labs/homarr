@@ -1,17 +1,24 @@
 import { TRPCError } from "@trpc/server";
 
 import type { Session } from "@homarr/auth";
+import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { boardPermissions } from "@homarr/db/schema/sqlite";
 import type { BoardPermission } from "@homarr/definitions";
 
-export const canAccessBoardAsync = async (
-  db: Database,
+/**
+ * Throws NOT_FOUND if user is not allowed to perform action on board
+ * @param ctx trpc router context
+ * @param boardWhere where clause for the board
+ * @param permission permission required to perform action on board
+ */
+export const throwIfActionForbiddenAsync = async (
+  ctx: { db: Database; session: Session | null },
   boardWhere: SQL<unknown>,
-  session: Session | null,
   permission: "full-access" | BoardPermission,
 ) => {
+  const { db, session } = ctx;
   const board = await db.query.boards.findFirst({
     where: boardWhere,
     columns: {
@@ -27,35 +34,34 @@ export const canAccessBoardAsync = async (
   });
 
   if (!board) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Board not found",
-    });
+    notAllowed();
   }
 
-  if (board.creatorId === session?.user.id) {
-    return true; // Creators can access their own private boards
+  const { hasViewAccess, hasChangeAccess, hasFullAccess } =
+    constructBoardPermissions(board, session);
+
+  if (permission === "full-access" && hasFullAccess) {
+    return; // As full access is required and user has full access, allow
   }
 
-  if (permission === "full-access") {
-    return false; // Only creators can have full access
+  if (permission === "board-change" && hasChangeAccess) {
+    return; // As change access is required and user has change access, allow
   }
 
-  if (board.isPublic && permission === "board-view") {
-    return true; // Public boards can be accessed by anyone
+  if (permission === "board-view" && hasViewAccess) {
+    return; // As view access is required and user has view access, allow
   }
 
-  if (!session) {
-    return false; // Not logged in users can't access private boards
-  }
-
-  if (permission === "board-view") {
-    return ["board-view", "board-change"].some((key) =>
-      board.permissions.some(({ permission }) => key === permission),
-    ); // For view access, allow if user has any board permission
-  }
-
-  return board.permissions.some(
-    ({ permission }) => permission === "board-change",
-  ); // When change is required, only allow if user has change permission
+  notAllowed();
 };
+
+/**
+ * This method returns NOT_FOUND to prevent snooping on board existence
+ * A function is used to use the method without return statement
+ */
+function notAllowed(): never {
+  throw new TRPCError({
+    code: "NOT_FOUND",
+    message: "Board not found",
+  });
+}

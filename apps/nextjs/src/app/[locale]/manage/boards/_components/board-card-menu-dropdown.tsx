@@ -20,7 +20,7 @@ const iconProps = {
 interface BoardCardMenuDropdownProps {
   board: Pick<
     RouterOutputs["board"]["getAll"][number],
-    "id" | "name" | "creator" | "permissions"
+    "id" | "name" | "creator" | "permissions" | "isPublic"
   >;
 }
 
@@ -30,10 +30,7 @@ export const BoardCardMenuDropdown = ({
   const t = useScopedI18n("management.page.board.action");
   const tCommon = useScopedI18n("common");
 
-  const { hasFullAccess, hasChangeAccess } = useBoardPermissions({
-    creatorId: board.creator?.id ?? null,
-    permissions: board.permissions.map(({ permission }) => permission),
-  });
+  const { hasFullAccess, hasChangeAccess } = useBoardPermissions(board);
 
   const { openConfirmModal } = useConfirmModal();
 

@@ -33,7 +33,7 @@ vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 describe("default should return default board", () => {
   it("should return default board", async () => {
     // Arrange
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -50,7 +50,6 @@ describe("default should return default board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-view",
     );
   });
@@ -61,7 +60,7 @@ describe("byName should return board by name", () => {
     "should return board by name %s when present",
     async (name) => {
       // Arrange
-      const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
       const db = createDb();
       const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -78,7 +77,6 @@ describe("byName should return board by name", () => {
       expect(spy).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        defaultSession,
         "board-view",
       );
     },
@@ -91,7 +89,7 @@ describe("byName should return board by name", () => {
 describe("savePartialSettings should save general settings", () => {
   it("should save general settings", async () => {
     // Arrange
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -124,7 +122,6 @@ describe("savePartialSettings should save general settings", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
@@ -148,7 +145,7 @@ describe("savePartialSettings should save general settings", () => {
 
 describe("save should save full board", () => {
   it("should remove section when not present in input", async () => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -184,12 +181,11 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
   it("should remove item when not present in input", async () => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -245,12 +241,11 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
   it("should remove integration reference when not present in input", async () => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
     const anotherIntegration = {
@@ -317,7 +312,6 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
@@ -325,7 +319,7 @@ describe("save should save full board", () => {
     [{ kind: "empty" as const }],
     [{ kind: "category" as const, name: "My first category" }],
   ])("should add section when present in input", async (partialSection) => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -377,12 +371,11 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
   it("should add item when present in input", async () => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -448,12 +441,11 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
   it("should add integration reference when present in input", async () => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
     const integration = {
@@ -524,7 +516,6 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });
@@ -587,7 +578,7 @@ describe("save should save full board", () => {
     expect(secondSection.name).toBe("After");
   });
   it("should update item when present in input", async () => {
-    const spy = vi.spyOn(boardAccess, "canAccessBoardAsync");
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
@@ -650,7 +641,6 @@ describe("save should save full board", () => {
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      defaultSession,
       "board-change",
     );
   });

@@ -21,7 +21,7 @@ import {
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { canAccessBoardAsync } from "./board/board-access";
+import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 const filterAddedItems = <TInput extends { id: string }>(
   inputArray: TInput[],
@@ -97,21 +97,14 @@ export const boardRouter = createTRPCRouter({
         });
       });
     }),
-  rename: publicProcedure
+  rename: protectedProcedure
     .input(validation.board.rename)
     .mutation(async ({ ctx, input }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "full-access",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to rename this board",
-        });
-      }
 
       await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
 
@@ -123,18 +116,11 @@ export const boardRouter = createTRPCRouter({
   changeVisibility: protectedProcedure
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "full-access",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to change the visibility of this board",
-        });
-      }
 
       await ctx.db
         .update(boards)
@@ -144,34 +130,17 @@ export const boardRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "full-access",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to delete this board",
-        });
-      }
+
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
   default: publicProcedure.query(async ({ ctx }) => {
     const boardWhere = eq(boards.name, "default");
-    const canAccessBoard = await canAccessBoardAsync(
-      ctx.db,
-      boardWhere,
-      ctx.session,
-      "board-view",
-    );
-    if (!canAccessBoard) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You are not allowed to access the default board",
-      });
-    }
+    await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
     return await getFullBoardWithWhere(
       ctx.db,
@@ -183,19 +152,7 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {
       const boardWhere = eq(boards.name, input.name);
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
-        boardWhere,
-        ctx.session,
-        "board-view",
-      );
-
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to access this board",
-        });
-      }
+      await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
       return await getFullBoardWithWhere(
         ctx.db,
@@ -203,21 +160,14 @@ export const boardRouter = createTRPCRouter({
         ctx.session?.user.id ?? null,
       );
     }),
-  savePartialSettings: publicProcedure
+  savePartialSettings: protectedProcedure
     .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "board-change",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to change the settings of this board",
-        });
-      }
 
       await ctx.db
         .update(boards)
@@ -250,18 +200,11 @@ export const boardRouter = createTRPCRouter({
   save: protectedProcedure
     .input(validation.board.save)
     .mutation(async ({ input, ctx }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "board-change",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to change the content of this board",
-        });
-      }
 
       await ctx.db.transaction(async (transaction) => {
         const dbBoard = await getFullBoardWithWhere(
@@ -425,18 +368,11 @@ export const boardRouter = createTRPCRouter({
   permissions: protectedProcedure
     .input(validation.board.permissions)
     .query(async ({ input, ctx }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "full-access",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to view the permissions of this board",
-        });
-      }
 
       const permissions = await ctx.db.query.boardPermissions.findMany({
         where: eq(boardPermissions.boardId, input.id),
@@ -464,19 +400,11 @@ export const boardRouter = createTRPCRouter({
   savePermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      const canAccessBoard = await canAccessBoardAsync(
-        ctx.db,
+      await throwIfActionForbiddenAsync(
+        ctx,
         eq(boards.id, input.id),
-        ctx.session,
         "full-access",
       );
-      if (!canAccessBoard) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message:
-            "You are not allowed to change the permissions of this board",
-        });
-      }
 
       await ctx.db.transaction(async (transaction) => {
         await transaction
