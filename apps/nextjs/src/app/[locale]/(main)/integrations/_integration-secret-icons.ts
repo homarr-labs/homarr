@@ -1,6 +1,7 @@
+import { IconKey, IconPassword, IconUser } from "@tabler/icons-react";
+
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import type { TablerIcon } from "@homarr/ui";
-import { IconKey, IconPassword, IconUser } from "@homarr/ui";
 
 export const integrationSecretIcons = {
   username: IconUser,

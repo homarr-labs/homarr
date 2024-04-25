@@ -1,4 +1,4 @@
-import { IconDownload } from "@homarr/ui";
+import { IconDownload } from "@tabler/icons-react";
 
 import { useRegisterSpotlightActions } from "./data-store";
 

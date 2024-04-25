@@ -1,16 +1,14 @@
 import type { RefObject } from "react";
-import { useDisclosure } from "@mantine/hooks";
-
 import {
   Card,
   Collapse,
   Group,
-  IconChevronDown,
-  IconChevronUp,
   Stack,
   Title,
   UnstyledButton,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { CategoryMenu } from "./category/category-menu";

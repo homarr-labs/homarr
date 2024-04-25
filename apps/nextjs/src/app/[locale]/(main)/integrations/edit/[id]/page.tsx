@@ -1,7 +1,8 @@
+import { Container, Group, Stack, Title } from "@mantine/core";
+
 import { api } from "@homarr/api/server";
 import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Container, Group, Stack, Title } from "@homarr/ui";
 
 import { IntegrationAvatar } from "../../_integration-avatar";
 import { EditIntegrationForm } from "./_integration-edit-form";

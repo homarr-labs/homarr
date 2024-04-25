@@ -3,10 +3,9 @@
 import type { PropsWithChildren } from "react";
 import { useCallback } from "react";
 import { usePathname } from "next/navigation";
+import type { AccordionProps } from "@mantine/core";
+import { Accordion } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-
-import type { AccordionProps } from "@homarr/ui";
-import { Accordion } from "@homarr/ui";
 
 type ActiveTabAccordionProps = PropsWithChildren<
   Omit<AccordionProps<false>, "onChange">

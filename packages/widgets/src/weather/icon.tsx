@@ -1,8 +1,5 @@
-import type { TranslationObject } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
+import { Box, Tooltip } from "@mantine/core";
 import {
-  Box,
   IconCloud,
   IconCloudFog,
   IconCloudRain,
@@ -11,8 +8,11 @@ import {
   IconQuestionMark,
   IconSnowflake,
   IconSun,
-  Tooltip,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+
+import type { TranslationObject } from "@homarr/translation";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 interface WeatherIconProps {
   code: number;

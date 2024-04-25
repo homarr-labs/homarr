@@ -1,6 +1,5 @@
 import type { PropsWithChildren } from "react";
-
-import { AppShellMain } from "@homarr/ui";
+import { AppShellMain } from "@mantine/core";
 
 import { MainHeader } from "~/components/layout/header";
 import { ClientShell } from "~/components/layout/shell";

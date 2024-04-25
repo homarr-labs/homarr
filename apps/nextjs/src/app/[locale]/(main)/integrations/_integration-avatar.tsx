@@ -1,7 +1,8 @@
+import { Avatar } from "@mantine/core";
+import type { MantineSize } from "@mantine/core";
+
 import { getIconUrl } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
-import { Avatar } from "@homarr/ui";
-import type { MantineSize } from "@homarr/ui";
 
 interface IntegrationAvatarProps {
   size: MantineSize;

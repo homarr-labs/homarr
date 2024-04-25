@@ -3,12 +3,13 @@ import { Inter } from "next/font/google";
 
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
-import "@homarr/ui/styles.css";
+import "@mantine/core/styles.css";
+
+import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 
 import { auth } from "@homarr/auth";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
-import { ColorSchemeScript, createTheme, MantineProvider } from "@homarr/ui";
 
 import { JotaiProvider } from "./_client-providers/jotai";
 import { NextInternationalProvider } from "./_client-providers/next-international";

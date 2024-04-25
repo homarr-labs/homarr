@@ -1,6 +1,5 @@
+import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
-
-import { IconClock } from "@homarr/ui";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

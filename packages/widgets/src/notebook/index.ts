@@ -1,4 +1,4 @@
-import { IconNotes } from "@homarr/ui";
+import { IconNotes } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

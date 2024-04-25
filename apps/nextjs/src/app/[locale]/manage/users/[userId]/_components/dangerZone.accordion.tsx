@@ -2,11 +2,11 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
 
 interface DangerZoneAccordionProps {
   user: NonNullable<RouterOutputs["user"]["getById"]>;

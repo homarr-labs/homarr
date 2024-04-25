@@ -2,21 +2,19 @@
 // Ignored because of gridstack attributes
 
 import type { RefObject } from "react";
+import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
+import {
+  IconDotsVertical,
+  IconLayoutKanban,
+  IconPencil,
+  IconTrash,
+} from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
 
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import {
-  ActionIcon,
-  Card,
-  IconDotsVertical,
-  IconLayoutKanban,
-  IconPencil,
-  IconTrash,
-  Menu,
-} from "@homarr/ui";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,

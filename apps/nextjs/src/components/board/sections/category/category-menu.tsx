@@ -1,12 +1,8 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useAtomValue } from "jotai";
-
-import { useScopedI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
+import { ActionIcon, Menu } from "@mantine/core";
 import {
-  ActionIcon,
   IconDotsVertical,
   IconEdit,
   IconRowInsertBottom,
@@ -14,8 +10,11 @@ import {
   IconTransitionBottom,
   IconTransitionTop,
   IconTrash,
-  Menu,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+import { useAtomValue } from "jotai";
+
+import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { editModeAtom } from "../../editMode";

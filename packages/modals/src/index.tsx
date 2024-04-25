@@ -8,12 +8,12 @@ import {
   useReducer,
   useRef,
 } from "react";
+import { getDefaultZIndex, Modal } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
 
 import type { stringOrTranslation } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { getDefaultZIndex, Modal } from "@homarr/ui";
 
 import type { ConfirmModalProps } from "./confirm-modal";
 import { ConfirmModal } from "./confirm-modal";

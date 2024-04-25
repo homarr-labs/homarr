@@ -1,19 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Anchor, Center, Group, Stack, Title } from "@mantine/core";
+import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import videojs from "video.js";
 
 import { useI18n } from "@homarr/translation/client";
-import {
-  Anchor,
-  Center,
-  Group,
-  IconBrandYoutube,
-  IconDeviceCctvOff,
-  Stack,
-  Title,
-} from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";

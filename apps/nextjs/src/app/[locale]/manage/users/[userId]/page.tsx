@@ -1,7 +1,4 @@
 import { notFound } from "next/navigation";
-
-import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
 import {
   Accordion,
   AccordionControl,
@@ -9,14 +6,19 @@ import {
   AccordionPanel,
   Avatar,
   Group,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import {
   IconAlertTriangleFilled,
   IconSettingsFilled,
   IconShieldLockFilled,
   IconUserFilled,
-  Stack,
-  Text,
-  Title,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+
+import { api } from "@homarr/api/server";
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { DangerZoneAccordion } from "./_components/dangerZone.accordion";
 import { ProfileAccordion } from "./_components/profile.accordion";

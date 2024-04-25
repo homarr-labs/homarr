@@ -1,11 +1,12 @@
 "use client";
 
 import { memo, useMemo } from "react";
+import type { SelectProps } from "@mantine/core";
+import { Group, Loader, Select } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import type { SelectProps } from "@homarr/ui";
-import { Group, IconCheck, Loader, Select } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

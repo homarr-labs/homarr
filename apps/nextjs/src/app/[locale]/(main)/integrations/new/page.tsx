@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
+import { Container, Group, Stack, Title } from "@mantine/core";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Container, Group, Stack, Title } from "@homarr/ui";
 import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
