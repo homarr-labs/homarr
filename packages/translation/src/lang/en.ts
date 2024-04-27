@@ -1131,6 +1131,22 @@ export default {
           },
         },
       },
+      about: {
+        version: "Version {version}",
+        text: "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
+        accordion: {
+          contributors: {
+            title: "Contributors",
+          },
+          translators: {
+            title: "Translators",
+          },
+          libraries: {
+            title: "Libraries",
+            subtitle: "{count} used",
+          },
+        },
+      },
     },
   },
 } as const;
