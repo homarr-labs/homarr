@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -17,9 +18,9 @@ export const AddGroup = () => {
   const t = useI18n();
   const { openModal } = useModalAction(AddGroupModal);
 
-  const handleAddGroup = () => {
+  const handleAddGroup = useCallback(() => {
     openModal();
-  };
+  }, [openModal]);
 
   return (
     <Button onClick={handleAddGroup} color="teal">

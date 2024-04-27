@@ -6,6 +6,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
 import { Pagination } from "@mantine/core";
 
+import { logger } from "@homarr/log";
+
 interface TablePaginationProps {
   total: number;
 }
@@ -37,16 +39,21 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
     [current],
   );
 
+  const handleChange = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams);
+      params.set("page", page.toString());
+      replace(`${pathName}?${params.toString()}`);
+    },
+    [pathName, searchParams],
+  );
+
   return (
     <Pagination
       total={total}
       getItemProps={getItemProps}
       getControlProps={getControlProps}
-      onChange={(page) => {
-        const params = new URLSearchParams(searchParams);
-        params.set("page", page.toString());
-        replace(`${pathName}?${params.toString()}`);
-      }}
+      onChange={handleChange}
     />
   );
 };
@@ -68,5 +75,8 @@ const calculatePageFor = (
       return current + 1;
     case "last":
       return total;
+    default:
+      logger;
+      return 1;
   }
 };

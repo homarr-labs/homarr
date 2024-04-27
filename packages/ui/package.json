@@ -28,6 +28,9 @@
     "eslint": "^8.57.0",
     "typescript": "^5.4.5"
   },
+  "dependencies": {
+    "@homarr/log": "workspace:^0.1.0"
+  },
   "eslintConfig": {
     "extends": [
       "@homarr/eslint-config/base"

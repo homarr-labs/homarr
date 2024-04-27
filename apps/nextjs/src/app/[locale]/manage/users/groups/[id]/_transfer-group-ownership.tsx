@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -31,7 +31,7 @@ export const TransferGroupOwnership = ({
   const { openConfirmModal } = useConfirmModal();
   const { mutateAsync } = clientApi.group.transferOwnership.useMutation();
 
-  const handleTransfer = () => {
+  const handleTransfer = useCallback(() => {
     openModal(
       {
         confirmLabel: t("common.action.continue"),
@@ -76,7 +76,16 @@ export const TransferGroupOwnership = ({
         title: tTransfer("label"),
       },
     );
-  };
+  }, [
+    group.id,
+    group.name,
+    innerOwnerId,
+    mutateAsync,
+    openConfirmModal,
+    openModal,
+    t,
+    tTransfer,
+  ]);
 
   return (
     <Button variant="subtle" color="red" onClick={handleTransfer}>
