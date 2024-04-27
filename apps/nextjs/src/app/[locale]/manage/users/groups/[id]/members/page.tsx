@@ -1,13 +1,8 @@
 import Link from "next/link";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
 import {
   Anchor,
   Center,
   Group,
-  SearchInput,
   Stack,
   Table,
   TableTbody,
@@ -15,8 +10,12 @@ import {
   TableTr,
   Text,
   Title,
-  UserAvatar,
-} from "@homarr/ui";
+} from "@mantine/core";
+
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { getScopedI18n } from "@homarr/translation/server";
+import { SearchInput, UserAvatar } from "@homarr/ui";
 
 import { AddGroupMember } from "./_add-group-member";
 import { RemoveGroupMember } from "./_remove-group-member";
@@ -35,7 +34,7 @@ export default async function GroupsDetailPage({
   searchParams,
 }: GroupsDetailPageProps) {
   const tMembers = await getScopedI18n("management.page.group.setting.members");
-  const group = await api.group.byId({ id: params.id });
+  const group = await api.group.getById({ id: params.id });
 
   const filteredMembers = searchParams.search
     ? group.members.filter((member) =>
@@ -77,7 +76,7 @@ export default async function GroupsDetailPage({
 }
 
 interface RowProps {
-  member: RouterOutputs["group"]["paginated"]["items"][number]["members"][number];
+  member: RouterOutputs["group"]["getPaginated"]["items"][number]["members"][number];
   groupId: string;
 }
 

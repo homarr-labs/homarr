@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "2a1424fb-d8b8-4474-b336-3a019a9ae0da",
+  "id": "614ae8f4-b490-42a9-a1b3-85fca4f94875",
   "prevId": "7c2291ee-febd-4b90-994c-85e6ef27102d",
   "tables": {
     "account": {
@@ -500,8 +500,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "creator_id": {
-          "name": "creator_id",
+        "owner_id": {
+          "name": "owner_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -510,12 +510,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "group_creator_id_user_id_fk": {
-          "name": "group_creator_id_user_id_fk",
+        "group_owner_id_user_id_fk": {
+          "name": "group_owner_id_user_id_fk",
           "tableFrom": "group",
           "tableTo": "user",
           "columnsFrom": [
-            "creator_id"
+            "owner_id"
           ],
           "columnsTo": [
             "id"

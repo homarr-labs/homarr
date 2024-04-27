@@ -12,10 +12,10 @@ import { createDb } from "@homarr/db/test";
 
 import { groupRouter } from "../group";
 
-const defaultCreatorId = createId();
+const defaultOwnerId = createId();
 const defaultSession = {
   user: {
-    id: defaultCreatorId,
+    id: defaultOwnerId,
   },
   expires: new Date().toISOString(),
 } satisfies Session;
@@ -223,7 +223,7 @@ describe("create should create group in database", () => {
 
     expect(item).toBeDefined();
     expect(item?.id).toBe(result);
-    expect(item?.creatorId).toBe(defaultCreatorId);
+    expect(item?.ownerId).toBe(defaultOwnerId);
     expect(item?.name).toBe(name);
   });
 
@@ -432,14 +432,14 @@ describe("transferOwnership should transfer ownership of group", () => {
         name: "New user",
       },
       {
-        id: defaultCreatorId,
+        id: defaultOwnerId,
         name: "Old user",
       },
     ]);
     await db.insert(groups).values({
       id: groupId,
       name: "Group",
-      creatorId: defaultCreatorId,
+      ownerId: defaultOwnerId,
     });
 
     // Act
@@ -453,7 +453,7 @@ describe("transferOwnership should transfer ownership of group", () => {
       where: eq(groups.id, groupId),
     });
 
-    expect(group?.creatorId).toBe(newUserId);
+    expect(group?.ownerId).toBe(newUserId);
   });
 
   test("with non existing group it should throw not found error", async () => {
@@ -543,14 +543,14 @@ describe("addMember should add member to group", () => {
         name: "User",
       },
       {
-        id: defaultCreatorId,
+        id: defaultOwnerId,
         name: "Creator",
       },
     ]);
     await db.insert(groups).values({
       id: groupId,
       name: "Group",
-      creatorId: defaultCreatorId,
+      ownerId: defaultOwnerId,
     });
 
     // Act
@@ -604,14 +604,14 @@ describe("removeMember should remove member from group", () => {
         name: "User",
       },
       {
-        id: defaultCreatorId,
+        id: defaultOwnerId,
         name: "Creator",
       },
     ]);
     await db.insert(groups).values({
       id: groupId,
       name: "Group",
-      creatorId: defaultCreatorId,
+      ownerId: defaultOwnerId,
     });
     await db.insert(groupMembers).values({
       groupId,

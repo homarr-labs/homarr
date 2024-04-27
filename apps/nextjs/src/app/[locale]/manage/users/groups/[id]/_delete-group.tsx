@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
@@ -10,7 +11,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 
@@ -23,7 +23,7 @@ interface DeleteGroupProps {
 
 export const DeleteGroup = ({ group }: DeleteGroupProps) => {
   const router = useRouter();
-  const { mutateAsync } = clientApi.group.delete.useMutation();
+  const { mutateAsync } = clientApi.group.deleteGroup.useMutation();
   const { openConfirmModal } = useConfirmModal();
   const tDelete = useScopedI18n("group.action.delete");
   const t = useI18n();

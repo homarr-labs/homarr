@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
@@ -9,7 +10,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack, TextInput } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 
@@ -22,7 +22,7 @@ interface RenameGroupFormProps {
 
 export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
   const t = useI18n();
-  const { mutate, isPending } = clientApi.group.update.useMutation();
+  const { mutate, isPending } = clientApi.group.updateGroup.useMutation();
   const form = useForm<FormType>({
     initialValues: {
       name: group.name,

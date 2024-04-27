@@ -104,7 +104,7 @@ export const groupRouter = createTRPCRouter({
       await ctx.db.insert(groups).values({
         id,
         name: normalizedName,
-        creatorId: ctx.session.user.id,
+        ownerId: ctx.session.user.id,
       });
 
       return id;
@@ -148,7 +148,7 @@ export const groupRouter = createTRPCRouter({
       await ctx.db
         .update(groups)
         .set({
-          creatorId: input.userId,
+          ownerId: input.userId,
         })
         .where(eq(groups.id, input.groupId));
     }),

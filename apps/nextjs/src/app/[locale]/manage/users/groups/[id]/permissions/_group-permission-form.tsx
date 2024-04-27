@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import type { PropsWithChildren } from "react";
+import { Button, Card, Group, Switch, Text, Transition } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { objectEntries } from "@homarr/common";
@@ -13,7 +14,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button, Card, Group, Switch, Text, Transition } from "@homarr/ui";
 
 const [FormProvider, useFormContext, useForm] = createFormContext<FormType>();
 
@@ -62,23 +62,6 @@ export const PermissionSwitch = ({ name }: { name: GroupPermissionKey }) => {
     withError: false,
     type: "checkbox",
   });
-
-  // TODO: Evaluate if this should be implemented or not, probably yes because it would show the user which permissions are
-  // affected and when new permissions are added they would not be included by default which would be better for security
-  // The alternative would be to just set the parent permissions and then check them with children permissions on usage
-  /*const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const inner = getPermissionsWithChildren([name]);
-      objectEntries(form.getValues()).forEach(([key, value]) => {
-        if (value) return;
-        if (inner.includes(key)) {
-          form.setFieldValue(key, true);
-        }
-      });
-    } else {
-      form.setFieldValue(name, false);
-    }
-  };*/
 
   return <Switch {...props} />;
 };

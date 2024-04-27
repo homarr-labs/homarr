@@ -1,5 +1,7 @@
 "use client";
 
+import { Button, Group, Stack, TextInput } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
@@ -8,7 +10,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack, TextInput } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 
@@ -29,7 +30,7 @@ export const AddGroup = () => {
 
 const AddGroupModal = createModal<void>(({ actions }) => {
   const t = useI18n();
-  const { mutate, isPending } = clientApi.group.create.useMutation();
+  const { mutate, isPending } = clientApi.group.createGroup.useMutation();
   const form = useForm({
     initialValues: {
       name: "",

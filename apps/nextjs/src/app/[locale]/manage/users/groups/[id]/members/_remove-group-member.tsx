@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback } from "react";
+import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 

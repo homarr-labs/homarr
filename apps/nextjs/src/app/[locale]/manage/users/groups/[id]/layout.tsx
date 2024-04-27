@@ -1,21 +1,19 @@
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
-
-import { api } from "@homarr/api/server";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import {
   Button,
   Container,
   Grid,
   GridCol,
   Group,
-  IconLock,
-  IconSettings,
-  IconUsersGroup,
   Stack,
   Text,
   Title,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
+
+import { api } from "@homarr/api/server";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import { NavigationLink } from "./_navigation";
 
@@ -29,7 +27,7 @@ export default async function Layout({
 }: PropsWithChildren<LayoutProps>) {
   const t = await getI18n();
   const tGroup = await getScopedI18n("management.page.group");
-  const group = await api.group.byId({ id: params.id });
+  const group = await api.group.getById({ id: params.id });
 
   return (
     <Container size="xl">

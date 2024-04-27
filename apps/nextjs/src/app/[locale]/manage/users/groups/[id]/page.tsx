@@ -1,5 +1,3 @@
-import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
 import {
   Card,
   CardSection,
@@ -8,7 +6,10 @@ import {
   Stack,
   Text,
   Title,
-} from "@homarr/ui";
+} from "@mantine/core";
+
+import { api } from "@homarr/api/server";
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { DeleteGroup } from "./_delete-group";
 import { RenameGroupForm } from "./_rename-group-form";
@@ -23,7 +24,7 @@ interface GroupsDetailPageProps {
 export default async function GroupsDetailPage({
   params,
 }: GroupsDetailPageProps) {
-  const group = await api.group.byId({ id: params.id });
+  const group = await api.group.getById({ id: params.id });
   const tGeneral = await getScopedI18n("management.page.group.setting.general");
   const tGroupAction = await getScopedI18n("group.action");
 

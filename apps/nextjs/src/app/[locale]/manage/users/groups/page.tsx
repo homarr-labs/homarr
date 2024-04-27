@@ -1,24 +1,22 @@
 import Link from "next/link";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { getI18n } from "@homarr/translation/server";
 import {
   Anchor,
   Container,
   Group,
-  SearchInput,
   Stack,
   Table,
-  TablePagination,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
   Title,
-  UserAvatarGroup,
-} from "@homarr/ui";
+} from "@mantine/core";
+
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { getI18n } from "@homarr/translation/server";
+import { SearchInput, TablePagination, UserAvatarGroup } from "@homarr/ui";
 import { z } from "@homarr/validation";
 
 import { AddGroup } from "./_add-group";
@@ -46,7 +44,8 @@ interface GroupsListPageProps {
 export default async function GroupsListPage(props: GroupsListPageProps) {
   const t = await getI18n();
   const searchParams = searchParamsSchema.parse(props.searchParams);
-  const { items: groups, totalCount } = await api.group.paginated(searchParams);
+  const { items: groups, totalCount } =
+    await api.group.getPaginated(searchParams);
 
   return (
     <Container size="xl">
@@ -84,7 +83,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
 }
 
 interface RowProps {
-  group: RouterOutputs["group"]["paginated"]["items"][number];
+  group: RouterOutputs["group"]["getPaginated"]["items"][number];
 }
 
 const Row = ({ group }: RowProps) => {

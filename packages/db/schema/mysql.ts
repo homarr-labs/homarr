@@ -16,6 +16,7 @@ import type {
   BackgroundImageRepeat,
   BackgroundImageSize,
   BoardPermission,
+  GroupPermissionKey,
   IntegrationKind,
   IntegrationSecretKind,
   SectionKind,
@@ -91,6 +92,38 @@ export const verificationTokens = mysqlTable(
     }),
   }),
 );
+
+export const groupMembers = mysqlTable(
+  "groupMember",
+  {
+    groupId: varchar("groupId", { length: 256 })
+      .notNull()
+      .references(() => groups.id, { onDelete: "cascade" }),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (groupMember) => ({
+    compoundKey: primaryKey({
+      columns: [groupMember.groupId, groupMember.userId],
+    }),
+  }),
+);
+
+export const groups = mysqlTable("group", {
+  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  name: varchar("name", { length: 64 }).notNull(),
+  ownerId: varchar("owner_id", { length: 256 }).references(() => users.id, {
+    onDelete: "set null",
+  }),
+});
+
+export const groupPermissions = mysqlTable("groupPermission", {
+  groupId: varchar("groupId", { length: 256 })
+    .notNull()
+    .references(() => groups.id, { onDelete: "cascade" }),
+  permission: text("permission").$type<GroupPermissionKey>().notNull(),
+});
 
 export const integrations = mysqlTable(
   "integration",
@@ -236,6 +269,8 @@ export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   boards: many(boards),
   boardPermissions: many(boardPermissions),
+  groups: many(groupMembers),
+  ownedGroups: many(groups),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
@@ -244,6 +279,36 @@ export const sessionRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const groupMemberRelations = relations(groupMembers, ({ one }) => ({
+  group: one(groups, {
+    fields: [groupMembers.groupId],
+    references: [groups.id],
+  }),
+  user: one(users, {
+    fields: [groupMembers.userId],
+    references: [users.id],
+  }),
+}));
+
+export const groupRelations = relations(groups, ({ one, many }) => ({
+  permissions: many(groupPermissions),
+  members: many(groupMembers),
+  owner: one(users, {
+    fields: [groups.ownerId],
+    references: [users.id],
+  }),
+}));
+
+export const groupPermissionRelations = relations(
+  groupPermissions,
+  ({ one }) => ({
+    group: one(groups, {
+      fields: [groupPermissions.groupId],
+      references: [groups.id],
+    }),
+  }),
+);
 
 export const boardPermissionRelations = relations(
   boardPermissions,

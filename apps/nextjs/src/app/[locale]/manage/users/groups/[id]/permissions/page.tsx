@@ -1,10 +1,4 @@
 import React from "react";
-
-import { api } from "@homarr/api/server";
-import { objectKeys } from "@homarr/common";
-import type { GroupPermissionKey } from "@homarr/definitions";
-import { groupPermissions } from "@homarr/definitions";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import {
   Card,
   CardSection,
@@ -13,7 +7,13 @@ import {
   Stack,
   Text,
   Title,
-} from "@homarr/ui";
+} from "@mantine/core";
+
+import { api } from "@homarr/api/server";
+import { objectKeys } from "@homarr/common";
+import type { GroupPermissionKey } from "@homarr/definitions";
+import { groupPermissions } from "@homarr/definitions";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import {
   PermissionForm,
@@ -30,7 +30,7 @@ interface GroupPermissionsPageProps {
 export default async function GroupPermissionsPage({
   params,
 }: GroupPermissionsPageProps) {
-  const group = await api.group.byId({ id: params.id });
+  const group = await api.group.getById({ id: params.id });
   const tPermissions = await getScopedI18n("group.permission");
   const t = await getI18n();
 

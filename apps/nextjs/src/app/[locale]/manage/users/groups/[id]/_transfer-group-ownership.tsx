@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -9,7 +10,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button } from "@homarr/ui";
 
 import { UserSelectModal } from "~/app/[locale]/boards/[name]/settings/_access";
 
@@ -17,7 +17,7 @@ interface TransferGroupOwnershipProps {
   group: {
     id: string;
     name: string;
-    creatorId: string | null;
+    ownerId: string | null;
   };
 }
 
@@ -26,7 +26,7 @@ export const TransferGroupOwnership = ({
 }: TransferGroupOwnershipProps) => {
   const tTransfer = useScopedI18n("group.action.transfer");
   const t = useI18n();
-  const [innerCreatorId, setInnerCreatorId] = useState(group.creatorId);
+  const [innerOwnerId, setInnerOwnerId] = useState(group.ownerId);
   const { openModal } = useModalAction(UserSelectModal);
   const { openConfirmModal } = useConfirmModal();
   const { mutateAsync } = clientApi.group.transferOwnership.useMutation();
@@ -35,7 +35,7 @@ export const TransferGroupOwnership = ({
     openModal(
       {
         confirmLabel: t("common.action.continue"),
-        presentUserIds: innerCreatorId ? [innerCreatorId] : [],
+        presentUserIds: innerOwnerId ? [innerOwnerId] : [],
         onSelect: ({ id, name }) => {
           openConfirmModal({
             title: tTransfer("label"),
@@ -51,7 +51,7 @@ export const TransferGroupOwnership = ({
                 },
                 {
                   onSuccess() {
-                    setInnerCreatorId(id);
+                    setInnerOwnerId(id);
                     showSuccessNotification({
                       title: t("common.notification.transfer.success"),
                       message: tTransfer("notification.success.message", {

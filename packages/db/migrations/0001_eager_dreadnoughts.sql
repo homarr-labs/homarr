@@ -15,6 +15,6 @@ CREATE TABLE `groupPermission` (
 CREATE TABLE `group` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
-	`creator_id` text,
-	FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE set null
+	`owner_id` text,
+	FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE set null
 );

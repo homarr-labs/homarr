@@ -110,7 +110,7 @@ export const groupMembers = sqliteTable(
 export const groups = sqliteTable("group", {
   id: text("id").notNull().primaryKey(),
   name: text("name").notNull(),
-  creatorId: text("creator_id").references(() => users.id, {
+  ownerId: text("owner_id").references(() => users.id, {
     onDelete: "set null",
   }),
 });
@@ -265,7 +265,7 @@ export const userRelations = relations(users, ({ many }) => ({
   boards: many(boards),
   boardPermissions: many(boardPermissions),
   groups: many(groupMembers),
-  createdGroups: many(groups),
+  ownedGroups: many(groups),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
@@ -289,8 +289,8 @@ export const groupMemberRelations = relations(groupMembers, ({ one }) => ({
 export const groupRelations = relations(groups, ({ one, many }) => ({
   permissions: many(groupPermissions),
   members: many(groupMembers),
-  creator: one(users, {
-    fields: [groups.creatorId],
+  owner: one(users, {
+    fields: [groups.ownerId],
     references: [users.id],
   }),
 }));
