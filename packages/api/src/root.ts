@@ -1,6 +1,6 @@
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
-import { groupRouter } from "./router/groups";
+import { groupRouter } from "./router/group";
 import { integrationRouter } from "./router/integration";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";

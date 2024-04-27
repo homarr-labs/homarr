@@ -12,7 +12,7 @@ import { validation } from "@homarr/validation";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const groupRouter = createTRPCRouter({
-  paginated: protectedProcedure
+  getPaginated: protectedProcedure
     .input(validation.group.paginated)
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search
@@ -53,7 +53,7 @@ export const groupRouter = createTRPCRouter({
         totalCount: groupCount[0]!.count,
       };
     }),
-  byId: protectedProcedure
+  getById: protectedProcedure
     .input(validation.group.byId)
     .query(async ({ input, ctx }) => {
       const group = await ctx.db.query.groups.findFirst({
@@ -94,7 +94,7 @@ export const groupRouter = createTRPCRouter({
         ),
       };
     }),
-  create: protectedProcedure
+  createGroup: protectedProcedure
     .input(validation.group.create)
     .mutation(async ({ input, ctx }) => {
       const normalizedName = normalizeName(input.name);
@@ -109,9 +109,11 @@ export const groupRouter = createTRPCRouter({
 
       return id;
     }),
-  update: protectedProcedure
+  updateGroup: protectedProcedure
     .input(validation.group.update)
     .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.id);
+
       const normalizedName = normalizeName(input.name);
       await checkSimilarNameAndThrow(ctx.db, normalizedName, input.id);
 
@@ -125,9 +127,12 @@ export const groupRouter = createTRPCRouter({
   savePermissions: protectedProcedure
     .input(validation.group.savePermissions)
     .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+
       await ctx.db
         .delete(groupPermissions)
         .where(eq(groupPermissions.groupId, input.groupId));
+
       await ctx.db.insert(groupPermissions).values(
         input.permissions.map((permission) => ({
           groupId: input.groupId,
@@ -138,6 +143,8 @@ export const groupRouter = createTRPCRouter({
   transferOwnership: protectedProcedure
     .input(validation.group.groupUser)
     .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+
       await ctx.db
         .update(groups)
         .set({
@@ -145,24 +152,17 @@ export const groupRouter = createTRPCRouter({
         })
         .where(eq(groups.id, input.groupId));
     }),
-  delete: protectedProcedure
+  deleteGroup: protectedProcedure
     .input(validation.group.byId)
     .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.id);
+
       await ctx.db.delete(groups).where(eq(groups.id, input.id));
     }),
   addMember: protectedProcedure
     .input(validation.group.groupUser)
     .mutation(async ({ input, ctx }) => {
-      const group = await ctx.db.query.groups.findFirst({
-        where: eq(groups.id, input.groupId),
-      });
-
-      if (!group) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Group not found",
-        });
-      }
+      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
       const user = await ctx.db.query.users.findFirst({
         where: eq(groups.id, input.userId),
@@ -183,6 +183,8 @@ export const groupRouter = createTRPCRouter({
   removeMember: protectedProcedure
     .input(validation.group.groupUser)
     .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+
       await ctx.db
         .delete(groupMembers)
         .where(
@@ -212,6 +214,19 @@ const checkSimilarNameAndThrow = async (
     throw new TRPCError({
       code: "CONFLICT",
       message: "Found group with similar name",
+    });
+  }
+};
+
+const throwIfGroupNotFoundAsync = async (db: Database, id: string) => {
+  const group = await db.query.groups.findFirst({
+    where: eq(groups.id, id),
+  });
+
+  if (!group) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Group not found",
     });
   }
 };

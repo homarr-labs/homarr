@@ -10,7 +10,7 @@ import {
 } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { groupRouter } from "../groups";
+import { groupRouter } from "../group";
 
 const defaultCreatorId = createId();
 const defaultSession = {
@@ -45,7 +45,7 @@ describe("paginated should return a list of groups with pagination", () => {
       );
 
       // Act
-      const result = await caller.paginated({
+      const result = await caller.getPaginated({
         page,
         pageSize: 3,
       });
@@ -68,7 +68,7 @@ describe("paginated should return a list of groups with pagination", () => {
     );
 
     // Act
-    const result = await caller.paginated({
+    const result = await caller.getPaginated({
       pageSize: 3,
     });
 
@@ -94,7 +94,7 @@ describe("paginated should return a list of groups with pagination", () => {
     });
 
     // Act
-    const result = await caller.paginated({});
+    const result = await caller.getPaginated({});
 
     // Assert
     const item = result.items[0];
@@ -127,7 +127,7 @@ describe("paginated should return a list of groups with pagination", () => {
       );
 
       // Act
-      const result = await caller.paginated({
+      const result = await caller.getPaginated({
         search: query,
       });
 
@@ -167,7 +167,7 @@ describe("byId should return group by id including members and permissions", () 
     });
 
     // Act
-    const result = await caller.byId({
+    const result = await caller.getById({
       id: groupId,
     });
 
@@ -195,7 +195,7 @@ describe("byId should return group by id including members and permissions", () 
     });
 
     // Act
-    const act = async () => await caller.byId({ id: "1" });
+    const act = async () => await caller.getById({ id: "1" });
 
     // Assert
     await expect(act()).rejects.toThrow("Group not found");
@@ -212,7 +212,7 @@ describe("create should create group in database", () => {
     await db.insert(users).values(defaultSession.user);
 
     // Act
-    const result = await caller.create({
+    const result = await caller.createGroup({
       name,
     });
 
@@ -235,7 +235,7 @@ describe("create should create group in database", () => {
 
     // Act
     const act = async () =>
-      await caller.create({
+      await caller.createGroup({
         name: longName,
       });
 
@@ -261,7 +261,7 @@ describe("create should create group in database", () => {
       });
 
       // Act
-      const act = async () => await caller.create({ name: nameToCreate });
+      const act = async () => await caller.createGroup({ name: nameToCreate });
 
       // Assert
       await expect(act()).rejects.toThrow("similar name");
@@ -293,7 +293,7 @@ describe("update should update name with value that is no duplicate", () => {
       ]);
 
       // Act
-      await caller.update({
+      await caller.updateGroup({
         id: groupId,
         name: updateValue,
       });
@@ -330,7 +330,7 @@ describe("update should update name with value that is no duplicate", () => {
 
       // Act
       const act = async () =>
-        await caller.update({
+        await caller.updateGroup({
           id: groupId,
           name: updateValue,
         });
@@ -351,7 +351,306 @@ describe("update should update name with value that is no duplicate", () => {
     });
 
     // Act
-    const act = async () => await caller.update({});
+    const act = () =>
+      caller.updateGroup({
+        id: createId(),
+        name: "something else",
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
+  });
+});
+
+describe("savePermissions should save permissions for group", () => {
+  test("with existing group and permissions it should save permissions", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+    });
+    await db.insert(groupPermissions).values({
+      groupId,
+      permission: "admin",
+    });
+
+    // Act
+    await caller.savePermissions({
+      groupId,
+      permissions: ["integration-use-all", "board-full-access"],
+    });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.length).toBe(2);
+    expect(permissions.map(({ permission }) => permission)).toEqual([
+      "integration-use-all",
+      "board-full-access",
+    ]);
+  });
+
+  test("with non existing group it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(groups).values({
+      id: createId(),
+      name: "Group",
+    });
+
+    // Act
+    const act = async () =>
+      await caller.savePermissions({
+        groupId: createId(),
+        permissions: ["integration-create", "board-full-access"],
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
+  });
+});
+
+describe("transferOwnership should transfer ownership of group", () => {
+  test("with existing group and user it should transfer ownership", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const groupId = createId();
+    const newUserId = createId();
+    await db.insert(users).values([
+      {
+        id: newUserId,
+        name: "New user",
+      },
+      {
+        id: defaultCreatorId,
+        name: "Old user",
+      },
+    ]);
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    await caller.transferOwnership({
+      groupId,
+      userId: newUserId,
+    });
+
+    // Assert
+    const group = await db.query.groups.findFirst({
+      where: eq(groups.id, groupId),
+    });
+
+    expect(group?.creatorId).toBe(newUserId);
+  });
+
+  test("with non existing group it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(groups).values({
+      id: createId(),
+      name: "Group",
+    });
+
+    // Act
+    const act = async () =>
+      await caller.transferOwnership({
+        groupId: createId(),
+        userId: createId(),
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
+  });
+});
+
+describe("deleteGroup should delete group", () => {
+  test("with existing group it should delete group", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const groupId = createId();
+    await db.insert(groups).values([
+      {
+        id: groupId,
+        name: "Group",
+      },
+      {
+        id: createId(),
+        name: "Another group",
+      },
+    ]);
+
+    // Act
+    await caller.deleteGroup({
+      id: groupId,
+    });
+
+    // Assert
+    const dbGroups = await db.query.groups.findMany();
+
+    expect(dbGroups.length).toBe(1);
+    expect(dbGroups[0]?.id).not.toBe(groupId);
+  });
+
+  test("with non existing group it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(groups).values({
+      id: createId(),
+      name: "Group",
+    });
+
+    // Act
+    const act = async () =>
+      await caller.deleteGroup({
+        id: createId(),
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
+  });
+});
+
+describe("addMember should add member to group", () => {
+  test("with existing group and user it should add member", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const groupId = createId();
+    const userId = createId();
+    await db.insert(users).values([
+      {
+        id: userId,
+        name: "User",
+      },
+      {
+        id: defaultCreatorId,
+        name: "Creator",
+      },
+    ]);
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    await caller.addMember({
+      groupId,
+      userId,
+    });
+
+    // Assert
+    const members = await db.query.groupMembers.findMany({
+      where: eq(groupMembers.groupId, groupId),
+    });
+
+    expect(members.length).toBe(1);
+    expect(members[0]?.userId).toBe(userId);
+  });
+
+  test("with non existing group it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(users).values({
+      id: createId(),
+      name: "User",
+    });
+
+    // Act
+    const act = async () =>
+      await caller.addMember({
+        groupId: createId(),
+        userId: createId(),
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
+  });
+});
+
+describe("removeMember should remove member from group", () => {
+  test("with existing group and user it should remove member", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const groupId = createId();
+    const userId = createId();
+    await db.insert(users).values([
+      {
+        id: userId,
+        name: "User",
+      },
+      {
+        id: defaultCreatorId,
+        name: "Creator",
+      },
+    ]);
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      creatorId: defaultCreatorId,
+    });
+    await db.insert(groupMembers).values({
+      groupId,
+      userId,
+    });
+
+    // Act
+    await caller.removeMember({
+      groupId,
+      userId,
+    });
+
+    // Assert
+    const members = await db.query.groupMembers.findMany({
+      where: eq(groupMembers.groupId, groupId),
+    });
+
+    expect(members.length).toBe(0);
+  });
+
+  test("with non existing group it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(users).values({
+      id: createId(),
+      name: "User",
+    });
+
+    // Act
+    const act = async () =>
+      await caller.removeMember({
+        groupId: createId(),
+        userId: createId(),
+      });
+
+    // Assert
+    await expect(act()).rejects.toThrow("Group not found");
   });
 });
 
