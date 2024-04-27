@@ -1,6 +1,7 @@
 {
   "name": "@homarr/spotlight",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "exports": {
     ".": "./index.ts",
@@ -21,16 +22,11 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/eslint-config": "workspace:^0.3.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.1.1",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {

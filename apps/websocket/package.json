@@ -10,7 +10,7 @@
     "dev": "pnpm with-env tsx ./src/main.ts",
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --loader:.html=text",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
@@ -28,19 +28,13 @@
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/eslint-config": "workspace:^0.3.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.5.10",
     "eslint": "^9.1.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

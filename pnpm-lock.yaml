@@ -13,20 +13,20 @@ importers:
         version: 7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/dates':
         specifier: ^7.8.0
-        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react@18.3.1)
+        version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tabler/icons-react':
         specifier: ^3.2.0
         version: 3.2.0(react@18.3.1)
       mantine-react-table:
         specifier: 2.0.0-beta.1
-        version: 2.0.0-beta.1(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(@tabler/icons-react@3.2.0(react@18.3.1))(clsx@2.1.0)(dayjs@1.11.10)(react@18.3.1)
+        version: 2.0.0-beta.1(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(@tabler/icons-react@3.2.0(react@18.3.1))(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:tooling/prettier
-      '@testing-library/react-hooks':
-        specifier: ^8.0.1
-        version: 8.0.1(@types/react@18.3.1)(react@18.3.1)
+      '@testing-library/react':
+        specifier: ^15.0.5
+        version: 15.0.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@turbo/gen':
         specifier: ^1.13.2
         version: 1.13.2(@types/node@20.12.7)(typescript@5.4.5)
@@ -188,7 +188,7 @@ importers:
         version: 1.8.1(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -252,7 +252,7 @@ importers:
         version: 3.0.3
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -316,7 +316,7 @@ importers:
         version: 8.16.0
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -374,7 +374,7 @@ importers:
         version: 2.2.1
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -426,7 +426,7 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -456,7 +456,7 @@ importers:
   packages/common:
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -496,7 +496,7 @@ importers:
         version: 3.9.6
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -527,7 +527,7 @@ importers:
         version: link:../common
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -549,7 +549,7 @@ importers:
         version: 7.8.0(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -577,7 +577,7 @@ importers:
         version: 3.13.0
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -602,7 +602,7 @@ importers:
         version: link:../ui
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -627,7 +627,7 @@ importers:
         version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -658,7 +658,7 @@ importers:
         version: 5.4.1
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -686,7 +686,7 @@ importers:
         version: 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -708,7 +708,7 @@ importers:
         version: 1.2.4
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -726,7 +726,7 @@ importers:
   packages/ui:
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -754,7 +754,7 @@ importers:
         version: 3.22.5
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -854,7 +854,7 @@ importers:
         version: 8.10.0
     devDependencies:
       '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:^0.3.0
         version: link:../../tooling/eslint
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -877,15 +877,6 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^14.2.3
         version: 14.2.3
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^7.7.1
-        version: 7.7.1(@typescript-eslint/parser@7.7.1(eslint@9.1.1)(typescript@5.4.5))(eslint@9.1.1)(typescript@5.4.5)
-      '@typescript-eslint/parser':
-        specifier: ^7.7.1
-        version: 7.7.1(eslint@9.1.1)(typescript@5.4.5)
-      eslint-config-prettier:
-        specifier: ^9.1.0
-        version: 9.1.0(eslint@9.1.1)
       eslint-config-turbo:
         specifier: ^1.13.2
         version: 1.13.2(eslint@9.1.1)
@@ -901,6 +892,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^4.6.2
         version: 4.6.2(eslint@9.1.1)
+      typescript-eslint:
+        specifier: ^7.6.0
+        version: 7.7.1(eslint@9.1.1)(typescript@5.4.5)
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -908,9 +902,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../typescript
-      '@types/eslint':
-        specifier: ^8.56.10
-        version: 8.56.10
       eslint:
         specifier: ^9.1.1
         version: 9.1.1
@@ -1994,21 +1985,16 @@ packages:
   '@tanstack/virtual-core@3.2.0':
     resolution: {integrity: sha512-P5XgYoAw/vfW65byBbJQCw+cagdXDT/qH6wmABiLt4v4YBT2q2vqCOhihe+D1Nt325F/S/0Tkv6C5z0Lv+VBQQ==}
 
-  '@testing-library/react-hooks@8.0.1':
-    resolution: {integrity: sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==}
-    engines: {node: '>=12'}
+  '@testing-library/dom@10.0.0':
+    resolution: {integrity: sha512-PmJPnogldqoVFf+EwbHvbBJ98MmqASV8kLrBYgsDNxQcFMeIS7JFL48sfyXvuMtgmWO/wMhh25odr+8VhDmn4g==}
+    engines: {node: '>=18'}
+
+  '@testing-library/react@15.0.5':
+    resolution: {integrity: sha512-ttodVWYA2i2w4hRa6krKrmS1vKxAEkwDz34y+CwbcrbZUxFzUYN3a5xZyFKo+K6LBseCRCUkwcjATpaNn/UsIA==}
+    engines: {node: '>=18'}
     peerDependencies:
-      '@types/react': ^16.9.0 || ^17.0.0
-      react: ^16.9.0 || ^17.0.0
-      react-dom: ^16.9.0 || ^17.0.0
-      react-test-renderer: ^16.9.0 || ^17.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react-dom:
-        optional: true
-      react-test-renderer:
-        optional: true
+      react: ^18.0.0
+      react-dom: ^18.0.0
 
   '@tiptap/core@2.2.6':
     resolution: {integrity: sha512-v7S7RhQhTXQo9KSk2jM/jJlTd3clU2FsJA3Omjz7GbgYtPSy67qSiaTbH/tWq12GzDHbKymx+oQnKmyx+yPucA==}
@@ -2266,6 +2252,9 @@ packages:
     resolution: {integrity: sha512-m1kUcR6VRbJH4Ok0J+dA6blMu3Ywjq1d9rg/4OAMtkLPkO74LjGKtmqw7VNKhYlQBJd3oMyiI3mWn+QL7abtpg==}
     hasBin: true
 
+  '@types/aria-query@5.0.4':
+    resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
+
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
 
@@ -2301,9 +2290,6 @@ packages:
 
   '@types/css-modules@1.0.5':
     resolution: {integrity: sha512-oeKafs/df9lwOvtfiXVliZsocFVOexK9PZtLQWuPeuVCFR7jwiqlg60lu80JTe5NFNtH3tnV6Fs/ySR8BUPHAw==}
-
-  '@types/eslint@8.56.10':
-    resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
@@ -3064,6 +3050,9 @@ packages:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
 
+  dom-accessibility-api@0.5.16:
+    resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
+
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
 
@@ -3282,12 +3271,6 @@ packages:
     resolution: {integrity: sha512-2NlIDTwUWJN0mRPQOdtQBzbUHvdGY2P1VXSyU83Q3xKxM7WHX2Ql8dKq782Q9TgQUNOLEzEYu9bzLNj1q88I5w==}
     engines: {node: '>=6.0'}
     hasBin: true
-
-  eslint-config-prettier@9.1.0:
-    resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
-    hasBin: true
-    peerDependencies:
-      eslint: '>=7.0.0'
 
   eslint-config-turbo@1.13.2:
     resolution: {integrity: sha512-TzvsMwNJx/P4JYw79iFqbyQApnyT050gW7dBxnNeNVl3pVMnT2rwaFo9Q3Hc49Tp5NANxEwYN9RStF50P/IwGA==}
@@ -4139,6 +4122,10 @@ packages:
   lru-queue@0.1.0:
     resolution: {integrity: sha512-BpdYkt9EvGl8OfWHDQPISVpcl5xZthb+XPsbELj5AQXxIC8IriDZIQYjBJPEm5rS420sjZ0TLEzRcq5KdBhYrQ==}
 
+  lz-string@1.5.0:
+    resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
+    hasBin: true
+
   m3u8-parser@7.1.0:
     resolution: {integrity: sha512-7N+pk79EH4oLKPEYdgRXgAsKDyA/VCo0qCHlUwacttQA0WqsjZQYmNfywMvjlY9MpEBVZEt0jKFd73Kv15EBYQ==}
 
@@ -4643,6 +4630,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  pretty-format@27.5.1:
+    resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -4751,14 +4742,11 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-error-boundary@3.1.4:
-    resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
-    engines: {node: '>=10', npm: '>=6'}
-    peerDependencies:
-      react: '>=16.13.1'
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react-is@17.0.2:
+    resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
   react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
@@ -5395,6 +5383,16 @@ packages:
 
   typed-array-length@1.0.4:
     resolution: {integrity: sha512-KjZypGq+I/H7HI5HlOoGHkWUUGq+Q0TPhQurLbyrVrvnKTBgzLhIJ7j6J/XTQOi0d1RjyZ0wdas8bKs2p0x3Ng==}
+
+  typescript-eslint@7.7.1:
+    resolution: {integrity: sha512-ykEBfa3xx3odjZy6GRED4SCPrjo0rgHwstLlEgLX4EMEuv7QeIDSmfV+S6Kk+XkbsYn4BDEcPvsci1X26lRpMQ==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   typescript@5.4.5:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
@@ -6360,13 +6358,14 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react@18.3.1)':
+  '@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.8.0(react@18.3.1)
       clsx: 2.1.0
       dayjs: 1.11.10
       react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@mantine/form@7.8.0(react@18.3.1)':
     dependencies:
@@ -6605,27 +6604,40 @@ snapshots:
       '@tanstack/query-core': 5.29.0
       react: 18.3.1
 
-  '@tanstack/react-table@8.15.0(react@18.3.1)':
+  '@tanstack/react-table@8.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/table-core': 8.14.0
       react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
-  '@tanstack/react-virtual@3.2.0(react@18.3.1)':
+  '@tanstack/react-virtual@3.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/virtual-core': 3.2.0
       react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@tanstack/table-core@8.14.0': {}
 
   '@tanstack/virtual-core@3.2.0': {}
 
-  '@testing-library/react-hooks@8.0.1(@types/react@18.3.1)(react@18.3.1)':
+  '@testing-library/dom@10.0.0':
+    dependencies:
+      '@babel/code-frame': 7.23.5
+      '@babel/runtime': 7.23.9
+      '@types/aria-query': 5.0.4
+      aria-query: 5.3.0
+      chalk: 4.1.2
+      dom-accessibility-api: 0.5.16
+      lz-string: 1.5.0
+      pretty-format: 27.5.1
+
+  '@testing-library/react@15.0.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.9
+      '@testing-library/dom': 10.0.0
+      '@types/react-dom': 18.3.0
       react: 18.3.1
-      react-error-boundary: 3.1.4(react@18.3.1)
-    optionalDependencies:
-      '@types/react': 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@tiptap/core@2.2.6(@tiptap/pm@2.2.4)':
     dependencies:
@@ -6905,6 +6917,8 @@ snapshots:
       semver: 7.6.0
       update-check: 1.5.4
 
+  '@types/aria-query@5.0.4': {}
+
   '@types/babel__core@7.20.5':
     dependencies:
       '@babel/parser': 7.23.9
@@ -6955,11 +6969,6 @@ snapshots:
       '@types/node': 20.12.7
 
   '@types/css-modules@1.0.5': {}
-
-  '@types/eslint@8.56.10':
-    dependencies:
-      '@types/estree': 1.0.5
-      '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.5': {}
 
@@ -7836,6 +7845,8 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
+  dom-accessibility-api@0.5.16: {}
+
   dom-helpers@5.2.1:
     dependencies:
       '@babel/runtime': 7.23.9
@@ -8119,10 +8130,6 @@ snapshots:
       esutils: 2.0.3
     optionalDependencies:
       source-map: 0.6.1
-
-  eslint-config-prettier@9.1.0(eslint@9.1.1):
-    dependencies:
-      eslint: 9.1.1
 
   eslint-config-turbo@1.13.2(eslint@9.1.1):
     dependencies:
@@ -9111,6 +9118,8 @@ snapshots:
     dependencies:
       es5-ext: 0.10.62
 
+  lz-string@1.5.0: {}
+
   m3u8-parser@7.1.0:
     dependencies:
       '@babel/runtime': 7.23.9
@@ -9137,18 +9146,19 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  mantine-react-table@2.0.0-beta.1(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(@tabler/icons-react@3.2.0(react@18.3.1))(clsx@2.1.0)(dayjs@1.11.10)(react@18.3.1):
+  mantine-react-table@2.0.0-beta.1(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(@tabler/icons-react@3.2.0(react@18.3.1))(clsx@2.1.0)(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@mantine/core': 7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mantine/dates': 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react@18.3.1)
+      '@mantine/dates': 7.8.0(@mantine/core@7.8.0(@mantine/hooks@7.8.0(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.0(react@18.3.1))(dayjs@1.11.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.8.0(react@18.3.1)
       '@tabler/icons-react': 3.2.0(react@18.3.1)
       '@tanstack/match-sorter-utils': 8.11.8
-      '@tanstack/react-table': 8.15.0(react@18.3.1)
-      '@tanstack/react-virtual': 3.2.0(react@18.3.1)
+      '@tanstack/react-table': 8.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-virtual': 3.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 2.1.0
       dayjs: 1.11.10
       react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   markdown-it@14.0.0:
     dependencies:
@@ -9661,6 +9671,12 @@ snapshots:
 
   prettier@3.2.5: {}
 
+  pretty-format@27.5.1:
+    dependencies:
+      ansi-regex: 5.0.1
+      ansi-styles: 5.2.0
+      react-is: 17.0.2
+
   pretty-format@29.7.0:
     dependencies:
       '@jest/schemas': 29.6.3
@@ -9823,12 +9839,9 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-error-boundary@3.1.4(react@18.3.1):
-    dependencies:
-      '@babel/runtime': 7.23.9
-      react: 18.3.1
-
   react-is@16.13.1: {}
+
+  react-is@17.0.2: {}
 
   react-is@18.2.0: {}
 
@@ -10483,6 +10496,17 @@ snapshots:
       call-bind: 1.0.7
       for-each: 0.3.3
       is-typed-array: 1.1.13
+
+  typescript-eslint@7.7.1(eslint@9.1.1)(typescript@5.4.5):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 7.7.1(@typescript-eslint/parser@7.7.1(eslint@9.1.1)(typescript@5.4.5))(eslint@9.1.1)(typescript@5.4.5)
+      '@typescript-eslint/parser': 7.7.1(eslint@9.1.1)(typescript@5.4.5)
+      '@typescript-eslint/utils': 7.7.1(eslint@9.1.1)(typescript@5.4.5)
+      eslint: 9.1.1
+    optionalDependencies:
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - supports-color
 
   typescript@5.4.5: {}
 
