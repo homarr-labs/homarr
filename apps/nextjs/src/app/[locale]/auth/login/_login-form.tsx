@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { signIn } from "@homarr/auth/client";
-import { useForm, zodResolver } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
 import {
   Alert,
   Button,
-  IconAlertTriangle,
   PasswordInput,
   rem,
   Stack,
   TextInput,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
+
+import { signIn } from "@homarr/auth/client";
+import { useForm, zodResolver } from "@homarr/form";
+import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 

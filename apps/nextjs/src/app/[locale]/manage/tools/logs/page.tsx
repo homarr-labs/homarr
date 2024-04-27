@@ -1,5 +1,6 @@
+import { Box } from "@mantine/core";
+
 import { getScopedI18n } from "@homarr/translation/server";
-import { Box } from "@homarr/ui";
 
 import "@xterm/xterm/css/xterm.css";
 

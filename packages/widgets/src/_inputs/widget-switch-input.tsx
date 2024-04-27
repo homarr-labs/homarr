@@ -1,6 +1,6 @@
 "use client";
 
-import { Switch } from "@homarr/ui";
+import { Switch } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

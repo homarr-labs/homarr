@@ -1,8 +1,6 @@
 import type { PropsWithChildren } from "react";
-
-import { getScopedI18n } from "@homarr/translation/server";
+import { AppShellMain } from "@mantine/core";
 import {
-  AppShellMain,
   IconBook2,
   IconBrandDiscord,
   IconBrandDocker,
@@ -17,7 +15,9 @@ import {
   IconTool,
   IconUser,
   IconUsers,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
 import type { NavigationLink } from "~/components/layout/navigation";

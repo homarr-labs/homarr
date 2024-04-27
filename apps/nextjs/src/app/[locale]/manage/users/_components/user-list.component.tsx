@@ -2,21 +2,14 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import { Avatar, Button, Group, Text, ThemeIcon, Title } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import {
-  Avatar,
-  Button,
-  Group,
-  IconCheck,
-  Text,
-  ThemeIcon,
-  Title,
-} from "@homarr/ui";
 
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];

@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import { Box, LoadingOverlay, Stack } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { Box, LoadingOverlay, Stack } from "@homarr/ui";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";

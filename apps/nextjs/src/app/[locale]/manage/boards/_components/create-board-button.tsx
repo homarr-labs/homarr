@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback } from "react";
+import { Button } from "@mantine/core";
+import { IconCategoryPlus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, IconCategoryPlus } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { AddBoardModal } from "~/components/manage/boards/add-board-modal";
@@ -41,7 +42,7 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
       onClick={onClick}
       loading={isPending}
     >
-      {t("management.page.board.action.create.label")}
+      {t("management.page.board.action.new.label")}
     </Button>
   );
 };

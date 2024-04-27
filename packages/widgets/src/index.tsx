@@ -1,14 +1,17 @@
 import type { ComponentType } from "react";
 import type { Loader } from "next/dynamic";
 import dynamic from "next/dynamic";
+import { Loader as UiLoader } from "@mantine/core";
 
 import type { WidgetKind } from "@homarr/definitions";
-import { Loader as UiLoader } from "@homarr/ui";
 
 import * as app from "./app";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
+import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as notebook from "./notebook";
+import * as video from "./video";
 import * as weather from "./weather";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
@@ -21,6 +24,9 @@ export const widgetImports = {
   clock,
   weather,
   app,
+  notebook,
+  iframe,
+  video,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

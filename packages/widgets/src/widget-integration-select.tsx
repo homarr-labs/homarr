@@ -1,10 +1,6 @@
 "use client";
 
 import type { FocusEventHandler } from "react";
-
-import type { IntegrationKind } from "@homarr/definitions";
-import { getIconUrl } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
 import {
   Avatar,
   CheckIcon,
@@ -17,7 +13,11 @@ import {
   Stack,
   Text,
   useCombobox,
-} from "@homarr/ui";
+} from "@mantine/core";
+
+import type { IntegrationKind } from "@homarr/definitions";
+import { getIconUrl } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./widget-integration-select.module.css";
 

@@ -1,20 +1,18 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { ActionIcon, Affix, Card } from "@mantine/core";
+import {
+  IconDimensions,
+  IconPencil,
+  IconToggleLeft,
+  IconToggleRight,
+} from "@tabler/icons-react";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import {
-  ActionIcon,
-  Affix,
-  Card,
-  IconDimensions,
-  IconPencil,
-  IconToggleLeft,
-  IconToggleRight,
-} from "@homarr/ui";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -112,6 +110,8 @@ export const WidgetPreviewPageContent = ({
           width={dimensions.width}
           height={dimensions.height}
           isEditMode={editMode}
+          boardId={undefined}
+          itemId={undefined}
         />
       </Card>
       <Affix bottom={12} right={72}>

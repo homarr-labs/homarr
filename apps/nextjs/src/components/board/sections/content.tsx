@@ -2,21 +2,19 @@
 // Ignored because of gridstack attributes
 
 import type { RefObject } from "react";
+import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
+import {
+  IconDotsVertical,
+  IconLayoutKanban,
+  IconPencil,
+  IconTrash,
+} from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
 
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import {
-  ActionIcon,
-  Card,
-  IconDotsVertical,
-  IconLayoutKanban,
-  IconPencil,
-  IconTrash,
-  Menu,
-} from "@homarr/ui";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -88,6 +86,7 @@ interface ItemProps {
 }
 
 const BoardItem = ({ item, ...dimensions }: ItemProps) => {
+  const board = useRequiredBoard();
   const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
@@ -98,12 +97,14 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
 
   return (
     <>
-      <ItemMenu offset={8} item={newItem} />
+      <ItemMenu offset={4} item={newItem} />
       <Comp
         options={options as never}
         integrations={item.integrations}
         serverData={serverData?.data as never}
         isEditMode={editMode}
+        boardId={board.id}
+        itemId={item.id}
         {...dimensions}
       />
     </>
@@ -155,6 +156,7 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
           pos="absolute"
           top={offset}
           right={offset}
+          style={{ zIndex: 1 }}
         >
           <IconDotsVertical />
         </ActionIcon>

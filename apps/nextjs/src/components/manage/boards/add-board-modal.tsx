@@ -1,9 +1,9 @@
+import { Button, Group, Stack, TextInput } from "@mantine/core";
 import { boardSchemas } from "node_modules/@homarr/validation/src/board";
 
 import { useForm, zodResolver } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack, TextInput } from "@homarr/ui";
 import { z } from "@homarr/validation";
 
 interface InnerProps {
@@ -55,5 +55,5 @@ export const AddBoardModal = createModal<InnerProps>(
     );
   },
 ).withOptions({
-  defaultTitle: (t) => t("management.page.board.action.create.label"),
+  defaultTitle: (t) => t("management.page.board.action.new.label"),
 });

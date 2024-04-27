@@ -1,6 +1,6 @@
 "use client";
 
-import { InputWrapper, Slider } from "@homarr/ui";
+import { InputWrapper, Slider } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -16,10 +16,11 @@ export const WidgetSliderInput = ({
 
   return (
     <InputWrapper
+      label={t("label")}
       description={options.withDescription ? t("description") : undefined}
+      inputWrapperOrder={["label", "input", "description", "error"]}
     >
       <Slider
-        label={t("label")}
         min={options.validate.minValue ?? undefined}
         max={options.validate.maxValue ?? undefined}
         step={options.step}

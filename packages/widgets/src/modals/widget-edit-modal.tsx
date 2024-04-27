@@ -1,9 +1,10 @@
 "use client";
 
+import { Button, Group, Stack } from "@mantine/core";
+
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack } from "@homarr/ui";
 
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
@@ -88,4 +89,6 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(
       </form>
     );
   },
-).withOptions({});
+).withOptions({
+  keepMounted: true,
+});

@@ -1,10 +1,11 @@
 "use client";
 
+import { Button, Stack, TextInput } from "@mantine/core";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Stack, TextInput } from "@homarr/ui";
 import { validation } from "@homarr/validation";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
