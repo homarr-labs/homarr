@@ -49,10 +49,13 @@ const filterUpdatedItems = <TInput extends { id: string }>(
 
 export const boardRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const myPermissions = await ctx.db.query.boardPermissions.findMany({
-      where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
-    });
-    const boardIds = myPermissions.map((permission) => permission.boardId);
+    const permissionsOfCurrentUserWhenPresent =
+      await ctx.db.query.boardPermissions.findMany({
+        where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+      });
+    const boardIds = permissionsOfCurrentUserWhenPresent.map(
+      (permission) => permission.boardId,
+    );
     const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
         id: true,

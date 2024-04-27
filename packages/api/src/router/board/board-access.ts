@@ -40,11 +40,11 @@ export const throwIfActionForbiddenAsync = async (
   const { hasViewAccess, hasChangeAccess, hasFullAccess } =
     constructBoardPermissions(board, session);
 
-  if (permission === "full-access" && hasFullAccess) {
+  if (hasFullAccess) {
     return; // As full access is required and user has full access, allow
   }
 
-  if (permission === "board-change" && hasChangeAccess) {
+  if (["board-change", "board-view"].includes(permission) && hasChangeAccess) {
     return; // As change access is required and user has change access, allow
   }
 

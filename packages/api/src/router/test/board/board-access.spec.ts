@@ -1,17 +1,13 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import type { Session } from "@homarr/auth";
+import * as authShared from "@homarr/auth/shared";
 import { createId, eq } from "@homarr/db";
-import { boardPermissions, boards, users } from "@homarr/db/schema/sqlite";
+import { boards, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
 import { throwIfActionForbiddenAsync } from "../../board/board-access";
 
 const defaultCreatorId = createId();
-const defaultSession = {
-  user: { id: defaultCreatorId },
-  expires: new Date().toISOString(),
-} satisfies Session;
 
 const expectActToBe = async (act: () => Promise<void>, success: boolean) => {
   if (!success) {
@@ -24,22 +20,103 @@ const expectActToBe = async (act: () => Promise<void>, success: boolean) => {
 
 // TODO: most of this test can be used for constructBoardPermissions
 // TODO: the tests for the board-access can be reduced to about 4 tests (as the unit has shrunk)
-describe("canAccessBoardAsync should check access to board and return boolean", () => {
+
+describe("throwIfActionForbiddenAsync should check access to board and return boolean", () => {
+  test.each([
+    ["full-access" as const, true],
+    ["board-change" as const, true],
+    ["board-view" as const, true],
+  ])(
+    "with permission %s should return %s when hasFullAccess is true",
+    async (permission, expectedResult) => {
+      // Arrange
+      const db = createDb();
+      const spy = vi.spyOn(authShared, "constructBoardPermissions");
+      spy.mockReturnValue({
+        hasFullAccess: true,
+        hasChangeAccess: false,
+        hasViewAccess: false,
+      });
+
+      await db.insert(users).values({ id: defaultCreatorId });
+      const boardId = createId();
+      await db.insert(boards).values({
+        id: boardId,
+        name: "test",
+        creatorId: defaultCreatorId,
+      });
+
+      // Act
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: null },
+          eq(boards.id, boardId),
+          permission,
+        );
+
+      // Assert
+      await expectActToBe(act, expectedResult);
+    },
+  );
+
+  test.each([
+    ["full-access" as const, false],
+    ["board-change" as const, true],
+    ["board-view" as const, true],
+  ])(
+    "with permission %s should return %s when hasChangeAccess is true",
+    async (permission, expectedResult) => {
+      // Arrange
+      const db = createDb();
+      const spy = vi.spyOn(authShared, "constructBoardPermissions");
+      spy.mockReturnValue({
+        hasFullAccess: false,
+        hasChangeAccess: true,
+        hasViewAccess: false,
+      });
+
+      await db.insert(users).values({ id: defaultCreatorId });
+      const boardId = createId();
+      await db.insert(boards).values({
+        id: boardId,
+        name: "test",
+        creatorId: defaultCreatorId,
+      });
+
+      // Act
+      const act = () =>
+        throwIfActionForbiddenAsync(
+          { db, session: null },
+          eq(boards.id, boardId),
+          permission,
+        );
+
+      // Assert
+      await expectActToBe(act, expectedResult);
+    },
+  );
+
   test.each([
     ["full-access" as const, false],
     ["board-change" as const, false],
     ["board-view" as const, true],
   ])(
-    "with permission %s should return %s for public boards",
+    "with permission %s should return %s when hasViewAccess is true",
     async (permission, expectedResult) => {
       // Arrange
       const db = createDb();
+      const spy = vi.spyOn(authShared, "constructBoardPermissions");
+      spy.mockReturnValue({
+        hasFullAccess: false,
+        hasChangeAccess: false,
+        hasViewAccess: true,
+      });
+
       await db.insert(users).values({ id: defaultCreatorId });
       const boardId = createId();
       await db.insert(boards).values({
         id: boardId,
         name: "test",
-        isPublic: true,
         creatorId: defaultCreatorId,
       });
 
@@ -57,20 +134,26 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
   );
 
   test.each([
-    ["full-access" as const],
-    ["board-change" as const],
-    ["board-view" as const],
+    ["full-access" as const, false],
+    ["board-change" as const, false],
+    ["board-view" as const, false],
   ])(
-    "with permission %s should return false for private boards when user is not logged in",
-    async (permission) => {
+    "with permission %s should return %s when hasViewAccess is false",
+    async (permission, expectedResult) => {
       // Arrange
       const db = createDb();
+      const spy = vi.spyOn(authShared, "constructBoardPermissions");
+      spy.mockReturnValue({
+        hasFullAccess: false,
+        hasChangeAccess: false,
+        hasViewAccess: false,
+      });
+
       await db.insert(users).values({ id: defaultCreatorId });
       const boardId = createId();
       await db.insert(boards).values({
         id: boardId,
         name: "test",
-        isPublic: false,
         creatorId: defaultCreatorId,
       });
 
@@ -83,136 +166,23 @@ describe("canAccessBoardAsync should check access to board and return boolean", 
         );
 
       // Assert
-      await expectActToBe(act, false);
+      await expectActToBe(act, expectedResult);
     },
   );
 
-  test.each([
-    ["full-access" as const],
-    ["board-change" as const],
-    ["board-view" as const],
-  ])(
-    "with permission %s should return true for private boards when user is the creator",
-    async (permission) => {
-      // Arrange
-      const db = createDb();
-      await db.insert(users).values({ id: defaultCreatorId });
-      const boardId = createId();
-      await db.insert(boards).values({
-        id: boardId,
-        name: "test",
-        isPublic: false,
-        creatorId: defaultCreatorId,
-      });
-
-      // Act
-      const act = () =>
-        throwIfActionForbiddenAsync(
-          { db, session: defaultSession },
-          eq(boards.id, boardId),
-          permission,
-        );
-
-      // Assert
-      await expectActToBe(act, true);
-    },
-  );
-
-  test("with creator should return false for full-access permission", async () => {
+  test("should throw when board is not found", async () => {
     // Arrange
     const db = createDb();
-    const userId = createId();
-    await db.insert(users).values({ id: userId });
-    await db.insert(users).values({ id: defaultCreatorId });
-    const boardId = createId();
-    await db.insert(boards).values({
-      id: boardId,
-      name: "test",
-      isPublic: false,
-      creatorId: userId,
-    });
 
     // Act
     const act = () =>
       throwIfActionForbiddenAsync(
-        { db, session: defaultSession },
-        eq(boards.id, boardId),
+        { db, session: null },
+        eq(boards.id, createId()),
         "full-access",
       );
 
     // Assert
-    await expectActToBe(act, false);
+    await expect(act()).rejects.toThrow("Board not found");
   });
-
-  test.each([["board-view" as const], ["board-change" as const]])(
-    "with permission %s should return true when board-view is required",
-    async (permission) => {
-      // Arrange
-      const db = createDb();
-      const userId = createId();
-      await db.insert(users).values({ id: userId });
-      await db.insert(users).values({ id: defaultCreatorId });
-      const boardId = createId();
-      await db.insert(boards).values({
-        id: boardId,
-        name: "test",
-        isPublic: false,
-        creatorId: userId,
-      });
-      await db.insert(boardPermissions).values({
-        boardId,
-        userId: defaultCreatorId,
-        permission,
-      });
-
-      // Act
-      const act = () =>
-        throwIfActionForbiddenAsync(
-          { db, session: defaultSession },
-          eq(boards.id, boardId),
-          "board-view",
-        );
-
-      // Assert
-      await expectActToBe(act, true);
-    },
-  );
-
-  test.each([
-    ["board-view" as const, false],
-    ["board-change" as const, true],
-  ])(
-    "with permission %s permission should return %s when board-change is required",
-    async (permission, expectedResult) => {
-      // Arrange
-      const db = createDb();
-      const userId = createId();
-      await db.insert(users).values({ id: userId });
-      await db.insert(users).values({ id: defaultCreatorId });
-      const boardId = createId();
-      await db.insert(boards).values({
-        id: boardId,
-        name: "test",
-        isPublic: false,
-        creatorId: userId,
-      });
-      await db.insert(boardPermissions).values({
-        boardId,
-        userId: defaultCreatorId,
-        permission,
-      });
-
-      // Act
-      const act = () =>
-        throwIfActionForbiddenAsync(
-          { db, session: defaultSession },
-          eq(boards.id, boardId),
-
-          "board-change",
-        );
-
-      // Assert
-      await expectActToBe(act, expectedResult);
-    },
-  );
 });
