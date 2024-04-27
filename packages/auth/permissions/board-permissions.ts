@@ -16,7 +16,6 @@ export type BoardPermissionsProps = (
   isPublic: boolean;
 };
 
-// TODO: add unit tests
 export const constructBoardPermissions = (
   board: BoardPermissionsProps,
   session: Session | null,

@@ -82,8 +82,18 @@ describe("byName should return board by name", () => {
     },
   );
 
-  // TODO: Missing test case
-  it("should throw error when not present");
+  it("should throw error when not present", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+    await createFullBoardAsync(db, "default");
+
+    // Act
+    const act = async () => await caller.byName({ name: "nonExistentBoard" });
+
+    // Assert
+    await expect(act()).rejects.toThrowError("Board not found");
+  });
 });
 
 describe("savePartialSettings should save general settings", () => {
@@ -97,6 +107,15 @@ describe("savePartialSettings should save general settings", () => {
     const newMetaTitle = "newMetaTitle";
     const newLogoImageUrl = "http://logo.image/url.png";
     const newFaviconImageUrl = "http://favicon.image/url.png";
+    const newBackgroundImageAttachment = "scroll";
+    const newBackgroundImageSize = "cover";
+    const newBackgroundImageRepeat = "repeat";
+    const newBackgroundImageUrl = "http://background.image/url.png";
+    const newColumnCount = 2;
+    const newCustomCss = "body { background-color: blue; }";
+    const newOpacity = 0.8;
+    const newPrimaryColor = "#0000ff";
+    const newSecondaryColor = "#ff00ff";
 
     const { boardId } = await createFullBoardAsync(db, "default");
 
@@ -106,6 +125,15 @@ describe("savePartialSettings should save general settings", () => {
       metaTitle: newMetaTitle,
       logoImageUrl: newLogoImageUrl,
       faviconImageUrl: newFaviconImageUrl,
+      backgroundImageAttachment: newBackgroundImageAttachment,
+      backgroundImageRepeat: newBackgroundImageRepeat,
+      backgroundImageSize: newBackgroundImageSize,
+      backgroundImageUrl: newBackgroundImageUrl,
+      columnCount: newColumnCount,
+      customCss: newCustomCss,
+      opacity: newOpacity,
+      primaryColor: newPrimaryColor,
+      secondaryColor: newSecondaryColor,
       id: boardId,
     });
 
@@ -118,7 +146,18 @@ describe("savePartialSettings should save general settings", () => {
     expect(dbBoard?.metaTitle).toBe(newMetaTitle);
     expect(dbBoard?.logoImageUrl).toBe(newLogoImageUrl);
     expect(dbBoard?.faviconImageUrl).toBe(newFaviconImageUrl);
-    // TODO: Add more changes
+    expect(dbBoard?.backgroundImageAttachment).toBe(
+      newBackgroundImageAttachment,
+    );
+    expect(dbBoard?.backgroundImageRepeat).toBe(newBackgroundImageRepeat);
+    expect(dbBoard?.backgroundImageSize).toBe(newBackgroundImageSize);
+    expect(dbBoard?.backgroundImageUrl).toBe(newBackgroundImageUrl);
+    expect(dbBoard?.columnCount).toBe(newColumnCount);
+    expect(dbBoard?.customCss).toBe(newCustomCss);
+    expect(dbBoard?.opacity).toBe(newOpacity);
+    expect(dbBoard?.primaryColor).toBe(newPrimaryColor);
+    expect(dbBoard?.secondaryColor).toBe(newSecondaryColor);
+
     expect(spy).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
