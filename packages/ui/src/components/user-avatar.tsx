@@ -14,7 +14,7 @@ interface UserAvatarProps {
 export const UserAvatar = ({ user, size }: UserAvatarProps) => {
   const commonProps = {
     size,
-    color: "primaryColor", // TODO: change to custom color specific to the user?
+    color: "primaryColor",
   } satisfies Partial<AvatarProps>;
 
   if (!user?.name) return <Avatar {...commonProps} />;

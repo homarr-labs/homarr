@@ -26,7 +26,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
   const { mutateAsync } = clientApi.group.deleteGroup.useMutation();
   const { openConfirmModal } = useConfirmModal();
   const tDelete = useScopedI18n("group.action.delete");
-  const t = useI18n();
+  const tRoot = useI18n();
 
   const handleDeletion = useCallback(() => {
     openConfirmModal({
@@ -44,7 +44,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
               void revalidatePathAction("/manage/users/groups");
               router.push("/manage/users/groups");
               showSuccessNotification({
-                title: t("common.notification.delete.success"),
+                title: tRoot("common.notification.delete.success"),
                 message: tDelete("notification.success.message", {
                   name: group.name,
                 }),
@@ -52,7 +52,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
             },
             onError() {
               showErrorNotification({
-                title: t("common.notification.delete.error"),
+                title: tRoot("common.notification.delete.error"),
                 message: tDelete("notification.error.message", {
                   name: group.name,
                 }),
@@ -62,7 +62,15 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
         );
       },
     });
-  }, [tDelete, t, openConfirmModal, group.id, group.name, mutateAsync, router]);
+  }, [
+    tDelete,
+    tRoot,
+    openConfirmModal,
+    group.id,
+    group.name,
+    mutateAsync,
+    router,
+  ]);
 
   return (
     <Button variant="subtle" color="red" onClick={handleDeletion}>

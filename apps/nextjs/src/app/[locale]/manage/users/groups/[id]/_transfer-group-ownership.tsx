@@ -25,7 +25,7 @@ export const TransferGroupOwnership = ({
   group,
 }: TransferGroupOwnershipProps) => {
   const tTransfer = useScopedI18n("group.action.transfer");
-  const t = useI18n();
+  const tRoot = useI18n();
   const [innerOwnerId, setInnerOwnerId] = useState(group.ownerId);
   const { openModal } = useModalAction(UserSelectModal);
   const { openConfirmModal } = useConfirmModal();
@@ -34,7 +34,7 @@ export const TransferGroupOwnership = ({
   const handleTransfer = useCallback(() => {
     openModal(
       {
-        confirmLabel: t("common.action.continue"),
+        confirmLabel: tRoot("common.action.continue"),
         presentUserIds: innerOwnerId ? [innerOwnerId] : [],
         onSelect: ({ id, name }) => {
           openConfirmModal({
@@ -53,7 +53,7 @@ export const TransferGroupOwnership = ({
                   onSuccess() {
                     setInnerOwnerId(id);
                     showSuccessNotification({
-                      title: t("common.notification.transfer.success"),
+                      title: tRoot("common.notification.transfer.success"),
                       message: tTransfer("notification.success.message", {
                         group: group.name,
                         user: name,
@@ -62,7 +62,7 @@ export const TransferGroupOwnership = ({
                   },
                   onError() {
                     showErrorNotification({
-                      title: t("common.notification.transfer.error"),
+                      title: tRoot("common.notification.transfer.error"),
                       message: tTransfer("notification.error.message"),
                     });
                   },
@@ -83,7 +83,7 @@ export const TransferGroupOwnership = ({
     mutateAsync,
     openConfirmModal,
     openModal,
-    t,
+    tRoot,
     tTransfer,
   ]);
 
