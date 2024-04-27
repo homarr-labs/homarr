@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
+import { logger } from "@homarr/log";
 import { AppShellMain } from "@homarr/ui";
 import { GlobalItemServerDataRunner } from "@homarr/widgets";
 
@@ -29,8 +30,9 @@ export const createBoardLayout = <TParams extends Params>({
     params: TParams;
   }>) => {
     const initialBoard = await getInitialBoard(params).catch((error) => {
-      if (error instanceof TRPCError) {
-        return notFound();
+      if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+        logger.warn(error);
+        notFound();
       }
 
       throw error;

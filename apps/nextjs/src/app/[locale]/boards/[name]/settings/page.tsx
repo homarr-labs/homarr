@@ -50,7 +50,9 @@ const getBoardAndPermissions = async (params: Props["params"]) => {
 
     return { board, permissions };
   } catch (error) {
-    if (error instanceof TRPCError) {
+    // Ignore not found errors and redirect to 404
+    // error is already logged in _layout-creator.tsx
+    if (error instanceof TRPCError && error.code === "NOT_FOUND") {
       notFound();
     }
 
@@ -63,10 +65,7 @@ export default async function BoardSettingsPage({
   searchParams,
 }: Props) {
   const { board, permissions } = await getBoardAndPermissions(params);
-  const { hasFullAccess } = await getBoardPermissions({
-    creatorId: board.creatorId,
-    permissions: board.permissions.map(({ permission }) => permission),
-  });
+  const { hasFullAccess } = await getBoardPermissions(board);
   const t = await getScopedI18n("board.setting");
 
   return (

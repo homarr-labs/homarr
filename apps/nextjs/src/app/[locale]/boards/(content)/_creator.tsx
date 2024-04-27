@@ -45,7 +45,8 @@ export const createBoardContentPage = <
           },
         };
       } catch (error) {
-        if (error instanceof TRPCError) {
+        // Ignore not found errors and return empty metadata
+        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
           return {};
         }
 
