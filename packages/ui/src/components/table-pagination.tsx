@@ -76,7 +76,7 @@ const calculatePageFor = (
     case "last":
       return total;
     default:
-      logger;
+      logger.error(`Unknown pagination control type: ${type as string}`);
       return 1;
   }
 };
