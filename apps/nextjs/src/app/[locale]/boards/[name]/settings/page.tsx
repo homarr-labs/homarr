@@ -1,17 +1,15 @@
 import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
-import { TRPCError } from "@trpc/server";
-
-import { api } from "@homarr/api/server";
-import { capitalize } from "@homarr/common";
-import type { TranslationObject } from "@homarr/translation";
-import { getScopedI18n } from "@homarr/translation/server";
-import type { TablerIcon } from "@homarr/ui";
 import {
   AccordionControl,
   AccordionItem,
   AccordionPanel,
   Container,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import {
   IconAlertTriangle,
   IconBrush,
   IconFileTypeCss,
@@ -19,10 +17,14 @@ import {
   IconPhoto,
   IconSettings,
   IconUser,
-  Stack,
-  Text,
-  Title,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+import { TRPCError } from "@trpc/server";
+
+import { api } from "@homarr/api/server";
+import { capitalize } from "@homarr/common";
+import type { TranslationObject } from "@homarr/translation";
+import { getScopedI18n } from "@homarr/translation/server";
+import type { TablerIcon } from "@homarr/ui";
 
 import { getBoardPermissions } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";

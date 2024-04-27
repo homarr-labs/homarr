@@ -1,4 +1,4 @@
-import { IconBrowser } from "@homarr/ui";
+import { IconBrowser } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

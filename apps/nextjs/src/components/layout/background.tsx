@@ -1,6 +1,5 @@
 import { usePathname } from "next/navigation";
-
-import type { AppShellProps } from "@homarr/ui";
+import type { AppShellProps } from "@mantine/core";
 
 import { useOptionalBoard } from "~/app/[locale]/boards/(content)/_context";
 

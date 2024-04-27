@@ -1,4 +1,4 @@
-import { Stack, Title } from "@homarr/ui";
+import { Stack, Title } from "@mantine/core";
 
 export default function HomePage() {
   return (

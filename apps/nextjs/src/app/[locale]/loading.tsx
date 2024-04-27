@@ -1,4 +1,4 @@
-import { Center, Loader } from "@homarr/ui";
+import { Center, Loader } from "@mantine/core";
 
 export default function CommonLoading() {
   return (

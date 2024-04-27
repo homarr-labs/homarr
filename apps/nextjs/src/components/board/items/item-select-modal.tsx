@@ -1,7 +1,8 @@
+import { Button, Card, Center, Grid, Stack, Text } from "@mantine/core";
+
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Card, Center, Grid, Stack, Text } from "@homarr/ui";
 
 import { objectEntries } from "../../../../../../packages/common/src";
 import { widgetImports } from "../../../../../../packages/widgets/src";

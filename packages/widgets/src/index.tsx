@@ -1,9 +1,9 @@
 import type { ComponentType } from "react";
 import type { Loader } from "next/dynamic";
 import dynamic from "next/dynamic";
+import { Loader as UiLoader } from "@mantine/core";
 
 import type { WidgetKind } from "@homarr/definitions";
-import { Loader as UiLoader } from "@homarr/ui";
 
 import * as app from "./app";
 import * as clock from "./clock";

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
 
 import { useForm, zodResolver } from "@homarr/form";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack, Textarea, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 

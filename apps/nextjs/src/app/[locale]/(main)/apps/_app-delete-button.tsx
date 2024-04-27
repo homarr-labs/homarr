@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
+import { ActionIcon } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -10,7 +12,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { revalidatePathAction } from "../../../revalidatePathAction";
 

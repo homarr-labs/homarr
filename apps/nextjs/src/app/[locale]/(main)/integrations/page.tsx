@@ -1,11 +1,4 @@
 import Link from "next/link";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { objectEntries } from "@homarr/common";
-import type { IntegrationKind } from "@homarr/definitions";
-import { getIntegrationName } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
 import {
   AccordionControl,
   AccordionItem,
@@ -15,10 +8,7 @@ import {
   Anchor,
   Button,
   Container,
-  CountBadge,
   Group,
-  IconChevronDown,
-  IconPencil,
   Menu,
   MenuDropdown,
   MenuTarget,
@@ -31,7 +21,16 @@ import {
   TableTr,
   Text,
   Title,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconChevronDown, IconPencil } from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { objectEntries } from "@homarr/common";
+import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationName } from "@homarr/definitions";
+import { getScopedI18n } from "@homarr/translation/server";
+import { CountBadge } from "@homarr/ui";
 
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { IntegrationAvatar } from "./_integration-avatar";

@@ -1,21 +1,21 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-
-import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
 import {
   Avatar,
   Card,
-  IconUserCheck,
   PasswordInput,
   Stack,
   Stepper,
   Text,
   TextInput,
   Title,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconUserCheck } from "@tabler/icons-react";
+
+import { clientApi } from "@homarr/api/client";
+import { useForm, zodResolver } from "@homarr/form";
+import { useScopedI18n } from "@homarr/translation/client";
 import { validation, z } from "@homarr/validation";
 
 import { StepperNavigationComponent } from "./stepper-navigation.component";

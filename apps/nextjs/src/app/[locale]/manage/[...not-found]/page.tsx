@@ -1,5 +1,6 @@
+import { Center, Stack, Text, Title } from "@mantine/core";
+
 import { getScopedI18n } from "@homarr/translation/server";
-import { Center, Stack, Text, Title } from "@homarr/ui";
 
 export default async function NotFound() {
   const t = await getScopedI18n("management.notFound");

@@ -1,6 +1,6 @@
 "use client";
 
-import { TextInput } from "@homarr/ui";
+import { TextInput } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

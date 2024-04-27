@@ -2,12 +2,13 @@
 
 import { useCallback } from "react";
 import Link from "next/link";
+import { Menu } from "@mantine/core";
+import { IconSettings, IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import { IconSettings, IconTrash, Menu } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { useBoardPermissions } from "~/components/board/permissions/client";

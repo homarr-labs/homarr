@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 
 import { Spotlight } from "@homarr/spotlight";
-import { AppShellHeader, Group, UnstyledButton } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";

@@ -1,7 +1,6 @@
 import type { NotificationData } from "@mantine/notifications";
 import { notifications } from "@mantine/notifications";
-
-import { IconCheck, IconX } from "@homarr/ui";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 type CommonNotificationProps = Pick<NotificationData, "title" | "message">;
 

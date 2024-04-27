@@ -1,16 +1,12 @@
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
+import { Card, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import {
-  Card,
-  Flex,
-  Group,
   IconArrowDownRight,
   IconArrowUpRight,
   IconMapPin,
-  Stack,
-  Text,
-  Title,
-} from "@homarr/ui";
+} from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { WeatherIcon } from "./icon";

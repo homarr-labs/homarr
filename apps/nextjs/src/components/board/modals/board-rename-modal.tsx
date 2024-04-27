@@ -1,10 +1,11 @@
 "use client";
 
+import { Button, Group, Stack, TextInput } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, Stack, TextInput } from "@homarr/ui";
 import type { validation, z } from "@homarr/validation";
 
 interface InnerProps {

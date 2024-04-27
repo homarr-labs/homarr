@@ -2,23 +2,23 @@
 
 import { useEffect, useRef } from "react";
 import {
-  useDebouncedValue,
-  useDocumentTitle,
-  useFavicon,
-} from "@mantine/hooks";
-
-import { useForm } from "@homarr/form";
-import { useI18n } from "@homarr/translation/client";
-import {
   Button,
   Grid,
   Group,
-  IconAlertTriangle,
   Loader,
   Stack,
   TextInput,
   Tooltip,
-} from "@homarr/ui";
+} from "@mantine/core";
+import {
+  useDebouncedValue,
+  useDocumentTitle,
+  useFavicon,
+} from "@mantine/hooks";
+import { IconAlertTriangle } from "@tabler/icons-react";
+
+import { useForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 
 import type { Board } from "../../_types";
 import { useUpdateBoard } from "../../(content)/_client";

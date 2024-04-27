@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";
@@ -9,7 +10,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Button, PasswordInput, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
