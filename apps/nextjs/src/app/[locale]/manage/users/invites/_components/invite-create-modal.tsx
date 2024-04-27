@@ -1,4 +1,6 @@
 import React from "react";
+import { Button, Group, Stack, Text } from "@mantine/core";
+import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -6,7 +8,6 @@ import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button, DateTimePicker, Group, Stack, Text } from "@homarr/ui";
 
 import { InviteCopyModal } from "./invite-copy-modal";
 
@@ -22,7 +23,7 @@ export const InviteCreateModal = createModal<void>(({ actions }) => {
   const { openModal } = useModalAction(InviteCopyModal);
 
   const utils = clientApi.useUtils();
-  const { mutate, isPending } = clientApi.invite.create.useMutation();
+  const { mutate, isPending } = clientApi.invite.createInvite.useMutation();
   const minDate = dayjs().add(1, "hour").toDate();
   const maxDate = dayjs().add(6, "months").toDate();
 
@@ -35,7 +36,7 @@ export const InviteCreateModal = createModal<void>(({ actions }) => {
   const handleSubmit = (values: FormType) => {
     mutate(values, {
       onSuccess: (result) => {
-        void utils.invite.all.invalidate();
+        void utils.invite.getAll.invalidate();
         actions.closeModal();
         openModal(result);
       },

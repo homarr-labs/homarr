@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { ActionIcon, Button, Title } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
@@ -10,21 +12,20 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import { ActionIcon, Button, IconTrash, Title } from "@homarr/ui";
 
 import { InviteCreateModal } from "./invite-create-modal";
 
 dayjs.extend(relativeTime);
 
 interface InviteListComponentProps {
-  initialInvites: RouterOutputs["invite"]["all"];
+  initialInvites: RouterOutputs["invite"]["getAll"];
 }
 
 export const InviteListComponent = ({
   initialInvites,
 }: InviteListComponentProps) => {
   const t = useScopedI18n("management.page.user.invite");
-  const { data, isLoading } = clientApi.invite.all.useQuery(undefined, {
+  const { data, isLoading } = clientApi.invite.getAll.useQuery(undefined, {
     initialData: initialInvites,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -32,7 +33,7 @@ export const InviteListComponent = ({
   });
 
   const columns = useMemo<
-    MRT_ColumnDef<RouterOutputs["invite"]["all"][number]>[]
+    MRT_ColumnDef<RouterOutputs["invite"]["getAll"][number]>[]
   >(
     () => [
       {
@@ -102,10 +103,10 @@ const RenderTopToolbarCustomActions = () => {
 const RenderRowActions = ({
   row,
 }: {
-  row: MRT_Row<RouterOutputs["invite"]["all"][number]>;
+  row: MRT_Row<RouterOutputs["invite"]["getAll"][number]>;
 }) => {
   const t = useScopedI18n("management.page.user.invite");
-  const { mutate, isPending } = clientApi.invite.delete.useMutation();
+  const { mutate, isPending } = clientApi.invite.deleteInvite.useMutation();
   const utils = clientApi.useUtils();
   const { openConfirmModal } = useConfirmModal();
   const handleDelete = useCallback(() => {
@@ -114,7 +115,7 @@ const RenderRowActions = ({
       children: t("action.delete.description"),
       onConfirm: () => {
         mutate({ id: row.original.id });
-        void utils.invite.all.invalidate();
+        void utils.invite.getAll.invalidate();
       },
     });
   }, [openConfirmModal, row.original.id, mutate, utils, t]);

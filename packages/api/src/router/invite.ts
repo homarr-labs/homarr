@@ -8,7 +8,7 @@ import { z } from "@homarr/validation";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const inviteRouter = createTRPCRouter({
-  all: protectedProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     const dbInvites = await ctx.db.query.invites.findMany({
       orderBy: asc(invites.expirationDate),
       columns: {
@@ -25,7 +25,7 @@ export const inviteRouter = createTRPCRouter({
     });
     return dbInvites;
   }),
-  create: protectedProcedure
+  createInvite: protectedProcedure
     .input(
       z.object({
         expirationDate: z.date(),
@@ -47,7 +47,7 @@ export const inviteRouter = createTRPCRouter({
         token,
       };
     }),
-  delete: protectedProcedure
+  deleteInvite: protectedProcedure
     .input(
       z.object({
         id: z.string(),

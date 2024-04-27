@@ -44,7 +44,7 @@ describe("all should return all existing invites without sensitive informations"
     });
 
     // Act
-    const result = await caller.all();
+    const result = await caller.getAll();
 
     // Assert
     expect(result.length).toBe(1);
@@ -84,7 +84,7 @@ describe("all should return all existing invites without sensitive informations"
     });
 
     // Act
-    const result = await caller.all();
+    const result = await caller.getAll();
 
     // Assert
     expect(result.length).toBe(2);
@@ -107,7 +107,7 @@ describe("create should create a new invite expiring on the specified date with 
     const expirationDate = new Date(2024, 5, 1); // TODO: add mock date
 
     // Act
-    const result = await caller.create({
+    const result = await caller.createInvite({
       expirationDate,
     });
 
@@ -154,7 +154,7 @@ describe("delete should remove invite by id", () => {
     ]);
 
     // Act
-    await caller.delete({ id: inviteId });
+    await caller.deleteInvite({ id: inviteId });
 
     // Assert
     const dbInvites = await db.query.invites.findMany();
@@ -182,7 +182,7 @@ describe("delete should remove invite by id", () => {
     });
 
     // Act
-    const act = async () => await caller.delete({ id: createId() });
+    const act = async () => await caller.deleteInvite({ id: createId() });
 
     // Assert
     await expect(act()).rejects.toThrow("not found");
