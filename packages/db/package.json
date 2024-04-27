@@ -28,15 +28,15 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "better-sqlite3": "^9.5.0",
-    "drizzle-orm": "^0.30.8",
-    "mysql2": "3.9.6",
+    "drizzle-orm": "^0.30.9",
+    "mysql2": "3.9.7",
     "drizzle-kit": "^0.20.17"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/better-sqlite3": "7.6.9",
+    "@types/better-sqlite3": "7.6.10",
     "dotenv-cli": "^7.4.1",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",

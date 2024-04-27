@@ -57,9 +57,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const router = useRouter();
   const form = useForm<FormType>({
     initialValues: initialFormValues,
-    validate: zodResolver(
-      validation.integration.update.omit({ id: true, kind: true }),
-    ),
+    validate: zodResolver(validation.integration.update.omit({ id: true })),
     onValuesChange,
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
