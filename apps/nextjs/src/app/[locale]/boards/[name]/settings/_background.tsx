@@ -10,10 +10,8 @@ import {
 import { useForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import {
-  SelectItemWithDescriptionBadge,
-  SelectWithDescriptionBadge,
-} from "@homarr/ui";
+import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
+import { SelectWithDescriptionBadge } from "@homarr/ui";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
