@@ -6,8 +6,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
 import { Pagination } from "@mantine/core";
 
-import { logger } from "@homarr/log";
-
 interface TablePaginationProps {
   total: number;
 }
@@ -76,7 +74,7 @@ const calculatePageFor = (
     case "last":
       return total;
     default:
-      logger.error(`Unknown pagination control type: ${type as string}`);
+      console.error(`Unknown pagination control type: ${type as string}`);
       return 1;
   }
 };
