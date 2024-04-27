@@ -5,7 +5,7 @@
     "node": ">=20.12.2"
   },
   "type": "module",
-  "packageManager": "pnpm@9.0.4",
+  "packageManager": "pnpm@9.0.6",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
@@ -28,21 +28,21 @@
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@testing-library/react": "^15.0.5",
-    "@turbo/gen": "^1.13.2",
+    "@turbo/gen": "^1.13.3",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.5.2",
     "@vitest/ui": "^1.5.2",
     "cross-env": "^7.0.3",
     "jsdom": "^24.0.0",
     "prettier": "^3.2.5",
-    "turbo": "^1.13.2",
+    "turbo": "^1.13.3",
     "typescript": "^5.4.5",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.5.2"
   },
   "dependencies": {
-    "@mantine/core": "^7.8.0",
-    "@mantine/dates": "^7.8.0",
+    "@mantine/core": "^7.8.1",
+    "@mantine/dates": "^7.8.1",
     "@tabler/icons-react": "^3.2.0",
     "mantine-react-table": "2.0.0-beta.1"
   },
