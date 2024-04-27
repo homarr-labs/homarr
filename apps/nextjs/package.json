@@ -48,7 +48,7 @@
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.5",
     "jotai": "^2.8.0",
-    "next": "^14.2.2",
+    "next": "^14.2.3",
     "postcss-preset-mantine": "^1.15.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
