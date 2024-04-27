@@ -1,12 +1,8 @@
-import {
-  Avatar,
-  AvatarGroup,
-  MantineSize,
-  Tooltip,
-  TooltipGroup,
-} from "@mantine/core";
+import type { MantineSize } from "@mantine/core";
+import { Avatar, AvatarGroup, Tooltip, TooltipGroup } from "@mantine/core";
 
-import { UserAvatar, UserProps } from "./user-avatar";
+import type { UserProps } from "./user-avatar";
+import { UserAvatar } from "./user-avatar";
 
 interface UserAvatarGroupProps {
   size: MantineSize;

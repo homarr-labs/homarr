@@ -1,4 +1,5 @@
-import { Avatar, type AvatarProps, type MantineSize } from "@mantine/core";
+import { Avatar } from "@mantine/core";
+import type { AvatarProps, MantineSize } from "@mantine/core";
 
 export interface UserProps {
   name: string | null;
