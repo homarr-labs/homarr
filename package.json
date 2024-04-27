@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@turbo/gen": "^1.13.3",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.5.2",
