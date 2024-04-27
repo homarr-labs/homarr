@@ -16,7 +16,7 @@ import { IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
 
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { getPackageAttributes } from "~/versions/package-reader";
+import { getPackageAttributesAsync } from "~/versions/package-reader";
 import logo from "../../../../../public/logo/logo.png";
 import classes from "./accordion.module.css";
 
@@ -31,7 +31,7 @@ export async function generateMetadata() {
 
 export default async function AboutPage() {
   const t = await getScopedI18n("management.page.about");
-  const attributes = getPackageAttributes();
+  const attributes = await getPackageAttributesAsync();
   return (
     <div>
       <Center w="100%">
@@ -75,15 +75,17 @@ export default async function AboutPage() {
           </AccordionControl>
           <AccordionPanel>
             <List>
-              {Object.entries(attributes.dependencies).map(([key, value]) => (
-                <ListItem key={key}>
-                  {value.includes("workspace:") ? (
-                    <Text>{key}</Text>
-                  ) : (
-                    <a href={`https://www.npmjs.com/package/${key}`}>{key}</a>
-                  )}
-                </ListItem>
-              ))}
+              {Object.entries(attributes.dependencies)
+                .sort(([key1], [key2]) => key1.localeCompare(key2))
+                .map(([key, value]) => (
+                  <ListItem key={key}>
+                    {value.includes("workspace:") ? (
+                      <Text>{key}</Text>
+                    ) : (
+                      <a href={`https://www.npmjs.com/package/${key}`}>{key}</a>
+                    )}
+                  </ListItem>
+                ))}
             </List>
           </AccordionPanel>
         </AccordionItem>
