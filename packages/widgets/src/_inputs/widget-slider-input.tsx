@@ -1,6 +1,6 @@
 "use client";
 
-import { InputWrapper, Slider } from "@homarr/ui";
+import { InputWrapper, Slider } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

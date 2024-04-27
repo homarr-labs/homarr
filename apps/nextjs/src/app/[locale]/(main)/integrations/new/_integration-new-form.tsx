@@ -3,6 +3,14 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  Button,
+  Fieldset,
+  Group,
+  SegmentedControl,
+  Stack,
+  TextInput,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type {
@@ -17,14 +25,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import {
-  Button,
-  Fieldset,
-  Group,
-  SegmentedControl,
-  Stack,
-  TextInput,
-} from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 

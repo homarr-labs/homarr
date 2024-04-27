@@ -1,6 +1,17 @@
 "use client";
 
 import { useCallback } from "react";
+import { Group, Menu } from "@mantine/core";
+import {
+  IconBox,
+  IconBoxAlignTop,
+  IconChevronDown,
+  IconPackageImport,
+  IconPencil,
+  IconPencilOff,
+  IconPlus,
+  IconSettings,
+} from "@tabler/icons-react";
 import { useAtom, useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
@@ -10,18 +21,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import {
-  Group,
-  IconBox,
-  IconBoxAlignTop,
-  IconChevronDown,
-  IconPackageImport,
-  IconPencil,
-  IconPencilOff,
-  IconPlus,
-  IconSettings,
-  Menu,
-} from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { editModeAtom } from "~/components/board/editMode";

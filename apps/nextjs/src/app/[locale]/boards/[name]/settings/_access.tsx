@@ -1,24 +1,11 @@
 "use client";
 
 import { useCallback, useState } from "react";
-
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
-import type { BoardPermission } from "@homarr/definitions";
-import { boardPermissions } from "@homarr/definitions";
-import { useForm } from "@homarr/form";
-import { createModal, useModalAction } from "@homarr/modals";
-import { useI18n } from "@homarr/translation/client";
-import type { SelectProps, TablerIcon } from "@homarr/ui";
+import type { SelectProps } from "@mantine/core";
 import {
   Button,
   Flex,
   Group,
-  IconCheck,
-  IconEye,
-  IconPencil,
-  IconPlus,
-  IconSettings,
   Loader,
   Select,
   Stack,
@@ -29,7 +16,23 @@ import {
   TableThead,
   TableTr,
   Text,
-} from "@homarr/ui";
+} from "@mantine/core";
+import {
+  IconCheck,
+  IconEye,
+  IconPencil,
+  IconPlus,
+  IconSettings,
+} from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import type { BoardPermission } from "@homarr/definitions";
+import { boardPermissions } from "@homarr/definitions";
+import { useForm } from "@homarr/form";
+import { createModal, useModalAction } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import type { Board } from "../../_types";
 

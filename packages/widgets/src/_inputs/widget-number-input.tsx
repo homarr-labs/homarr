@@ -1,6 +1,6 @@
 "use client";
 
-import { NumberInput } from "@homarr/ui";
+import { NumberInput } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

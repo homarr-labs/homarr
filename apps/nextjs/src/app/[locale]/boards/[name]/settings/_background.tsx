@@ -1,5 +1,7 @@
 "use client";
 
+import { Button, Grid, Group, Stack, TextInput } from "@mantine/core";
+
 import {
   backgroundImageAttachments,
   backgroundImageRepeats,
@@ -8,14 +10,9 @@ import {
 import { useForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import {
-  Button,
-  Grid,
-  Group,
+  SelectItemWithDescriptionBadge,
   SelectWithDescriptionBadge,
-  Stack,
-  TextInput,
 } from "@homarr/ui";
 
 import type { Board } from "../../_types";

@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ButtonProps, GroupProps } from "@mantine/core";
+import { Box, Button, Group } from "@mantine/core";
 
 import type {
   stringOrTranslation,
@@ -7,8 +9,6 @@ import type {
 } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { ButtonProps, GroupProps } from "@homarr/ui";
-import { Box, Button, Group } from "@homarr/ui";
 
 import { createModal } from "./creator";
 

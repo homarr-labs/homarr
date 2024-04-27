@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -16,7 +17,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Fieldset, Group, Stack, TextInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
@@ -57,9 +57,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const router = useRouter();
   const form = useForm<FormType>({
     initialValues: initialFormValues,
-    validate: zodResolver(
-      validation.integration.update.omit({ id: true, kind: true }),
-    ),
+    validate: zodResolver(validation.integration.update.omit({ id: true })),
     onValuesChange,
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();

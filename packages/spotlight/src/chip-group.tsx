@@ -1,5 +1,6 @@
+import { Chip } from "@mantine/core";
+
 import { useScopedI18n } from "@homarr/translation/client";
-import { Chip } from "@homarr/ui";
 
 import {
   selectNextAction,

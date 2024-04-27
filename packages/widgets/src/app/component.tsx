@@ -1,20 +1,20 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-
-import { clientApi } from "@homarr/api/client";
-import { useRegisterSpotlightActions } from "@homarr/spotlight";
-import { useScopedI18n } from "@homarr/translation/client";
 import {
   Center,
   Flex,
-  IconDeviceDesktopX,
   Loader,
   Stack,
   Text,
   Tooltip,
   UnstyledButton,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconDeviceDesktopX } from "@tabler/icons-react";
+
+import { clientApi } from "@homarr/api/client";
+import { useRegisterSpotlightActions } from "@homarr/spotlight";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";

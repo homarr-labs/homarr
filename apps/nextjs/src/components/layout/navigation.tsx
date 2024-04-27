@@ -1,5 +1,6 @@
+import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
+
 import type { TablerIcon } from "@homarr/ui";
-import { AppShellNavbar, AppShellSection, ScrollArea } from "@homarr/ui";
 
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";

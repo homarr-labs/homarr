@@ -1,4 +1,4 @@
-import { IconDeviceCctv } from "@homarr/ui";
+import { IconDeviceCctv } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

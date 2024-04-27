@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
+import { Card, Center, Stack, Text, Title } from "@mantine/core";
 
 import { db } from "@homarr/db";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { InitUserForm } from "./_init-user-form";

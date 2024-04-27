@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
+import type { ModalProps } from "@mantine/core";
 
 import type { stringOrTranslation } from "@homarr/translation";
-import type { ModalProps } from "@homarr/ui";
 
 export type ModalComponent<TInnerProps> = (props: {
   actions: { closeModal: () => void };

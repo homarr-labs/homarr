@@ -3,8 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import { NavLink } from "@homarr/ui";
+import { NavLink } from "@mantine/core";
 
 export const CommonNavLink = (props: ClientNavigationLink) =>
   "href" in props ? (

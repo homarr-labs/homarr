@@ -1,7 +1,6 @@
 import Image from "next/image";
-
-import type { TitleOrder } from "@homarr/ui";
-import { Group, Title } from "@homarr/ui";
+import type { TitleOrder } from "@mantine/core";
+import { Group, Title } from "@mantine/core";
 
 interface LogoProps {
   size: number;

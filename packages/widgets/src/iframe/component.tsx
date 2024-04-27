@@ -1,6 +1,8 @@
+import { Box, Stack, Text, Title } from "@mantine/core";
+import { IconBrowserOff } from "@tabler/icons-react";
+
 import { objectEntries } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
-import { Box, IconBrowserOff, Stack, Text, Title } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";

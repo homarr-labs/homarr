@@ -1,6 +1,7 @@
+import { Container, Stack, Title } from "@mantine/core";
+
 import { api } from "@homarr/api/server";
 import { getI18n } from "@homarr/translation/server";
-import { Container, Stack, Title } from "@homarr/ui";
 
 import { AppEditForm } from "./_app-edit-form";
 

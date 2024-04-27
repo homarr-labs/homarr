@@ -34,7 +34,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/spotlight": "^7.8.0",
+    "@mantine/spotlight": "^7.8.1",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0"
   }

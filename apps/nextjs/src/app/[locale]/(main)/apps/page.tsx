@@ -1,8 +1,4 @@
 import Link from "next/link";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { getI18n } from "@homarr/translation/server";
 import {
   ActionIcon,
   ActionIconGroup,
@@ -12,12 +8,15 @@ import {
   Card,
   Container,
   Group,
-  IconApps,
-  IconPencil,
   Stack,
   Text,
   Title,
-} from "@homarr/ui";
+} from "@mantine/core";
+import { IconApps, IconPencil } from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { AppDeleteButton } from "./_app-delete-button";
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { ActionIcon } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
@@ -9,7 +11,6 @@ import {
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { ActionIcon, IconTrash } from "@homarr/ui";
 
 import { revalidatePathAction } from "../../../revalidatePathAction";
 

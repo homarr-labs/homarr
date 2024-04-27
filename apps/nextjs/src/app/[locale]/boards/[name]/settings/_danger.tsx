@@ -2,11 +2,11 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Button, Divider, Group, Stack, Text } from "@homarr/ui";
 
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import { useRequiredBoard } from "../../_context";

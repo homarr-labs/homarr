@@ -1,9 +1,10 @@
 "use client";
 
+import { Button, Group, InputWrapper, Slider, Stack } from "@mantine/core";
+
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Group, InputWrapper, Slider, Stack } from "@homarr/ui";
 
 interface InnerProps {
   dimensions: Dimensions;

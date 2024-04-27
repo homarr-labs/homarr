@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
+import { Burger } from "@mantine/core";
 import { atom, useAtom } from "jotai";
-
-import { Burger } from "@homarr/ui";
 
 export const navigationCollapsedAtom = atom(true);
 
