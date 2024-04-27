@@ -1,9 +1,9 @@
 import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
+import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
 
 import { logger } from "@homarr/log";
-import { AppShellMain } from "@homarr/ui";
 import { GlobalItemServerDataRunner } from "@homarr/widgets";
 
 import { MainHeader } from "~/components/layout/header";
