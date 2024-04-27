@@ -13,8 +13,9 @@ import {
   Title,
 } from "@mantine/core";
 import { IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
+import { setStaticParamsLocale } from "next-international/server";
 
-import { getScopedI18n } from "@homarr/translation/server";
+import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import logo from "../../../../../public/logo/logo.png";
@@ -29,7 +30,14 @@ export async function generateMetadata() {
   };
 }
 
-export default async function AboutPage() {
+interface PageProps {
+  params: {
+    locale: string;
+  };
+}
+
+export default async function AboutPage({ params: { locale } }: PageProps) {
+  setStaticParamsLocale(locale);
   const t = await getScopedI18n("management.page.about");
   const attributes = await getPackageAttributesAsync();
   return (
@@ -93,3 +101,9 @@ export default async function AboutPage() {
     </div>
   );
 }
+
+export function generateStaticParams() {
+  return getStaticParams();
+}
+
+export const dynamic = "force-static";
