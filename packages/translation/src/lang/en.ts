@@ -13,6 +13,9 @@ export default {
       },
     },
     field: {
+      email: {
+        label: "E-Mail",
+      },
       username: {
         label: "Username",
       },
@@ -866,14 +869,6 @@ export default {
           section: {
             profile: {
               title: "Profile",
-              form: {
-                username: {
-                  label: "Username",
-                },
-                email: {
-                  label: "E-Mail",
-                },
-              },
             },
             preferences: {
               title: "Preferences",
@@ -882,11 +877,6 @@ export default {
               title: "Security",
               changePassword: {
                 title: "Change password",
-                form: {
-                  password: {
-                    label: "Password",
-                  },
-                },
                 message: {
                   passwordUpdated: "Updated password",
                 },
@@ -911,25 +901,9 @@ export default {
           step: {
             personalInformation: {
               label: "Personal information",
-              field: {
-                username: {
-                  label: "Username",
-                },
-                email: {
-                  label: "E-Mail",
-                },
-              },
             },
             security: {
               label: "Security",
-              field: {
-                password: {
-                  label: "Password",
-                },
-                confirmPassword: {
-                  label: "Confirm password",
-                },
-              },
             },
             permissions: {
               label: "Permissions",
@@ -942,9 +916,45 @@ export default {
               title: "User created",
             },
           },
-          buttons: {
+          action: {
             createAnother: "Create another user",
-            return: "Return to the user list",
+            back: "Return to the user list",
+          },
+        },
+        invite: {
+          title: "Manager user invites",
+          action: {
+            new: {
+              title: "New invite",
+              description:
+                "After the expiration, an invite will no longer be valid and the recipient of the invite won't be able to create an account.",
+            },
+            copy: {
+              title: "Copy invite",
+              description:
+                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore</b>. If you do no longer wish to invite said person, you can delete this invitation any time.",
+              link: "Invitation link",
+              button: "Copy & close",
+            },
+            delete: {
+              title: "Delete invite",
+              description:
+                "Are you sure, that you want to delete this invitation? Users with this link will no longer be able to create an account using that link.",
+            },
+          },
+          field: {
+            id: {
+              label: "ID",
+            },
+            creator: {
+              label: "Creator",
+            },
+            expirationDate: {
+              label: "Expiration date",
+            },
+            token: {
+              label: "Token",
+            },
           },
         },
       },
