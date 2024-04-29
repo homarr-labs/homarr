@@ -52,6 +52,27 @@ CREATE TABLE `board` (
 	FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
+CREATE TABLE `groupMember` (
+	`groupId` text NOT NULL,
+	`userId` text NOT NULL,
+	PRIMARY KEY(`groupId`, `userId`),
+	FOREIGN KEY (`groupId`) REFERENCES `group`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `groupPermission` (
+	`groupId` text NOT NULL,
+	`permission` text NOT NULL,
+	FOREIGN KEY (`groupId`) REFERENCES `group`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `group` (
+	`id` text PRIMARY KEY NOT NULL,
+	`name` text NOT NULL,
+	`owner_id` text,
+	FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE set null
+);
+--> statement-breakpoint
 CREATE TABLE `integration_item` (
 	`item_id` text NOT NULL,
 	`integration_id` text NOT NULL,
@@ -74,6 +95,14 @@ CREATE TABLE `integration` (
 	`name` text NOT NULL,
 	`url` text NOT NULL,
 	`kind` text NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `invite` (
+	`id` text PRIMARY KEY NOT NULL,
+	`token` text NOT NULL,
+	`expiration_date` integer NOT NULL,
+	`creator_id` text NOT NULL,
+	FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `item` (
@@ -126,4 +155,5 @@ CREATE UNIQUE INDEX `board_name_unique` ON `board` (`name`);--> statement-breakp
 CREATE INDEX `integration_secret__kind_idx` ON `integrationSecret` (`kind`);--> statement-breakpoint
 CREATE INDEX `integration_secret__updated_at_idx` ON `integrationSecret` (`updated_at`);--> statement-breakpoint
 CREATE INDEX `integration__kind_idx` ON `integration` (`kind`);--> statement-breakpoint
+CREATE UNIQUE INDEX `invite_token_unique` ON `invite` (`token`);--> statement-breakpoint
 CREATE INDEX `user_id_idx` ON `session` (`userId`);

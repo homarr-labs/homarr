@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ButtonProps, GroupProps } from "@mantine/core";
 import { Box, Button, Group } from "@mantine/core";
@@ -33,6 +33,7 @@ export interface ConfirmModalProps {
 
 export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(
   ({ actions, innerProps }) => {
+    const [loading, setLoading] = useState(false);
     const t = useI18n();
     const {
       children,
@@ -65,10 +66,12 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(
 
     const handleConfirm = useCallback(
       async (event: React.MouseEvent<HTMLButtonElement>) => {
+        setLoading(true);
         typeof confirmProps?.onClick === "function" &&
           confirmProps?.onClick(event);
         typeof onConfirm === "function" && (await onConfirm());
         closeOnConfirm && actions.closeModal();
+        setLoading(false);
       },
       [confirmProps?.onClick, onConfirm, actions.closeModal],
     );
@@ -82,7 +85,12 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(
             {cancelProps?.children || translateIfNecessary(t, cancelLabel)}
           </Button>
 
-          <Button {...confirmProps} onClick={handleConfirm} color="red.9">
+          <Button
+            {...confirmProps}
+            onClick={handleConfirm}
+            color="red.9"
+            loading={loading}
+          >
             {confirmProps?.children || translateIfNecessary(t, confirmLabel)}
           </Button>
         </Group>

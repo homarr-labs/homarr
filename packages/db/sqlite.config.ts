@@ -7,5 +7,5 @@ export default {
   schema: "./schema",
   driver: "better-sqlite",
   dbCredentials: { url: process.env.DB_URL! },
-  out: "./migrations",
+  out: "./migrations/sqlite",
 } satisfies Config;

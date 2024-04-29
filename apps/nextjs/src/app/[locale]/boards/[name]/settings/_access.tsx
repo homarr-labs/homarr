@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import type { SelectProps } from "@mantine/core";
 import {
   Button,
   Flex,
   Group,
+  Loader,
   Select,
   Stack,
   Table,
@@ -241,7 +242,8 @@ interface FormType {
 
 interface InnerProps {
   presentUserIds: string[];
-  onSelect: (props: { id: string; name: string }) => void;
+  onSelect: (props: { id: string; name: string }) => void | Promise<void>;
+  confirmLabel?: string;
 }
 
 interface UserSelectFormType {
@@ -251,40 +253,45 @@ interface UserSelectFormType {
 export const UserSelectModal = createModal<InnerProps>(
   ({ actions, innerProps }) => {
     const t = useI18n();
-    const { data: users } = clientApi.user.selectable.useQuery();
+    const { data: users, isPending } = clientApi.user.selectable.useQuery();
+    const [loading, setLoading] = useState(false);
     const form = useForm<UserSelectFormType>();
-    const handleSubmit = (values: UserSelectFormType) => {
+    const handleSubmit = async (values: UserSelectFormType) => {
       const currentUser = users?.find((user) => user.id === values.userId);
       if (!currentUser) return;
-      innerProps.onSelect({
+      setLoading(true);
+      await innerProps.onSelect({
         id: currentUser.id,
         name: currentUser.name ?? "",
       });
+
+      setLoading(false);
       actions.closeModal();
     };
 
+    const confirmLabel = innerProps.confirmLabel ?? t("common.action.add");
+
     return (
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
         <Stack>
           <Select
             {...form.getInputProps("userId")}
-            label={t(
-              "board.setting.section.access.permission.userSelect.label",
-            )}
+            label={t("user.action.select.label")}
             searchable
-            nothingFoundMessage={t(
-              "board.setting.section.access.permission.userSelect.notFound",
-            )}
+            leftSection={isPending ? <Loader size="xs" /> : undefined}
+            nothingFoundMessage={t("user.action.select.notFound")}
             limit={5}
             data={users
               ?.filter((user) => !innerProps.presentUserIds.includes(user.id))
               .map((user) => ({ value: user.id, label: user.name ?? "" }))}
           />
           <Group justify="end">
-            <Button onClick={actions.closeModal}>
+            <Button variant="default" onClick={actions.closeModal}>
               {t("common.action.cancel")}
             </Button>
-            <Button type="submit">{t("common.action.add")}</Button>
+            <Button type="submit" loading={loading}>
+              {confirmLabel}
+            </Button>
           </Group>
         </Stack>
       </form>

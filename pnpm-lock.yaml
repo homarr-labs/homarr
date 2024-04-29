@@ -724,6 +724,10 @@ importers:
         version: 5.4.5
 
   packages/ui:
+    dependencies:
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0

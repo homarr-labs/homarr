@@ -29,6 +29,150 @@ export default {
     action: {
       login: "Login",
       create: "Create user",
+      select: {
+        label: "Select user",
+        notFound: "No user found",
+      },
+      transfer: {
+        label: "Select new owner",
+      },
+    },
+  },
+  group: {
+    title: "Groups",
+    name: "Group",
+    search: "Find a group",
+    field: {
+      name: "Name",
+      members: "Members",
+    },
+    permission: {
+      admin: {
+        title: "Admin",
+        item: {
+          admin: {
+            label: "Administrator",
+            description:
+              "Members with this permission have full access to all features and settings",
+          },
+        },
+      },
+      board: {
+        title: "Boards",
+        item: {
+          create: {
+            label: "Create boards",
+            description: "Allow members to create boards",
+          },
+          "view-all": {
+            label: "View all boards",
+            description: "Allow members to view all boards",
+          },
+          "modify-all": {
+            label: "Modify all boards",
+            description:
+              "Allow members to modify all boards (Does not include access control and danger zone)",
+          },
+          "full-access": {
+            label: "Full board access",
+            description:
+              "Allow members to view, modify, and delete all boards (Including access control and danger zone)",
+          },
+        },
+      },
+      integration: {
+        title: "Integrations",
+        item: {
+          create: {
+            label: "Create integrations",
+            description: "Allow members to create integrations",
+          },
+          "use-all": {
+            label: "Use all integrations",
+            description:
+              "Allows members to add any integrations to their boards",
+          },
+          "interact-all": {
+            label: "Interact with any integration",
+            description: "Allow members to interact with any integration",
+          },
+          "full-access": {
+            label: "Full integration access",
+            description:
+              "Allow members to manage, use and interact with any integration",
+          },
+        },
+      },
+    },
+    action: {
+      create: {
+        label: "New group",
+        notification: {
+          success: {
+            message: "The app was successfully created",
+          },
+          error: {
+            message: "The app could not be created",
+          },
+        },
+      },
+      transfer: {
+        label: "Transfer ownership",
+        description: "Transfer ownership of this group to another user.",
+        confirm:
+          "Are you sure you want to transfer ownership for the group {name} to {username}?",
+        notification: {
+          success: {
+            message: "Transfered group {group} successfully to {user}",
+          },
+          error: {
+            message: "Unable to transfer ownership",
+          },
+        },
+      },
+      addMember: {
+        label: "Add member",
+      },
+      removeMember: {
+        label: "Remove member",
+        confirm: "Are you sure you want to remove {user} from this group?",
+      },
+      delete: {
+        label: "Delete group",
+        description:
+          "Once you delete a group, there is no going back. Please be certain.",
+        confirm: "Are you sure you want to delete the group {name}?",
+        notification: {
+          success: {
+            message: "Deleted group {name} successfully",
+          },
+          error: {
+            message: "Unable to delete group {name}",
+          },
+        },
+      },
+      changePermissions: {
+        notification: {
+          success: {
+            title: "Permissions saved",
+            message: "Permissions have been saved successfully",
+          },
+          error: {
+            title: "Permissions not saved",
+            message: "Permissions have not been saved",
+          },
+        },
+      },
+      update: {
+        notification: {
+          success: {
+            message: "The group {name} was saved successfully",
+          },
+          error: {
+            message: "Unable to save group {name}",
+          },
+        },
+      },
     },
   },
   app: {
@@ -204,10 +348,30 @@ export default {
       save: "Save",
       saveChanges: "Save changes",
       cancel: "Cancel",
+      discard: "Discard",
       confirm: "Confirm",
+      continue: "Continue",
       previous: "Previous",
       next: "Next",
       checkoutDocs: "Check out the documentation",
+    },
+    notification: {
+      create: {
+        success: "Creation successful",
+        error: "Creation failed",
+      },
+      delete: {
+        success: "Deletion successful",
+        error: "Deletion failed",
+      },
+      update: {
+        success: "Changes applied successfully",
+        error: "Unable to apply changes",
+      },
+      transfer: {
+        success: "Transfer successful",
+        error: "Transfer failed",
+      },
     },
     multiSelect: {
       placeholder: "Pick one or more values",
@@ -708,8 +872,6 @@ export default {
           permission: {
             userSelect: {
               title: "Add user permission",
-              label: "Select user",
-              notFound: "No user found",
             },
             field: {
               user: {
@@ -803,6 +965,7 @@ export default {
           items: {
             manage: "Manage",
             invites: "Invites",
+            groups: "Groups",
           },
         },
         tools: {
@@ -954,6 +1117,26 @@ export default {
             },
             token: {
               label: "Token",
+            },
+          },
+        },
+      },
+      group: {
+        back: "Back to groups",
+        setting: {
+          general: {
+            title: "General",
+            dangerZone: "Danger zone",
+          },
+          members: {
+            title: "Members",
+            search: "Find a member",
+            notFound: "No members found",
+          },
+          permissions: {
+            title: "Permissions",
+            form: {
+              unsavedChanges: "You have unsaved changes!",
             },
           },
         },

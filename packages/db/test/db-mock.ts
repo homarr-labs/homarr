@@ -8,7 +8,7 @@ export const createDb = () => {
   const sqlite = new Database(":memory:");
   const db = drizzle(sqlite, { schema });
   migrate(db, {
-    migrationsFolder: "./packages/db/migrations",
+    migrationsFolder: "./packages/db/migrations/sqlite",
   });
   return db;
 };

@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "c0a91279-dffa-4567-8cd2-d9d2d1a2e77c",
-  "prevId": "7c2291ee-febd-4b90-994c-85e6ef27102d",
+  "id": "e3ff4a97-d357-4a64-989b-78668b36c82d",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
       "name": "account",
@@ -353,6 +353,126 @@
           "tableFrom": "board",
           "tableTo": "user",
           "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "groupMember": {
+      "name": "groupMember",
+      "columns": {
+        "groupId": {
+          "name": "groupId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "groupMember_groupId_group_id_fk": {
+          "name": "groupMember_groupId_group_id_fk",
+          "tableFrom": "groupMember",
+          "tableTo": "group",
+          "columnsFrom": ["groupId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "groupMember_userId_user_id_fk": {
+          "name": "groupMember_userId_user_id_fk",
+          "tableFrom": "groupMember",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "groupMember_groupId_userId_pk": {
+          "columns": ["groupId", "userId"],
+          "name": "groupMember_groupId_userId_pk"
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "groupPermission": {
+      "name": "groupPermission",
+      "columns": {
+        "groupId": {
+          "name": "groupId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "groupPermission_groupId_group_id_fk": {
+          "name": "groupPermission_groupId_group_id_fk",
+          "tableFrom": "groupPermission",
+          "tableTo": "group",
+          "columnsFrom": ["groupId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "group": {
+      "name": "group",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "group_owner_id_user_id_fk": {
+          "name": "group_owner_id_user_id_fk",
+          "tableFrom": "group",
+          "tableTo": "user",
+          "columnsFrom": ["owner_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
