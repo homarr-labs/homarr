@@ -45,7 +45,7 @@
     "@xterm/addon-fit": "0.10.0",
     "@xterm/xterm": "^5.5.0",
     "chroma-js": "^2.4.2",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
     "glob": "^10.3.12",
     "jotai": "^2.8.0",
