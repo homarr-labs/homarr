@@ -1,5 +1,5 @@
 # Run migrations
-node ./db/migrate.cjs ./db/migrations
+node ./db/migrate.cjs ./db/migrations/sqlite
 
 # Start Redis
 redis-server &

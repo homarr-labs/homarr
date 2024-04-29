@@ -17,8 +17,9 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "migration:generate": "drizzle-kit generate:sqlite",
+    "migration:sqlite:generate": "drizzle-kit generate:sqlite --config ./sqlite.config.ts",
     "migration:run": "tsx ./migrate.ts",
+    "migration:mysql:generate": "drizzle-kit generate:mysql --config ./mysql.config.ts",
     "push": "drizzle-kit push:sqlite",
     "studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"
