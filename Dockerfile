@@ -35,7 +35,7 @@ RUN corepack enable pnpm && pnpm install
 
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/next-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
+RUN corepack enable pnpm && pnpm install sharp -w
 
 # Build the project
 COPY --from=builder /app/tasks-out/full/ .
