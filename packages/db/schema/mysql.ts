@@ -125,6 +125,15 @@ export const groupPermissions = mysqlTable("groupPermission", {
   permission: text("permission").$type<GroupPermissionKey>().notNull(),
 });
 
+export const invites = mysqlTable("invite", {
+  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  token: varchar("token", { length: 512 }).notNull().unique(),
+  expirationDate: timestamp("expiration_date").notNull(),
+  creatorId: varchar("creator_id", { length: 256 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
 export const integrations = mysqlTable(
   "integration",
   {
@@ -271,6 +280,14 @@ export const userRelations = relations(users, ({ many }) => ({
   boardPermissions: many(boardPermissions),
   groups: many(groupMembers),
   ownedGroups: many(groups),
+  invites: many(invites),
+}));
+
+export const inviteRelations = relations(invites, ({ one }) => ({
+  creator: one(users, {
+    fields: [invites.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({

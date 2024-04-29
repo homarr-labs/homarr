@@ -122,6 +122,17 @@ export const groupPermissions = sqliteTable("groupPermission", {
   permission: text("permission").$type<GroupPermissionKey>().notNull(),
 });
 
+export const invites = sqliteTable("invite", {
+  id: text("id").notNull().primaryKey(),
+  token: text("token").notNull().unique(),
+  expirationDate: int("expiration_date", {
+    mode: "timestamp",
+  }).notNull(),
+  creatorId: text("creator_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
 export const integrations = sqliteTable(
   "integration",
   {
@@ -266,6 +277,14 @@ export const userRelations = relations(users, ({ many }) => ({
   boardPermissions: many(boardPermissions),
   groups: many(groupMembers),
   ownedGroups: many(groups),
+  invites: many(invites),
+}));
+
+export const inviteRelations = relations(invites, ({ one }) => ({
+  creator: one(users, {
+    fields: [invites.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({

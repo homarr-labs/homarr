@@ -38,9 +38,7 @@ export const AddBoardModal = createModal<InnerProps>(
       >
         <Stack>
           <TextInput
-            label={t(
-              "management.page.board.modal.createBoard.field.name.label",
-            )}
+            label={t("board.field.name.label")}
             data-autofocus
             {...form.getInputProps("name")}
           />

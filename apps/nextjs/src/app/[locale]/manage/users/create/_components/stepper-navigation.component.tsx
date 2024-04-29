@@ -56,14 +56,14 @@ export const StepperNavigationComponent = ({
             leftSection={<IconRotate size="1rem" />}
             onClick={reset}
           >
-            {t("management.page.user.create.buttons.createAnother")}
+            {t("management.page.user.create.action.createAnother")}
           </Button>
           <Button
             leftSection={<IconArrowBackUp size="1rem" />}
             component={Link}
             href="/manage/users"
           >
-            {t("management.page.user.create.buttons.return")}
+            {t("management.page.user.create.action.back")}
           </Button>
         </Group>
       )}

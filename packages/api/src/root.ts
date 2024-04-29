@@ -2,6 +2,7 @@ import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { groupRouter } from "./router/group";
 import { integrationRouter } from "./router/integration";
+import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { userRouter } from "./router/user";
@@ -11,6 +12,7 @@ import { createTRPCRouter } from "./trpc";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   group: groupRouter,
+  invite: inviteRouter,
   integration: integrationRouter,
   board: boardRouter,
   app: innerAppRouter,
