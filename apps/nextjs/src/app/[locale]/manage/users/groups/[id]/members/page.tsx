@@ -14,7 +14,7 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, UserAvatar } from "@homarr/ui";
 
 import { AddGroupMember } from "./_add-group-member";
@@ -33,6 +33,7 @@ export default async function GroupsDetailPage({
   params,
   searchParams,
 }: GroupsDetailPageProps) {
+  const t = await getI18n();
   const tMembers = await getScopedI18n("management.page.group.setting.members");
   const group = await api.group.getById({ id: params.id });
 
@@ -49,7 +50,10 @@ export default async function GroupsDetailPage({
       <Title>{tMembers("title")}</Title>
       <Group justify="space-between">
         <SearchInput
-          placeholder={`${tMembers("search")}...`}
+          placeholder={t("common.rtl", {
+            value: tMembers("search"),
+            symbol: "...",
+          })}
           defaultValue={searchParams.search}
         />
         <AddGroupMember

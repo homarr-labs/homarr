@@ -100,7 +100,10 @@ export const Spotlight = () => {
       store={spotlightStore}
     >
       <MantineSpotlight.Search
-        placeholder={t("common.search.placeholder")}
+        placeholder={t("common.rtl", {
+          value: t("common.search.placeholder"),
+          symbol: "...",
+        })}
         leftSection={<IconSearch stroke={1.5} />}
       />
 

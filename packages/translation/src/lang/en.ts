@@ -337,6 +337,7 @@ export default {
     },
   },
   common: {
+    rtl: "{value}{symbol}",
     action: {
       add: "Add",
       apply: "Apply",
@@ -383,7 +384,7 @@ export default {
       },
     },
     search: {
-      placeholder: "Search for anything...",
+      placeholder: "Search for anything",
       nothingFound: "Nothing found",
       group: {
         all: "All",
