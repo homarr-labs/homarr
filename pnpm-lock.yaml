@@ -116,7 +116,7 @@ importers:
         version: 7.8.1(@mantine/core@7.8.1(@mantine/hooks@7.8.1(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/tiptap':
         specifier: ^7.8.1
-        version: 7.8.1(@mantine/core@7.8.1(@mantine/hooks@7.8.1(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.1(react@18.3.1))(@tiptap/extension-link@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4))(@tiptap/react@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 7.8.1(@mantine/core@7.8.1(@mantine/hooks@7.8.1(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.1(react@18.3.1))(@tiptap/extension-link@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4))(@tiptap/react@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.4.5)(zod@3.23.5)
@@ -809,50 +809,50 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@tiptap/extension-color':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4)))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4)))
       '@tiptap/extension-highlight':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-image':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-link':
-        specifier: ^2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+        specifier: ^2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/extension-table':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/extension-table-cell':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-table-header':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-table-row':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-task-item':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/extension-task-list':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-text-align':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-text-style':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/extension-underline':
-        specifier: 2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+        specifier: 2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
       '@tiptap/react':
-        specifier: ^2.3.0
-        version: 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^2.3.1
+        version: 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tiptap/starter-kit':
-        specifier: ^2.3.0
-        version: 2.3.0(@tiptap/pm@2.2.4)
+        specifier: ^2.3.1
+        version: 2.3.1(@tiptap/pm@2.2.4)
       video.js:
         specifier: ^8.12.0
         version: 8.12.0
@@ -1966,200 +1966,200 @@ packages:
   '@tanstack/virtual-core@3.2.0':
     resolution: {integrity: sha512-P5XgYoAw/vfW65byBbJQCw+cagdXDT/qH6wmABiLt4v4YBT2q2vqCOhihe+D1Nt325F/S/0Tkv6C5z0Lv+VBQQ==}
 
-  '@tiptap/core@2.3.0':
-    resolution: {integrity: sha512-Gk2JN3i5CMkYGmsbyFI7cBUftWa+F7QYmeCLTWfbuy+hCM2OBsnYVKxhggFPGXRL5KLBEgBWeCeWMHfIw3B2MA==}
+  '@tiptap/core@2.3.1':
+    resolution: {integrity: sha512-ycpQlmczAOc05TgB5sc3RUTEEBXAVmS8MR9PqQzg96qidaRfVkgE+2w4k7t83PMHl2duC0MGqOCy96pLYwSpeg==}
     peerDependencies:
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-blockquote@2.3.0':
-    resolution: {integrity: sha512-Cztt77t7f+f0fuPy+FWUL8rKTIpcdsVT0z0zYQFFafvGaom0ZALQSOdTR/q+Kle9I4DaCMO3/Q0mwax/D4k4+A==}
+  '@tiptap/extension-blockquote@2.3.1':
+    resolution: {integrity: sha512-eyw3/Zn/XbIP2Yo11iE4vYcJ0471aBPMLD56YOyUC0PIF7D5tvPutDesSg95R+BDa5Tq/Id2zV5pZerw1dwwOQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-bold@2.3.0':
-    resolution: {integrity: sha512-SzkbJibHXFNU7TRaAebTtwbXUEhGZ8+MhlBn12aQ4QhdjNtFpQwKXQPyYeDyZGcyiOFgtFTb+WIfCGm8ZX0Fpw==}
+  '@tiptap/extension-bold@2.3.1':
+    resolution: {integrity: sha512-szHDXKOQfrlCzsys401zBtPWE5gyY3LcpPlrn2zBRrBmzU2U/1A7Y3HkoqZo3SSrTY37eG1Vr2J2aHySK6Uj/w==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-bubble-menu@2.3.0':
-    resolution: {integrity: sha512-dqyfQ8idTlhapvt0fxCGvkyjw92pBEwPqmkJ01h3EE8wTh53j0ytOHyMSf1KBuzardxpd8Yya3zlrAcR0Z3DlQ==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-      '@tiptap/pm': ^2.0.0
-
-  '@tiptap/extension-bullet-list@2.3.0':
-    resolution: {integrity: sha512-4nU4vJ5FjRDLqHm085vYAkuo68UK84Wl6CDSjm7sPVcu0FvQX02Okqt65azoSYQeS1SSSd5qq9YZuGWcYdp4Cw==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-code-block@2.3.0':
-    resolution: {integrity: sha512-+Ne6PRBwQt70Pp8aW2PewaEy4bHrNYn4N+y8MObsFtqLutXBz4nXnsXWiNYFQZwzlUY+CHG4XS73mx8oMOFfDw==}
+  '@tiptap/extension-bubble-menu@2.3.1':
+    resolution: {integrity: sha512-6PGrk65f0eXHcCEe6A2/GpooMsD6RPZY1kWSSWUNfklJO54R/8uAtsSVIBr7wQ34pvrYkNaluRUrDWUokWyBOQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-code@2.3.0':
-    resolution: {integrity: sha512-O2FZmosiIRoVbW82fZy8xW4h4gb2xAzxWzHEcsHPlwCbE3vYvcBMmbkQ5p+33eRtuRQInzl3Q/cwupv9ctIepQ==}
+  '@tiptap/extension-bullet-list@2.3.1':
+    resolution: {integrity: sha512-pif0AB4MUoA1Xm26y1ovH7vfXaV19T9EEQH4tgN2g2eTfdFnQWDmKI0r3XRxudtg40RstBJRa81N9xEO79o8ag==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-color@2.3.0':
-    resolution: {integrity: sha512-rqtdTaGawPZSRszwC/BlkJTF1diosIBBRSO5/YCRHT7CfGJNJyomL3eFREynXLKnXZ69SMceDh6yU6B54uTHXQ==}
+  '@tiptap/extension-code-block@2.3.1':
+    resolution: {integrity: sha512-rM7T+DWuOShariPl5vknNFMesPOFQrhMjmms9Ql636sSxOcnkb0d39NFbUpI/r5noFDC6Km+lAebF0Rx2MxpKQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+
+  '@tiptap/extension-code@2.3.1':
+    resolution: {integrity: sha512-bVX0EnDZoRXnoA7dyoZe7w2gdRjxmFEcsatHLkcr3R3x4k9oSgZXLe1C2jGbjJWr4j32tYXZ1cpKte6f1WUKzg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-color@2.3.1':
+    resolution: {integrity: sha512-a127akyS3nMbcLKzZ02l/rHUP5BlCmbma6vYJNjRk6Srd1DlhXCIynMZJr7Bzgngq9KNLGQha2uxbPr7me3xAA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/extension-text-style': ^2.0.0
 
-  '@tiptap/extension-document@2.3.0':
-    resolution: {integrity: sha512-WC55SMrtlsNOnHXpzbXDzJOp7eKmZV0rXooKmvCDqoiLO/DKpyQXyF+0UHfcRPmUAi2GWFPaer7+p1H9xzcjXg==}
+  '@tiptap/extension-document@2.3.1':
+    resolution: {integrity: sha512-uWYbzAV95JnetFBduWRI9n2QbQfmznQ7I6XzfZxuTAO2KcWGvHPBS7F00COO9Y67FZAPMbuQ1njtCJK0nClOPw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-dropcursor@2.3.0':
-    resolution: {integrity: sha512-WWxxGQPWdbzxyYP6jtBYSq4wMRhINhI0wBC8pgkxTVwCIWftMuYj++FP4LLIpuWgj78PWApuoM0QQxk4Lj7FOw==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-      '@tiptap/pm': ^2.0.0
-
-  '@tiptap/extension-floating-menu@2.3.0':
-    resolution: {integrity: sha512-bNY43/yU/+wGfmk2eDV7EPDAN/akbC+YnSKTA5VPJADzscvlrL2HlQrxbd/STIdlwKqdPU5MokcvCChhfZ4f6w==}
+  '@tiptap/extension-dropcursor@2.3.1':
+    resolution: {integrity: sha512-xDG1Z01ftRI4mIOY+bPuG53xZ9FfVd6hzjNchwFHRlU3E+/2O+DsEBy/pJuHmpnFx1B/1ANbssoidGvK3LIPYw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-gapcursor@2.3.0':
-    resolution: {integrity: sha512-OxcXcfD0uzNcXdXu2ZpXFAtXIsgK2MBHvFUs0t0gxtcL/t43pTOQBLy+29Ei30BxpwLghtX8jQ6IDzMiybq/sA==}
+  '@tiptap/extension-floating-menu@2.3.1':
+    resolution: {integrity: sha512-3+dONthHRMFzJjLF9JtRbm9u4XJs8txCoChsZjwD0wBf8XfPtUGZQn9W5xNJG+5pozrOQhj9KC1UZL4tuvSRkg==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-hard-break@2.3.0':
-    resolution: {integrity: sha512-9pXi69SzLabbjY5KZ54UKzu7HAHTla9aYZKH56VatOAiJOPKJppFbU2/NfJwGzDrEtfOiDqr3dYbUDF3RuCFoQ==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-heading@2.3.0':
-    resolution: {integrity: sha512-YcZoUYfqb0nohoPgem4f8mjn5OqDomFrbJiC9VRHUOCIuEu+aJEYwp8mmdkLnS3f+LRCZ6G76cJJ50lkzSAZRw==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-highlight@2.3.0':
-    resolution: {integrity: sha512-An/tzoCMbugdaU02ORJeJ74DZI5pf9oqwX9RoYPQ5K81Ia3jG52BBVtFjGq/j10Tr4iOuCmOuE+PzNtnzz3UIw==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-history@2.3.0':
-    resolution: {integrity: sha512-EF5Oq9fe/VBzU1Lsow2ubOlx1e1r4OQT1WUPGsRnL7pr94GH1Skpk7/hs9COJ9K6kP3Ebt42XjP0JEQodR58YA==}
+  '@tiptap/extension-gapcursor@2.3.1':
+    resolution: {integrity: sha512-jhMw0LtEV/HVovUDRdoH0QLnBWLDyw4Su7UZ0bkMtsnCO9MujLKths3SKsPstuAckZQKR5smokEytxDHH0aglg==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-horizontal-rule@2.3.0':
-    resolution: {integrity: sha512-4DB8GU3uuDzzyqUmONIb3CHXcQ6Nuy4mHHkFSmUyEjg1i5eMQU5H7S6mNvZbltcJB2ImgCSwSMlj1kVN3MLIPg==}
+  '@tiptap/extension-hard-break@2.3.1':
+    resolution: {integrity: sha512-HO47iS2KQJLxhZM4ghZz5t2qgESH6D/mKJbjO7jM0eCYEyUfPyYJwV2VgjQP7x+1axcvsrhpzkJrjSg5+KqtQQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-heading@2.3.1':
+    resolution: {integrity: sha512-epdIrg1xpuk5ApnNyM/NJO1dhVZgD7kDPem6QH4fug5UJtCueze942yNzUhCuvckmIegfdferAb1p4ug4674ig==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-highlight@2.3.1':
+    resolution: {integrity: sha512-BWetu1jqHVsl6bZMaZM8VZYtHC6JBM2CRgI7R8GnKKDM8aSxK0P7CHCZLs4dGwOPlFVjE/nCjwdKd+GUUkeaQg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-history@2.3.1':
+    resolution: {integrity: sha512-m+W6qTP4V0PHqqKnXw/ma18a62O0Cqp5FDWtSarOuxx6W4FpVr4A3Uxfbp4RigZEYanLcX4UJOWL4nWsFdYWHw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-image@2.3.0':
-    resolution: {integrity: sha512-v1fLEEzrfXWavsLFUEkTiYYxwm1WDNrjuUriU5tG2Jv22NL1BL4BLVbZbGdkAk+qHWy8QWszrDJbcgGh2VNCoQ==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-italic@2.3.0':
-    resolution: {integrity: sha512-jdFjLjdt5JtPlGMpoS6TEq5rznjbAYVlPwcw5VkYENVIYIGIR1ylIw2JwK1nUEsQ+OgYwVxHLejcUXWG1dCi2g==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-link@2.3.0':
-    resolution: {integrity: sha512-CnJAlV0ZOdEhKmDfYKuHJVG8g79iCFQ85cX/CROTWyuMfXz9uhj2rLpZ6nfidVbonqxAhQp7NAIr2y+Fj5/53A==}
+  '@tiptap/extension-horizontal-rule@2.3.1':
+    resolution: {integrity: sha512-IPgCFkiT6Y5BSFBQMTXS6gq2Ust6otMzRwddoI0RC8tl/tMftFBEPqYKADWVQeQb4C6AQydRjUbmAwHpBH31Eg==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-list-item@2.3.0':
-    resolution: {integrity: sha512-mHU+IuRa56OT6YCtxf5Z7OSUrbWdKhGCEX7RTrteDVs5oMB6W3oF9j88M5qQmZ1WDcxvQhAOoXctnMt6eX9zcA==}
+  '@tiptap/extension-image@2.3.1':
+    resolution: {integrity: sha512-3RhVBySQA2LbftWhtZ0p2Mqf9lihNAYs3uQ3iyaB+BYViQiHyVpui09Wny0BwNy0oV6ryUWjBifko2Z1AZgANw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-ordered-list@2.3.0':
-    resolution: {integrity: sha512-gkf0tltXjlUj0cqyfDV2r7xy9YPKtcVSWwlCPun6OOi0KzKFiAMqQpA9hy2W6gJ+KCp8+KNRMClZOfH4TnnBfg==}
+  '@tiptap/extension-italic@2.3.1':
+    resolution: {integrity: sha512-yEAn0dT1LH1vAULmZv3L1fs7M1Fn/8wZCw7LDGw2/E+VYbDeXgy7XwMPyzhrzV1oV9Z+3gugCbYV0IJ4PBwudA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-paragraph@2.3.0':
-    resolution: {integrity: sha512-peCpA7DFqkd0cHb+cHv4YHNoMsXG8tKFNJlCHpLmsZWl2hWmpKgKmUrXAUfzjcFSvkZxn0xYc5oWbqUgg+2LzA==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-strike@2.3.0':
-    resolution: {integrity: sha512-gOW4ALeH8gkJiUGGXVy/AOd5lAPTX0bzoOW1+sCLcTA7t8dluBW7M2ngNYxTEtlKqyv7aLfrgsYSiqucmmfSLw==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-table-cell@2.3.0':
-    resolution: {integrity: sha512-jsFp5lc+be04AsuMiTGlluLnsmJl/51+sv0DewYHeidh7iyvk3R5y2pyA+Bk1V/txFdaH5GxOQvSH3RonEVMAg==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-table-header@2.3.0':
-    resolution: {integrity: sha512-wLvJqDBaXc/xs+NBJZoSIfO7fVYqcrIlsdtQRlBec3vTpSG0w0zlrM/JY4mjQKHzWsDk6hb9mvbK2scChOu5TA==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-table-row@2.3.0':
-    resolution: {integrity: sha512-i2o/S8Mggw1GDxF5N5i8SvDvmOvbHu8MuWpdhFwfOkbrnEdtHlU/GjWIEstPymg4QyrfAEQa/KDffkrX0T7RNw==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0
-
-  '@tiptap/extension-table@2.3.0':
-    resolution: {integrity: sha512-1cU0C5LFyF7Nm8K2X6sntuunpLDE11XV8gV4ALbXv0FNKx2rG9Wq0tQlGHAjhYZMhWt386T21N7o13aMAov1GA==}
+  '@tiptap/extension-link@2.3.1':
+    resolution: {integrity: sha512-VE54iLwWcPldqZl7a4E/pmGD7waCWS//VT8jxTuFUroTouIzT+OjB9DQAXMkrRiaz+na3I8Jie1yBE+zYB0gvQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-task-item@2.3.0':
-    resolution: {integrity: sha512-WvQJiQSskI1dZLPgNH4hmYPW0HFyR/EHwogzVnY7XCn2/5isV0ewyaVuSfqTXvfEA/R5uCi95opwz61NFBc2nQ==}
+  '@tiptap/extension-list-item@2.3.1':
+    resolution: {integrity: sha512-GyHLNoXVo9u29NVqijwZPBcv9MzXMGyIiQiO5FxRpuT4Ei4ZmsaJrJ2dmhO3KZhX0HdTSc65/omM2XBr6PDoLA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-ordered-list@2.3.1':
+    resolution: {integrity: sha512-+6I76b7fu0FghUtzB0LyIC5GB0xfrpAKtXjbrmeUGsOEL7jxKsE6+A5RoTrgQTfuP7oItdCZGTSC/8WtGbtEMg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-paragraph@2.3.1':
+    resolution: {integrity: sha512-bHkkHU012clwCrpzmEHGuF8fwLuFL3x9MJ17wnhwanoIM3MG6ZCdeb9copjDvUpZXLKTUYKotoPGNhxmOrP2bQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-strike@2.3.1':
+    resolution: {integrity: sha512-fpsVewcnaYk37TAF4JHkwH9O6Ml7JooF1v/Eh9p7PSItNcEfg/3RLlJL3c53RzLWdlunjgptM/M0alPV0Zyq4A==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-table-cell@2.3.1':
+    resolution: {integrity: sha512-xjCmpokTRyU4OcUbrXchPkZhUY5ACNyNYPwxWcXlZHG8rFbF/UJFHt22VZzMFLb33iBWgsPR9MfPtSL4+wdm4Q==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-table-header@2.3.1':
+    resolution: {integrity: sha512-hAQjjPie+QDW851CsmknoPI1hkB54mur0EudHxuEMCTweMZJseiO+IggNdQT3YdlUcV/UZTJdnhtOvmpHHLQ1w==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-table-row@2.3.1':
+    resolution: {integrity: sha512-TYUj1XXdVGHrQOs1MiErB064Wp6vJeInViuN+fXt/u/Fc4LbQzfXbMsjqALfcfajJdGgqHBNBV25lzCrFGTJ8w==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+
+  '@tiptap/extension-table@2.3.1':
+    resolution: {integrity: sha512-FRhmTKi1Q9ihww+mFSkuLQzssT0tjyqu3C+CRQL1N+2pTcRoe1gh6zh/D+oYitc660bgV5oBgHV6mfOJYUB9lQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
 
-  '@tiptap/extension-task-list@2.3.0':
-    resolution: {integrity: sha512-TBgqf4s3DpUV97w7AAj1WZDnZ3rZQ8B645d9bBayo4VfRzHCLefv5cVP/Ye9GA23T4FZoHNR+yIPrM7SfhkmPA==}
+  '@tiptap/extension-task-item@2.3.1':
+    resolution: {integrity: sha512-iNVLiwJOTp9UulUS6tLk5NR85nNxtxqvaboOwPxoqcFaM/IkybTwZ/hMr9EqbAucigx85OowHKsdgPHIAr3xdw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+
+  '@tiptap/extension-task-list@2.3.1':
+    resolution: {integrity: sha512-lu/27tetu2KYEjsaD8wyQ4rBthxrW8aRNeSv74jXJLPYN4aCtAl9C2bM7os+A2OYpidPBMbRjp8ZQoUnJ9auNA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-text-align@2.3.0':
-    resolution: {integrity: sha512-Pj+Yuk8xpYLGxNKGRUwvjlrOQP66ZyzjpJN5xqjJ7anzb2OKrluWMBco3xhjd/h03viA+wYeJKfnEpk/SbzHTQ==}
+  '@tiptap/extension-text-align@2.3.1':
+    resolution: {integrity: sha512-EhV8xuCKdy0abZNALW0AwgqK3KeFzUFmRiKETTkfZb9Y2Jqz8HVGJT8EAAIMfEMkO9AaRMoGRIDMCx3vQsiJlw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-text-style@2.3.0':
-    resolution: {integrity: sha512-S+sQZqd+QtJjbZ0LOp0Krf0dlrdMx7BQL0sUNKPq8XXRMcfW0pEEFGIU/0VDFQCldLIuyd7lZ8zo5cjaAgskIA==}
+  '@tiptap/extension-text-style@2.3.1':
+    resolution: {integrity: sha512-eXtuf3AqcOv28BM0dO4lbBNnvM1fo4WWuT+/s1YV5Ovex3T5OS7PsPuR/9p5AD4NuX9QvNrV+eM02mcNzaTBWw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-text@2.3.0':
-    resolution: {integrity: sha512-zkudl0TyKRy/8vHtyo5dMzjBRD0HEUnsS8YOsjR4xwQq5EYUXleRgM1s6lb6Yms2sLUAZRWdDddoQ686iq4zQg==}
+  '@tiptap/extension-text@2.3.1':
+    resolution: {integrity: sha512-ZM+Bpty9jChEN/VjUP/fX1Fvoz0Z3YLdjj9+pFA0H7woli+TmxWY6yUUTA2SBDb2mJ52yNOUfRE/sYx6gkDuBQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
-  '@tiptap/extension-underline@2.3.0':
-    resolution: {integrity: sha512-vmmcwCPmWqGKYHZevz50+bxrpHyiu5y6YZweAE476hn8Mud6vYg7RpkXgW8bjkCOky6UA51uelslSc0XrLE6uw==}
+  '@tiptap/extension-underline@2.3.1':
+    resolution: {integrity: sha512-xgLGr7bM5OAKagUKdL5dWxJHgwEp2fk3D5XCVUBwqgeOZtOFteoqPzb/2617w7qrP+9oM9zRjw6z27hM8YxyvQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
 
   '@tiptap/pm@2.2.4':
     resolution: {integrity: sha512-Po0klR165zgtinhVp1nwMubjyKx6gAY9kH3IzcniYLCkqhPgiqnAcCr61TBpp4hfK8YURBS4ihvCB1dyfCyY8A==}
 
-  '@tiptap/react@2.3.0':
-    resolution: {integrity: sha512-ThgFJQTWYKRClTV2Zg0wBRqfy0EGz3U4NOey7jwncUjSjx5+o9nXbfQAYWDKQFfWyE+wnrBTYfddEP9pHNX5cQ==}
+  '@tiptap/react@2.3.1':
+    resolution: {integrity: sha512-MM6UOi5nmdM/dZXYtbBYHJEsVtyyFFnOCXlXmhTlhz0WYI8VkEAY7XWLB96KrqsbRk9PUWwdev7iT1q40zxVeg==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
 
-  '@tiptap/starter-kit@2.3.0':
-    resolution: {integrity: sha512-TjvCd/hzEnuEYOdr5uQqcfHOMuj7JRoZBPdheupwl3SbuYiCxtcqYyAE5qoGXWwuVe9xVGerOLVPkDUgmyrH6A==}
+  '@tiptap/starter-kit@2.3.1':
+    resolution: {integrity: sha512-VGk1o5y5f2ZHKkvP2WNj8BH7FGak0d0cjxQiXP1n5w8eS0vFnTkCz3JbCPM+KTKobsBmxd2vSC3ElgP9E9d2xw==}
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
@@ -6340,12 +6340,12 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  '@mantine/tiptap@7.8.1(@mantine/core@7.8.1(@mantine/hooks@7.8.1(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.1(react@18.3.1))(@tiptap/extension-link@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4))(@tiptap/react@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mantine/tiptap@7.8.1(@mantine/core@7.8.1(@mantine/hooks@7.8.1(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.8.1(react@18.3.1))(@tiptap/extension-link@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4))(@tiptap/react@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@mantine/core': 7.8.1(@mantine/hooks@7.8.1(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.8.1(react@18.3.1)
-      '@tiptap/extension-link': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/react': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tiptap/extension-link': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/react': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
@@ -6555,155 +6555,155 @@ snapshots:
 
   '@tanstack/virtual-core@3.2.0': {}
 
-  '@tiptap/core@2.3.0(@tiptap/pm@2.2.4)':
+  '@tiptap/core@2.3.1(@tiptap/pm@2.2.4)':
     dependencies:
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-blockquote@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-blockquote@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-bold@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-bold@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-bubble-menu@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-bubble-menu@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-      tippy.js: 6.3.7
-
-  '@tiptap/extension-bullet-list@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-code-block@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-
-  '@tiptap/extension-code@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-color@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4)))':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-      '@tiptap/extension-text-style': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-
-  '@tiptap/extension-document@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-
-  '@tiptap/extension-dropcursor@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-      '@tiptap/pm': 2.2.4
-
-  '@tiptap/extension-floating-menu@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
-    dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       tippy.js: 6.3.7
 
-  '@tiptap/extension-gapcursor@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-bullet-list@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-code-block@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-hard-break@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-code@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-heading@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-color@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4)))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+      '@tiptap/extension-text-style': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
 
-  '@tiptap/extension-highlight@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-document@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-history@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-dropcursor@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-horizontal-rule@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-floating-menu@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+      tippy.js: 6.3.7
+
+  '@tiptap/extension-gapcursor@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-image@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-hard-break@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-italic@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-heading@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-link@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-highlight@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-history@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+
+  '@tiptap/extension-horizontal-rule@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+      '@tiptap/pm': 2.2.4
+
+  '@tiptap/extension-image@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-italic@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+
+  '@tiptap/extension-link@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+    dependencies:
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       linkifyjs: 4.1.3
 
-  '@tiptap/extension-list-item@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-list-item@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-ordered-list@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-ordered-list@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-paragraph@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-paragraph@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-strike@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-strike@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table-cell@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-table-cell@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table-header@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-table-header@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table-row@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-table-row@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-table@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-table@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-task-item@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
+  '@tiptap/extension-task-item@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
 
-  '@tiptap/extension-task-list@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-task-list@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-text-align@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-text-align@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-text-style@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-text-style@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-text@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-text@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
-  '@tiptap/extension-underline@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))':
+  '@tiptap/extension-underline@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
 
   '@tiptap/pm@2.2.4':
     dependencies:
@@ -6726,36 +6726,36 @@ snapshots:
       prosemirror-transform: 1.8.0
       prosemirror-view: 1.33.1
 
-  '@tiptap/react@2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@tiptap/react@2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-      '@tiptap/extension-bubble-menu': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/extension-floating-menu': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+      '@tiptap/extension-bubble-menu': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-floating-menu': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
       '@tiptap/pm': 2.2.4
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@tiptap/starter-kit@2.3.0(@tiptap/pm@2.2.4)':
+  '@tiptap/starter-kit@2.3.1(@tiptap/pm@2.2.4)':
     dependencies:
-      '@tiptap/core': 2.3.0(@tiptap/pm@2.2.4)
-      '@tiptap/extension-blockquote': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-bold': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-bullet-list': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-code': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-code-block': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/extension-document': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-dropcursor': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/extension-gapcursor': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/extension-hard-break': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-heading': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-history': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/extension-horizontal-rule': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
-      '@tiptap/extension-italic': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-list-item': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-ordered-list': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-paragraph': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-strike': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
-      '@tiptap/extension-text': 2.3.0(@tiptap/core@2.3.0(@tiptap/pm@2.2.4))
+      '@tiptap/core': 2.3.1(@tiptap/pm@2.2.4)
+      '@tiptap/extension-blockquote': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-bold': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-bullet-list': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-code': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-code-block': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-document': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-dropcursor': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-gapcursor': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-hard-break': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-heading': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-history': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-horizontal-rule': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))(@tiptap/pm@2.2.4)
+      '@tiptap/extension-italic': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-list-item': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-ordered-list': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-paragraph': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-strike': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
+      '@tiptap/extension-text': 2.3.1(@tiptap/core@2.3.1(@tiptap/pm@2.2.4))
     transitivePeerDependencies:
       - '@tiptap/pm'
 
