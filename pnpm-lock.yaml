@@ -854,8 +854,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(@tiptap/pm@2.2.4)
       video.js:
-        specifier: ^8.10.0
-        version: 8.10.0
+        specifier: ^8.12.0
+        version: 8.12.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2407,11 +2407,11 @@ packages:
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
-  '@videojs/http-streaming@3.10.0':
-    resolution: {integrity: sha512-Lf1rmhTalV4Gw0bJqHmH4lfk/FlepUDs9smuMtorblAYnqDlE2tbUOb7sBXVYoXGdbWbdTW8jH2cnS+6HWYJ4Q==}
+  '@videojs/http-streaming@3.12.1':
+    resolution: {integrity: sha512-rpB5AMt0QZ9bMXzwiWhynF2NLNnm5g2DZjPOFX6OoFqqXhbe2ngY2nqm9lLRhRVe22YeysQCmAlvBNwGuWFI8Q==}
     engines: {node: '>=8', npm: '>=5'}
     peerDependencies:
-      video.js: ^7 || ^8
+      video.js: ^8.11.0
 
   '@videojs/vhs-utils@3.0.5':
     resolution: {integrity: sha512-PKVgdo8/GReqdx512F+ombhS+Bzogiofy1LgAj4tN8PfdBx3HSS7V5WfJotKTqtOWGwVfSWsrYN/t09/DSryrw==}
@@ -4242,11 +4242,6 @@ packages:
   mute-stream@0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
 
-  mux.js@7.0.2:
-    resolution: {integrity: sha512-CM6+QuyDbc0qW1OfEjkd2+jVKzTXF+z5VOKH0eZxtZtnrG/ilkW/U7l7IXGtBNLASF9sKZMcK1u669cq50Qq0A==}
-    engines: {node: '>=8', npm: '>=5'}
-    hasBin: true
-
   mux.js@7.0.3:
     resolution: {integrity: sha512-gzlzJVEGFYPtl2vvEiJneSWAWD4nfYRHD5XgxmB2gWvXraMPOYk+sxfvexmNfjQUFpmk6hwLR5C6iSFmuwCHdQ==}
     engines: {node: '>=8', npm: '>=5'}
@@ -5470,12 +5465,12 @@ packages:
     resolution: {integrity: sha512-YuKoXDAhBYxY7SfOKxHBDoSyENFeW5VvIIQp2TGQuit8gpK6MnWaQelBKxso72DoxTZfZdcP3W90LqpSkgPzLQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  video.js@8.10.0:
-    resolution: {integrity: sha512-7UeG/flj/pp8tNGW8WKPP1VJb3x2FgLoqUWzpZqkoq5YIyf6MNzmIrKtxprl438T5RVkcj+OzV8IX4jYSAn4Sw==}
+  video.js@8.12.0:
+    resolution: {integrity: sha512-bLjfg3y09CAed1xZ4FujdTW7G9kgL0CJHaBnDKwBUgYuutijCutYPP5yQGCdN6VOi76uEuOpINwmTJSJia6zww==}
 
-  videojs-contrib-quality-levels@4.0.0:
-    resolution: {integrity: sha512-u5rmd8BjLwANp7XwuQ0Q/me34bMe6zg9PQdHfTS7aXgiVRbNTb4djcmfG7aeSrkpZjg+XCLezFNenlJaCjBHKw==}
-    engines: {node: '>=14', npm: '>=6'}
+  videojs-contrib-quality-levels@4.1.0:
+    resolution: {integrity: sha512-TfrXJJg1Bv4t6TOCMEVMwF/CoS8iENYsWNKip8zfhB5kTcegiFYezEA0eHAJPU64ZC8NQbxQgOwAsYU8VXbOWA==}
+    engines: {node: '>=16', npm: '>=8'}
     peerDependencies:
       video.js: ^8
 
@@ -7072,7 +7067,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@videojs/http-streaming@3.10.0(video.js@8.10.0)':
+  '@videojs/http-streaming@3.12.1(video.js@8.12.0)':
     dependencies:
       '@babel/runtime': 7.23.9
       '@videojs/vhs-utils': 4.0.0
@@ -7080,8 +7075,8 @@ snapshots:
       global: 4.4.0
       m3u8-parser: 7.1.0
       mpd-parser: 1.3.0
-      mux.js: 7.0.2
-      video.js: 8.10.0
+      mux.js: 7.0.3
+      video.js: 8.12.0
 
   '@videojs/vhs-utils@3.0.5':
     dependencies:
@@ -9207,11 +9202,6 @@ snapshots:
 
   mute-stream@0.0.8: {}
 
-  mux.js@7.0.2:
-    dependencies:
-      '@babel/runtime': 7.23.9
-      global: 4.4.0
-
   mux.js@7.0.3:
     dependencies:
       '@babel/runtime': 7.23.9
@@ -10529,10 +10519,10 @@ snapshots:
     dependencies:
       builtins: 5.0.1
 
-  video.js@8.10.0:
+  video.js@8.12.0:
     dependencies:
       '@babel/runtime': 7.23.9
-      '@videojs/http-streaming': 3.10.0(video.js@8.10.0)
+      '@videojs/http-streaming': 3.12.1(video.js@8.12.0)
       '@videojs/vhs-utils': 4.0.0
       '@videojs/xhr': 2.6.0
       aes-decrypter: 4.0.1
@@ -10542,14 +10532,14 @@ snapshots:
       mpd-parser: 1.3.0
       mux.js: 7.0.3
       safe-json-parse: 4.0.0
-      videojs-contrib-quality-levels: 4.0.0(video.js@8.10.0)
+      videojs-contrib-quality-levels: 4.1.0(video.js@8.12.0)
       videojs-font: 4.1.0
       videojs-vtt.js: 0.15.5
 
-  videojs-contrib-quality-levels@4.0.0(video.js@8.10.0):
+  videojs-contrib-quality-levels@4.1.0(video.js@8.12.0):
     dependencies:
       global: 4.4.0
-      video.js: 8.10.0
+      video.js: 8.12.0
 
   videojs-font@4.1.0: {}
 

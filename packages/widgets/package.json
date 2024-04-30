@@ -60,6 +60,6 @@
     "@tiptap/extension-text-align": "2.3.0",
     "@tiptap/extension-text-style": "2.3.0",
     "@tiptap/extension-underline": "2.3.0",
-    "video.js": "^8.10.0"
+    "video.js": "^8.12.0"
   }
 }
