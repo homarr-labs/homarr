@@ -20,7 +20,7 @@ const iconProps = {
 
 interface BoardCardMenuDropdownProps {
   board: Pick<
-    RouterOutputs["board"]["getAll"][number],
+    RouterOutputs["board"]["getAllBoards"][number],
     "id" | "name" | "creator" | "permissions" | "isPublic"
   >;
 }
@@ -35,7 +35,7 @@ export const BoardCardMenuDropdown = ({
 
   const { openConfirmModal } = useConfirmModal();
 
-  const { mutateAsync, isPending } = clientApi.board.delete.useMutation({
+  const { mutateAsync, isPending } = clientApi.board.deleteBoard.useMutation({
     onSettled: async () => {
       await revalidatePathAction("/manage/boards");
     },

@@ -19,9 +19,9 @@ export const DangerZoneSettingsContent = () => {
   const { openConfirmModal } = useConfirmModal();
   const { openModal } = useModalAction(BoardRenameModal);
   const { mutate: changeVisibility, isPending: isChangeVisibilityPending } =
-    clientApi.board.changeVisibility.useMutation();
+    clientApi.board.changeBoardVisibility.useMutation();
   const { mutate: deleteBoard, isPending: isDeletePending } =
-    clientApi.board.delete.useMutation();
+    clientApi.board.deleteBoard.useMutation();
   const utils = clientApi.useUtils();
   const visibility = board.isPublic ? "public" : "private";
 
@@ -51,8 +51,8 @@ export const DangerZoneSettingsContent = () => {
           },
           {
             onSettled() {
-              void utils.board.byName.invalidate({ name: board.name });
-              void utils.board.default.invalidate();
+              void utils.board.getBoardByName.invalidate({ name: board.name });
+              void utils.board.getDefaultBoard.invalidate();
             },
           },
         );
@@ -63,8 +63,8 @@ export const DangerZoneSettingsContent = () => {
     board.name,
     changeVisibility,
     t,
-    utils.board.byName,
-    utils.board.default,
+    utils.board.getBoardByName,
+    utils.board.getDefaultBoard,
     visibility,
     openConfirmModal,
   ]);

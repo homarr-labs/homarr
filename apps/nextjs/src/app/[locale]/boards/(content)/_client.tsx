@@ -19,8 +19,8 @@ export const updateBoardName = (name: string | null) => {
 };
 
 type UpdateCallback = (
-  prev: RouterOutputs["board"]["default"],
-) => RouterOutputs["board"]["default"];
+  prev: RouterOutputs["board"]["getDefaultBoard"],
+) => RouterOutputs["board"]["getDefaultBoard"];
 
 export const useUpdateBoard = () => {
   const utils = clientApi.useUtils();
@@ -30,7 +30,7 @@ export const useUpdateBoard = () => {
       if (!boardName) {
         throw new Error("Board name is not set");
       }
-      utils.board.byName.setData({ name: boardName }, (previous) =>
+      utils.board.getBoardByName.setData({ name: boardName }, (previous) =>
         previous ? updaterWithoutUndefined(previous) : previous,
       );
     },

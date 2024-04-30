@@ -30,7 +30,7 @@ const defaultSession = {
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
-describe("default should return default board", () => {
+describe("getDefaultBoard should return default board", () => {
   it("should return default board", async () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -40,7 +40,7 @@ describe("default should return default board", () => {
     const fullBoardProps = await createFullBoardAsync(db, "default");
 
     // Act
-    const result = await caller.default();
+    const result = await caller.getDefaultBoard();
 
     // Assert
     expectInputToBeFullBoardWithName(result, {
@@ -55,7 +55,7 @@ describe("default should return default board", () => {
   });
 });
 
-describe("byName should return board by name", () => {
+describe("getBoardByName should return board by name", () => {
   it.each([["default"], ["something"]])(
     "should return board by name %s when present",
     async (name) => {
@@ -67,7 +67,7 @@ describe("byName should return board by name", () => {
       const fullBoardProps = await createFullBoardAsync(db, name);
 
       // Act
-      const result = await caller.byName({ name });
+      const result = await caller.getBoardByName({ name });
 
       // Assert
       expectInputToBeFullBoardWithName(result, {
@@ -89,14 +89,15 @@ describe("byName should return board by name", () => {
     await createFullBoardAsync(db, "default");
 
     // Act
-    const act = async () => await caller.byName({ name: "nonExistentBoard" });
+    const act = async () =>
+      await caller.getBoardByName({ name: "nonExistentBoard" });
 
     // Assert
     await expect(act()).rejects.toThrowError("Board not found");
   });
 });
 
-describe("savePartialSettings should save general settings", () => {
+describe("savePartialBoardSettings should save general settings", () => {
   it("should save general settings", async () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -120,7 +121,7 @@ describe("savePartialSettings should save general settings", () => {
     const { boardId } = await createFullBoardAsync(db, "default");
 
     // Act
-    await caller.savePartialSettings({
+    await caller.savePartialBoardSettings({
       pageTitle: newPageTitle,
       metaTitle: newMetaTitle,
       logoImageUrl: newLogoImageUrl,
@@ -170,7 +171,7 @@ describe("savePartialSettings should save general settings", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     const act = async () =>
-      await caller.savePartialSettings({
+      await caller.savePartialBoardSettings({
         pageTitle: "newPageTitle",
         metaTitle: "newMetaTitle",
         logoImageUrl: "http://logo.image/url.png",
@@ -182,7 +183,7 @@ describe("savePartialSettings should save general settings", () => {
   });
 });
 
-describe("save should save full board", () => {
+describe("saveBoard should save full board", () => {
   it("should remove section when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
@@ -190,7 +191,7 @@ describe("save should save full board", () => {
 
     const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -233,7 +234,7 @@ describe("save should save full board", () => {
       "default",
     );
 
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -298,7 +299,7 @@ describe("save should save full board", () => {
       await createFullBoardAsync(db, "default");
     await db.insert(integrations).values(anotherIntegration);
 
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -365,7 +366,7 @@ describe("save should save full board", () => {
     const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
     const newSectionId = createId();
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -421,7 +422,7 @@ describe("save should save full board", () => {
     const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
     const newItemId = createId();
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -500,7 +501,7 @@ describe("save should save full board", () => {
     );
     await db.insert(integrations).values(integration);
 
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -572,7 +573,7 @@ describe("save should save full board", () => {
       boardId,
     });
 
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -626,7 +627,7 @@ describe("save should save full board", () => {
       "default",
     );
 
-    await caller.save({
+    await caller.saveBoard({
       id: boardId,
       sections: [
         {
@@ -688,7 +689,7 @@ describe("save should save full board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     const act = async () =>
-      await caller.save({
+      await caller.saveBoard({
         id: "nonExistentBoardId",
         sections: [],
       });
@@ -698,7 +699,7 @@ describe("save should save full board", () => {
 });
 
 const expectInputToBeFullBoardWithName = (
-  input: RouterOutputs["board"]["default"],
+  input: RouterOutputs["board"]["getDefaultBoard"],
   props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,
 ) => {
   expect(input.id).toBe(props.boardId);

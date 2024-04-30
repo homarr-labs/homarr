@@ -26,7 +26,7 @@ import { CreateBoardButton } from "./_components/create-board-button";
 export default async function ManageBoardsPage() {
   const t = await getScopedI18n("management.page.board");
 
-  const boards = await api.board.getAll();
+  const boards = await api.board.getAllBoards();
 
   return (
     <>
@@ -47,7 +47,7 @@ export default async function ManageBoardsPage() {
 }
 
 interface BoardCardProps {
-  board: RouterOutputs["board"]["getAll"][number];
+  board: RouterOutputs["board"]["getAllBoards"][number];
 }
 
 const BoardCard = async ({ board }: BoardCardProps) => {

@@ -18,10 +18,12 @@ export const BoardRenameModal = createModal<InnerProps>(
   ({ actions, innerProps }) => {
     const utils = clientApi.useUtils();
     const t = useI18n();
-    const { mutate, isPending } = clientApi.board.rename.useMutation({
+    const { mutate, isPending } = clientApi.board.renameBoard.useMutation({
       onSettled() {
-        void utils.board.byName.invalidate({ name: innerProps.previousName });
-        void utils.board.default.invalidate();
+        void utils.board.getBoardByName.invalidate({
+          name: innerProps.previousName,
+        });
+        void utils.board.getDefaultBoard.invalidate();
       },
     });
     const form = useForm<FormType>({

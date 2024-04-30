@@ -47,8 +47,8 @@ interface Props {
 
 const getBoardAndPermissions = async (params: Props["params"]) => {
   try {
-    const board = await api.board.byName({ name: params.name });
-    const permissions = await api.board.permissions({ id: board.id });
+    const board = await api.board.getBoardByName({ name: params.name });
+    const permissions = await api.board.getBoardPermissions({ id: board.id });
 
     return { board, permissions };
   } catch (error) {

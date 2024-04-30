@@ -19,7 +19,7 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
   const t = useI18n();
   const { openModal } = useModalAction(AddBoardModal);
 
-  const { mutateAsync, isPending } = clientApi.board.create.useMutation({
+  const { mutateAsync, isPending } = clientApi.board.createBoard.useMutation({
     onSettled: async () => {
       await revalidatePathAction("/manage/boards");
     },

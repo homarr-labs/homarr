@@ -48,7 +48,7 @@ const filterUpdatedItems = <TInput extends { id: string }>(
   );
 
 export const boardRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const permissionsOfCurrentUserWhenPresent =
       await ctx.db.query.boardPermissions.findMany({
         where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
@@ -82,7 +82,7 @@ export const boardRouter = createTRPCRouter({
     });
     return dbBoards;
   }),
-  create: protectedProcedure
+  createBoard: protectedProcedure
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
@@ -100,7 +100,7 @@ export const boardRouter = createTRPCRouter({
         });
       });
     }),
-  rename: protectedProcedure
+  renameBoard: protectedProcedure
     .input(validation.board.rename)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(
@@ -116,7 +116,7 @@ export const boardRouter = createTRPCRouter({
         .set({ name: input.name })
         .where(eq(boards.id, input.id));
     }),
-  changeVisibility: protectedProcedure
+  changeBoardVisibility: protectedProcedure
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(
@@ -130,7 +130,7 @@ export const boardRouter = createTRPCRouter({
         .set({ isPublic: input.visibility === "public" })
         .where(eq(boards.id, input.id));
     }),
-  delete: protectedProcedure
+  deleteBoard: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(
@@ -141,7 +141,7 @@ export const boardRouter = createTRPCRouter({
 
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
-  default: publicProcedure.query(async ({ ctx }) => {
+  getDefaultBoard: publicProcedure.query(async ({ ctx }) => {
     const boardWhere = eq(boards.name, "default");
     await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
@@ -151,7 +151,7 @@ export const boardRouter = createTRPCRouter({
       ctx.session?.user.id ?? null,
     );
   }),
-  byName: publicProcedure
+  getBoardByName: publicProcedure
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {
       const boardWhere = eq(boards.name, input.name);
@@ -163,7 +163,7 @@ export const boardRouter = createTRPCRouter({
         ctx.session?.user.id ?? null,
       );
     }),
-  savePartialSettings: protectedProcedure
+  savePartialBoardSettings: protectedProcedure
     .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(
@@ -200,7 +200,7 @@ export const boardRouter = createTRPCRouter({
         })
         .where(eq(boards.id, input.id));
     }),
-  save: protectedProcedure
+  saveBoard: protectedProcedure
     .input(validation.board.save)
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(
@@ -368,7 +368,7 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 
-  permissions: protectedProcedure
+  getBoardPermissions: protectedProcedure
     .input(validation.board.permissions)
     .query(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(
@@ -400,7 +400,7 @@ export const boardRouter = createTRPCRouter({
           return permissionA.user.name.localeCompare(permissionB.user.name);
         });
     }),
-  savePermissions: protectedProcedure
+  saveBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(

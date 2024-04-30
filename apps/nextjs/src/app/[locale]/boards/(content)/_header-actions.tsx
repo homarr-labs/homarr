@@ -123,23 +123,24 @@ const EditModeMenu = () => {
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
-  const { mutate: saveBoard, isPending } = clientApi.board.save.useMutation({
-    onSuccess() {
-      showSuccessNotification({
-        title: t("notification.success.title"),
-        message: t("notification.success.message"),
-      });
-      void utils.board.byName.invalidate({ name: board.name });
-      void revalidatePathAction(`/boards/${board.name}`);
-      setEditMode(false);
-    },
-    onError() {
-      showErrorNotification({
-        title: t("notification.error.title"),
-        message: t("notification.error.message"),
-      });
-    },
-  });
+  const { mutate: saveBoard, isPending } =
+    clientApi.board.saveBoard.useMutation({
+      onSuccess() {
+        showSuccessNotification({
+          title: t("notification.success.title"),
+          message: t("notification.success.message"),
+        });
+        void utils.board.getBoardByName.invalidate({ name: board.name });
+        void revalidatePathAction(`/boards/${board.name}`);
+        setEditMode(false);
+      },
+      onError() {
+        showErrorNotification({
+          title: t("notification.error.title"),
+          message: t("notification.error.message"),
+        });
+      },
+    });
 
   const toggle = useCallback(() => {
     if (isEditMode) return saveBoard(board);
