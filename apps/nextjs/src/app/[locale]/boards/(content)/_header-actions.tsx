@@ -25,14 +25,20 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { editModeAtom } from "~/components/board/editMode";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
+import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { HeaderButton } from "~/components/layout/header/button";
-import { useRequiredBoard } from "../../_context";
+import { useRequiredBoard } from "./_context";
 
-export default function BoardViewHeaderActions() {
+export const BoardContentHeaderActions = () => {
   const isEditMode = useAtomValue(editModeAtom);
   const board = useRequiredBoard();
+  const { hasChangeAccess } = useBoardPermissions(board);
+
+  if (!hasChangeAccess) {
+    return null; // Hide actions for user without access
+  }
 
   return (
     <>
@@ -45,7 +51,7 @@ export default function BoardViewHeaderActions() {
       </HeaderButton>
     </>
   );
-}
+};
 
 const AddMenu = () => {
   const { openModal: openCategoryEditModal } =
@@ -117,28 +123,29 @@ const EditModeMenu = () => {
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
-  const { mutate: saveBoard, isPending } = clientApi.board.save.useMutation({
-    onSuccess() {
-      showSuccessNotification({
-        title: t("notification.success.title"),
-        message: t("notification.success.message"),
-      });
-      void utils.board.byName.invalidate({ name: board.name });
-      void revalidatePathAction(`/boards/${board.name}`);
-      setEditMode(false);
-    },
-    onError() {
-      showErrorNotification({
-        title: t("notification.error.title"),
-        message: t("notification.error.message"),
-      });
-    },
-  });
+  const { mutate: saveBoard, isPending } =
+    clientApi.board.saveBoard.useMutation({
+      onSuccess() {
+        showSuccessNotification({
+          title: t("notification.success.title"),
+          message: t("notification.success.message"),
+        });
+        void utils.board.getBoardByName.invalidate({ name: board.name });
+        void revalidatePathAction(`/boards/${board.name}`);
+        setEditMode(false);
+      },
+      onError() {
+        showErrorNotification({
+          title: t("notification.error.title"),
+          message: t("notification.error.message"),
+        });
+      },
+    });
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     if (isEditMode) return saveBoard(board);
     setEditMode(true);
-  };
+  }, [board, isEditMode, saveBoard, setEditMode]);
 
   return (
     <HeaderButton onClick={toggle} loading={isPending}>

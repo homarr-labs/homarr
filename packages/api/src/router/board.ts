@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import type { Database, SQL } from "@homarr/db";
-import { and, createId, eq, inArray } from "@homarr/db";
+import { and, createId, eq, inArray, or } from "@homarr/db";
 import {
   boardPermissions,
   boards,
@@ -20,7 +20,8 @@ import {
 } from "@homarr/validation";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 const filterAddedItems = <TInput extends { id: string }>(
   inputArray: TInput[],
@@ -47,23 +48,41 @@ const filterUpdatedItems = <TInput extends { id: string }>(
   );
 
 export const boardRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.boards.findMany({
+  getAllBoards: publicProcedure.query(async ({ ctx }) => {
+    const permissionsOfCurrentUserWhenPresent =
+      await ctx.db.query.boardPermissions.findMany({
+        where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+      });
+    const boardIds = permissionsOfCurrentUserWhenPresent.map(
+      (permission) => permission.boardId,
+    );
+    const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
         id: true,
         name: true,
         isPublic: true,
       },
       with: {
-        sections: {
-          with: {
-            items: true,
+        creator: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
           },
         },
+        permissions: {
+          where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+        },
       },
+      where: or(
+        eq(boards.isPublic, true),
+        eq(boards.creatorId, ctx.session?.user.id ?? ""),
+        boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
+      ),
     });
+    return dbBoards;
   }),
-  create: publicProcedure
+  createBoard: protectedProcedure
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
@@ -71,6 +90,7 @@ export const boardRouter = createTRPCRouter({
         await transaction.insert(boards).values({
           id: boardId,
           name: input.name,
+          creatorId: ctx.session.user.id,
         });
         await transaction.insert(sections).values({
           id: createId(),
@@ -80,9 +100,15 @@ export const boardRouter = createTRPCRouter({
         });
       });
     }),
-  rename: publicProcedure
+  renameBoard: protectedProcedure
     .input(validation.board.rename)
     .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
       await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
 
       await ctx.db
@@ -90,40 +116,61 @@ export const boardRouter = createTRPCRouter({
         .set({ name: input.name })
         .where(eq(boards.id, input.id));
     }),
-  changeVisibility: publicProcedure
+  changeBoardVisibility: protectedProcedure
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
       await ctx.db
         .update(boards)
         .set({ isPublic: input.visibility === "public" })
         .where(eq(boards.id, input.id));
     }),
-  delete: publicProcedure
+  deleteBoard: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
-  default: publicProcedure.query(async ({ ctx }) => {
-    return await getFullBoardWithWhere(ctx.db, eq(boards.name, "default"));
+  getDefaultBoard: publicProcedure.query(async ({ ctx }) => {
+    const boardWhere = eq(boards.name, "default");
+    await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
+
+    return await getFullBoardWithWhere(
+      ctx.db,
+      boardWhere,
+      ctx.session?.user.id ?? null,
+    );
   }),
-  byName: publicProcedure
+  getBoardByName: publicProcedure
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {
-      return await getFullBoardWithWhere(ctx.db, eq(boards.name, input.name));
+      const boardWhere = eq(boards.name, input.name);
+      await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
+
+      return await getFullBoardWithWhere(
+        ctx.db,
+        boardWhere,
+        ctx.session?.user.id ?? null,
+      );
     }),
-  savePartialSettings: publicProcedure
+  savePartialBoardSettings: protectedProcedure
     .input(validation.board.savePartialSettings)
     .mutation(async ({ ctx, input }) => {
-      const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.id),
-      });
-
-      if (!board) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Board not found",
-        });
-      }
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "board-change",
+      );
 
       await ctx.db
         .update(boards)
@@ -153,13 +200,20 @@ export const boardRouter = createTRPCRouter({
         })
         .where(eq(boards.id, input.id));
     }),
-  save: publicProcedure
+  saveBoard: protectedProcedure
     .input(validation.board.save)
     .mutation(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "board-change",
+      );
+
       await ctx.db.transaction(async (transaction) => {
         const dbBoard = await getFullBoardWithWhere(
           transaction,
           eq(boards.id, input.id),
+          ctx.session.user.id,
         );
 
         const addedSections = filterAddedItems(
@@ -314,9 +368,15 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 
-  permissions: publicProcedure
+  getBoardPermissions: protectedProcedure
     .input(validation.board.permissions)
     .query(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
       const permissions = await ctx.db.query.boardPermissions.findMany({
         where: eq(boardPermissions.boardId, input.id),
         with: {
@@ -340,9 +400,15 @@ export const boardRouter = createTRPCRouter({
           return permissionA.user.name.localeCompare(permissionB.user.name);
         });
     }),
-  savePermissions: publicProcedure
+  saveBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
       await ctx.db.transaction(async (transaction) => {
         await transaction
           .delete(boardPermissions)
@@ -387,7 +453,11 @@ const noBoardWithSimilarName = async (
   }
 };
 
-const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
+const getFullBoardWithWhere = async (
+  db: Database,
+  where: SQL<unknown>,
+  userId: string | null,
+) => {
   const board = await db.query.boards.findFirst({
     where,
     with: {
@@ -408,6 +478,12 @@ const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
               },
             },
           },
+        },
+      },
+      permissions: {
+        where: eq(boardPermissions.userId, userId ?? ""),
+        columns: {
+          permission: true,
         },
       },
     },
@@ -437,8 +513,6 @@ const getFullBoardWithWhere = async (db: Database, where: SQL<unknown>) => {
   };
 };
 
-// The following is a bit of a mess, it's providing us typesafe options matching the widget kind.
-// But I might be able to do this in a better way in the future.
 const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),

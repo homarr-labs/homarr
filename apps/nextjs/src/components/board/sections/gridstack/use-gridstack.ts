@@ -8,11 +8,11 @@ import type {
   GridStackNode,
 } from "@homarr/gridstack";
 
+import type { Section } from "~/app/[locale]/boards/_types";
 import {
   useMarkSectionAsReady,
   useRequiredBoard,
-} from "~/app/[locale]/boards/_context";
-import type { Section } from "~/app/[locale]/boards/_types";
+} from "~/app/[locale]/boards/(content)/_context";
 import { editModeAtom } from "../../editMode";
 import { useItemActions } from "../../items/item-actions";
 import { initializeGridstack } from "./init-gridstack";

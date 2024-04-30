@@ -38,11 +38,11 @@ import type { Board } from "../../_types";
 
 interface Props {
   board: Board;
-  initialPermissions: RouterOutputs["board"]["permissions"];
+  initialPermissions: RouterOutputs["board"]["getBoardPermissions"];
 }
 
 export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
-  const { data: permissions } = clientApi.board.permissions.useQuery(
+  const { data: permissions } = clientApi.board.getBoardPermissions.useQuery(
     {
       id: board.id,
     },
@@ -64,7 +64,8 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
       }),
     },
   });
-  const { mutate, isPending } = clientApi.board.savePermissions.useMutation();
+  const { mutate, isPending } =
+    clientApi.board.saveBoardPermissions.useMutation();
   const utils = clientApi.useUtils();
   const { openModal } = useModalAction(UserSelectModal);
 
@@ -77,12 +78,12 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
         },
         {
           onSuccess: () => {
-            void utils.board.permissions.invalidate();
+            void utils.board.getBoardPermissions.invalidate();
           },
         },
       );
     },
-    [board.id, mutate, utils.board.permissions],
+    [board.id, mutate, utils.board.getBoardPermissions],
   );
 
   const handleAddUser = useCallback(() => {
@@ -237,7 +238,7 @@ const RenderOption: SelectProps["renderOption"] = ({ option, checked }) => {
 };
 
 interface FormType {
-  permissions: RouterOutputs["board"]["permissions"];
+  permissions: RouterOutputs["board"]["getBoardPermissions"];
 }
 
 interface InnerProps {

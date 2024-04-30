@@ -20,8 +20,8 @@ import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
-import { generateColors } from "../../_theme";
 import type { Board } from "../../_types";
+import { generateColors } from "../../(content)/_theme";
 import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {

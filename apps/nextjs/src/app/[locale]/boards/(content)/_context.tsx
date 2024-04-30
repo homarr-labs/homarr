@@ -16,7 +16,7 @@ import { clientApi } from "@homarr/api/client";
 import { updateBoardName } from "./_client";
 
 const BoardContext = createContext<{
-  board: RouterOutputs["board"]["default"];
+  board: RouterOutputs["board"]["getDefaultBoard"];
   isReady: boolean;
   markAsReady: (id: string) => void;
 } | null>(null);
@@ -24,11 +24,13 @@ const BoardContext = createContext<{
 export const BoardProvider = ({
   children,
   initialBoard,
-}: PropsWithChildren<{ initialBoard: RouterOutputs["board"]["byName"] }>) => {
+}: PropsWithChildren<{
+  initialBoard: RouterOutputs["board"]["getBoardByName"];
+}>) => {
   const pathname = usePathname();
   const utils = clientApi.useUtils();
   const [readySections, setReadySections] = useState<string[]>([]);
-  const { data } = clientApi.board.byName.useQuery(
+  const { data } = clientApi.board.getBoardByName.useQuery(
     { name: initialBoard.name },
     {
       initialData: initialBoard,
@@ -45,7 +47,7 @@ export const BoardProvider = ({
   useEffect(() => {
     return () => {
       setReadySections([]);
-      void utils.board.byName.invalidate({ name: initialBoard.name });
+      void utils.board.getBoardByName.invalidate({ name: initialBoard.name });
     };
   }, [pathname, utils, initialBoard.name]);
 

@@ -20,8 +20,8 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
-import { useUpdateBoard } from "../../_client";
 import type { Board } from "../../_types";
+import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {

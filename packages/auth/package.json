@@ -6,6 +6,7 @@
     ".": "./index.ts",
     "./security": "./security.ts",
     "./client": "./client.ts",
+    "./shared": "./shared.ts",
     "./env.mjs": "./env.mjs"
   },
   "private": true,

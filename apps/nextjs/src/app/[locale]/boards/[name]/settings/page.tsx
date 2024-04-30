@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { notFound } from "next/navigation";
 import {
   AccordionControl,
   AccordionItem,
@@ -17,6 +18,7 @@ import {
   IconSettings,
   IconUser,
 } from "@tabler/icons-react";
+import { TRPCError } from "@trpc/server";
 
 import { api } from "@homarr/api/server";
 import { capitalize } from "@homarr/common";
@@ -24,6 +26,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
 import type { TablerIcon } from "@homarr/ui";
 
+import { getBoardPermissions } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
 import { AccessSettingsContent } from "./_access";
 import { BackgroundSettingsContent } from "./_background";
@@ -42,12 +45,29 @@ interface Props {
   };
 }
 
+const getBoardAndPermissions = async (params: Props["params"]) => {
+  try {
+    const board = await api.board.getBoardByName({ name: params.name });
+    const permissions = await api.board.getBoardPermissions({ id: board.id });
+
+    return { board, permissions };
+  } catch (error) {
+    // Ignore not found errors and redirect to 404
+    // error is already logged in _layout-creator.tsx
+    if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+      notFound();
+    }
+
+    throw error;
+  }
+};
+
 export default async function BoardSettingsPage({
   params,
   searchParams,
 }: Props) {
-  const board = await api.board.byName({ name: params.name });
-  const permissions = await api.board.permissions({ id: board.id });
+  const { board, permissions } = await getBoardAndPermissions(params);
+  const { hasFullAccess } = await getBoardPermissions(board);
   const t = await getScopedI18n("board.setting");
 
   return (
@@ -73,20 +93,24 @@ export default async function BoardSettingsPage({
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
             <CustomCssSettingsContent />
           </AccordionItemFor>
-          <AccordionItemFor value="access" icon={IconUser}>
-            <AccessSettingsContent
-              board={board}
-              initialPermissions={permissions}
-            />
-          </AccordionItemFor>
-          <AccordionItemFor
-            value="dangerZone"
-            icon={IconAlertTriangle}
-            danger
-            noPadding
-          >
-            <DangerZoneSettingsContent />
-          </AccordionItemFor>
+          {hasFullAccess && (
+            <>
+              <AccordionItemFor value="access" icon={IconUser}>
+                <AccessSettingsContent
+                  board={board}
+                  initialPermissions={permissions}
+                />
+              </AccordionItemFor>
+              <AccordionItemFor
+                value="dangerZone"
+                icon={IconAlertTriangle}
+                danger
+                noPadding
+              >
+                <DangerZoneSettingsContent />
+              </AccordionItemFor>
+            </>
+          )}
         </ActiveTabAccordion>
       </Stack>
     </Container>

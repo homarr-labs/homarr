@@ -7,7 +7,7 @@ import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "..";
 import { ClientServerDataInitalizer } from "./client";
 import { GlobalItemServerDataProvider } from "./provider";
 
-type Board = RouterOutputs["board"]["default"];
+type Board = RouterOutputs["board"]["getDefaultBoard"];
 
 type Props = PropsWithChildren<{
   board: Board;

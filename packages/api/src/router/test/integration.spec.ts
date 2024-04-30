@@ -7,7 +7,7 @@ import { createDb } from "@homarr/db/test";
 
 import type { RouterInputs } from "../..";
 import { encryptSecret, integrationRouter } from "../integration";
-import { expectToBeDefined } from "./board.spec";
+import { expectToBeDefined } from "./helper";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
