@@ -144,6 +144,7 @@ export default {
     },
   },
   common: {
+    rtl: "{value}{symbol}",
     action: {
       backToOverview: "Zurück zur Übersicht",
       create: "Erstellen",
@@ -157,7 +158,7 @@ export default {
     },
     noResults: "Keine Ergebnisse gefunden",
     search: {
-      placeholder: "Suche nach etwas...",
+      placeholder: "Suche nach etwas",
       nothingFound: "Nichts gefunden",
     },
   },
