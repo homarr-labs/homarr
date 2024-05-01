@@ -11,6 +11,7 @@ import superjson from "superjson";
 
 import type { Session } from "@homarr/auth";
 import { db } from "@homarr/db";
+import type { GroupPermissionKey } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { ZodError } from "@homarr/validation";
 
@@ -115,3 +116,25 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
+/**
+ * Procedure that requires a specific permission
+ *
+ * If you want a query or mutation to ONLY be accessible to users with a specific permission, use
+ * this. It verifies that the user has the required permission
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const permissionRequiredProcedure = {
+  requiresPermission: (permission: GroupPermissionKey) => {
+    return protectedProcedure.use(async ({ ctx, input, next }) => {
+      if (!ctx.session?.user.permissions.includes(permission)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permission denied",
+        });
+      }
+      return next({ input, ctx });
+    });
+  },
+};

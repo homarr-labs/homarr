@@ -32,6 +32,7 @@ import { boardPermissions } from "@homarr/definitions";
 import { useForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { UserAvatarGroup } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { Board } from "../../_types";
@@ -110,6 +111,39 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
+        <Table>
+          <TableThead>
+            <TableTr>
+              <TableTh>Inherited group</TableTh>
+              <TableTh>Permission</TableTh>
+              <TableTh>Members</TableTh>
+            </TableTr>
+          </TableThead>
+          <TableTbody>
+            <TableTr>
+              <TableTd>Family</TableTd>
+              <TableTd>
+                <Group gap={0}>
+                  <Flex w={34} h={34} align="center" justify="center">
+                    <IconSettings
+                      size="1rem"
+                      color="var(--input-section-color, var(--mantine-color-dimmed))"
+                    />
+                  </Flex>
+                  <Text size="sm">
+                    {t(
+                      "board.setting.section.access.permission.item.board-full.label",
+                    )}
+                  </Text>
+                </Group>
+              </TableTd>
+              <TableTd>
+                <UserAvatarGroup users={[]} limit={5} size="sm" />
+              </TableTd>
+            </TableTr>
+          </TableTbody>
+        </Table>
+
         <Table>
           <TableThead>
             <TableTr>

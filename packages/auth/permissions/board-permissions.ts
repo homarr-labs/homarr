@@ -23,13 +23,19 @@ export const constructBoardPermissions = (
   const creatorId = "creator" in board ? board.creator?.id : board.creatorId;
 
   return {
-    hasFullAccess: session?.user?.id === creatorId,
+    hasFullAccess:
+      session?.user?.id === creatorId ||
+      session?.user.permissions.includes("board-full-access"),
     hasChangeAccess:
       session?.user?.id === creatorId ||
-      board.permissions.some(({ permission }) => permission === "board-change"),
+      board.permissions.some(
+        ({ permission }) => permission === "board-change",
+      ) ||
+      session?.user.permissions.includes("board-modify-all"),
     hasViewAccess:
       session?.user?.id === creatorId ||
       board.permissions.length >= 1 ||
-      board.isPublic,
+      board.isPublic ||
+      session?.user.permissions.includes("board-view-all"),
   };
 };

@@ -20,7 +20,12 @@ import {
 } from "@homarr/validation";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  permissionRequiredProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 const filterAddedItems = <TInput extends { id: string }>(
@@ -74,15 +79,19 @@ export const boardRouter = createTRPCRouter({
           where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
         },
       },
-      where: or(
-        eq(boards.isPublic, true),
-        eq(boards.creatorId, ctx.session?.user.id ?? ""),
-        boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
-      ),
+      // Allow viewing all boards if the user has the permission
+      where: ctx.session?.user.permissions.includes("board-view-all")
+        ? undefined
+        : or(
+            eq(boards.isPublic, true),
+            eq(boards.creatorId, ctx.session?.user.id ?? ""),
+            boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
+          ),
     });
     return dbBoards;
   }),
-  createBoard: protectedProcedure
+  createBoard: permissionRequiredProcedure
+    .requiresPermission("board-create")
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();

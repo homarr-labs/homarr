@@ -6,7 +6,7 @@ import type { Account, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { describe, expect, it, vi } from "vitest";
 
-import { createSignInCallback, sessionCallback } from "../callbacks";
+import { createSessionCallback, createSignInCallback } from "../callbacks";
 
 describe("session callback", () => {
   it("should add id and name to session user", async () => {
@@ -17,7 +17,7 @@ describe("session callback", () => {
       emailVerified: new Date("2023-01-13"),
     };
     const token: JWT = {};
-    const result = await sessionCallback({
+    const result = await createSessionCallback({
       session: {
         user: {
           id: "no-id",
