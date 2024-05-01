@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
 import {
   IconBook2,
+  IconBox,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
@@ -11,6 +12,7 @@ import {
   IconLayoutDashboard,
   IconLogs,
   IconMailForward,
+  IconPlug,
   IconQuestionMark,
   IconTool,
   IconUser,
@@ -37,6 +39,16 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconLayoutDashboard,
       href: "/manage/boards",
       label: t("items.boards"),
+    },
+    {
+      icon: IconBox,
+      href: "/manage/apps",
+      label: t("items.apps"),
+    },
+    {
+      icon: IconPlug,
+      href: "/manage/integrations",
+      label: t("items.integrations"),
     },
     {
       icon: IconUser,

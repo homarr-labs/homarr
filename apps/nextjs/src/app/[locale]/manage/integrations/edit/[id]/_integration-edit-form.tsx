@@ -20,6 +20,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
+import { revalidatePathAction } from "~/app/revalidatePathAction";
 import { SecretCard } from "../../_integration-secret-card";
 import { IntegrationSecretInput } from "../../_integration-secret-inputs";
 import {
@@ -27,7 +28,6 @@ import {
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
 } from "../../_integration-test-connection";
-import { revalidatePathAction } from "../../../../../revalidatePathAction";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];

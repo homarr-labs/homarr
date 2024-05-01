@@ -961,6 +961,8 @@ export default {
       items: {
         home: "Home",
         boards: "Boards",
+        apps: "Apps",
+        integrations: "Integrations",
         users: {
           label: "Users",
           items: {

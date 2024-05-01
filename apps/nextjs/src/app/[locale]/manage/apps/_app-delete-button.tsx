@@ -37,7 +37,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
                 title: t("notification.success.title"),
                 message: t("notification.success.message"),
               });
-              void revalidatePathAction("/apps");
+              void revalidatePathAction("/manage/apps");
             },
             onError: () => {
               showErrorNotification({

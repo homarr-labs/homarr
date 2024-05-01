@@ -28,7 +28,7 @@ export default async function AppsPage() {
       <Stack>
         <Group justify="space-between" align="center">
           <Title>Apps</Title>
-          <Button component={Link} href="/apps/new">
+          <Button component={Link} href="/manage/apps/new">
             New app
           </Button>
         </Group>
@@ -82,7 +82,7 @@ const AppCard = ({ app }: AppCardProps) => {
           <ActionIconGroup>
             <ActionIcon
               component={Link}
-              href={`/apps/edit/${app.id}`}
+              href={`/manage/apps/edit/${app.id}`}
               variant="subtle"
               color="gray"
               aria-label="Edit app"
@@ -107,7 +107,7 @@ const AppNoResults = async () => {
         <Text fw={500} size="lg">
           {t("app.page.list.noResults.title")}
         </Text>
-        <Anchor href="/apps/new">
+        <Anchor href="/manage/apps/new">
           {t("app.page.list.noResults.description")}
         </Anchor>
       </Stack>
