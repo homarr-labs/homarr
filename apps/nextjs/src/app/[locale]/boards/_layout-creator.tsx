@@ -17,11 +17,13 @@ import { BoardMantineProvider } from "./(content)/_theme";
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
   getInitialBoard: (params: TParams) => Promise<Board>;
+  isBoardContentPage: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
   getInitialBoard,
+  isBoardContentPage,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -39,7 +41,10 @@ export const createBoardLayout = <TParams extends Params>({
     });
 
     return (
-      <GlobalItemServerDataRunner board={initialBoard}>
+      <GlobalItemServerDataRunner
+        board={initialBoard}
+        shouldRun={isBoardContentPage}
+      >
         <BoardProvider initialBoard={initialBoard}>
           <BoardMantineProvider>
             <ClientShell hasNavigation={false}>
