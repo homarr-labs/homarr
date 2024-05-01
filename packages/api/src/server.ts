@@ -2,7 +2,7 @@ import { cache } from "react";
 import { headers } from "next/headers";
 
 import { createCaller, createTRPCContext } from "@homarr/api";
-import { auth } from "@homarr/auth";
+import { auth } from "@homarr/auth/next";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when

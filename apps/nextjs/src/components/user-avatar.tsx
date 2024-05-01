@@ -1,7 +1,7 @@
 import type { AvatarProps, MantineSize } from "@mantine/core";
 import { Avatar } from "@mantine/core";
 
-import { auth } from "@homarr/auth";
+import { auth } from "@homarr/auth/next";
 
 interface UserAvatarProps {
   size: MantineSize;
