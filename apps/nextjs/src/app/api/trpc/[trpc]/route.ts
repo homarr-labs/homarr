@@ -1,7 +1,7 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
-import { auth } from "@homarr/auth";
+import { auth } from "@homarr/auth/next";
 import { logger } from "@homarr/log";
 
 /**
