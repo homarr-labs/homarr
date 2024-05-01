@@ -68,7 +68,7 @@
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "tsx": "^4.8.1",
+    "tsx": "^4.8.2",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {
