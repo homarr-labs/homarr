@@ -8,4 +8,5 @@ export default createBoardLayout<{ locale: string; name: string }>({
   async getInitialBoard({ name }) {
     return await api.board.getBoardByName({ name });
   },
+  isBoardContentPage: false,
 });

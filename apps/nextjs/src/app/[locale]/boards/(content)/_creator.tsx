@@ -26,6 +26,7 @@ export const createBoardContentPage = <
     layout: createBoardLayout({
       headerActions: <BoardContentHeaderActions />,
       getInitialBoard,
+      isBoardContentPage: true,
     }),
     page: () => {
       return <ClientBoard />;
