@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { Group, Menu, ScrollArea, Stack, Text, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
@@ -20,13 +20,18 @@ export const IntegrationCreateDropdownContent = () => {
     );
   }, [search]);
 
+  const handleSearch = React.useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value),
+    [setSearch],
+  );
+
   return (
     <Stack>
       <TextInput
         leftSection={<IconSearch stroke={1.5} size={20} />}
         placeholder={t("integration.page.list.search")}
         value={search}
-        onChange={(event) => setSearch(event.target.value)}
+        onChange={handleSearch}
       />
 
       {filteredKinds.length > 0 ? (

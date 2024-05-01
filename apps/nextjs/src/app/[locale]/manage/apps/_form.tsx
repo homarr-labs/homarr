@@ -47,7 +47,7 @@ export const AppForm = (props: AppFormProps) => {
         <TextInput {...form.getInputProps("href")} label="URL" />
 
         <Group justify="end">
-          <Button variant="default" component={Link} href="/apps">
+          <Button variant="default" component={Link} href="/manage/apps">
             {t("common.action.backToOverview")}
           </Button>
           <Button type="submit" loading={isPending}>

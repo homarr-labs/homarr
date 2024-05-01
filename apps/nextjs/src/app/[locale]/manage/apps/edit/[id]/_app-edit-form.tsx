@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   showErrorNotification,
@@ -13,20 +14,24 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { validation, z } from "@homarr/validation";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
-import { AppForm } from "../_form";
+import { AppForm } from "../../_form";
 
-export const AppNewForm = () => {
-  const t = useScopedI18n("app.page.create.notification");
+interface AppEditFormProps {
+  app: RouterOutputs["app"]["byId"];
+}
+
+export const AppEditForm = ({ app }: AppEditFormProps) => {
+  const t = useScopedI18n("app.page.edit.notification");
   const router = useRouter();
 
-  const { mutate, isPending } = clientApi.app.create.useMutation({
+  const { mutate, isPending } = clientApi.app.update.useMutation({
     onSuccess: () => {
       showSuccessNotification({
         title: t("success.title"),
         message: t("success.message"),
       });
-      void revalidatePathAction("/apps").then(() => {
-        router.push("/apps");
+      void revalidatePathAction("/manage/apps").then(() => {
+        router.push("/manage/apps");
       });
     },
     onError: () => {
@@ -39,19 +44,23 @@ export const AppNewForm = () => {
 
   const handleSubmit = useCallback(
     (values: z.infer<typeof validation.app.manage>) => {
-      mutate(values);
+      mutate({
+        id: app.id,
+        ...values,
+      });
     },
-    [mutate],
+    [mutate, app.id],
   );
 
   const submitButtonTranslation = useCallback(
-    (t: TranslationFunction) => t("common.action.create"),
+    (t: TranslationFunction) => t("common.action.save"),
     [],
   );
 
   return (
     <AppForm
       submitButtonTranslation={submitButtonTranslation}
+      initialValues={app}
       handleSubmit={handleSubmit}
       isPending={isPending}
     />
