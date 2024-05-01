@@ -360,6 +360,10 @@ export default {
       next: "Next",
       checkoutDocs: "Check out the documentation",
     },
+    iconPicker: {
+      header:
+        "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+    },
     notification: {
       create: {
         success: "Creation successful",

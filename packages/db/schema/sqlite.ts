@@ -282,6 +282,21 @@ export const integrationItems = sqliteTable(
   }),
 );
 
+export const icons = sqliteTable("icon", {
+  id: text("icon_id").notNull().primaryKey(),
+  name: text("icon_name").notNull(),
+  url: text("icon_url").notNull(),
+  checksum: text("icon_checksum").notNull(),
+  iconRepositoryId: text("iconRepository_id")
+    .notNull()
+    .references(() => iconRepositories.id, { onDelete: "cascade" }),
+});
+
+export const iconRepositories = sqliteTable("iconRepository", {
+  id: text("iconRepository_id").notNull().primaryKey(),
+  slug: text("iconRepository_slug").notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -297,6 +312,20 @@ export const userRelations = relations(users, ({ many }) => ({
   ownedGroups: many(groups),
   invites: many(invites),
 }));
+
+export const iconRelations = relations(icons, ({ one }) => ({
+  repository: one(iconRepositories, {
+    fields: [icons.iconRepositoryId],
+    references: [iconRepositories.id],
+  }),
+}));
+
+export const iconRepositoryRelations = relations(
+  iconRepositories,
+  ({ many }) => ({
+    icons: many(icons),
+  }),
+);
 
 export const inviteRelations = relations(invites, ({ one }) => ({
   creator: one(users, {
