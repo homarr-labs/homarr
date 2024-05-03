@@ -34,7 +34,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "zod": "^3.23.5",
+    "zod": "^3.23.6",
     "@homarr/definitions": "workspace:^0.1.0"
   }
 }
