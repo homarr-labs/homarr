@@ -3,8 +3,12 @@ import { TRPCError } from "@trpc/server";
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
-import { eq } from "@homarr/db";
-import { boardPermissions } from "@homarr/db/schema/sqlite";
+import { eq, inArray } from "@homarr/db";
+import {
+  boardGroupPermissions,
+  boardUserPermissions,
+  groupMembers,
+} from "@homarr/db/schema/sqlite";
 import type { BoardPermission } from "@homarr/definitions";
 
 /**
@@ -19,6 +23,9 @@ export const throwIfActionForbiddenAsync = async (
   permission: "full-access" | BoardPermission,
 ) => {
   const { db, session } = ctx;
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, session?.user.id ?? ""),
+  });
   const board = await db.query.boards.findFirst({
     where: boardWhere,
     columns: {
@@ -27,8 +34,14 @@ export const throwIfActionForbiddenAsync = async (
       isPublic: true,
     },
     with: {
-      permissions: {
-        where: eq(boardPermissions.userId, session?.user.id ?? ""),
+      userPermissions: {
+        where: eq(boardUserPermissions.userId, session?.user.id ?? ""),
+      },
+      groupPermissions: {
+        where: inArray(
+          boardGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId).concat(""),
+        ),
       },
     },
   });

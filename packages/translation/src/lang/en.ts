@@ -173,6 +173,10 @@ export default {
           },
         },
       },
+      select: {
+        label: "Select group",
+        notFound: "No group found",
+      },
     },
   },
   app: {
@@ -874,9 +878,15 @@ export default {
             userSelect: {
               title: "Add user permission",
             },
+            groupSelect: {
+              title: "Add group permission",
+            },
             field: {
               user: {
                 label: "User",
+              },
+              group: {
+                label: "Group",
               },
               permission: {
                 label: "Permission",

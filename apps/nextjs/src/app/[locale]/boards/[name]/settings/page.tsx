@@ -51,7 +51,11 @@ const getBoardAndPermissions = async (params: Props["params"]) => {
     const { hasFullAccess } = await getBoardPermissions(board);
     const permissions = hasFullAccess
       ? await api.board.getBoardPermissions({ id: board.id })
-      : [];
+      : {
+          userPermissions: [],
+          groupPermissions: [],
+          inherited: [],
+        };
 
     return { board, permissions };
   } catch (error) {

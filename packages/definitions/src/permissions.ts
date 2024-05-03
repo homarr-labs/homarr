@@ -1,4 +1,4 @@
-import { objectKeys } from "@homarr/common";
+import { objectEntries, objectKeys } from "@homarr/common";
 
 export const boardPermissions = ["board-view", "board-change"] as const;
 export const groupPermissions = {
@@ -19,6 +19,21 @@ const groupPermissionParents = {
   "integration-full-access": ["integration-interact-all", "integration-create"],
   admin: ["board-full-access", "integration-full-access"],
 } satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey[]>>;
+
+export const getPermissionsWithParents = (
+  permissions: GroupPermissionKey[],
+): GroupPermissionKey[] => {
+  const res = permissions.map((permission) => {
+    return objectEntries(groupPermissionParents)
+      .filter(([_key, value]: [string, GroupPermissionKey[]]) =>
+        value.includes(permission),
+      )
+      .map(([key]) => getPermissionsWithParents([key]))
+      .flat();
+  });
+
+  return permissions.concat(res.flat());
+};
 
 const getPermissionsInner = (
   permissionSet: Set<GroupPermissionKey>,

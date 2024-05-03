@@ -4,14 +4,17 @@ import superjson from "superjson";
 import type { Database, SQL } from "@homarr/db";
 import { and, createId, eq, inArray, or } from "@homarr/db";
 import {
-  boardPermissions,
+  boardGroupPermissions,
   boards,
+  boardUserPermissions,
+  groupMembers,
+  groupPermissions,
   integrationItems,
   items,
   sections,
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
-import { widgetKinds } from "@homarr/definitions";
+import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
 import {
   createSectionSchema,
   sharedItemSchema,
@@ -55,12 +58,31 @@ const filterUpdatedItems = <TInput extends { id: string }>(
 export const boardRouter = createTRPCRouter({
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const permissionsOfCurrentUserWhenPresent =
-      await ctx.db.query.boardPermissions.findMany({
-        where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+      await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
       });
-    const boardIds = permissionsOfCurrentUserWhenPresent.map(
-      (permission) => permission.boardId,
-    );
+    const permissionsOfCurrentUserGroupsWhenPresent =
+      await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+        with: {
+          group: {
+            with: {
+              boardPermissions: {},
+            },
+          },
+        },
+      });
+    const boardIds = permissionsOfCurrentUserWhenPresent
+      .map((permission) => permission.boardId)
+      .concat(
+        permissionsOfCurrentUserGroupsWhenPresent
+          .map((groupMember) =>
+            groupMember.group.boardPermissions.map(
+              (permission) => permission.boardId,
+            ),
+          )
+          .flat(),
+      );
     const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
         id: true,
@@ -75,8 +97,8 @@ export const boardRouter = createTRPCRouter({
             image: true,
           },
         },
-        permissions: {
-          where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+        userPermissions: {
+          where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
         },
       },
       // Allow viewing all boards if the user has the permission
@@ -160,6 +182,7 @@ export const boardRouter = createTRPCRouter({
       ctx.session?.user.id ?? null,
     );
   }),
+  // TODO: check if group permissions are correct
   getBoardByName: publicProcedure
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {
@@ -386,10 +409,17 @@ export const boardRouter = createTRPCRouter({
         "full-access",
       );
 
-      const permissions = await ctx.db.query.boardPermissions.findMany({
-        where: eq(boardPermissions.boardId, input.id),
+      const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+        where: inArray(
+          groupPermissions.permission,
+          getPermissionsWithParents([
+            "board-view-all",
+            "board-modify-all",
+            "board-full-access",
+          ]),
+        ),
         with: {
-          user: {
+          group: {
             columns: {
               id: true,
               name: true,
@@ -397,19 +427,61 @@ export const boardRouter = createTRPCRouter({
           },
         },
       });
-      return permissions
-        .map((permission) => ({
+
+      const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.boardId, input.id),
+        with: {
           user: {
-            id: permission.userId,
-            name: permission.user.name ?? "",
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+            },
           },
-          permission: permission.permission,
-        }))
-        .sort((permissionA, permissionB) => {
-          return permissionA.user.name.localeCompare(permissionB.user.name);
+        },
+      });
+
+      const dbGroupBoardPermission =
+        await ctx.db.query.boardGroupPermissions.findMany({
+          where: eq(boardGroupPermissions.boardId, input.id),
+          with: {
+            group: {
+              columns: {
+                id: true,
+                name: true,
+              },
+            },
+          },
         });
+
+      return {
+        inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+          return permissionA.group.name.localeCompare(permissionB.group.name);
+        }),
+        userPermissions: userPermissions
+          .map(({ user, permission }) => ({
+            user,
+            permission,
+          }))
+          .sort((permissionA, permissionB) => {
+            return (permissionA.user.name ?? "").localeCompare(
+              permissionB.user.name ?? "",
+            );
+          }),
+        groupPermissions: dbGroupBoardPermission
+          .map(({ group, permission }) => ({
+            group: {
+              id: group.id,
+              name: group.name,
+            },
+            permission,
+          }))
+          .sort((permissionA, permissionB) => {
+            return permissionA.group.name.localeCompare(permissionB.group.name);
+          }),
+      };
     }),
-  saveBoardPermissions: protectedProcedure
+  saveUserBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(
@@ -420,14 +492,39 @@ export const boardRouter = createTRPCRouter({
 
       await ctx.db.transaction(async (transaction) => {
         await transaction
-          .delete(boardPermissions)
-          .where(eq(boardPermissions.boardId, input.id));
+          .delete(boardUserPermissions)
+          .where(eq(boardUserPermissions.boardId, input.id));
         if (input.permissions.length === 0) {
           return;
         }
-        await transaction.insert(boardPermissions).values(
+        await transaction.insert(boardUserPermissions).values(
           input.permissions.map((permission) => ({
-            userId: permission.user.id,
+            userId: permission.itemId,
+            permission: permission.permission,
+            boardId: input.id,
+          })),
+        );
+      });
+    }),
+  saveGroupBoardPermissions: protectedProcedure
+    .input(validation.board.savePermissions)
+    .mutation(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
+      await ctx.db.transaction(async (transaction) => {
+        await transaction
+          .delete(boardGroupPermissions)
+          .where(eq(boardGroupPermissions.boardId, input.id));
+        if (input.permissions.length === 0) {
+          return;
+        }
+        await transaction.insert(boardGroupPermissions).values(
+          input.permissions.map((permission) => ({
+            groupId: permission.itemId,
             permission: permission.permission,
             boardId: input.id,
           })),
@@ -467,6 +564,9 @@ const getFullBoardWithWhere = async (
   where: SQL<unknown>,
   userId: string | null,
 ) => {
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId ?? ""),
+  });
   const board = await db.query.boards.findFirst({
     where,
     with: {
@@ -474,6 +574,7 @@ const getFullBoardWithWhere = async (
         columns: {
           id: true,
           name: true,
+          image: true,
         },
       },
       sections: {
@@ -489,11 +590,17 @@ const getFullBoardWithWhere = async (
           },
         },
       },
-      permissions: {
-        where: eq(boardPermissions.userId, userId ?? ""),
+      userPermissions: {
+        where: eq(boardUserPermissions.userId, userId ?? ""),
         columns: {
           permission: true,
         },
+      },
+      groupPermissions: {
+        where: inArray(
+          boardGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId).concat(""),
+        ),
       },
     },
   });
