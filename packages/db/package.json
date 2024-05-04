@@ -20,8 +20,8 @@
     "migration:sqlite:generate": "drizzle-kit generate:sqlite --config ./sqlite.config.ts",
     "migration:run": "tsx ./migrate.ts",
     "migration:mysql:generate": "drizzle-kit generate:mysql --config ./mysql.config.ts",
-    "push": "drizzle-kit push:sqlite",
-    "studio": "drizzle-kit studio",
+    "push": "drizzle-kit push:sqlite --config ./sqlite.config.ts",
+    "studio": "drizzle-kit studio --config ./sqlite.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

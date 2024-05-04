@@ -5,7 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 
 import { db } from "@homarr/db";
 
-import { createSignInCallback, sessionCallback } from "./callbacks";
+import { createSessionCallback, createSignInCallback } from "./callbacks";
 import { createCredentialsConfiguration } from "./providers/credentials";
 import { EmptyNextAuthProvider } from "./providers/empty";
 import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
@@ -33,7 +33,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
       EmptyNextAuthProvider(),
     ],
     callbacks: {
-      session: sessionCallback,
+      session: createSessionCallback(db),
       signIn: createSignInCallback(adapter, isCredentialsRequest),
     },
     secret: "secret-is-not-defined-yet", // TODO: This should be added later

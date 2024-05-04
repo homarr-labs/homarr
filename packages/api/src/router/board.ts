@@ -4,14 +4,17 @@ import superjson from "superjson";
 import type { Database, SQL } from "@homarr/db";
 import { and, createId, eq, inArray, or } from "@homarr/db";
 import {
-  boardPermissions,
+  boardGroupPermissions,
   boards,
+  boardUserPermissions,
+  groupMembers,
+  groupPermissions,
   integrationItems,
   items,
   sections,
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
-import { widgetKinds } from "@homarr/definitions";
+import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
 import {
   createSectionSchema,
   sharedItemSchema,
@@ -20,42 +23,43 @@ import {
 } from "@homarr/validation";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  permissionRequiredProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
-
-const filterAddedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  inputArray.filter(
-    (inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id),
-  );
-
-const filterRemovedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  dbArray.filter(
-    (dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id),
-  );
-
-const filterUpdatedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  inputArray.filter((inputItem) =>
-    dbArray.some((dbItem) => dbItem.id === inputItem.id),
-  );
 
 export const boardRouter = createTRPCRouter({
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const permissionsOfCurrentUserWhenPresent =
-      await ctx.db.query.boardPermissions.findMany({
-        where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+      await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
       });
-    const boardIds = permissionsOfCurrentUserWhenPresent.map(
-      (permission) => permission.boardId,
-    );
+
+    const permissionsOfCurrentUserGroupsWhenPresent =
+      await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+        with: {
+          group: {
+            with: {
+              boardPermissions: {},
+            },
+          },
+        },
+      });
+    const boardIds = permissionsOfCurrentUserWhenPresent
+      .map((permission) => permission.boardId)
+      .concat(
+        permissionsOfCurrentUserGroupsWhenPresent
+          .map((groupMember) =>
+            groupMember.group.boardPermissions.map(
+              (permission) => permission.boardId,
+            ),
+          )
+          .flat(),
+      );
     const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
         id: true,
@@ -70,19 +74,34 @@ export const boardRouter = createTRPCRouter({
             image: true,
           },
         },
-        permissions: {
-          where: eq(boardPermissions.userId, ctx.session?.user.id ?? ""),
+        userPermissions: {
+          where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+        },
+        groupPermissions: {
+          where:
+            permissionsOfCurrentUserGroupsWhenPresent.length >= 1
+              ? inArray(
+                  boardGroupPermissions.groupId,
+                  permissionsOfCurrentUserGroupsWhenPresent.map(
+                    (groupMember) => groupMember.groupId,
+                  ),
+                )
+              : undefined,
         },
       },
-      where: or(
-        eq(boards.isPublic, true),
-        eq(boards.creatorId, ctx.session?.user.id ?? ""),
-        boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
-      ),
+      // Allow viewing all boards if the user has the permission
+      where: ctx.session?.user.permissions.includes("board-view-all")
+        ? undefined
+        : or(
+            eq(boards.isPublic, true),
+            eq(boards.creatorId, ctx.session?.user.id ?? ""),
+            boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
+          ),
     });
     return dbBoards;
   }),
-  createBoard: protectedProcedure
+  createBoard: permissionRequiredProcedure
+    .requiresPermission("board-create")
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
@@ -377,10 +396,20 @@ export const boardRouter = createTRPCRouter({
         "full-access",
       );
 
-      const permissions = await ctx.db.query.boardPermissions.findMany({
-        where: eq(boardPermissions.boardId, input.id),
+      const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+        where: inArray(
+          groupPermissions.permission,
+          getPermissionsWithParents([
+            "board-view-all",
+            "board-modify-all",
+            "board-full-access",
+          ]),
+        ),
+        columns: {
+          groupId: false,
+        },
         with: {
-          user: {
+          group: {
             columns: {
               id: true,
               name: true,
@@ -388,19 +417,61 @@ export const boardRouter = createTRPCRouter({
           },
         },
       });
-      return permissions
-        .map((permission) => ({
+
+      const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.boardId, input.id),
+        with: {
           user: {
-            id: permission.userId,
-            name: permission.user.name ?? "",
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+            },
           },
-          permission: permission.permission,
-        }))
-        .sort((permissionA, permissionB) => {
-          return permissionA.user.name.localeCompare(permissionB.user.name);
+        },
+      });
+
+      const dbGroupBoardPermission =
+        await ctx.db.query.boardGroupPermissions.findMany({
+          where: eq(boardGroupPermissions.boardId, input.id),
+          with: {
+            group: {
+              columns: {
+                id: true,
+                name: true,
+              },
+            },
+          },
         });
+
+      return {
+        inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+          return permissionA.group.name.localeCompare(permissionB.group.name);
+        }),
+        userPermissions: userPermissions
+          .map(({ user, permission }) => ({
+            user,
+            permission,
+          }))
+          .sort((permissionA, permissionB) => {
+            return (permissionA.user.name ?? "").localeCompare(
+              permissionB.user.name ?? "",
+            );
+          }),
+        groupPermissions: dbGroupBoardPermission
+          .map(({ group, permission }) => ({
+            group: {
+              id: group.id,
+              name: group.name,
+            },
+            permission,
+          }))
+          .sort((permissionA, permissionB) => {
+            return permissionA.group.name.localeCompare(permissionB.group.name);
+          }),
+      };
     }),
-  saveBoardPermissions: protectedProcedure
+  saveUserBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(
@@ -411,14 +482,39 @@ export const boardRouter = createTRPCRouter({
 
       await ctx.db.transaction(async (transaction) => {
         await transaction
-          .delete(boardPermissions)
-          .where(eq(boardPermissions.boardId, input.id));
+          .delete(boardUserPermissions)
+          .where(eq(boardUserPermissions.boardId, input.id));
         if (input.permissions.length === 0) {
           return;
         }
-        await transaction.insert(boardPermissions).values(
+        await transaction.insert(boardUserPermissions).values(
           input.permissions.map((permission) => ({
-            userId: permission.user.id,
+            userId: permission.itemId,
+            permission: permission.permission,
+            boardId: input.id,
+          })),
+        );
+      });
+    }),
+  saveGroupBoardPermissions: protectedProcedure
+    .input(validation.board.savePermissions)
+    .mutation(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "full-access",
+      );
+
+      await ctx.db.transaction(async (transaction) => {
+        await transaction
+          .delete(boardGroupPermissions)
+          .where(eq(boardGroupPermissions.boardId, input.id));
+        if (input.permissions.length === 0) {
+          return;
+        }
+        await transaction.insert(boardGroupPermissions).values(
+          input.permissions.map((permission) => ({
+            groupId: permission.itemId,
             permission: permission.permission,
             boardId: input.id,
           })),
@@ -458,6 +554,9 @@ const getFullBoardWithWhere = async (
   where: SQL<unknown>,
   userId: string | null,
 ) => {
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId ?? ""),
+  });
   const board = await db.query.boards.findFirst({
     where,
     with: {
@@ -465,6 +564,7 @@ const getFullBoardWithWhere = async (
         columns: {
           id: true,
           name: true,
+          image: true,
         },
       },
       sections: {
@@ -480,11 +580,17 @@ const getFullBoardWithWhere = async (
           },
         },
       },
-      permissions: {
-        where: eq(boardPermissions.userId, userId ?? ""),
+      userPermissions: {
+        where: eq(boardUserPermissions.userId, userId ?? ""),
         columns: {
           permission: true,
         },
+      },
+      groupPermissions: {
+        where: inArray(
+          boardGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId).concat(""),
+        ),
       },
     },
   });
@@ -530,3 +636,27 @@ const parseSection = (section: unknown) => {
   }
   return result.data;
 };
+
+const filterAddedItems = <TInput extends { id: string }>(
+  inputArray: TInput[],
+  dbArray: TInput[],
+) =>
+  inputArray.filter(
+    (inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id),
+  );
+
+const filterRemovedItems = <TInput extends { id: string }>(
+  inputArray: TInput[],
+  dbArray: TInput[],
+) =>
+  dbArray.filter(
+    (dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id),
+  );
+
+const filterUpdatedItems = <TInput extends { id: string }>(
+  inputArray: TInput[],
+  dbArray: TInput[],
+) =>
+  inputArray.filter((inputItem) =>
+    dbArray.some((dbItem) => dbItem.id === inputItem.id),
+  );

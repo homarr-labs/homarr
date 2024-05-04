@@ -21,7 +21,12 @@ const iconProps = {
 interface BoardCardMenuDropdownProps {
   board: Pick<
     RouterOutputs["board"]["getAllBoards"][number],
-    "id" | "name" | "creator" | "permissions" | "isPublic"
+    | "id"
+    | "name"
+    | "creator"
+    | "userPermissions"
+    | "groupPermissions"
+    | "isPublic"
   >;
 }
 

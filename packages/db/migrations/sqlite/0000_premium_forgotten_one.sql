@@ -22,7 +22,16 @@ CREATE TABLE `app` (
 	`href` text
 );
 --> statement-breakpoint
-CREATE TABLE `boardPermission` (
+CREATE TABLE `boardGroupPermission` (
+	`board_id` text NOT NULL,
+	`group_id` text NOT NULL,
+	`permission` text NOT NULL,
+	PRIMARY KEY(`board_id`, `group_id`, `permission`),
+	FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`group_id`) REFERENCES `group`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `boardUserPermission` (
 	`board_id` text NOT NULL,
 	`user_id` text NOT NULL,
 	`permission` text NOT NULL,

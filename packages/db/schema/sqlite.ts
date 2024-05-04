@@ -198,8 +198,8 @@ export const boards = sqliteTable("board", {
   columnCount: int("column_count").default(10).notNull(),
 });
 
-export const boardPermissions = sqliteTable(
-  "boardPermission",
+export const boardUserPermissions = sqliteTable(
+  "boardUserPermission",
   {
     boardId: text("board_id")
       .notNull()
@@ -212,6 +212,24 @@ export const boardPermissions = sqliteTable(
   (table) => ({
     compoundKey: primaryKey({
       columns: [table.boardId, table.userId, table.permission],
+    }),
+  }),
+);
+
+export const boardGroupPermissions = sqliteTable(
+  "boardGroupPermission",
+  {
+    boardId: text("board_id")
+      .notNull()
+      .references(() => boards.id, { onDelete: "cascade" }),
+    groupId: text("group_id")
+      .notNull()
+      .references(() => groups.id, { onDelete: "cascade" }),
+    permission: text("permission").$type<BoardPermission>().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.boardId, table.groupId, table.permission],
     }),
   }),
 );
@@ -274,7 +292,7 @@ export const accountRelations = relations(accounts, ({ one }) => ({
 export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   boards: many(boards),
-  boardPermissions: many(boardPermissions),
+  boardPermissions: many(boardUserPermissions),
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
@@ -307,6 +325,7 @@ export const groupMemberRelations = relations(groupMembers, ({ one }) => ({
 
 export const groupRelations = relations(groups, ({ one, many }) => ({
   permissions: many(groupPermissions),
+  boardPermissions: many(boardGroupPermissions),
   members: many(groupMembers),
   owner: one(users, {
     fields: [groups.ownerId],
@@ -324,15 +343,29 @@ export const groupPermissionRelations = relations(
   }),
 );
 
-export const boardPermissionRelations = relations(
-  boardPermissions,
+export const boardUserPermissionRelations = relations(
+  boardUserPermissions,
   ({ one }) => ({
     user: one(users, {
-      fields: [boardPermissions.userId],
+      fields: [boardUserPermissions.userId],
       references: [users.id],
     }),
     board: one(boards, {
-      fields: [boardPermissions.boardId],
+      fields: [boardUserPermissions.boardId],
+      references: [boards.id],
+    }),
+  }),
+);
+
+export const boardGroupPermissionRelations = relations(
+  boardGroupPermissions,
+  ({ one }) => ({
+    group: one(groups, {
+      fields: [boardGroupPermissions.groupId],
+      references: [groups.id],
+    }),
+    board: one(boards, {
+      fields: [boardGroupPermissions.boardId],
       references: [boards.id],
     }),
   }),
@@ -359,7 +392,8 @@ export const boardRelations = relations(boards, ({ many, one }) => ({
     fields: [boards.creatorId],
     references: [users.id],
   }),
-  permissions: many(boardPermissions),
+  userPermissions: many(boardUserPermissions),
+  groupPermissions: many(boardGroupPermissions),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({

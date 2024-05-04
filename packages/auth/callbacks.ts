@@ -2,6 +2,11 @@ import { cookies } from "next/headers";
 import type { Adapter } from "@auth/core/adapters";
 import type { NextAuthConfig } from "next-auth";
 
+import type { Database } from "@homarr/db";
+import { eq, inArray } from "@homarr/db";
+import { groupMembers, groupPermissions } from "@homarr/db/schema/sqlite";
+import { getPermissionsWithChildren } from "@homarr/definitions";
+
 import {
   expireDateAfter,
   generateSessionToken,
@@ -9,17 +14,44 @@ import {
   sessionTokenCookieName,
 } from "./session";
 
-export const sessionCallback: NextAuthCallbackOf<"session"> = ({
-  session,
-  user,
-}) => ({
-  ...session,
-  user: {
-    ...session.user,
-    id: user.id,
-    name: user.name,
-  },
-});
+export const getCurrentUserPermissions = async (
+  db: Database,
+  userId: string,
+) => {
+  const dbGroupMembers = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId),
+  });
+  const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
+  const dbGroupPermissions = await db
+    .selectDistinct({
+      permission: groupPermissions.permission,
+    })
+    .from(groupPermissions)
+    .where(
+      groupIds.length > 0
+        ? inArray(groupPermissions.groupId, groupIds)
+        : undefined,
+    );
+  const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
+
+  return getPermissionsWithChildren(permissionKeys);
+};
+
+export const createSessionCallback = (
+  db: Database,
+): NextAuthCallbackOf<"session"> => {
+  return async ({ session, user }) => {
+    return {
+      ...session,
+      user: {
+        ...session.user,
+        id: user.id,
+        name: user.name,
+        permissions: await getCurrentUserPermissions(db, user.id),
+      },
+    };
+  };
+};
 
 export const createSignInCallback =
   (

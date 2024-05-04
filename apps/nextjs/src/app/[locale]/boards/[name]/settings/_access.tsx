@@ -1,40 +1,19 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import type { SelectProps } from "@mantine/core";
-import {
-  Button,
-  Flex,
-  Group,
-  Loader,
-  Select,
-  Stack,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTh,
-  TableThead,
-  TableTr,
-  Text,
-} from "@mantine/core";
-import {
-  IconCheck,
-  IconEye,
-  IconPencil,
-  IconPlus,
-  IconSettings,
-} from "@tabler/icons-react";
+import { useState } from "react";
+import { Group, Stack, Tabs } from "@mantine/core";
+import { IconUser, IconUserDown, IconUsersGroup } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import type { BoardPermission } from "@homarr/definitions";
-import { boardPermissions } from "@homarr/definitions";
-import { useForm } from "@homarr/form";
-import { createModal, useModalAction } from "@homarr/modals";
-import { useI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
+import { CountBadge } from "@homarr/ui";
 
 import type { Board } from "../../_types";
+import { GroupsForm } from "./_access/group-access";
+import { InheritTable } from "./_access/inherit-access";
+import { UsersForm } from "./_access/user-access";
 
 interface Props {
   board: Board;
@@ -54,251 +33,73 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
     },
   );
 
-  const t = useI18n();
-  const form = useForm<FormType>({
-    initialValues: {
-      permissions: permissions.sort((permissionA, permissionB) => {
-        if (permissionA.user.id === board.creatorId) return -1;
-        if (permissionB.user.id === board.creatorId) return 1;
-        return permissionA.user.name.localeCompare(permissionB.user.name);
-      }),
-    },
+  const [counts, setCounts] = useState({
+    user: initialPermissions.userPermissions.length + (board.creator ? 1 : 0),
+    group: initialPermissions.groupPermissions.length,
   });
-  const { mutate, isPending } =
-    clientApi.board.saveBoardPermissions.useMutation();
-  const utils = clientApi.useUtils();
-  const { openModal } = useModalAction(UserSelectModal);
-
-  const handleSubmit = useCallback(
-    (values: FormType) => {
-      mutate(
-        {
-          id: board.id,
-          permissions: values.permissions,
-        },
-        {
-          onSuccess: () => {
-            void utils.board.getBoardPermissions.invalidate();
-          },
-        },
-      );
-    },
-    [board.id, mutate, utils.board.getBoardPermissions],
-  );
-
-  const handleAddUser = useCallback(() => {
-    const presentUserIds = form.values.permissions.map(
-      (permission) => permission.user.id,
-    );
-
-    openModal({
-      presentUserIds: board.creatorId
-        ? presentUserIds.concat(board.creatorId)
-        : presentUserIds,
-      onSelect: (user) => {
-        form.setFieldValue("permissions", [
-          ...form.values.permissions,
-          {
-            user,
-            permission: "board-view",
-          },
-        ]);
-      },
-    });
-  }, [form, openModal, board.creatorId]);
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack>
-        <Table>
-          <TableThead>
-            <TableTr>
-              <TableTh>
-                {t("board.setting.section.access.permission.field.user.label")}
-              </TableTh>
-              <TableTh>
-                {t(
-                  "board.setting.section.access.permission.field.permission.label",
-                )}
-              </TableTh>
-            </TableTr>
-          </TableThead>
-          <TableTbody>
-            {board.creator && <CreatorRow user={board.creator} />}
-            {form.values.permissions.map((row, index) => {
-              const Icon = icons[row.permission];
-              return (
-                <TableTr key={row.user.id}>
-                  <TableTd>{row.user.name}</TableTd>
-                  <TableTd>
-                    <Group wrap="nowrap">
-                      <Select
-                        flex="1"
-                        leftSection={<Icon size="1rem" />}
-                        renderOption={RenderOption}
-                        variant="unstyled"
-                        data={boardPermissions.map((permission) => ({
-                          value: permission,
-                          label: t(
-                            `board.setting.section.access.permission.item.${permission}.label`,
-                          ),
-                        }))}
-                        {...form.getInputProps(
-                          `permissions.${index}.permission`,
-                        )}
-                      />
-                      <Button
-                        size="xs"
-                        variant="subtle"
-                        onClick={() => {
-                          form.setFieldValue(
-                            "permissions",
-                            form.values.permissions.filter(
-                              (_, i) => i !== index,
-                            ),
-                          );
-                        }}
-                      >
-                        {t("common.action.remove")}
-                      </Button>
-                    </Group>
-                  </TableTd>
-                </TableTr>
-              );
-            })}
-          </TableTbody>
-        </Table>
-
-        <Group justify="space-between">
-          <Button
-            rightSection={<IconPlus size="1rem" />}
-            variant="light"
-            onClick={handleAddUser}
-          >
-            {t("common.action.add")}
-          </Button>
-          <Button type="submit" loading={isPending} color="teal">
-            {t("common.action.saveChanges")}
-          </Button>
-        </Group>
-      </Stack>
-    </form>
-  );
-};
-
-interface CreatorRowProps {
-  user: Exclude<Board["creator"], null>;
-}
-
-const CreatorRow = ({ user }: CreatorRowProps) => {
-  const t = useI18n();
-  return (
-    <TableTr>
-      <TableTd>{user.name}</TableTd>
-      <TableTd>
-        <Group gap={0}>
-          <Flex w={34} h={34} align="center" justify="center">
-            <IconSettings
-              size="1rem"
-              color="var(--input-section-color, var(--mantine-color-dimmed))"
-            />
-          </Flex>
-          <Text size="sm">
-            {t("board.setting.section.access.permission.item.board-full.label")}
-          </Text>
-        </Group>
-      </TableTd>
-    </TableTr>
-  );
-};
-
-const icons = {
-  "board-change": IconPencil,
-  "board-view": IconEye,
-} satisfies Record<BoardPermission, TablerIcon>;
-
-const iconProps = {
-  stroke: 1.5,
-  color: "currentColor",
-  opacity: 0.6,
-  size: "1rem",
-};
-
-const RenderOption: SelectProps["renderOption"] = ({ option, checked }) => {
-  const Icon = icons[option.value as BoardPermission];
-  return (
-    <Group flex="1" gap="xs">
-      <Icon {...iconProps} />
-      {option.label}
-      {checked && (
-        <IconCheck style={{ marginInlineStart: "auto" }} {...iconProps} />
-      )}
-    </Group>
-  );
-};
-
-interface FormType {
-  permissions: RouterOutputs["board"]["getBoardPermissions"];
-}
-
-interface InnerProps {
-  presentUserIds: string[];
-  onSelect: (props: { id: string; name: string }) => void | Promise<void>;
-  confirmLabel?: string;
-}
-
-interface UserSelectFormType {
-  userId: string;
-}
-
-export const UserSelectModal = createModal<InnerProps>(
-  ({ actions, innerProps }) => {
-    const t = useI18n();
-    const { data: users, isPending } = clientApi.user.selectable.useQuery();
-    const [loading, setLoading] = useState(false);
-    const form = useForm<UserSelectFormType>();
-    const handleSubmit = async (values: UserSelectFormType) => {
-      const currentUser = users?.find((user) => user.id === values.userId);
-      if (!currentUser) return;
-      setLoading(true);
-      await innerProps.onSelect({
-        id: currentUser.id,
-        name: currentUser.name ?? "",
-      });
-
-      setLoading(false);
-      actions.closeModal();
-    };
-
-    const confirmLabel = innerProps.confirmLabel ?? t("common.action.add");
-
-    return (
-      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
-        <Stack>
-          <Select
-            {...form.getInputProps("userId")}
-            label={t("user.action.select.label")}
-            searchable
-            leftSection={isPending ? <Loader size="xs" /> : undefined}
-            nothingFoundMessage={t("user.action.select.notFound")}
-            limit={5}
-            data={users
-              ?.filter((user) => !innerProps.presentUserIds.includes(user.id))
-              .map((user) => ({ value: user.id, label: user.name ?? "" }))}
+    <Stack>
+      <Tabs color="red" defaultValue="user">
+        <Tabs.List grow>
+          <TabItem value="user" count={counts.user} icon={IconUser} />
+          <TabItem value="group" count={counts.group} icon={IconUsersGroup} />
+          <TabItem
+            value="inherited"
+            count={initialPermissions.inherited.length}
+            icon={IconUserDown}
           />
-          <Group justify="end">
-            <Button variant="default" onClick={actions.closeModal}>
-              {t("common.action.cancel")}
-            </Button>
-            <Button type="submit" loading={loading}>
-              {confirmLabel}
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    );
-  },
-).withOptions({
-  defaultTitle: (t) =>
-    t("board.setting.section.access.permission.userSelect.title"),
-});
+        </Tabs.List>
+
+        <Tabs.Panel value="user">
+          <UsersForm
+            board={board}
+            initialPermissions={permissions}
+            onCountChange={(callback) =>
+              setCounts(({ user, ...others }) => ({
+                user: callback(user),
+                ...others,
+              }))
+            }
+          />
+        </Tabs.Panel>
+
+        <Tabs.Panel value="group">
+          <GroupsForm
+            board={board}
+            initialPermissions={permissions}
+            onCountChange={(callback) =>
+              setCounts(({ group, ...others }) => ({
+                group: callback(group),
+                ...others,
+              }))
+            }
+          />
+        </Tabs.Panel>
+
+        <Tabs.Panel value="inherited">
+          <InheritTable initialPermissions={permissions} />
+        </Tabs.Panel>
+      </Tabs>
+    </Stack>
+  );
+};
+
+interface TabItemProps {
+  value: "user" | "group" | "inherited";
+  count: number;
+  icon: TablerIcon;
+}
+
+const TabItem = ({ value, icon: Icon, count }: TabItemProps) => {
+  const t = useScopedI18n("board.setting.section.access.permission");
+
+  return (
+    <Tabs.Tab value={value} leftSection={<Icon stroke={1.5} size={16} />}>
+      <Group gap="sm">
+        {t(`tab.${value}`)}
+        <CountBadge count={count} />
+      </Group>
+    </Tabs.Tab>
+  );
+};

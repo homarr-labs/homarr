@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d0a05e9e-107f-4bed-ac54-a4a41369f0da",
+  "id": "47dc6887-a308-480d-8125-183412fe7fa7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -160,8 +160,62 @@
       },
       "uniqueConstraints": {}
     },
-    "boardPermission": {
-      "name": "boardPermission",
+    "boardGroupPermission": {
+      "name": "boardGroupPermission",
+      "columns": {
+        "board_id": {
+          "name": "board_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "boardGroupPermission_board_id_board_id_fk": {
+          "name": "boardGroupPermission_board_id_board_id_fk",
+          "tableFrom": "boardGroupPermission",
+          "tableTo": "board",
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "boardGroupPermission_group_id_group_id_fk": {
+          "name": "boardGroupPermission_group_id_group_id_fk",
+          "tableFrom": "boardGroupPermission",
+          "tableTo": "group",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "boardGroupPermission_board_id_group_id_permission_pk": {
+          "name": "boardGroupPermission_board_id_group_id_permission_pk",
+          "columns": ["board_id", "group_id", "permission"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "boardUserPermission": {
+      "name": "boardUserPermission",
       "columns": {
         "board_id": {
           "name": "board_id",
@@ -187,18 +241,18 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "boardPermission_board_id_board_id_fk": {
-          "name": "boardPermission_board_id_board_id_fk",
-          "tableFrom": "boardPermission",
+        "boardUserPermission_board_id_board_id_fk": {
+          "name": "boardUserPermission_board_id_board_id_fk",
+          "tableFrom": "boardUserPermission",
           "tableTo": "board",
           "columnsFrom": ["board_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "boardPermission_user_id_user_id_fk": {
-          "name": "boardPermission_user_id_user_id_fk",
-          "tableFrom": "boardPermission",
+        "boardUserPermission_user_id_user_id_fk": {
+          "name": "boardUserPermission_user_id_user_id_fk",
+          "tableFrom": "boardUserPermission",
           "tableTo": "user",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
@@ -207,8 +261,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "boardPermission_board_id_user_id_permission_pk": {
-          "name": "boardPermission_board_id_user_id_permission_pk",
+        "boardUserPermission_board_id_user_id_permission_pk": {
+          "name": "boardUserPermission_board_id_user_id_permission_pk",
           "columns": ["board_id", "user_id", "permission"]
         }
       },

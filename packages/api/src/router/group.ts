@@ -94,6 +94,14 @@ export const groupRouter = createTRPCRouter({
         ),
       };
     }),
+  selectable: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.groups.findMany({
+      columns: {
+        id: true,
+        name: true,
+      },
+    });
+  }),
   createGroup: protectedProcedure
     .input(validation.group.create)
     .mutation(async ({ input, ctx }) => {
