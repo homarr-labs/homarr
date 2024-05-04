@@ -102,12 +102,15 @@ export const boardRouter = createTRPCRouter({
           where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
         },
         groupPermissions: {
-          where: inArray(
-            boardGroupPermissions.groupId,
-            permissionsOfCurrentUserGroupsWhenPresent.map(
-              (groupMember) => groupMember.groupId,
-            ),
-          ),
+          where:
+            permissionsOfCurrentUserGroupsWhenPresent.length >= 1
+              ? inArray(
+                  boardGroupPermissions.groupId,
+                  permissionsOfCurrentUserGroupsWhenPresent.map(
+                    (groupMember) => groupMember.groupId,
+                  ),
+                )
+              : undefined,
         },
       },
       // Allow viewing all boards if the user has the permission
@@ -191,7 +194,6 @@ export const boardRouter = createTRPCRouter({
       ctx.session?.user.id ?? null,
     );
   }),
-  // TODO: check if group permissions are correct
   getBoardByName: publicProcedure
     .input(validation.board.byName)
     .query(async ({ input, ctx }) => {

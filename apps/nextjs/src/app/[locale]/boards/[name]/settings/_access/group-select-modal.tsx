@@ -43,6 +43,7 @@ export const GroupSelectModal = createModal<InnerProps>(
           <Select
             {...form.getInputProps("groupId")}
             label={t("group.action.select.label")}
+            clearable
             searchable
             leftSection={isPending ? <Loader size="xs" /> : undefined}
             nothingFoundMessage={t("group.action.select.notFound")}
