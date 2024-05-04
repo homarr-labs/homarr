@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { ModalContext } from ".";
 import type { ModalDefinition, ModalState } from "./type";
 
-type ModalStateWithReference = ModalState & {
+export type ModalStateWithReference = ModalState & {
   /**
    * Reference to modal component instance
    * Used so the modal can be persisted between navigating in newer modals
@@ -13,7 +13,7 @@ type ModalStateWithReference = ModalState & {
   reference: ReturnType<typeof getModal>;
 };
 
-interface ModalsState {
+export interface ModalsState {
   modals: ModalStateWithReference[];
 
   /**
