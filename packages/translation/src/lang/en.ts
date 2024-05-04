@@ -403,7 +403,9 @@ export default {
         switchToLightMode: "Switch to light mode",
         management: "Management",
         logout: "Logout",
+        login: "Login",
         navigateDefaultBoard: "Navigate to default board",
+        loggedOut: "Logged out",
       },
     },
     menu: {

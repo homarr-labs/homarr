@@ -18,6 +18,9 @@ export type CreateModalOptions = Pick<
   | "zIndex"
   | "scrollAreaComponent"
   | "yOffset"
+  | "transitionProps"
+  | "closeOnClickOutside"
+  | "closeOnEscape"
 > & {
   defaultTitle: stringOrTranslation;
 };
