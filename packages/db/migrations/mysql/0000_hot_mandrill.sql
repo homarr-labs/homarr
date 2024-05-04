@@ -22,11 +22,18 @@ CREATE TABLE `app` (
 	CONSTRAINT `app_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `boardPermission` (
+CREATE TABLE `boardGroupPermission` (
+	`board_id` text NOT NULL,
+	`group_id` text NOT NULL,
+	`permission` text NOT NULL,
+	CONSTRAINT `boardGroupPermission_board_id_group_id_permission_pk` PRIMARY KEY(`board_id`,`group_id`,`permission`)
+);
+--> statement-breakpoint
+CREATE TABLE `boardUserPermission` (
 	`board_id` text NOT NULL,
 	`user_id` text NOT NULL,
 	`permission` text NOT NULL,
-	CONSTRAINT `boardPermission_board_id_user_id_permission_pk` PRIMARY KEY(`board_id`,`user_id`,`permission`)
+	CONSTRAINT `boardUserPermission_board_id_user_id_permission_pk` PRIMARY KEY(`board_id`,`user_id`,`permission`)
 );
 --> statement-breakpoint
 CREATE TABLE `board` (
@@ -152,8 +159,10 @@ CREATE INDEX `integration_secret__updated_at_idx` ON `integrationSecret` (`updat
 CREATE INDEX `integration__kind_idx` ON `integration` (`kind`);--> statement-breakpoint
 CREATE INDEX `user_id_idx` ON `session` (`userId`);--> statement-breakpoint
 ALTER TABLE `account` ADD CONSTRAINT `account_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `boardPermission` ADD CONSTRAINT `boardPermission_board_id_board_id_fk` FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `boardPermission` ADD CONSTRAINT `boardPermission_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `boardGroupPermission` ADD CONSTRAINT `boardGroupPermission_board_id_board_id_fk` FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `boardGroupPermission` ADD CONSTRAINT `boardGroupPermission_group_id_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `group`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `boardUserPermission` ADD CONSTRAINT `boardUserPermission_board_id_board_id_fk` FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `boardUserPermission` ADD CONSTRAINT `boardUserPermission_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `board` ADD CONSTRAINT `board_creator_id_user_id_fk` FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `groupMember` ADD CONSTRAINT `groupMember_groupId_group_id_fk` FOREIGN KEY (`groupId`) REFERENCES `group`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `groupMember` ADD CONSTRAINT `groupMember_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
