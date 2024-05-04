@@ -285,6 +285,21 @@ export const integrationItems = mysqlTable(
   }),
 );
 
+export const icons = mysqlTable("icon", {
+  id: varchar("icon_id", { length: 256 }).notNull().primaryKey(),
+  name: varchar("icon_name", { length: 250 }).notNull(),
+  url: text("icon_url").notNull(),
+  checksum: text("icon_checksum").notNull(),
+  iconRepositoryId: varchar("iconRepository_id", { length: 256 })
+    .notNull()
+    .references(() => iconRepositories.id, { onDelete: "cascade" }),
+});
+
+export const iconRepositories = mysqlTable("iconRepository", {
+  id: varchar("iconRepository_id", { length: 256 }).notNull().primaryKey(),
+  slug: varchar("iconRepository_slug", { length: 150 }).notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -300,6 +315,20 @@ export const userRelations = relations(users, ({ many }) => ({
   ownedGroups: many(groups),
   invites: many(invites),
 }));
+
+export const iconRelations = relations(icons, ({ one }) => ({
+  repository: one(iconRepositories, {
+    fields: [icons.iconRepositoryId],
+    references: [iconRepositories.id],
+  }),
+}));
+
+export const iconRepositoryRelations = relations(
+  iconRepositories,
+  ({ many }) => ({
+    icons: many(icons),
+  }),
+);
 
 export const inviteRelations = relations(invites, ({ one }) => ({
   creator: one(users, {

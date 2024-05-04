@@ -9,7 +9,8 @@ import { useI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-// TODO: add icon picker
+import { IconPicker } from "~/components/icons/picker/icon-picker";
+
 type FormType = z.infer<typeof validation.app.manage>;
 
 interface AppFormProps {
@@ -38,10 +39,11 @@ export const AppForm = (props: AppFormProps) => {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label="Name" />
-        <TextInput
-          {...form.getInputProps("iconUrl")}
-          withAsterisk
-          label="Icon URL"
+        <IconPicker
+          initialValue={initialValues?.iconUrl}
+          onChange={(iconUrl) => {
+            form.setFieldValue("iconUrl", iconUrl);
+          }}
         />
         <Textarea {...form.getInputProps("description")} label="Description" />
         <TextInput {...form.getInputProps("href")} label="URL" />

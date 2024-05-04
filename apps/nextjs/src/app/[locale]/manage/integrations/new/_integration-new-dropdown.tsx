@@ -1,6 +1,7 @@
 "use client";
 
-import React, { ChangeEvent, useMemo, useState } from "react";
+import type { ChangeEvent } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { Group, Menu, ScrollArea, Stack, Text, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
