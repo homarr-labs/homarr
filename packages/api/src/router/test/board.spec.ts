@@ -1,11 +1,15 @@
 import SuperJSON from "superjson";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { createId, eq } from "@homarr/db";
 import {
+  boardGroupPermissions,
   boards,
+  boardUserPermissions,
+  groupMembers,
+  groups,
   integrationItems,
   integrations,
   items,
@@ -13,6 +17,7 @@ import {
   users,
 } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
+import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
 
 import type { RouterOutputs } from "../..";
 import { boardRouter } from "../board";
@@ -30,6 +35,298 @@ const defaultSession = {
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+
+const createRandomUser = async (db: Database) => {
+  const userId = createId();
+  await db.insert(users).values({
+    id: userId,
+  });
+  return userId;
+};
+
+describe("getAllBoards should return all boards accessable to the current user", () => {
+  test("without session it should return only public boards", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: null });
+
+    const user1 = await createRandomUser(db);
+    const user2 = await createRandomUser(db);
+
+    await db.insert(boards).values([
+      {
+        id: createId(),
+        name: "public",
+        creatorId: user1,
+        isPublic: true,
+      },
+      {
+        id: createId(),
+        name: "private",
+        creatorId: user2,
+        isPublic: false,
+      },
+    ]);
+
+    // Act
+    const result = await caller.getAllBoards();
+
+    // Assert
+    expect(result.length).toBe(1);
+    expect(result[0]?.name).toBe("public");
+  });
+
+  test("with session containing board-view-all permission it should return all boards", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({
+      db,
+      session: {
+        user: {
+          id: defaultCreatorId,
+          permissions: ["board-view-all"],
+        },
+        expires: new Date().toISOString(),
+      },
+    });
+
+    const user1 = await createRandomUser(db);
+    const user2 = await createRandomUser(db);
+
+    await db.insert(boards).values([
+      {
+        id: createId(),
+        name: "public",
+        creatorId: user1,
+        isPublic: true,
+      },
+      {
+        id: createId(),
+        name: "private",
+        creatorId: user2,
+        isPublic: false,
+      },
+    ]);
+
+    // Act
+    const result = await caller.getAllBoards();
+
+    // Assert
+    expect(result.length).toBe(2);
+    expect(result.map((board) => board.name)).toEqual(["public", "private"]);
+  });
+
+  test("with session user beeing creator it should return all private boards of them", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+
+    const user1 = await createRandomUser(db);
+    const user2 = await createRandomUser(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    await db.insert(boards).values([
+      {
+        id: createId(),
+        name: "public",
+        creatorId: user1,
+        isPublic: true,
+      },
+      {
+        id: createId(),
+        name: "private",
+        creatorId: user2,
+        isPublic: false,
+      },
+      {
+        id: createId(),
+        name: "private2",
+        creatorId: defaultCreatorId,
+        isPublic: false,
+      },
+    ]);
+
+    // Act
+    const result = await caller.getAllBoards();
+
+    // Assert
+    expect(result.length).toBe(2);
+    expect(result.map(({ name }) => name)).toStrictEqual([
+      "public",
+      "private2",
+    ]);
+  });
+
+  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+    "with %s group board permission it should show board",
+    async (permission) => {
+      // Arrange
+      const db = createDb();
+      const caller = boardRouter.createCaller({
+        db,
+        session: defaultSession,
+      });
+
+      const user1 = await createRandomUser(db);
+      const user2 = await createRandomUser(db);
+      await db.insert(users).values({
+        id: defaultCreatorId,
+      });
+      const boardId = createId();
+
+      await db.insert(boards).values([
+        {
+          id: createId(),
+          name: "public",
+          creatorId: user1,
+          isPublic: true,
+        },
+        {
+          id: boardId,
+          name: "private1",
+          creatorId: user2,
+          isPublic: false,
+        },
+        {
+          id: createId(),
+          name: "private2",
+          creatorId: user2,
+          isPublic: false,
+        },
+      ]);
+
+      const groupId = createId();
+      await db.insert(groups).values({
+        id: groupId,
+        name: "group1",
+      });
+
+      await db.insert(groupMembers).values({
+        userId: defaultSession.user.id,
+        groupId,
+      });
+
+      await db.insert(boardGroupPermissions).values({
+        groupId,
+        permission,
+        boardId,
+      });
+
+      // Act
+      const result = await caller.getAllBoards();
+
+      // Assert
+      expect(result.length).toBe(2);
+      expect(result.map(({ name }) => name)).toStrictEqual([
+        "public",
+        "private1",
+      ]);
+    },
+  );
+
+  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+    "with %s user board permission it should show board",
+    async (permission) => {
+      // Arrange
+      const db = createDb();
+      const caller = boardRouter.createCaller({
+        db,
+        session: defaultSession,
+      });
+
+      const user1 = await createRandomUser(db);
+      const user2 = await createRandomUser(db);
+      await db.insert(users).values({
+        id: defaultCreatorId,
+      });
+      const boardId = createId();
+
+      await db.insert(boards).values([
+        {
+          id: createId(),
+          name: "public",
+          creatorId: user1,
+          isPublic: true,
+        },
+        {
+          id: boardId,
+          name: "private1",
+          creatorId: user2,
+          isPublic: false,
+        },
+        {
+          id: createId(),
+          name: "private2",
+          creatorId: user2,
+          isPublic: false,
+        },
+      ]);
+
+      await db.insert(boardUserPermissions).values({
+        userId: defaultSession.user.id,
+        permission,
+        boardId,
+      });
+
+      // Act
+      const result = await caller.getAllBoards();
+
+      // Assert
+      expect(result.length).toBe(2);
+      expect(result.map(({ name }) => name)).toStrictEqual([
+        "public",
+        "private1",
+      ]);
+    },
+  );
+});
+
+describe("createBoard should create a new board", () => {
+  test("should create a new board with permission board-create", async () => {
+    // Arrange
+    const db = createDb();
+    const session = {
+      ...defaultSession,
+      user: {
+        ...defaultSession.user,
+        permissions: ["board-create"] satisfies GroupPermissionKey[],
+      },
+    };
+    const caller = boardRouter.createCaller({ db, session });
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    // Act
+    await caller.createBoard({ name: "newBoard" });
+
+    // Assert
+    const dbBoard = await db.query.boards.findFirst();
+    expect(dbBoard).toBeDefined();
+    expect(dbBoard?.name).toBe("newBoard");
+    expect(dbBoard?.creatorId).toBe(defaultCreatorId);
+
+    const dbSection = await db.query.sections.findFirst();
+    expect(dbSection).toBeDefined();
+    expect(dbSection?.boardId).toBe(dbBoard?.id);
+    expect(dbSection?.kind).toBe("empty");
+  });
+
+  test("should throw error when user has no board-create permission", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+
+    // Act
+    const act = async () => await caller.createBoard({ name: "newBoard" });
+
+    // Assert
+    await expect(act()).rejects.toThrowError("Permission denied");
+  });
+});
 
 describe("getDefaultBoard should return default board", () => {
   it("should return default board", async () => {

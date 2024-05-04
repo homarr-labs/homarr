@@ -31,30 +31,6 @@ import {
 } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
-const filterAddedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  inputArray.filter(
-    (inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id),
-  );
-
-const filterRemovedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  dbArray.filter(
-    (dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id),
-  );
-
-const filterUpdatedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  inputArray.filter((inputItem) =>
-    dbArray.some((dbItem) => dbItem.id === inputItem.id),
-  );
-
 export const boardRouter = createTRPCRouter({
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const permissionsOfCurrentUserWhenPresent =
@@ -657,3 +633,27 @@ const parseSection = (section: unknown) => {
   }
   return result.data;
 };
+
+const filterAddedItems = <TInput extends { id: string }>(
+  inputArray: TInput[],
+  dbArray: TInput[],
+) =>
+  inputArray.filter(
+    (inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id),
+  );
+
+const filterRemovedItems = <TInput extends { id: string }>(
+  inputArray: TInput[],
+  dbArray: TInput[],
+) =>
+  dbArray.filter(
+    (dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id),
+  );
+
+const filterUpdatedItems = <TInput extends { id: string }>(
+  inputArray: TInput[],
+  dbArray: TInput[],
+) =>
+  inputArray.filter((inputItem) =>
+    dbArray.some((dbItem) => dbItem.id === inputItem.id),
+  );
