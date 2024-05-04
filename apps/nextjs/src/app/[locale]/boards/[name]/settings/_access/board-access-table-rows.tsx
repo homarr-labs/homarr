@@ -59,9 +59,13 @@ export const BoardAccessSelectRow = ({
 
   return (
     <TableTr>
-      <TableTd>{itemContent}</TableTd>
+      <TableTd w={{ sm: 128, lg: 256 }}>{itemContent}</TableTd>
       <TableTd>
-        <Group wrap="nowrap">
+        <Flex
+          direction={{ base: "column", xs: "row" }}
+          align={{ base: "end", xs: "center" }}
+          wrap="nowrap"
+        >
           <Select
             allowDeselect={false}
             flex="1"
@@ -78,7 +82,7 @@ export const BoardAccessSelectRow = ({
           <Button size="xs" variant="subtle" onClick={handleRemove}>
             {tRoot("common.action.remove")}
           </Button>
-        </Group>
+        </Flex>
       </TableTd>
     </TableTr>
   );
@@ -98,7 +102,7 @@ export const BoardAccessDisplayRow = ({
 
   return (
     <TableTr>
-      <TableTd>{itemContent}</TableTd>
+      <TableTd w={{ sm: 128, lg: 256 }}>{itemContent}</TableTd>
       <TableTd>
         <Group gap={0}>
           <Flex w={34} h={34} align="center" justify="center">
@@ -124,7 +128,7 @@ const iconProps = {
 const RenderOption: SelectProps["renderOption"] = ({ option, checked }) => {
   const Icon = icons[option.value as BoardPermission];
   return (
-    <Group flex="1" gap="xs">
+    <Group flex="1" gap="xs" wrap="nowrap">
       <Icon {...iconProps} />
       {option.label}
       {checked && (

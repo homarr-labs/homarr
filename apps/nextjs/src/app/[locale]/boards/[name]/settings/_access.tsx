@@ -6,6 +6,8 @@ import { IconUser, IconUserDown, IconUsersGroup } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { CountBadge } from "@homarr/ui";
 
 import type { Board } from "../../_types";
@@ -38,38 +40,18 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
 
   return (
     <Stack>
-      <Tabs color="red" defaultValue="users">
+      <Tabs color="red" defaultValue="user">
         <Tabs.List grow>
-          <Tabs.Tab
-            value="users"
-            leftSection={<IconUser stroke={1.5} size={16} />}
-          >
-            <Group gap="sm">
-              Users
-              <CountBadge count={counts.user} />
-            </Group>
-          </Tabs.Tab>
-          <Tabs.Tab
-            value="groups"
-            leftSection={<IconUsersGroup stroke={1.5} size={16} />}
-          >
-            <Group gap="sm">
-              Groups
-              <CountBadge count={counts.group} />
-            </Group>
-          </Tabs.Tab>
-          <Tabs.Tab
+          <TabItem value="user" count={counts.user} icon={IconUser} />
+          <TabItem value="group" count={counts.group} icon={IconUsersGroup} />
+          <TabItem
             value="inherited"
-            leftSection={<IconUserDown stroke={1.5} size={16} />}
-          >
-            <Group gap="sm">
-              Inherited groups
-              <CountBadge count={initialPermissions.inherited.length} />
-            </Group>
-          </Tabs.Tab>
+            count={initialPermissions.inherited.length}
+            icon={IconUserDown}
+          />
         </Tabs.List>
 
-        <Tabs.Panel value="users">
+        <Tabs.Panel value="user">
           <UsersForm
             board={board}
             initialPermissions={permissions}
@@ -82,7 +64,7 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
           />
         </Tabs.Panel>
 
-        <Tabs.Panel value="groups">
+        <Tabs.Panel value="group">
           <GroupsForm
             board={board}
             initialPermissions={permissions}
@@ -100,5 +82,24 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
         </Tabs.Panel>
       </Tabs>
     </Stack>
+  );
+};
+
+interface TabItemProps {
+  value: "user" | "group" | "inherited";
+  count: number;
+  icon: TablerIcon;
+}
+
+const TabItem = ({ value, icon: Icon, count }: TabItemProps) => {
+  const t = useScopedI18n("board.setting.section.access.permission");
+
+  return (
+    <Tabs.Tab value={value} leftSection={<Icon stroke={1.5} size={16} />}>
+      <Group gap="sm">
+        {t(`tab.${value}`)}
+        <CountBadge count={count} />
+      </Group>
+    </Tabs.Tab>
   );
 };

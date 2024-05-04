@@ -881,6 +881,11 @@ export default {
             groupSelect: {
               title: "Add group permission",
             },
+            tab: {
+              user: "Users",
+              group: "Groups",
+              inherited: "Inherited groups",
+            },
             field: {
               user: {
                 label: "User",

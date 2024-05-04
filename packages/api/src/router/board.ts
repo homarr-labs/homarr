@@ -61,6 +61,7 @@ export const boardRouter = createTRPCRouter({
       await ctx.db.query.boardUserPermissions.findMany({
         where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
       });
+
     const permissionsOfCurrentUserGroupsWhenPresent =
       await ctx.db.query.groupMembers.findMany({
         where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
@@ -99,6 +100,14 @@ export const boardRouter = createTRPCRouter({
         },
         userPermissions: {
           where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+        },
+        groupPermissions: {
+          where: inArray(
+            boardGroupPermissions.groupId,
+            permissionsOfCurrentUserGroupsWhenPresent.map(
+              (groupMember) => groupMember.groupId,
+            ),
+          ),
         },
       },
       // Allow viewing all boards if the user has the permission

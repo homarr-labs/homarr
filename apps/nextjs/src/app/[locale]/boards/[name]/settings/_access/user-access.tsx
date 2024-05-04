@@ -1,5 +1,8 @@
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import {
+  Anchor,
+  Box,
   Button,
   Group,
   Stack,
@@ -8,7 +11,6 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Text,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -148,14 +150,24 @@ export const UsersForm = ({
 
 const UserItemContent = ({ user }: { user: User }) => {
   return (
-    <Group>
-      <UserAvatar user={user} size="sm" />
-      <Text size="sm">{user.name}</Text>
+    <Group wrap="nowrap">
+      <Box visibleFrom="xs">
+        <UserAvatar user={user} size="sm" />
+      </Box>
+      <Anchor
+        component={Link}
+        href={`/manage/users/${user.id}`}
+        size="sm"
+        style={{ whiteSpace: "nowrap" }}
+      >
+        {user.name}
+      </Anchor>
     </Group>
   );
 };
 
 interface User {
+  id: string;
   name: string | null;
   image: string | null;
 }

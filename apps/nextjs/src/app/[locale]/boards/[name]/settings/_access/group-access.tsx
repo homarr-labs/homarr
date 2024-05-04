@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import {
+  Anchor,
   Button,
   Group,
   Stack,
@@ -8,7 +10,6 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Text,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -91,7 +92,9 @@ export const GroupsForm = ({
           <Table>
             <TableThead>
               <TableTr>
-                <TableTh>{tPermissions("field.group.label")}</TableTh>
+                <TableTh style={{ whiteSpace: "nowrap" }}>
+                  {tPermissions("field.group.label")}
+                </TableTh>
                 <TableTh>{tPermissions("field.permission.label")}</TableTh>
               </TableTr>
             </TableThead>
@@ -129,7 +132,16 @@ export const GroupsForm = ({
 };
 
 export const GroupItemContent = ({ group }: { group: Group }) => {
-  return <Text size="sm">{group.name}</Text>;
+  return (
+    <Anchor
+      component={Link}
+      href={`/manage/users/groups/${group.id}`}
+      size="sm"
+      style={{ whiteSpace: "nowrap" }}
+    >
+      {group.name}
+    </Anchor>
+  );
 };
 
 type Group =

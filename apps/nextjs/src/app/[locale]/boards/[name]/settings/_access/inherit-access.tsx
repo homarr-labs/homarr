@@ -8,6 +8,7 @@ import {
 } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
+import { getPermissionsWithChildren } from "@homarr/definitions";
 import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -36,16 +37,28 @@ export const InheritTable = ({ initialPermissions }: InheritTableProps) => {
           </TableTr>
         </TableThead>
         <TableTbody>
-          {initialPermissions.inherited.map(({ group, permission }) => (
-            <BoardAccessDisplayRow
-              key={group.id}
-              itemContent={<GroupItemContent group={group} />}
-              permission={
-                mapPermissions[permission as keyof typeof mapPermissions] ??
-                "board-full" // Fallback to full-access as only higher permissions are queried
-              }
-            />
-          ))}
+          {initialPermissions.inherited.map(({ group, permission }) => {
+            const boardPermission =
+              permission in mapPermissions
+                ? mapPermissions[permission as keyof typeof mapPermissions]
+                : getPermissionsWithChildren([permission]).includes(
+                      "board-full-access",
+                    )
+                  ? "board-full"
+                  : null;
+
+            if (!boardPermission) {
+              return null;
+            }
+
+            return (
+              <BoardAccessDisplayRow
+                key={group.id}
+                itemContent={<GroupItemContent group={group} />}
+                permission={boardPermission}
+              />
+            );
+          })}
         </TableTbody>
       </Table>
     </Stack>
