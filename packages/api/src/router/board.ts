@@ -64,6 +64,7 @@ export const boardRouter = createTRPCRouter({
       columns: {
         id: true,
         name: true,
+        columnCount: true,
         isPublic: true,
       },
       with: {
@@ -76,6 +77,16 @@ export const boardRouter = createTRPCRouter({
         },
         userPermissions: {
           where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+        },
+        sections: {
+          with: {
+            items: {
+              columns: {
+                options: false,
+                sectionId: false,
+              },
+            },
+          },
         },
         groupPermissions: {
           where:

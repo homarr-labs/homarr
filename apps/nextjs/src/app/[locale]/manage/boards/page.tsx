@@ -15,12 +15,16 @@ import {
 } from "@mantine/core";
 import { IconDotsVertical, IconLock, IconWorld } from "@tabler/icons-react";
 
+import "~/styles/gridstack.scss";
+
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
+import { UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissions } from "~/components/board/permissions/server";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
+import { BoardPreview } from "./_components/board-preview";
 import { CreateBoardButton } from "./_components/create-board-button";
 
 export default async function ManageBoardsPage() {
@@ -37,7 +41,7 @@ export default async function ManageBoardsPage() {
 
       <Grid>
         {boards.map((board) => (
-          <GridCol span={{ xs: 12, md: 4 }} key={board.id}>
+          <GridCol span={{ base: 12, md: 6, xl: 4 }} key={board.id}>
             <BoardCard board={board} />
           </GridCol>
         ))}
@@ -68,7 +72,20 @@ const BoardCard = async ({ board }: BoardCardProps) => {
               {board.name}
             </Text>
           </Group>
+
+          {board.creator && (
+            <Group>
+              <Group gap="xs">
+                <UserAvatar user={board.creator} size="sm" />
+                <Text>{board.creator?.name}</Text>
+              </Group>
+            </Group>
+          )}
         </Group>
+      </CardSection>
+
+      <CardSection p="sm" style={{ aspectRatio: 1920 / 1080 }}>
+        <BoardPreview board={board} />
       </CardSection>
 
       <CardSection p="sm">
