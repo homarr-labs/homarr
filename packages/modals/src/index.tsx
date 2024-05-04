@@ -5,8 +5,10 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useReducer,
   useRef,
+  useState,
 } from "react";
 import { getDefaultZIndex, Modal } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
@@ -17,6 +19,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { ConfirmModalProps } from "./confirm-modal";
 import { ConfirmModal } from "./confirm-modal";
+import type { ModalsState, ModalStateWithReference } from "./reducer";
 import { modalReducer } from "./reducer";
 import type { inferInnerProps, ModalDefinition } from "./type";
 
@@ -32,7 +35,6 @@ interface ModalContextProps {
 export const ModalContext = createContext<ModalContextProps | null>(null);
 
 export const ModalProvider = ({ children }: PropsWithChildren) => {
-  const t = useI18n();
   const [state, dispatch] = useReducer(modalReducer, {
     modals: [],
     current: null,
@@ -80,36 +82,61 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <ModalContext.Provider value={{ openModalInner, closeModal }}>
-      {activeModals.map((modal) => {
-        const { defaultTitle: _ignored, ...otherModalProps } =
-          modal.reference.modalProps;
-        return (
-          <Modal
-            key={modal.id}
-            zIndex={getDefaultZIndex("modal") + 1}
-            display={modal.id === state.current?.id ? undefined : "none"}
-            style={{
-              userSelect: modal.id === state.current?.id ? undefined : "none",
-            }}
-            styles={{
-              title: {
-                fontSize: "1.25rem",
-                fontWeight: 500,
-              },
-            }}
-            trapFocus={modal.id === state.current?.id}
-            {...otherModalProps}
-            title={translateIfNecessary(t, modal.props.defaultTitle)}
-            opened={state.modals.length > 0}
-            onClose={handleCloseModal}
-          >
-            {modal.reference.content}
-          </Modal>
-        );
-      })}
+      {activeModals.map((modal) => (
+        <ActiveModal
+          key={modal.id}
+          modal={modal}
+          state={state}
+          handleCloseModal={handleCloseModal}
+        />
+      ))}
 
       {children}
     </ModalContext.Provider>
+  );
+};
+
+interface ActiveModalProps {
+  modal: ModalStateWithReference;
+  state: ModalsState;
+  handleCloseModal: () => void;
+}
+
+const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
+  const t = useI18n();
+
+  // The below code is used to animate the modal when it opens (using the transition)
+  // It is necessary as transition is not working when the modal is directly mounted and run
+  const [opened, setOpened] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setOpened(true), 0);
+  }, []);
+
+  const { defaultTitle: _ignored, ...otherModalProps } =
+    modal.reference.modalProps;
+
+  return (
+    <Modal
+      key={modal.id}
+      zIndex={getDefaultZIndex("modal") + 1}
+      display={modal.id === state.current?.id ? undefined : "none"}
+      style={{
+        userSelect: modal.id === state.current?.id ? undefined : "none",
+      }}
+      styles={{
+        title: {
+          fontSize: "1.25rem",
+          fontWeight: 500,
+        },
+      }}
+      trapFocus={modal.id === state.current?.id}
+      {...otherModalProps}
+      title={translateIfNecessary(t, modal.props.defaultTitle)}
+      opened={opened}
+      onClose={handleCloseModal}
+    >
+      {modal.reference.content}
+    </Modal>
   );
 };
 
