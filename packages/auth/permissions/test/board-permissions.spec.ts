@@ -10,12 +10,14 @@ describe("constructBoardPermissions", () => {
       creator: {
         id: "1",
       },
-      permissions: [],
+      userPermissions: [],
+      groupPermissions: [],
       isPublic: false,
     };
     const session = {
       user: {
         id: "1",
+        permissions: [],
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -35,12 +37,15 @@ describe("constructBoardPermissions", () => {
       creator: {
         id: "1",
       },
-      permissions: [{ permission: "board-change" }],
+
+      userPermissions: [{ permission: "board-change" }],
+      groupPermissions: [],
       isPublic: false,
     };
     const session = {
       user: {
         id: "2",
+        permissions: [],
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -60,12 +65,14 @@ describe("constructBoardPermissions", () => {
       creator: {
         id: "1",
       },
-      permissions: [{ permission: "board-view" }],
+      userPermissions: [{ permission: "board-view" }],
+      groupPermissions: [],
       isPublic: false,
     };
     const session = {
       user: {
         id: "2",
+        permissions: [],
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -85,12 +92,14 @@ describe("constructBoardPermissions", () => {
       creator: {
         id: "1",
       },
-      permissions: [],
+      userPermissions: [],
+      groupPermissions: [],
       isPublic: true,
     };
     const session = {
       user: {
         id: "2",
+        permissions: [],
       },
       expires: new Date().toISOString(),
     } satisfies Session;

@@ -16,6 +16,7 @@ const defaultOwnerId = createId();
 const defaultSession = {
   user: {
     id: defaultOwnerId,
+    permissions: [],
   },
   expires: new Date().toISOString(),
 } satisfies Session;

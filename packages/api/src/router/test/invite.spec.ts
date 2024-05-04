@@ -10,9 +10,10 @@ import { inviteRouter } from "../invite";
 const defaultSession = {
   user: {
     id: createId(),
+    permissions: [],
   },
   expires: new Date().toISOString(),
-};
+} satisfies Session;
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", async () => {

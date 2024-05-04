@@ -3,6 +3,8 @@ import type { Session } from "next-auth";
 
 import type { Database } from "@homarr/db";
 
+import { getCurrentUserPermissions } from "./callbacks";
+
 export const sessionMaxAgeInSeconds = 30 * 24 * 60 * 60; // 30 days
 export const sessionTokenCookieName = "next-auth.session-token";
 
@@ -44,7 +46,10 @@ export const getSessionFromToken = async (
   }
 
   return {
-    user: session.user,
+    user: {
+      ...session.user,
+      permissions: await getCurrentUserPermissions(db, session.user.id),
+    },
     expires: session.expires.toISOString(),
   };
 };

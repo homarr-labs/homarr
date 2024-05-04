@@ -23,6 +23,7 @@ const defaultCreatorId = createId();
 const defaultSession = {
   user: {
     id: defaultCreatorId,
+    permissions: [],
   },
   expires: new Date().toISOString(),
 } satisfies Session;

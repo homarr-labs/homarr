@@ -14,37 +14,40 @@ import {
   sessionTokenCookieName,
 } from "./session";
 
+export const getCurrentUserPermissions = async (
+  db: Database,
+  userId: string,
+) => {
+  const dbGroupMembers = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId),
+  });
+  const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
+  const dbGroupPermissions = await db
+    .selectDistinct({
+      permission: groupPermissions.permission,
+    })
+    .from(groupPermissions)
+    .where(
+      groupIds.length > 0
+        ? inArray(groupPermissions.groupId, groupIds)
+        : undefined,
+    );
+  const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
+
+  return getPermissionsWithChildren(permissionKeys);
+};
+
 export const createSessionCallback = (
   db: Database,
 ): NextAuthCallbackOf<"session"> => {
   return async ({ session, user }) => {
-    const dbGroupMembers = await db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, user.id),
-    });
-    const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
-    const dbGroupPermissions = await db
-      .selectDistinct({
-        permission: groupPermissions.permission,
-      })
-      .from(groupPermissions)
-      .where(
-        groupIds.length > 0
-          ? inArray(groupPermissions.groupId, groupIds)
-          : undefined,
-      );
-    const permissionKeys = dbGroupPermissions.map(
-      ({ permission }) => permission,
-    );
-
-    const permissionsWithChildren = getPermissionsWithChildren(permissionKeys);
-
     return {
       ...session,
       user: {
         ...session.user,
         id: user.id,
         name: user.name,
-        permissions: permissionsWithChildren,
+        permissions: await getCurrentUserPermissions(db, user.id),
       },
     };
   };
