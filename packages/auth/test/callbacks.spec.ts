@@ -4,11 +4,63 @@ import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
 import type { Account, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, test, vi } from "vitest";
 
+import {
+  groupMembers,
+  groupPermissions,
+  groups,
+  users,
+} from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
+import * as definitions from "@homarr/definitions";
 
-import { createSessionCallback, createSignInCallback } from "../callbacks";
+import {
+  createSessionCallback,
+  createSignInCallback,
+  getCurrentUserPermissions,
+} from "../callbacks";
+
+describe("getCurrentUserPermissions", () => {
+  test("should return empty permissions when non existing user requested", async () => {
+    const db = createDb();
+
+    await db.insert(users).values({
+      id: "2",
+    });
+
+    const userId = "1";
+    const result = await getCurrentUserPermissions(db, userId);
+    expect(result).toEqual([]);
+  });
+  test("should return permissions for user", async () => {
+    const db = createDb();
+    const getPermissionsWithChildrenMock = vi
+      .spyOn(definitions, "getPermissionsWithChildren")
+      .mockReturnValue(["board-create"]);
+    const mockId = "1";
+
+    await db.insert(users).values({
+      id: mockId,
+    });
+    await db.insert(groups).values({
+      id: mockId,
+      name: "test",
+    });
+    await db.insert(groupMembers).values({
+      userId: mockId,
+      groupId: mockId,
+    });
+    await db.insert(groupPermissions).values({
+      groupId: mockId,
+      permission: "admin",
+    });
+
+    const result = await getCurrentUserPermissions(db, mockId);
+    expect(result).toEqual(["board-create"]);
+    expect(getPermissionsWithChildrenMock).toHaveBeenCalledWith(["admin"]);
+  });
+});
 
 describe("session callback", () => {
   it("should add id and name to session user", async () => {

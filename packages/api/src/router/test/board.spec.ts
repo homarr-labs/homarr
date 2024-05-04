@@ -9,6 +9,7 @@ import {
   boards,
   boardUserPermissions,
   groupMembers,
+  groupPermissions,
   groups,
   integrationItems,
   integrations,
@@ -325,6 +326,170 @@ describe("createBoard should create a new board", () => {
 
     // Assert
     await expect(act()).rejects.toThrowError("Permission denied");
+  });
+});
+
+describe("rename board should rename board", () => {
+  test("should rename board", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "oldName",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    await caller.renameBoard({ id: boardId, name: "newName" });
+
+    // Assert
+    const dbBoard = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+    });
+    expect(dbBoard).toBeDefined();
+    expect(dbBoard?.name).toBe("newName");
+    expect(spy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      "full-access",
+    );
+  });
+
+  test("should throw error when similar board name exists", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "oldName",
+      creatorId: defaultCreatorId,
+    });
+    await db.insert(boards).values({
+      id: createId(),
+      name: "newName",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    const act = async () =>
+      await caller.renameBoard({ id: boardId, name: "Newname" });
+
+    // Assert
+    await expect(act()).rejects.toThrowError(
+      "Board with similar name already exists",
+    );
+  });
+
+  test("should throw error when board not found", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+
+    // Act
+    const act = async () =>
+      await caller.renameBoard({ id: "nonExistentBoardId", name: "newName" });
+
+    // Assert
+    await expect(act()).rejects.toThrowError("Board not found");
+  });
+});
+
+describe("changeBoardVisibility should change board visibility", () => {
+  test.each([["public"], ["private"]] satisfies ["private" | "public"][])(
+    "should change board visibility to %s",
+    async (visibility) => {
+      // Arrange
+      const db = createDb();
+      const caller = boardRouter.createCaller({ db, session: defaultSession });
+      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+
+      await db.insert(users).values({
+        id: defaultCreatorId,
+      });
+      const boardId = createId();
+      await db.insert(boards).values({
+        id: boardId,
+        name: "board",
+        creatorId: defaultCreatorId,
+        isPublic: visibility === "public",
+      });
+
+      // Act
+      await caller.changeBoardVisibility({
+        id: boardId,
+        visibility,
+      });
+
+      // Assert
+      const dbBoard = await db.query.boards.findFirst({
+        where: eq(boards.id, boardId),
+      });
+      expect(dbBoard).toBeDefined();
+      expect(dbBoard?.isPublic).toBe(visibility === "public");
+      expect(spy).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        "full-access",
+      );
+    },
+  );
+});
+
+describe("deleteBoard should delete board", () => {
+  test("should delete board", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    await caller.deleteBoard({ id: boardId });
+
+    // Assert
+    const dbBoard = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+    });
+    expect(dbBoard).toBeUndefined();
+    expect(spy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      "full-access",
+    );
+  });
+
+  test("should throw error when board not found", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+
+    // Act
+    const act = async () =>
+      await caller.deleteBoard({ id: "nonExistentBoardId" });
+
+    // Assert
+    await expect(act()).rejects.toThrowError("Board not found");
   });
 });
 
@@ -994,6 +1159,183 @@ describe("saveBoard should save full board", () => {
 
     await expect(act()).rejects.toThrowError("Board not found");
   });
+});
+
+describe("getBoardPermissions should return board permissions", () => {
+  test("should return board permissions", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+
+    const user1 = await createRandomUser(db);
+    const user2 = await createRandomUser(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
+
+    await db.insert(boardUserPermissions).values([
+      {
+        userId: user1,
+        permission: "board-view",
+        boardId,
+      },
+      {
+        userId: user2,
+        permission: "board-change",
+        boardId,
+      },
+    ]);
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "group1",
+    });
+
+    await db.insert(boardGroupPermissions).values({
+      groupId,
+      permission: "board-view",
+      boardId,
+    });
+
+    await db.insert(groupPermissions).values({
+      groupId,
+      permission: "admin",
+    });
+
+    // Act
+    const result = await caller.getBoardPermissions({ id: boardId });
+
+    // Assert
+    expect(result.groupPermissions).toEqual([
+      { group: { id: groupId, name: "group1" }, permission: "board-view" },
+    ]);
+    expect(result.userPermissions).toEqual(
+      expect.arrayContaining([
+        {
+          user: { id: user1, name: null, image: null },
+          permission: "board-view",
+        },
+        {
+          user: { id: user2, name: null, image: null },
+          permission: "board-change",
+        },
+      ]),
+    );
+    expect(result.inherited).toEqual([
+      { group: { id: groupId, name: "group1" }, permission: "admin" },
+    ]);
+    expect(spy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      "full-access",
+    );
+  });
+});
+
+describe("saveUserBoardPermissions should save user board permissions", () => {
+  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+    "should save user board permissions",
+    async (permission) => {
+      // Arrange
+      const db = createDb();
+      const caller = boardRouter.createCaller({ db, session: defaultSession });
+      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+
+      const user1 = await createRandomUser(db);
+      await db.insert(users).values({
+        id: defaultCreatorId,
+      });
+
+      const boardId = createId();
+      await db.insert(boards).values({
+        id: boardId,
+        name: "board",
+        creatorId: defaultCreatorId,
+      });
+
+      // Act
+      await caller.saveUserBoardPermissions({
+        id: boardId,
+        permissions: [
+          {
+            itemId: user1,
+            permission,
+          },
+        ],
+      });
+
+      // Assert
+      const dbUserPermission = await db.query.boardUserPermissions.findFirst({
+        where: eq(boardUserPermissions.userId, user1),
+      });
+      expect(dbUserPermission).toBeDefined();
+      expect(spy).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        "full-access",
+      );
+    },
+  );
+});
+
+describe("saveGroupBoardPermissions should save group board permissions", () => {
+  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+    "should save group board permissions",
+    async (permission) => {
+      // Arrange
+      const db = createDb();
+      const caller = boardRouter.createCaller({ db, session: defaultSession });
+      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+
+      await db.insert(users).values({
+        id: defaultCreatorId,
+      });
+
+      const groupId = createId();
+      await db.insert(groups).values({
+        id: groupId,
+        name: "group1",
+      });
+
+      const boardId = createId();
+      await db.insert(boards).values({
+        id: boardId,
+        name: "board",
+        creatorId: defaultCreatorId,
+      });
+
+      // Act
+      await caller.saveGroupBoardPermissions({
+        id: boardId,
+        permissions: [
+          {
+            itemId: groupId,
+            permission,
+          },
+        ],
+      });
+
+      // Assert
+      const dbGroupPermission = await db.query.boardGroupPermissions.findFirst({
+        where: eq(boardGroupPermissions.groupId, groupId),
+      });
+      expect(dbGroupPermission).toBeDefined();
+      expect(spy).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        "full-access",
+      );
+    },
+  );
 });
 
 const expectInputToBeFullBoardWithName = (

@@ -405,6 +405,9 @@ export const boardRouter = createTRPCRouter({
             "board-full-access",
           ]),
         ),
+        columns: {
+          groupId: false,
+        },
         with: {
           group: {
             columns: {
