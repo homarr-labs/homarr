@@ -11,7 +11,7 @@ import { createCronJob } from "~/lib/cron-job/creator";
 export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
   runOnStart: true,
 }).withCallback(async () => {
-  logger.info(`Updating icon repository cache...`);
+  logger.info("Updating icon repository cache...");
   const stopWatch = new Stopwatch();
   const repositoryIconGroups = await fetchIconsAsync();
   const countIcons = repositoryIconGroups
@@ -31,7 +31,7 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
   let countDeleted = 0;
   let countInserted = 0;
 
-  logger.info(`Updating icons in database...`);
+  logger.info("Updating icons in database...");
   stopWatch.reset();
 
   await db.transaction(async (transaction) => {
@@ -55,7 +55,7 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
         if (
           databaseIconGroups
             .flatMap((group) => group.icons)
-            .some((dbIcon) => dbIcon.checksum == icon.checksum)
+            .some((dbIcon) => dbIcon.checksum === icon.checksum)
         ) {
           skippedChecksums.push(icon.checksum);
           continue;
