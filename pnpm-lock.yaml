@@ -485,6 +485,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
