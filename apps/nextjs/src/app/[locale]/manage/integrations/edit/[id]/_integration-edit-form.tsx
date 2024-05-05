@@ -83,8 +83,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             title: t("integration.page.edit.notification.success.title"),
             message: t("integration.page.edit.notification.success.message"),
           });
-          void revalidatePathAction("/integrations").then(() =>
-            router.push("/integrations"),
+          void revalidatePathAction("/manage/integrations").then(() =>
+            router.push("/manage/integrations"),
           );
         },
         onError: () => {
@@ -164,7 +164,11 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             }}
           />
           <Group>
-            <Button variant="default" component={Link} href="/integrations">
+            <Button
+              variant="default"
+              component={Link}
+              href="/manage/integrations"
+            >
               {t("common.action.backToOverview")}
             </Button>
             <Button type="submit" loading={isPending} disabled={isDirty}>

@@ -148,7 +148,7 @@ const IntegrationList = async ({
                         <ActionIconGroup>
                           <ActionIcon
                             component={Link}
-                            href={`/integrations/edit/${integration.id}`}
+                            href={`/manage/integrations/edit/${integration.id}`}
                             variant="subtle"
                             color="gray"
                             aria-label="Edit integration"
