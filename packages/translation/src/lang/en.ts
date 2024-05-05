@@ -2,6 +2,8 @@ import "dayjs/locale/en";
 
 export default {
   user: {
+    title: "Users",
+    name: "User",
     page: {
       login: {
         title: "Log in to your account",
@@ -1047,6 +1049,16 @@ export default {
         },
       },
       user: {
+        back: "Back to users",
+        setting: {
+          general: {
+            title: "General",
+            dangerZone: "Danger zone",
+          },
+          security: {
+            title: "Security",
+          },
+        },
         list: {
           metaTitle: "Manage users",
           title: "Users",

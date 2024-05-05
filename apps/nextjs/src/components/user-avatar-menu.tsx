@@ -18,6 +18,7 @@ import {
   IconLogin,
   IconLogout,
   IconMoon,
+  IconSettings,
   IconSun,
   IconTool,
 } from "@tabler/icons-react";
@@ -73,6 +74,13 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         </Menu.Item>
         <Menu.Item
           component={Link}
+          href="/users/settings"
+          leftSection={<IconSettings size="1rem" />}
+        >
+          Your preferences
+        </Menu.Item>
+        <Menu.Item
+          component={Link}
           href="/manage"
           leftSection={<IconTool size="1rem" />}
         >
@@ -111,7 +119,7 @@ const LogoutModal = createModal<{ onTimeout: () => void }>(
 
     useEffect(() => {
       start();
-    }, []);
+    }, [start]);
 
     return (
       <Center h={200 - 2 * 16}>
