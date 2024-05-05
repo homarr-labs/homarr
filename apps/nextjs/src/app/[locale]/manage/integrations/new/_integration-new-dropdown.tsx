@@ -40,7 +40,7 @@ export const IntegrationCreateDropdownContent = () => {
           {filteredKinds.map((kind) => (
             <Menu.Item
               component={Link}
-              href={`/integrations/new?kind=${kind}`}
+              href={`/manage/integrations/new?kind=${kind}`}
               key={kind}
             >
               <Group>

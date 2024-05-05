@@ -47,9 +47,9 @@ export const DeleteIntegrationActionButton = ({
                     message: t("notification.success.message"),
                   });
                   if (count === 1) {
-                    router.replace("/integrations");
+                    router.replace("/manage/integrations");
                   }
-                  void revalidatePathAction("/integrations");
+                  void revalidatePathAction("/manage/integrations");
                 },
                 onError: () => {
                   showErrorNotification({
