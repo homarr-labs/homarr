@@ -4,6 +4,9 @@ import {
   AccordionControl,
   AccordionItem,
   AccordionPanel,
+  AspectRatio,
+  Avatar,
+  Card,
   Center,
   Flex,
   Group,
@@ -22,7 +25,7 @@ import { getPackageAttributesAsync } from "~/versions/package-reader";
 import contributorsData from "../../../../../../../static-data/contributors.json";
 import translatorsData from "../../../../../../../static-data/translators.json";
 import logo from "../../../../../public/logo/logo.png";
-import { GenericContributorLinkCard } from "./_components/generic-contributor-link-card";
+import classes from "./about.module.css";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
@@ -140,6 +143,37 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
     </div>
   );
 }
+
+interface GenericContributorLinkCardProps {
+  name: string;
+  link: string;
+  image: string;
+}
+
+const GenericContributorLinkCard = ({
+  name,
+  image,
+  link,
+}: GenericContributorLinkCardProps) => {
+  return (
+    <AspectRatio ratio={1}>
+      <Card
+        className={classes.contributorCard}
+        component="a"
+        href={link}
+        target="_blank"
+        w={100}
+      >
+        <Stack align="center">
+          <Avatar src={image} alt={name} size={40} display="block" />
+          <Text lineClamp={1} size="sm">
+            {name}
+          </Text>
+        </Stack>
+      </Card>
+    </AspectRatio>
+  );
+};
 
 export function generateStaticParams() {
   return getStaticParams();
