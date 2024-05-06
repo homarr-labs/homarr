@@ -6,7 +6,10 @@ import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useForm, zodResolver } from "@homarr/form";
-import { showSuccessNotification } from "@homarr/notifications";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
@@ -20,13 +23,17 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   const { data: session } = useSession();
   const t = useI18n();
   const { mutate, isPending } = clientApi.user.changePassword.useMutation({
-    onSettled: async () => {
+    async onSettled() {
       await revalidatePathAction(`/manage/users/${user.id}`);
+    },
+    onSuccess() {
       showSuccessNotification({
-        title: t(
-          "management.page.user.edit.section.security.changePassword.message.passwordUpdated",
-        ),
-        message: "",
+        message: t("user.action.changePassword.notification.success.message"),
+      });
+    },
+    onError() {
+      showErrorNotification({
+        message: t("user.action.changePassword.notification.error.message"),
       });
     },
   });
@@ -58,26 +65,25 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <Fieldset
-          legend={t(
-            "management.page.user.edit.section.security.changePassword.title",
-          )}
-        >
+        <Fieldset legend={t("user.action.changePassword.label")}>
           <Stack gap="xs">
             {/* Require previous password if the current user want's to change his password */}
             {session?.user.id === user.id && (
               <PasswordInput
-                label="Previous password"
+                withAsterisk
+                label={t("user.field.previousPassword.label")}
                 {...form.getInputProps("previousPassword")}
               />
             )}
 
             <PasswordInput
+              withAsterisk
               label={t("user.field.password.label")}
               {...form.getInputProps("password")}
             />
 
             <PasswordInput
+              withAsterisk
               label={t("user.field.passwordConfirm.label")}
               {...form.getInputProps("confirmPassword")}
             />

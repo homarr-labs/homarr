@@ -3,6 +3,10 @@ import { Box, Group, Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import {
+  DangerZoneItem,
+  DangerZoneRoot,
+} from "~/components/manage/danger-zone";
 import { UserProfileAvatarForm } from "./_profile-avatar-form";
 import { UserProfileForm } from "./_profile-form";
 
@@ -41,6 +45,14 @@ export default async function EditUserPage({ params }: Props) {
           <UserProfileAvatarForm user={user} />
         </Box>
       </Group>
+
+      <DangerZoneRoot>
+        <DangerZoneItem
+          label="Delete user"
+          description="Delete user account"
+          action={null}
+        />
+      </DangerZoneRoot>
     </Stack>
   );
 }

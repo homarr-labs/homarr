@@ -1,16 +1,12 @@
-import {
-  Card,
-  CardSection,
-  Divider,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import {
+  DangerZoneItem,
+  DangerZoneRoot,
+} from "~/components/manage/danger-zone";
 import { DeleteGroup } from "./_delete-group";
 import { RenameGroupForm } from "./_rename-group-form";
 import { TransferGroupOwnership } from "./_transfer-group-ownership";
@@ -34,42 +30,19 @@ export default async function GroupsDetailPage({
 
       <RenameGroupForm group={group} />
 
-      <Stack gap="sm">
-        <Title c="red.8" order={2}>
-          {tGeneral("dangerZone")}
-        </Title>
-        <Card withBorder style={{ borderColor: "var(--mantine-color-red-8)" }}>
-          <Stack gap="sm">
-            <Group justify="space-between" px="md">
-              <Stack gap={0}>
-                <Text fw="bold" size="sm">
-                  {tGroupAction("transfer.label")}
-                </Text>
-                <Text size="sm">{tGroupAction("transfer.description")}</Text>
-              </Stack>
-              <Group justify="end" w={{ base: "100%", xs: "auto" }}>
-                <TransferGroupOwnership group={group} />
-              </Group>
-            </Group>
+      <DangerZoneRoot>
+        <DangerZoneItem
+          label={tGroupAction("transfer.label")}
+          description={tGroupAction("transfer.description")}
+          action={<TransferGroupOwnership group={group} />}
+        />
 
-            <CardSection>
-              <Divider />
-            </CardSection>
-
-            <Group justify="space-between" px="md">
-              <Stack gap={0}>
-                <Text fw="bold" size="sm">
-                  {tGroupAction("delete.label")}
-                </Text>
-                <Text size="sm">{tGroupAction("delete.description")}</Text>
-              </Stack>
-              <Group justify="end" w={{ base: "100%", xs: "auto" }}>
-                <DeleteGroup group={group} />
-              </Group>
-            </Group>
-          </Stack>
-        </Card>
-      </Stack>
+        <DangerZoneItem
+          label={tGroupAction("delete.label")}
+          description={tGroupAction("delete.description")}
+          action={<DeleteGroup group={group} />}
+        />
+      </DangerZoneRoot>
     </Stack>
   );
 }

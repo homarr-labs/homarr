@@ -13,6 +13,7 @@ import {
 import { IconSettings, IconShieldLock } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
@@ -26,12 +27,13 @@ export default async function Layout({
   children,
   params,
 }: PropsWithChildren<LayoutProps>) {
+  const session = await auth();
   const t = await getI18n();
   const tUser = await getScopedI18n("management.page.user");
   const user = await api.user.getById({ userId: params.userId });
 
   return (
-    <Container size="xl">
+    <Container size="xl" bg={{ light: "cyan", dark: "blue" }}>
       <Grid>
         <GridCol span={12}>
           <Group justify="space-between" align="center">
@@ -42,14 +44,16 @@ export default async function Layout({
                 <Text c="gray.5">{t("user.name")}</Text>
               </Stack>
             </Group>
-            <Button
-              component={Link}
-              href="/manage/users"
-              color="gray"
-              variant="light"
-            >
-              {tUser("back")}
-            </Button>
+            {session?.user.permissions.includes("admin") && (
+              <Button
+                component={Link}
+                href="/manage/users"
+                color="gray"
+                variant="light"
+              >
+                {tUser("back")}
+              </Button>
+            )}
           </Group>
         </GridCol>
         <GridCol span={{ xs: 12, md: 4, lg: 3, xl: 2 }}>

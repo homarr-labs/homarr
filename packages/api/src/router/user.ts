@@ -34,10 +34,10 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await createUser(ctx.db, input);
     }),
-  // TODO: The user id should be provided as otherwise it will update the current user when he want's to change another user's profile image
   setProfileImage: protectedProcedure
     .input(
       z.object({
+        userId: z.string(),
         // Max image size of 256KB, only png and jpeg are allowed
         image: z
           .string()
@@ -47,12 +47,23 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users profile images
+      if (
+        ctx.session.user.id !== input.userId &&
+        !ctx.session.user.permissions.includes("admin")
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to change other users profile images",
+        });
+      }
+
       const user = await ctx.db.query.users.findFirst({
         columns: {
           id: true,
           image: true,
         },
-        where: eq(users.id, ctx.session.user.id),
+        where: eq(users.id, input.userId),
       });
 
       if (!user) {
@@ -67,7 +78,7 @@ export const userRouter = createTRPCRouter({
         .set({
           image: input.image,
         })
-        .where(eq(users.id, ctx.session.user.id));
+        .where(eq(users.id, input.userId));
     }),
   getAll: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.query.users.findMany({

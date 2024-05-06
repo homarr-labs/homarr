@@ -8,7 +8,11 @@ import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import { showErrorNotification } from "@homarr/notifications";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
@@ -21,6 +25,8 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
   const { mutate } = clientApi.user.setProfileImage.useMutation();
   const [opened, { toggle }] = useDisclosure(false);
   const { openConfirmModal } = useConfirmModal();
+  const t = useI18n();
+  const tManageAvatar = useScopedI18n("user.action.manageAvatar");
 
   const handleAvatarChange = useCallback(
     async (file: File | null) => {
@@ -32,46 +38,74 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
 
       mutate(
         {
+          userId: user.id,
           image: base64Url,
         },
         {
           async onSuccess() {
             // Revalidate all as the avatar is used in multiple places
             await revalidatePathAction("/");
+            showSuccessNotification({
+              message: tManageAvatar(
+                "changeImage.notification.success.message",
+              ),
+            });
           },
           onError(error) {
             if (error.shape?.data.code === "BAD_REQUEST") {
               showErrorNotification({
-                title: "Image is too large",
-                message: "Max image size is 256KB",
+                title: tManageAvatar("changeImage.notification.toLarge.title"),
+                message: tManageAvatar(
+                  "changeImage.notification.toLarge.message",
+                  { size: "256KB" },
+                ),
+              });
+            } else {
+              showErrorNotification({
+                message: tManageAvatar(
+                  "changeImage.notification.error.message",
+                ),
               });
             }
           },
         },
       );
     },
-    [mutate],
+    [mutate, user.id, tManageAvatar],
   );
 
   const handleRemoveAvatar = useCallback(() => {
     openConfirmModal({
-      title: "Remove avatar",
-      children: "Are you sure you want to remove the avatar?",
+      title: tManageAvatar("removeImage.label"),
+      children: tManageAvatar("removeImage.confirm"),
       onConfirm() {
         mutate(
           {
+            userId: user.id,
             image: null,
           },
           {
             async onSuccess() {
               // Revalidate all as the avatar is used in multiple places
               await revalidatePathAction("/");
+              showSuccessNotification({
+                message: tManageAvatar(
+                  "removeImage.notification.success.message",
+                ),
+              });
+            },
+            onError() {
+              showErrorNotification({
+                message: tManageAvatar(
+                  "removeImage.notification.error.message",
+                ),
+              });
             },
           },
         );
       },
     });
-  }, [mutate, openConfirmModal]);
+  }, [mutate, user.id, openConfirmModal, tManageAvatar]);
 
   return (
     <Box pos="relative">
@@ -95,7 +129,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
               variant="default"
               leftSection={<IconPencil size={18} stroke={1.5} />}
             >
-              Edit
+              {t("common.action.edit")}
             </Button>
           </UnstyledButton>
         </Menu.Target>
@@ -109,7 +143,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
                 {...props}
                 leftSection={<IconPhotoEdit size={16} stroke={1.5} />}
               >
-                Change image
+                {tManageAvatar("changeImage.label")}
               </Menu.Item>
             )}
           </FileButton>
@@ -118,7 +152,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
               onClick={handleRemoveAvatar}
               leftSection={<IconPhotoX size={16} stroke={1.5} />}
             >
-              Remove image
+              {tManageAvatar("removeImage.label")}
             </Menu.Item>
           )}
         </Menu.Dropdown>

@@ -25,20 +25,16 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
     async onSettled() {
       await revalidatePathAction("/manage/users");
     },
-    onSuccess(_, input) {
+    onSuccess() {
       showSuccessNotification({
         title: t("common.notification.update.success"),
-        message: t("group.action.update.notification.success.message", {
-          name: input.name,
-        }),
+        message: t("user.action.editProfile.notification.success.message"),
       });
     },
-    onError(_, input) {
+    onError() {
       showErrorNotification({
         title: t("common.notification.update.error"),
-        message: t("group.action.update.notification.error.message", {
-          name: input.name,
-        }),
+        message: t("user.action.editProfile.notification.error.message"),
       });
     },
   });
