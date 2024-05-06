@@ -11,6 +11,8 @@ export const integrationSchema = z.object({
   url: z.string(),
 });
 
+export type BoardItemIntegration = z.infer<typeof integrationSchema>;
+
 export const sharedItemSchema = z.object({
   id: z.string(),
   xOffset: z.number(),

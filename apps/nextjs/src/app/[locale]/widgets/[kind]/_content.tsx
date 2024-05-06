@@ -13,6 +13,7 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import type { BoardItemIntegration } from "@homarr/validation";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -53,7 +54,7 @@ export const WidgetPreviewPageContent = ({
   });
   const [state, setState] = useState<{
     options: Record<string, unknown>;
-    integrations: string[];
+    integrations: BoardItemIntegration[];
   }>({
     options: reduceWidgetOptionsWithDefaultValues(kind, {}),
     integrations: [],
@@ -104,8 +105,10 @@ export const WidgetPreviewPageContent = ({
         <Comp
           options={state.options as never}
           integrations={state.integrations.map(
-            (id) =>
-              integrationData.find((integration) => integration.id === id)!,
+            (stateIntegration) =>
+              integrationData.find(
+                (integration) => integration.id === stateIntegration.id,
+              )!,
           )}
           width={dimensions.width}
           height={dimensions.height}
