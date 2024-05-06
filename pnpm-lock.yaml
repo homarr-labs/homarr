@@ -492,8 +492,8 @@ importers:
         specifier: ^9.6.0
         version: 9.6.0
       drizzle-kit:
-        specifier: ^0.20.17
-        version: 0.20.17
+        specifier: ^0.20.18
+        version: 0.20.18
       drizzle-orm:
         specifier: ^0.30.10
         version: 0.30.10(@types/better-sqlite3@7.6.10)(@types/react@18.3.1)(better-sqlite3@9.6.0)(mysql2@3.9.7)(react@18.3.1)
@@ -3079,8 +3079,8 @@ packages:
     resolution: {integrity: sha512-vyJTp8+mC+G+5dfgsY+r3ckxlz+QMX40VjPQsZc5gxVAxLmi64TBoVkP54A/pRAXMXsbu2GMMBrZPxNv23waMg==}
     engines: {node: '>=0.4.0'}
 
-  drizzle-kit@0.20.17:
-    resolution: {integrity: sha512-mLVDS4nXmO09wFVlzGrdshWnAL+U9eQGC5zRs6hTN6Q9arwQGWU2XnZ17I8BM8Quau8CQRx3Ms6VPgRWJFVp7Q==}
+  drizzle-kit@0.20.18:
+    resolution: {integrity: sha512-fLTwcnLqtBxGd+51H/dEm9TC0FW6+cIX/RVPyNcitBO77X9+nkogEfMAJebpd/8Yl4KucmePHRYRWWvUlW0rqg==}
     hasBin: true
 
   drizzle-orm@0.30.10:
@@ -5708,9 +5708,6 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
 
-  zod@3.22.5:
-    resolution: {integrity: sha512-HqnGsCdVZ2xc0qWPLdO25WnseXThh0kEYKIdV5F/hTHO75hNZFp8thxSeHhiPrHZKrFTo1SOgkAj9po5bexZlw==}
-
   zod@3.23.6:
     resolution: {integrity: sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==}
 
@@ -6235,10 +6232,10 @@ snapshots:
 
   '@hono/node-server@1.11.0': {}
 
-  '@hono/zod-validator@0.2.1(hono@4.2.5)(zod@3.22.5)':
+  '@hono/zod-validator@0.2.1(hono@4.2.5)(zod@3.23.6)':
     dependencies:
       hono: 4.2.5
-      zod: 3.22.5
+      zod: 3.23.6
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -7822,11 +7819,11 @@ snapshots:
     dependencies:
       wordwrap: 1.0.0
 
-  drizzle-kit@0.20.17:
+  drizzle-kit@0.20.18:
     dependencies:
       '@esbuild-kit/esm-loader': 2.6.5
       '@hono/node-server': 1.11.0
-      '@hono/zod-validator': 0.2.1(hono@4.2.5)(zod@3.22.5)
+      '@hono/zod-validator': 0.2.1(hono@4.2.5)(zod@3.23.6)
       camelcase: 7.0.1
       chalk: 5.3.0
       commander: 9.5.0
@@ -7840,7 +7837,7 @@ snapshots:
       minimatch: 7.4.6
       semver: 7.6.0
       superjson: 2.2.1
-      zod: 3.22.5
+      zod: 3.23.6
     transitivePeerDependencies:
       - supports-color
 
@@ -10801,7 +10798,5 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yocto-queue@1.0.0: {}
-
-  zod@3.22.5: {}
 
   zod@3.23.6: {}
