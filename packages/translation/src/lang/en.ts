@@ -1171,13 +1171,15 @@ export default {
         accordion: {
           contributors: {
             title: "Contributors",
+            subtitle: "{count} maintaining code & Homarr",
           },
           translators: {
             title: "Translators",
+            subtitle: "{count} contributing translations in many languages",
           },
           libraries: {
             title: "Libraries",
-            subtitle: "{count} used",
+            subtitle: "{count} used in the Code of Homarr",
           },
         },
       },
