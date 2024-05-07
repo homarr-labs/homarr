@@ -112,11 +112,9 @@ describe("initUser should initialize the first user", () => {
 
     // act
     await caller.editProfile({
-      userId: id,
-      form: {
-        name: "ABC",
-        email: "",
-      },
+      id: id,
+      name: "ABC",
+      email: "",
     });
 
     // assert
@@ -156,11 +154,9 @@ describe("initUser should initialize the first user", () => {
 
     // act
     await caller.editProfile({
-      userId: id,
-      form: {
-        name: "ABC",
-        email: "myNewEmail@gmail.com",
-      },
+      id,
+      name: "ABC",
+      email: "myNewEmail@gmail.com",
     });
 
     // assert
