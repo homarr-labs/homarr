@@ -88,6 +88,8 @@ export default {
         label: "Delete user permanently",
         description:
           "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
+        confirm:
+          "Are you sure, that you want to delete the user {username} with his preferences?",
       },
       select: {
         label: "Select user",
@@ -413,6 +415,7 @@ export default {
       save: "Save",
       saveChanges: "Save changes",
       cancel: "Cancel",
+      delete: "Delete",
       discard: "Discard",
       confirm: "Confirm",
       continue: "Continue",
@@ -970,6 +973,7 @@ export default {
           },
         },
         dangerZone: {
+          title: "Danger zone",
           action: {
             rename: {
               label: "Rename board",

@@ -74,9 +74,7 @@ export const BoardCardMenuDropdown = ({
       {hasFullAccess && (
         <>
           <Menu.Divider />
-          <Menu.Label c="red.7">
-            {tCommon("menu.section.dangerZone.title")}
-          </Menu.Label>
+          <Menu.Label c="red.7">{tCommon("dangerZone")}</Menu.Label>
           <Menu.Item
             c="red.7"
             leftSection={<IconTrash {...iconProps} />}

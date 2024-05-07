@@ -1,0 +1,44 @@
+"use client";
+
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@mantine/core";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import { useConfirmModal } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
+
+interface DeleteUserButtonProps {
+  user: RouterOutputs["user"]["getById"];
+}
+
+export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
+  const t = useI18n();
+  const router = useRouter();
+  const { mutateAsync: mutateUserDeletionAsync } =
+    clientApi.user.delete.useMutation({
+      onSuccess() {
+        router.push("/manage/users");
+      },
+    });
+  const { openConfirmModal } = useConfirmModal();
+
+  const handleDelete = useCallback(
+    () =>
+      openConfirmModal({
+        title: t("user.action.delete.label"),
+        children: t("user.action.delete.confirm", { username: user.name }),
+        async onConfirm() {
+          await mutateUserDeletionAsync(user.id);
+        },
+      }),
+    [user, mutateUserDeletionAsync, openConfirmModal, t],
+  );
+
+  return (
+    <Button onClick={handleDelete} variant="subtle" color="red">
+      {t("common.action.delete")}
+    </Button>
+  );
+};

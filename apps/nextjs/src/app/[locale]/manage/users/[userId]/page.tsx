@@ -1,12 +1,13 @@
 import { Box, Group, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import {
   DangerZoneItem,
   DangerZoneRoot,
 } from "~/components/manage/danger-zone";
+import { DeleteUserButton } from "./_delete-user-button";
 import { UserProfileAvatarForm } from "./_profile-avatar-form";
 import { UserProfileForm } from "./_profile-form";
 
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function EditUserPage({ params }: Props) {
+  const t = await getI18n();
   const tGeneral = await getScopedI18n("management.page.user.setting.general");
   const user = await api.user.getById({
     userId: params.userId,
@@ -48,9 +50,9 @@ export default async function EditUserPage({ params }: Props) {
 
       <DangerZoneRoot>
         <DangerZoneItem
-          label="Delete user"
-          description="Delete user account"
-          action={null}
+          label={t("user.action.delete.label")}
+          description={t("user.action.delete.description")}
+          action={<DeleteUserButton user={user} />}
         />
       </DangerZoneRoot>
     </Stack>
