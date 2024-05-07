@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
+import type { BoardItemIntegration } from "@homarr/validation";
 
 import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
@@ -28,6 +29,11 @@ interface RemoveItem {
 interface UpdateItemOptions {
   itemId: string;
   newOptions: Record<string, unknown>;
+}
+
+interface UpdateItemIntegrations {
+  itemId: string;
+  newIntegrations: BoardItemIntegration[];
 }
 
 interface CreateItem {
@@ -95,6 +101,36 @@ export const useItemActions = () => {
                 return {
                   ...item,
                   options: newOptions,
+                };
+              }),
+            };
+          }),
+        };
+      });
+    },
+    [updateBoard],
+  );
+
+  const updateItemIntegrations = useCallback(
+    ({ itemId, newIntegrations }: UpdateItemIntegrations) => {
+      updateBoard((previous) => {
+        if (!previous) return previous;
+        return {
+          ...previous,
+          sections: previous.sections.map((section) => {
+            // Return same section if item is not in it
+            if (!section.items.some((item) => item.id === itemId))
+              return section;
+            return {
+              ...section,
+              items: section.items.map((item) => {
+                // Return same item if item is not the one we're moving
+                if (item.id !== itemId) return item;
+                return {
+                  ...item,
+                  ...("integrations" in item
+                    ? { integrations: newIntegrations }
+                    : {}),
                 };
               }),
             };
@@ -200,6 +236,7 @@ export const useItemActions = () => {
     moveItemToSection,
     removeItem,
     updateItemOptions,
+    updateItemIntegrations,
     createItem,
   };
 };

@@ -80,8 +80,8 @@ export const NewIntegrationForm = ({
             title: t("integration.page.create.notification.success.title"),
             message: t("integration.page.create.notification.success.message"),
           });
-          void revalidatePathAction("/integrations").then(() =>
-            router.push("/integrations"),
+          void revalidatePathAction("/manage/integrations").then(() =>
+            router.push("/manage/integrations"),
           );
         },
         onError: () => {
@@ -139,7 +139,11 @@ export const NewIntegrationForm = ({
           />
 
           <Group>
-            <Button variant="default" component={Link} href="/integrations">
+            <Button
+              variant="default"
+              component={Link}
+              href="/manage/integrations"
+            >
               {t("common.action.backToOverview")}
             </Button>
             <Button type="submit" loading={isPending} disabled={isDirty}>

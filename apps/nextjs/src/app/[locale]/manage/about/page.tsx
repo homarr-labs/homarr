@@ -4,7 +4,11 @@ import {
   AccordionControl,
   AccordionItem,
   AccordionPanel,
+  AspectRatio,
+  Avatar,
+  Card,
   Center,
+  Flex,
   Group,
   List,
   ListItem,
@@ -18,8 +22,10 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
 import { getPackageAttributesAsync } from "~/versions/package-reader";
+import contributorsData from "../../../../../../../static-data/contributors.json";
+import translatorsData from "../../../../../../../static-data/translators.json";
 import logo from "../../../../../public/logo/logo.png";
-import classes from "./accordion.module.css";
+import classes from "./about.module.css";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
@@ -57,18 +63,54 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
       </Center>
       <Text mb="xl">{t("text")}</Text>
 
-      <Accordion classNames={classes}>
+      <Accordion defaultValue="contributors" variant="filled" radius="md">
         <AccordionItem value="contributors">
           <AccordionControl icon={<IconUsers size="1rem" />}>
-            {t("accordion.contributors.title")}
+            <Stack gap={0}>
+              <Text>{t("accordion.contributors.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.contributors.subtitle", {
+                  count: contributorsData.length,
+                })}
+              </Text>
+            </Stack>
           </AccordionControl>
-          <AccordionPanel></AccordionPanel>
+          <AccordionPanel>
+            <Flex wrap="wrap" gap="xs">
+              {contributorsData.map((contributor) => (
+                <GenericContributorLinkCard
+                  key={contributor.login}
+                  link={`https://github.com/${contributor.login}`}
+                  image={contributor.avatar_url}
+                  name={contributor.login}
+                />
+              ))}
+            </Flex>
+          </AccordionPanel>
         </AccordionItem>
         <AccordionItem value="translators">
           <AccordionControl icon={<IconLanguage size="1rem" />}>
-            {t("accordion.translators.title")}
+            <Stack gap={0}>
+              <Text>{t("accordion.translators.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.translators.subtitle", {
+                  count: translatorsData.length,
+                })}
+              </Text>
+            </Stack>
           </AccordionControl>
-          <AccordionPanel></AccordionPanel>
+          <AccordionPanel>
+            <Flex wrap="wrap" gap="xs">
+              {translatorsData.map((translator) => (
+                <GenericContributorLinkCard
+                  key={translator.username}
+                  link={`https://crowdin.com/profile/${translator.username}`}
+                  image={translator.avatarUrl}
+                  name={translator.username}
+                />
+              ))}
+            </Flex>
+          </AccordionPanel>
         </AccordionItem>
         <AccordionItem value="libraries">
           <AccordionControl icon={<IconLibrary size="1rem" />}>
@@ -101,6 +143,37 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
     </div>
   );
 }
+
+interface GenericContributorLinkCardProps {
+  name: string;
+  link: string;
+  image: string;
+}
+
+const GenericContributorLinkCard = ({
+  name,
+  image,
+  link,
+}: GenericContributorLinkCardProps) => {
+  return (
+    <AspectRatio ratio={1}>
+      <Card
+        className={classes.contributorCard}
+        component="a"
+        href={link}
+        target="_blank"
+        w={100}
+      >
+        <Stack align="center">
+          <Avatar src={image} alt={name} size={40} display="block" />
+          <Text lineClamp={1} size="sm">
+            {name}
+          </Text>
+        </Stack>
+      </Card>
+    </AspectRatio>
+  );
+};
 
 export function generateStaticParams() {
   return getStaticParams();

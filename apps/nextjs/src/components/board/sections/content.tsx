@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 // Ignored because of gridstack attributes
 
+import { useMemo } from "react";
 import type { RefObject } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
@@ -13,6 +14,7 @@ import {
 import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
 
+import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
@@ -20,6 +22,7 @@ import {
   reduceWidgetOptionsWithDefaultValues,
   useServerDataFor,
   WidgetEditModal,
+  widgetImports,
 } from "@homarr/widgets";
 
 import type { Item } from "~/app/[locale]/boards/_types";
@@ -116,25 +119,42 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
   const isEditMode = useAtomValue(editModeAtom);
-  const { updateItemOptions, removeItem } = useItemActions();
+  const { updateItemOptions, updateItemIntegrations, removeItem } =
+    useItemActions();
+  const { data: integrationData, isPending } =
+    clientApi.integration.all.useQuery();
+  const currentDefinition = useMemo(
+    () => widgetImports[item.kind].definition,
+    [item.kind],
+  );
 
-  if (!isEditMode) return null;
+  if (!isEditMode || isPending) return null;
 
   const openEditModal = () => {
     openModal({
       kind: item.kind,
       value: {
         options: item.options,
-        integrations: item.integrations.map(({ id }) => id),
+        integrations: item.integrations,
       },
-      onSuccessfulEdit: ({ options, integrations: _ }) => {
+      onSuccessfulEdit: ({ options, integrations }) => {
         updateItemOptions({
           itemId: item.id,
           newOptions: options,
         });
+        updateItemIntegrations({
+          itemId: item.id,
+          newIntegrations: integrations,
+        });
       },
-      integrationData: [],
-      integrationSupport: false,
+      integrationData: (integrationData ?? []).filter(
+        (integration) =>
+          "supportedIntegrations" in currentDefinition &&
+          (currentDefinition.supportedIntegrations as string[]).some(
+            (kind) => kind === integration.kind,
+          ),
+      ),
+      integrationSupport: "supportedIntegrations" in currentDefinition,
     });
   };
 

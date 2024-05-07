@@ -1,8 +1,11 @@
 import Database from "better-sqlite3";
+import type { Logger } from "drizzle-orm";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
 import mysql from "mysql2";
+
+import { logger } from "@homarr/log";
 
 import * as mysqlSchema from "./schema/mysql";
 import * as sqliteSchema from "./schema/sqlite";
@@ -25,9 +28,18 @@ const init = () => {
 export let connection: Database.Database | mysql.Connection;
 export let database: HomarrDatabase;
 
+class WinstonDrizzleLogger implements Logger {
+  logQuery(query: string, _: unknown[]): void {
+    logger.debug(`Executed SQL query: ${query}`);
+  }
+}
+
 const initBetterSqlite = () => {
   connection = new Database(process.env.DB_URL);
-  database = drizzleSqlite(connection, { schema: sqliteSchema });
+  database = drizzleSqlite(connection, {
+    schema: sqliteSchema,
+    logger: new WinstonDrizzleLogger(),
+  });
 };
 
 const initMySQL2 = () => {
@@ -46,6 +58,7 @@ const initMySQL2 = () => {
   database = drizzleMysql(connection, {
     schema: mysqlSchema,
     mode: "default",
+    logger: new WinstonDrizzleLogger(),
   }) as unknown as HomarrDatabase;
 };
 

@@ -18,4 +18,8 @@ export const validation = {
   icons: iconsSchemas,
 };
 
-export { createSectionSchema, sharedItemSchema } from "./shared";
+export {
+  createSectionSchema,
+  sharedItemSchema,
+  type BoardItemIntegration,
+} from "./shared";
