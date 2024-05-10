@@ -90,7 +90,16 @@ export const userRouter = createTRPCRouter({
         .from(users)
         .where(eq(users.id, input.userId))
         .limit(1);
+      const existingUser = await ctx.db.query.users.findFirst({
+        where: eq(users.name, input.form.name),
+      });
 
+      if (existingUser !== undefined) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `User ${input.form.name} already exists`,
+        });
+      }
       const emailDirty =
         input.form.email && user[0]?.email !== input.form.email;
       await ctx.db
