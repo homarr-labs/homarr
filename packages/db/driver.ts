@@ -43,11 +43,11 @@ const initBetterSqlite = () => {
 };
 
 const initMySQL2 = () => {
-  if (process.env.DB_URL) {
+  if (!process.env.DB_HOST) {
     connection = mysql.createConnection({ uri: process.env.DB_URL });
   } else {
     connection = mysql.createConnection({
-      host: process.env.DB_HOST!,
+      host: process.env.DB_HOST,
       database: process.env.DB_NAME!,
       port: Number(process.env.DB_PORT),
       user: process.env.DB_USER,
