@@ -127,10 +127,12 @@ const createUser = async (
   const salt = await createSalt();
   const hashedPassword = await hashPassword(input.password, salt);
 
+  const username = input.username.toLowerCase();
+
   const userId = createId();
   await db.insert(schema.users).values({
     id: userId,
-    name: input.username,
+    name: username,
     password: hashedPassword,
     salt,
   });
