@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import {
   Avatar,
   Card,
@@ -11,7 +12,6 @@ import {
   Title,
 } from "@mantine/core";
 import { IconUserCheck } from "@tabler/icons-react";
-import { useCallback, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";

@@ -20,30 +20,25 @@ interface ProfileAccordionProps {
 
 export const ProfileAccordion = ({ user }: ProfileAccordionProps) => {
   const t = useI18n();
-  const { mutate, isPending } =
-    clientApi.user.editProfile.useMutation({
-      onError(error) {
-        showErrorNotification({
-          title: t(
-            "management.page.user.edit.section.profile.editProfile.title",
-          ),
-          message: error.message,
-        });
-      },
-      onSuccess: () => {
-        showSuccessNotification({
-          title: t(
-            "management.page.user.edit.section.profile.editProfile.title",
-          ),
-          message: t(
-            "management.page.user.edit.section.profile.editProfile.message.profileUpdated",
-          ),
-        });
-      },
-      onSettled: async () => {
-        await revalidatePathAction("/manage/users");
-      },
-    });
+  const { mutate, isPending } = clientApi.user.editProfile.useMutation({
+    onError(error) {
+      showErrorNotification({
+        title: t("management.page.user.edit.section.profile.editProfile.title"),
+        message: error.message,
+      });
+    },
+    onSuccess: () => {
+      showSuccessNotification({
+        title: t("management.page.user.edit.section.profile.editProfile.title"),
+        message: t(
+          "management.page.user.edit.section.profile.editProfile.message.profileUpdated",
+        ),
+      });
+    },
+    onSettled: async () => {
+      await revalidatePathAction("/manage/users");
+    },
+  });
   const form = useForm({
     initialValues: {
       name: user.name ?? "",
