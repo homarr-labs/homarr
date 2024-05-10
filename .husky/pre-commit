@@ -1,0 +1,1 @@
+turbo run typecheck lint format && pnpm test
