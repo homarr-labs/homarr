@@ -1056,6 +1056,12 @@ export default {
           section: {
             profile: {
               title: "Profile",
+              editProfile: {
+                title: "Edit profile",
+                message: {
+                  profileUpdated: "Updated profile",
+                },
+              },
             },
             preferences: {
               title: "Preferences",
