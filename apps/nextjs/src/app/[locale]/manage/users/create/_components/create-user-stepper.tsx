@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
 import {
   Avatar,
   Card,
@@ -12,12 +11,14 @@ import {
   Title,
 } from "@mantine/core";
 import { IconUserCheck } from "@tabler/icons-react";
+import { useCallback, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";
 import { useScopedI18n } from "@homarr/translation/client";
 import { validation, z } from "@homarr/validation";
 
+import { ErrorDisplay } from "~/components/utils";
 import { StepperNavigationComponent } from "./stepper-navigation.component";
 
 export const UserCreateStepperComponent = () => {
@@ -38,7 +39,8 @@ export const UserCreateStepperComponent = () => {
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
-  const { mutateAsync, isPending } = clientApi.user.create.useMutation();
+  const { mutateAsync, isPending, isError, error } =
+    clientApi.user.create.useMutation();
 
   const generalForm = useForm({
     initialValues: {
@@ -107,6 +109,7 @@ export const UserCreateStepperComponent = () => {
   return (
     <>
       <Title mb="md">{t("title")}</Title>
+      <ErrorDisplay hidden={!isError} message={error?.message} my="lg" />
       <Stepper
         active={active}
         onStepClick={setActive}
