@@ -32,6 +32,16 @@ export const userRouter = createTRPCRouter({
   create: publicProcedure
     .input(validation.user.create)
     .mutation(async ({ ctx, input }) => {
+      const user = await ctx.db.query.users.findFirst({
+        where: eq(users.name, input.username),
+      });
+
+      if (user !== null) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User already exists",
+        });
+      }
       await createUser(ctx.db, input);
     }),
   getAll: publicProcedure.query(async ({ ctx }) => {
