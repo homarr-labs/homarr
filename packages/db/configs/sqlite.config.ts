@@ -4,8 +4,9 @@ import type { Config } from "drizzle-kit";
 dotenv.config({ path: "../../.env" });
 
 export default {
+  dialect: "sqlite",
+  driver: "better-sqlite" as never, // TODO: Remove this line when the issue is fixed
   schema: "./schema",
-  driver: "better-sqlite",
   dbCredentials: { url: process.env.DB_URL! },
   out: "./migrations/sqlite",
 } satisfies Config;

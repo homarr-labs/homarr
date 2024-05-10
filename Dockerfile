@@ -35,6 +35,7 @@ RUN corepack enable pnpm && pnpm install
 
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/next-out/pnpm-lock.yaml ./pnpm-lock.yaml
+
 RUN corepack enable pnpm && pnpm install sharp -w
 
 # Build the project
@@ -42,6 +43,8 @@ COPY --from=builder /app/tasks-out/full/ .
 COPY --from=builder /app/websocket-out/full/ .
 COPY --from=builder /app/next-out/full/ .
 COPY --from=builder /app/migration-out/full/ .
+# Copy static data as it is not part of the build
+COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION=true
 RUN corepack enable pnpm && pnpm turbo run build
 
@@ -63,7 +66,6 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/websocket/wssServer.cjs ./
 COPY --from=installer --chown=nextjs:nodejs /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
 COPY --from=installer --chown=nextjs:nodejs /app/packages/db/migrations ./db/migrations
-COPY --from=installer --chown=nextjs:nodejs /app/packages/db/migrate.cjs ./db/migrate.cjs
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
