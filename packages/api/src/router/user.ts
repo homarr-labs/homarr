@@ -35,8 +35,7 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.db.query.users.findFirst({
         where: eq(users.name, input.username),
       });
-
-      if (user !== null) {
+      if (user !== undefined) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "User already exists",
