@@ -1108,6 +1108,9 @@ export default {
             completed: {
               title: "User created",
             },
+            error: {
+              title: "User creation failed",
+            },
           },
           action: {
             createAnother: "Create another user",

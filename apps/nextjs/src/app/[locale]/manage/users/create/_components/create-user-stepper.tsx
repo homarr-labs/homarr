@@ -15,10 +15,10 @@ import { useCallback, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm, zodResolver } from "@homarr/form";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { validation, z } from "@homarr/validation";
 
-import { ErrorDisplay } from "~/components/utils";
 import { StepperNavigationComponent } from "./stepper-navigation.component";
 
 export const UserCreateStepperComponent = () => {
@@ -39,8 +39,16 @@ export const UserCreateStepperComponent = () => {
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
-  const { mutateAsync, isPending, isError, error } =
-    clientApi.user.create.useMutation();
+  const { mutateAsync, isPending } = clientApi.user.create.useMutation({
+    onError(error) {
+      showErrorNotification({
+        autoClose: false,
+        id: "create-user-error",
+        title: t("step.error.title"),
+        message: error.message,
+      });
+    },
+  });
 
   const generalForm = useForm({
     initialValues: {
@@ -109,7 +117,6 @@ export const UserCreateStepperComponent = () => {
   return (
     <>
       <Title mb="md">{t("title")}</Title>
-      <ErrorDisplay hidden={!isError} message={error?.message} my="lg" />
       <Stepper
         active={active}
         onStepClick={setActive}

@@ -13,7 +13,6 @@ import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
 import { revalidatePathAction } from "~/app/revalidatePathAction";
-import { ErrorDisplay } from "~/components/utils";
 
 interface ProfileAccordionProps {
   user: NonNullable<RouterOutputs["user"]["getById"]>;
@@ -21,7 +20,7 @@ interface ProfileAccordionProps {
 
 export const ProfileAccordion = ({ user }: ProfileAccordionProps) => {
   const t = useI18n();
-  const { mutate, isPending, isError, error } =
+  const { mutate, isPending } =
     clientApi.user.editProfile.useMutation({
       onError(error) {
         showErrorNotification({
@@ -65,7 +64,6 @@ export const ProfileAccordion = ({ user }: ProfileAccordionProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <ErrorDisplay hidden={!isError} message={error?.message} />
         <TextInput
           label={t("user.field.username.label")}
           withAsterisk

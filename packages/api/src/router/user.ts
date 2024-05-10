@@ -33,11 +33,11 @@ export const userRouter = createTRPCRouter({
     .input(validation.user.create)
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.db.query.users.findFirst({
-        where: eq(users.name, input.username),
+        where: eq(users.name, input.username.toLowerCase()),
       });
       if (user !== undefined) {
         throw new TRPCError({
-          code: "FORBIDDEN",
+          code: "CONFLICT",
           message: "User already exists",
         });
       }
@@ -91,12 +91,12 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.userId))
         .limit(1);
       const existingUser = await ctx.db.query.users.findFirst({
-        where: eq(users.name, input.form.name),
+        where: eq(users.name, input.form.name.toLowerCase()),
       });
 
       if (existingUser !== undefined) {
         throw new TRPCError({
-          code: "FORBIDDEN",
+          code: "CONFLICT",
           message: `User ${input.form.name} already exists`,
         });
       }
