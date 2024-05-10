@@ -75,5 +75,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextj
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
 
 ENV DB_URL='/app/db/db.sqlite'
+ENV DB_DIALECT='sqlite'
+ENV DB_DRIVER='better-sqlite3'
 
 CMD ["sh", "run.sh"]
