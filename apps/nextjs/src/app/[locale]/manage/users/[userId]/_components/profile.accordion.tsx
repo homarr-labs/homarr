@@ -50,7 +50,11 @@ export const ProfileAccordion = ({ user }: ProfileAccordionProps) => {
           label={t("user.field.email.label")}
           {...form.getInputProps("email")}
         />
-        <Button type="submit" disabled={!form.isValid()} loading={isPending}>
+        <Button
+          type="submit"
+          disabled={!form.isValid() || !form.isDirty()}
+          loading={isPending}
+        >
           {t("common.action.save")}
         </Button>
       </Stack>
