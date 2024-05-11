@@ -44,7 +44,7 @@
     "@mantine/core": "^7.9.1",
     "@mantine/dates": "^7.9.1",
     "@tabler/icons-react": "^3.3.0",
-    "mantine-react-table": "2.0.0-beta.1"
+    "mantine-react-table": "2.0.0-beta.2"
   },
   "prettier": "@homarr/prettier-config"
 }
