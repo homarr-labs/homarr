@@ -4,9 +4,9 @@ import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { createConfiguration } from "./configuration";
 
-export type { Session } from "next-auth";
+export type { Session } from "@auth/core/types";
 
-declare module "next-auth" {
+declare module "@auth/core/types" {
   interface Session {
     user: {
       id: string;
