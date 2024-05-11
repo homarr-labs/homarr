@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
   Button,
   Container,
@@ -17,7 +18,9 @@ import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
+import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { NavigationLink } from "../groups/[id]/_navigation";
+import { canAccessUserEditPage } from "./access";
 
 interface LayoutProps {
   params: { userId: string };
@@ -30,7 +33,13 @@ export default async function Layout({
   const session = await auth();
   const t = await getI18n();
   const tUser = await getScopedI18n("management.page.user");
-  const user = await api.user.getById({ userId: params.userId });
+  const user = await api.user
+    .getById({ userId: params.userId })
+    .catch(catchTrpcNotFound);
+
+  if (!canAccessUserEditPage(session, user.id)) {
+    notFound();
+  }
 
   return (
     <Container size="xl" bg={{ light: "cyan", dark: "blue" }}>

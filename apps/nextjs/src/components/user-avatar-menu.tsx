@@ -72,13 +72,15 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         >
           {t("navigateDefaultBoard")}
         </Menu.Item>
-        <Menu.Item
-          component={Link}
-          href="/users/settings"
-          leftSection={<IconSettings size="1rem" />}
-        >
-          Your preferences
-        </Menu.Item>
+        {Boolean(session.data) && (
+          <Menu.Item
+            component={Link}
+            href={`/manage/users/${session.data?.user.id}`}
+            leftSection={<IconSettings size="1rem" />}
+          >
+            {t("preferences")}
+          </Menu.Item>
+        )}
         <Menu.Item
           component={Link}
           href="/manage"

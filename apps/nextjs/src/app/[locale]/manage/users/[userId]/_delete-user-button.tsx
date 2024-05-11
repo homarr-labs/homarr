@@ -9,6 +9,8 @@ import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
+import { revalidatePathAction } from "~/app/revalidatePathAction";
+
 interface DeleteUserButtonProps {
   user: RouterOutputs["user"]["getById"];
 }
@@ -18,8 +20,10 @@ export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
   const router = useRouter();
   const { mutateAsync: mutateUserDeletionAsync } =
     clientApi.user.delete.useMutation({
-      onSuccess() {
-        router.push("/manage/users");
+      async onSuccess() {
+        await revalidatePathAction("/manage/users").then(() =>
+          router.push("/manage/users"),
+        );
       },
     });
   const { openConfirmModal } = useConfirmModal();

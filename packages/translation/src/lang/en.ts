@@ -469,6 +469,7 @@ export default {
         switchToDarkMode: "Switch to dark mode",
         switchToLightMode: "Switch to light mode",
         management: "Management",
+        preferences: "Your preferences",
         logout: "Logout",
         login: "Login",
         navigateDefaultBoard: "Navigate to default board",
