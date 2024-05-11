@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { Session } from "next-auth";
+import type { Session } from "@auth/core/types";
 
 import type { Database } from "@homarr/db";
 

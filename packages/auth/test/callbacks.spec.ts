@@ -79,7 +79,6 @@ describe("session callback", () => {
           id: "no-id",
           email: "no-email",
           emailVerified: new Date("2023-01-13"),
-          permissions: [],
         },
         expires: "2023-01-13" as Date & string,
         sessionToken: "token",
