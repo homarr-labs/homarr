@@ -13,14 +13,18 @@
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
-    "build": "esbuild migrate.ts --bundle --platform=node --outfile=migrate.cjs",
+    "build": "pnpm run build:sqlite && pnpm run build:mysql",
+    "build:sqlite": "esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs",
+    "build:mysql": "esbuild migrations/mysql/migrate.ts --bundle --platform=node --outfile=migrations/mysql/migrate.cjs",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "migration:sqlite:generate": "drizzle-kit generate:sqlite --config ./sqlite.config.ts",
-    "migration:run": "tsx ./migrate.ts",
-    "migration:mysql:generate": "drizzle-kit generate:mysql --config ./mysql.config.ts",
-    "push": "drizzle-kit push:sqlite --config ./sqlite.config.ts",
+    "migration:sqlite:generate": "drizzle-kit generate --config ./configs/sqlite.config.ts",
+    "migration:sqlite:run": "drizzle-kit migrate --config ./configs/sqlite.config.ts",
+    "migration:mysql:generate": "drizzle-kit generate --config ./configs/mysql.config.ts",
+    "migration:mysql:run": "drizzle-kit migrate --config ./configs/mysql.config.ts",
+    "push:sqlite": "drizzle-kit push --config ./configs/sqlite.config.ts",
+    "push:mysql": "drizzle-kit push --config ./configs/mysql.config.ts",
     "studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"
   },
@@ -32,7 +36,7 @@
     "better-sqlite3": "^9.6.0",
     "drizzle-orm": "^0.30.10",
     "mysql2": "3.9.7",
-    "drizzle-kit": "^0.20.18"
+    "drizzle-kit": "^0.21.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

@@ -13,7 +13,8 @@
     "db:studio": "pnpm -F db studio",
     "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
-    "db:migration:run": "pnpm -F db migration:run",
+    "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
+    "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
     "dev": "turbo dev --parallel",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
@@ -43,7 +44,7 @@
     "@mantine/core": "^7.9.1",
     "@mantine/dates": "^7.9.1",
     "@tabler/icons-react": "^3.3.0",
-    "mantine-react-table": "2.0.0-beta.1"
+    "mantine-react-table": "2.0.0-beta.2"
   },
   "prettier": "@homarr/prettier-config"
 }

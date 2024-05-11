@@ -4,8 +4,8 @@ import type { Config } from "drizzle-kit";
 dotenv.config({ path: "../../.env" });
 
 export default {
+  dialect: "mysql",
   schema: "./schema",
-  driver: "mysql2",
   dbCredentials: {
     host: process.env.DB_HOST!,
     user: process.env.DB_USER!,
