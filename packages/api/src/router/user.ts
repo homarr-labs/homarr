@@ -41,7 +41,7 @@ export const userRouter = createTRPCRouter({
         // Max image size of 256KB, only png and jpeg are allowed
         image: z
           .string()
-          .regex(/^data:image\/(png|jpeg);base64,[A-Za-z0-9/+]+=*$/g)
+          .regex(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$/g)
           .max(262144)
           .nullable(),
       }),

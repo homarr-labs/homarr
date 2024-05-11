@@ -34,7 +34,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
         return;
       }
 
-      const base64Url = await fileToBase64(file);
+      const base64Url = await fileToBase64Async(file);
 
       mutate(
         {
@@ -136,7 +136,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
         <Menu.Dropdown>
           <FileButton
             onChange={handleAvatarChange}
-            accept="image/png,image/jpeg"
+            accept="image/png,image/jpeg,image/webp,image/gif"
           >
             {(props) => (
               <Menu.Item
@@ -161,7 +161,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
   );
 };
 
-const fileToBase64 = (file: File): Promise<string> =>
+const fileToBase64Async = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
