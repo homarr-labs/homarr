@@ -29,7 +29,7 @@ import {
 } from "@homarr/definitions";
 
 export const users = mysqlTable("user", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
   name: text("name"),
   email: text("email"),
   emailVerified: timestamp("emailVerified"),
@@ -41,12 +41,12 @@ export const users = mysqlTable("user", {
 export const accounts = mysqlTable(
   "account",
   {
-    userId: varchar("userId", { length: 256 })
+    userId: varchar("userId", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: varchar("provider", { length: 256 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 256 }).notNull(),
+    provider: varchar("provider", { length: 64 }).notNull(),
+    providerAccountId: varchar("providerAccountId", { length: 64 }).notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
     expires_at: int("expires_at"),
@@ -69,7 +69,7 @@ export const sessions = mysqlTable(
     sessionToken: varchar("sessionToken", { length: 512 })
       .notNull()
       .primaryKey(),
-    userId: varchar("userId", { length: 256 })
+    userId: varchar("userId", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     expires: timestamp("expires").notNull(),
@@ -82,7 +82,7 @@ export const sessions = mysqlTable(
 export const verificationTokens = mysqlTable(
   "verificationToken",
   {
-    identifier: varchar("identifier", { length: 256 }).notNull(),
+    identifier: varchar("identifier", { length: 64 }).notNull(),
     token: varchar("token", { length: 512 }).notNull(),
     expires: timestamp("expires").notNull(),
   },
@@ -96,10 +96,10 @@ export const verificationTokens = mysqlTable(
 export const groupMembers = mysqlTable(
   "groupMember",
   {
-    groupId: varchar("groupId", { length: 256 })
+    groupId: varchar("groupId", { length: 64 })
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    userId: varchar("userId", { length: 256 })
+    userId: varchar("userId", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -111,25 +111,25 @@ export const groupMembers = mysqlTable(
 );
 
 export const groups = mysqlTable("group", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
   name: varchar("name", { length: 64 }).notNull(),
-  ownerId: varchar("owner_id", { length: 256 }).references(() => users.id, {
+  ownerId: varchar("owner_id", { length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),
 });
 
 export const groupPermissions = mysqlTable("groupPermission", {
-  groupId: varchar("groupId", { length: 256 })
+  groupId: varchar("groupId", { length: 64 })
     .notNull()
     .references(() => groups.id, { onDelete: "cascade" }),
   permission: text("permission").$type<GroupPermissionKey>().notNull(),
 });
 
 export const invites = mysqlTable("invite", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
   token: varchar("token", { length: 512 }).notNull().unique(),
   expirationDate: timestamp("expiration_date").notNull(),
-  creatorId: varchar("creator_id", { length: 256 })
+  creatorId: varchar("creator_id", { length: 64 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
@@ -137,7 +137,7 @@ export const invites = mysqlTable("invite", {
 export const integrations = mysqlTable(
   "integration",
   {
-    id: varchar("id", { length: 256 }).notNull().primaryKey(),
+    id: varchar("id", { length: 64 }).notNull().primaryKey(),
     name: text("name").notNull(),
     url: text("url").notNull(),
     kind: varchar("kind", { length: 128 }).$type<IntegrationKind>().notNull(),
@@ -155,7 +155,7 @@ export const integrationSecrets = mysqlTable(
       .notNull(),
     value: text("value").$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp("updated_at").notNull(),
-    integrationId: varchar("integration_id", { length: 256 })
+    integrationId: varchar("integration_id", { length: 64 })
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
   },
@@ -171,10 +171,10 @@ export const integrationSecrets = mysqlTable(
 );
 
 export const boards = mysqlTable("board", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
   name: varchar("name", { length: 256 }).unique().notNull(),
   isPublic: boolean("is_public").default(false).notNull(),
-  creatorId: text("creator_id").references(() => users.id, {
+  creatorId: varchar("creator_id", { length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),
   pageTitle: text("page_title"),
@@ -204,13 +204,15 @@ export const boards = mysqlTable("board", {
 export const boardUserPermissions = mysqlTable(
   "boardUserPermission",
   {
-    boardId: text("board_id")
+    boardId: varchar("board_id", { length: 64 })
       .notNull()
       .references(() => boards.id, { onDelete: "cascade" }),
-    userId: text("user_id")
+    userId: varchar("user_id", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<BoardPermission>().notNull(),
+    permission: varchar("permission", { length: 128 })
+      .$type<BoardPermission>()
+      .notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -222,13 +224,15 @@ export const boardUserPermissions = mysqlTable(
 export const boardGroupPermissions = mysqlTable(
   "boardGroupPermission",
   {
-    boardId: text("board_id")
+    boardId: varchar("board_id", { length: 64 })
       .notNull()
       .references(() => boards.id, { onDelete: "cascade" }),
-    groupId: text("group_id")
+    groupId: varchar("group_id", { length: 64 })
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<BoardPermission>().notNull(),
+    permission: varchar("permission", { length: 128 })
+      .$type<BoardPermission>()
+      .notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -238,8 +242,8 @@ export const boardGroupPermissions = mysqlTable(
 );
 
 export const sections = mysqlTable("section", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
-  boardId: varchar("board_id", { length: 256 })
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  boardId: varchar("board_id", { length: 64 })
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text("kind").$type<SectionKind>().notNull(),
@@ -248,8 +252,8 @@ export const sections = mysqlTable("section", {
 });
 
 export const items = mysqlTable("item", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
-  sectionId: varchar("section_id", { length: 256 })
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  sectionId: varchar("section_id", { length: 64 })
     .notNull()
     .references(() => sections.id, { onDelete: "cascade" }),
   kind: text("kind").$type<WidgetKind>().notNull(),
@@ -261,7 +265,7 @@ export const items = mysqlTable("item", {
 });
 
 export const apps = mysqlTable("app", {
-  id: varchar("id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   iconUrl: text("icon_url").notNull(),
@@ -271,10 +275,10 @@ export const apps = mysqlTable("app", {
 export const integrationItems = mysqlTable(
   "integration_item",
   {
-    itemId: varchar("item_id", { length: 256 })
+    itemId: varchar("item_id", { length: 64 })
       .notNull()
       .references(() => items.id, { onDelete: "cascade" }),
-    integrationId: varchar("integration_id", { length: 256 })
+    integrationId: varchar("integration_id", { length: 64 })
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
   },
@@ -286,17 +290,17 @@ export const integrationItems = mysqlTable(
 );
 
 export const icons = mysqlTable("icon", {
-  id: varchar("icon_id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("icon_id", { length: 64 }).notNull().primaryKey(),
   name: varchar("icon_name", { length: 250 }).notNull(),
   url: text("icon_url").notNull(),
   checksum: text("icon_checksum").notNull(),
-  iconRepositoryId: varchar("iconRepository_id", { length: 256 })
+  iconRepositoryId: varchar("iconRepository_id", { length: 64 })
     .notNull()
     .references(() => iconRepositories.id, { onDelete: "cascade" }),
 });
 
 export const iconRepositories = mysqlTable("iconRepository", {
-  id: varchar("iconRepository_id", { length: 256 }).notNull().primaryKey(),
+  id: varchar("iconRepository_id", { length: 64 }).notNull().primaryKey(),
   slug: varchar("iconRepository_slug", { length: 150 }).notNull(),
 });
 

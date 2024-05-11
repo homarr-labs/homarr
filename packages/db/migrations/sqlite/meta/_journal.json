@@ -1,19 +1,12 @@
 {
-  "version": "5",
+  "version": "6",
   "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1714817544524,
-      "tag": "0000_premium_forgotten_one",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1714854863811,
-      "tag": "0001_unusual_rage",
+      "version": "6",
+      "when": 1715334238443,
+      "tag": "0000_talented_ben_parker",
       "breakpoints": true
     }
   ]
