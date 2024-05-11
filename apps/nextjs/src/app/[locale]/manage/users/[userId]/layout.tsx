@@ -42,7 +42,7 @@ export default async function Layout({
   }
 
   return (
-    <Container size="xl" bg={{ light: "cyan", dark: "blue" }}>
+    <Container size="xl">
       <Grid>
         <GridCol span={12}>
           <Group justify="space-between" align="center">
