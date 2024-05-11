@@ -52,10 +52,12 @@ FROM base AS runner
 WORKDIR /app
 
 RUN apk add --no-cache redis
+RUN mkdir /app/redis
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+RUN chown -R nextjs:nodejs /app/redis
 USER nextjs
 
 COPY --from=installer /app/apps/nextjs/next.config.mjs .
@@ -73,6 +75,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
+COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 
 ENV DB_URL='/app/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
