@@ -28,7 +28,7 @@
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
     "next": "^14.2.3",
-    "next-auth": "5.0.0-beta.17",
+    "next-auth": "5.0.0-beta.18",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
