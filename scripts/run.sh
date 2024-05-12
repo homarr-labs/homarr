@@ -2,7 +2,7 @@
 node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
 
 # Start Redis
-redis-server &
+redis-server /app/redis.conf &
 
 # Run the tasks backend
 node apps/tasks/tasks.cjs &
