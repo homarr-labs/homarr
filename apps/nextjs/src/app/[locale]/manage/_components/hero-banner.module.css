@@ -2,7 +2,12 @@
   padding: 3rem;
   border-radius: 8px;
   overflow: hidden;
-  background: linear-gradient(130deg, #fa52521f 0%, var(--mantine-color-dark-6) 35%, var(--mantine-color-dark-6) 100%) !important;
+  background: linear-gradient(
+    130deg,
+    #fa52521f 0%,
+    var(--mantine-color-dark-6) 35%,
+    var(--mantine-color-dark-6) 100%
+  ) !important;
 }
 
 .scrollContainer {
@@ -11,16 +16,22 @@
 }
 
 @keyframes scrolling {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-50%);
-    }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
 }
 
 .scrollAnimationContainer {
-    animation: scrolling;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+  animation: scrolling;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollAnimationContainer {
+    animation: none !important;
+  }
 }

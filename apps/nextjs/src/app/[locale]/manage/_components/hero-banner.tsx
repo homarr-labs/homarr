@@ -63,8 +63,7 @@ export const HeroBanner = () => {
                 <Stack
                   className={classes.scrollAnimationContainer}
                   style={{
-                    animationDuration:
-                      animationDurationInSeconds - columnIndex + "s",
+                    animationDuration: `${animationDurationInSeconds - columnIndex}s`,
                   }}
                 >
                   {arrayInChunks[columnIndex]?.map((icon, index) => (

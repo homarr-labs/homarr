@@ -1042,6 +1042,22 @@ export default {
       },
     },
     page: {
+      home: {
+        statistic: {
+          countBoards: "Boards",
+          createUser: "Create new user",
+          createInvite: "Create new invite",
+          addIntegration: "Create integration",
+          addApp: "Add app",
+          manageRoles: "Manage roles",
+        },
+        statisticLabel: {
+          boards: "Boards",
+          resources: "Resources",
+          authentication: "Authentication",
+          authorization: "Authorization",
+        },
+      },
       board: {
         title: "Your boards",
         action: {

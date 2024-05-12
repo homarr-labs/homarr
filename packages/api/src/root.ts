@@ -1,6 +1,7 @@
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { groupRouter } from "./router/group";
+import { homeRouter } from "./router/home";
 import { iconsRouter } from "./router/icons";
 import { integrationRouter } from "./router/integration";
 import { inviteRouter } from "./router/invite";
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   location: locationRouter,
   log: logRouter,
   icon: iconsRouter,
+  home: homeRouter,
 });
 
 // export type definition of API

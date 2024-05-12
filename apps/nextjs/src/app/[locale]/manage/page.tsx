@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
+import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { HeroBanner } from "./_components/hero-banner";
@@ -13,39 +14,6 @@ interface LinkProps {
   href: string;
 }
 
-const links: LinkProps[] = [
-  {
-    count: 1,
-    href: "/manage/boards",
-    subtitle: "Boards",
-    title: "View boards",
-  },
-  {
-    count: 1,
-    href: "/manage/boards",
-    subtitle: "Users",
-    title: "Create new user",
-  },
-  {
-    count: 1,
-    href: "/manage/boards",
-    subtitle: "Security",
-    title: "Create user invite",
-  },
-  {
-    count: 1,
-    href: "/manage/users",
-    subtitle: "Security",
-    title: "Manage users",
-  },
-  {
-    count: 4,
-    href: "/manage/users/groups",
-    subtitle: "Security",
-    title: "Manage roles",
-  },
-];
-
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
   const metaTitle = `${t("metaTitle")} • Homarr`;
@@ -55,7 +23,48 @@ export async function generateMetadata() {
   };
 }
 
-export default function ManagementPage() {
+export default async function ManagementPage() {
+  const statistics = await api.home.getStats();
+  const t = await getScopedI18n("management.page.home");
+
+  const links: LinkProps[] = [
+    {
+      count: statistics.countBoards,
+      href: "/manage/boards",
+      subtitle: t("statisticLabel.boards"),
+      title: t("statistic.countBoards"),
+    },
+    {
+      count: statistics.countUsers,
+      href: "/manage/boards",
+      subtitle: t("statisticLabel.authentication"),
+      title: t("statistic.createUser"),
+    },
+    {
+      count: statistics.countInvites,
+      href: "/manage/boards",
+      subtitle: t("statisticLabel.authentication"),
+      title: t("statistic.createInvite"),
+    },
+    {
+      count: statistics.countIntegrations,
+      href: "/manage/integrations",
+      subtitle: t("statisticLabel.resources"),
+      title: t("statistic.addIntegration"),
+    },
+    {
+      count: statistics.countApps,
+      href: "/manage/apps",
+      subtitle: t("statisticLabel.resources"),
+      title: t("statistic.addApp"),
+    },
+    {
+      count: statistics.countGroups,
+      href: "/manage/users/groups",
+      subtitle: t("statisticLabel.authorization"),
+      title: t("statistic.manageRoles"),
+    },
+  ];
   return (
     <>
       <HeroBanner />
