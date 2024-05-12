@@ -7,6 +7,7 @@ import {
   Avatar,
   Group,
   Stack,
+  Switch,
   Text,
   Title,
 } from "@mantine/core";
@@ -54,6 +55,7 @@ export default async function EditUserPage({ params }: Props) {
 
   return (
     <Stack>
+      <Switch label="something" description="something" />
       <Group mb="md">
         <Avatar>{user.name?.substring(0, 2)}</Avatar>
         <Title>{user.name}</Title>

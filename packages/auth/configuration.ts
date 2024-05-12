@@ -1,16 +1,16 @@
 import { cookies } from "next/headers";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { db } from "@homarr/db";
 
+import { adapter } from "./adapter";
 import { createSessionCallback, createSignInCallback } from "./callbacks";
-import { createCredentialsConfiguration } from "./providers/credentials";
-import { EmptyNextAuthProvider } from "./providers/empty";
+import { createCredentialsConfiguration } from "./providers/credentials/credentials-provider";
+import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
+import { filterProviders } from "./providers/filter-providers";
+import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
-
-const adapter = DrizzleAdapter(db);
 
 export const createConfiguration = (isCredentialsRequest: boolean) =>
   NextAuth({
@@ -28,10 +28,11 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
     },
     trustHost: true,
     adapter,
-    providers: [
+    providers: filterProviders([
       Credentials(createCredentialsConfiguration(db)),
       EmptyNextAuthProvider(),
-    ],
+      OidcProvider(),
+    ]),
     callbacks: {
       session: createSessionCallback(db),
       signIn: createSignInCallback(adapter, isCredentialsRequest),

@@ -5,7 +5,7 @@ import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
 import { createSalt, hashPassword } from "../../security";
-import { createCredentialsConfiguration } from "../credentials";
+import { createCredentialsConfiguration } from "../credentials/credentials-provider";
 
 describe("Credentials authorization", () => {
   it("should authorize user with correct credentials", async () => {
