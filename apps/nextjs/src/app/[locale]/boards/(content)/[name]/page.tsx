@@ -1,6 +1,6 @@
 import definition from "./_definition";
 
-const { generateMetadata, page } = definition;
+const { generateMetadataAsync: generateMetadata, page } = definition;
 
 export default page;
 

@@ -22,7 +22,7 @@ import {
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { editModeAtom } from "~/components/board/editMode";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
@@ -131,7 +131,7 @@ const EditModeMenu = () => {
           message: t("notification.success.message"),
         });
         void utils.board.getBoardByName.invalidate({ name: board.name });
-        void revalidatePathAction(`/boards/${board.name}`);
+        void revalidatePathActionAsync(`/boards/${board.name}`);
         setEditMode(false);
       },
       onError() {

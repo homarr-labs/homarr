@@ -22,6 +22,7 @@ export const createCredentialsConfiguration = (db: Database) =>
         type: "password",
       },
     },
+    // eslint-disable-next-line no-restricted-syntax
     async authorize(credentials) {
       const data = await validation.user.signIn.parseAsync(credentials);
 
