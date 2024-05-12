@@ -19,5 +19,3 @@ export const localeAttributes: Record<
     flagIcon: "us",
   },
 };
-
-localeAttributes;

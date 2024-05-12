@@ -1,10 +1,11 @@
 "use client";
 
+import React from "react";
 import { Combobox, Group, InputBase, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";
-import { languageMapping, localeAttributes } from "@homarr/translation";
+import { localeAttributes, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 
 import classes from "./language-combobox.module.css";
@@ -15,20 +16,24 @@ export const LanguageCombobox = () => {
   });
   const currentLocale = useCurrentLocale();
   const changeLocale = useChangeLocale();
-  const mapping = languageMapping();
-  const languageKeys = Object.keys(mapping) as SupportedLanguage[];
+
+  const handleOnOptionSubmit = React.useCallback(
+    (value: string) => {
+      if (!value) {
+        return;
+      }
+      changeLocale(value as SupportedLanguage);
+      combobox.closeDropdown();
+    },
+    [changeLocale, combobox],
+  );
+
+  const handleOnClick = React.useCallback(() => {
+    combobox.toggleDropdown();
+  }, [combobox]);
 
   return (
-    <Combobox
-      store={combobox}
-      onOptionSubmit={(value) => {
-        if (!value) {
-          return;
-        }
-        changeLocale(value as SupportedLanguage);
-        combobox.closeDropdown();
-      }}
-    >
+    <Combobox store={combobox} onOptionSubmit={handleOnOptionSubmit}>
       <Combobox.Target>
         <InputBase
           component="button"
@@ -36,7 +41,7 @@ export const LanguageCombobox = () => {
           pointer
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
-          onClick={() => combobox.toggleDropdown()}
+          onClick={handleOnClick}
           variant="filled"
         >
           <OptionItem currentLocale={currentLocale} localeKey={currentLocale} />
@@ -44,7 +49,7 @@ export const LanguageCombobox = () => {
       </Combobox.Target>
       <Combobox.Dropdown>
         <Combobox.Options>
-          {languageKeys.map((languageKey) => (
+          {supportedLanguages.map((languageKey) => (
             <Combobox.Option value={languageKey} key={languageKey}>
               <OptionItem
                 currentLocale={currentLocale}
