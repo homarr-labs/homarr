@@ -32,7 +32,8 @@
     "@trpc/client": "next",
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
-    "superjson": "2.2.1"
+    "superjson": "2.2.1",
+    "trpc-swagger": "^1.2.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

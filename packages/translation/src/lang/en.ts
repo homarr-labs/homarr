@@ -1157,6 +1157,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            api: "API"
           },
         },
         settings: "Settings",
