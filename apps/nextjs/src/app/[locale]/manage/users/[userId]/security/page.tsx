@@ -7,7 +7,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { canAccessUserEditPage } from "../access";
-import { ChangePasswordForm } from "./_change-password-form";
+import { ChangePasswordForm } from "./_components/_change-password-form";
 
 interface Props {
   params: {

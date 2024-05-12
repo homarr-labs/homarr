@@ -10,10 +10,10 @@ import {
   DangerZoneRoot,
 } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
-import { DeleteUserButton } from "./_delete-user-button";
-import { UserProfileAvatarForm } from "./_profile-avatar-form";
-import { UserProfileForm } from "./_profile-form";
-import { canAccessUserEditPage } from "./access";
+import { DeleteUserButton } from "./_components/_delete-user-button";
+import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
+import { UserProfileForm } from "./_components/_profile-form";
+import { canAccessUserEditPage } from "../access";
 
 interface Props {
   params: {
