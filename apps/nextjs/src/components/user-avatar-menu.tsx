@@ -4,8 +4,10 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { SelectProps } from "@mantine/core";
 import {
   Center,
+  Group,
   Menu,
   Stack,
   Text,
@@ -77,9 +79,27 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
           {t("navigateDefaultBoard")}
         </Menu.Item>
         <Menu.Divider />
-
-        <Menu.Item p={0} closeMenuOnClick={false}>
-          <LanguageCombobox />
+        {Boolean(session.data) && (
+          <>
+            <Menu.Item
+              component={Link}
+              href={`/manage/users/${session.data?.user.id}`}
+              leftSection={<IconSettings size="1rem" />}
+            >
+              {t("preferences")}
+            </Menu.Item>
+            <Menu.Item p={0} closeMenuOnClick={false}>
+              <LanguageCombobox />
+            </Menu.Item>
+          </>
+        )}
+        <Menu.Divider />
+        <Menu.Item
+          component={Link}
+          href="/manage"
+          leftSection={<IconTool size="1rem" />}
+        >
+          {t("management")}
         </Menu.Item>
         <Menu.Divider />
         {Boolean(session.data) && (
