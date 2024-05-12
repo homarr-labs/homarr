@@ -212,11 +212,9 @@ describe("editProfile shoud update user", () => {
 
     // act
     await caller.editProfile({
-      userId: id,
-      form: {
-        name: "ABC",
-        email: "",
-      },
+      id: id,
+      name: "ABC",
+      email: "",
     });
 
     // assert
@@ -256,11 +254,9 @@ describe("editProfile shoud update user", () => {
 
     // act
     await caller.editProfile({
-      userId: id,
-      form: {
-        name: "ABC",
-        email: "myNewEmail@gmail.com",
-      },
+      id,
+      name: "ABC",
+      email: "myNewEmail@gmail.com",
     });
 
     // assert

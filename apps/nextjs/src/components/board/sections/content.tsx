@@ -16,7 +16,7 @@ import { useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -115,7 +115,8 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
 };
 
 const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
-  const t = useScopedI18n("item");
+  const tItem = useScopedI18n("item");
+  const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
   const isEditMode = useAtomValue(editModeAtom);
@@ -160,8 +161,8 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
 
   const openRemoveModal = () => {
     openConfirmModal({
-      title: t("remove.title"),
-      children: t("remove.message"),
+      title: tItem("remove.title"),
+      children: tItem("remove.message"),
       onConfirm: () => {
         removeItem({ itemId: item.id });
       },
@@ -182,24 +183,24 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
-        <Menu.Label>{t("menu.label.settings")}</Menu.Label>
+        <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
         <Menu.Item
           leftSection={<IconPencil size={16} />}
           onClick={openEditModal}
         >
-          {t("action.edit")}
+          {tItem("action.edit")}
         </Menu.Item>
         <Menu.Item leftSection={<IconLayoutKanban size={16} />}>
-          {t("action.move")}
+          {tItem("action.move")}
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Label c="red.6">{t("menu.label.dangerZone")}</Menu.Label>
+        <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item
           c="red.6"
           leftSection={<IconTrash size={16} />}
           onClick={openRemoveModal}
         >
-          {t("action.remove")}
+          {tItem("action.remove")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

@@ -41,6 +41,7 @@ const registrationSchemaApi = registrationSchema.and(
 );
 
 const editProfileSchema = z.object({
+  id: z.string(),
   name: usernameSchema,
   email: z
     .string()
@@ -51,10 +52,20 @@ const editProfileSchema = z.object({
     .nullable(),
 });
 
-const changePasswordSchema = z.object({
-  userId: z.string(),
-  password: passwordSchema,
-});
+const changePasswordSchema = z
+  .object({
+    previousPassword: z.string(),
+    password: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+const changePasswordApiSchema = changePasswordSchema.and(
+  z.object({ userId: z.string() }),
+);
 
 export const userSchemas = {
   signIn: signInSchema,
@@ -65,4 +76,5 @@ export const userSchemas = {
   password: passwordSchema,
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,
+  changePasswordApi: changePasswordApiSchema,
 };
