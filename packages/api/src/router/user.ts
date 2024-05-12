@@ -125,19 +125,29 @@ export const userRouter = createTRPCRouter({
           image: input.image,
         })
         .where(eq(users.id, input.userId));
+      await createUserAsync(ctx.db, input);
+      // Delete invite as it's used
+      await ctx.db.delete(invites).where(inviteWhere);
     }),
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.users.findMany({
-      columns: {
-        id: true,
-        name: true,
-        email: true,
-        emailVerified: true,
-        image: true,
-        provider: true,
-      },
-    });
-  }),
+  create: publicProcedure
+    .meta({ openapi: { method: "POST", path: "/api/users" } })
+    .input(validation.user.create)
+    .mutation(async ({ ctx, input }) => {
+      await createUserAsync(ctx.db, input);
+    }),
+  getAll: publicProcedure
+    .meta({ openapi: { method: "GET", path: "/api/users" } })
+    .query(async ({ ctx }) => {
+      return await ctx.db.query.users.findMany({
+        columns: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+        },
+      });
+    }),
   selectable: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.users.findMany({
       columns: {

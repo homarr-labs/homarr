@@ -85,6 +85,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           href: "/manage/tools/docker",
         },
         {
+          label: t("items.tools.items.api"),
+          icon: IconPlug,
+          href: "/manage/tools/api"
+        },
+        {
           label: t("items.tools.items.logs"),
           icon: IconLogs,
           href: "/manage/tools/logs",
