@@ -14,6 +14,10 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { signIn } from "@homarr/auth/client";
 import { useForm, zodResolver } from "@homarr/form";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
@@ -44,11 +48,19 @@ export const LoginForm = () => {
           throw response?.error;
         }
 
-        void router.push("/");
+        showSuccessNotification({
+          title: t("action.login.notification.success.title"),
+          message: t("action.login.notification.success.message"),
+        });
+        router.push("/");
       })
       .catch((error: Error | string) => {
         setIsLoading(false);
         setError(error.toString());
+        showErrorNotification({
+          title: t("action.login.notification.error.title"),
+          message: t("action.login.notification.error.message"),
+        });
       });
   };
 
@@ -65,7 +77,7 @@ export const LoginForm = () => {
             {...form.getInputProps("password")}
           />
           <Button type="submit" fullWidth loading={isLoading}>
-            {t("action.login")}
+            {t("action.login.label")}
           </Button>
         </Stack>
       </form>

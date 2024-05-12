@@ -3,8 +3,8 @@ import { observable } from "@trpc/server/observable";
 
 import { createSalt, hashPassword } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { createId, eq, schema } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import { and, createId, eq, schema } from "@homarr/db";
+import { invites, users } from "@homarr/db/schema/sqlite";
 import { exampleChannel } from "@homarr/redis";
 import { validation, z } from "@homarr/validation";
 
@@ -28,6 +28,32 @@ export const userRouter = createTRPCRouter({
       }
 
       await createUser(ctx.db, input);
+    }),
+  register: publicProcedure
+    .input(validation.user.registrationApi)
+    .mutation(async ({ ctx, input }) => {
+      const inviteWhere = and(
+        eq(invites.id, input.inviteId),
+        eq(invites.token, input.token),
+      );
+      const dbInvite = await ctx.db.query.invites.findFirst({
+        columns: {
+          id: true,
+          expirationDate: true,
+        },
+        where: inviteWhere,
+      });
+
+      if (!dbInvite || dbInvite.expirationDate < new Date()) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Invalid invite",
+        });
+      }
+
+      await createUser(ctx.db, input);
+      // Delete invite as it's used
+      await ctx.db.delete(invites).where(inviteWhere);
     }),
   create: publicProcedure
     .input(validation.user.create)

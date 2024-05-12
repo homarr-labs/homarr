@@ -7,6 +7,11 @@ export default {
         title: "Log in to your account",
         subtitle: "Welcome back! Please enter your credentials",
       },
+      invite: {
+        title: "Join Homarr",
+        subtitle: "Welcome to Homarr! Please create your account",
+        description: "You were invited by {username}",
+      },
       init: {
         title: "New Homarr installation",
         subtitle: "Please create the initial administator user",
@@ -27,7 +32,32 @@ export default {
       },
     },
     action: {
-      login: "Login",
+      login: {
+        label: "Login",
+        notification: {
+          success: {
+            title: "Login successful",
+            message: "You are now logged in",
+          },
+          error: {
+            title: "Login failed",
+            message: "Your login failed",
+          },
+        },
+      },
+      register: {
+        label: "Create account",
+        notification: {
+          success: {
+            title: "Account created",
+            message: "Please log in to continue",
+          },
+          error: {
+            title: "Account creation failed",
+            message: "Your account could not be created",
+          },
+        },
+      },
       create: "Create user",
       select: {
         label: "Select user",

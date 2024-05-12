@@ -2,6 +2,7 @@ import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId, eq, schema } from "@homarr/db";
+import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
 import { userRouter } from "../user";
@@ -91,7 +92,106 @@ describe("initUser should initialize the first user", () => {
 
     await expect(act()).rejects.toThrow("too_small");
   });
+});
 
+describe("register should create a user with valid invitation", () => {
+  test("register should create a user with valid invitation", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      session: null,
+    });
+
+    const userId = createId();
+    const inviteId = createId();
+    const inviteToken = "123";
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2024, 0, 3));
+
+    await db.insert(users).values({
+      id: userId,
+    });
+    await db.insert(schema.invites).values({
+      id: inviteId,
+      token: inviteToken,
+      creatorId: userId,
+      expirationDate: new Date(2024, 0, 5),
+    });
+
+    // Act
+    await caller.register({
+      inviteId,
+      token: inviteToken,
+      username: "test",
+      password: "12345678",
+      confirmPassword: "12345678",
+    });
+
+    // Assert
+    const user = await db.query.users.findMany({
+      columns: {
+        name: true,
+      },
+    });
+    const invite = await db.query.invites.findMany({
+      columns: {
+        id: true,
+      },
+    });
+
+    expect(user).toHaveLength(2);
+    expect(invite).toHaveLength(0);
+  });
+
+  test.each([
+    [{ token: "fakeToken" }, new Date(2024, 0, 3)],
+    [{ inviteId: "fakeInviteId" }, new Date(2024, 0, 3)],
+    [{}, new Date(2024, 0, 5, 0, 0, 1)],
+  ])(
+    "register should throw an error with input %s and date %s if the invitation is invalid",
+    async (partialInput, systemTime) => {
+      // Arrange
+      const db = createDb();
+      const caller = userRouter.createCaller({
+        db,
+        session: null,
+      });
+
+      const userId = createId();
+      const inviteId = createId();
+      const inviteToken = "123";
+      vi.useFakeTimers();
+      vi.setSystemTime(systemTime);
+
+      await db.insert(users).values({
+        id: userId,
+      });
+      await db.insert(schema.invites).values({
+        id: inviteId,
+        token: inviteToken,
+        creatorId: userId,
+        expirationDate: new Date(2024, 0, 5),
+      });
+
+      // Act
+      const act = async () =>
+        await caller.register({
+          inviteId,
+          token: inviteToken,
+          username: "test",
+          password: "12345678",
+          confirmPassword: "12345678",
+          ...partialInput,
+        });
+
+      // Assert
+      await expect(act()).rejects.toThrow("Invalid invite");
+    },
+  );
+});
+
+describe("editProfile shoud update user", () => {
   test("editProfile should update users and not update emailVerified when email not dirty", async () => {
     // arrange
     const db = createDb();
@@ -180,7 +280,9 @@ describe("initUser should initialize the first user", () => {
       image: null,
     });
   });
+});
 
+describe("delete should delete user", () => {
   test("delete should delete user", async () => {
     const db = createDb();
     const caller = userRouter.createCaller({
