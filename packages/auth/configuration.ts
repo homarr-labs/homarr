@@ -9,6 +9,7 @@ import { createSessionCallback, createSignInCallback } from "./callbacks";
 import { createCredentialsConfiguration } from "./providers/credentials/credentials-provider";
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
 import { filterProviders } from "./providers/filter-providers";
+import { LdapProvider } from "./providers/ldap/ldap-provider";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
 
@@ -32,6 +33,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
       Credentials(createCredentialsConfiguration(db)),
       EmptyNextAuthProvider(),
       OidcProvider(),
+      LdapProvider(),
     ]),
     callbacks: {
       session: createSessionCallback(db),
