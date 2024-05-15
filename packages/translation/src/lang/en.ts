@@ -34,6 +34,7 @@ export default {
     action: {
       login: {
         label: "Login",
+        labelWith: "Login with {provider}",
         notification: {
           success: {
             title: "Login successful",

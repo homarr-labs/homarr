@@ -10,5 +10,8 @@ export const POST = async (req: NextRequest) => {
 };
 
 const isCredentialsRequest = (req: NextRequest) => {
-  return req.url.includes("credentials") && req.method === "POST";
+  return (
+    (req.url.includes("credentials") || req.url.includes("ldap")) &&
+    req.method === "POST"
+  );
 };

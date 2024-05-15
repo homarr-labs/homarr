@@ -38,6 +38,7 @@ export default async function Login({ searchParams }: LoginProps) {
         <Card bg="dark.8" w={64 * 6} maw="90vw">
           <LoginForm
             providers={env.AUTH_PROVIDERS}
+            oidcClientName={env.AUTH_OIDC_CLIENT_NAME}
             isOidcAutoLoginEnabled={env.AUTH_OIDC_AUTO_LOGIN}
             callbackUrl={searchParams.redirectAfterLogin ?? "/"}
           />

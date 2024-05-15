@@ -20,6 +20,7 @@ const initUserSchema = createUserSchema;
 const signInSchema = z.object({
   name: z.string(),
   password: z.string(),
+  credentialType: z.enum(["basic", "ldap"]),
 });
 
 const registrationSchema = z

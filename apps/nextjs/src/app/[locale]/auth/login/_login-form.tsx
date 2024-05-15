@@ -26,12 +26,14 @@ import { validation } from "@homarr/validation";
 
 interface LoginFormProps {
   providers: string[];
+  oidcClientName: string;
   isOidcAutoLoginEnabled: boolean;
   callbackUrl: string;
 }
 
 export const LoginForm = ({
   providers,
+  oidcClientName,
   isOidcAutoLoginEnabled,
   callbackUrl,
 }: LoginFormProps) => {
@@ -42,9 +44,9 @@ export const LoginForm = ({
   const form = useForm<FormType>({
     validate: zodResolver(validation.user.signIn),
     initialValues: {
-      provider: "",
       name: "",
       password: "",
+      credentialType: "basic",
     },
   });
 
@@ -53,6 +55,7 @@ export const LoginForm = ({
 
   const onSuccess = useCallback(
     (response: Awaited<ReturnType<typeof signIn>>) => {
+      console.log(response);
       if ((response && !response.ok) || response?.error) {
         throw response?.error;
       }
@@ -86,7 +89,8 @@ export const LoginForm = ({
     async (provider: string, options?: Parameters<typeof signIn>[1]) => {
       setIsPending(true);
       setError(undefined);
-      return await signIn(provider, {
+      console.log("signInAsync", provider, options);
+      await signIn(provider, {
         ...options,
         redirect: false,
         callbackUrl,
@@ -118,8 +122,7 @@ export const LoginForm = ({
           <>
             <form
               onSubmit={form.onSubmit(
-                ({ provider, ...credentials }) =>
-                  void signInAsync(provider, credentials),
+                (credentials) => void signInAsync("credentials", credentials),
               )}
             >
               <Stack gap="lg">
@@ -136,7 +139,7 @@ export const LoginForm = ({
                   <SubmitButton
                     isPending={isPending}
                     form={form}
-                    provider="credentials"
+                    credentialType="basic"
                   >
                     {t("action.login.label")}
                   </SubmitButton>
@@ -146,9 +149,9 @@ export const LoginForm = ({
                   <SubmitButton
                     isPending={isPending}
                     form={form}
-                    provider="ldap"
+                    credentialType="ldap"
                   >
-                    {t("action.login.label")} with LDAP
+                    {t("action.login.labelWith", { provider: "LDAP" })}
                   </SubmitButton>
                 )}
               </Stack>
@@ -165,7 +168,7 @@ export const LoginForm = ({
             variant="light"
             onClick={async () => await signInAsync("oidc")}
           >
-            Continue with OIDC
+            {t("action.login.labelWith", { provider: oidcClientName })}
           </Button>
         )}
       </Stack>
@@ -182,28 +185,30 @@ export const LoginForm = ({
 interface SubmitButtonProps {
   isPending: boolean;
   form: ReturnType<typeof useForm<FormType, (values: FormType) => FormType>>;
-  provider: string;
+  credentialType: "basic" | "ldap";
 }
 
 const SubmitButton = ({
   isPending,
   form,
-  provider,
+  credentialType,
   children,
 }: PropsWithChildren<SubmitButtonProps>) => {
+  const isCurrentProviderActive =
+    form.getValues().credentialType === credentialType;
+
   return (
     <Button
       type="submit"
+      name={credentialType}
       fullWidth
-      onClick={() => form.setFieldValue("provider", provider)}
-      loading={isPending && form.getValues().provider === provider}
-      disabled={isPending && form.getValues().provider !== provider}
+      onClick={() => form.setFieldValue("credentialType", credentialType)}
+      loading={isPending && isCurrentProviderActive}
+      disabled={isPending && !isCurrentProviderActive}
     >
       {children}
     </Button>
   );
 };
 
-type FormType = z.infer<typeof validation.user.signIn> & {
-  provider: string;
-};
+type FormType = z.infer<typeof validation.user.signIn>;

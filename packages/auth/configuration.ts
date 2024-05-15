@@ -7,7 +7,7 @@ import { db } from "@homarr/db";
 
 import { adapter } from "./adapter";
 import { createSessionCallback, createSignInCallback } from "./callbacks";
-import { createCredentialsConfiguration } from "./providers/credentials/credentials-provider";
+import { credentialsConfiguration } from "./providers/credentials/credentials-provider";
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
 import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
@@ -32,21 +32,10 @@ export const createConfiguration = (
     },
     trustHost: true,
     adapter,
-    providers: /*[
-      //Credentials(createCredentialsConfiguration(db)),
+    providers: filterProviders([
+      Credentials(credentialsConfiguration),
       EmptyNextAuthProvider(),
       OidcProvider(headers),
-      /*Entra({
-        clientId: env.AUTH_OIDC_CLIENT_ID,
-        clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
-        tenantId: "a1f41085-544b-4a33-937b-9c99cb685d81",
-      }),*/ /*
-    ] /**/ filterProviders([
-      Credentials(createCredentialsConfiguration(db)),
-      EmptyNextAuthProvider(),
-      OidcProvider(headers),
-
-      //LdapProvider(),
     ]),
     callbacks: {
       session: createSessionCallback(db),

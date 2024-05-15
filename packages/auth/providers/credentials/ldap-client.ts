@@ -3,11 +3,11 @@ import type {
   SearchOptions as LdapSearchOptions,
   SearchEntry,
 } from "ldapjs";
-import { createClient } from "ldapjs";
+import ldap from "ldapjs";
 
 import { env } from "../../env.mjs";
 
-interface BindOptions {
+export interface BindOptions {
   distinguishedName: string;
   password: string;
 }
@@ -24,7 +24,7 @@ export class LdapClient {
   private client: Client;
 
   constructor() {
-    this.client = createClient({
+    this.client = ldap.createClient({
       url: env.AUTH_LDAP_URI,
     });
   }
