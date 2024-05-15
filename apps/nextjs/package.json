@@ -34,9 +34,9 @@
     "@mantine/modals": "^7.9.1",
     "@mantine/tiptap": "^7.9.1",
     "@t3-oss/env-nextjs": "^0.10.1",
-    "@tanstack/react-query": "^5.35.5",
-    "@tanstack/react-query-devtools": "^5.35.5",
-    "@tanstack/react-query-next-experimental": "5.35.5",
+    "@tanstack/react-query": "^5.36.0",
+    "@tanstack/react-query-devtools": "^5.36.0",
+    "@tanstack/react-query-next-experimental": "5.36.0",
     "@trpc/client": "11.0.0-rc.366",
     "@trpc/next": "next",
     "@trpc/react-query": "next",
@@ -68,7 +68,7 @@
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "tsx": "4.10.0",
+    "tsx": "4.10.1",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {

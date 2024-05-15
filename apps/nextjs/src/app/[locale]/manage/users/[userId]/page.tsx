@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Avatar,
+  Box,
   Group,
   Stack,
   Switch,
@@ -19,11 +20,18 @@ import {
 } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
-import { getScopedI18n } from "@homarr/translation/server";
+import { auth } from "@homarr/auth/next";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
-import { DangerZoneAccordion } from "./_components/dangerZone.accordion";
-import { ProfileAccordion } from "./_components/profile.accordion";
-import { SecurityAccordionComponent } from "./_components/security.accordion";
+import {
+  DangerZoneItem,
+  DangerZoneRoot,
+} from "~/components/manage/danger-zone";
+import { catchTrpcNotFound } from "~/errors/trpc-not-found";
+import { DeleteUserButton } from "./_delete-user-button";
+import { UserProfileAvatarForm } from "./_profile-avatar-form";
+import { UserProfileForm } from "./_profile-form";
+import { canAccessUserEditPage } from "./access";
 
 interface Props {
   params: {
@@ -32,9 +40,17 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const user = await api.user.getById({
-    userId: params.userId,
-  });
+  const session = await auth();
+  const user = await api.user
+    .getById({
+      userId: params.userId,
+    })
+    .catch(() => null);
+
+  if (!user || !canAccessUserEditPage(session, user.id)) {
+    return {};
+  }
+
   const t = await getScopedI18n("management.page.user.edit");
   const metaTitle = `${t("metaTitle", { username: user?.name })} • Homarr`;
 
@@ -44,72 +60,38 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function EditUserPage({ params }: Props) {
-  const t = await getScopedI18n("management.page.user.edit");
-  const user = await api.user.getById({
-    userId: params.userId,
-  });
+  const t = await getI18n();
+  const tGeneral = await getScopedI18n("management.page.user.setting.general");
+  const session = await auth();
+  const user = await api.user
+    .getById({
+      userId: params.userId,
+    })
+    .catch(catchTrpcNotFound);
 
-  if (!user) {
+  if (!canAccessUserEditPage(session, user.id)) {
     notFound();
   }
 
   return (
     <Stack>
-      <Switch label="something" description="something" />
-      <Group mb="md">
-        <Avatar>{user.name?.substring(0, 2)}</Avatar>
-        <Title>{user.name}</Title>
+      <Title>{tGeneral("title")}</Title>
+      <Group gap="xl">
+        <Box flex={1}>
+          <UserProfileForm user={user} />
+        </Box>
+        <Box w={{ base: "100%", lg: 200 }}>
+          <UserProfileAvatarForm user={user} />
+        </Box>
       </Group>
-      <Accordion variant="separated" defaultValue="general">
-        <AccordionItem value="general">
-          <AccordionControl icon={<IconUserFilled />}>
-            <Text fw="bold" size="lg">
-              {t("section.profile.title")}
-            </Text>
-          </AccordionControl>
-          <AccordionPanel>
-            <ProfileAccordion user={user} />
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem value="preferences">
-          <AccordionControl icon={<IconSettingsFilled />}>
-            <Text fw="bold" size="lg">
-              {t("section.preferences.title")}
-            </Text>
-          </AccordionControl>
-          <AccordionPanel></AccordionPanel>
-        </AccordionItem>
-        <AccordionItem value="security">
-          <AccordionControl icon={<IconShieldLockFilled />}>
-            <Text fw="bold" size="lg">
-              {t("section.security.title")}
-            </Text>
-          </AccordionControl>
-          <AccordionPanel>
-            <SecurityAccordionComponent user={user} />
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem
-          styles={{
-            item: {
-              borderColor: "rgba(248,81,73,0.4)",
-              borderWidth: 4,
-            },
-          }}
-          value="dangerZone"
-        >
-          <AccordionControl icon={<IconAlertTriangleFilled />}>
-            <Text fw="bold" size="lg">
-              {t("section.dangerZone.title")}
-            </Text>
-          </AccordionControl>
-          <AccordionPanel
-            styles={{ content: { paddingRight: 0, paddingLeft: 0 } }}
-          >
-            <DangerZoneAccordion user={user} />
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+
+      <DangerZoneRoot>
+        <DangerZoneItem
+          label={t("user.action.delete.label")}
+          description={t("user.action.delete.description")}
+          action={<DeleteUserButton user={user} />}
+        />
+      </DangerZoneRoot>
     </Stack>
   );
 }

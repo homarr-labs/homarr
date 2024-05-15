@@ -1,5 +1,5 @@
+import type { AvatarProps } from "@mantine/core";
 import { Avatar } from "@mantine/core";
-import type { AvatarProps, MantineSize } from "@mantine/core";
 
 export interface UserProps {
   name: string | null;
@@ -8,7 +8,7 @@ export interface UserProps {
 
 interface UserAvatarProps {
   user: UserProps | null;
-  size: MantineSize;
+  size: AvatarProps["size"];
 }
 
 export const UserAvatar = ({ user, size }: UserAvatarProps) => {
