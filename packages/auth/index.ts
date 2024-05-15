@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { DefaultSession } from "@auth/core/types";
 
 import type { GroupPermissionKey } from "@homarr/definitions";
@@ -18,6 +19,6 @@ declare module "@auth/core/types" {
 export * from "./security";
 
 export const createHandlers = (isCredentialsRequest: boolean) =>
-  createConfiguration(isCredentialsRequest);
+  createConfiguration(isCredentialsRequest, headers());
 
 export { getSessionFromToken, sessionTokenCookieName } from "./session";

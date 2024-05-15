@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import type { PropsWithChildren } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Alert,
   Button,
+  Divider,
   PasswordInput,
   rem,
   Stack,
@@ -22,65 +24,151 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  providers: string[];
+  isOidcAutoLoginEnabled: boolean;
+  callbackUrl: string;
+}
+
+export const LoginForm = ({
+  providers,
+  isOidcAutoLoginEnabled,
+  callbackUrl,
+}: LoginFormProps) => {
   const t = useScopedI18n("user");
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string>();
   const form = useForm<FormType>({
     validate: zodResolver(validation.user.signIn),
     initialValues: {
+      provider: "",
       name: "",
       password: "",
     },
   });
 
-  const handleSubmit = async (values: FormType) => {
-    setIsLoading(true);
-    setError(undefined);
-    await signIn("credentials", {
-      ...values,
-      redirect: false,
-      callbackUrl: "/",
-    })
-      .then((response) => {
-        if (!response?.ok || response.error) {
-          throw response?.error;
-        }
+  const credentialInputsVisible =
+    providers.includes("credentials") || providers.includes("ldap");
 
-        showSuccessNotification({
-          title: t("action.login.notification.success.title"),
-          message: t("action.login.notification.success.message"),
-        });
-        router.push("/");
-      })
-      .catch((error: Error | string) => {
-        setIsLoading(false);
-        setError(error.toString());
-        showErrorNotification({
-          title: t("action.login.notification.error.title"),
-          message: t("action.login.notification.error.message"),
-        });
+  const onSuccess = useCallback(
+    (response: Awaited<ReturnType<typeof signIn>>) => {
+      if ((response && !response.ok) || response?.error) {
+        throw response?.error;
+      }
+
+      showSuccessNotification({
+        title: t("action.login.notification.success.title"),
+        message: t("action.login.notification.success.message"),
       });
-  };
+
+      // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
+      if (response) {
+        void router.push(callbackUrl);
+      }
+    },
+    [t, router, callbackUrl],
+  );
+
+  const onError = useCallback(
+    (error: Error | string) => {
+      setIsPending(false);
+      setError(error.toString());
+      showErrorNotification({
+        title: t("action.login.notification.error.title"),
+        message: t("action.login.notification.error.message"),
+      });
+    },
+    [t],
+  );
+
+  const signInAsync = useCallback(
+    async (provider: string, options?: Parameters<typeof signIn>[1]) => {
+      setIsPending(true);
+      setError(undefined);
+      return await signIn(provider, {
+        ...options,
+        redirect: false,
+        callbackUrl,
+      })
+        .then(onSuccess)
+        .catch(onError);
+    },
+    [setIsPending, setError, onSuccess, onError, callbackUrl],
+  );
+
+  const isLoginInProgress = useRef(false);
+
+  useEffect(() => {
+    if (
+      isOidcAutoLoginEnabled &&
+      !error &&
+      !isPending &&
+      !isLoginInProgress.current
+    ) {
+      isLoginInProgress.current = true;
+      void signInAsync("oidc");
+    }
+  }, [signInAsync, isOidcAutoLoginEnabled, error, isPending]);
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
-        <Stack gap="lg">
-          <TextInput
-            label={t("field.username.label")}
-            {...form.getInputProps("name")}
-          />
-          <PasswordInput
-            label={t("field.password.label")}
-            {...form.getInputProps("password")}
-          />
-          <Button type="submit" fullWidth loading={isLoading}>
-            {t("action.login.label")}
+      <Stack gap="lg">
+        {credentialInputsVisible && (
+          <>
+            <form
+              onSubmit={form.onSubmit(
+                ({ provider, ...credentials }) =>
+                  void signInAsync(provider, credentials),
+              )}
+            >
+              <Stack gap="lg">
+                <TextInput
+                  label={t("field.username.label")}
+                  {...form.getInputProps("name")}
+                />
+                <PasswordInput
+                  label={t("field.password.label")}
+                  {...form.getInputProps("password")}
+                />
+
+                {providers.includes("credentials") && (
+                  <SubmitButton
+                    isPending={isPending}
+                    form={form}
+                    provider="credentials"
+                  >
+                    {t("action.login.label")}
+                  </SubmitButton>
+                )}
+
+                {providers.includes("ldap") && (
+                  <SubmitButton
+                    isPending={isPending}
+                    form={form}
+                    provider="ldap"
+                  >
+                    {t("action.login.label")} with LDAP
+                  </SubmitButton>
+                )}
+              </Stack>
+            </form>
+            {providers.includes("oidc") && (
+              <Divider label="OIDC" labelPosition="center" />
+            )}
+          </>
+        )}
+
+        {providers.includes("oidc") && (
+          <Button
+            fullWidth
+            variant="light"
+            onClick={async () => await signInAsync("oidc")}
+          >
+            Continue with OIDC
           </Button>
-        </Stack>
-      </form>
+        )}
+      </Stack>
 
       {error && (
         <Alert icon={<IconAlertTriangle size={rem(16)} />} color="red">
@@ -91,4 +179,31 @@ export const LoginForm = () => {
   );
 };
 
-type FormType = z.infer<typeof validation.user.signIn>;
+interface SubmitButtonProps {
+  isPending: boolean;
+  form: ReturnType<typeof useForm<FormType, (values: FormType) => FormType>>;
+  provider: string;
+}
+
+const SubmitButton = ({
+  isPending,
+  form,
+  provider,
+  children,
+}: PropsWithChildren<SubmitButtonProps>) => {
+  return (
+    <Button
+      type="submit"
+      fullWidth
+      onClick={() => form.setFieldValue("provider", provider)}
+      loading={isPending && form.getValues().provider === provider}
+      disabled={isPending && form.getValues().provider !== provider}
+    >
+      {children}
+    </Button>
+  );
+};
+
+type FormType = z.infer<typeof validation.user.signIn> & {
+  provider: string;
+};

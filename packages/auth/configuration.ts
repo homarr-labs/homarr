@@ -1,3 +1,4 @@
+import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -9,11 +10,13 @@ import { createSessionCallback, createSignInCallback } from "./callbacks";
 import { createCredentialsConfiguration } from "./providers/credentials/credentials-provider";
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
 import { filterProviders } from "./providers/filter-providers";
-import { LdapProvider } from "./providers/ldap/ldap-provider";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
 
-export const createConfiguration = (isCredentialsRequest: boolean) =>
+export const createConfiguration = (
+  isCredentialsRequest: boolean,
+  headers: ReadonlyHeaders | null,
+) =>
   NextAuth({
     logger: {
       error: (code, ...message) => {
@@ -29,11 +32,21 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
     },
     trustHost: true,
     adapter,
-    providers: filterProviders([
+    providers: /*[
+      //Credentials(createCredentialsConfiguration(db)),
+      EmptyNextAuthProvider(),
+      OidcProvider(headers),
+      /*Entra({
+        clientId: env.AUTH_OIDC_CLIENT_ID,
+        clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+        tenantId: "a1f41085-544b-4a33-937b-9c99cb685d81",
+      }),*/ /*
+    ] /**/ filterProviders([
       Credentials(createCredentialsConfiguration(db)),
       EmptyNextAuthProvider(),
-      OidcProvider(),
-      LdapProvider(),
+      OidcProvider(headers),
+
+      //LdapProvider(),
     ]),
     callbacks: {
       session: createSessionCallback(db),
@@ -44,6 +57,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
       strategy: "database",
       maxAge: sessionMaxAgeInSeconds,
     },
+    debug: true,
     pages: {
       signIn: "/auth/login",
       error: "/auth/login",
