@@ -39,56 +39,69 @@ interface Props {
 
 export const SectionContent = ({ items, refs }: Props) => {
   const board = useRequiredBoard();
-  const { ref, width, height } = useElementSize<HTMLDivElement>();
 
   return (
     <>
-      {items.map((item) => {
-        return (
-          <div
-            key={item.id}
-            className="grid-stack-item"
-            data-id={item.id}
-            gs-x={item.xOffset}
-            gs-y={item.yOffset}
-            gs-w={item.width}
-            gs-h={item.height}
-            gs-min-w={1}
-            gs-min-h={1}
-            gs-max-w={4}
-            gs-max-h={4}
-            ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
-          >
-            <Card
-              ref={ref}
-              className={combineClasses(
-                classes.itemCard,
-                "grid-stack-item-content",
-              )}
-              withBorder
-              styles={{
-                root: {
-                  "--opacity": board.opacity / 100,
-                },
-              }}
-              p={width >= 96 ? undefined : "xs"}
-            >
-              <BoardItem item={item} width={width + 32} height={height + 32} />
-            </Card>
-          </div>
-        );
-      })}
+      {items.map((item) => (
+        <BoardItem
+          key={item.id}
+          refs={refs}
+          item={item}
+          opacity={board.opacity}
+        />
+      ))}
     </>
   );
 };
 
 interface ItemProps {
   item: Item;
+  refs: UseGridstackRefs;
+  opacity: number;
+}
+
+const BoardItem = ({ refs, item, opacity }: ItemProps) => {
+  const { ref, width, height } = useElementSize<HTMLDivElement>();
+
+  return (
+    <div
+      key={item.id}
+      className="grid-stack-item"
+      data-id={item.id}
+      gs-x={item.xOffset}
+      gs-y={item.yOffset}
+      gs-w={item.width}
+      gs-h={item.height}
+      gs-min-w={1}
+      gs-min-h={1}
+      gs-max-w={4}
+      gs-max-h={4}
+      ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
+    >
+      <Card
+        ref={ref}
+        className={combineClasses(classes.itemCard, "grid-stack-item-content")}
+        withBorder
+        styles={{
+          root: {
+            "--opacity": opacity / 100,
+          },
+        }}
+        p={0}
+      >
+        <BoardItemContent item={item} width={width} height={height} />
+      </Card>
+    </div>
+  );
+};
+
+interface ItemContentProps {
+  item: Item;
   width: number;
   height: number;
 }
 
-const BoardItem = ({ item, ...dimensions }: ItemProps) => {
+const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   const board = useRequiredBoard();
   const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);

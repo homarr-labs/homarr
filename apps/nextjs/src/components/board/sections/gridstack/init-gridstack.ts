@@ -22,11 +22,14 @@ export const initializeGridstack = ({
 }: InitializeGridstackProps) => {
   if (!refs.wrapper.current) return false;
   // initialize gridstack
+  console.log(refs.wrapper.current.offsetWidth);
   const newGrid = refs.gridstack;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
-      margin: 10,
+      margin: Math.round(
+        Math.max(Math.min(refs.wrapper.current.offsetWidth / 100, 10), 1),
+      ),
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,
