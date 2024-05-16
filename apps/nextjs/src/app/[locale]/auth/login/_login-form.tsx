@@ -55,7 +55,6 @@ export const LoginForm = ({
 
   const onSuccess = useCallback(
     (response: Awaited<ReturnType<typeof signIn>>) => {
-      console.log(response);
       if ((response && !response.ok) || response?.error) {
         throw response?.error;
       }
@@ -89,7 +88,6 @@ export const LoginForm = ({
     async (provider: string, options?: Parameters<typeof signIn>[1]) => {
       setIsPending(true);
       setError(undefined);
-      console.log("signInAsync", provider, options);
       await signIn(provider, {
         ...options,
         redirect: false,

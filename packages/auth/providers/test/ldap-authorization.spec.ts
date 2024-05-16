@@ -20,6 +20,7 @@ vi.mock("../../env.mjs", () => ({
 
 describe("authorizeWithLdapCredentials", () => {
   test("should fail when wrong ldap base credentials", async () => {
+    // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
     spy.mockImplementation(
       () =>
@@ -28,6 +29,7 @@ describe("authorizeWithLdapCredentials", () => {
         }) as unknown as ldapClient.LdapClient,
     );
 
+    // Act
     const act = () =>
       authorizeWithLdapCredentials(null as unknown as Adapter, {
         name: "test",
@@ -35,10 +37,12 @@ describe("authorizeWithLdapCredentials", () => {
         credentialType: "ldap",
       });
 
+    // Assert
     await expect(act()).rejects.toThrow("bindAsync");
   });
 
   test("should fail when user not found", async () => {
+    // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
     spy.mockImplementation(
       () =>
@@ -48,6 +52,7 @@ describe("authorizeWithLdapCredentials", () => {
         }) as unknown as ldapClient.LdapClient,
     );
 
+    // Act
     const act = () =>
       authorizeWithLdapCredentials(null as unknown as Adapter, {
         name: "test",
@@ -55,10 +60,12 @@ describe("authorizeWithLdapCredentials", () => {
         credentialType: "ldap",
       });
 
+    // Assert
     await expect(act()).rejects.toThrow("User test not found in LDAP");
   });
 
   test("should fail when user has invalid email", async () => {
+    // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
     spy.mockImplementation(
       () =>
@@ -75,6 +82,7 @@ describe("authorizeWithLdapCredentials", () => {
         }) as unknown as ldapClient.LdapClient,
     );
 
+    // Act
     const act = () =>
       authorizeWithLdapCredentials(null as unknown as Adapter, {
         name: "test",
@@ -82,12 +90,14 @@ describe("authorizeWithLdapCredentials", () => {
         credentialType: "ldap",
       });
 
+    // Assert
     await expect(act()).rejects.toThrow(
       'User found but with invalid or non-existing Email. Not Supported: "test"',
     );
   });
 
   test("should fail when user password is incorrect", async () => {
+    // Arrange
     const searchSpy = vi.fn(() =>
       Promise.resolve([
         {
@@ -109,6 +119,7 @@ describe("authorizeWithLdapCredentials", () => {
         }) as unknown as ldapClient.LdapClient,
     );
 
+    // Act
     const act = () =>
       authorizeWithLdapCredentials(null as unknown as Adapter, {
         name: "test",
@@ -116,11 +127,13 @@ describe("authorizeWithLdapCredentials", () => {
         credentialType: "ldap",
       });
 
+    // Assert
     await expect(act()).rejects.toThrow("bindAsync");
     expect(searchSpy).toHaveBeenCalledTimes(1);
   });
 
   test("should authorize user with correct credentials and create user", async () => {
+    // Arrange
     const db = createDb();
     const adapter = DrizzleAdapter(db);
     const spy = vi.spyOn(ldapClient, "LdapClient");
@@ -140,12 +153,14 @@ describe("authorizeWithLdapCredentials", () => {
         }) as unknown as ldapClient.LdapClient,
     );
 
+    // Act
     const result = await authorizeWithLdapCredentials(adapter, {
       name: "test",
       password: "test",
       credentialType: "ldap",
     });
 
+    // Assert
     expect(result.name).toBe("test");
     const dbUser = await db.query.users.findFirst({
       where: eq(users.name, "test"),
@@ -156,7 +171,8 @@ describe("authorizeWithLdapCredentials", () => {
     expect(dbUser?.emailVerified).not.toBeNull();
   });
 
-  test("should authorize user with correct credentials", async () => {
+  test("should authorize user with correct credentials and update name", async () => {
+    // Arrange
     const userId = createId();
     const db = createDb();
     const adapter = DrizzleAdapter(db);
@@ -169,12 +185,14 @@ describe("authorizeWithLdapCredentials", () => {
       email: "test@gmail.com",
     });
 
+    // Act
     const result = await authorizeWithLdapCredentials(adapter, {
       name: "test",
       password: "test",
       credentialType: "ldap",
     });
 
+    // Assert
     expect(result).toEqual({ id: userId, name: "test" });
 
     const dbUser = await db.query.users.findFirst({

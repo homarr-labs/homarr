@@ -1,23 +1,5 @@
 import { notFound } from "next/navigation";
-import {
-  Accordion,
-  AccordionControl,
-  AccordionItem,
-  AccordionPanel,
-  Avatar,
-  Box,
-  Group,
-  Stack,
-  Switch,
-  Text,
-  Title,
-} from "@mantine/core";
-import {
-  IconAlertTriangleFilled,
-  IconSettingsFilled,
-  IconShieldLockFilled,
-  IconUserFilled,
-} from "@tabler/icons-react";
+import { Box, Group, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
