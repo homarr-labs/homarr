@@ -232,6 +232,7 @@ describe("editProfile shoud update user", () => {
       salt: null,
       password: null,
       image: null,
+      homeBoardId: null,
     });
   });
 
@@ -274,6 +275,7 @@ describe("editProfile shoud update user", () => {
       salt: null,
       password: null,
       image: null,
+      homeBoardId: null,
     });
   });
 });
@@ -297,6 +299,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
       {
         id: userToDelete,
@@ -306,6 +309,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
       {
         id: createId(),
@@ -315,6 +319,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
     ];
 

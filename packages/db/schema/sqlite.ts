@@ -1,6 +1,7 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import {
   index,
   int,
@@ -35,6 +36,12 @@ export const users = sqliteTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  homeBoardId: text("homeBoardId").references(
+    (): AnySQLiteColumn => boards.id,
+    {
+      onDelete: "set null",
+    },
+  ),
 });
 
 export const accounts = sqliteTable(

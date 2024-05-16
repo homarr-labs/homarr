@@ -94,7 +94,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.metaTitle.label")}
-              placeholder="Default Board | Homarr"
+              placeholder="Home Board | Homarr"
               rightSection={<PendingOrInvalidIndicator {...metaTitleStatus} />}
               {...form.getInputProps("metaTitle")}
             />

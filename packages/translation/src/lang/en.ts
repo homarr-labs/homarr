@@ -502,7 +502,7 @@ export default {
         preferences: "Your preferences",
         logout: "Logout",
         login: "Login",
-        navigateDefaultBoard: "Navigate to default board",
+        homeBoard: "Your home board",
         loggedOut: "Logged out",
       },
     },
@@ -1126,6 +1126,13 @@ export default {
           },
           settings: {
             label: "Settings",
+          },
+          setHomeBoard: {
+            label: "Set as your home board",
+            badge: {
+              label: "Home",
+              tooltip: "This board will show as your home board",
+            },
           },
           delete: {
             label: "Delete permanently",

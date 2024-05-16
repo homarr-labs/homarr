@@ -41,6 +41,7 @@ const createRandomUser = async (db: Database) => {
   const userId = createId();
   await db.insert(users).values({
     id: userId,
+    homeBoardId: null,
   });
   return userId;
 };
@@ -68,6 +69,7 @@ describe("getAllBoards should return all boards accessable to the current user",
         isPublic: false,
       },
     ]);
+    console.log("hi after insert");
 
     // Act
     const result = await caller.getAllBoards();
@@ -493,21 +495,21 @@ describe("deleteBoard should delete board", () => {
   });
 });
 
-describe("getDefaultBoard should return default board", () => {
-  it("should return default board", async () => {
+describe("getHomeBoard should return home board", () => {
+  it("should return home board", async () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const fullBoardProps = await createFullBoardAsync(db, "default");
+    const fullBoardProps = await createFullBoardAsync(db, "home");
 
     // Act
-    const result = await caller.getDefaultBoard();
+    const result = await caller.getHomeBoard();
 
     // Assert
     expectInputToBeFullBoardWithName(result, {
-      name: "default",
+      name: "home",
       ...fullBoardProps,
     });
     expect(spy).toHaveBeenCalledWith(
@@ -1339,7 +1341,7 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
 });
 
 const expectInputToBeFullBoardWithName = (
-  input: RouterOutputs["board"]["getDefaultBoard"],
+  input: RouterOutputs["board"]["getHomeBoard"],
   props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,
 ) => {
   expect(input.id).toBe(props.boardId);

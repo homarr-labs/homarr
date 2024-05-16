@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ActionIcon,
+  Badge,
   Button,
   Card,
   CardSection,
@@ -13,7 +14,12 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDotsVertical, IconLock, IconWorld } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconHomeFilled,
+  IconLock,
+  IconWorld,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -70,12 +76,27 @@ const BoardCard = async ({ board }: BoardCardProps) => {
             </Text>
           </Group>
 
-          {board.creator && (
-            <Group gap="xs">
-              <UserAvatar user={board.creator} size="sm" />
-              <Text>{board.creator?.name}</Text>
-            </Group>
-          )}
+          <Group>
+            {board.isHome && (
+              <Tooltip label={t("action.setHomeBoard.badge.tooltip")}>
+                <Badge
+                  tt="none"
+                  color="yellow"
+                  variant="light"
+                  leftSection={<IconHomeFilled size=".7rem" />}
+                >
+                  {t("action.setHomeBoard.badge.label")}
+                </Badge>
+              </Tooltip>
+            )}
+
+            {board.creator && (
+              <Group gap="xs">
+                <UserAvatar user={board.creator} size="sm" />
+                <Text>{board.creator?.name}</Text>
+              </Group>
+            )}
+          </Group>
         </Group>
       </CardSection>
 
