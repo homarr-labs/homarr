@@ -91,7 +91,7 @@ export const LoginForm = ({
       await signIn(provider, {
         ...options,
         redirect: false,
-        callbackUrl,
+        callbackUrl: new URL(callbackUrl, window.location.href).href,
       })
         .then(onSuccess)
         .catch(onError);

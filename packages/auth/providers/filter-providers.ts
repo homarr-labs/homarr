@@ -5,6 +5,8 @@ import { env } from "../env.mjs";
 export const filterProviders = (
   providers: Exclude<Provider, () => unknown>[],
 ) => {
+  const authProviders = env.AUTH_PROVIDERS ?? [];
+
   return providers.filter((provider) => {
     if (provider.id === "empty") {
       return true;
@@ -13,12 +15,12 @@ export const filterProviders = (
     if (
       provider.id === "credentials" &&
       ["ldap", "credentials"].some((credentialType) =>
-        env.AUTH_PROVIDERS.includes(credentialType),
+        authProviders.includes(credentialType),
       )
     ) {
       return true;
     }
 
-    return env.AUTH_PROVIDERS.includes(provider.id);
+    return authProviders.includes(provider.id);
   });
 };

@@ -11,6 +11,7 @@ import { credentialsConfiguration } from "./providers/credentials/credentials-pr
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
 import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
+import { createRedirectUri } from "./redirect";
 import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
 
 export const createConfiguration = (
@@ -41,6 +42,7 @@ export const createConfiguration = (
       session: createSessionCallback(db),
       signIn: createSignInCallback(adapter, isCredentialsRequest),
     },
+    redirectProxyUrl: createRedirectUri(headers, `/api/auth`),
     secret: "secret-is-not-defined-yet", // TODO: This should be added later
     session: {
       strategy: "database",
