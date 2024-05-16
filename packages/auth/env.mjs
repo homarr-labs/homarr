@@ -38,7 +38,11 @@ const booleanSchema = z
     throw new Error(`Invalid boolean value for ${ctx.path.join(".")}`);
   });
 
-const authProviders = authProvidersSchema.parse(process.env.AUTH_PROVIDERS);
+const skipValidation =
+  Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION);
+const authProviders = skipValidation
+  ? []
+  : authProvidersSchema.parse(process.env.AUTH_PROVIDERS);
 
 export const env = createEnv({
   server: {
@@ -106,6 +110,5 @@ export const env = createEnv({
       process.env.AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG,
     AUTH_OIDC_AUTO_LOGIN: process.env.AUTH_OIDC_AUTO_LOGIN,
   },
-  skipValidation:
-    Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION),
+  skipValidation,
 });

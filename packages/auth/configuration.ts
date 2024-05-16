@@ -46,7 +46,6 @@ export const createConfiguration = (
       strategy: "database",
       maxAge: sessionMaxAgeInSeconds,
     },
-    debug: true,
     pages: {
       signIn: "/auth/login",
       error: "/auth/login",
