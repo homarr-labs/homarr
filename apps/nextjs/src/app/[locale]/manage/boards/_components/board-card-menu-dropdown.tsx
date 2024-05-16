@@ -66,10 +66,14 @@ export const BoardCardMenuDropdown = ({
     });
   }, [board.id, board.name, deleteBoardMutation, openConfirmModal, t]);
 
+  const handleSetHomeBoard = useCallback(async () => {
+    await setHomeBoardMutation.mutateAsync({ id: board.id });
+  }, [board.id, setHomeBoardMutation]);
+
   return (
     <Menu.Dropdown>
       <Menu.Item
-        onClick={async () => setHomeBoardMutation.mutateAsync({ id: board.id })}
+        onClick={handleSetHomeBoard}
         leftSection={<IconHome {...iconProps} />}
       >
         {t("setHomeBoard.label")}
