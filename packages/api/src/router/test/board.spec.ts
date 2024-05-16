@@ -69,7 +69,6 @@ describe("getAllBoards should return all boards accessable to the current user",
         isPublic: false,
       },
     ]);
-    console.log("hi after insert");
 
     // Act
     const result = await caller.getAllBoards();
