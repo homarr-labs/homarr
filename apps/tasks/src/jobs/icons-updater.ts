@@ -1,5 +1,6 @@
 import { Stopwatch } from "@homarr/common";
-import { db, eq } from "@homarr/db";
+import type { InferInsertModel } from "@homarr/db";
+import { db, inArray } from "@homarr/db";
 import { createId } from "@homarr/db/client";
 import { iconRepositories, icons } from "@homarr/db/schema/sqlite";
 import { fetchIconsAsync } from "@homarr/icons";
@@ -34,52 +35,67 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
   logger.info("Updating icons in database...");
   stopWatch.reset();
 
-  await db.transaction(async (transaction) => {
-    for (const repositoryIconGroup of repositoryIconGroups) {
-      if (!repositoryIconGroup.success) {
+  const newIconRepositories: InferInsertModel<typeof iconRepositories>[] = [];
+  const newIcons: InferInsertModel<typeof icons>[] = [];
+
+  for (const repositoryIconGroup of repositoryIconGroups) {
+    if (!repositoryIconGroup.success) {
+      continue;
+    }
+
+    const repositoryInDb = databaseIconGroups.find(
+      (dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug,
+    );
+    const repositoryIconGroupId: string = repositoryInDb?.id ?? createId();
+    if (!repositoryInDb?.id) {
+      newIconRepositories.push({
+        id: repositoryIconGroupId,
+        slug: repositoryIconGroup.slug,
+      });
+    }
+
+    for (const icon of repositoryIconGroup.icons) {
+      if (
+        databaseIconGroups
+          .flatMap((group) => group.icons)
+          .some((dbIcon) => dbIcon.checksum === icon.checksum)
+      ) {
+        skippedChecksums.push(icon.checksum);
         continue;
       }
 
-      const repositoryInDb = databaseIconGroups.find(
-        (dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug,
-      );
-      const repositoryIconGroupId: string = repositoryInDb?.id ?? createId();
-      if (!repositoryInDb?.id) {
-        await transaction.insert(iconRepositories).values({
-          id: repositoryIconGroupId,
-          slug: repositoryIconGroup.slug,
-        });
-      }
+      newIcons.push({
+        id: createId(),
+        checksum: icon.checksum,
+        name: icon.fileNameWithExtension,
+        url: icon.imageUrl.href,
+        iconRepositoryId: repositoryIconGroupId,
+      });
+      countInserted++;
+    }
+  }
 
-      for (const icon of repositoryIconGroup.icons) {
-        if (
-          databaseIconGroups
-            .flatMap((group) => group.icons)
-            .some((dbIcon) => dbIcon.checksum === icon.checksum)
-        ) {
-          skippedChecksums.push(icon.checksum);
-          continue;
-        }
+  const deadIcons = databaseIconGroups
+    .flatMap((group) => group.icons)
+    .filter((icon) => !skippedChecksums.includes(icon.checksum));
 
-        await transaction.insert(icons).values({
-          id: createId(),
-          checksum: icon.checksum,
-          name: icon.fileNameWithExtension,
-          url: icon.imageUrl.href,
-          iconRepositoryId: repositoryIconGroupId,
-        });
-        countInserted++;
-      }
+  await db.transaction(async (transaction) => {
+    if (newIconRepositories.length >= 1) {
+      await transaction.insert(iconRepositories).values(newIconRepositories);
     }
 
-    const deadIcons = databaseIconGroups
-      .flatMap((group) => group.icons)
-      .filter((icon) => !skippedChecksums.includes(icon.checksum));
-
-    for (const icon of deadIcons) {
-      await transaction.delete(icons).where(eq(icons.checksum, icon.checksum));
-      countDeleted++;
+    if (newIcons.length >= 1) {
+      await transaction.insert(icons).values(newIcons);
     }
+    await transaction.delete(icons).where(
+      deadIcons.length >= 1
+        ? inArray(
+            icons.checksum,
+            deadIcons.map((icon) => icon.checksum),
+          )
+        : undefined,
+    );
+    countDeleted += deadIcons.length;
   });
 
   logger.info(
