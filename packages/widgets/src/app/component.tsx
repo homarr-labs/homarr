@@ -107,7 +107,6 @@ export default function AppWidget({
             h="100%"
             direction="column"
             align="center"
-            justify="center"
             gap={0}
             style={{
               overflow: "visible",
