@@ -1,3 +1,5 @@
+"use client";
+
 import type { FocusEventHandler } from "react";
 import { useState } from "react";
 import {
