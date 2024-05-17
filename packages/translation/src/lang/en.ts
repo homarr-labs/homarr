@@ -478,6 +478,10 @@ export default {
     multiSelect: {
       placeholder: "Pick one or more values",
     },
+    multiText: {
+      placeholder: "Add more values",
+      addLabel: `Add {value}`,
+    },
     select: {
       placeholder: "Pick value",
       badge: {
@@ -578,9 +582,16 @@ export default {
     },
     edit: {
       title: "Edit item",
+      advancedOptions: {
+        label: "Advanced options",
+        title: "Advanced item options",
+      },
       field: {
         integrations: {
           label: "Integrations",
+        },
+        customCssClasses: {
+          label: "Custom css classes",
         },
       },
     },
@@ -936,7 +947,14 @@ export default {
         label: "Opacity",
       },
       customCss: {
-        label: "Custom CSS",
+        label: "Custom css for this board",
+        description:
+          "Further, customize your dashboard using CSS, only recommended for experienced users",
+        customClassesAlert: {
+          title: "Custom classes",
+          description:
+            "You can add custom classes to your board items in the advanced options of each item and use them in the custom CSS above.",
+        },
       },
       columnCount: {
         label: "Column count",

@@ -99,7 +99,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(
                   })
                 }
               >
-                Advanced options
+                {t("item.edit.advancedOptions.label")}
               </Button>
               <Group justify="end" w={{ base: "100%", xs: "auto" }}>
                 <Button

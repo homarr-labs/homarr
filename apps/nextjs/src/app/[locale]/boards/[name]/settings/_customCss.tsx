@@ -9,7 +9,7 @@ import "~/styles/prismjs.scss";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { useForm } from "@homarr/form";
-import { useI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -21,6 +21,7 @@ interface Props {
 
 export const CustomCssSettingsContent = ({ board }: Props) => {
   const t = useI18n();
+  const customCssT = useScopedI18n("board.field.customCss");
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
   const form = useForm({
@@ -44,11 +45,10 @@ export const CustomCssSettingsContent = ({ board }: Props) => {
         <Alert
           variant="light"
           color="cyan"
-          title="Custom classes"
+          title={customCssT("customClassesAlert.title")}
           icon={<IconInfoCircle />}
         >
-          You can add custom classes to your board items in the advanced options
-          of each item and use them in the custom CSS above.
+          {customCssT("customClassesAlert.description")}
         </Alert>
 
         <Group justify="end">
@@ -67,13 +67,15 @@ interface CustomCssInputProps {
 }
 
 const CustomCssInput = ({ value, onChange }: CustomCssInputProps) => {
+  const customCssT = useScopedI18n("board.field.customCss");
+
   return (
     <Input.Wrapper
-      label="Custom css for this board"
+      label={customCssT("label")}
       labelProps={{
         htmlFor: "custom-css",
       }}
-      description="Further, customize your dashboard using CSS, only recommended for experienced users"
+      description={customCssT("description")}
       inputWrapperOrder={["label", "description", "input", "error"]}
     >
       <div className={classes.codeEditorRoot}>

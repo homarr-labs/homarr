@@ -28,7 +28,7 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextMultiSelect
-            label="Custom css classes"
+            label={t("item.edit.field.customCssClasses.label")}
             {...form.getInputProps("customCssClasses")}
           />
           <Group justify="end">
@@ -44,7 +44,9 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(
     );
   },
 ).withOptions({
-  defaultTitle: "Advanced item options",
+  defaultTitle(t) {
+    return t("item.edit.advancedOptions.title");
+  },
   size: "lg",
   transitionProps: {
     duration: 0,

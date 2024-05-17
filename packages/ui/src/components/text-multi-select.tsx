@@ -7,11 +7,12 @@ import {
   Group,
   Pill,
   PillsInput,
-  Stack,
   Text,
   useCombobox,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+
+import { useI18n } from "@homarr/translation/client";
 
 interface TextMultiSelectProps {
   label: string;
@@ -30,6 +31,7 @@ export const TextMultiSelect = ({
   onFocus,
   error,
 }: TextMultiSelectProps) => {
+  const t = useI18n();
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
@@ -84,7 +86,7 @@ export const TextMultiSelect = ({
                   combobox.closeDropdown();
                 }}
                 value={search}
-                placeholder="Search values"
+                placeholder={t("common.multiText.placeholder")}
                 onChange={(event) => {
                   combobox.updateSelectedOptionIndex();
                   setSearch(event.currentTarget.value);
@@ -107,9 +109,9 @@ export const TextMultiSelect = ({
             <Combobox.Option value="$create">
               <Group>
                 <IconPlus size={12} />
-                <Stack gap={0}>
-                  <Text size="xs">Add {search}</Text>
-                </Stack>
+                <Text size="sm">
+                  {t("common.multiText.addLabel", { value: search })}
+                </Text>
               </Group>
             </Combobox.Option>
           </Combobox.Options>

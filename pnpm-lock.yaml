@@ -759,6 +759,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
