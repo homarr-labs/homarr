@@ -262,6 +262,7 @@ export const items = mysqlTable("item", {
   width: int("width").notNull(),
   height: int("height").notNull(),
   options: text("options").default('{"json": {}}').notNull(), // empty superjson object
+  advancedOptions: text("advanced_options").default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const apps = mysqlTable("app", {
