@@ -15,6 +15,7 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import {
   createSectionSchema,
   sharedItemSchema,
@@ -271,6 +272,7 @@ export const boardRouter = createTRPCRouter({
               xOffset: item.xOffset,
               yOffset: item.yOffset,
               options: superjson.stringify(item.options),
+              advancedOptions: superjson.stringify(item.advancedOptions),
               sectionId: item.sectionId,
             })),
           );
@@ -320,6 +322,7 @@ export const boardRouter = createTRPCRouter({
               xOffset: item.xOffset,
               yOffset: item.yOffset,
               options: superjson.stringify(item.options),
+              advancedOptions: superjson.stringify(item.advancedOptions),
               sectionId: item.sectionId,
             })
             .where(eq(items.id, item.id));
@@ -612,6 +615,9 @@ const getFullBoardWithWhere = async (
         items: section.items.map((item) => ({
           ...item,
           integrations: item.integrations.map((item) => item.integration),
+          advancedOptions: superjson.parse<BoardItemAdvancedOptions>(
+            item.advancedOptions,
+          ),
           options: superjson.parse<Record<string, unknown>>(item.options),
         })),
       }),

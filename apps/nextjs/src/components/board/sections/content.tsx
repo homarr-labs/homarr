@@ -80,7 +80,11 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
     >
       <Card
         ref={ref}
-        className={combineClasses(classes.itemCard, "grid-stack-item-content")}
+        className={combineClasses(
+          classes.itemCard,
+          "grid-stack-item-content",
+          item.advancedOptions.customCssClasses.join(" "),
+        )}
         withBorder
         styles={{
           root: {
@@ -133,8 +137,12 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
   const isEditMode = useAtomValue(editModeAtom);
-  const { updateItemOptions, updateItemIntegrations, removeItem } =
-    useItemActions();
+  const {
+    updateItemOptions,
+    updateItemAdvancedOptions,
+    updateItemIntegrations,
+    removeItem,
+  } = useItemActions();
   const { data: integrationData, isPending } =
     clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(
@@ -148,13 +156,18 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
     openModal({
       kind: item.kind,
       value: {
+        advancedOptions: item.advancedOptions,
         options: item.options,
         integrations: item.integrations,
       },
-      onSuccessfulEdit: ({ options, integrations }) => {
+      onSuccessfulEdit: ({ options, integrations, advancedOptions }) => {
         updateItemOptions({
           itemId: item.id,
           newOptions: options,
+        });
+        updateItemAdvancedOptions({
+          itemId: item.id,
+          newAdvancedOptions: advancedOptions,
         });
         updateItemIntegrations({
           itemId: item.id,

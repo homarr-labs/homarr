@@ -98,7 +98,7 @@ export default async function BoardSettingsPage({
             <ColorSettingsContent board={board} />
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
-            <CustomCssSettingsContent />
+            <CustomCssSettingsContent board={board} />
           </AccordionItemFor>
           {hasFullAccess && (
             <>

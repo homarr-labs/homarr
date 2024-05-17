@@ -13,6 +13,14 @@ export const integrationSchema = z.object({
 
 export type BoardItemIntegration = z.infer<typeof integrationSchema>;
 
+export const itemAdvancedOptionsSchema = z.object({
+  customCssClasses: z.array(z.string()).default([]),
+});
+
+export type BoardItemAdvancedOptions = z.infer<
+  typeof itemAdvancedOptionsSchema
+>;
+
 export const sharedItemSchema = z.object({
   id: z.string(),
   xOffset: z.number(),
@@ -20,6 +28,7 @@ export const sharedItemSchema = z.object({
   height: z.number(),
   width: z.number(),
   integrations: z.array(integrationSchema),
+  advancedOptions: itemAdvancedOptionsSchema,
 });
 
 export const commonItemSchema = z
