@@ -73,7 +73,7 @@ describe("initUser should initialize the first user", () => {
         confirmPassword: "12345679",
       });
 
-    await expect(act()).rejects.toThrow("Passwords do not match");
+    await expect(act()).rejects.toThrow("passwordsDoNotMatch");
   });
 
   it("should not create a user if the password is too short", async () => {
