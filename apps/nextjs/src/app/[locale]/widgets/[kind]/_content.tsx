@@ -13,7 +13,10 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { BoardItemIntegration } from "@homarr/validation";
+import type {
+  BoardItemAdvancedOptions,
+  BoardItemIntegration,
+} from "@homarr/validation";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -55,9 +58,13 @@ export const WidgetPreviewPageContent = ({
   const [state, setState] = useState<{
     options: Record<string, unknown>;
     integrations: BoardItemIntegration[];
+    advancedOptions: BoardItemAdvancedOptions;
   }>({
     options: reduceWidgetOptionsWithDefaultValues(kind, {}),
     integrations: [],
+    advancedOptions: {
+      customCssClasses: [],
+    },
   });
 
   const handleOpenEditWidgetModal = useCallback(() => {
