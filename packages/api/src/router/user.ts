@@ -255,6 +255,7 @@ const createUser = async (
   await db.insert(schema.users).values({
     id: userId,
     name: input.username,
+    email: input.email,
     password: hashedPassword,
     salt,
   });

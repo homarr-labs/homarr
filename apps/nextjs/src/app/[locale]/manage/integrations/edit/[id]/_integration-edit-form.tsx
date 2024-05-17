@@ -10,7 +10,7 @@ import {
   getAllSecretKindOptions,
   getDefaultSecretKinds,
 } from "@homarr/definitions";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { useConfirmModal } from "@homarr/modals";
 import {
   showErrorNotification,
@@ -55,9 +55,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   });
 
   const router = useRouter();
-  const form = useForm<FormType>({
+  const form = useZodForm(validation.integration.update.omit({ id: true }), {
     initialValues: initialFormValues,
-    validate: zodResolver(validation.integration.update.omit({ id: true })),
     onValuesChange,
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
@@ -103,11 +102,13 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
         <TestConnectionNoticeAlert />
 
         <TextInput
+          withAsterisk
           label={t("integration.field.name.label")}
           {...form.getInputProps("name")}
         />
 
         <TextInput
+          withAsterisk
           label={t("integration.field.url.label")}
           {...form.getInputProps("url")}
         />

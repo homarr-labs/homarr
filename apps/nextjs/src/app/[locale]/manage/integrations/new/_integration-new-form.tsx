@@ -19,7 +19,7 @@ import type {
 } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -60,9 +60,8 @@ export const NewIntegrationForm = ({
     initialFormValue: initialFormValues,
   });
   const router = useRouter();
-  const form = useForm<FormType>({
+  const form = useZodForm(validation.integration.create.omit({ kind: true }), {
     initialValues: initialFormValues,
-    validate: zodResolver(validation.integration.create.omit({ kind: true })),
     onValuesChange,
   });
   const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
@@ -100,11 +99,13 @@ export const NewIntegrationForm = ({
         <TestConnectionNoticeAlert />
 
         <TextInput
+          withAsterisk
           label={t("integration.field.name.label")}
           {...form.getInputProps("name")}
         />
 
         <TextInput
+          withAsterisk
           label={t("integration.field.url.label")}
           {...form.getInputProps("url")}
         />
@@ -119,6 +120,7 @@ export const NewIntegrationForm = ({
             )}
             {form.values.secrets.map(({ kind }, index) => (
               <IntegrationSecretInput
+                withAsterisk
                 key={kind}
                 kind={kind}
                 {...form.getInputProps(`secrets.${index}.value`)}

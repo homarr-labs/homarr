@@ -33,6 +33,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@mantine/form": "^7.9.1"
+    "@mantine/form": "^7.9.1",
+    "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0"
   }
 }

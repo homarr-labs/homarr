@@ -13,7 +13,7 @@ import {
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { signIn } from "@homarr/auth/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -27,15 +27,16 @@ export const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.signIn),
+  const form = useZodForm(validation.user.signIn, {
     initialValues: {
       name: "",
       password: "",
     },
   });
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmit = async (
+    values: z.infer<typeof validation.user.signIn>,
+  ) => {
     setIsLoading(true);
     setError(undefined);
     await signIn("credentials", {
@@ -90,5 +91,3 @@ export const LoginForm = () => {
     </Stack>
   );
 };
-
-type FormType = z.infer<typeof validation.user.signIn>;

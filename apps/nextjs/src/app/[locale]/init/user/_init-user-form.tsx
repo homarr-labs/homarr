@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -18,10 +18,7 @@ export const InitUserForm = () => {
   const t = useScopedI18n("user");
   const { mutateAsync, error, isPending } =
     clientApi.user.initUser.useMutation();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.init),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
+  const form = useZodForm(validation.user.init, {
     initialValues: {
       username: "",
       password: "",

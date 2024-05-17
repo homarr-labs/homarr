@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./form": "./src/form/i18n.ts"
   },
   "typesVersions": {
     "*": {
@@ -35,6 +36,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "zod": "^3.23.8",
-    "@homarr/definitions": "workspace:^0.1.0"
+    "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0"
   }
 }

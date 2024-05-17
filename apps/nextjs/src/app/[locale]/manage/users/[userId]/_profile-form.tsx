@@ -5,7 +5,7 @@ import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -38,14 +38,11 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
       });
     },
   });
-  const form = useForm({
+  const form = useZodForm(validation.user.editProfile.omit({ id: true }), {
     initialValues: {
       name: user.name ?? "",
       email: user.email ?? "",
     },
-    validate: zodResolver(validation.user.editProfile.omit({ id: true })),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
   });
 
   const handleSubmit = useCallback(

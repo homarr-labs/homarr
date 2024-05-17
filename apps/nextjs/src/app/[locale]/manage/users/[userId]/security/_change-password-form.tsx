@@ -5,7 +5,7 @@ import { Button, Fieldset, Group, PasswordInput, Stack } from "@mantine/core";
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -37,15 +37,13 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
       });
     },
   });
-  const form = useForm<FormType>({
+  const form = useZodForm(validation.user.changePassword, {
     initialValues: {
-      previousPassword: "",
+      /* Require previous password if the current user want's to change his password */
+      previousPassword: session?.user.id === user.id ? "" : "_",
       password: "",
       confirmPassword: "",
     },
-    validate: zodResolver(validation.user.changePassword),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
   });
 
   const handleSubmit = (values: FormType) => {
