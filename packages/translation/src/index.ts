@@ -1,6 +1,7 @@
 import type { stringOrTranslation, TranslationFunction } from "./type";
 
 export * from "./type";
+export * from "./locale-attributes";
 
 export const supportedLanguages = ["en", "de"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];

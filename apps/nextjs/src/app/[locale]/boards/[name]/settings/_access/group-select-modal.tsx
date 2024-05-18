@@ -22,7 +22,7 @@ export const GroupSelectModal = createModal<InnerProps>(
     const { data: groups, isPending } = clientApi.group.selectable.useQuery();
     const [loading, setLoading] = useState(false);
     const form = useForm<GroupSelectFormType>();
-    const handleSubmit = async (values: GroupSelectFormType) => {
+    const handleSubmitAsync = async (values: GroupSelectFormType) => {
       const currentGroup = groups?.find((group) => group.id === values.groupId);
       if (!currentGroup) return;
       setLoading(true);
@@ -38,7 +38,9 @@ export const GroupSelectModal = createModal<InnerProps>(
     const confirmLabel = innerProps.confirmLabel ?? t("common.action.add");
 
     return (
-      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}
+      >
         <Stack>
           <Select
             {...form.getInputProps("groupId")}

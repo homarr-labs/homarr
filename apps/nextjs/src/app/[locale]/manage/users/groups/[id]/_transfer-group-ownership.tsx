@@ -43,6 +43,7 @@ export const TransferGroupOwnership = ({
               name: group.name,
               username: name,
             }),
+            // eslint-disable-next-line no-restricted-syntax
             onConfirm: async () => {
               await mutateAsync(
                 {

@@ -26,7 +26,7 @@ import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
-import { getBoardPermissions } from "~/components/board/permissions/server";
+import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -59,7 +59,8 @@ interface BoardCardProps {
 
 const BoardCard = async ({ board }: BoardCardProps) => {
   const t = await getScopedI18n("management.page.board");
-  const { hasChangeAccess: isMenuVisible } = await getBoardPermissions(board);
+  const { hasChangeAccess: isMenuVisible } =
+    await getBoardPermissionsAsync(board);
   const visibility = board.isPublic ? "public" : "private";
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 

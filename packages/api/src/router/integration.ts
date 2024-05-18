@@ -139,9 +139,9 @@ export const integrationRouter = createTRPCRouter({
               (secret) => secret.kind === changedSecret.kind,
             )
           ) {
-            await addSecret(ctx.db, secretInput);
+            await addSecretAsync(ctx.db, secretInput);
           } else {
-            await updateSecret(ctx.db, secretInput);
+            await updateSecretAsync(ctx.db, secretInput);
           }
         }
       }
@@ -276,7 +276,7 @@ interface UpdateSecretInput {
   value: string;
   kind: IntegrationSecretKind;
 }
-const updateSecret = async (db: Database, input: UpdateSecretInput) => {
+const updateSecretAsync = async (db: Database, input: UpdateSecretInput) => {
   await db
     .update(integrationSecrets)
     .set({
@@ -296,7 +296,7 @@ interface AddSecretInput {
   value: string;
   kind: IntegrationSecretKind;
 }
-const addSecret = async (db: Database, input: AddSecretInput) => {
+const addSecretAsync = async (db: Database, input: AddSecretInput) => {
   await db.insert(integrationSecrets).values({
     kind: input.kind,
     value: encryptSecret(input.value),

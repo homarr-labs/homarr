@@ -69,7 +69,7 @@ export default async function Layout({
           <Stack>
             <Stack gap={0}>
               <NavigationLink
-                href={`/manage/users/${params.userId}`}
+                href={`/manage/users/${params.userId}/general`}
                 label={tUser("setting.general.title")}
                 icon={<IconSettings size="1rem" stroke={1.5} />}
               />

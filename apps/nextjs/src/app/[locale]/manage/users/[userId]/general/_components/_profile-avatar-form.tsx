@@ -15,7 +15,7 @@ import {
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface UserProfileAvatarForm {
   user: RouterOutputs["user"]["getById"];
@@ -44,7 +44,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
         {
           async onSuccess() {
             // Revalidate all as the avatar is used in multiple places
-            await revalidatePathAction("/");
+            await revalidatePathActionAsync("/");
             showSuccessNotification({
               message: tManageAvatar(
                 "changeImage.notification.success.message",
@@ -87,7 +87,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
           {
             async onSuccess() {
               // Revalidate all as the avatar is used in multiple places
-              await revalidatePathAction("/");
+              await revalidatePathActionAsync("/");
               showSuccessNotification({
                 message: tManageAvatar(
                   "removeImage.notification.success.message",
@@ -161,7 +161,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
   );
 };
 
-const fileToBase64Async = (file: File): Promise<string> =>
+const fileToBase64Async = async (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

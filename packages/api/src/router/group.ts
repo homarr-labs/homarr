@@ -106,7 +106,7 @@ export const groupRouter = createTRPCRouter({
     .input(validation.group.create)
     .mutation(async ({ input, ctx }) => {
       const normalizedName = normalizeName(input.name);
-      await checkSimilarNameAndThrow(ctx.db, normalizedName);
+      await checkSimilarNameAndThrowAsync(ctx.db, normalizedName);
 
       const id = createId();
       await ctx.db.insert(groups).values({
@@ -123,7 +123,7 @@ export const groupRouter = createTRPCRouter({
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
 
       const normalizedName = normalizeName(input.name);
-      await checkSimilarNameAndThrow(ctx.db, normalizedName, input.id);
+      await checkSimilarNameAndThrowAsync(ctx.db, normalizedName, input.id);
 
       await ctx.db
         .update(groups)
@@ -206,7 +206,7 @@ export const groupRouter = createTRPCRouter({
 
 const normalizeName = (name: string) => name.trim();
 
-const checkSimilarNameAndThrow = async (
+const checkSimilarNameAndThrowAsync = async (
   db: Database,
   name: string,
   ignoreId?: string,

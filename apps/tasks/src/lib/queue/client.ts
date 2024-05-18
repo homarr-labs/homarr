@@ -39,7 +39,7 @@ export const createQueueClient = <TQueues extends Queues>(queues: TQueues) => {
           const queue = queueRegistry.get(name);
           if (!queue) return;
 
-          await queueChannel.add({
+          await queueChannel.addAsync({
             name,
             data,
             executionDate:

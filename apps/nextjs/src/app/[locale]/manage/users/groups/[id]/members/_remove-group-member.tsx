@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface RemoveGroupMemberProps {
   groupId: string;
@@ -29,12 +29,15 @@ export const RemoveGroupMember = ({
       children: tRemoveMember("confirm", {
         user: user.name ?? "",
       }),
+      // eslint-disable-next-line no-restricted-syntax
       onConfirm: async () => {
         await mutateAsync({
           groupId,
           userId: user.id,
         });
-        await revalidatePathAction(`/manage/users/groups/${groupId}/members`);
+        await revalidatePathActionAsync(
+          `/manage/users/groups/${groupId}/members`,
+        );
       },
     });
   }, [

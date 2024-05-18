@@ -11,10 +11,11 @@ import {
 } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { createMetaTitle } from "~/metadata";
-import { DeleteUserButton } from "./_delete-user-button";
-import { UserProfileAvatarForm } from "./_profile-avatar-form";
-import { UserProfileForm } from "./_profile-form";
-import { canAccessUserEditPage } from "./access";
+import { canAccessUserEditPage } from "../access";
+import { DeleteUserButton } from "./_components/_delete-user-button";
+import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
+import { UserProfileForm } from "./_components/_profile-form";
+import { ProfileLanguageChange } from "./_components/_profile-language-change";
 
 interface Props {
   params: {
@@ -66,6 +67,8 @@ export default async function EditUserPage({ params }: Props) {
           <UserProfileAvatarForm user={user} />
         </Box>
       </Group>
+
+      <ProfileLanguageChange />
 
       <DangerZoneRoot>
         <DangerZoneItem
