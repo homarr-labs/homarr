@@ -23,10 +23,10 @@ import type { WidgetComponentProps, WidgetProps } from "../../definition";
 export default function DnsHoleSummaryWidget({
   options,
   serverData,
-  integrations,
+  integrationIds,
 }: WidgetComponentProps<"dnsHoleSummary">) {
   // TODO: this is an issue
-  const integrationId = integrations.at(0) as unknown as string | undefined;
+  const integrationId = integrationIds.at(0) as unknown as string | undefined;
   const { data, isPending } = clientApi.widget.dnsHole.summary.useQuery(
     {
       integrationId: integrationId!,

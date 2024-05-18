@@ -116,7 +116,7 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
       <ItemMenu offset={4} item={newItem} />
       <Comp
         options={options as never}
-        integrations={item.integrations}
+        integrationIds={item.integrationIds}
         serverData={serverData?.data as never}
         isEditMode={editMode}
         boardId={board.id}
@@ -149,16 +149,16 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
       kind: item.kind,
       value: {
         options: item.options,
-        integrations: item.integrations,
+        integrationIds: item.integrationIds,
       },
-      onSuccessfulEdit: ({ options, integrations }) => {
+      onSuccessfulEdit: ({ options, integrationIds }) => {
         updateItemOptions({
           itemId: item.id,
           newOptions: options,
         });
         updateItemIntegrations({
           itemId: item.id,
-          newIntegrations: integrations,
+          newIntegrations: integrationIds,
         });
       },
       integrationData: (integrationData ?? []).filter(

@@ -13,7 +13,6 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { BoardItemIntegration } from "@homarr/validation";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -21,8 +20,8 @@ import {
   widgetImports,
 } from "@homarr/widgets";
 
-import { PreviewDimensionsModal } from "./_dimension-modal";
 import type { Dimensions } from "./_dimension-modal";
+import { PreviewDimensionsModal } from "./_dimension-modal";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
@@ -54,10 +53,10 @@ export const WidgetPreviewPageContent = ({
   });
   const [state, setState] = useState<{
     options: Record<string, unknown>;
-    integrations: BoardItemIntegration[];
+    integrationIds: string[];
   }>({
     options: reduceWidgetOptionsWithDefaultValues(kind, {}),
-    integrations: [],
+    integrationIds: [],
   });
 
   const handleOpenEditWidgetModal = useCallback(() => {
@@ -104,12 +103,7 @@ export const WidgetPreviewPageContent = ({
       >
         <Comp
           options={state.options as never}
-          integrations={state.integrations.map(
-            (stateIntegration) =>
-              integrationData.find(
-                (integration) => integration.id === stateIntegration.id,
-              )!,
-          )}
+          integrationIds={state.integrationIds}
           width={dimensions.width}
           height={dimensions.height}
           isEditMode={editMode}

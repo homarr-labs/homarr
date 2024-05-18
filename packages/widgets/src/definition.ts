@@ -8,7 +8,6 @@ import type {
   inferOptionsFromDefinition,
   WidgetOptionsRecord,
 } from "./options";
-import type { IntegrationSelectOption } from "./widget-integration-select";
 
 type ServerDataLoader<TKind extends WidgetKind> = () => Promise<{
   default: (props: WidgetProps<TKind>) => Promise<Record<string, unknown>>;
@@ -85,9 +84,7 @@ export interface WidgetDefinition {
 
 export interface WidgetProps<TKind extends WidgetKind> {
   options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TKind>>;
-  integrations: inferIntegrationsFromDefinition<
-    WidgetImports[TKind]["definition"]
-  >;
+  integrationIds: string[];
 }
 
 type inferServerDataForKind<TKind extends WidgetKind> =
@@ -111,22 +108,6 @@ export type WidgetComponentProps<TKind extends WidgetKind> =
     width: number;
     height: number;
   };
-
-type inferIntegrationsFromDefinition<TDefinition extends WidgetDefinition> =
-  TDefinition extends {
-    supportedIntegrations: infer TSupportedIntegrations;
-  } // check if definition has supportedIntegrations
-    ? TSupportedIntegrations extends IntegrationKind[] // check if supportedIntegrations is an array of IntegrationKind
-      ? IntegrationSelectOptionFor<TSupportedIntegrations[number]>[] // if so, return an array of IntegrationSelectOptionFor
-      : IntegrationSelectOption[] // otherwise, return an array of IntegrationSelectOption without specifying the kind
-    : IntegrationSelectOption[];
-
-interface IntegrationSelectOptionFor<TIntegration extends IntegrationKind> {
-  id: string;
-  name: string;
-  url: string;
-  kind: TIntegration[number];
-}
 
 export type WidgetOptionsRecordOf<TKind extends WidgetKind> =
   WidgetImports[TKind]["definition"]["options"];

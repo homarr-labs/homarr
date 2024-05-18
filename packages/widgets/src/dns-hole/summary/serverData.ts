@@ -5,9 +5,9 @@ import { api } from "@homarr/api/server";
 import type { WidgetProps } from "../../definition";
 
 export default async function getServerDataAsync({
-  integrations,
+  integrationIds,
 }: WidgetProps<"dnsHoleSummary">) {
-  const integrationId = integrations.at(0)?.id;
+  const integrationId = integrationIds.at(0);
   if (!integrationId) return { initialData: undefined };
 
   try {
