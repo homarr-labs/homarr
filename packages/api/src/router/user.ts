@@ -54,7 +54,7 @@ export const userRouter = createTRPCRouter({
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
 
       await createUserAsync(ctx.db, input);
-      await createUserAsync(ctx.db, input);
+
       // Delete invite as it's used
       await ctx.db.delete(invites).where(inviteWhere);
     }),
@@ -64,7 +64,7 @@ export const userRouter = createTRPCRouter({
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
 
       await createUserAsync(ctx.db, input);
-  }),
+    }),
   setProfileImage: protectedProcedure
     .input(
       z.object({
