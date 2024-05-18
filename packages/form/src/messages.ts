@@ -9,6 +9,7 @@ import { ZodIssueCode } from "@homarr/validation";
 
 const handleStringError = (issue: z.ZodInvalidStringIssue) => {
   if (typeof issue.validation === "object") {
+    // Check if object contains startsWith / endsWith key to determine the error type. If not, it's an includes error. (see type of issue.validation)
     if ("startsWith" in issue.validation) {
       return {
         key: "errors.string.startsWith",
