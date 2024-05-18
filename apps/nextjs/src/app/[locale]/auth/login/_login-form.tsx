@@ -35,7 +35,7 @@ export const LoginForm = () => {
     },
   });
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: FormType) => {
     setIsLoading(true);
     setError(undefined);
     await signIn("credentials", {
@@ -66,7 +66,9 @@ export const LoginForm = () => {
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}
+      >
         <Stack gap="lg">
           <TextInput
             label={t("field.username.label")}

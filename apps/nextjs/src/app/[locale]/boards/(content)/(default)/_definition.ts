@@ -3,7 +3,7 @@ import { api } from "@homarr/api/server";
 import { createBoardContentPage } from "../_creator";
 
 export default createBoardContentPage<{ locale: string }>({
-  async getInitialBoard() {
+  async getInitialBoardAsync() {
     return await api.board.getDefaultBoard();
   },
 });

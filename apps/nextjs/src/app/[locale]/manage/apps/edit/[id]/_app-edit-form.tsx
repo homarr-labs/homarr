@@ -13,7 +13,7 @@ import type { TranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { validation, z } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { AppForm } from "../../_form";
 
 interface AppEditFormProps {
@@ -30,7 +30,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
         title: t("success.title"),
         message: t("success.message"),
       });
-      void revalidatePathAction("/manage/apps").then(() => {
+      void revalidatePathActionAsync("/manage/apps").then(() => {
         router.push("/manage/apps");
       });
     },

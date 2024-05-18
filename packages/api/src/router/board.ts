@@ -128,7 +128,7 @@ export const boardRouter = createTRPCRouter({
         "full-access",
       );
 
-      await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
+      await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
       await ctx.db
         .update(boards)
@@ -164,7 +164,7 @@ export const boardRouter = createTRPCRouter({
     const boardWhere = eq(boards.name, "default");
     await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
-    return await getFullBoardWithWhere(
+    return await getFullBoardWithWhereAsync(
       ctx.db,
       boardWhere,
       ctx.session?.user.id ?? null,
@@ -176,7 +176,7 @@ export const boardRouter = createTRPCRouter({
       const boardWhere = eq(boards.name, input.name);
       await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
-      return await getFullBoardWithWhere(
+      return await getFullBoardWithWhereAsync(
         ctx.db,
         boardWhere,
         ctx.session?.user.id ?? null,
@@ -229,7 +229,7 @@ export const boardRouter = createTRPCRouter({
       );
 
       await ctx.db.transaction(async (transaction) => {
-        const dbBoard = await getFullBoardWithWhere(
+        const dbBoard = await getFullBoardWithWhereAsync(
           transaction,
           eq(boards.id, input.id),
           ctx.session.user.id,
@@ -523,7 +523,7 @@ export const boardRouter = createTRPCRouter({
     }),
 });
 
-const noBoardWithSimilarName = async (
+const noBoardWithSimilarNameAsync = async (
   db: Database,
   name: string,
   ignoredIds: string[] = [],
@@ -549,7 +549,7 @@ const noBoardWithSimilarName = async (
   }
 };
 
-const getFullBoardWithWhere = async (
+const getFullBoardWithWhereAsync = async (
   db: Database,
   where: SQL<unknown>,
   userId: string | null,

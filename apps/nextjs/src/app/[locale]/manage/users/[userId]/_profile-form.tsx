@@ -13,7 +13,7 @@ import {
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface UserProfileFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -32,7 +32,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
   });
   const { mutate, isPending } = clientApi.user.editProfile.useMutation({
     async onSettled() {
-      await revalidatePathAction("/manage/users");
+      await revalidatePathActionAsync("/manage/users");
     },
     onSuccess(_, variables) {
       // Reset form initial values to reset dirty state

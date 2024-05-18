@@ -12,7 +12,7 @@ import {
 } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface DeleteGroupProps {
   group: {
@@ -34,6 +34,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
       children: tDelete("confirm", {
         name: group.name,
       }),
+      // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         await mutateAsync(
           {
@@ -41,7 +42,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
           },
           {
             onSuccess() {
-              void revalidatePathAction("/manage/users/groups");
+              void revalidatePathActionAsync("/manage/users/groups");
               router.push("/manage/users/groups");
               showSuccessNotification({
                 title: tRoot("common.notification.delete.success"),

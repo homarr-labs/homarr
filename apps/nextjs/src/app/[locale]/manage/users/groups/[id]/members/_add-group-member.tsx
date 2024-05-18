@@ -8,7 +8,7 @@ import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UserSelectModal } from "~/app/[locale]/boards/[name]/settings/_access/user-select-modal";
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface AddGroupMemberProps {
   groupId: string;
@@ -26,12 +26,13 @@ export const AddGroupMember = ({
   const handleAddMember = useCallback(() => {
     openModal(
       {
+        // eslint-disable-next-line no-restricted-syntax
         async onSelect({ id }) {
           await mutateAsync({
             userId: id,
             groupId,
           });
-          await revalidatePathAction(
+          await revalidatePathActionAsync(
             `/manage/users/groups/${groupId}}/members`,
           );
         },

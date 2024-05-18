@@ -26,7 +26,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
 import type { TablerIcon } from "@homarr/ui";
 
-import { getBoardPermissions } from "~/components/board/permissions/server";
+import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
 import { AccessSettingsContent } from "./_access";
 import { BackgroundSettingsContent } from "./_background";
@@ -45,10 +45,10 @@ interface Props {
   };
 }
 
-const getBoardAndPermissions = async (params: Props["params"]) => {
+const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
   try {
     const board = await api.board.getBoardByName({ name: params.name });
-    const { hasFullAccess } = await getBoardPermissions(board);
+    const { hasFullAccess } = await getBoardPermissionsAsync(board);
     const permissions = hasFullAccess
       ? await api.board.getBoardPermissions({ id: board.id })
       : {
@@ -73,8 +73,8 @@ export default async function BoardSettingsPage({
   params,
   searchParams,
 }: Props) {
-  const { board, permissions } = await getBoardAndPermissions(params);
-  const { hasFullAccess } = await getBoardPermissions(board);
+  const { board, permissions } = await getBoardAndPermissionsAsync(params);
+  const { hasFullAccess } = await getBoardPermissionsAsync(board);
   const t = await getScopedI18n("board.setting");
 
   return (

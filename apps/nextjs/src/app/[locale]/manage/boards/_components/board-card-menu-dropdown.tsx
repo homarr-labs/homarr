@@ -10,7 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 
 const iconProps = {
@@ -42,7 +42,7 @@ export const BoardCardMenuDropdown = ({
 
   const { mutateAsync, isPending } = clientApi.board.deleteBoard.useMutation({
     onSettled: async () => {
-      await revalidatePathAction("/manage/boards");
+      await revalidatePathActionAsync("/manage/boards");
     },
   });
 
@@ -52,6 +52,7 @@ export const BoardCardMenuDropdown = ({
       children: t("delete.confirm.description", {
         name: board.name,
       }),
+      // eslint-disable-next-line no-restricted-syntax
       onConfirm: async () => {
         await mutateAsync({
           id: board.id,

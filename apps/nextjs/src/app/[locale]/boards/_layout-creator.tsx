@@ -16,13 +16,13 @@ import { BoardMantineProvider } from "./(content)/_theme";
 
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
-  getInitialBoard: (params: TParams) => Promise<Board>;
+  getInitialBoardAsync: (params: TParams) => Promise<Board>;
   isBoardContentPage: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
-  getInitialBoard,
+  getInitialBoardAsync: getInitialBoard,
   isBoardContentPage,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({

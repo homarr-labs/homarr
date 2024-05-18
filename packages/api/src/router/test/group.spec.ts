@@ -196,10 +196,10 @@ describe("byId should return group by id including members and permissions", () 
     });
 
     // Act
-    const act = async () => await caller.getById({ id: "1" });
+    const actAsync = async () => await caller.getById({ id: "1" });
 
     // Assert
-    await expect(act()).rejects.toThrow("Group not found");
+    await expect(actAsync()).rejects.toThrow("Group not found");
   });
 });
 
@@ -235,13 +235,13 @@ describe("create should create group in database", () => {
     const longName = "a".repeat(65);
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.createGroup({
         name: longName,
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("too_big");
+    await expect(actAsync()).rejects.toThrow("too_big");
   });
 
   test.each([
@@ -262,10 +262,11 @@ describe("create should create group in database", () => {
       });
 
       // Act
-      const act = async () => await caller.createGroup({ name: nameToCreate });
+      const actAsync = async () =>
+        await caller.createGroup({ name: nameToCreate });
 
       // Assert
-      await expect(act()).rejects.toThrow("similar name");
+      await expect(actAsync()).rejects.toThrow("similar name");
     },
   );
 });
@@ -330,14 +331,14 @@ describe("update should update name with value that is no duplicate", () => {
       ]);
 
       // Act
-      const act = async () =>
+      const actAsync = async () =>
         await caller.updateGroup({
           id: groupId,
           name: updateValue,
         });
 
       // Assert
-      await expect(act()).rejects.toThrow("similar name");
+      await expect(actAsync()).rejects.toThrow("similar name");
     },
   );
 
@@ -408,14 +409,14 @@ describe("savePermissions should save permissions for group", () => {
     });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.savePermissions({
         groupId: createId(),
         permissions: ["integration-create", "board-full-access"],
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("Group not found");
+    await expect(actAsync()).rejects.toThrow("Group not found");
   });
 });
 
@@ -468,14 +469,14 @@ describe("transferOwnership should transfer ownership of group", () => {
     });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.transferOwnership({
         groupId: createId(),
         userId: createId(),
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("Group not found");
+    await expect(actAsync()).rejects.toThrow("Group not found");
   });
 });
 
@@ -520,13 +521,13 @@ describe("deleteGroup should delete group", () => {
     });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.deleteGroup({
         id: createId(),
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("Group not found");
+    await expect(actAsync()).rejects.toThrow("Group not found");
   });
 });
 
@@ -580,14 +581,14 @@ describe("addMember should add member to group", () => {
     });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.addMember({
         groupId: createId(),
         userId: createId(),
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("Group not found");
+    await expect(actAsync()).rejects.toThrow("Group not found");
   });
 });
 
@@ -644,14 +645,14 @@ describe("removeMember should remove member from group", () => {
     });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.removeMember({
         groupId: createId(),
         userId: createId(),
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("Group not found");
+    await expect(actAsync()).rejects.toThrow("Group not found");
   });
 });
 

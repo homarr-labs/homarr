@@ -37,7 +37,7 @@ const defaultSession = {
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
-const createRandomUser = async (db: Database) => {
+const createRandomUserAsync = async (db: Database) => {
   const userId = createId();
   await db.insert(users).values({
     id: userId,
@@ -51,8 +51,8 @@ describe("getAllBoards should return all boards accessable to the current user",
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: null });
 
-    const user1 = await createRandomUser(db);
-    const user2 = await createRandomUser(db);
+    const user1 = await createRandomUserAsync(db);
+    const user2 = await createRandomUserAsync(db);
 
     await db.insert(boards).values([
       {
@@ -91,8 +91,8 @@ describe("getAllBoards should return all boards accessable to the current user",
       },
     });
 
-    const user1 = await createRandomUser(db);
-    const user2 = await createRandomUser(db);
+    const user1 = await createRandomUserAsync(db);
+    const user2 = await createRandomUserAsync(db);
 
     await db.insert(boards).values([
       {
@@ -122,8 +122,8 @@ describe("getAllBoards should return all boards accessable to the current user",
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const user1 = await createRandomUser(db);
-    const user2 = await createRandomUser(db);
+    const user1 = await createRandomUserAsync(db);
+    const user2 = await createRandomUserAsync(db);
     await db.insert(users).values({
       id: defaultCreatorId,
     });
@@ -170,8 +170,8 @@ describe("getAllBoards should return all boards accessable to the current user",
         session: defaultSession,
       });
 
-      const user1 = await createRandomUser(db);
-      const user2 = await createRandomUser(db);
+      const user1 = await createRandomUserAsync(db);
+      const user2 = await createRandomUserAsync(db);
       await db.insert(users).values({
         id: defaultCreatorId,
       });
@@ -237,8 +237,8 @@ describe("getAllBoards should return all boards accessable to the current user",
         session: defaultSession,
       });
 
-      const user1 = await createRandomUser(db);
-      const user2 = await createRandomUser(db);
+      const user1 = await createRandomUserAsync(db);
+      const user2 = await createRandomUserAsync(db);
       await db.insert(users).values({
         id: defaultCreatorId,
       });
@@ -322,10 +322,10 @@ describe("createBoard should create a new board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const act = async () => await caller.createBoard({ name: "newBoard" });
+    const actAsync = async () => await caller.createBoard({ name: "newBoard" });
 
     // Assert
-    await expect(act()).rejects.toThrowError("Permission denied");
+    await expect(actAsync()).rejects.toThrowError("Permission denied");
   });
 });
 
@@ -383,11 +383,11 @@ describe("rename board should rename board", () => {
     });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.renameBoard({ id: boardId, name: "Newname" });
 
     // Assert
-    await expect(act()).rejects.toThrowError(
+    await expect(actAsync()).rejects.toThrowError(
       "Board with similar name already exists",
     );
   });
@@ -398,11 +398,11 @@ describe("rename board should rename board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.renameBoard({ id: "nonExistentBoardId", name: "newName" });
 
     // Assert
-    await expect(act()).rejects.toThrowError("Board not found");
+    await expect(actAsync()).rejects.toThrowError("Board not found");
   });
 });
 
@@ -485,11 +485,11 @@ describe("deleteBoard should delete board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.deleteBoard({ id: "nonExistentBoardId" });
 
     // Assert
-    await expect(act()).rejects.toThrowError("Board not found");
+    await expect(actAsync()).rejects.toThrowError("Board not found");
   });
 });
 
@@ -552,11 +552,11 @@ describe("getBoardByName should return board by name", () => {
     await createFullBoardAsync(db, "default");
 
     // Act
-    const act = async () =>
+    const actAsync = async () =>
       await caller.getBoardByName({ name: "nonExistentBoard" });
 
     // Assert
-    await expect(act()).rejects.toThrowError("Board not found");
+    await expect(actAsync()).rejects.toThrowError("Board not found");
   });
 });
 
@@ -633,7 +633,7 @@ describe("savePartialBoardSettings should save general settings", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.savePartialBoardSettings({
         pageTitle: "newPageTitle",
         metaTitle: "newMetaTitle",
@@ -642,7 +642,7 @@ describe("savePartialBoardSettings should save general settings", () => {
         id: "nonExistentBoardId",
       });
 
-    await expect(act()).rejects.toThrowError("Board not found");
+    await expect(actAsync()).rejects.toThrowError("Board not found");
   });
 });
 
@@ -1151,13 +1151,13 @@ describe("saveBoard should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.saveBoard({
         id: "nonExistentBoardId",
         sections: [],
       });
 
-    await expect(act()).rejects.toThrowError("Board not found");
+    await expect(actAsync()).rejects.toThrowError("Board not found");
   });
 });
 
@@ -1168,8 +1168,8 @@ describe("getBoardPermissions should return board permissions", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
-    const user1 = await createRandomUser(db);
-    const user2 = await createRandomUser(db);
+    const user1 = await createRandomUserAsync(db);
+    const user2 = await createRandomUserAsync(db);
     await db.insert(users).values({
       id: defaultCreatorId,
     });
@@ -1250,7 +1250,7 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
       const caller = boardRouter.createCaller({ db, session: defaultSession });
       const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
-      const user1 = await createRandomUser(db);
+      const user1 = await createRandomUserAsync(db);
       await db.insert(users).values({
         id: defaultCreatorId,
       });

@@ -76,8 +76,8 @@ describe("byId should return an integration by id", () => {
       session: null,
     });
 
-    const act = async () => await caller.byId({ id: "2" });
-    await expect(act()).rejects.toThrow("Integration not found");
+    const actAsync = async () => await caller.byId({ id: "2" });
+    await expect(actAsync()).rejects.toThrow("Integration not found");
   });
 
   it("should only return the public secret values", async () => {
@@ -258,14 +258,14 @@ describe("update should update an integration", () => {
       session: null,
     });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.update({
         id: createId(),
         name: "Pi Hole",
         url: "http://hole.local",
         secrets: [],
       });
-    await expect(act()).rejects.toThrow("Integration not found");
+    await expect(actAsync()).rejects.toThrow("Integration not found");
   });
 });
 
@@ -343,8 +343,8 @@ describe("testConnection should test the connection to an integration", () => {
         secrets,
       };
 
-      const act = async () => await caller.testConnection(input);
-      await expect(act()).rejects.toThrow("SECRETS_NOT_DEFINED");
+      const actAsync = async () => await caller.testConnection(input);
+      await expect(actAsync()).rejects.toThrow("SECRETS_NOT_DEFINED");
     },
   );
 
@@ -373,8 +373,8 @@ describe("testConnection should test the connection to an integration", () => {
         secrets,
       };
 
-      const act = async () => await caller.testConnection(input);
-      await expect(act()).resolves.toBeUndefined();
+      const actAsync = async () => await caller.testConnection(input);
+      await expect(actAsync()).resolves.toBeUndefined();
     },
   );
 
@@ -395,8 +395,8 @@ describe("testConnection should test the connection to an integration", () => {
       ],
     };
 
-    const act = async () => await caller.testConnection(input);
-    await expect(act()).resolves.toBeUndefined();
+    const actAsync = async () => await caller.testConnection(input);
+    await expect(actAsync()).resolves.toBeUndefined();
   });
 
   it("should be successful when overriding one of the secrets for an existing nzbGet integration", async () => {
@@ -439,8 +439,8 @@ describe("testConnection should test the connection to an integration", () => {
       ],
     };
 
-    const act = async () => await caller.testConnection(input);
-    await expect(act()).resolves.toBeUndefined();
+    const actAsync = async () => await caller.testConnection(input);
+    await expect(actAsync()).resolves.toBeUndefined();
   });
 
   it("should fail when a required secret is missing for an existing nzbGet integration", async () => {
@@ -477,8 +477,8 @@ describe("testConnection should test the connection to an integration", () => {
       ],
     };
 
-    const act = async () => await caller.testConnection(input);
-    await expect(act()).rejects.toThrow("SECRETS_NOT_DEFINED");
+    const actAsync = async () => await caller.testConnection(input);
+    await expect(actAsync()).rejects.toThrow("SECRETS_NOT_DEFINED");
   });
 
   it("should fail when the updating integration does not exist", async () => {
@@ -488,7 +488,7 @@ describe("testConnection should test the connection to an integration", () => {
       session: null,
     });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.testConnection({
         id: createId(),
         kind: "nzbGet",
@@ -498,6 +498,6 @@ describe("testConnection should test the connection to an integration", () => {
           { kind: "password", value: "Password123!" },
         ],
       });
-    await expect(act()).rejects.toThrow("SECRETS_NOT_DEFINED");
+    await expect(actAsync()).rejects.toThrow("SECRETS_NOT_DEFINED");
   });
 });
