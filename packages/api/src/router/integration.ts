@@ -257,7 +257,7 @@ export function encryptSecret(text: string): `${string}.${string}` {
 }
 
 // Decrypting text
-function decryptSecret(value: `${string}.${string}`) {
+export function decryptSecret(value: `${string}.${string}`) {
   const [data, dataIv] = value.split(".") as [string, string];
   const initializationVector = Buffer.from(dataIv, "hex");
   const encryptedText = Buffer.from(data, "hex");
