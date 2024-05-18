@@ -30,12 +30,14 @@
     "@trpc/client": "next",
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
+    "immer": "^10.1.1",
     "superjson": "2.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/dockerode": "^3.3.29",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
