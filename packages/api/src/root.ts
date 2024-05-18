@@ -7,6 +7,7 @@ import { integrationRouter } from "./router/integration";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
+import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
 import { widgetRouter } from "./router/widgets";
 import { createTRPCRouter } from "./trpc";
@@ -23,6 +24,7 @@ export const appRouter = createTRPCRouter({
   log: logRouter,
   icon: iconsRouter,
   home: homeRouter,
+  serverSettings: serverSettingsRouter,
 });
 
 // export type definition of API

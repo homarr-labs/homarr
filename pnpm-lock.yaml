@@ -90,6 +90,9 @@ importers:
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/server-settings
       '@homarr/spotlight':
         specifier: workspace:^0.1.0
         version: link:../../packages/spotlight
@@ -247,6 +250,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/server-settings
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
@@ -256,6 +262,9 @@ importers:
       node-cron:
         specifier: ^3.0.3
         version: 3.0.3
+      superjson:
+        specifier: 2.2.1
+        version: 2.2.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -363,6 +372,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../server-settings
       '@homarr/tasks':
         specifier: workspace:^0.1.0
         version: link:../../apps/tasks
@@ -696,6 +708,24 @@ importers:
       ioredis:
         specifier: 5.4.1
         version: 5.4.1
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+
+  packages/server-settings:
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
