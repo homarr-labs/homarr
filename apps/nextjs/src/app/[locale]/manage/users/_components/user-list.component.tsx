@@ -33,7 +33,7 @@ export const UserListComponent = ({
         header: t("user.field.username.label"),
         grow: 100,
         Cell: ({ renderedCellValue, row }) => (
-          <Link href={`/manage/users/${row.original.id}`}>
+          <Link href={`/manage/users/${row.original.id}/general`}>
             <Group>
               <Avatar size="sm"></Avatar>
               {renderedCellValue}
