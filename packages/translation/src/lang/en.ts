@@ -636,6 +636,35 @@ export default {
         },
       },
     },
+    dnsHoleSummary: {
+      name: "DNS Hole Summary",
+      description: "Displays the summary of your DNS Hole",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            horizontal: {
+              label: "Horizontal",
+            },
+            vertical: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        usePiHoleColors: {
+          label: "Use Pi-Hole colors",
+        },
+      },
+      data: {
+        adsBlockedToday: "blocked today",
+        adsBlockedTodayPercentage: "blocked today",
+        dnsQueriesToday: "Queries today",
+        domainsBeingBlocked: "Domains on adlists",
+      },
+    },
     clock: {
       name: "Date and time",
       description: "Displays the current date and time.",

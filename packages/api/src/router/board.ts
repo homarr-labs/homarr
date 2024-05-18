@@ -313,15 +313,15 @@ export const boardRouter = createTRPCRouter({
 
         const inputIntegrationRelations = inputItems.flatMap(
           ({ integrations, id: itemId }) =>
-            integrations.map((integration) => ({
-              integrationId: integration.id,
+            integrations.map((integrationId) => ({
+              integrationId: integrationId,
               itemId,
             })),
         );
         const dbIntegrationRelations = dbItems.flatMap(
           ({ integrations, id: itemId }) =>
-            integrations.map((integration) => ({
-              integrationId: integration.id,
+            integrations.map((integrationId) => ({
+              integrationId: integrationId,
               itemId,
             })),
         );
@@ -646,7 +646,7 @@ const getFullBoardWithWhereAsync = async (
         ...section,
         items: section.items.map((item) => ({
           ...item,
-          integrations: item.integrations.map((item) => item.integration),
+          integrations: item.integrations.map((item) => item.integration.id),
           options: superjson.parse<Record<string, unknown>>(item.options),
         })),
       }),

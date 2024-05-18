@@ -37,6 +37,11 @@ export const dnsHoleRouter = createTRPCRouter({
       }));
       const client = new PiHoleIntegration(integration.url, decryptedSecrets);
 
-      return await client.getSummaryAsync();
+      const summary = await client.getSummaryAsync();
+
+      return {
+        ...summary,
+        integrationId: input.integrationId,
+      };
     }),
 });

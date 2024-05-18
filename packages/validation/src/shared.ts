@@ -19,7 +19,7 @@ export const sharedItemSchema = z.object({
   yOffset: z.number(),
   height: z.number(),
   width: z.number(),
-  integrations: z.array(integrationSchema),
+  integrations: z.array(z.string()),
 });
 
 export const commonItemSchema = z
