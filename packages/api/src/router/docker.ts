@@ -1,5 +1,8 @@
 import Docker from "dockerode";
 
+import { logger } from "@homarr/log";
+import { createCacheChannel } from "@homarr/redis";
+
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 // ENV DOCKER_HOST: z.string().optional(),
@@ -15,10 +18,7 @@ class DockerSingleton {
     const portVariable = process.env.DOCKER_PORT;
     if (hostVariable === undefined || portVariable === undefined) {
       instances.push(new Docker());
-      return {
-        ...instances,
-        names: ["default"],
-      };
+      return instances;
     }
     // Split the instances at the comma
     const hosts = hostVariable.split(",");
@@ -35,10 +35,7 @@ class DockerSingleton {
       );
       return instances;
     });
-    return {
-      ...instances,
-      names: hosts,
-    };
+    return instances;
   }
 
   public static getInstance(): Docker[] {
@@ -50,15 +47,34 @@ class DockerSingleton {
   }
 }
 
-export default DockerSingleton;
+const dockerCache = createCacheChannel<{ containers: Docker.ContainerInfo[] }>(
+  "/docker",
+);
 
 export const dockerRouter = createTRPCRouter({
   getContainers: publicProcedure.query(async () => {
     // Check if the value already in the cache from redis
+    const cachedData = await dockerCache.getAsync();
+    const isCacheYoungerThan5Minutes =
+      cachedData &&
+      new Date().getTime() - new Date(cachedData.timestamp).getTime() <
+        5 * 60 * 1000;
+    if (
+      cachedData &&
+      cachedData.data.containers.length > 0 &&
+      isCacheYoungerThan5Minutes
+    ) {
+      logger.info(
+        "Cache hit for /docker with timestamp: " + cachedData.timestamp,
+      );
+      return cachedData;
+    }
     const docker = DockerSingleton.getInstance();
     const containers = await Promise.all(
       // Return all the containers of all the instances into only one item
-      docker.map((d) => d.listContainers({ all: true })),
+      docker.map((dockerInstance) =>
+        dockerInstance.listContainers({ all: true }),
+      ),
     ).then((containers) => containers.flat());
     // Only return the name, id, status, image, and ports of each containers from all instances
     const sanitizedContainers = containers.map((container) => ({

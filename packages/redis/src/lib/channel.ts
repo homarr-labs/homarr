@@ -69,14 +69,25 @@ export const createCacheChannel = <TData>(name: string) => {
      */
     getAsync: async () => {
       const data = await cacheClient.get(cacheChannelName);
-      return data ? superjson.parse<TData>(data) : undefined;
+      if (!data) return undefined;
+      return superjson.parse<{
+        data: TData;
+        timestamp: string;
+      }>(data);
     },
     /**
      * Set the data in the cache channel.
      * @param data data to be stored in the cache channel
      */
     setAsync: async (data: TData) => {
-      await cacheClient.set(cacheChannelName, superjson.stringify(data));
+      const dataWithTimestamp = {
+        data,
+        timestamp: new Date().toISOString(),
+      };
+      await cacheClient.set(
+        cacheChannelName,
+        superjson.stringify(dataWithTimestamp),
+      );
     },
   };
 };
