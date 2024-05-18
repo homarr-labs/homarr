@@ -2,10 +2,17 @@ import "dayjs/locale/en";
 
 export default {
   user: {
+    title: "Users",
+    name: "User",
     page: {
       login: {
         title: "Log in to your account",
         subtitle: "Welcome back! Please enter your credentials",
+      },
+      invite: {
+        title: "Join Homarr",
+        subtitle: "Welcome to Homarr! Please create your account",
+        description: "You were invited by {username}",
       },
       init: {
         title: "New Homarr installation",
@@ -25,10 +32,98 @@ export default {
       passwordConfirm: {
         label: "Confirm password",
       },
+      previousPassword: {
+        label: "Previous password",
+      },
+    },
+    error: {
+      usernameTaken: "Username already taken",
     },
     action: {
-      login: "Login",
+      login: {
+        label: "Login",
+        notification: {
+          success: {
+            title: "Login successful",
+            message: "You are now logged in",
+          },
+          error: {
+            title: "Login failed",
+            message: "Your login failed",
+          },
+        },
+      },
+      register: {
+        label: "Create account",
+        notification: {
+          success: {
+            title: "Account created",
+            message: "Please log in to continue",
+          },
+          error: {
+            title: "Account creation failed",
+            message: "Your account could not be created",
+          },
+        },
+      },
       create: "Create user",
+      changePassword: {
+        label: "Change password",
+        notification: {
+          success: {
+            message: "Password changed successfully",
+          },
+          error: {
+            message: "Unable to change password",
+          },
+        },
+      },
+      manageAvatar: {
+        changeImage: {
+          label: "Change image",
+          notification: {
+            success: {
+              message: "The image changed successfully",
+            },
+            error: {
+              message: "Unable to change image",
+            },
+            toLarge: {
+              title: "Image is too large",
+              message: "Max image size is {size}",
+            },
+          },
+        },
+        removeImage: {
+          label: "Remove image",
+          confirm: "Are you sure you want to remove the image?",
+          notification: {
+            success: {
+              message: "Image removed successfully",
+            },
+            error: {
+              message: "Unable to remove image",
+            },
+          },
+        },
+      },
+      editProfile: {
+        notification: {
+          success: {
+            message: "Profile updated successfully",
+          },
+          error: {
+            message: "Unable to update profile",
+          },
+        },
+      },
+      delete: {
+        label: "Delete user permanently",
+        description:
+          "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
+        confirm:
+          "Are you sure, that you want to delete the user {username} with his preferences?",
+      },
       select: {
         label: "Select user",
         notFound: "No user found",
@@ -109,10 +204,10 @@ export default {
         label: "New group",
         notification: {
           success: {
-            message: "The app was successfully created",
+            message: "The group was successfully created",
           },
           error: {
-            message: "The app could not be created",
+            message: "The group could not be created",
           },
         },
       },
@@ -353,6 +448,7 @@ export default {
       save: "Save",
       saveChanges: "Save changes",
       cancel: "Cancel",
+      delete: "Delete",
       discard: "Discard",
       confirm: "Confirm",
       continue: "Continue",
@@ -406,19 +502,14 @@ export default {
         switchToDarkMode: "Switch to dark mode",
         switchToLightMode: "Switch to light mode",
         management: "Management",
+        preferences: "Your preferences",
         logout: "Logout",
         login: "Login",
         navigateDefaultBoard: "Navigate to default board",
         loggedOut: "Logged out",
       },
     },
-    menu: {
-      section: {
-        dangerZone: {
-          title: "Danger Zone",
-        },
-      },
-    },
+    dangerZone: "Danger zone",
     noResults: "No results found",
     preview: {
       show: "Show preview",
@@ -472,7 +563,6 @@ export default {
     menu: {
       label: {
         settings: "Settings",
-        dangerZone: "Danger Zone",
       },
     },
     create: {
@@ -917,7 +1007,7 @@ export default {
           },
         },
         dangerZone: {
-          title: "Danger Zone",
+          title: "Danger zone",
           action: {
             rename: {
               label: "Rename board",
@@ -1012,6 +1102,22 @@ export default {
       },
     },
     page: {
+      home: {
+        statistic: {
+          countBoards: "Boards",
+          createUser: "Create new user",
+          createInvite: "Create new invite",
+          addIntegration: "Create integration",
+          addApp: "Add app",
+          manageRoles: "Manage roles",
+        },
+        statisticLabel: {
+          boards: "Boards",
+          resources: "Resources",
+          authentication: "Authentication",
+          authorization: "Authorization",
+        },
+      },
       board: {
         title: "Your boards",
         action: {
@@ -1047,46 +1153,21 @@ export default {
         },
       },
       user: {
+        back: "Back to users",
+        setting: {
+          general: {
+            title: "General",
+          },
+          security: {
+            title: "Security",
+          },
+        },
         list: {
           metaTitle: "Manage users",
           title: "Users",
         },
         edit: {
           metaTitle: "Edit user {username}",
-          section: {
-            profile: {
-              title: "Profile",
-              editProfile: {
-                title: "Edit profile",
-                message: {
-                  profileUpdated: "Updated profile",
-                },
-              },
-            },
-            preferences: {
-              title: "Preferences",
-            },
-            security: {
-              title: "Security",
-              changePassword: {
-                title: "Change password",
-                message: {
-                  passwordUpdated: "Updated password",
-                },
-              },
-            },
-            dangerZone: {
-              title: "Danger zone",
-              action: {
-                delete: {
-                  label: "Delete user permanently",
-                  description:
-                    "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
-                  button: "Delete",
-                },
-              },
-            },
-          },
         },
         create: {
           metaTitle: "Create user",
@@ -1159,7 +1240,6 @@ export default {
         setting: {
           general: {
             title: "General",
-            dangerZone: "Danger zone",
           },
           members: {
             title: "Members",

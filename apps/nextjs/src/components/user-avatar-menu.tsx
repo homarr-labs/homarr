@@ -18,6 +18,7 @@ import {
   IconLogin,
   IconLogout,
   IconMoon,
+  IconSettings,
   IconSun,
   IconTool,
 } from "@tabler/icons-react";
@@ -71,6 +72,15 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         >
           {t("navigateDefaultBoard")}
         </Menu.Item>
+        {Boolean(session.data) && (
+          <Menu.Item
+            component={Link}
+            href={`/manage/users/${session.data?.user.id}`}
+            leftSection={<IconSettings size="1rem" />}
+          >
+            {t("preferences")}
+          </Menu.Item>
+        )}
         <Menu.Item
           component={Link}
           href="/manage"
@@ -111,7 +121,7 @@ const LogoutModal = createModal<{ onTimeout: () => void }>(
 
     useEffect(() => {
       start();
-    }, []);
+    }, [start]);
 
     return (
       <Center h={200 - 2 * 16}>

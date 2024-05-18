@@ -4,12 +4,12 @@
   "engines": {
     "node": ">=20.13.1"
   },
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@9.1.1",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
-    "db:push": "pnpm -F db push",
+    "db:push": "pnpm -F db push:sqlite",
     "db:studio": "pnpm -F db studio",
     "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
@@ -43,8 +43,8 @@
   "dependencies": {
     "@mantine/core": "^7.9.1",
     "@mantine/dates": "^7.9.1",
-    "@tabler/icons-react": "^3.3.0",
-    "mantine-react-table": "2.0.0-beta.2"
+    "@tabler/icons-react": "^3.4.0",
+    "mantine-react-table": "2.0.0-beta.3"
   },
   "prettier": "@homarr/prettier-config"
 }

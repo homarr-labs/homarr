@@ -16,7 +16,7 @@ import { useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
@@ -39,56 +39,69 @@ interface Props {
 
 export const SectionContent = ({ items, refs }: Props) => {
   const board = useRequiredBoard();
-  const { ref, width, height } = useElementSize<HTMLDivElement>();
 
   return (
     <>
-      {items.map((item) => {
-        return (
-          <div
-            key={item.id}
-            className="grid-stack-item"
-            data-id={item.id}
-            gs-x={item.xOffset}
-            gs-y={item.yOffset}
-            gs-w={item.width}
-            gs-h={item.height}
-            gs-min-w={1}
-            gs-min-h={1}
-            gs-max-w={4}
-            gs-max-h={4}
-            ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
-          >
-            <Card
-              ref={ref}
-              className={combineClasses(
-                classes.itemCard,
-                "grid-stack-item-content",
-              )}
-              withBorder
-              styles={{
-                root: {
-                  "--opacity": board.opacity / 100,
-                },
-              }}
-              p={width >= 96 ? undefined : "xs"}
-            >
-              <BoardItem item={item} width={width + 32} height={height + 32} />
-            </Card>
-          </div>
-        );
-      })}
+      {items.map((item) => (
+        <BoardItem
+          key={item.id}
+          refs={refs}
+          item={item}
+          opacity={board.opacity}
+        />
+      ))}
     </>
   );
 };
 
 interface ItemProps {
   item: Item;
+  refs: UseGridstackRefs;
+  opacity: number;
+}
+
+const BoardItem = ({ refs, item, opacity }: ItemProps) => {
+  const { ref, width, height } = useElementSize<HTMLDivElement>();
+
+  return (
+    <div
+      key={item.id}
+      className="grid-stack-item"
+      data-id={item.id}
+      gs-x={item.xOffset}
+      gs-y={item.yOffset}
+      gs-w={item.width}
+      gs-h={item.height}
+      gs-min-w={1}
+      gs-min-h={1}
+      gs-max-w={4}
+      gs-max-h={4}
+      ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
+    >
+      <Card
+        ref={ref}
+        className={combineClasses(classes.itemCard, "grid-stack-item-content")}
+        withBorder
+        styles={{
+          root: {
+            "--opacity": opacity / 100,
+          },
+        }}
+        p={0}
+      >
+        <BoardItemContent item={item} width={width} height={height} />
+      </Card>
+    </div>
+  );
+};
+
+interface ItemContentProps {
+  item: Item;
   width: number;
   height: number;
 }
 
-const BoardItem = ({ item, ...dimensions }: ItemProps) => {
+const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   const board = useRequiredBoard();
   const editMode = useAtomValue(editModeAtom);
   const serverData = useServerDataFor(item.id);
@@ -115,7 +128,8 @@ const BoardItem = ({ item, ...dimensions }: ItemProps) => {
 };
 
 const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
-  const t = useScopedI18n("item");
+  const tItem = useScopedI18n("item");
+  const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
   const isEditMode = useAtomValue(editModeAtom);
@@ -160,8 +174,8 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
 
   const openRemoveModal = () => {
     openConfirmModal({
-      title: t("remove.title"),
-      children: t("remove.message"),
+      title: tItem("remove.title"),
+      children: tItem("remove.message"),
       onConfirm: () => {
         removeItem({ itemId: item.id });
       },
@@ -182,24 +196,24 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
-        <Menu.Label>{t("menu.label.settings")}</Menu.Label>
+        <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
         <Menu.Item
           leftSection={<IconPencil size={16} />}
           onClick={openEditModal}
         >
-          {t("action.edit")}
+          {tItem("action.edit")}
         </Menu.Item>
         <Menu.Item leftSection={<IconLayoutKanban size={16} />}>
-          {t("action.move")}
+          {tItem("action.move")}
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Label c="red.6">{t("menu.label.dangerZone")}</Menu.Label>
+        <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item
           c="red.6"
           leftSection={<IconTrash size={16} />}
           onClick={openRemoveModal}
         >
-          {t("action.remove")}
+          {tItem("action.remove")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

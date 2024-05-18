@@ -78,7 +78,7 @@ export default function AppWidget({
     return (
       <Tooltip.Floating label={t("error.notFound.tooltip")}>
         <Stack gap="xs" align="center" justify="center" h="100%" w="100%">
-          <IconDeviceDesktopX size={width >= 96 ? "2rem" : "1.5rem"} />
+          <IconDeviceDesktopX size={width >= 96 ? "2rem" : "1rem"} />
           {width >= 96 && (
             <Text ta="center" size="sm">
               {t("error.notFound.label")}

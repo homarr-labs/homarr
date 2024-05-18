@@ -3,12 +3,12 @@ import { observable } from "@trpc/server/observable";
 
 import { createSalt, hashPassword } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { createId, eq, schema } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import { and, createId, eq, schema } from "@homarr/db";
+import { invites, users } from "@homarr/db/schema/sqlite";
 import { exampleChannel } from "@homarr/redis";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure
@@ -29,19 +29,86 @@ export const userRouter = createTRPCRouter({
 
       await createUser(ctx.db, input);
     }),
+  register: publicProcedure
+    .input(validation.user.registrationApi)
+    .mutation(async ({ ctx, input }) => {
+      const inviteWhere = and(
+        eq(invites.id, input.inviteId),
+        eq(invites.token, input.token),
+      );
+      const dbInvite = await ctx.db.query.invites.findFirst({
+        columns: {
+          id: true,
+          expirationDate: true,
+        },
+        where: inviteWhere,
+      });
+
+      if (!dbInvite || dbInvite.expirationDate < new Date()) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Invalid invite",
+        });
+      }
+
+      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+
+      await createUser(ctx.db, input);
+      // Delete invite as it's used
+      await ctx.db.delete(invites).where(inviteWhere);
+    }),
   create: publicProcedure
     .input(validation.user.create)
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.db.query.users.findFirst({
-        where: eq(users.name, input.username.toLowerCase()),
-      });
-      if (user !== undefined) {
+      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+
+      await createUser(ctx.db, input);
+    }),
+  setProfileImage: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        // Max image size of 256KB, only png and jpeg are allowed
+        image: z
+          .string()
+          .regex(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$/g)
+          .max(262144)
+          .nullable(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users profile images
+      if (
+        ctx.session.user.id !== input.userId &&
+        !ctx.session.user.permissions.includes("admin")
+      ) {
         throw new TRPCError({
-          code: "CONFLICT",
-          message: "User already exists",
+          code: "FORBIDDEN",
+          message: "You are not allowed to change other users profile images",
         });
       }
-      await createUser(ctx.db, input);
+
+      const user = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+          image: true,
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          image: input.image,
+        })
+        .where(eq(users.id, input.userId));
     }),
   getAll: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.query.users.findMany({
@@ -66,7 +133,7 @@ export const userRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ input, ctx }) => {
-      return ctx.db.query.users.findFirst({
+      const user = await ctx.db.query.users.findFirst({
         columns: {
           id: true,
           name: true,
@@ -76,47 +143,96 @@ export const userRouter = createTRPCRouter({
         },
         where: eq(users.id, input.userId),
       });
-    }),
-  editProfile: publicProcedure
-    .input(
-      z.object({
-        form: validation.user.editProfile,
-        userId: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const user = await ctx.db
-        .select()
-        .from(users)
-        .where(eq(users.id, input.userId))
-        .limit(1);
-      const existingUser = await ctx.db.query.users.findFirst({
-        where: eq(users.name, input.form.name.toLowerCase()),
-      });
 
-      if (existingUser !== undefined) {
+      if (!user) {
         throw new TRPCError({
-          code: "CONFLICT",
-          message: `User ${input.form.name} already exists`,
+          code: "NOT_FOUND",
+          message: "User not found",
         });
       }
-      const emailDirty =
-        input.form.email && user[0]?.email !== input.form.email;
+
+      return user;
+    }),
+  editProfile: publicProcedure
+    .input(validation.user.editProfile)
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.db.query.users.findFirst({
+        columns: { email: true },
+        where: eq(users.id, input.id),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await checkUsernameAlreadyTakenAndThrowAsync(
+        ctx.db,
+        input.name,
+        input.id,
+      );
+
+      const emailDirty = input.email && user.email !== input.email;
       await ctx.db
         .update(users)
         .set({
-          name: input.form.name,
-          email: emailDirty === true ? input.form.email : undefined,
+          name: input.name,
+          email: emailDirty === true ? input.email : undefined,
           emailVerified: emailDirty === true ? null : undefined,
         })
-        .where(eq(users.id, input.userId));
+        .where(eq(users.id, input.id));
     }),
   delete: publicProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
     await ctx.db.delete(users).where(eq(users.id, input));
   }),
-  changePassword: publicProcedure
-    .input(validation.user.changePassword)
+  changePassword: protectedProcedure
+    .input(validation.user.changePasswordApi)
     .mutation(async ({ ctx, input }) => {
+      const user = ctx.session.user;
+      // Only admins can change other users' passwords
+      if (!user.permissions.includes("admin") && user.id !== input.userId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      // Admins can change the password of other users without providing the previous password
+      const isPreviousPasswordRequired = ctx.session.user.id === input.userId;
+
+      if (isPreviousPasswordRequired) {
+        const dbUser = await ctx.db.query.users.findFirst({
+          columns: {
+            id: true,
+            password: true,
+            salt: true,
+          },
+          where: eq(users.id, input.userId),
+        });
+
+        if (!dbUser) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        const previousPasswordHash = await hashPassword(
+          input.previousPassword,
+          dbUser.salt ?? "",
+        );
+        const isValid = previousPasswordHash === dbUser.password;
+
+        if (!isValid) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Invalid password",
+          });
+        }
+      }
+
       const salt = await createSalt();
       const hashedPassword = await hashPassword(input.password, salt);
       await ctx.db
@@ -153,5 +269,23 @@ const createUser = async (
     name: username,
     password: hashedPassword,
     salt,
+  });
+};
+
+const checkUsernameAlreadyTakenAndThrowAsync = async (
+  db: Database,
+  username: string,
+  ignoreId?: string,
+) => {
+  const user = await db.query.users.findFirst({
+    where: eq(users.name, username.toLowerCase()),
+  });
+
+  if (!user) return;
+  if (ignoreId && user.id === ignoreId) return;
+
+  throw new TRPCError({
+    code: "CONFLICT",
+    message: "Username already taken",
   });
 };

@@ -34,11 +34,11 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "@types/node": "^20.12.11",
+    "@types/node": "^20.12.12",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "tsx": "4.10.0",
+    "tsx": "4.10.3",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {

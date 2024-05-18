@@ -26,7 +26,9 @@ export const initializeGridstack = ({
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
-      margin: 10,
+      margin: Math.round(
+        Math.max(Math.min(refs.wrapper.current.offsetWidth / 100, 10), 1),
+      ),
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,
