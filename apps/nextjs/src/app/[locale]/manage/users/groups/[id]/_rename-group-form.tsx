@@ -11,7 +11,7 @@ import {
 } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface RenameGroupFormProps {
   group: {
@@ -38,7 +38,7 @@ export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
         },
         {
           onSuccess() {
-            void revalidatePathAction(`/users/groups/${group.id}`);
+            void revalidatePathActionAsync(`/users/groups/${group.id}`);
             showSuccessNotification({
               title: t("common.notification.update.success"),
               message: t("group.action.update.notification.success.message", {

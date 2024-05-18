@@ -9,7 +9,10 @@ import { throwIfActionForbiddenAsync } from "../../board/board-access";
 
 const defaultCreatorId = createId();
 
-const expectActToBe = async (act: () => Promise<void>, success: boolean) => {
+const expectActToBeAsync = async (
+  act: () => Promise<void>,
+  success: boolean,
+) => {
   if (!success) {
     await expect(act()).rejects.toThrow("Board not found");
     return;
@@ -55,7 +58,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
         );
 
       // Assert
-      await expectActToBe(act, expectedResult);
+      await expectActToBeAsync(act, expectedResult);
     },
   );
 
@@ -92,7 +95,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
         );
 
       // Assert
-      await expectActToBe(act, expectedResult);
+      await expectActToBeAsync(act, expectedResult);
     },
   );
 
@@ -129,7 +132,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
         );
 
       // Assert
-      await expectActToBe(act, expectedResult);
+      await expectActToBeAsync(act, expectedResult);
     },
   );
 
@@ -166,7 +169,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
         );
 
       // Assert
-      await expectActToBe(act, expectedResult);
+      await expectActToBeAsync(act, expectedResult);
     },
   );
 

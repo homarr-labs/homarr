@@ -14,7 +14,7 @@ import {
   sessionTokenCookieName,
 } from "./session";
 
-export const getCurrentUserPermissions = async (
+export const getCurrentUserPermissionsAsync = async (
   db: Database,
   userId: string,
 ) => {
@@ -47,7 +47,7 @@ export const createSessionCallback = (
         ...session.user,
         id: user.id,
         name: user.name,
-        permissions: await getCurrentUserPermissions(db, user.id),
+        permissions: await getCurrentUserPermissionsAsync(db, user.id),
       },
     };
   };

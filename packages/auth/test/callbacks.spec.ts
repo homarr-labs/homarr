@@ -18,7 +18,7 @@ import * as definitions from "@homarr/definitions";
 import {
   createSessionCallback,
   createSignInCallback,
-  getCurrentUserPermissions,
+  getCurrentUserPermissionsAsync,
 } from "../callbacks";
 
 describe("getCurrentUserPermissions", () => {
@@ -30,7 +30,7 @@ describe("getCurrentUserPermissions", () => {
     });
 
     const userId = "1";
-    const result = await getCurrentUserPermissions(db, userId);
+    const result = await getCurrentUserPermissionsAsync(db, userId);
     expect(result).toEqual([]);
   });
   test("should return permissions for user", async () => {
@@ -56,7 +56,7 @@ describe("getCurrentUserPermissions", () => {
       permission: "admin",
     });
 
-    const result = await getCurrentUserPermissions(db, mockId);
+    const result = await getCurrentUserPermissionsAsync(db, mockId);
     expect(result).toEqual(["board-create"]);
     expect(getPermissionsWithChildrenMock).toHaveBeenCalledWith(["admin"]);
   });
