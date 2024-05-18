@@ -60,7 +60,10 @@ const cacheClient = createRedisConnection();
  * @param name name of the channel
  * @returns cache channel object
  */
-export const createCacheChannel = <TData>(name: string) => {
+export const createCacheChannel = <TData>(
+  name: string,
+  cacheTime: number = 5 * 60 * 1000,
+) => {
   const cacheChannelName = `cache:${name}`;
   return {
     /**
@@ -70,10 +73,18 @@ export const createCacheChannel = <TData>(name: string) => {
     getAsync: async () => {
       const data = await cacheClient.get(cacheChannelName);
       if (!data) return undefined;
-      return superjson.parse<{
+      const parsedData = superjson.parse<{
         data: TData;
         timestamp: string;
       }>(data);
+      const isFresh =
+        new Date().getTime() - new Date(parsedData.timestamp).getTime() <
+        cacheTime;
+      return {
+        data: parsedData.data,
+        timestamp: parsedData.timestamp,
+        isFresh,
+      };
     },
     /**
      * Set the data in the cache channel.
