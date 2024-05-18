@@ -43,7 +43,7 @@ export const BoardCardMenuDropdown = ({
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
       // Revalidate all as it's part of the user settings, /boards page and board manage page
-      await revalidatePathAction("/");
+      await revalidatePathActionAsync("/");
     },
   });
   const deleteBoardMutation = clientApi.board.deleteBoard.useMutation({
