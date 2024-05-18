@@ -68,6 +68,7 @@
     "@types/react-dom": "^18.3.0",
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
+    "node-loader": "^2.0.0",
     "prettier": "^3.2.5",
     "tsx": "4.10.5",
     "typescript": "^5.4.5"
