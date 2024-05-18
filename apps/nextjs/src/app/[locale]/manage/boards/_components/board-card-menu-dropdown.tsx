@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { Menu } from "@mantine/core";
-import { IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -40,7 +40,13 @@ export const BoardCardMenuDropdown = ({
 
   const { openConfirmModal } = useConfirmModal();
 
-  const { mutateAsync, isPending } = clientApi.board.deleteBoard.useMutation({
+  const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
+    onSettled: async () => {
+      // Revalidate all as it's part of the user settings, /boards page and board manage page
+      await revalidatePathActionAsync("/");
+    },
+  });
+  const deleteBoardMutation = clientApi.board.deleteBoard.useMutation({
     onSettled: async () => {
       await revalidatePathActionAsync("/manage/boards");
     },
@@ -54,23 +60,36 @@ export const BoardCardMenuDropdown = ({
       }),
       // eslint-disable-next-line no-restricted-syntax
       onConfirm: async () => {
-        await mutateAsync({
+        await deleteBoardMutation.mutateAsync({
           id: board.id,
         });
       },
     });
-  }, [board.id, board.name, mutateAsync, openConfirmModal, t]);
+  }, [board.id, board.name, deleteBoardMutation, openConfirmModal, t]);
+
+  const handleSetHomeBoard = useCallback(async () => {
+    await setHomeBoardMutation.mutateAsync({ id: board.id });
+  }, [board.id, setHomeBoardMutation]);
 
   return (
     <Menu.Dropdown>
+      <Menu.Item
+        onClick={handleSetHomeBoard}
+        leftSection={<IconHome {...iconProps} />}
+      >
+        {t("setHomeBoard.label")}
+      </Menu.Item>
       {hasChangeAccess && (
-        <Menu.Item
-          component={Link}
-          href={`/boards/${board.name}/settings`}
-          leftSection={<IconSettings {...iconProps} />}
-        >
-          {t("settings.label")}
-        </Menu.Item>
+        <>
+          <Menu.Divider />
+          <Menu.Item
+            component={Link}
+            href={`/boards/${board.name}/settings`}
+            leftSection={<IconSettings {...iconProps} />}
+          >
+            {t("settings.label")}
+          </Menu.Item>
+        </>
       )}
       {hasFullAccess && (
         <>
@@ -80,7 +99,7 @@ export const BoardCardMenuDropdown = ({
             c="red.7"
             leftSection={<IconTrash {...iconProps} />}
             onClick={handleDeletion}
-            disabled={isPending}
+            disabled={deleteBoardMutation.isPending}
           >
             {t("delete.label")}
           </Menu.Item>

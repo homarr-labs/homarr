@@ -52,7 +52,7 @@ export const DangerZoneSettingsContent = () => {
           {
             onSettled() {
               void utils.board.getBoardByName.invalidate({ name: board.name });
-              void utils.board.getDefaultBoard.invalidate();
+              void utils.board.getHomeBoard.invalidate();
             },
           },
         );
@@ -64,7 +64,7 @@ export const DangerZoneSettingsContent = () => {
     changeVisibility,
     t,
     utils.board.getBoardByName,
-    utils.board.getDefaultBoard,
+    utils.board.getHomeBoard,
     visibility,
     openConfirmModal,
   ]);

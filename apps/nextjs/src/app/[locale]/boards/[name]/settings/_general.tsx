@@ -21,6 +21,7 @@ import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
+import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -105,7 +106,9 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.metaTitle.label")}
-              placeholder="Default Board | Homarr"
+              placeholder={createMetaTitle(
+                t("board.content.metaTitle", { boardName: board.name }),
+              )}
               rightSection={<PendingOrInvalidIndicator {...metaTitleStatus} />}
               {...form.getInputProps("metaTitle")}
             />

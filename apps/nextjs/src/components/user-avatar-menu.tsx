@@ -14,7 +14,7 @@ import {
 import { useTimeout } from "@mantine/hooks";
 import {
   IconCheck,
-  IconDashboard,
+  IconHome,
   IconLogin,
   IconLogout,
   IconMoon,
@@ -72,9 +72,9 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         <Menu.Item
           component={Link}
           href="/boards"
-          leftSection={<IconDashboard size="1rem" />}
+          leftSection={<IconHome size="1rem" />}
         >
-          {t("navigateDefaultBoard")}
+          {t("homeBoard")}
         </Menu.Item>
         <Menu.Divider />
 

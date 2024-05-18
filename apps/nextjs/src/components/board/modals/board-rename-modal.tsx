@@ -24,7 +24,7 @@ export const BoardRenameModal = createModal<InnerProps>(
         void utils.board.getBoardByName.invalidate({
           name: innerProps.previousName,
         });
-        void utils.board.getDefaultBoard.invalidate();
+        void utils.board.getHomeBoard.invalidate();
       },
     });
     const form = useZodForm(validation.board.rename.omit({ id: true }), {

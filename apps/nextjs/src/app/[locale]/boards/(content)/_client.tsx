@@ -19,8 +19,8 @@ export const updateBoardName = (name: string | null) => {
 };
 
 type UpdateCallback = (
-  prev: RouterOutputs["board"]["getDefaultBoard"],
-) => RouterOutputs["board"]["getDefaultBoard"];
+  prev: RouterOutputs["board"]["getHomeBoard"],
+) => RouterOutputs["board"]["getHomeBoard"];
 
 export const useUpdateBoard = () => {
   const utils = clientApi.useUtils();

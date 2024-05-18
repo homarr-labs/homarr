@@ -1,7 +1,7 @@
 import type { RouterOutputs } from "@homarr/api";
 import type { WidgetKind } from "@homarr/definitions";
 
-export type Board = RouterOutputs["board"]["getDefaultBoard"];
+export type Board = RouterOutputs["board"]["getHomeBoard"];
 export type Section = Board["sections"][number];
 export type Item = Section["items"][number];
 
