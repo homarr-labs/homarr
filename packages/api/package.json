@@ -29,6 +29,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@trpc/client": "next",
     "@trpc/server": "next",
+    "dockerode": "^4.0.2",
     "superjson": "2.2.1"
   },
   "devDependencies": {
