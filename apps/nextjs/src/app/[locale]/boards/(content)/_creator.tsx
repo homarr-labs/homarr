@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { TRPCError } from "@trpc/server";
 
-import { capitalize } from "@homarr/common";
-
 // Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
 
+import { getI18n } from "@homarr/translation/server";
+
+import { createMetaTitle } from "~/metadata";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board } from "../_types";
 import { ClientBoard } from "./_client";
@@ -38,9 +39,14 @@ export const createBoardContentPage = <
     }): Promise<Metadata> => {
       try {
         const board = await getInitialBoard(params);
+        const t = await getI18n();
 
         return {
-          title: board.metaTitle ?? `${capitalize(board.name)} board | Homarr`,
+          title:
+            board.metaTitle ??
+            createMetaTitle(
+              t("board.content.metaTitle", { boardName: board.name }),
+            ),
           icons: {
             icon: board.faviconImageUrl ? board.faviconImageUrl : undefined,
           },

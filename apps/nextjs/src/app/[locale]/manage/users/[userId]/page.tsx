@@ -10,6 +10,7 @@ import {
   DangerZoneRoot,
 } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
+import { createMetaTitle } from "~/metadata";
 import { DeleteUserButton } from "./_delete-user-button";
 import { UserProfileAvatarForm } from "./_profile-avatar-form";
 import { UserProfileForm } from "./_profile-form";
@@ -34,10 +35,9 @@ export async function generateMetadata({ params }: Props) {
   }
 
   const t = await getScopedI18n("management.page.user.edit");
-  const metaTitle = `${t("metaTitle", { username: user?.name })} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle", { username: user?.name })),
   };
 }
 

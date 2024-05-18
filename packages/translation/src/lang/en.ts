@@ -945,6 +945,9 @@ export default {
         label: "Name",
       },
     },
+    content: {
+      metaTitle: "{boardName} board",
+    },
     setting: {
       title: "Settings for {boardName} board",
       section: {

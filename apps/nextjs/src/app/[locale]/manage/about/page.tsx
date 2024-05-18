@@ -21,6 +21,7 @@ import { setStaticParamsLocale } from "next-international/server";
 
 import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
+import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import contributorsData from "../../../../../../../static-data/contributors.json";
 import translatorsData from "../../../../../../../static-data/translators.json";
@@ -29,10 +30,9 @@ import classes from "./about.module.css";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 

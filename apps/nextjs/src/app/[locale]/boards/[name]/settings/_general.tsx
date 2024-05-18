@@ -20,6 +20,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
+import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -94,7 +95,9 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.metaTitle.label")}
-              placeholder="Home Board | Homarr"
+              placeholder={createMetaTitle(
+                t("board.content.metaTitle", { boardName: board.name }),
+              )}
               rightSection={<PendingOrInvalidIndicator {...metaTitleStatus} />}
               {...form.getInputProps("metaTitle")}
             />

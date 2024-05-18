@@ -12,7 +12,7 @@ export const createDb = (debug?: boolean) => {
   });
 
   if (debug) {
-    console.log("> --\n> Database created\n> --");
+    console.log("Database created");
   }
 
   return db;
