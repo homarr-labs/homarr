@@ -29,10 +29,10 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
-    "@mantine/colors-generator": "^7.9.1",
-    "@mantine/hooks": "^7.9.1",
-    "@mantine/modals": "^7.9.1",
-    "@mantine/tiptap": "^7.9.1",
+    "@mantine/colors-generator": "^7.9.2",
+    "@mantine/hooks": "^7.9.2",
+    "@mantine/modals": "^7.9.2",
+    "@mantine/tiptap": "^7.9.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.36.2",
     "@tanstack/react-query-devtools": "^5.36.2",
@@ -54,7 +54,7 @@
     "postcss-preset-mantine": "^1.15.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "sass": "^1.77.1",
+    "sass": "^1.77.2",
     "superjson": "2.2.1",
     "use-deep-compare-effect": "^1.8.1"
   },
@@ -69,7 +69,7 @@
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "tsx": "4.10.3",
+    "tsx": "4.10.5",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {

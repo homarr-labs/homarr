@@ -53,6 +53,34 @@ export const createSubPubChannel = <TData>(name: string) => {
   };
 };
 
+const cacheClient = createRedisConnection();
+
+/**
+ * Creates a new cache channel.
+ * @param name name of the channel
+ * @returns cache channel object
+ */
+export const createCacheChannel = <TData>(name: string) => {
+  const cacheChannelName = `cache:${name}`;
+  return {
+    /**
+     * Get the data from the cache channel.
+     * @returns data or undefined if not found
+     */
+    getAsync: async () => {
+      const data = await cacheClient.get(cacheChannelName);
+      return data ? superjson.parse<TData>(data) : undefined;
+    },
+    /**
+     * Set the data in the cache channel.
+     * @param data data to be stored in the cache channel
+     */
+    setAsync: async (data: TData) => {
+      await cacheClient.set(cacheChannelName, superjson.stringify(data));
+    },
+  };
+};
+
 const queueClient = createRedisConnection();
 
 type WithId<TItem> = TItem & { _id: string };
