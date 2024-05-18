@@ -13,7 +13,7 @@ import {
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 export const AddGroup = () => {
   const t = useI18n();
@@ -45,7 +45,7 @@ const AddGroupModal = createModal<void>(({ actions }) => {
         mutate(values, {
           onSuccess() {
             actions.closeModal();
-            void revalidatePathAction("/manage/users/groups");
+            void revalidatePathActionAsync("/manage/users/groups");
             showSuccessNotification({
               title: t("common.notification.create.success"),
               message: t("group.action.create.notification.success.message"),

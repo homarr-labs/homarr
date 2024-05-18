@@ -5,7 +5,7 @@ import { createBoardLayout } from "../_layout-creator";
 
 export default createBoardLayout<{ locale: string; name: string }>({
   headerActions: <BoardOtherHeaderActions />,
-  async getInitialBoard({ name }) {
+  async getInitialBoardAsync({ name }) {
     return await api.board.getBoardByName({ name });
   },
   isBoardContentPage: false,

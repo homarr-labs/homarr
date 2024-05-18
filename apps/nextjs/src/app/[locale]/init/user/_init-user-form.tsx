@@ -26,7 +26,7 @@ export const InitUserForm = () => {
     },
   });
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: FormType) => {
     await mutateAsync(values, {
       onSuccess: () => {
         showSuccessNotification({
@@ -48,7 +48,7 @@ export const InitUserForm = () => {
     <Stack gap="xl">
       <form
         onSubmit={form.onSubmit(
-          (values) => void handleSubmit(values),
+          (values) => void handleSubmitAsync(values),
           (err) => console.log(err),
         )}
       >

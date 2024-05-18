@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
-import { createSalt, hashPassword } from "@homarr/auth";
+import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, schema } from "@homarr/db";
 import { invites, users } from "@homarr/db/schema/sqlite";
@@ -27,7 +27,7 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      await createUser(ctx.db, input);
+      await createUserAsync(ctx.db, input);
     }),
   register: publicProcedure
     .input(validation.user.registrationApi)
@@ -51,14 +51,14 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      await createUser(ctx.db, input);
+      await createUserAsync(ctx.db, input);
       // Delete invite as it's used
       await ctx.db.delete(invites).where(inviteWhere);
     }),
   create: publicProcedure
     .input(validation.user.create)
     .mutation(async ({ ctx, input }) => {
-      await createUser(ctx.db, input);
+      await createUserAsync(ctx.db, input);
     }),
   setProfileImage: protectedProcedure
     .input(
@@ -209,7 +209,7 @@ export const userRouter = createTRPCRouter({
           });
         }
 
-        const previousPasswordHash = await hashPassword(
+        const previousPasswordHash = await hashPasswordAsync(
           input.previousPassword,
           dbUser.salt ?? "",
         );
@@ -223,8 +223,8 @@ export const userRouter = createTRPCRouter({
         }
       }
 
-      const salt = await createSalt();
-      const hashedPassword = await hashPassword(input.password, salt);
+      const salt = await createSaltAsync();
+      const hashedPassword = await hashPasswordAsync(input.password, salt);
       await ctx.db
         .update(users)
         .set({
@@ -233,7 +233,7 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.userId));
     }),
   setMessage: publicProcedure.input(z.string()).mutation(async ({ input }) => {
-    await exampleChannel.publish({ message: input });
+    await exampleChannel.publishAsync({ message: input });
   }),
   test: publicProcedure.subscription(() => {
     return observable<{ message: string }>((emit) => {
@@ -244,12 +244,12 @@ export const userRouter = createTRPCRouter({
   }),
 });
 
-const createUser = async (
+const createUserAsync = async (
   db: Database,
   input: z.infer<typeof validation.user.create>,
 ) => {
-  const salt = await createSalt();
-  const hashedPassword = await hashPassword(input.password, salt);
+  const salt = await createSaltAsync();
+  const hashedPassword = await hashPasswordAsync(input.password, salt);
 
   const userId = createId();
   await db.insert(schema.users).values({

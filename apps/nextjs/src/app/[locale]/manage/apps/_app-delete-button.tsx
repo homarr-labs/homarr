@@ -13,7 +13,7 @@ import {
 } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "../../../revalidatePathAction";
+import { revalidatePathActionAsync } from "../../../revalidatePathAction";
 
 interface AppDeleteButtonProps {
   app: RouterOutputs["app"]["all"][number];
@@ -37,7 +37,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
                 title: t("notification.success.title"),
                 message: t("notification.success.message"),
               });
-              void revalidatePathAction("/manage/apps");
+              void revalidatePathActionAsync("/manage/apps");
             },
             onError: () => {
               showErrorNotification({

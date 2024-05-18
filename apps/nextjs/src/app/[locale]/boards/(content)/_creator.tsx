@@ -14,24 +14,24 @@ import { BoardContentHeaderActions } from "./_header-actions";
 export type Params = Record<string, unknown>;
 
 interface Props<TParams extends Params> {
-  getInitialBoard: (params: TParams) => Promise<Board>;
+  getInitialBoardAsync: (params: TParams) => Promise<Board>;
 }
 
 export const createBoardContentPage = <
   TParams extends Record<string, unknown>,
 >({
-  getInitialBoard,
+  getInitialBoardAsync: getInitialBoard,
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
       headerActions: <BoardContentHeaderActions />,
-      getInitialBoard,
+      getInitialBoardAsync: getInitialBoard,
       isBoardContentPage: true,
     }),
     page: () => {
       return <ClientBoard />;
     },
-    generateMetadata: async ({
+    generateMetadataAsync: async ({
       params,
     }: {
       params: TParams;

@@ -27,6 +27,10 @@ import { signOut, useSession } from "@homarr/auth/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import "flag-icons/css/flag-icons.min.css";
+
+import { LanguageCombobox } from "./language/language-combobox";
+
 interface UserAvatarMenuProps {
   children: ReactNode;
 }
@@ -57,7 +61,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
   }, [openModal, router]);
 
   return (
-    <Menu width={200} withArrow withinPortal>
+    <Menu width={300} withArrow withinPortal>
       <Menu.Dropdown>
         <Menu.Item
           onClick={toggleColorScheme}
@@ -72,22 +76,31 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         >
           {t("navigateDefaultBoard")}
         </Menu.Item>
-        {Boolean(session.data) && (
-          <Menu.Item
-            component={Link}
-            href={`/manage/users/${session.data?.user.id}`}
-            leftSection={<IconSettings size="1rem" />}
-          >
-            {t("preferences")}
-          </Menu.Item>
-        )}
-        <Menu.Item
-          component={Link}
-          href="/manage"
-          leftSection={<IconTool size="1rem" />}
-        >
-          {t("management")}
+        <Menu.Divider />
+
+        <Menu.Item p={0} closeMenuOnClick={false}>
+          <LanguageCombobox />
         </Menu.Item>
+        <Menu.Divider />
+        {Boolean(session.data) && (
+          <>
+            <Menu.Item
+              component={Link}
+              href={`/manage/users/${session.data?.user.id}`}
+              leftSection={<IconSettings size="1rem" />}
+            >
+              {t("preferences")}
+            </Menu.Item>
+
+            <Menu.Item
+              component={Link}
+              href="/manage"
+              leftSection={<IconTool size="1rem" />}
+            >
+              {t("management")}
+            </Menu.Item>
+          </>
+        )}
         <Menu.Divider />
         {session.status === "authenticated" ? (
           <Menu.Item

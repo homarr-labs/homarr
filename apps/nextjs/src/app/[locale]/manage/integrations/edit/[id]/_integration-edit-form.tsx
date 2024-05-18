@@ -20,7 +20,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { SecretCard } from "../../_integration-secret-card";
 import { IntegrationSecretInput } from "../../_integration-secret-inputs";
 import {
@@ -65,7 +65,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     integration.secrets.map((secret) => [secret.kind, secret]),
   );
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: FormType) => {
     if (isDirty) return;
     await mutateAsync(
       {
@@ -82,7 +82,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             title: t("integration.page.edit.notification.success.title"),
             message: t("integration.page.edit.notification.success.message"),
           });
-          void revalidatePathAction("/manage/integrations").then(() =>
+          void revalidatePathActionAsync("/manage/integrations").then(() =>
             router.push("/manage/integrations"),
           );
         },
@@ -97,7 +97,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   };
 
   return (
-    <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
+    <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack>
         <TestConnectionNoticeAlert />
 

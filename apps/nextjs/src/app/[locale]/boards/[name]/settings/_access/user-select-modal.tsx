@@ -30,7 +30,7 @@ export const UserSelectModal = createModal<InnerProps>(
     const { data: users, isPending } = clientApi.user.selectable.useQuery();
     const [loading, setLoading] = useState(false);
     const form = useForm<UserSelectFormType>();
-    const handleSubmit = async (values: UserSelectFormType) => {
+    const handleSubmitAsync = async (values: UserSelectFormType) => {
       const currentUser = users?.find((user) => user.id === values.userId);
       if (!currentUser) return;
       setLoading(true);
@@ -48,7 +48,9 @@ export const UserSelectModal = createModal<InnerProps>(
     const currentUser = users?.find((user) => user.id === form.values.userId);
 
     return (
-      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}
+      >
         <Stack>
           <Select
             {...form.getInputProps("userId")}

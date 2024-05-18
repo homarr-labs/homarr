@@ -34,7 +34,7 @@ export const LoginForm = () => {
     },
   });
 
-  const handleSubmit = async (
+  const handleSubmitAsync = async (
     values: z.infer<typeof validation.user.signIn>,
   ) => {
     setIsLoading(true);
@@ -67,7 +67,9 @@ export const LoginForm = () => {
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}
+      >
         <Stack gap="lg">
           <TextInput
             label={t("field.username.label")}

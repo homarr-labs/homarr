@@ -13,7 +13,7 @@ import {
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface ChangePasswordFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -24,7 +24,7 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.user.changePassword.useMutation({
     async onSettled() {
-      await revalidatePathAction(`/manage/users/${user.id}`);
+      await revalidatePathActionAsync(`/manage/users/${user.id}`);
     },
     onSuccess() {
       showSuccessNotification({

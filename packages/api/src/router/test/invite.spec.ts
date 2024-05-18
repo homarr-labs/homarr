@@ -183,9 +183,9 @@ describe("delete should remove invite by id", () => {
     });
 
     // Act
-    const act = async () => await caller.deleteInvite({ id: createId() });
+    const actAsync = async () => await caller.deleteInvite({ id: createId() });
 
     // Assert
-    await expect(act()).rejects.toThrow("not found");
+    await expect(actAsync()).rejects.toThrow("not found");
   });
 });

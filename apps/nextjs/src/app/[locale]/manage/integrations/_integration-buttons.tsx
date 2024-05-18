@@ -12,7 +12,7 @@ import {
 } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "../../../revalidatePathAction";
+import { revalidatePathActionAsync } from "../../../revalidatePathAction";
 
 interface DeleteIntegrationActionButtonProps {
   count: number;
@@ -49,7 +49,7 @@ export const DeleteIntegrationActionButton = ({
                   if (count === 1) {
                     router.replace("/manage/integrations");
                   }
-                  void revalidatePathAction("/manage/integrations");
+                  void revalidatePathActionAsync("/manage/integrations");
                 },
                 onError: () => {
                   showErrorNotification({

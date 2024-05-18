@@ -13,6 +13,8 @@ const wss = new WebSocketServer({
 const handler = applyWSSHandler({
   wss,
   router: appRouter,
+  // ignore error on next line because the createContext must be set with this name
+  // eslint-disable-next-line no-restricted-syntax
   createContext: async ({ req }) => {
     try {
       const headers = Object.entries(req.headers).map(

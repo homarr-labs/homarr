@@ -34,7 +34,7 @@ import {
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
 } from "../_integration-test-connection";
-import { revalidatePathAction } from "../../../../revalidatePathAction";
+import { revalidatePathActionAsync } from "../../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof validation.integration.create>> & {
@@ -66,7 +66,7 @@ export const NewIntegrationForm = ({
   });
   const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: FormType) => {
     if (isDirty) return;
     await mutateAsync(
       {
@@ -79,7 +79,7 @@ export const NewIntegrationForm = ({
             title: t("integration.page.create.notification.success.title"),
             message: t("integration.page.create.notification.success.message"),
           });
-          void revalidatePathAction("/manage/integrations").then(() =>
+          void revalidatePathActionAsync("/manage/integrations").then(() =>
             router.push("/manage/integrations"),
           );
         },
@@ -94,7 +94,7 @@ export const NewIntegrationForm = ({
   };
 
   return (
-    <form onSubmit={form.onSubmit((value) => void handleSubmit(value))}>
+    <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
       <Stack>
         <TestConnectionNoticeAlert />
 

@@ -87,14 +87,15 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
     if (newIcons.length >= 1) {
       await transaction.insert(icons).values(newIcons);
     }
-    await transaction.delete(icons).where(
-      deadIcons.length >= 1
-        ? inArray(
-            icons.checksum,
-            deadIcons.map((icon) => icon.checksum),
-          )
-        : undefined,
-    );
+    if (deadIcons.length >= 1) {
+      await transaction.delete(icons).where(
+        inArray(
+          icons.checksum,
+          deadIcons.map((icon) => icon.checksum),
+        ),
+      );
+    }
+
     countDeleted += deadIcons.length;
   });
 
