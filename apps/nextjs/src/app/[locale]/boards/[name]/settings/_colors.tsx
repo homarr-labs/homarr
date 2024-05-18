@@ -17,8 +17,9 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { validation } from "@homarr/validation";
 
 import type { Board } from "../../_types";
 import { generateColors } from "../../(content)/_theme";
@@ -33,7 +34,7 @@ const hexRegex = /^#[0-9a-fA-F]{6}$/;
 const progressPercentageLabel = (value: number) => `${value}%`;
 
 export const ColorSettingsContent = ({ board }: Props) => {
-  const form = useForm({
+  const form = useZodForm(validation.board.savePartialSettings, {
     initialValues: {
       primaryColor: board.primaryColor,
       secondaryColor: board.secondaryColor,
@@ -114,15 +115,16 @@ export const ColorSettingsContent = ({ board }: Props) => {
 };
 
 interface ColorsPreviewProps {
-  previewColor: string;
+  previewColor: string | undefined;
 }
 
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
   const theme = useMantineTheme();
 
-  const colors = hexRegex.test(previewColor)
-    ? generateColors(previewColor)
-    : generateColors("#000000");
+  const colors =
+    previewColor && hexRegex.test(previewColor)
+      ? generateColors(previewColor)
+      : generateColors("#000000");
 
   return (
     <Group gap={0} wrap="nowrap">

@@ -2,8 +2,9 @@
 
 import { Button, Grid, Group, Input, Slider, Stack } from "@mantine/core";
 
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { validation } from "@homarr/validation";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -15,11 +16,14 @@ export const LayoutSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
-  const form = useForm({
-    initialValues: {
-      columnCount: board.columnCount,
+  const form = useZodForm(
+    validation.board.savePartialSettings.pick({ columnCount: true }).required(),
+    {
+      initialValues: {
+        columnCount: board.columnCount,
+      },
     },
-  });
+  );
 
   return (
     <form

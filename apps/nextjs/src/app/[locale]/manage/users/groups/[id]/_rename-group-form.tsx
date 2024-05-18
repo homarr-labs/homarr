@@ -4,12 +4,13 @@ import { useCallback } from "react";
 import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
 } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { validation } from "@homarr/validation";
 
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
@@ -23,7 +24,7 @@ interface RenameGroupFormProps {
 export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.group.updateGroup.useMutation();
-  const form = useForm<FormType>({
+  const form = useZodForm(validation.group.update.pick({ name: true }), {
     initialValues: {
       name: group.name,
     },

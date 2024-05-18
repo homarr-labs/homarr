@@ -183,7 +183,9 @@ export const boardRouter = createTRPCRouter({
       );
     }),
   savePartialBoardSettings: protectedProcedure
-    .input(validation.board.savePartialSettings)
+    .input(
+      validation.board.savePartialSettings.and(z.object({ id: z.string() })),
+    )
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(
         ctx,

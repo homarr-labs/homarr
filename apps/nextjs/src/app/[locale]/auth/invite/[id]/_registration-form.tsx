@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -24,18 +24,17 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
   const t = useScopedI18n("user");
   const router = useRouter();
   const { mutate, isPending } = clientApi.user.register.useMutation();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.registration),
+  const form = useZodForm(validation.user.registration, {
     initialValues: {
       username: "",
       password: "",
       confirmPassword: "",
     },
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
   });
 
-  const handleSubmit = (values: FormType) => {
+  const handleSubmit = (
+    values: z.infer<typeof validation.user.registration>,
+  ) => {
     mutate(
       {
         ...values,
@@ -88,5 +87,3 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     </Stack>
   );
 };
-
-type FormType = z.infer<typeof validation.user.registration>;

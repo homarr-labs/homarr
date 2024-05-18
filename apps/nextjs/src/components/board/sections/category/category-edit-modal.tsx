@@ -1,8 +1,9 @@
 import { Button, Group, Stack, TextInput } from "@mantine/core";
 
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { z } from "@homarr/validation";
 
 interface Category {
   id: string;
@@ -18,7 +19,7 @@ interface InnerProps {
 export const CategoryEditModal = createModal<InnerProps>(
   ({ actions, innerProps }) => {
     const t = useI18n();
-    const form = useForm({
+    const form = useZodForm(z.object({ name: z.string().min(1) }), {
       initialValues: {
         name: innerProps.category.name,
       },

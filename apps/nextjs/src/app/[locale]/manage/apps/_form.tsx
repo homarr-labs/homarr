@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
 
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
@@ -25,14 +25,13 @@ export const AppForm = (props: AppFormProps) => {
     props;
   const t = useI18n();
 
-  const form = useForm({
+  const form = useZodForm(validation.app.manage, {
     initialValues: initialValues ?? {
       name: "",
       description: "",
       iconUrl: "",
       href: "",
     },
-    validate: zodResolver(validation.app.manage),
   });
 
   return (
@@ -41,9 +40,7 @@ export const AppForm = (props: AppFormProps) => {
         <TextInput {...form.getInputProps("name")} withAsterisk label="Name" />
         <IconPicker
           initialValue={initialValues?.iconUrl}
-          onChange={(iconUrl) => {
-            form.setFieldValue("iconUrl", iconUrl);
-          }}
+          {...form.getInputProps("iconUrl")}
         />
         <Textarea {...form.getInputProps("description")} label="Description" />
         <TextInput {...form.getInputProps("href")} label="URL" />

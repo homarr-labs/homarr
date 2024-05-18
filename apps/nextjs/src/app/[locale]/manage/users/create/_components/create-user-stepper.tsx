@@ -14,9 +14,10 @@ import {
 import { IconUserCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { useScopedI18n } from "@homarr/translation/client";
 import { validation, z } from "@homarr/validation";
+import { createCustomErrorParams } from "@homarr/validation/form";
 
 import { StepperNavigationComponent } from "./stepper-navigation.component";
 
@@ -40,40 +41,36 @@ export const UserCreateStepperComponent = () => {
 
   const { mutateAsync, isPending } = clientApi.user.create.useMutation();
 
-  const generalForm = useForm({
-    initialValues: {
-      username: "",
-      email: undefined,
+  const generalForm = useZodForm(
+    z.object({
+      username: z.string().min(1),
+      email: z.string().email().or(z.string().length(0).optional()),
+    }),
+    {
+      initialValues: {
+        username: "",
+        email: "",
+      },
     },
-    validate: zodResolver(
-      z.object({
-        username: z.string().min(1),
-        email: z.string().email().or(z.string().length(0).optional()),
-      }),
-    ),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
-  });
+  );
 
-  const securityForm = useForm({
-    initialValues: {
-      password: "",
-      confirmPassword: "",
+  const securityForm = useZodForm(
+    z
+      .object({
+        password: validation.user.password,
+        confirmPassword: z.string(),
+      })
+      .refine((data) => data.password === data.confirmPassword, {
+        path: ["confirmPassword"],
+        params: createCustomErrorParams("passwordsDoNotMatch"),
+      }),
+    {
+      initialValues: {
+        password: "",
+        confirmPassword: "",
+      },
     },
-    validate: zodResolver(
-      z
-        .object({
-          password: validation.user.password,
-          confirmPassword: z.string(),
-        })
-        .refine((data) => data.password === data.confirmPassword, {
-          path: ["confirmPassword"],
-          message: "Passwords do not match",
-        }),
-    ),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
-  });
+  );
 
   const allForms = useMemo(
     () => [generalForm, securityForm],

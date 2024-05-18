@@ -7,11 +7,12 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
 } from "@homarr/definitions";
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
+import { validation } from "@homarr/validation";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -23,7 +24,7 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
-  const form = useForm({
+  const form = useZodForm(validation.board.savePartialSettings, {
     initialValues: {
       backgroundImageUrl: board.backgroundImageUrl ?? "",
       backgroundImageAttachment: board.backgroundImageAttachment,

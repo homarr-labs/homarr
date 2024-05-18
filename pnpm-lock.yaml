@@ -556,6 +556,12 @@ importers:
 
   packages/form:
     dependencies:
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
       '@mantine/form':
         specifier: ^7.9.2
         version: 7.9.2(react@18.3.1)
@@ -787,6 +793,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
       zod:
         specifier: ^3.23.8
         version: 3.23.8
