@@ -1,5 +1,7 @@
 import { createQueueChannel, createSubPubChannel } from "./lib/channel";
 
+export { createCacheChannel } from "./lib/channel";
+
 export const exampleChannel = createSubPubChannel<{ message: string }>(
   "example",
 );

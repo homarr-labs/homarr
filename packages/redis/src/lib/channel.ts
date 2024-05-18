@@ -60,23 +60,80 @@ const cacheClient = createRedisConnection();
  * @param name name of the channel
  * @returns cache channel object
  */
-export const createCacheChannel = <TData>(name: string) => {
+export const createCacheChannel = <TData>(
+  name: string,
+  cacheDurationSeconds: number = 5 * 60 * 1000,
+) => {
   const cacheChannelName = `cache:${name}`;
+
   return {
     /**
      * Get the data from the cache channel.
-     * @returns data or undefined if not found
+     * @returns data or null if not found or expired
      */
     getAsync: async () => {
       const data = await cacheClient.get(cacheChannelName);
-      return data ? superjson.parse<TData>(data) : undefined;
+      if (!data) return null;
+
+      const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(
+        data,
+      );
+      const now = new Date();
+      const diff = now.getTime() - parsedData.timestamp.getTime();
+      if (diff > cacheDurationSeconds) return null;
+
+      return parsedData;
+    },
+    /**
+     * Consume the data from the cache channel, if not present or expired, it will call the callback to get new data.
+     * @param callback callback function to get new data if not present or expired
+     * @returns data or new data if not present or expired
+     */
+    consumeAsync: async (callback: () => Promise<TData>) => {
+      const data = await cacheClient.get(cacheChannelName);
+
+      const getNewDataAsync = async () => {
+        logger.debug(`Cache miss for channel '${cacheChannelName}'`);
+        const newData = await callback();
+        const result = { data: newData, timestamp: new Date() };
+        await cacheClient.set(cacheChannelName, superjson.stringify(result));
+        logger.debug(`Cache updated for channel '${cacheChannelName}'`);
+        return result;
+      };
+
+      if (!data) {
+        return await getNewDataAsync();
+      }
+
+      const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(
+        data,
+      );
+      const now = new Date();
+      const diff = now.getTime() - parsedData.timestamp.getTime();
+
+      if (diff > cacheDurationSeconds) {
+        return await getNewDataAsync();
+      }
+
+      logger.debug(`Cache hit for channel '${cacheChannelName}'`);
+
+      return parsedData;
+    },
+    /**
+     * Invalidate the cache channels data.
+     */
+    invalidateAsync: async () => {
+      await cacheClient.del(cacheChannelName);
     },
     /**
      * Set the data in the cache channel.
      * @param data data to be stored in the cache channel
      */
     setAsync: async (data: TData) => {
-      await cacheClient.set(cacheChannelName, superjson.stringify(data));
+      await cacheClient.set(
+        cacheChannelName,
+        superjson.stringify({ data, timestamp: new Date() }),
+      );
     },
   };
 };
