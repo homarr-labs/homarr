@@ -47,44 +47,47 @@ class DockerSingleton {
   }
 }
 
-const dockerCache = createCacheChannel<{ containers: Docker.ContainerInfo[] }>(
-  "/docker",
-);
+const dockerCache = createCacheChannel<{ containers: Docker.ContainerInfo[] }>("/docker", 5 * 60 * 1000);
 
 export const dockerRouter = createTRPCRouter({
   getContainers: publicProcedure.query(async () => {
     // Check if the value already in the cache from redis
     const cachedData = await dockerCache.getAsync();
-    const isCacheYoungerThan5Minutes =
-      cachedData &&
-      new Date().getTime() - new Date(cachedData.timestamp).getTime() <
-        5 * 60 * 1000;
-    if (
-      cachedData &&
-      cachedData.data.containers.length > 0 &&
-      isCacheYoungerThan5Minutes
-    ) {
-      logger.info(
-        "Cache hit for /docker with timestamp: " + cachedData.timestamp,
-      );
-      return cachedData;
+    const isCacheYoungerThan5Minutes = cachedData?.isFresh;
+    if (isCacheYoungerThan5Minutes) {
+      logger.info("Cache hit for /docker with timestamp: " + cachedData.timestamp);
+      return {
+        containers: sanitizeContainers(cachedData.data.containers),
+        timestamp: cachedData.timestamp,
+      };
     }
     const docker = DockerSingleton.getInstance();
     const containers = await Promise.all(
       // Return all the containers of all the instances into only one item
-      docker.map((dockerInstance) =>
-        dockerInstance.listContainers({ all: true }),
-      ),
+      docker.map((dockerInstance) => dockerInstance.listContainers({ all: true })),
     ).then((containers) => containers.flat());
     // Only return the name, id, status, image, and ports of each containers from all instances
-    const sanitizedContainers = containers.map((container) => ({
+    const sanitizedContainers = sanitizeContainers(containers);
+    // Save the data into the cache
+    await dockerCache.setAsync({
+      containers,
+    });
+
+    return {
+      containers: sanitizedContainers,
+      timestamp: new Date().toISOString(),
+    };
+  }),
+});
+
+function sanitizeContainers(containers: Docker.ContainerInfo[]) {
+  return containers.map((container) => {
+    return {
       name: container.Names[0],
       id: container.Id,
       status: container.State,
       image: container.Image,
       ports: container.Ports,
-    }));
-
-    return { containers: sanitizedContainers };
-  }),
-});
+    };
+  });
+}
