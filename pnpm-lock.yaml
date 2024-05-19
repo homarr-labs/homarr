@@ -60,6 +60,9 @@ importers:
 
   apps/nextjs:
     dependencies:
+      '@homarr/analytics':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/analytics
       '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../../packages/api
@@ -232,6 +235,9 @@ importers:
 
   apps/tasks:
     dependencies:
+      '@homarr/analytics':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/analytics
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
@@ -348,6 +354,31 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+
+  packages/analytics:
+    dependencies:
+      '@umami/node':
+        specifier: ^0.3.0
+        version: 0.3.0
+    devDependencies:
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -2463,6 +2494,9 @@ packages:
   '@typescript-eslint/visitor-keys@7.9.0':
     resolution: {integrity: sha512-iESPx2TNLDNGQLyjKhUvIKprlP49XNEK+MvIf9nIO7ZZaZdbnfWKHnXAgufpxqfA0YryH8XToi4+CjBgVnFTSQ==}
     engines: {node: ^18.18.0 || >=20.0.0}
+
+  '@umami/node@0.3.0':
+    resolution: {integrity: sha512-+1cZ7o7jVN8oXDYZRqigfLHrWbEv5vtGWjB7blfVH1QUa+DRmWB6GfhMZtE2aSW+P9ACal8ZW7xD2PCAejlNCQ==}
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
@@ -7045,6 +7079,8 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.9.0
       eslint-visitor-keys: 3.4.3
+
+  '@umami/node@0.3.0': {}
 
   '@ungap/structured-clone@1.2.0': {}
 

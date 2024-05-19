@@ -16,6 +16,7 @@ import { NextInternationalProvider } from "./_client-providers/next-internationa
 import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { composeWrappers } from "./compose";
+import { Analytics } from "~/components/layout/analytics";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -76,6 +77,7 @@ export default function Layout(props: { children: React.ReactNode; params: { loc
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme={colorScheme} />
+        <Analytics />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>
