@@ -30,7 +30,6 @@
     "@trpc/client": "next",
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
-    "immer": "^10.1.1",
     "superjson": "2.2.1"
   },
   "devDependencies": {

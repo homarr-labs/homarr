@@ -32,9 +32,7 @@ export const createSubPubChannel = <TData>(name: string) => {
         if (!err) {
           return;
         }
-        logger.error(
-          `Error with channel '${channelName}': ${err.name} (${err.message})`,
-        );
+        logger.error(`Error with channel '${channelName}': ${err.name} (${err.message})`);
       });
       subscriber.on("message", (channel, message) => {
         if (channel !== channelName) return; // TODO: check if this is necessary - it should be handled by the redis client
@@ -60,10 +58,7 @@ const cacheClient = createRedisConnection();
  * @param name name of the channel
  * @returns cache channel object
  */
-export const createCacheChannel = <TData>(
-  name: string,
-  cacheTime: number = 5 * 60 * 1000,
-) => {
+export const createCacheChannel = <TData>(name: string, cacheTime: number = 5 * 60 * 1000) => {
   const cacheChannelName = `cache:${name}`;
   return {
     /**
@@ -75,11 +70,9 @@ export const createCacheChannel = <TData>(
       if (!data) return undefined;
       const parsedData = superjson.parse<{
         data: TData;
-        timestamp: string;
+        timestamp: Date;
       }>(data);
-      const isFresh =
-        new Date().getTime() - new Date(parsedData.timestamp).getTime() <
-        cacheTime;
+      const isFresh = new Date().getTime() - parsedData.timestamp.getTime() < cacheTime;
       return {
         data: parsedData.data,
         timestamp: parsedData.timestamp,
@@ -93,12 +86,9 @@ export const createCacheChannel = <TData>(
     setAsync: async (data: TData) => {
       const dataWithTimestamp = {
         data,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(),
       };
-      await cacheClient.set(
-        cacheChannelName,
-        superjson.stringify(dataWithTimestamp),
-      );
+      await cacheClient.set(cacheChannelName, superjson.stringify(dataWithTimestamp));
     },
   };
 };
