@@ -103,7 +103,6 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
     <Modal
       key={modal.id}
       zIndex={getDefaultZIndex("modal") + 1}
-      display={modal.id === state.current?.id ? undefined : "none"}
       style={{
         userSelect: modal.id === state.current?.id ? undefined : "none",
       }}
@@ -111,6 +110,9 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
         title: {
           fontSize: "1.25rem",
           fontWeight: 500,
+        },
+        inner: {
+          display: modal.id === state.current?.id ? undefined : "none",
         },
       }}
       trapFocus={modal.id === state.current?.id}

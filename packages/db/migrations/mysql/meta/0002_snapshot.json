@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e7a373e1-9f36-4910-9f2b-ac6fd5e79145",
-  "prevId": "ba2dd885-4e7f-4a45-99a0-7b45cbd0a5c2",
+  "id": "4e382d0d-a432-4953-bd5e-04f3f33e26a4",
+  "prevId": "fdeaf6eb-cd62-4fa5-9b38-d7f80a60db9f",
   "tables": {
     "account": {
       "name": "account",
@@ -910,6 +910,14 @@
           "notNull": true,
           "autoincrement": false,
           "default": "('{\"json\": {}}')"
+        },
+        "advanced_options": {
+          "name": "advanced_options",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "('{\"json\": {}}')"
         }
       },
       "indexes": {},
@@ -990,40 +998,6 @@
         }
       },
       "uniqueConstraints": {}
-    },
-    "serverSetting": {
-      "name": "serverSetting",
-      "columns": {
-        "key": {
-          "name": "key",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "value": {
-          "name": "value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "('{\"json\": {}}')"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "serverSetting_key": {
-          "name": "serverSetting_key",
-          "columns": ["key"]
-        }
-      },
-      "uniqueConstraints": {
-        "serverSetting_key_unique": {
-          "name": "serverSetting_key_unique",
-          "columns": ["key"]
-        }
-      }
     },
     "session": {
       "name": "session",

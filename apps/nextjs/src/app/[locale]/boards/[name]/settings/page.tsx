@@ -84,7 +84,7 @@ export default async function BoardSettingsPage({ params, searchParams }: Props)
             <ColorSettingsContent board={board} />
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
-            <CustomCssSettingsContent />
+            <CustomCssSettingsContent board={board} />
           </AccordionItemFor>
           {hasFullAccess && (
             <>

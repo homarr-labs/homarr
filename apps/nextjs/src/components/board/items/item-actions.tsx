@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
-import type { BoardItemIntegration } from "@homarr/validation";
+import type { BoardItemAdvancedOptions, BoardItemIntegration } from "@homarr/validation";
 
 import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
@@ -29,6 +29,11 @@ interface RemoveItem {
 interface UpdateItemOptions {
   itemId: string;
   newOptions: Record<string, unknown>;
+}
+
+interface UpdateItemAdvancedOptions {
+  itemId: string;
+  newAdvancedOptions: BoardItemAdvancedOptions;
 }
 
 interface UpdateItemIntegrations {
@@ -59,6 +64,9 @@ export const useItemActions = () => {
           width: 1,
           height: 1,
           integrations: [],
+          advancedOptions: {
+            customCssClasses: [],
+          },
         } satisfies Omit<Item, "kind" | "yOffset" | "xOffset"> & {
           kind: WidgetKind;
         };
@@ -91,11 +99,38 @@ export const useItemActions = () => {
             return {
               ...section,
               items: section.items.map((item) => {
-                // Return same item if item is not the one we're moving
+                // Return same item if item is not the one we're changing
                 if (item.id !== itemId) return item;
                 return {
                   ...item,
                   options: newOptions,
+                };
+              }),
+            };
+          }),
+        };
+      });
+    },
+    [updateBoard],
+  );
+
+  const updateItemAdvancedOptions = useCallback(
+    ({ itemId, newAdvancedOptions }: UpdateItemAdvancedOptions) => {
+      updateBoard((previous) => {
+        if (!previous) return previous;
+        return {
+          ...previous,
+          sections: previous.sections.map((section) => {
+            // Return same section if item is not in it
+            if (!section.items.some((item) => item.id === itemId)) return section;
+            return {
+              ...section,
+              items: section.items.map((item) => {
+                // Return same item if item is not the one we're changing
+                if (item.id !== itemId) return item;
+                return {
+                  ...item,
+                  advancedOptions: newAdvancedOptions,
                 };
               }),
             };
@@ -224,6 +259,7 @@ export const useItemActions = () => {
     moveItemToSection,
     removeItem,
     updateItemOptions,
+    updateItemAdvancedOptions,
     updateItemIntegrations,
     createItem,
   };

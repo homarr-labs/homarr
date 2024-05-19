@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5ad60251-8450-437d-9081-a456884120d2",
-  "prevId": "0575873a-9e10-4480-8d7d-c47198622c22",
+  "id": "b72fe407-31bc-4dd0-8c36-dbb8e42ef708",
+  "prevId": "5ad60251-8450-437d-9081-a456884120d2",
   "tables": {
     "account": {
       "name": "account",
@@ -953,6 +953,36 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "serverSetting": {
+      "name": "serverSetting",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'{\"json\": {}}'"
+        }
+      },
+      "indexes": {
+        "serverSetting_key_unique": {
+          "name": "serverSetting_key_unique",
+          "columns": ["key"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
