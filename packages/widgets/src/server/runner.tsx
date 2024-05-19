@@ -7,18 +7,14 @@ import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "..";
 import { ClientServerDataInitalizer } from "./client";
 import { GlobalItemServerDataProvider } from "./provider";
 
-type Board = RouterOutputs["board"]["getDefaultBoard"];
+type Board = RouterOutputs["board"]["getHomeBoard"];
 
 type Props = PropsWithChildren<{
   shouldRun: boolean;
   board: Board;
 }>;
 
-export const GlobalItemServerDataRunner = ({
-  board,
-  shouldRun,
-  children,
-}: Props) => {
+export const GlobalItemServerDataRunner = ({ board, shouldRun, children }: Props) => {
   if (!shouldRun) return children;
 
   const allItems = board.sections.flatMap((section) => section.items);
@@ -45,10 +41,7 @@ const ItemDataLoader = async ({ item }: ItemDataLoaderProps) => {
     return <ClientServerDataInitalizer id={item.id} serverData={undefined} />;
   }
   const loader = await widgetImport.serverDataLoader();
-  const optionsWithDefault = reduceWidgetOptionsWithDefaultValues(
-    item.kind,
-    item.options,
-  );
+  const optionsWithDefault = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
   const data = await loader.default({
     ...item,
     options: optionsWithDefault as never,

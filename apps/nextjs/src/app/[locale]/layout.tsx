@@ -48,10 +48,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function Layout(props: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
   const colorScheme = "dark";
 
   const StackedProvider = composeWrappers([
@@ -61,9 +58,7 @@ export default function Layout(props: {
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
-    (innerProps) => (
-      <NextInternationalProvider {...innerProps} locale={props.params.locale} />
-    ),
+    (innerProps) => <NextInternationalProvider {...innerProps} locale={props.params.locale} />,
     (innerProps) => (
       <MantineProvider
         {...innerProps}

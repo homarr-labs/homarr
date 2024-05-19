@@ -15,10 +15,7 @@ interface AddGroupMemberProps {
   presentUserIds: string[];
 }
 
-export const AddGroupMember = ({
-  groupId,
-  presentUserIds,
-}: AddGroupMemberProps) => {
+export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps) => {
   const tMembersAdd = useScopedI18n("group.action.addMember");
   const { mutateAsync } = clientApi.group.addMember.useMutation();
   const { openModal } = useModalAction(UserSelectModal);
@@ -32,9 +29,7 @@ export const AddGroupMember = ({
             userId: id,
             groupId,
           });
-          await revalidatePathActionAsync(
-            `/manage/users/groups/${groupId}}/members`,
-          );
+          await revalidatePathActionAsync(`/manage/users/groups/${groupId}}/members`);
         },
         presentUserIds,
       },

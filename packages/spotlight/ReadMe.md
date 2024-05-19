@@ -130,8 +130,7 @@ const ColorSchemeButton = () => {
       {
         id: "toggle-color-scheme",
         title: (t) => t("common.colorScheme.toggle.title"),
-        description: (t) =>
-          t(`common.colorScheme.toggle.${colorScheme}.description`),
+        description: (t) => t(`common.colorScheme.toggle.${colorScheme}.description`),
         icon: colorScheme === "light" ? IconSun : IconMoon,
         group: "action",
         type: "button",

@@ -47,23 +47,12 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
   );
 
   return (
-    <Pagination
-      total={total}
-      getItemProps={getItemProps}
-      getControlProps={getControlProps}
-      onChange={handleChange}
-    />
+    <Pagination total={total} getItemProps={getItemProps} getControlProps={getControlProps} onChange={handleChange} />
   );
 };
 
-type ControlType = Parameters<
-  Exclude<PaginationProps["getControlProps"], undefined>
->[0];
-const calculatePageFor = (
-  type: ControlType,
-  current: number,
-  total: number,
-) => {
+type ControlType = Parameters<Exclude<PaginationProps["getControlProps"], undefined>>[0];
+const calculatePageFor = (type: ControlType, current: number, total: number) => {
   switch (type) {
     case "first":
       return 1;

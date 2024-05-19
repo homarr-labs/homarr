@@ -9,9 +9,7 @@ export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   options: Omit<WidgetOptionOfType<TKey>, "defaultValue" | "type">;
 }
 
-type UseWidgetInputTranslationReturnType = (
-  key: "label" | "description",
-) => string;
+type UseWidgetInputTranslationReturnType = (key: "label" | "description") => string;
 
 /**
  * Short description why as and unknown convertions are used below:
@@ -23,10 +21,7 @@ type UseWidgetInputTranslationReturnType = (
  * - The label translation can be used for every input, especially considering that all options should have defined a label for themself. The description translation should only be used when withDescription
  *   is defined for the option. The method does sadly not reconize issues with those definitions. So it does not yell at you when you somewhere show the label without having it defined in the translations.
  */
-export const useWidgetInputTranslation = (
-  kind: WidgetKind,
-  property: string,
-): UseWidgetInputTranslationReturnType => {
+export const useWidgetInputTranslation = (kind: WidgetKind, property: string): UseWidgetInputTranslationReturnType => {
   return useScopedI18n(
     `widget.${kind}.option.${property}` as never, // Because the type is complex and not recognized by typescript, we need to cast it to never to make it work.
   ) as unknown as UseWidgetInputTranslationReturnType;

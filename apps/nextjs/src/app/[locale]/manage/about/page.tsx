@@ -21,6 +21,7 @@ import { setStaticParamsLocale } from "next-international/server";
 
 import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
+import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import contributorsData from "../../../../../../../static-data/contributors.json";
 import translatorsData from "../../../../../../../static-data/translators.json";
@@ -29,10 +30,9 @@ import classes from "./about.module.css";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 
@@ -55,9 +55,7 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
             <Title order={1} tt="uppercase">
               Homarr
             </Title>
-            <Title order={2}>
-              {t("version", { version: attributes.version })}
-            </Title>
+            <Title order={2}>{t("version", { version: attributes.version })}</Title>
           </Stack>
         </Group>
       </Center>
@@ -150,20 +148,10 @@ interface GenericContributorLinkCardProps {
   image: string;
 }
 
-const GenericContributorLinkCard = ({
-  name,
-  image,
-  link,
-}: GenericContributorLinkCardProps) => {
+const GenericContributorLinkCard = ({ name, image, link }: GenericContributorLinkCardProps) => {
   return (
     <AspectRatio ratio={1}>
-      <Card
-        className={classes.contributorCard}
-        component="a"
-        href={link}
-        target="_blank"
-        w={100}
-      >
+      <Card className={classes.contributorCard} component="a" href={link} target="_blank" w={100}>
         <Stack align="center">
           <Avatar src={image} alt={name} size={40} display="block" />
           <Text lineClamp={1} size="sm">

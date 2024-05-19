@@ -12,9 +12,7 @@ export const env = createEnv({
       .optional()
       .transform((url) => (url ? `https://${url}` : undefined)),
     PORT: z.coerce.number().default(3000),
-    NODE_ENV: z
-      .enum(["development", "production", "test"])
-      .default("development"),
+    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   },
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app isn't
@@ -25,9 +23,7 @@ export const env = createEnv({
     // If the DB_HOST is set, the DB_URL is optional
     DB_URL: isUsingDbHost ? z.string().optional() : z.string(),
     DB_HOST: isUsingDbUrl ? z.string().optional() : z.string(),
-    DB_PORT: isUsingDbUrl
-      ? z.number().optional()
-      : z.number().min(1).default(3306),
+    DB_PORT: isUsingDbUrl ? z.number().optional() : z.number().min(1).default(3306),
     DB_USER: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_PASSWORD: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_NAME: isUsingDbUrl ? z.string().optional() : z.string(),
@@ -56,7 +52,5 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:
-    Boolean(process.env.CI) ||
-    Boolean(process.env.SKIP_ENV_VALIDATION) ||
-    process.env.npm_lifecycle_event === "lint",
+    Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION) || process.env.npm_lifecycle_event === "lint",
 });

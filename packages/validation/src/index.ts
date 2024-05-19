@@ -21,5 +21,7 @@ export const validation = {
 export {
   createSectionSchema,
   sharedItemSchema,
+  itemAdvancedOptionsSchema,
   type BoardItemIntegration,
+  type BoardItemAdvancedOptions,
 } from "./shared";

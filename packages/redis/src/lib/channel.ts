@@ -32,9 +32,7 @@ export const createSubPubChannel = <TData>(name: string) => {
         if (!err) {
           return;
         }
-        logger.error(
-          `Error with channel '${channelName}': ${err.name} (${err.message})`,
-        );
+        logger.error(`Error with channel '${channelName}': ${err.name} (${err.message})`);
       });
       subscriber.on("message", (channel, message) => {
         if (channel !== channelName) return; // TODO: check if this is necessary - it should be handled by the redis client
@@ -49,6 +47,34 @@ export const createSubPubChannel = <TData>(name: string) => {
     publishAsync: async (data: TData) => {
       await lastDataClient.set(lastChannelName, superjson.stringify(data));
       await publisher.publish(channelName, superjson.stringify(data));
+    },
+  };
+};
+
+const cacheClient = createRedisConnection();
+
+/**
+ * Creates a new cache channel.
+ * @param name name of the channel
+ * @returns cache channel object
+ */
+export const createCacheChannel = <TData>(name: string) => {
+  const cacheChannelName = `cache:${name}`;
+  return {
+    /**
+     * Get the data from the cache channel.
+     * @returns data or undefined if not found
+     */
+    getAsync: async () => {
+      const data = await cacheClient.get(cacheChannelName);
+      return data ? superjson.parse<TData>(data) : undefined;
+    },
+    /**
+     * Set the data in the cache channel.
+     * @param data data to be stored in the cache channel
+     */
+    setAsync: async (data: TData) => {
+      await cacheClient.set(cacheChannelName, superjson.stringify(data));
     },
   };
 };

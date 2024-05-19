@@ -23,24 +23,22 @@ const headerButtonActionIconProps: ActionIconProps = {
 };
 
 // eslint-disable-next-line react/display-name
-export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>(
-  (props, ref) => {
-    if ("href" in props) {
-      return (
-        <ActionIcon
-          ref={ref as ForwardedRef<HTMLAnchorElement>}
-          component={Link}
-          {...props}
-          {...headerButtonActionIconProps}
-        >
-          {props.children}
-        </ActionIcon>
-      );
-    }
+export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((props, ref) => {
+  if ("href" in props) {
     return (
-      <ActionIcon ref={ref} {...props} {...headerButtonActionIconProps}>
+      <ActionIcon
+        ref={ref as ForwardedRef<HTMLAnchorElement>}
+        component={Link}
+        {...props}
+        {...headerButtonActionIconProps}
+      >
         {props.children}
       </ActionIcon>
     );
-  },
-);
+  }
+  return (
+    <ActionIcon ref={ref} {...props} {...headerButtonActionIconProps}>
+      {props.children}
+    </ActionIcon>
+  );
+});

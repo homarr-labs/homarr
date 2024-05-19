@@ -9,10 +9,7 @@ import { objectEntries } from "@homarr/common";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { groupPermissionKeys } from "@homarr/definitions";
 import { createFormContext } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 const [FormProvider, useFormContext, useForm] = createFormContext<FormType>();
@@ -21,10 +18,7 @@ interface PermissionFormProps {
   initialPermissions: GroupPermissionKey[];
 }
 
-export const PermissionForm = ({
-  children,
-  initialPermissions,
-}: PropsWithChildren<PermissionFormProps>) => {
+export const PermissionForm = ({ children, initialPermissions }: PropsWithChildren<PermissionFormProps>) => {
   const form = useForm({
     initialValues: groupPermissionKeys.reduce((acc, key) => {
       acc[key] = initialPermissions.includes(key);
@@ -73,9 +67,7 @@ interface SaveAffixProps {
 export const SaveAffix = ({ groupId }: SaveAffixProps) => {
   const t = useI18n();
   const tForm = useScopedI18n("management.page.group.setting.permissions.form");
-  const tNotification = useScopedI18n(
-    "group.action.changePermissions.notification",
-  );
+  const tNotification = useScopedI18n("group.action.changePermissions.notification");
   const form = useFormContext();
   const { mutate, isPending } = clientApi.group.savePermissions.useMutation();
 

@@ -7,10 +7,7 @@ import { IconTrash } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { revalidatePathActionAsync } from "../../../revalidatePathAction";
@@ -52,13 +49,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   }, [app, mutate, t, openConfirmModal]);
 
   return (
-    <ActionIcon
-      loading={isPending}
-      variant="subtle"
-      color="red"
-      onClick={onClick}
-      aria-label="Delete app"
-    >
+    <ActionIcon loading={isPending} variant="subtle" color="red" onClick={onClick} aria-label="Delete app">
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>
   );

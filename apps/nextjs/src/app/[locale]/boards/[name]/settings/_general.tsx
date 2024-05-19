@@ -1,25 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  Button,
-  Grid,
-  Group,
-  Loader,
-  Stack,
-  TextInput,
-  Tooltip,
-} from "@mantine/core";
-import {
-  useDebouncedValue,
-  useDocumentTitle,
-  useFavicon,
-} from "@mantine/hooks";
+import { Button, Grid, Group, Loader, Stack, TextInput, Tooltip } from "@mantine/core";
+import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { validation } from "@homarr/validation";
 
+import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -36,22 +26,31 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   });
   const { updateBoard } = useUpdateBoard();
 
-  const { mutate: savePartialSettings, isPending } =
-    useSavePartialSettingsMutation(board);
-  const form = useForm({
-    initialValues: {
-      pageTitle: board.pageTitle ?? "",
-      logoImageUrl: board.logoImageUrl ?? "",
-      metaTitle: board.metaTitle ?? "",
-      faviconImageUrl: board.faviconImageUrl ?? "",
+  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
+  const form = useZodForm(
+    validation.board.savePartialSettings
+      .pick({
+        pageTitle: true,
+        logoImageUrl: true,
+        metaTitle: true,
+        faviconImageUrl: true,
+      })
+      .required(),
+    {
+      initialValues: {
+        pageTitle: board.pageTitle ?? "",
+        logoImageUrl: board.logoImageUrl ?? "",
+        metaTitle: board.metaTitle ?? "",
+        faviconImageUrl: board.faviconImageUrl ?? "",
+      },
+      onValuesChange({ pageTitle }) {
+        updateBoard((previous) => ({
+          ...previous,
+          pageTitle,
+        }));
+      },
     },
-    onValuesChange({ pageTitle }) {
-      updateBoard((previous) => ({
-        ...previous,
-        pageTitle,
-      }));
-    },
-  });
+  );
 
   const metaTitleStatus = useMetaTitlePreview(form.values.metaTitle);
   const faviconStatus = useFaviconPreview(form.values.faviconImageUrl);
@@ -94,7 +93,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.metaTitle.label")}
-              placeholder="Default Board | Homarr"
+              placeholder={createMetaTitle(t("board.content.metaTitle", { boardName: board.name }))}
               rightSection={<PendingOrInvalidIndicator {...metaTitleStatus} />}
               {...form.getInputProps("metaTitle")}
             />
@@ -126,22 +125,12 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   );
 };
 
-const PendingOrInvalidIndicator = ({
-  isPending,
-  isInvalid,
-}: {
-  isPending: boolean;
-  isInvalid?: boolean;
-}) => {
+const PendingOrInvalidIndicator = ({ isPending, isInvalid }: { isPending: boolean; isInvalid?: boolean }) => {
   const t = useI18n();
 
   if (isInvalid) {
     return (
-      <Tooltip
-        multiline
-        w={220}
-        label={t("board.setting.section.general.unrecognizedLink")}
-      >
+      <Tooltip multiline w={220} label={t("board.setting.section.general.unrecognizedLink")}>
         <IconAlertTriangle size="1rem" color="red" />
       </Tooltip>
     );
@@ -183,8 +172,7 @@ const useMetaTitlePreview = (title: string | null) => {
 
 const validFaviconExtensions = ["ico", "png", "svg", "gif"];
 const isValidUrl = (url: string) =>
-  url.includes("/") &&
-  validFaviconExtensions.some((extension) => url.endsWith(`.${extension}`));
+  url.includes("/") && validFaviconExtensions.some((extension) => url.endsWith(`.${extension}`));
 
 const useFaviconPreview = (url: string | null) => {
   const [faviconDebounced] = useDebouncedValue(url ?? "", 500);

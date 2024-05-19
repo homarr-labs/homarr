@@ -1,15 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
 import { getDefaultZIndex, Modal } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
 
@@ -76,19 +68,12 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
     [closeModal, state.current?.id],
   );
 
-  const activeModals = state.modals.filter(
-    (modal) => modal.id === state.current?.id || modal.props.keepMounted,
-  );
+  const activeModals = state.modals.filter((modal) => modal.id === state.current?.id || modal.props.keepMounted);
 
   return (
     <ModalContext.Provider value={{ openModalInner, closeModal }}>
       {activeModals.map((modal) => (
-        <ActiveModal
-          key={modal.id}
-          modal={modal}
-          state={state}
-          handleCloseModal={handleCloseModal}
-        />
+        <ActiveModal key={modal.id} modal={modal} state={state} handleCloseModal={handleCloseModal} />
       ))}
 
       {children}
@@ -112,14 +97,12 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
     setTimeout(() => setOpened(true), 0);
   }, []);
 
-  const { defaultTitle: _ignored, ...otherModalProps } =
-    modal.reference.modalProps;
+  const { defaultTitle: _ignored, ...otherModalProps } = modal.reference.modalProps;
 
   return (
     <Modal
       key={modal.id}
       zIndex={getDefaultZIndex("modal") + 1}
-      display={modal.id === state.current?.id ? undefined : "none"}
       style={{
         userSelect: modal.id === state.current?.id ? undefined : "none",
       }}
@@ -127,6 +110,9 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
         title: {
           fontSize: "1.25rem",
           fontWeight: 500,
+        },
+        inner: {
+          display: modal.id === state.current?.id ? undefined : "none",
         },
       }}
       trapFocus={modal.id === state.current?.id}
@@ -145,18 +131,13 @@ interface OpenModalOptions {
   title?: stringOrTranslation;
 }
 
-export const useModalAction = <TModal extends ModalDefinition>(
-  modal: TModal,
-) => {
+export const useModalAction = <TModal extends ModalDefinition>(modal: TModal) => {
   const context = useContext(ModalContext);
 
   if (!context) throw new Error("ModalContext is not provided");
 
   return {
-    openModal: (
-      innerProps: inferInnerProps<TModal>,
-      options: OpenModalOptions | void,
-    ) => {
+    openModal: (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void) => {
       context.openModalInner({ modal, innerProps, options: options ?? {} });
     },
   };
@@ -166,7 +147,6 @@ export const useConfirmModal = () => {
   const { openModal } = useModalAction(ConfirmModal);
 
   return {
-    openConfirmModal: (props: ConfirmModalProps) =>
-      openModal(props, { title: props.title }),
+    openConfirmModal: (props: ConfirmModalProps) => openModal(props, { title: props.title }),
   };
 };

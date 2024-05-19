@@ -1,20 +1,10 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
-import {
-  index,
-  int,
-  integer,
-  primaryKey,
-  sqliteTable,
-  text,
-} from "drizzle-orm/sqlite-core";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
+import { index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-} from "@homarr/definitions";
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -35,6 +25,9 @@ export const users = sqliteTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
+    onDelete: "set null",
+  }),
 });
 
 export const accounts = sqliteTable(
@@ -161,9 +154,7 @@ export const integrationSecrets = sqliteTable(
       columns: [integrationSecret.integrationId, integrationSecret.kind],
     }),
     kindIdx: index("integration_secret__kind_idx").on(integrationSecret.kind),
-    updatedAtIdx: index("integration_secret__updated_at_idx").on(
-      integrationSecret.updatedAt,
-    ),
+    updatedAtIdx: index("integration_secret__updated_at_idx").on(integrationSecret.updatedAt),
   }),
 );
 
@@ -255,6 +246,7 @@ export const items = sqliteTable("item", {
   width: int("width").notNull(),
   height: int("height").notNull(),
   options: text("options").default('{"json": {}}').notNull(), // empty superjson object
+  advancedOptions: text("advanced_options").default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const apps = sqliteTable("app", {
@@ -297,6 +289,11 @@ export const iconRepositories = sqliteTable("iconRepository", {
   slug: text("iconRepository_slug").notNull(),
 });
 
+export const serverSettings = sqliteTable("serverSetting", {
+  settingKey: text("key").notNull().unique().primaryKey(),
+  value: text("value").default('{"json": {}}').notNull(), // empty superjson object
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -320,12 +317,9 @@ export const iconRelations = relations(icons, ({ one }) => ({
   }),
 }));
 
-export const iconRepositoryRelations = relations(
-  iconRepositories,
-  ({ many }) => ({
-    icons: many(icons),
-  }),
-);
+export const iconRepositoryRelations = relations(iconRepositories, ({ many }) => ({
+  icons: many(icons),
+}));
 
 export const inviteRelations = relations(invites, ({ one }) => ({
   creator: one(users, {
@@ -362,58 +356,46 @@ export const groupRelations = relations(groups, ({ one, many }) => ({
   }),
 }));
 
-export const groupPermissionRelations = relations(
-  groupPermissions,
-  ({ one }) => ({
-    group: one(groups, {
-      fields: [groupPermissions.groupId],
-      references: [groups.id],
-    }),
+export const groupPermissionRelations = relations(groupPermissions, ({ one }) => ({
+  group: one(groups, {
+    fields: [groupPermissions.groupId],
+    references: [groups.id],
   }),
-);
+}));
 
-export const boardUserPermissionRelations = relations(
-  boardUserPermissions,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [boardUserPermissions.userId],
-      references: [users.id],
-    }),
-    board: one(boards, {
-      fields: [boardUserPermissions.boardId],
-      references: [boards.id],
-    }),
+export const boardUserPermissionRelations = relations(boardUserPermissions, ({ one }) => ({
+  user: one(users, {
+    fields: [boardUserPermissions.userId],
+    references: [users.id],
   }),
-);
+  board: one(boards, {
+    fields: [boardUserPermissions.boardId],
+    references: [boards.id],
+  }),
+}));
 
-export const boardGroupPermissionRelations = relations(
-  boardGroupPermissions,
-  ({ one }) => ({
-    group: one(groups, {
-      fields: [boardGroupPermissions.groupId],
-      references: [groups.id],
-    }),
-    board: one(boards, {
-      fields: [boardGroupPermissions.boardId],
-      references: [boards.id],
-    }),
+export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({ one }) => ({
+  group: one(groups, {
+    fields: [boardGroupPermissions.groupId],
+    references: [groups.id],
   }),
-);
+  board: one(boards, {
+    fields: [boardGroupPermissions.boardId],
+    references: [boards.id],
+  }),
+}));
 
 export const integrationRelations = relations(integrations, ({ many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
 }));
 
-export const integrationSecretRelations = relations(
-  integrationSecrets,
-  ({ one }) => ({
-    integration: one(integrations, {
-      fields: [integrationSecrets.integrationId],
-      references: [integrations.id],
-    }),
+export const integrationSecretRelations = relations(integrationSecrets, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [integrationSecrets.integrationId],
+    references: [integrations.id],
   }),
-);
+}));
 
 export const boardRelations = relations(boards, ({ many, one }) => ({
   sections: many(sections),
@@ -441,19 +423,16 @@ export const itemRelations = relations(items, ({ one, many }) => ({
   integrations: many(integrationItems),
 }));
 
-export const integrationItemRelations = relations(
-  integrationItems,
-  ({ one }) => ({
-    integration: one(integrations, {
-      fields: [integrationItems.integrationId],
-      references: [integrations.id],
-    }),
-    item: one(items, {
-      fields: [integrationItems.itemId],
-      references: [items.id],
-    }),
+export const integrationItemRelations = relations(integrationItems, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [integrationItems.integrationId],
+    references: [integrations.id],
   }),
-);
+  item: one(items, {
+    fields: [integrationItems.itemId],
+    references: [items.id],
+  }),
+}));
 
 export type User = InferSelectModel<typeof users>;
 export type Account = InferSelectModel<typeof accounts>;

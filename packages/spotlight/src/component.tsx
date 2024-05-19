@@ -3,10 +3,7 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { Center, Chip, Divider, Flex, Group, Text } from "@mantine/core";
-import {
-  Spotlight as MantineSpotlight,
-  SpotlightAction,
-} from "@mantine/spotlight";
+import { Spotlight as MantineSpotlight, SpotlightAction } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import { useAtomValue } from "jotai";
 
@@ -41,11 +38,7 @@ export const Spotlight = () => {
       const renderRoot =
         item.type === "link"
           ? (props: Record<string, unknown>) => (
-              <Link
-                href={prepareHref(item.href, query)}
-                target={item.openInNewTab ? "_blank" : undefined}
-                {...props}
-              />
+              <Link href={prepareHref(item.href, query)} target={item.openInNewTab ? "_blank" : undefined} {...props} />
             )
           : undefined;
 
@@ -60,14 +53,7 @@ export const Spotlight = () => {
             {item.icon && (
               <Center w={50} h={50}>
                 {typeof item.icon !== "string" && <item.icon size={24} />}
-                {typeof item.icon === "string" && (
-                  <img
-                    src={item.icon}
-                    alt={item.title}
-                    width={24}
-                    height={24}
-                  />
-                )}
+                {typeof item.icon === "string" && <img src={item.icon} alt={item.title} width={24} height={24} />}
               </Center>
             )}
 
@@ -94,11 +80,7 @@ export const Spotlight = () => {
   );
 
   return (
-    <MantineSpotlight.Root
-      query={query}
-      onQueryChange={setQuery}
-      store={spotlightStore}
-    >
+    <MantineSpotlight.Root query={query} onQueryChange={setQuery} store={spotlightStore}>
       <MantineSpotlight.Search
         placeholder={t("common.rtl", {
           value: t("common.search.placeholder"),
@@ -119,13 +101,7 @@ export const Spotlight = () => {
       </Group>
 
       <MantineSpotlight.ActionsList>
-        {items.length > 0 ? (
-          items
-        ) : (
-          <MantineSpotlight.Empty>
-            {t("common.search.nothingFound")}
-          </MantineSpotlight.Empty>
-        )}
+        {items.length > 0 ? items : <MantineSpotlight.Empty>{t("common.search.nothingFound")}</MantineSpotlight.Empty>}
       </MantineSpotlight.ActionsList>
     </MantineSpotlight.Root>
   );
@@ -135,10 +111,7 @@ const prepareHref = (href: string, query: string) => {
   return href.replace("%s", query);
 };
 
-const translateIfNecessary = (
-  value: string | ((t: TranslationFunction) => string),
-  t: TranslationFunction,
-) => {
+const translateIfNecessary = (value: string | ((t: TranslationFunction) => string), t: TranslationFunction) => {
   if (typeof value === "function") {
     return value(t);
   }
@@ -146,10 +119,7 @@ const translateIfNecessary = (
   return value;
 };
 
-const prepareAction = (
-  action: SpotlightActionData,
-  t: TranslationFunction,
-) => ({
+const prepareAction = (action: SpotlightActionData, t: TranslationFunction) => ({
   ...action,
   title: translateIfNecessary(action.title, t),
   description: translateIfNecessary(action.description, t),

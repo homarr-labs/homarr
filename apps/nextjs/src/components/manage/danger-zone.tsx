@@ -1,13 +1,5 @@
 import { Fragment } from "react";
-import {
-  Card,
-  CardSection,
-  Divider,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 
 import { getI18n } from "@homarr/translation/server";
 
@@ -49,11 +41,7 @@ interface DangerZoneItemProps {
   action: React.ReactNode;
 }
 
-export const DangerZoneItem = ({
-  label,
-  description,
-  action,
-}: DangerZoneItemProps) => {
+export const DangerZoneItem = ({ label, description, action }: DangerZoneItemProps) => {
   return (
     <Group justify="space-between" px="md">
       <Stack gap={0}>

@@ -2,12 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { objectEntries, objectKeys } from "../object";
 
-const testObjects = [
-  { a: 1, c: 3, b: 2 },
-  { a: 1, b: 2 },
-  { a: 1 },
-  {},
-] as const;
+const testObjects = [{ a: 1, c: 3, b: 2 }, { a: 1, b: 2 }, { a: 1 }, {}] as const;
 
 describe("objectKeys should return all keys of an object", () => {
   testObjects.forEach((obj) => {
