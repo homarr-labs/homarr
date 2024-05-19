@@ -3,10 +3,11 @@
 import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import type { validation, z } from "@homarr/validation";
+import type { z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 interface InnerProps {
   id: string;
@@ -23,10 +24,10 @@ export const BoardRenameModal = createModal<InnerProps>(
         void utils.board.getBoardByName.invalidate({
           name: innerProps.previousName,
         });
-        void utils.board.getDefaultBoard.invalidate();
+        void utils.board.getHomeBoard.invalidate();
       },
     });
-    const form = useForm<FormType>({
+    const form = useZodForm(validation.board.rename.omit({ id: true }), {
       initialValues: {
         name: innerProps.previousName,
       },

@@ -19,7 +19,7 @@ import type {
 } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -34,7 +34,7 @@ import {
   TestConnectionNoticeAlert,
   useTestConnectionDirty,
 } from "../_integration-test-connection";
-import { revalidatePathAction } from "../../../../revalidatePathAction";
+import { revalidatePathActionAsync } from "../../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof validation.integration.create>> & {
@@ -60,14 +60,13 @@ export const NewIntegrationForm = ({
     initialFormValue: initialFormValues,
   });
   const router = useRouter();
-  const form = useForm<FormType>({
+  const form = useZodForm(validation.integration.create.omit({ kind: true }), {
     initialValues: initialFormValues,
-    validate: zodResolver(validation.integration.create.omit({ kind: true })),
     onValuesChange,
   });
   const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: FormType) => {
     if (isDirty) return;
     await mutateAsync(
       {
@@ -80,7 +79,7 @@ export const NewIntegrationForm = ({
             title: t("integration.page.create.notification.success.title"),
             message: t("integration.page.create.notification.success.message"),
           });
-          void revalidatePathAction("/manage/integrations").then(() =>
+          void revalidatePathActionAsync("/manage/integrations").then(() =>
             router.push("/manage/integrations"),
           );
         },
@@ -95,16 +94,18 @@ export const NewIntegrationForm = ({
   };
 
   return (
-    <form onSubmit={form.onSubmit((value) => void handleSubmit(value))}>
+    <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
       <Stack>
         <TestConnectionNoticeAlert />
 
         <TextInput
+          withAsterisk
           label={t("integration.field.name.label")}
           {...form.getInputProps("name")}
         />
 
         <TextInput
+          withAsterisk
           label={t("integration.field.url.label")}
           {...form.getInputProps("url")}
         />
@@ -119,6 +120,7 @@ export const NewIntegrationForm = ({
             )}
             {form.values.secrets.map(({ kind }, index) => (
               <IntegrationSecretInput
+                withAsterisk
                 key={kind}
                 kind={kind}
                 {...form.getInputProps(`secrets.${index}.value`)}

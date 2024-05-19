@@ -10,6 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import { integrationSecretIcons } from "./_integration-secret-icons";
 
 interface IntegrationSecretInputProps {
+  withAsterisk?: boolean;
   label?: string;
   kind: IntegrationSecretKind;
   value?: string;

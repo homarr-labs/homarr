@@ -12,6 +12,7 @@ import {
   integrationItems,
   items,
   sections,
+  users,
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
@@ -34,14 +35,15 @@ import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 export const boardRouter = createTRPCRouter({
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
     const permissionsOfCurrentUserWhenPresent =
       await ctx.db.query.boardUserPermissions.findMany({
-        where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+        where: eq(boardUserPermissions.userId, userId ?? ""),
       });
 
     const permissionsOfCurrentUserGroupsWhenPresent =
       await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+        where: eq(groupMembers.userId, userId ?? ""),
         with: {
           group: {
             with: {
@@ -61,6 +63,11 @@ export const boardRouter = createTRPCRouter({
           )
           .flat(),
       );
+
+    const currentUserWhenPresent = await ctx.db.query.users.findFirst({
+      where: eq(users.id, userId ?? ""),
+    });
+
     const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
         id: true,
@@ -99,7 +106,10 @@ export const boardRouter = createTRPCRouter({
             boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
           ),
     });
-    return dbBoards;
+    return dbBoards.map((board) => ({
+      ...board,
+      isHome: currentUserWhenPresent?.homeBoardId === board.id,
+    }));
   }),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
@@ -129,7 +139,7 @@ export const boardRouter = createTRPCRouter({
         "full-access",
       );
 
-      await noBoardWithSimilarName(ctx.db, input.name, [input.id]);
+      await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
       await ctx.db
         .update(boards)
@@ -161,11 +171,34 @@ export const boardRouter = createTRPCRouter({
 
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
-  getDefaultBoard: publicProcedure.query(async ({ ctx }) => {
-    const boardWhere = eq(boards.name, "default");
+  setHomeBoard: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(
+        ctx,
+        eq(boards.id, input.id),
+        "board-view",
+      );
+
+      await ctx.db
+        .update(users)
+        .set({ homeBoardId: input.id })
+        .where(eq(users.id, ctx.session.user.id));
+    }),
+  getHomeBoard: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    const user = userId
+      ? await ctx.db.query.users.findFirst({
+          where: eq(users.id, userId),
+        })
+      : null;
+
+    const boardWhere = user?.homeBoardId
+      ? eq(boards.id, user.homeBoardId)
+      : eq(boards.name, "home");
     await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
-    return await getFullBoardWithWhere(
+    return await getFullBoardWithWhereAsync(
       ctx.db,
       boardWhere,
       ctx.session?.user.id ?? null,
@@ -177,14 +210,16 @@ export const boardRouter = createTRPCRouter({
       const boardWhere = eq(boards.name, input.name);
       await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
-      return await getFullBoardWithWhere(
+      return await getFullBoardWithWhereAsync(
         ctx.db,
         boardWhere,
         ctx.session?.user.id ?? null,
       );
     }),
   savePartialBoardSettings: protectedProcedure
-    .input(validation.board.savePartialSettings)
+    .input(
+      validation.board.savePartialSettings.and(z.object({ id: z.string() })),
+    )
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(
         ctx,
@@ -230,7 +265,7 @@ export const boardRouter = createTRPCRouter({
       );
 
       await ctx.db.transaction(async (transaction) => {
-        const dbBoard = await getFullBoardWithWhere(
+        const dbBoard = await getFullBoardWithWhereAsync(
           transaction,
           eq(boards.id, input.id),
           ctx.session.user.id,
@@ -526,7 +561,7 @@ export const boardRouter = createTRPCRouter({
     }),
 });
 
-const noBoardWithSimilarName = async (
+const noBoardWithSimilarNameAsync = async (
   db: Database,
   name: string,
   ignoredIds: string[] = [],
@@ -552,7 +587,7 @@ const noBoardWithSimilarName = async (
   }
 };
 
-const getFullBoardWithWhere = async (
+const getFullBoardWithWhereAsync = async (
   db: Database,
   where: SQL<unknown>,
   userId: string | null,

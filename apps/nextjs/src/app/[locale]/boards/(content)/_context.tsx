@@ -16,7 +16,7 @@ import { clientApi } from "@homarr/api/client";
 import { updateBoardName } from "./_client";
 
 const BoardContext = createContext<{
-  board: RouterOutputs["board"]["getDefaultBoard"];
+  board: RouterOutputs["board"]["getHomeBoard"];
   isReady: boolean;
   markAsReady: (id: string) => void;
 } | null>(null);

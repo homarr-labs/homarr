@@ -1,5 +1,6 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
+import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
 import {
   boolean,
   index,
@@ -36,6 +37,12 @@ export const users = mysqlTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  homeBoardId: varchar("homeBoardId", { length: 64 }).references(
+    (): AnyMySqlColumn => boards.id,
+    {
+      onDelete: "set null",
+    },
+  ),
 });
 
 export const accounts = mysqlTable(

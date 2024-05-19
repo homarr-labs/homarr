@@ -506,7 +506,7 @@ export default {
         preferences: "Your preferences",
         logout: "Logout",
         login: "Login",
-        navigateDefaultBoard: "Navigate to default board",
+        homeBoard: "Your home board",
         loggedOut: "Logged out",
       },
     },
@@ -515,6 +515,31 @@ export default {
     preview: {
       show: "Show preview",
       hide: "Hide preview",
+    },
+    zod: {
+      errors: {
+        default: "This field is invalid",
+        required: "This field is required",
+        string: {
+          startsWith: "This field must start with {startsWith}",
+          endsWith: "This field must end with {endsWith}",
+          includes: "This field must include {includes}",
+          invalidEmail: "This field must be a valid email",
+        },
+        tooSmall: {
+          string: "This field must be at least {minimum} characters long",
+          number: "This field must be greater than or equal to {minimum}",
+        },
+        tooBig: {
+          string: "This field must be at most {maximum} characters long",
+          number: "This field must be less than or equal to {maximum}",
+        },
+        custom: {
+          passwordsDoNotMatch: "Passwords do not match",
+          boardAlreadyExists: "A board with this name already exists",
+          // TODO: Add custom error messages
+        },
+      },
     },
   },
   section: {
@@ -963,6 +988,9 @@ export default {
         label: "Name",
       },
     },
+    content: {
+      metaTitle: "{boardName} board",
+    },
     setting: {
       title: "Settings for {boardName} board",
       section: {
@@ -1144,6 +1172,13 @@ export default {
           },
           settings: {
             label: "Settings",
+          },
+          setHomeBoard: {
+            label: "Set as your home board",
+            badge: {
+              label: "Home",
+              tooltip: "This board will show as your home board",
+            },
           },
           delete: {
             label: "Delete permanently",

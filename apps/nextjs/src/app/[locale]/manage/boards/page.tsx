@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ActionIcon,
+  Badge,
   Button,
   Card,
   CardSection,
@@ -13,14 +14,19 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDotsVertical, IconLock, IconWorld } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconHomeFilled,
+  IconLock,
+  IconWorld,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
-import { getBoardPermissions } from "~/components/board/permissions/server";
+import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -53,7 +59,8 @@ interface BoardCardProps {
 
 const BoardCard = async ({ board }: BoardCardProps) => {
   const t = await getScopedI18n("management.page.board");
-  const { hasChangeAccess: isMenuVisible } = await getBoardPermissions(board);
+  const { hasChangeAccess: isMenuVisible } =
+    await getBoardPermissionsAsync(board);
   const visibility = board.isPublic ? "public" : "private";
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
@@ -70,12 +77,27 @@ const BoardCard = async ({ board }: BoardCardProps) => {
             </Text>
           </Group>
 
-          {board.creator && (
-            <Group gap="xs">
-              <UserAvatar user={board.creator} size="sm" />
-              <Text>{board.creator?.name}</Text>
-            </Group>
-          )}
+          <Group>
+            {board.isHome && (
+              <Tooltip label={t("action.setHomeBoard.badge.tooltip")}>
+                <Badge
+                  tt="none"
+                  color="yellow"
+                  variant="light"
+                  leftSection={<IconHomeFilled size=".7rem" />}
+                >
+                  {t("action.setHomeBoard.badge.label")}
+                </Badge>
+              </Tooltip>
+            )}
+
+            {board.creator && (
+              <Group gap="xs">
+                <UserAvatar user={board.creator} size="sm" />
+                <Text>{board.creator?.name}</Text>
+              </Group>
+            )}
+          </Group>
         </Group>
       </CardSection>
 

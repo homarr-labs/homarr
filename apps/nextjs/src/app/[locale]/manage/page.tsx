@@ -5,6 +5,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { createMetaTitle } from "~/metadata";
 import { HeroBanner } from "./_components/hero-banner";
 
 interface LinkProps {
@@ -16,10 +17,9 @@ interface LinkProps {
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 

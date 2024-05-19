@@ -7,13 +7,13 @@ import "@xterm/xterm/css/xterm.css";
 import dynamic from "next/dynamic";
 
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
+import { createMetaTitle } from "~/metadata";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 

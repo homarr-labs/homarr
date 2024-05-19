@@ -17,9 +17,11 @@ import {
 } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { validation } from "@homarr/validation";
 
+import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -38,20 +40,30 @@ export const GeneralSettingsContent = ({ board }: Props) => {
 
   const { mutate: savePartialSettings, isPending } =
     useSavePartialSettingsMutation(board);
-  const form = useForm({
-    initialValues: {
-      pageTitle: board.pageTitle ?? "",
-      logoImageUrl: board.logoImageUrl ?? "",
-      metaTitle: board.metaTitle ?? "",
-      faviconImageUrl: board.faviconImageUrl ?? "",
+  const form = useZodForm(
+    validation.board.savePartialSettings
+      .pick({
+        pageTitle: true,
+        logoImageUrl: true,
+        metaTitle: true,
+        faviconImageUrl: true,
+      })
+      .required(),
+    {
+      initialValues: {
+        pageTitle: board.pageTitle ?? "",
+        logoImageUrl: board.logoImageUrl ?? "",
+        metaTitle: board.metaTitle ?? "",
+        faviconImageUrl: board.faviconImageUrl ?? "",
+      },
+      onValuesChange({ pageTitle }) {
+        updateBoard((previous) => ({
+          ...previous,
+          pageTitle,
+        }));
+      },
     },
-    onValuesChange({ pageTitle }) {
-      updateBoard((previous) => ({
-        ...previous,
-        pageTitle,
-      }));
-    },
-  });
+  );
 
   const metaTitleStatus = useMetaTitlePreview(form.values.metaTitle);
   const faviconStatus = useFaviconPreview(form.values.faviconImageUrl);
@@ -94,7 +106,9 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput
               label={t("board.field.metaTitle.label")}
-              placeholder="Default Board | Homarr"
+              placeholder={createMetaTitle(
+                t("board.content.metaTitle", { boardName: board.name }),
+              )}
               rightSection={<PendingOrInvalidIndicator {...metaTitleStatus} />}
               {...form.getInputProps("metaTitle")}
             />

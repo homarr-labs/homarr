@@ -5,7 +5,7 @@ import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -13,7 +13,7 @@ import {
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface UserProfileFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -23,7 +23,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.user.editProfile.useMutation({
     async onSettled() {
-      await revalidatePathAction("/manage/users");
+      await revalidatePathActionAsync("/manage/users");
     },
     onSuccess() {
       showSuccessNotification({
@@ -38,14 +38,11 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
       });
     },
   });
-  const form = useForm({
+  const form = useZodForm(validation.user.editProfile.omit({ id: true }), {
     initialValues: {
       name: user.name ?? "",
       email: user.email ?? "",
     },
-    validate: zodResolver(validation.user.editProfile.omit({ id: true })),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
   });
 
   const handleSubmit = useCallback(

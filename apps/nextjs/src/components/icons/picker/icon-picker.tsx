@@ -1,3 +1,4 @@
+import type { FocusEventHandler } from "react";
 import { useState } from "react";
 import {
   Combobox,
@@ -15,9 +16,18 @@ import { useScopedI18n } from "@homarr/translation/client";
 interface IconPickerProps {
   initialValue?: string;
   onChange: (iconUrl: string) => void;
+  error?: string | null;
+  onFocus?: FocusEventHandler;
+  onBlur?: FocusEventHandler;
 }
 
-export const IconPicker = ({ initialValue, onChange }: IconPickerProps) => {
+export const IconPicker = ({
+  initialValue,
+  onChange,
+  error,
+  onFocus,
+  onBlur,
+}: IconPickerProps) => {
   const [value, setValue] = useState<string>(initialValue ?? "");
   const [search, setSearch] = useState(initialValue ?? "");
 
@@ -76,13 +86,18 @@ export const IconPicker = ({ initialValue, onChange }: IconPickerProps) => {
             setSearch(event.currentTarget.value);
           }}
           onClick={() => combobox.openDropdown()}
-          onFocus={() => combobox.openDropdown()}
-          onBlur={() => {
+          onFocus={(event) => {
+            onFocus?.(event);
+            combobox.openDropdown();
+          }}
+          onBlur={(event) => {
+            onBlur?.(event);
             combobox.closeDropdown();
             setSearch(value || "");
           }}
           rightSectionPointerEvents="none"
           withAsterisk
+          error={error}
           label="Icon URL"
         />
       </Combobox.Target>
