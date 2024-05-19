@@ -19,6 +19,7 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useForm } from "@homarr/form";
 import type { defaultServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
+
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface AnalyticsSettingsProps {
