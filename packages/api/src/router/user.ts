@@ -44,11 +44,23 @@ export const userRouter = createTRPCRouter({
       });
     }
 
+    if (!dbInvite || dbInvite.expirationDate < new Date()) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Invalid invite",
+      });
+    }
+
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+
     await createUserAsync(ctx.db, input);
+
     // Delete invite as it's used
     await ctx.db.delete(invites).where(inviteWhere);
   }),
   create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+
     await createUserAsync(ctx.db, input);
   }),
   setProfileImage: protectedProcedure
@@ -148,6 +160,8 @@ export const userRouter = createTRPCRouter({
       });
     }
 
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.name, input.id);
+
     const emailDirty = input.email && user.email !== input.email;
     await ctx.db
       .update(users)
@@ -227,12 +241,28 @@ const createUserAsync = async (db: Database, input: z.infer<typeof validation.us
   const salt = await createSaltAsync();
   const hashedPassword = await hashPasswordAsync(input.password, salt);
 
+  const username = input.username.toLowerCase();
+
   const userId = createId();
   await db.insert(schema.users).values({
     id: userId,
-    name: input.username,
+    name: username,
     email: input.email,
     password: hashedPassword,
     salt,
+  });
+};
+
+const checkUsernameAlreadyTakenAndThrowAsync = async (db: Database, username: string, ignoreId?: string) => {
+  const user = await db.query.users.findFirst({
+    where: eq(users.name, username.toLowerCase()),
+  });
+
+  if (!user) return;
+  if (ignoreId && user.id === ignoreId) return;
+
+  throw new TRPCError({
+    code: "CONFLICT",
+    message: "Username already taken",
   });
 };

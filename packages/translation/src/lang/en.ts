@@ -36,6 +36,9 @@ export default {
         label: "Previous password",
       },
     },
+    error: {
+      usernameTaken: "Username already taken",
+    },
     action: {
       login: {
         label: "Login",
@@ -1218,6 +1221,9 @@ export default {
             },
             completed: {
               title: "User created",
+            },
+            error: {
+              title: "User creation failed",
             },
           },
           action: {

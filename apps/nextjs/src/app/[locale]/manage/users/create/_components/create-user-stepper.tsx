@@ -6,6 +6,7 @@ import { IconUserCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { validation, z } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
@@ -26,7 +27,16 @@ export const UserCreateStepperComponent = () => {
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
-  const { mutateAsync, isPending } = clientApi.user.create.useMutation();
+  const { mutateAsync, isPending } = clientApi.user.create.useMutation({
+    onError(error) {
+      showErrorNotification({
+        autoClose: false,
+        id: "create-user-error",
+        title: t("step.error.title"),
+        message: error.message,
+      });
+    },
+  });
 
   const generalForm = useZodForm(
     z.object({

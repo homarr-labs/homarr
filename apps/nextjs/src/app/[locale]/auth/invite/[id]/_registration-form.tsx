@@ -44,10 +44,15 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
           });
           router.push("/auth/login");
         },
-        onError() {
+        onError(error) {
+          const message =
+            error.data?.code === "CONFLICT"
+              ? t("error.usernameTaken")
+              : t("action.register.notification.error.message");
+
           showErrorNotification({
             title: t("action.register.notification.error.title"),
-            message: t("action.register.notification.error.message"),
+            message,
           });
         },
       },
