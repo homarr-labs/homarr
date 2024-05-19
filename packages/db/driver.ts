@@ -39,7 +39,7 @@ const initBetterSqlite = () => {
   database = drizzleSqlite(connection, {
     schema: sqliteSchema,
     logger: new WinstonDrizzleLogger(),
-  });
+  }) as unknown as never;
 };
 
 const initMySQL2 = () => {

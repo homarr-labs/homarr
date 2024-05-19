@@ -1,12 +1,6 @@
 import type { Column, InferSelectModel } from "drizzle-orm";
-import type {
-  ForeignKey as MysqlForeignKey,
-  MySqlTableWithColumns,
-} from "drizzle-orm/mysql-core";
-import type {
-  ForeignKey as SqliteForeignKey,
-  SQLiteTableWithColumns,
-} from "drizzle-orm/sqlite-core";
+import type { ForeignKey as MysqlForeignKey, MySqlTableWithColumns } from "drizzle-orm/mysql-core";
+import type { ForeignKey as SqliteForeignKey, SQLiteTableWithColumns } from "drizzle-orm/sqlite-core";
 import { expect, expectTypeOf, test } from "vitest";
 
 import { objectEntries } from "@homarr/common";
@@ -21,54 +15,44 @@ test("schemas should match", () => {
   expectTypeOf<MysqlConfig>().toEqualTypeOf<SqliteConfig>();
 
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
-    Object.entries(sqliteTable).forEach(
-      ([columnName, sqliteColumn]: [string, object]) => {
-        if (!("isUnique" in sqliteColumn)) return;
-        if (!("uniqueName" in sqliteColumn)) return;
-        if (!("primary" in sqliteColumn)) return;
+    Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {
+      if (!("isUnique" in sqliteColumn)) return;
+      if (!("uniqueName" in sqliteColumn)) return;
+      if (!("primary" in sqliteColumn)) return;
 
-        const mysqlTable = mysqlSchema[tableName];
+      const mysqlTable = mysqlSchema[tableName];
 
-        const mysqlColumn = mysqlTable[
-          columnName as keyof typeof mysqlTable
-        ] as object;
-        if (!("isUnique" in mysqlColumn)) return;
-        if (!("uniqueName" in mysqlColumn)) return;
-        if (!("primary" in mysqlColumn)) return;
+      const mysqlColumn = mysqlTable[columnName as keyof typeof mysqlTable] as object;
+      if (!("isUnique" in mysqlColumn)) return;
+      if (!("uniqueName" in mysqlColumn)) return;
+      if (!("primary" in mysqlColumn)) return;
 
-        expect(
-          sqliteColumn.isUnique,
-          `expect unique of column ${columnName} in table ${tableName} to be the same for both schemas`,
-        ).toEqual(mysqlColumn.isUnique);
-        expect(
-          sqliteColumn.uniqueName,
-          `expect uniqueName of column ${columnName} in table ${tableName} to be the same for both schemas`,
-        ).toEqual(mysqlColumn.uniqueName);
-        expect(
-          sqliteColumn.primary,
-          `expect primary of column ${columnName} in table ${tableName} to be the same for both schemas`,
-        ).toEqual(mysqlColumn.primary);
-      },
-    );
+      expect(
+        sqliteColumn.isUnique,
+        `expect unique of column ${columnName} in table ${tableName} to be the same for both schemas`,
+      ).toEqual(mysqlColumn.isUnique);
+      expect(
+        sqliteColumn.uniqueName,
+        `expect uniqueName of column ${columnName} in table ${tableName} to be the same for both schemas`,
+      ).toEqual(mysqlColumn.uniqueName);
+      expect(
+        sqliteColumn.primary,
+        `expect primary of column ${columnName} in table ${tableName} to be the same for both schemas`,
+      ).toEqual(mysqlColumn.primary);
+    });
 
     const mysqlTable = mysqlSchema[tableName];
-    const sqliteForeignKeys = sqliteTable[
-      Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable
-    ] as SqliteForeignKey[] | undefined;
-    const mysqlForeignKeys = mysqlTable[
-      Symbol.for("drizzle:MySqlInlineForeignKeys") as keyof typeof mysqlTable
-    ] as MysqlForeignKey[] | undefined;
+    const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
+      | SqliteForeignKey[]
+      | undefined;
+    const mysqlForeignKeys = mysqlTable[Symbol.for("drizzle:MySqlInlineForeignKeys") as keyof typeof mysqlTable] as
+      | MysqlForeignKey[]
+      | undefined;
 
     if (!sqliteForeignKeys && !mysqlForeignKeys) return;
 
-    expect(
-      mysqlForeignKeys,
-      `mysql foreign key for ${tableName} to be defined`,
-    ).toBeDefined();
-    expect(
-      sqliteForeignKeys,
-      `sqlite foreign key for ${tableName} to be defined`,
-    ).toBeDefined();
+    expect(mysqlForeignKeys, `mysql foreign key for ${tableName} to be defined`).toBeDefined();
+    expect(sqliteForeignKeys, `sqlite foreign key for ${tableName} to be defined`).toBeDefined();
 
     expect(
       sqliteForeignKeys!.length,
@@ -77,9 +61,7 @@ test("schemas should match", () => {
 
     sqliteForeignKeys?.forEach((sqliteForeignKey) => {
       sqliteForeignKey.getName();
-      const mysqlForeignKey = mysqlForeignKeys!.find(
-        (key) => key.getName() === sqliteForeignKey.getName(),
-      );
+      const mysqlForeignKey = mysqlForeignKeys!.find((key) => key.getName() === sqliteForeignKey.getName());
       expect(
         mysqlForeignKey,
         `expect foreign key ${sqliteForeignKey.getName()} to be defined in mysql schema`,
@@ -97,9 +79,7 @@ test("schemas should match", () => {
 
       sqliteForeignKey.reference().foreignColumns.forEach((column) => {
         expect(
-          mysqlForeignKey!
-            .reference()
-            .foreignColumns.map((column) => column.name),
+          mysqlForeignKey!.reference().foreignColumns.map((column) => column.name),
           `expect foreign key (${sqliteForeignKey.getName()}) columns to be the same for both schemas`,
         ).toContainEqual(column.name);
       });
@@ -127,9 +107,7 @@ type MysqlTables = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InferColumnConfig<T extends Column<any, object>> =
-  T extends Column<infer C, object>
-    ? Omit<C, "columnType" | "enumValues" | "driverParam">
-    : never;
+  T extends Column<infer C, object> ? Omit<C, "columnType" | "enumValues" | "driverParam"> : never;
 
 type SqliteConfig = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

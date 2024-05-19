@@ -15,18 +15,14 @@ interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
 }
 
-export const UserListComponent = ({
-  initialUserList,
-}: UserListComponentProps) => {
+export const UserListComponent = ({ initialUserList }: UserListComponentProps) => {
   const tUserList = useScopedI18n("management.page.user.list");
   const t = useI18n();
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
     initialData: initialUserList,
   });
 
-  const columns = useMemo<
-    MRT_ColumnDef<RouterOutputs["user"]["getAll"][number]>[]
-  >(
+  const columns = useMemo<MRT_ColumnDef<RouterOutputs["user"]["getAll"][number]>[]>(
     () => [
       {
         accessorKey: "name",

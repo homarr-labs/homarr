@@ -1,21 +1,8 @@
 import { useCallback } from "react";
 import type { ReactNode } from "react";
 import type { SelectProps } from "@mantine/core";
-import {
-  Button,
-  Flex,
-  Group,
-  Select,
-  TableTd,
-  TableTr,
-  Text,
-} from "@mantine/core";
-import {
-  IconCheck,
-  IconEye,
-  IconPencil,
-  IconSettings,
-} from "@tabler/icons-react";
+import { Button, Flex, Group, Select, TableTd, TableTr, Text } from "@mantine/core";
+import { IconCheck, IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
 
 import type { BoardPermission } from "@homarr/definitions";
 import { boardPermissions } from "@homarr/definitions";
@@ -38,12 +25,7 @@ interface BoardAccessSelectRowProps {
   onCountChange: OnCountChange;
 }
 
-export const BoardAccessSelectRow = ({
-  itemContent,
-  permission,
-  index,
-  onCountChange,
-}: BoardAccessSelectRowProps) => {
+export const BoardAccessSelectRow = ({ itemContent, permission, index, onCountChange }: BoardAccessSelectRowProps) => {
   const tRoot = useI18n();
   const tPermissions = useScopedI18n("board.setting.section.access.permission");
   const form = useFormContext();
@@ -61,11 +43,7 @@ export const BoardAccessSelectRow = ({
     <TableTr>
       <TableTd w={{ sm: 128, lg: 256 }}>{itemContent}</TableTd>
       <TableTd>
-        <Flex
-          direction={{ base: "column", xs: "row" }}
-          align={{ base: "end", xs: "center" }}
-          wrap="nowrap"
-        >
+        <Flex direction={{ base: "column", xs: "row" }} align={{ base: "end", xs: "center" }} wrap="nowrap">
           <Select
             allowDeselect={false}
             flex="1"
@@ -93,10 +71,7 @@ interface BoardAccessDisplayRowProps {
   permission: BoardPermission | "board-full";
 }
 
-export const BoardAccessDisplayRow = ({
-  itemContent,
-  permission,
-}: BoardAccessDisplayRowProps) => {
+export const BoardAccessDisplayRow = ({ itemContent, permission }: BoardAccessDisplayRowProps) => {
   const tPermissions = useScopedI18n("board.setting.section.access.permission");
   const Icon = icons[permission];
 
@@ -106,10 +81,7 @@ export const BoardAccessDisplayRow = ({
       <TableTd>
         <Group gap={0}>
           <Flex w={34} h={34} align="center" justify="center">
-            <Icon
-              size="1rem"
-              color="var(--input-section-color, var(--mantine-color-dimmed))"
-            />
+            <Icon size="1rem" color="var(--input-section-color, var(--mantine-color-dimmed))" />
           </Flex>
           <Text size="sm">{tPermissions(`item.${permission}.label`)}</Text>
         </Group>
@@ -131,9 +103,7 @@ const RenderOption: SelectProps["renderOption"] = ({ option, checked }) => {
     <Group flex="1" gap="xs" wrap="nowrap">
       <Icon {...iconProps} />
       {option.label}
-      {checked && (
-        <IconCheck style={{ marginInlineStart: "auto" }} {...iconProps} />
-      )}
+      {checked && <IconCheck style={{ marginInlineStart: "auto" }} {...iconProps} />}
     </Group>
   );
 };

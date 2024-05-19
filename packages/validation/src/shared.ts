@@ -38,9 +38,7 @@ export const commonItemSchema = z
   })
   .and(sharedItemSchema);
 
-const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(
-  itemSchema: TItemSchema,
-) =>
+const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
   z.object({
     id: z.string(),
     name: z.string(),
@@ -49,9 +47,7 @@ const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(
     items: z.array(itemSchema),
   });
 
-const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(
-  itemSchema: TItemSchema,
-) =>
+const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
   z.object({
     id: z.string(),
     kind: z.literal("empty"),
@@ -59,6 +55,5 @@ const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(
     items: z.array(itemSchema),
   });
 
-export const createSectionSchema = <TItemSchema extends z.ZodTypeAny>(
-  itemSchema: TItemSchema,
-) => z.union([createCategorySchema(itemSchema), createEmptySchema(itemSchema)]);
+export const createSectionSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
+  z.union([createCategorySchema(itemSchema), createEmptySchema(itemSchema)]);

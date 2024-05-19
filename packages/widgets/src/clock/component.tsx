@@ -13,37 +13,19 @@ dayjs.extend(advancedFormat);
 dayjs.extend(utc);
 dayjs.extend(timezones);
 
-export default function ClockWidget({
-  options,
-}: WidgetComponentProps<"clock">) {
+export default function ClockWidget({ options }: WidgetComponentProps<"clock">) {
   const secondsFormat = options.showSeconds ? ":ss" : "";
-  const timeFormat = options.is24HourFormat
-    ? `HH:mm${secondsFormat}`
-    : `h:mm${secondsFormat} A`;
+  const timeFormat = options.is24HourFormat ? `HH:mm${secondsFormat}` : `h:mm${secondsFormat} A`;
   const dateFormat = options.dateFormat;
-  const timezone = options.useCustomTimezone
-    ? options.timezone
-    : Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
   return (
-    <Flex
-      classNames={{ root: "clock-wrapper" }}
-      align="center"
-      justify="center"
-      h="100%"
-    >
+    <Flex classNames={{ root: "clock-wrapper" }} align="center" justify="center" h="100%">
       <Stack classNames={{ root: "clock-text-stack" }} align="center" gap="xs">
         {options.customTitleToggle && (
-          <Text classNames={{ root: "clock-customTitle-text" }}>
-            {options.customTitle}
-          </Text>
+          <Text classNames={{ root: "clock-customTitle-text" }}>{options.customTitle}</Text>
         )}
-        <Text
-          classNames={{ root: "clock-time-text" }}
-          fw={700}
-          size="2.125rem"
-          lh="1"
-        >
+        <Text classNames={{ root: "clock-time-text" }} fw={700} size="2.125rem" lh="1">
           {dayjs(time).tz(timezone).format(timeFormat)}
         </Text>
         {options.showDate && (
@@ -64,10 +46,7 @@ const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
   const [time, setTime] = useState(new Date());
   const timeoutRef = useRef<NodeJS.Timeout>();
   const intervalRef = useRef<NodeJS.Timeout>();
-  const intervalMultiplier = useMemo(
-    () => (showSeconds ? 1 : 60),
-    [showSeconds],
-  );
+  const intervalMultiplier = useMemo(() => (showSeconds ? 1 : 60), [showSeconds]);
 
   useEffect(() => {
     setTime(new Date());
@@ -79,8 +58,7 @@ const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
           setTime(new Date());
         }, intervalMultiplier * 1000);
       },
-      intervalMultiplier * 1000 -
-        (1000 * (showSeconds ? 0 : dayjs().second()) + dayjs().millisecond()),
+      intervalMultiplier * 1000 - (1000 * (showSeconds ? 0 : dayjs().second()) + dayjs().millisecond()),
     );
 
     return () => {

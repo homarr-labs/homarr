@@ -14,12 +14,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import {
-  IconDotsVertical,
-  IconHomeFilled,
-  IconLock,
-  IconWorld,
-} from "@tabler/icons-react";
+import { IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -59,8 +54,7 @@ interface BoardCardProps {
 
 const BoardCard = async ({ board }: BoardCardProps) => {
   const t = await getScopedI18n("management.page.board");
-  const { hasChangeAccess: isMenuVisible } =
-    await getBoardPermissionsAsync(board);
+  const { hasChangeAccess: isMenuVisible } = await getBoardPermissionsAsync(board);
   const visibility = board.isPublic ? "public" : "private";
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
@@ -80,12 +74,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
           <Group>
             {board.isHome && (
               <Tooltip label={t("action.setHomeBoard.badge.tooltip")}>
-                <Badge
-                  tt="none"
-                  color="yellow"
-                  variant="light"
-                  leftSection={<IconHomeFilled size=".7rem" />}
-                >
+                <Badge tt="none" color="yellow" variant="light" leftSection={<IconHomeFilled size=".7rem" />}>
                   {t("action.setHomeBoard.badge.label")}
                 </Badge>
               </Tooltip>
@@ -103,12 +92,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
 
       <CardSection p="sm">
         <Group wrap="nowrap">
-          <Button
-            component={Link}
-            href={`/boards/${board.name}`}
-            variant="default"
-            fullWidth
-          >
+          <Button component={Link} href={`/boards/${board.name}`} variant="default" fullWidth>
             {t("action.open.label")}
           </Button>
           {isMenuVisible && (

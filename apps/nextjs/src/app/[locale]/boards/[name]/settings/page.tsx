@@ -1,14 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
-import {
-  AccordionControl,
-  AccordionItem,
-  AccordionPanel,
-  Container,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { AccordionControl, AccordionItem, AccordionPanel, Container, Stack, Text, Title } from "@mantine/core";
 import {
   IconAlertTriangle,
   IconBrush,
@@ -69,10 +61,7 @@ const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
   }
 };
 
-export default async function BoardSettingsPage({
-  params,
-  searchParams,
-}: Props) {
+export default async function BoardSettingsPage({ params, searchParams }: Props) {
   const { board, permissions } = await getBoardAndPermissionsAsync(params);
   const { hasFullAccess } = await getBoardPermissionsAsync(board);
   const t = await getScopedI18n("board.setting");
@@ -81,10 +70,7 @@ export default async function BoardSettingsPage({
     <Container>
       <Stack>
         <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
-        <ActiveTabAccordion
-          variant="separated"
-          defaultValue={searchParams.tab ?? "general"}
-        >
+        <ActiveTabAccordion variant="separated" defaultValue={searchParams.tab ?? "general"}>
           <AccordionItemFor value="general" icon={IconSettings}>
             <GeneralSettingsContent board={board} />
           </AccordionItemFor>
@@ -103,17 +89,9 @@ export default async function BoardSettingsPage({
           {hasFullAccess && (
             <>
               <AccordionItemFor value="access" icon={IconUser}>
-                <AccessSettingsContent
-                  board={board}
-                  initialPermissions={permissions}
-                />
+                <AccessSettingsContent board={board} initialPermissions={permissions} />
               </AccordionItemFor>
-              <AccordionItemFor
-                value="dangerZone"
-                icon={IconAlertTriangle}
-                danger
-                noPadding
-              >
+              <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
                 <DangerZoneSettingsContent />
               </AccordionItemFor>
             </>
@@ -131,13 +109,7 @@ type AccordionItemForProps = PropsWithChildren<{
   noPadding?: boolean;
 }>;
 
-const AccordionItemFor = async ({
-  value,
-  children,
-  icon: Icon,
-  danger,
-  noPadding,
-}: AccordionItemForProps) => {
+const AccordionItemFor = async ({ value, children, icon: Icon, danger, noPadding }: AccordionItemForProps) => {
   const t = await getScopedI18n("board.setting.section");
   return (
     <AccordionItem
@@ -158,13 +130,7 @@ const AccordionItemFor = async ({
           {t(`${value}.title`)}
         </Text>
       </AccordionControl>
-      <AccordionPanel
-        styles={
-          noPadding
-            ? { content: { paddingRight: 0, paddingLeft: 0 } }
-            : undefined
-        }
-      >
+      <AccordionPanel styles={noPadding ? { content: { paddingRight: 0, paddingLeft: 0 } } : undefined}>
         {children}
       </AccordionPanel>
     </AccordionItem>

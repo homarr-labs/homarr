@@ -67,14 +67,8 @@ const useActions = (category: CategorySection) => {
 };
 
 const useEditModeActions = (category: CategorySection) => {
-  const {
-    addCategoryAbove,
-    addCategoryBelow,
-    moveCategoryUp,
-    moveCategoryDown,
-    edit,
-    remove,
-  } = useCategoryMenuActions(category);
+  const { addCategoryAbove, addCategoryBelow, moveCategoryUp, moveCategoryDown, edit, remove } =
+    useCategoryMenuActions(category);
 
   return [
     {

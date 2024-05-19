@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardSection,
-  Divider,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { objectKeys } from "@homarr/common";
@@ -15,11 +7,7 @@ import type { GroupPermissionKey } from "@homarr/definitions";
 import { groupPermissions } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
-import {
-  PermissionForm,
-  PermissionSwitch,
-  SaveAffix,
-} from "./_group-permission-form";
+import { PermissionForm, PermissionSwitch, SaveAffix } from "./_group-permission-form";
 
 interface GroupPermissionsPageProps {
   params: {
@@ -27,9 +15,7 @@ interface GroupPermissionsPageProps {
   };
 }
 
-export default async function GroupPermissionsPage({
-  params,
-}: GroupPermissionsPageProps) {
+export default async function GroupPermissionsPage({ params }: GroupPermissionsPageProps) {
   const group = await api.group.getById({ id: params.id });
   const tPermissions = await getScopedI18n("group.permission");
   const t = await getI18n();
@@ -99,10 +85,7 @@ const PermissionCard = async ({ group, isDanger }: PermissionCardProps) => {
   );
 };
 
-const createGroupPermissionKey = (
-  group: keyof typeof groupPermissions,
-  permission: string,
-): GroupPermissionKey => {
+const createGroupPermissionKey = (group: keyof typeof groupPermissions, permission: string): GroupPermissionKey => {
   if (typeof groupPermissions[group] === "boolean") {
     return group as GroupPermissionKey;
   }

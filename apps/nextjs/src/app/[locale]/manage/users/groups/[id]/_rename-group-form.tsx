@@ -5,10 +5,7 @@ import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
@@ -64,10 +61,7 @@ export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput
-          label={t("group.field.name")}
-          {...form.getInputProps("name")}
-        />
+        <TextInput label={t("group.field.name")} {...form.getInputProps("name")} />
 
         <Group justify="end">
           <Button type="submit" color="teal" loading={isPending}>

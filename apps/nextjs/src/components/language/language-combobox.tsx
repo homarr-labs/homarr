@@ -51,11 +51,7 @@ export const LanguageCombobox = () => {
         <Combobox.Options>
           {supportedLanguages.map((languageKey) => (
             <Combobox.Option value={languageKey} key={languageKey}>
-              <OptionItem
-                currentLocale={currentLocale}
-                localeKey={languageKey}
-                showCheck
-              />
+              <OptionItem currentLocale={currentLocale} localeKey={languageKey} showCheck />
             </Combobox.Option>
           ))}
         </Combobox.Options>
@@ -76,9 +72,7 @@ const OptionItem = ({
   return (
     <Group wrap="nowrap" justify="space-between">
       <Group wrap="nowrap">
-        <span
-          className={`fi fi-${localeAttributes[localeKey].flagIcon} ${classes.flagIcon}`}
-        ></span>
+        <span className={`fi fi-${localeAttributes[localeKey].flagIcon} ${classes.flagIcon}`}></span>
         <Group wrap="nowrap" gap="xs">
           <Text>{localeAttributes[localeKey].name}</Text>
           <Text size="xs" c="dimmed" inherit>
@@ -86,9 +80,7 @@ const OptionItem = ({
           </Text>
         </Group>
       </Group>
-      {showCheck && localeKey === currentLocale && (
-        <IconCheck color="currentColor" size={16} />
-      )}
+      {showCheck && localeKey === currentLocale && <IconCheck color="currentColor" size={16} />}
     </Group>
   );
 };

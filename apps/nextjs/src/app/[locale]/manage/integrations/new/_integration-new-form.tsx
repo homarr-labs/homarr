@@ -3,37 +3,20 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Button,
-  Fieldset,
-  Group,
-  SegmentedControl,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { Button, Fieldset, Group, SegmentedControl, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import type {
-  IntegrationKind,
-  IntegrationSecretKind,
-} from "@homarr/definitions";
+import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { IntegrationSecretInput } from "../_integration-secret-inputs";
-import {
-  TestConnection,
-  TestConnectionNoticeAlert,
-  useTestConnectionDirty,
-} from "../_integration-test-connection";
+import { TestConnection, TestConnectionNoticeAlert, useTestConnectionDirty } from "../_integration-test-connection";
 import { revalidatePathActionAsync } from "../../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
@@ -42,9 +25,7 @@ interface NewIntegrationFormProps {
   };
 }
 
-export const NewIntegrationForm = ({
-  searchParams,
-}: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(searchParams.kind);
   const initialFormValues = {
@@ -79,9 +60,7 @@ export const NewIntegrationForm = ({
             title: t("integration.page.create.notification.success.title"),
             message: t("integration.page.create.notification.success.message"),
           });
-          void revalidatePathActionAsync("/manage/integrations").then(() =>
-            router.push("/manage/integrations"),
-          );
+          void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
         },
         onError: () => {
           showErrorNotification({
@@ -98,26 +77,13 @@ export const NewIntegrationForm = ({
       <Stack>
         <TestConnectionNoticeAlert />
 
-        <TextInput
-          withAsterisk
-          label={t("integration.field.name.label")}
-          {...form.getInputProps("name")}
-        />
+        <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
 
-        <TextInput
-          withAsterisk
-          label={t("integration.field.url.label")}
-          {...form.getInputProps("url")}
-        />
+        <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
-            {secretKinds.length > 1 && (
-              <SecretKindsSegmentedControl
-                secretKinds={secretKinds}
-                form={form}
-              />
-            )}
+            {secretKinds.length > 1 && <SecretKindsSegmentedControl secretKinds={secretKinds} form={form} />}
             {form.values.secrets.map(({ kind }, index) => (
               <IntegrationSecretInput
                 withAsterisk
@@ -141,11 +107,7 @@ export const NewIntegrationForm = ({
           />
 
           <Group>
-            <Button
-              variant="default"
-              component={Link}
-              href="/manage/integrations"
-            >
+            <Button variant="default" component={Link} href="/manage/integrations">
               {t("common.action.backToOverview")}
             </Button>
             <Button type="submit" loading={isPending} disabled={isDirty}>
@@ -163,10 +125,7 @@ interface SecretKindsSegmentedControlProps {
   form: UseFormReturnType<FormType, (values: FormType) => FormType>;
 }
 
-const SecretKindsSegmentedControl = ({
-  secretKinds,
-  form,
-}: SecretKindsSegmentedControlProps) => {
+const SecretKindsSegmentedControl = ({ secretKinds, form }: SecretKindsSegmentedControlProps) => {
   const t = useScopedI18n("integration.secrets");
 
   const secretKindGroups = secretKinds.map((kinds) => ({
@@ -186,13 +145,7 @@ const SecretKindsSegmentedControl = ({
     [form],
   );
 
-  return (
-    <SegmentedControl
-      fullWidth
-      data={secretKindGroups}
-      onChange={onChange}
-    ></SegmentedControl>
-  );
+  return <SegmentedControl fullWidth data={secretKindGroups} onChange={onChange}></SegmentedControl>;
 };
 
 type FormType = Omit<z.infer<typeof validation.integration.create>, "kind">;

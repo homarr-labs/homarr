@@ -5,12 +5,7 @@ import { useMemo } from "react";
 import type { RefObject } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import {
-  IconDotsVertical,
-  IconLayoutKanban,
-  IconPencil,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
 
@@ -43,12 +38,7 @@ export const SectionContent = ({ items, refs }: Props) => {
   return (
     <>
       {items.map((item) => (
-        <BoardItem
-          key={item.id}
-          refs={refs}
-          item={item}
-          opacity={board.opacity}
-        />
+        <BoardItem key={item.id} refs={refs} item={item} opacity={board.opacity} />
       ))}
     </>
   );
@@ -137,18 +127,9 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
   const isEditMode = useAtomValue(editModeAtom);
-  const {
-    updateItemOptions,
-    updateItemAdvancedOptions,
-    updateItemIntegrations,
-    removeItem,
-  } = useItemActions();
-  const { data: integrationData, isPending } =
-    clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(
-    () => widgetImports[item.kind].definition,
-    [item.kind],
-  );
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, removeItem } = useItemActions();
+  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
 
   if (!isEditMode || isPending) return null;
 
@@ -177,9 +158,7 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
       integrationData: (integrationData ?? []).filter(
         (integration) =>
           "supportedIntegrations" in currentDefinition &&
-          (currentDefinition.supportedIntegrations as string[]).some(
-            (kind) => kind === integration.kind,
-          ),
+          (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
     });
@@ -198,34 +177,19 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon
-          variant="transparent"
-          pos="absolute"
-          top={offset}
-          right={offset}
-          style={{ zIndex: 1 }}
-        >
+        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 1 }}>
           <IconDotsVertical />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
         <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
-        <Menu.Item
-          leftSection={<IconPencil size={16} />}
-          onClick={openEditModal}
-        >
+        <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
           {tItem("action.edit")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>
-          {tItem("action.move")}
-        </Menu.Item>
+        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>{tItem("action.move")}</Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
-        <Menu.Item
-          c="red.6"
-          leftSection={<IconTrash size={16} />}
-          onClick={openRemoveModal}
-        >
+        <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
           {tItem("action.remove")}
         </Menu.Item>
       </Menu.Dropdown>

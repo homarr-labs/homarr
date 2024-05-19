@@ -23,12 +23,7 @@ const ClientSideTerminalComponent = dynamic(() => import("./terminal"), {
 
 export default function LogsManagementPage() {
   return (
-    <Box
-      style={{ borderRadius: 6 }}
-      h={fullHeightWithoutHeaderAndFooter}
-      p="md"
-      bg="black"
-    >
+    <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
       <ClientSideTerminalComponent />
     </Box>
   );

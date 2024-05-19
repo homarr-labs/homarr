@@ -18,14 +18,11 @@ interface DeleteUserButtonProps {
 export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
   const t = useI18n();
   const router = useRouter();
-  const { mutateAsync: mutateUserDeletionAsync } =
-    clientApi.user.delete.useMutation({
-      async onSuccess() {
-        await revalidatePathActionAsync("/manage/users").then(() =>
-          router.push("/manage/users"),
-        );
-      },
-    });
+  const { mutateAsync: mutateUserDeletionAsync } = clientApi.user.delete.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/users").then(() => router.push("/manage/users"));
+    },
+  });
   const { openConfirmModal } = useConfirmModal();
 
   const handleDelete = useCallback(

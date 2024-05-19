@@ -42,10 +42,7 @@ export const createBoardLayout = <TParams extends Params>({
     });
 
     return (
-      <GlobalItemServerDataRunner
-        board={initialBoard}
-        shouldRun={isBoardContentPage}
-      >
+      <GlobalItemServerDataRunner board={initialBoard} shouldRun={isBoardContentPage}>
         <BoardProvider initialBoard={initialBoard}>
           <BoardMantineProvider>
             <CustomCss />

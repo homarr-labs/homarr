@@ -37,11 +37,7 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
   }, [mutateAsync, boardNames, openModal]);
 
   return (
-    <Button
-      leftSection={<IconCategoryPlus size="1rem" />}
-      onClick={onClick}
-      loading={isPending}
-    >
+    <Button leftSection={<IconCategoryPlus size="1rem" />} onClick={onClick} loading={isPending}>
       {t("management.page.board.action.new.label")}
     </Button>
   );

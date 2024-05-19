@@ -9,12 +9,7 @@ interface LogoProps {
   shouldUseNextImage?: boolean;
 }
 
-export const Logo = ({
-  size = 60,
-  shouldUseNextImage = false,
-  src,
-  alt,
-}: LogoProps) =>
+export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoProps) =>
   shouldUseNextImage ? (
     <Image src={src} alt={alt} width={size} height={size} />
   ) : (
@@ -36,22 +31,13 @@ export interface LogoWithTitleProps {
   hideTitleOnMobile?: boolean;
 }
 
-export const LogoWithTitle = ({
-  size,
-  title,
-  image,
-  hideTitleOnMobile,
-}: LogoWithTitleProps) => {
+export const LogoWithTitle = ({ size, title, image, hideTitleOnMobile }: LogoWithTitleProps) => {
   const { logoSize, titleOrder } = logoWithTitleSizes[size];
 
   return (
     <Group gap="xs" wrap="nowrap">
       <Logo {...image} size={logoSize} />
-      <Title
-        order={titleOrder}
-        visibleFrom={hideTitleOnMobile ? "sm" : undefined}
-        textWrap="nowrap"
-      >
+      <Title order={titleOrder} visibleFrom={hideTitleOnMobile ? "sm" : undefined} textWrap="nowrap">
         {title}
       </Title>
     </Group>

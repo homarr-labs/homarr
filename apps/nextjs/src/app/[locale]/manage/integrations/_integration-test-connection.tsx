@@ -6,10 +6,7 @@ import { IconCheck, IconInfoCircle, IconX } from "@tabler/icons-react";
 
 import type { RouterInputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 interface UseTestConnectionDirtyProps {
@@ -20,10 +17,7 @@ interface UseTestConnectionDirtyProps {
   };
 }
 
-export const useTestConnectionDirty = ({
-  defaultDirty,
-  initialFormValue,
-}: UseTestConnectionDirtyProps) => {
+export const useTestConnectionDirty = ({ defaultDirty, initialFormValue }: UseTestConnectionDirtyProps) => {
   const [isDirty, setIsDirty] = useState(defaultDirty);
   const prevFormValueRef = useRef(initialFormValue);
 
@@ -36,10 +30,7 @@ export const useTestConnectionDirty = ({
         prevFormValueRef.current.url !== values.url ||
         !prevFormValueRef.current.secrets
           .map((secret) => secret.value)
-          .every(
-            (secretValue, index) =>
-              values.secrets[index]?.value === secretValue,
-          )
+          .every((secretValue, index) => values.secrets[index]?.value === secretValue)
       ) {
         setIsDirty(true);
         return;
@@ -62,14 +53,9 @@ interface TestConnectionProps {
   integration: RouterInputs["integration"]["testConnection"] & { name: string };
 }
 
-export const TestConnection = ({
-  integration,
-  removeDirty,
-  isDirty,
-}: TestConnectionProps) => {
+export const TestConnection = ({ integration, removeDirty, isDirty }: TestConnectionProps) => {
   const t = useScopedI18n("integration.testConnection");
-  const { mutateAsync, ...mutation } =
-    clientApi.integration.testConnection.useMutation();
+  const { mutateAsync, ...mutation } = clientApi.integration.testConnection.useMutation();
 
   return (
     <Group>
@@ -125,13 +111,7 @@ interface TestConnectionIconProps {
   size: number;
 }
 
-const TestConnectionIcon = ({
-  isDirty,
-  isPending,
-  isSuccess,
-  isError,
-  size,
-}: TestConnectionIconProps) => {
+const TestConnectionIcon = ({ isDirty, isPending, isSuccess, isError, size }: TestConnectionIconProps) => {
   if (isPending) return <Loader color="blue" size={size} />;
   if (isDirty) return null;
   if (isSuccess) return <IconCheck size={size} stroke={1.5} color="green" />;
@@ -142,12 +122,7 @@ const TestConnectionIcon = ({
 export const TestConnectionNoticeAlert = () => {
   const t = useI18n();
   return (
-    <Alert
-      variant="light"
-      color="yellow"
-      title="Test Connection"
-      icon={<IconInfoCircle />}
-    >
+    <Alert variant="light" color="yellow" title="Test Connection" icon={<IconInfoCircle />}>
       {t("integration.testConnection.alertNotice")}
     </Alert>
   );

@@ -218,10 +218,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
@@ -261,10 +258,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({

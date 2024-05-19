@@ -1,15 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import {
-  Center,
-  Flex,
-  Loader,
-  Stack,
-  Text,
-  Tooltip,
-  UnstyledButton,
-} from "@mantine/core";
+import { Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconDeviceDesktopX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -19,13 +11,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
 
-export default function AppWidget({
-  options,
-  serverData,
-  isEditMode,
-  width,
-  height,
-}: WidgetComponentProps<"app">) {
+export default function AppWidget({ options, serverData, isEditMode, width, height }: WidgetComponentProps<"app">) {
   const t = useScopedI18n("widget.app");
   const isQueryEnabled = Boolean(options.appId);
   const {
@@ -90,11 +76,7 @@ export default function AppWidget({
   }
 
   return (
-    <AppLink
-      href={app?.href ?? ""}
-      openInNewTab={options.openInNewTab}
-      enabled={Boolean(app?.href) && !isEditMode}
-    >
+    <AppLink href={app?.href ?? ""} openInNewTab={options.openInNewTab} enabled={Boolean(app?.href) && !isEditMode}>
       <Flex align="center" justify="center" h="100%">
         <Tooltip.Floating
           label={app?.description}
@@ -118,11 +100,7 @@ export default function AppWidget({
                 {app?.name}
               </Text>
             )}
-            <img
-              src={app?.iconUrl}
-              alt={app?.name}
-              className={classes.appIcon}
-            />
+            <img src={app?.iconUrl} alt={app?.name} className={classes.appIcon} />
           </Flex>
         </Tooltip.Floating>
       </Flex>
@@ -136,20 +114,9 @@ interface AppLinkProps {
   enabled: boolean;
 }
 
-const AppLink = ({
-  href,
-  openInNewTab,
-  enabled,
-  children,
-}: PropsWithChildren<AppLinkProps>) =>
+const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
   enabled ? (
-    <UnstyledButton
-      component="a"
-      href={href}
-      target={openInNewTab ? "_blank" : undefined}
-      h="100%"
-      w="100%"
-    >
+    <UnstyledButton component="a" href={href} target={openInNewTab ? "_blank" : undefined} h="100%" w="100%">
       {children}
     </UnstyledButton>
   ) : (

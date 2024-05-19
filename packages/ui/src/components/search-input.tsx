@@ -12,10 +12,7 @@ interface SearchInputProps {
   placeholder: string;
 }
 
-export const SearchInput = ({
-  placeholder,
-  defaultValue,
-}: SearchInputProps) => {
+export const SearchInput = ({ placeholder, defaultValue }: SearchInputProps) => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { replace } = useRouter();
   const pathName = usePathname();

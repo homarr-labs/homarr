@@ -6,10 +6,7 @@ import { IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { revalidatePathActionAsync } from "../../../revalidatePathAction";
@@ -19,10 +16,7 @@ interface DeleteIntegrationActionButtonProps {
   integration: { id: string; name: string };
 }
 
-export const DeleteIntegrationActionButton = ({
-  count,
-  integration,
-}: DeleteIntegrationActionButtonProps) => {
+export const DeleteIntegrationActionButton = ({ count, integration }: DeleteIntegrationActionButtonProps) => {
   const t = useScopedI18n("integration.page.delete");
   const router = useRouter();
   const { openConfirmModal } = useConfirmModal();

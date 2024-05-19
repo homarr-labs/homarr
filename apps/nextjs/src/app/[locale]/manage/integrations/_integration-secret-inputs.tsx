@@ -42,10 +42,7 @@ const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   );
 };
 
-const PrivateSecretInput = ({
-  kind,
-  ...props
-}: IntegrationSecretInputProps) => {
+const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   const t = useI18n();
   const Icon = integrationSecretIcons[kind];
 

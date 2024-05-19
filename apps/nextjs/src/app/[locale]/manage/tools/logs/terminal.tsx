@@ -16,9 +16,7 @@ export default function TerminalComponent() {
   const terminalRef = useRef<Terminal>();
   clientApi.log.subscribe.useSubscription(undefined, {
     onData(data) {
-      terminalRef.current?.writeln(
-        `${data.timestamp} ${data.level} ${data.message}`,
-      );
+      terminalRef.current?.writeln(`${data.timestamp} ${data.level} ${data.message}`);
       terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
     },
     onError(err) {
@@ -55,12 +53,5 @@ export default function TerminalComponent() {
       canvasAddon.dispose();
     };
   }, []);
-  return (
-    <Box
-      ref={ref}
-      id="terminal"
-      className={classes.outerTerminal}
-      h="100%"
-    ></Box>
-  );
+  return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
 }

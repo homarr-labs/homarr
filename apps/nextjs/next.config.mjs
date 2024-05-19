@@ -10,19 +10,9 @@ const config = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   experimental: {
-    optimizePackageImports: [
-      "@mantine/core",
-      "@mantine/hooks",
-      "@tabler/icons-react",
-    ],
+    optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
   },
-  transpilePackages: [
-    "@homarr/ui",
-    "@homarr/notifications",
-    "@homarr/modals",
-    "@homarr/spotlight",
-    "@homarr/widgets",
-  ],
+  transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
     domains: ["cdn.jsdelivr.net"],
   },
