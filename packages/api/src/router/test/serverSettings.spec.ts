@@ -5,10 +5,7 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/db";
 import { serverSettings } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
-import {
-  defaultServerSettings,
-  defaultServerSettingsKeys,
-} from "@homarr/server-settings";
+import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import { serverSettingsRouter } from "../serverSettings";
 

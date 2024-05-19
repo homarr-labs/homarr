@@ -4,19 +4,14 @@ import { db } from "@homarr/db";
 import { serverSettings } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 
-import {
-  defaultServerSettings,
-  defaultServerSettingsKeys,
-} from "../../../packages/server-settings";
+import { defaultServerSettings, defaultServerSettingsKeys } from "../../../packages/server-settings";
 
 export const seedServerSettingsAsync = async () => {
   const serverSettingsData = await db.query.serverSettings.findMany();
   let insertedSettingsCount = 0;
 
   for (const settingsKey of defaultServerSettingsKeys) {
-    if (
-      serverSettingsData.some((setting) => setting.settingKey === settingsKey)
-    ) {
+    if (serverSettingsData.some((setting) => setting.settingKey === settingsKey)) {
       return;
     }
 
