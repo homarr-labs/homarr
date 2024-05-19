@@ -1,6 +1,5 @@
 import Docker from "dockerode";
 
-import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
@@ -55,7 +54,6 @@ export const dockerRouter = createTRPCRouter({
     const cachedData = await dockerCache.getAsync();
     const isCacheYoungerThan5Minutes = cachedData?.isFresh;
     if (isCacheYoungerThan5Minutes) {
-      logger.info("Cache hit for /docker with timestamp: " + cachedData.timestamp);
       return {
         containers: sanitizeContainers(cachedData.data.containers),
         timestamp: cachedData.timestamp,
