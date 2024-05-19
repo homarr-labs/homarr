@@ -12,7 +12,7 @@ export const { definition, componentLoader, serverDataLoader } =
       }),
       layout: factory.select({
         options: (["grid", "row", "column"] as const).map((value) => ({
-          value: value,
+          value,
           label: (t) =>
             t(`widget.dnsHoleSummary.option.layout.option.${value}.label`),
         })),

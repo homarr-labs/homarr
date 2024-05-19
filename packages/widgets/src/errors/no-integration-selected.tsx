@@ -9,7 +9,7 @@ export class NoIntegrationSelectedError extends ErrorBoundaryError {
     super("No integration selected");
   }
 
-  getErrorBoundaryData() {
+  public getErrorBoundaryData() {
     return {
       icon: IconPlugX,
       message: (t: TranslationFunction) =>

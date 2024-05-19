@@ -314,14 +314,14 @@ export const boardRouter = createTRPCRouter({
         const inputIntegrationRelations = inputItems.flatMap(
           ({ integrationIds, id: itemId }) =>
             integrationIds.map((integrationId) => ({
-              integrationId: integrationId,
+              integrationId,
               itemId,
             })),
         );
         const dbIntegrationRelations = dbItems.flatMap(
           ({ integrationIds, id: itemId }) =>
             integrationIds.map((integrationId) => ({
-              integrationId: integrationId,
+              integrationId,
               itemId,
             })),
         );

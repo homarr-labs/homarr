@@ -115,40 +115,38 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   if (!serverData?.isReady) return null;
 
   return (
-    <>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary
-            onReset={reset}
-            fallbackRender={({ resetErrorBoundary, error }) => (
-              <>
-                <ItemMenu
-                  offset={4}
-                  item={newItem}
-                  resetErrorBoundary={resetErrorBoundary}
-                />
-                <WidgetError
-                  kind={item.kind}
-                  error={error as unknown}
-                  resetErrorBoundary={resetErrorBoundary}
-                />
-              </>
-            )}
-          >
-            <ItemMenu offset={4} item={newItem} />
-            <Comp
-              options={options as never}
-              integrationIds={item.integrationIds}
-              serverData={serverData?.data as never}
-              isEditMode={editMode}
-              boardId={board.id}
-              itemId={item.id}
-              {...dimensions}
-            />
-          </ErrorBoundary>
-        )}
-      </QueryErrorResetBoundary>
-    </>
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          fallbackRender={({ resetErrorBoundary, error }) => (
+            <>
+              <ItemMenu
+                offset={4}
+                item={newItem}
+                resetErrorBoundary={resetErrorBoundary}
+              />
+              <WidgetError
+                kind={item.kind}
+                error={error as unknown}
+                resetErrorBoundary={resetErrorBoundary}
+              />
+            </>
+          )}
+        >
+          <ItemMenu offset={4} item={newItem} />
+          <Comp
+            options={options as never}
+            integrationIds={item.integrationIds}
+            serverData={serverData?.data as never}
+            isEditMode={editMode}
+            boardId={board.id}
+            itemId={item.id}
+            {...dimensions}
+          />
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   );
 };
 

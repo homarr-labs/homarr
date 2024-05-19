@@ -36,7 +36,7 @@ export default function DnsHoleSummaryWidget({
 
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
-      integrationId: integrationId,
+      integrationId,
     },
     {
       refetchOnMount: false,
