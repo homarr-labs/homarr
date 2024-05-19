@@ -304,6 +304,11 @@ export const iconRepositories = sqliteTable("iconRepository", {
   slug: text("iconRepository_slug").notNull(),
 });
 
+export const serverSettings = sqliteTable("serverSetting", {
+  settingKey: text("key").notNull().unique().primaryKey(),
+  value: text("value").default('{"json": {}}').notNull(), // empty superjson object
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
