@@ -8,8 +8,6 @@ import { z } from "@homarr/validation";
 import { decryptSecret } from "../router/integration";
 import { publicProcedure } from "../trpc";
 
-// TODO: add access control in some way, most likely reusable middleware or something
-
 export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
   return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
     const integration = await ctx.db.query.integrations.findFirst({
