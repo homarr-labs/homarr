@@ -312,10 +312,7 @@ export const iconRepositories = mysqlTable("iconRepository", {
 });
 
 export const serverSettings = mysqlTable("serverSetting", {
-  settingKey: varchar("key", { length: 64 })
-    .notNull()
-    .unique()
-    .primaryKey(),
+  settingKey: varchar("key", { length: 64 }).notNull().unique().primaryKey(),
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
 
