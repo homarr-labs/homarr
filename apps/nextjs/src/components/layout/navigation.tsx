@@ -11,11 +11,7 @@ interface MainNavigationProps {
   links: NavigationLink[];
 }
 
-export const MainNavigation = ({
-  headerSection,
-  footerSection,
-  links,
-}: MainNavigationProps) => {
+export const MainNavigation = ({ headerSection, footerSection, links }: MainNavigationProps) => {
   return (
     <AppShellNavbar p="md">
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}

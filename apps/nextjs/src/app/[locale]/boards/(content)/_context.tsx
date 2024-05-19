@@ -1,13 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -52,18 +46,12 @@ export const BoardProvider = ({
   }, [pathname, utils, initialBoard.name]);
 
   useEffect(() => {
-    setReadySections((previous) =>
-      previous.filter((id) =>
-        data.sections.some((section) => section.id === id),
-      ),
-    );
+    setReadySections((previous) => previous.filter((id) => data.sections.some((section) => section.id === id)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.sections.length, setReadySections]);
 
   const markAsReady = useCallback((id: string) => {
-    setReadySections((previous) =>
-      previous.includes(id) ? previous : [...previous, id],
-    );
+    setReadySections((previous) => (previous.includes(id) ? previous : [...previous, id]));
   }, []);
 
   return (

@@ -6,10 +6,7 @@ import { Button, Group, Stack, TextInput } from "@mantine/core";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
@@ -61,11 +58,7 @@ const AddGroupModal = createModal<void>(({ actions }) => {
       })}
     >
       <Stack>
-        <TextInput
-          label={t("group.field.name")}
-          data-autofocus
-          {...form.getInputProps("name")}
-        />
+        <TextInput label={t("group.field.name")} data-autofocus {...form.getInputProps("name")} />
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}

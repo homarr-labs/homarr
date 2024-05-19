@@ -14,11 +14,7 @@ type Props = PropsWithChildren<{
   board: Board;
 }>;
 
-export const GlobalItemServerDataRunner = ({
-  board,
-  shouldRun,
-  children,
-}: Props) => {
+export const GlobalItemServerDataRunner = ({ board, shouldRun, children }: Props) => {
   if (!shouldRun) return children;
 
   const allItems = board.sections.flatMap((section) => section.items);
@@ -45,10 +41,7 @@ const ItemDataLoader = async ({ item }: ItemDataLoaderProps) => {
     return <ClientServerDataInitalizer id={item.id} serverData={undefined} />;
   }
   const loader = await widgetImport.serverDataLoader();
-  const optionsWithDefault = reduceWidgetOptionsWithDefaultValues(
-    item.kind,
-    item.options,
-  );
+  const optionsWithDefault = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
   const data = await loader.default({
     ...item,
     options: optionsWithDefault as never,

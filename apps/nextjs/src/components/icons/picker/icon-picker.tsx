@@ -1,14 +1,6 @@
 import type { FocusEventHandler } from "react";
 import { useState } from "react";
-import {
-  Combobox,
-  Group,
-  Image,
-  InputBase,
-  Skeleton,
-  Text,
-  useCombobox,
-} from "@mantine/core";
+import { Combobox, Group, Image, InputBase, Skeleton, Text, useCombobox } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -21,13 +13,7 @@ interface IconPickerProps {
   onBlur?: FocusEventHandler;
 }
 
-export const IconPicker = ({
-  initialValue,
-  onChange,
-  error,
-  onFocus,
-  onBlur,
-}: IconPickerProps) => {
+export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: IconPickerProps) => {
   const [value, setValue] = useState<string>(initialValue ?? "");
   const [search, setSearch] = useState(initialValue ?? "");
 
@@ -43,10 +29,7 @@ export const IconPicker = ({
 
   const notNullableData = data?.icons ?? [];
 
-  const totalOptions = notNullableData.reduce(
-    (acc, group) => acc + group.icons.length,
-    0,
-  );
+  const totalOptions = notNullableData.reduce((acc, group) => acc + group.icons.length, 0);
 
   const groups = notNullableData.map((group) => {
     const options = group.icons.map((item) => (
@@ -104,9 +87,7 @@ export const IconPicker = ({
 
       <Combobox.Dropdown>
         <Combobox.Header>
-          <Text c="dimmed">
-            {t("iconPicker.header", { countIcons: data?.countIcons })}
-          </Text>
+          <Text c="dimmed">{t("iconPicker.header", { countIcons: data?.countIcons })}</Text>
         </Combobox.Header>
         <Combobox.Options mah={350} style={{ overflowY: "auto" }}>
           {totalOptions > 0 ? (
@@ -117,11 +98,7 @@ export const IconPicker = ({
             Array(15)
               .fill(0)
               .map((_, index: number) => (
-                <Combobox.Option
-                  value={`skeleton-${index}`}
-                  key={index}
-                  disabled
-                >
+                <Combobox.Option value={`skeleton-${index}`} key={index} disabled>
                   <Skeleton height={25} visible />
                 </Combobox.Option>
               ))

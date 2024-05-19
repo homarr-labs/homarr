@@ -2,12 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId, eq } from "@homarr/db";
-import {
-  groupMembers,
-  groupPermissions,
-  groups,
-  users,
-} from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
 import { groupRouter } from "../group";
@@ -103,9 +98,7 @@ describe("paginated should return a list of groups with pagination", () => {
     expect(item?.members.length).toBe(1);
     const userKeys = Object.keys(item?.members[0] ?? {});
     expect(userKeys.length).toBe(4);
-    expect(
-      ["id", "name", "email", "image"].some((key) => userKeys.includes(key)),
-    );
+    expect(["id", "name", "email", "image"].some((key) => userKeys.includes(key)));
   });
 
   test.each([
@@ -178,9 +171,7 @@ describe("byId should return group by id including members and permissions", () 
 
     const userKeys = Object.keys(result?.members[0] ?? {});
     expect(userKeys.length).toBe(4);
-    expect(
-      ["id", "name", "email", "image"].some((key) => userKeys.includes(key)),
-    );
+    expect(["id", "name", "email", "image"].some((key) => userKeys.includes(key)));
     expect(result.permissions.length).toBe(1);
     expect(result.permissions[0]).toBe("admin");
   });
@@ -249,98 +240,88 @@ describe("create should create group in database", () => {
     ["test", "Test "],
     ["test", "test"],
     ["test", " TeSt"],
-  ])(
-    "with similar name %s it should fail to create %s",
-    async (similarName, nameToCreate) => {
-      // Arrange
-      const db = createDb();
-      const caller = groupRouter.createCaller({ db, session: defaultSession });
+  ])("with similar name %s it should fail to create %s", async (similarName, nameToCreate) => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
 
-      await db.insert(groups).values({
-        id: createId(),
-        name: similarName,
-      });
+    await db.insert(groups).values({
+      id: createId(),
+      name: similarName,
+    });
 
-      // Act
-      const actAsync = async () =>
-        await caller.createGroup({ name: nameToCreate });
+    // Act
+    const actAsync = async () => await caller.createGroup({ name: nameToCreate });
 
-      // Assert
-      await expect(actAsync()).rejects.toThrow("similar name");
-    },
-  );
+    // Assert
+    await expect(actAsync()).rejects.toThrow("similar name");
+  });
 });
 
 describe("update should update name with value that is no duplicate", () => {
   test.each([
     ["first", "second ", "second"],
     ["first", " first", "first"],
-  ])(
-    "update should update name from %s to %s normalized",
-    async (initialValue, updateValue, expectedValue) => {
-      // Arrange
-      const db = createDb();
-      const caller = groupRouter.createCaller({ db, session: defaultSession });
+  ])("update should update name from %s to %s normalized", async (initialValue, updateValue, expectedValue) => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
 
-      const groupId = createId();
-      await db.insert(groups).values([
-        {
-          id: groupId,
-          name: initialValue,
-        },
-        {
-          id: createId(),
-          name: "Third",
-        },
-      ]);
+    const groupId = createId();
+    await db.insert(groups).values([
+      {
+        id: groupId,
+        name: initialValue,
+      },
+      {
+        id: createId(),
+        name: "Third",
+      },
+    ]);
 
-      // Act
+    // Act
+    await caller.updateGroup({
+      id: groupId,
+      name: updateValue,
+    });
+
+    // Assert
+    const value = await db.query.groups.findFirst({
+      where: eq(groups.id, groupId),
+    });
+    expect(value?.name).toBe(expectedValue);
+  });
+
+  test.each([
+    ["Second ", "second"],
+    [" seCond", "second"],
+  ])("with similar name %s it should fail to update %s", async (updateValue, initialDuplicate) => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, session: defaultSession });
+
+    const groupId = createId();
+    await db.insert(groups).values([
+      {
+        id: groupId,
+        name: "Something",
+      },
+      {
+        id: createId(),
+        name: initialDuplicate,
+      },
+    ]);
+
+    // Act
+    const actAsync = async () =>
       await caller.updateGroup({
         id: groupId,
         name: updateValue,
       });
 
-      // Assert
-      const value = await db.query.groups.findFirst({
-        where: eq(groups.id, groupId),
-      });
-      expect(value?.name).toBe(expectedValue);
-    },
-  );
-
-  test.each([
-    ["Second ", "second"],
-    [" seCond", "second"],
-  ])(
-    "with similar name %s it should fail to update %s",
-    async (updateValue, initialDuplicate) => {
-      // Arrange
-      const db = createDb();
-      const caller = groupRouter.createCaller({ db, session: defaultSession });
-
-      const groupId = createId();
-      await db.insert(groups).values([
-        {
-          id: groupId,
-          name: "Something",
-        },
-        {
-          id: createId(),
-          name: initialDuplicate,
-        },
-      ]);
-
-      // Act
-      const actAsync = async () =>
-        await caller.updateGroup({
-          id: groupId,
-          name: updateValue,
-        });
-
-      // Assert
-      await expect(actAsync()).rejects.toThrow("similar name");
-    },
-  );
+    // Assert
+    await expect(actAsync()).rejects.toThrow("similar name");
+  });
 
   test("with non existing id it should throw not found error", async () => {
     // Arrange
@@ -392,10 +373,7 @@ describe("savePermissions should save permissions for group", () => {
     });
 
     expect(permissions.length).toBe(2);
-    expect(permissions.map(({ permission }) => permission)).toEqual([
-      "integration-use-all",
-      "board-full-access",
-    ]);
+    expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-access"]);
   });
 
   test("with non existing group it should throw not found error", async () => {

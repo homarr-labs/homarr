@@ -6,8 +6,7 @@ const usernameSchema = z.string().min(3).max(255);
 const passwordSchema = z.string().min(8).max(255);
 
 const confirmPasswordRefine = [
-  (data: { password: string; confirmPassword: string }) =>
-    data.password === data.confirmPassword,
+  (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
   {
     path: ["confirmPassword"],
     params: createCustomErrorParams("passwordsDoNotMatch"),
@@ -66,9 +65,7 @@ const changePasswordSchema = z
   })
   .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
 
-const changePasswordApiSchema = changePasswordSchema.and(
-  z.object({ userId: z.string() }),
-);
+const changePasswordApiSchema = changePasswordSchema.and(z.object({ userId: z.string() }));
 
 export const userSchemas = {
   signIn: signInSchema,

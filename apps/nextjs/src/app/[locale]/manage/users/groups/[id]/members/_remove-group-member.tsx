@@ -14,10 +14,7 @@ interface RemoveGroupMemberProps {
   user: { id: string; name: string | null };
 }
 
-export const RemoveGroupMember = ({
-  groupId,
-  user,
-}: RemoveGroupMemberProps) => {
+export const RemoveGroupMember = ({ groupId, user }: RemoveGroupMemberProps) => {
   const t = useI18n();
   const tRemoveMember = useScopedI18n("group.action.removeMember");
   const { mutateAsync } = clientApi.group.removeMember.useMutation();
@@ -35,27 +32,13 @@ export const RemoveGroupMember = ({
           groupId,
           userId: user.id,
         });
-        await revalidatePathActionAsync(
-          `/manage/users/groups/${groupId}/members`,
-        );
+        await revalidatePathActionAsync(`/manage/users/groups/${groupId}/members`);
       },
     });
-  }, [
-    openConfirmModal,
-    mutateAsync,
-    groupId,
-    user.id,
-    user.name,
-    tRemoveMember,
-  ]);
+  }, [openConfirmModal, mutateAsync, groupId, user.id, user.name, tRemoveMember]);
 
   return (
-    <Button
-      variant="subtle"
-      color="red.9"
-      size="compact-sm"
-      onClick={handleRemove}
-    >
+    <Button variant="subtle" color="red.9" size="compact-sm" onClick={handleRemove}>
       {t("common.action.remove")}
     </Button>
   );

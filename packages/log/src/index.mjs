@@ -7,11 +7,7 @@ const logMessageFormat = format.printf(({ level, message, timestamp }) => {
 });
 
 const logger = winston.createLogger({
-  format: format.combine(
-    format.colorize(),
-    format.timestamp(),
-    logMessageFormat,
-  ),
+  format: format.combine(format.colorize(), format.timestamp(), logMessageFormat),
   transports: [new transports.Console(), new RedisTransport()],
 });
 

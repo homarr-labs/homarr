@@ -107,9 +107,7 @@ const AppNoResults = async () => {
         <Text fw={500} size="lg">
           {t("app.page.list.noResults.title")}
         </Text>
-        <Anchor href="/manage/apps/new">
-          {t("app.page.list.noResults.description")}
-        </Anchor>
+        <Anchor href="/manage/apps/new">{t("app.page.list.noResults.description")}</Anchor>
       </Stack>
     </Card>
   );

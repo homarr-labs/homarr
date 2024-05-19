@@ -9,9 +9,6 @@ interface AuthProviderProps {
   session: Session | null;
 }
 
-export const AuthProvider = ({
-  children,
-  session,
-}: PropsWithChildren<AuthProviderProps>) => {
+export const AuthProvider = ({ children, session }: PropsWithChildren<AuthProviderProps>) => {
   return <SessionProvider session={session}>{children}</SessionProvider>;
 };

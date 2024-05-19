@@ -1,7 +1,4 @@
-export const createDefinition = <
-  const TKeys extends string[],
-  TOptions extends { defaultValue: TKeys[number] } | void,
->(
+export const createDefinition = <const TKeys extends string[], TOptions extends { defaultValue: TKeys[number] } | void>(
   values: TKeys,
   options: TOptions,
 ) => ({

@@ -11,10 +11,7 @@ interface Queue<TInput extends z.ZodType = z.ZodType> {
   inputValidator: TInput;
 }
 
-type Queues = Record<
-  string,
-  ReturnType<ReturnType<typeof createQueue>["withCallback"]>
->;
+type Queues = Record<string, ReturnType<ReturnType<typeof createQueue>["withCallback"]>>;
 
 export const createQueueClient = <TQueues extends Queues>(queues: TQueues) => {
   const queueRegistry = new Map<string, Queue>();
@@ -31,10 +28,7 @@ export const createQueueClient = <TQueues extends Queues>(queues: TQueues) => {
     queueRegistry,
     client: objectKeys(queues).reduce(
       (acc, name) => {
-        acc[name] = async (
-          data: z.infer<TQueues[typeof name]["_input"]>,
-          options,
-        ) => {
+        acc[name] = async (data: z.infer<TQueues[typeof name]["_input"]>, options) => {
           if (typeof name !== "string") return;
           const queue = queueRegistry.get(name);
           if (!queue) return;
@@ -42,10 +36,7 @@ export const createQueueClient = <TQueues extends Queues>(queues: TQueues) => {
           await queueChannel.addAsync({
             name,
             data,
-            executionDate:
-              typeof options === "object" && options.executionDate
-                ? options.executionDate
-                : new Date(),
+            executionDate: typeof options === "object" && options.executionDate ? options.executionDate : new Date(),
           });
         };
         return acc;

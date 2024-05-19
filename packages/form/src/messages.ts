@@ -1,10 +1,5 @@
 import type { TranslationObject } from "@homarr/translation";
-import type {
-  ErrorMapCtx,
-  z,
-  ZodTooBigIssue,
-  ZodTooSmallIssue,
-} from "@homarr/validation";
+import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "@homarr/validation";
 import { ZodIssueCode } from "@homarr/validation";
 
 const handleStringError = (issue: z.ZodInvalidStringIssue) => {
@@ -71,10 +66,7 @@ const handleTooBigError = (issue: ZodTooBigIssue) => {
   } as const;
 };
 
-export const handleZodError = (
-  issue: z.ZodIssueOptionalMessage,
-  ctx: ErrorMapCtx,
-) => {
+export const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
   if (ctx.defaultError === "Required") {
     return {
       key: "errors.required",

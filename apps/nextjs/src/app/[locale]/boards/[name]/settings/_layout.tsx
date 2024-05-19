@@ -14,16 +14,12 @@ interface Props {
 }
 export const LayoutSettingsContent = ({ board }: Props) => {
   const t = useI18n();
-  const { mutate: savePartialSettings, isPending } =
-    useSavePartialSettingsMutation(board);
-  const form = useZodForm(
-    validation.board.savePartialSettings.pick({ columnCount: true }).required(),
-    {
-      initialValues: {
-        columnCount: board.columnCount,
-      },
+  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
+  const form = useZodForm(validation.board.savePartialSettings.pick({ columnCount: true }).required(), {
+    initialValues: {
+      columnCount: board.columnCount,
     },
-  );
+  });
 
   return (
     <form
@@ -38,13 +34,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
         <Grid>
           <Grid.Col span={{ sm: 12, md: 6 }}>
             <Input.Wrapper label={t("board.field.columnCount.label")}>
-              <Slider
-                mt="xs"
-                min={1}
-                max={24}
-                step={1}
-                {...form.getInputProps("columnCount")}
-              />
+              <Slider mt="xs" min={1} max={24} step={1} {...form.getInputProps("columnCount")} />
             </Input.Wrapper>
           </Grid.Col>
         </Grid>

@@ -13,9 +13,7 @@ import classes from "./component.module.css";
 
 import "video.js/dist/video-js.css";
 
-export default function VideoWidget({
-  options,
-}: WidgetComponentProps<"video">) {
+export default function VideoWidget({ options }: WidgetComponentProps<"video">) {
   if (options.feedUrl.trim() === "") {
     return <NoUrl />;
   }
@@ -48,9 +46,7 @@ const ForYoutubeUseIframe = () => {
       <Stack align="center" gap="xs">
         <IconBrandYoutube />
         <Title order={4}>{t("widget.video.error.forYoutubeUseIframe")}</Title>
-        <Anchor href="https://homarr.dev/docs/widgets/iframe/">
-          {t("common.action.checkoutDocs")}
-        </Anchor>
+        <Anchor href="https://homarr.dev/docs/widgets/iframe/">{t("common.action.checkoutDocs")}</Anchor>
       </Stack>
     </Center>
   );
@@ -80,10 +76,7 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
 
   return (
     <Group justify="center" w="100%" h="100%" pos="relative">
-      <video
-        className={combineClasses("video-js", classes.video)}
-        ref={videoRef}
-      >
+      <video className={combineClasses("video-js", classes.video)} ref={videoRef}>
         <source src={options.feedUrl} />
       </video>
     </Group>

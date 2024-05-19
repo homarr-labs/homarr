@@ -4,11 +4,7 @@ import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
-import {
-  boardGroupPermissions,
-  boardUserPermissions,
-  groupMembers,
-} from "@homarr/db/schema/sqlite";
+import { boardGroupPermissions, boardUserPermissions, groupMembers } from "@homarr/db/schema/sqlite";
 import type { BoardPermission } from "@homarr/definitions";
 
 /**
@@ -38,10 +34,7 @@ export const throwIfActionForbiddenAsync = async (
         where: eq(boardUserPermissions.userId, session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: inArray(
-          boardGroupPermissions.groupId,
-          groupsOfCurrentUser.map((group) => group.groupId).concat(""),
-        ),
+        where: inArray(boardGroupPermissions.groupId, groupsOfCurrentUser.map((group) => group.groupId).concat("")),
       },
     },
   });
@@ -50,8 +43,7 @@ export const throwIfActionForbiddenAsync = async (
     notAllowed();
   }
 
-  const { hasViewAccess, hasChangeAccess, hasFullAccess } =
-    constructBoardPermissions(board, session);
+  const { hasViewAccess, hasChangeAccess, hasFullAccess } = constructBoardPermissions(board, session);
 
   if (hasFullAccess) {
     return; // As full access is required and user has full access, allow

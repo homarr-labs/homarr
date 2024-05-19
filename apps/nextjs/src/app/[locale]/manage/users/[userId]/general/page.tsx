@@ -5,10 +5,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
-import {
-  DangerZoneItem,
-  DangerZoneRoot,
-} from "~/components/manage/danger-zone";
+import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";

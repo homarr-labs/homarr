@@ -21,8 +21,7 @@ interface AppFormProps {
 }
 
 export const AppForm = (props: AppFormProps) => {
-  const { submitButtonTranslation, handleSubmit, initialValues, isPending } =
-    props;
+  const { submitButtonTranslation, handleSubmit, initialValues, isPending } = props;
   const t = useI18n();
 
   const form = useZodForm(validation.app.manage, {
@@ -38,10 +37,7 @@ export const AppForm = (props: AppFormProps) => {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label="Name" />
-        <IconPicker
-          initialValue={initialValues?.iconUrl}
-          {...form.getInputProps("iconUrl")}
-        />
+        <IconPicker initialValue={initialValues?.iconUrl} {...form.getInputProps("iconUrl")} />
         <Textarea {...form.getInputProps("description")} label="Description" />
         <TextInput {...form.getInputProps("href")} label="URL" />
 

@@ -6,16 +6,10 @@ import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import {
-  getAllSecretKindOptions,
-  getDefaultSecretKinds,
-} from "@homarr/definitions";
+import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
@@ -23,11 +17,7 @@ import { validation } from "@homarr/validation";
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { SecretCard } from "../../_integration-secret-card";
 import { IntegrationSecretInput } from "../../_integration-secret-inputs";
-import {
-  TestConnection,
-  TestConnectionNoticeAlert,
-  useTestConnectionDirty,
-} from "../../_integration-test-connection";
+import { TestConnection, TestConnectionNoticeAlert, useTestConnectionDirty } from "../../_integration-test-connection";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
@@ -45,8 +35,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     url: integration.url,
     secrets: secretsKinds.map((kind) => ({
       kind,
-      value:
-        integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
+      value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
     })),
   };
   const { isDirty, onValuesChange, removeDirty } = useTestConnectionDirty({
@@ -61,9 +50,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
 
-  const secretsMap = new Map(
-    integration.secrets.map((secret) => [secret.kind, secret]),
-  );
+  const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
   const handleSubmitAsync = async (values: FormType) => {
     if (isDirty) return;
@@ -82,9 +69,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             title: t("integration.page.edit.notification.success.title"),
             message: t("integration.page.edit.notification.success.message"),
           });
-          void revalidatePathActionAsync("/manage/integrations").then(() =>
-            router.push("/manage/integrations"),
-          );
+          void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
         },
         onError: () => {
           showErrorNotification({
@@ -101,17 +86,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
       <Stack>
         <TestConnectionNoticeAlert />
 
-        <TextInput
-          withAsterisk
-          label={t("integration.field.name.label")}
-          {...form.getInputProps("name")}
-        />
+        <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
 
-        <TextInput
-          withAsterisk
-          label={t("integration.field.url.label")}
-          {...form.getInputProps("url")}
-        />
+        <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
@@ -122,10 +99,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                 onCancel={() =>
                   new Promise((res) => {
                     // When nothing changed, just close the secret card
-                    if (
-                      (form.values.secrets[index]?.value ?? "") ===
-                      (secretsMap.get(kind)?.value ?? "")
-                    ) {
+                    if ((form.values.secrets[index]?.value ?? "") === (secretsMap.get(kind)?.value ?? "")) {
                       return res(true);
                     }
                     openConfirmModal({
@@ -133,10 +107,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                       children: t("integration.secrets.reset.message"),
                       onCancel: () => res(false),
                       onConfirm: () => {
-                        form.setFieldValue(
-                          `secrets.${index}.value`,
-                          secretsMap.get(kind)!.value ?? "",
-                        );
+                        form.setFieldValue(`secrets.${index}.value`, secretsMap.get(kind)!.value ?? "");
                         res(true);
                       },
                     });
@@ -165,11 +136,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             }}
           />
           <Group>
-            <Button
-              variant="default"
-              component={Link}
-              href="/manage/integrations"
-            >
+            <Button variant="default" component={Link} href="/manage/integrations">
               {t("common.action.backToOverview")}
             </Button>
             <Button type="submit" loading={isPending} disabled={isDirty}>

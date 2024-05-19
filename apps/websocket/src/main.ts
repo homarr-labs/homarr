@@ -18,11 +18,7 @@ const handler = applyWSSHandler({
   createContext: async ({ req }) => {
     try {
       const headers = Object.entries(req.headers).map(
-        ([key, value]) =>
-          [key, typeof value === "string" ? value : value?.[0]] as [
-            string,
-            string,
-          ],
+        ([key, value]) => [key, typeof value === "string" ? value : value?.[0]] as [string, string],
       );
       const nextHeaders = new Headers(headers);
 
@@ -46,13 +42,9 @@ const handler = applyWSSHandler({
 });
 
 wss.on("connection", (websocket, incomingMessage) => {
-  logger.info(
-    `➕ Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`,
-  );
+  logger.info(`➕ Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`);
   websocket.once("close", (code, reason) => {
-    logger.info(
-      `➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`,
-    );
+    logger.info(`➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
   });
 });
 logger.info("✅ WebSocket Server listening on ws://localhost:3001");

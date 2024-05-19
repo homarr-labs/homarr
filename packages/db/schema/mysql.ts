@@ -1,16 +1,7 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
 import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
-import {
-  boolean,
-  index,
-  int,
-  mysqlTable,
-  primaryKey,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import type {
   BackgroundImageAttachment,
@@ -23,11 +14,7 @@ import type {
   SectionKind,
   WidgetKind,
 } from "@homarr/definitions";
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-} from "@homarr/definitions";
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
@@ -37,12 +24,9 @@ export const users = mysqlTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
-  homeBoardId: varchar("homeBoardId", { length: 64 }).references(
-    (): AnyMySqlColumn => boards.id,
-    {
-      onDelete: "set null",
-    },
-  ),
+  homeBoardId: varchar("homeBoardId", { length: 64 }).references((): AnyMySqlColumn => boards.id, {
+    onDelete: "set null",
+  }),
 });
 
 export const accounts = mysqlTable(
@@ -73,9 +57,7 @@ export const accounts = mysqlTable(
 export const sessions = mysqlTable(
   "session",
   {
-    sessionToken: varchar("sessionToken", { length: 512 })
-      .notNull()
-      .primaryKey(),
+    sessionToken: varchar("sessionToken", { length: 512 }).notNull().primaryKey(),
     userId: varchar("userId", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
@@ -157,9 +139,7 @@ export const integrations = mysqlTable(
 export const integrationSecrets = mysqlTable(
   "integrationSecret",
   {
-    kind: varchar("kind", { length: 16 })
-      .$type<IntegrationSecretKind>()
-      .notNull(),
+    kind: varchar("kind", { length: 16 }).$type<IntegrationSecretKind>().notNull(),
     value: text("value").$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp("updated_at").notNull(),
     integrationId: varchar("integration_id", { length: 64 })
@@ -171,9 +151,7 @@ export const integrationSecrets = mysqlTable(
       columns: [integrationSecret.integrationId, integrationSecret.kind],
     }),
     kindIdx: index("integration_secret__kind_idx").on(integrationSecret.kind),
-    updatedAtIdx: index("integration_secret__updated_at_idx").on(
-      integrationSecret.updatedAt,
-    ),
+    updatedAtIdx: index("integration_secret__updated_at_idx").on(integrationSecret.updatedAt),
   }),
 );
 
@@ -217,9 +195,7 @@ export const boardUserPermissions = mysqlTable(
     userId: varchar("user_id", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    permission: varchar("permission", { length: 128 })
-      .$type<BoardPermission>()
-      .notNull(),
+    permission: varchar("permission", { length: 128 }).$type<BoardPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -237,9 +213,7 @@ export const boardGroupPermissions = mysqlTable(
     groupId: varchar("group_id", { length: 64 })
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    permission: varchar("permission", { length: 128 })
-      .$type<BoardPermission>()
-      .notNull(),
+    permission: varchar("permission", { length: 128 }).$type<BoardPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -334,12 +308,9 @@ export const iconRelations = relations(icons, ({ one }) => ({
   }),
 }));
 
-export const iconRepositoryRelations = relations(
-  iconRepositories,
-  ({ many }) => ({
-    icons: many(icons),
-  }),
-);
+export const iconRepositoryRelations = relations(iconRepositories, ({ many }) => ({
+  icons: many(icons),
+}));
 
 export const inviteRelations = relations(invites, ({ one }) => ({
   creator: one(users, {
@@ -376,58 +347,46 @@ export const groupRelations = relations(groups, ({ one, many }) => ({
   }),
 }));
 
-export const groupPermissionRelations = relations(
-  groupPermissions,
-  ({ one }) => ({
-    group: one(groups, {
-      fields: [groupPermissions.groupId],
-      references: [groups.id],
-    }),
+export const groupPermissionRelations = relations(groupPermissions, ({ one }) => ({
+  group: one(groups, {
+    fields: [groupPermissions.groupId],
+    references: [groups.id],
   }),
-);
+}));
 
-export const boardUserPermissionRelations = relations(
-  boardUserPermissions,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [boardUserPermissions.userId],
-      references: [users.id],
-    }),
-    board: one(boards, {
-      fields: [boardUserPermissions.boardId],
-      references: [boards.id],
-    }),
+export const boardUserPermissionRelations = relations(boardUserPermissions, ({ one }) => ({
+  user: one(users, {
+    fields: [boardUserPermissions.userId],
+    references: [users.id],
   }),
-);
+  board: one(boards, {
+    fields: [boardUserPermissions.boardId],
+    references: [boards.id],
+  }),
+}));
 
-export const boardGroupPermissionRelations = relations(
-  boardGroupPermissions,
-  ({ one }) => ({
-    group: one(groups, {
-      fields: [boardGroupPermissions.groupId],
-      references: [groups.id],
-    }),
-    board: one(boards, {
-      fields: [boardGroupPermissions.boardId],
-      references: [boards.id],
-    }),
+export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({ one }) => ({
+  group: one(groups, {
+    fields: [boardGroupPermissions.groupId],
+    references: [groups.id],
   }),
-);
+  board: one(boards, {
+    fields: [boardGroupPermissions.boardId],
+    references: [boards.id],
+  }),
+}));
 
 export const integrationRelations = relations(integrations, ({ many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
 }));
 
-export const integrationSecretRelations = relations(
-  integrationSecrets,
-  ({ one }) => ({
-    integration: one(integrations, {
-      fields: [integrationSecrets.integrationId],
-      references: [integrations.id],
-    }),
+export const integrationSecretRelations = relations(integrationSecrets, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [integrationSecrets.integrationId],
+    references: [integrations.id],
   }),
-);
+}));
 
 export const boardRelations = relations(boards, ({ many, one }) => ({
   sections: many(sections),
@@ -455,16 +414,13 @@ export const itemRelations = relations(items, ({ one, many }) => ({
   integrations: many(integrationItems),
 }));
 
-export const integrationItemRelations = relations(
-  integrationItems,
-  ({ one }) => ({
-    integration: one(integrations, {
-      fields: [integrationItems.integrationId],
-      references: [integrations.id],
-    }),
-    item: one(items, {
-      fields: [integrationItems.itemId],
-      references: [items.id],
-    }),
+export const integrationItemRelations = relations(integrationItems, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [integrationItems.integrationId],
+    references: [integrations.id],
   }),
-);
+  item: one(items, {
+    fields: [integrationItems.itemId],
+    references: [items.id],
+  }),
+}));

@@ -47,12 +47,8 @@ export const useItemActions = () => {
     ({ kind }: CreateItem) => {
       updateBoard((previous) => {
         const lastSection = previous.sections
-          .filter(
-            (section): section is EmptySection => section.kind === "empty",
-          )
-          .sort(
-            (sectionA, sectionB) => sectionB.position - sectionA.position,
-          )[0];
+          .filter((section): section is EmptySection => section.kind === "empty")
+          .sort((sectionA, sectionB) => sectionB.position - sectionA.position)[0];
 
         if (!lastSection) return previous;
 
@@ -91,8 +87,7 @@ export const useItemActions = () => {
           ...previous,
           sections: previous.sections.map((section) => {
             // Return same section if item is not in it
-            if (!section.items.some((item) => item.id === itemId))
-              return section;
+            if (!section.items.some((item) => item.id === itemId)) return section;
             return {
               ...section,
               items: section.items.map((item) => {
@@ -119,8 +114,7 @@ export const useItemActions = () => {
           ...previous,
           sections: previous.sections.map((section) => {
             // Return same section if item is not in it
-            if (!section.items.some((item) => item.id === itemId))
-              return section;
+            if (!section.items.some((item) => item.id === itemId)) return section;
             return {
               ...section,
               items: section.items.map((item) => {
@@ -128,9 +122,7 @@ export const useItemActions = () => {
                 if (item.id !== itemId) return item;
                 return {
                   ...item,
-                  ...("integrations" in item
-                    ? { integrations: newIntegrations }
-                    : {}),
+                  ...("integrations" in item ? { integrations: newIntegrations } : {}),
                 };
               }),
             };
@@ -168,18 +160,14 @@ export const useItemActions = () => {
   const moveItemToSection = useCallback(
     ({ itemId, sectionId, ...positionProps }: MoveItemToSection) => {
       updateBoard((previous) => {
-        const currentSection = previous.sections.find((section) =>
-          section.items.some((item) => item.id === itemId),
-        );
+        const currentSection = previous.sections.find((section) => section.items.some((item) => item.id === itemId));
 
         // If item is in the same section (on initial loading) don't do anything
         if (!currentSection) {
           return previous;
         }
 
-        const currentItem = currentSection.items.find(
-          (item) => item.id === itemId,
-        );
+        const currentItem = currentSection.items.find((item) => item.id === itemId);
         if (!currentItem) {
           return previous;
         }

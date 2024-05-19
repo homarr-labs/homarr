@@ -44,8 +44,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
   const [showPreview, { toggle }] = useDisclosure(false);
   const t = useI18n();
   const theme = useMantineTheme();
-  const { mutate: savePartialSettings, isPending } =
-    useSavePartialSettingsMutation(board);
+  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
 
   return (
     <form
@@ -77,11 +76,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
             />
           </Grid.Col>
           <Grid.Col span={12}>
-            <Anchor onClick={toggle}>
-              {showPreview
-                ? t("common.preview.hide")
-                : t("common.preview.show")}
-            </Anchor>
+            <Anchor onClick={toggle}>{showPreview ? t("common.preview.hide") : t("common.preview.show")}</Anchor>
           </Grid.Col>
           <Grid.Col span={12}>
             <Collapse in={showPreview}>
@@ -121,10 +116,7 @@ interface ColorsPreviewProps {
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
   const theme = useMantineTheme();
 
-  const colors =
-    previewColor && hexRegex.test(previewColor)
-      ? generateColors(previewColor)
-      : generateColors("#000000");
+  const colors = previewColor && hexRegex.test(previewColor) ? generateColors(previewColor) : generateColors("#000000");
 
   return (
     <Group gap={0} wrap="nowrap">

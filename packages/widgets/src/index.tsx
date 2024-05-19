@@ -32,10 +32,7 @@ export const widgetImports = {
 export type WidgetImports = typeof widgetImports;
 export type WidgetImportKey = keyof WidgetImports;
 
-const loadedComponents = new Map<
-  WidgetKind,
-  ComponentType<WidgetComponentProps<WidgetKind>>
->();
+const loadedComponents = new Map<WidgetKind, ComponentType<WidgetComponentProps<WidgetKind>>>();
 
 export const loadWidgetDynamic = <TKind extends WidgetKind>(kind: TKind) => {
   const existingComponent = loadedComponents.get(kind);
