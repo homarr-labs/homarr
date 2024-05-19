@@ -19,7 +19,7 @@ importers:
         version: 3.4.0(react@18.3.1)
       mantine-react-table:
         specifier: 2.0.0-beta.3
-        version: 2.0.0-beta.3(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(@tabler/icons-react@3.4.0(react@18.3.1))(clsx@2.1.0)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.0.0-beta.3(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(@tabler/icons-react@3.4.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -108,6 +108,12 @@ importers:
       '@mantine/colors-generator':
         specifier: ^7.9.2
         version: 7.9.2(chroma-js@2.4.2)
+      '@mantine/core':
+        specifier: ^7.9.2
+        version: 7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/dates':
+        specifier: ^7.9.2
+        version: 7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.9.2
         version: 7.9.2(react@18.3.1)
@@ -120,6 +126,9 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.4.5)(zod@3.23.8)
+      '@tabler/icons-react':
+        specifier: ^3.4.0
+        version: 3.4.0(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.36.2
         version: 5.36.2(react@18.3.1)
@@ -153,6 +162,9 @@ importers:
       chroma-js:
         specifier: ^2.4.2
         version: 2.4.2
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
@@ -168,6 +180,9 @@ importers:
       jotai:
         specifier: ^2.8.0
         version: 2.8.0(@types/react@18.3.2)(react@18.3.1)
+      mantine-react-table:
+        specifier: 2.0.0-beta.3
+        version: 2.0.0-beta.3(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(@tabler/icons-react@3.4.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.3
         version: 14.2.3(@babel/core@7.23.9)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.2)
@@ -2917,6 +2932,10 @@ packages:
 
   clsx@2.1.0:
     resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
+    engines: {node: '>=6'}
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
   cluster-key-slot@1.1.2:
@@ -7928,6 +7947,8 @@ snapshots:
 
   clsx@2.1.0: {}
 
+  clsx@2.1.1: {}
+
   cluster-key-slot@1.1.2: {}
 
   color-convert@1.9.3:
@@ -9505,7 +9526,7 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  mantine-react-table@2.0.0-beta.3(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(@tabler/icons-react@3.4.0(react@18.3.1))(clsx@2.1.0)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  mantine-react-table@2.0.0-beta.3(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(@tabler/icons-react@3.4.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@mantine/core': 7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/dates': 7.9.2(@mantine/core@7.9.2(@mantine/hooks@7.9.2(react@18.3.1))(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.9.2(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -9514,7 +9535,7 @@ snapshots:
       '@tanstack/match-sorter-utils': 8.15.1
       '@tanstack/react-table': 8.16.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-virtual': 3.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      clsx: 2.1.0
+      clsx: 2.1.1
       dayjs: 1.11.11
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
