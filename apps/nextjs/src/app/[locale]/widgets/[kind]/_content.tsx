@@ -8,6 +8,8 @@ import {
   IconToggleLeft,
   IconToggleRight,
 } from "@tabler/icons-react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
@@ -19,6 +21,7 @@ import {
   WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
+import { WidgetError } from "@homarr/widgets/errors";
 
 import type { Dimensions } from "./_dimension-modal";
 import { PreviewDimensionsModal } from "./_dimension-modal";
@@ -101,15 +104,30 @@ export const WidgetPreviewPageContent = ({
         h={dimensions.height}
         p={dimensions.height >= 96 ? undefined : 4}
       >
-        <Comp
-          options={state.options as never}
-          integrationIds={state.integrationIds}
-          width={dimensions.width}
-          height={dimensions.height}
-          isEditMode={editMode}
-          boardId={undefined}
-          itemId={undefined}
-        />
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary, error }) => (
+                <WidgetError
+                  kind={kind}
+                  error={error as unknown}
+                  resetErrorBoundary={resetErrorBoundary}
+                />
+              )}
+            >
+              <Comp
+                options={state.options as never}
+                integrationIds={state.integrationIds}
+                width={dimensions.width}
+                height={dimensions.height}
+                isEditMode={editMode}
+                boardId={undefined}
+                itemId={undefined}
+              />
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
       </Card>
       <Affix bottom={12} right={72}>
         <ActionIcon
