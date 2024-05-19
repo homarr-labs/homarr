@@ -15,20 +15,14 @@ interface InitializeGridstackProps {
   sectionColumnCount: number;
 }
 
-export const initializeGridstack = ({
-  section,
-  refs,
-  sectionColumnCount,
-}: InitializeGridstackProps) => {
+export const initializeGridstack = ({ section, refs, sectionColumnCount }: InitializeGridstackProps) => {
   if (!refs.wrapper.current) return false;
   // initialize gridstack
   const newGrid = refs.gridstack;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
-      margin: Math.round(
-        Math.max(Math.min(refs.wrapper.current.offsetWidth / 100, 10), 1),
-      ),
+      margin: Math.round(Math.max(Math.min(refs.wrapper.current.offsetWidth / 100, 10), 1)),
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,

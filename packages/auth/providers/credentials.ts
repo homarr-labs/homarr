@@ -35,13 +35,8 @@ export const createCredentialsConfiguration = (db: Database) =>
         return null;
       }
 
-      console.log(
-        `user ${user.name} is trying to log in. checking password...`,
-      );
-      const isValidPassword = await bcrypt.compare(
-        data.password,
-        user.password,
-      );
+      console.log(`user ${user.name} is trying to log in. checking password...`);
+      const isValidPassword = await bcrypt.compare(data.password, user.password);
 
       if (!isValidPassword) {
         console.log(`password for user ${user.name} was incorrect`);

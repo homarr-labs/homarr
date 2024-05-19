@@ -28,8 +28,7 @@ export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
   const t = useScopedI18n("widget.weather");
 
   const { icon: Icon, name } =
-    weatherDefinitions.find((definition) => definition.codes.includes(code)) ??
-    unknownWeather;
+    weatherDefinitions.find((definition) => definition.codes.includes(code)) ?? unknownWeather;
 
   return (
     <Tooltip withinPortal withArrow label={t(`kind.${name}`)}>

@@ -26,13 +26,7 @@ describe("Credentials authorization", () => {
     expect(result).toEqual({ id: userId, name: "test" });
   });
 
-  const passwordsThatShouldNotAuthorize = [
-    "wrong",
-    "Test",
-    "test ",
-    " test",
-    " test ",
-  ];
+  const passwordsThatShouldNotAuthorize = ["wrong", "Test", "test ", " test", " test "];
 
   passwordsThatShouldNotAuthorize.forEach((password) => {
     it(`should not authorize user with incorrect credentials (${password})`, async () => {

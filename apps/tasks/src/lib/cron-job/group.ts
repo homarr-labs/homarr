@@ -3,10 +3,7 @@ import { objectEntries } from "@homarr/common";
 import type { createCronJob } from "./creator";
 import { jobRegistry } from "./registry";
 
-type Jobs = Record<
-  string,
-  ReturnType<ReturnType<typeof createCronJob>["withCallback"]>
->;
+type Jobs = Record<string, ReturnType<ReturnType<typeof createCronJob>["withCallback"]>>;
 
 export const createJobGroup = <TJobs extends Jobs>(jobs: TJobs) => {
   for (const [name, job] of objectEntries(jobs)) {

@@ -14,9 +14,7 @@ export const serverSettingsRouter = createTRPCRouter({
 
     const data = {} as ServerSettings;
     defaultServerSettingsKeys.forEach((key) => {
-      const settingValue = settings.find(
-        (setting) => setting.settingKey === key,
-      )?.value;
+      const settingValue = settings.find((setting) => setting.settingKey === key)?.value;
       if (!settingValue) {
         return;
       }

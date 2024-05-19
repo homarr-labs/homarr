@@ -1,11 +1,6 @@
 import Link from "next/link";
 import { Button, Card, Group } from "@mantine/core";
-import {
-  IconArrowBackUp,
-  IconArrowLeft,
-  IconArrowRight,
-  IconRotate,
-} from "@tabler/icons-react";
+import { IconArrowBackUp, IconArrowLeft, IconArrowRight, IconRotate } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
@@ -51,18 +46,10 @@ export const StepperNavigationComponent = ({
         </Group>
       ) : (
         <Group justify="end" wrap="nowrap">
-          <Button
-            variant="light"
-            leftSection={<IconRotate size="1rem" />}
-            onClick={reset}
-          >
+          <Button variant="light" leftSection={<IconRotate size="1rem" />} onClick={reset}>
             {t("management.page.user.create.action.createAnother")}
           </Button>
-          <Button
-            leftSection={<IconArrowBackUp size="1rem" />}
-            component={Link}
-            href="/manage/users"
-          >
+          <Button leftSection={<IconArrowBackUp size="1rem" />} component={Link} href="/manage/users">
             {t("management.page.user.create.action.back")}
           </Button>
         </Group>

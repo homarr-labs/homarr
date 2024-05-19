@@ -3,16 +3,7 @@
 import type { ReactNode } from "react";
 import React from "react";
 import type { MantineSpacing } from "@mantine/core";
-import {
-  Card,
-  Group,
-  LoadingOverlay,
-  Stack,
-  Switch,
-  Text,
-  Title,
-  UnstyledButton,
-} from "@mantine/core";
+import { Card, Group, LoadingOverlay, Stack, Switch, Text, Title, UnstyledButton } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UseFormReturnType } from "@homarr/form";
@@ -37,9 +28,7 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
 
       if (
         !updatedValues.enableGeneral &&
-        (updatedValues.enableWidgetData ||
-          updatedValues.enableIntegrationData ||
-          updatedValues.enableUserData)
+        (updatedValues.enableWidgetData || updatedValues.enableIntegrationData || updatedValues.enableUserData)
       ) {
         updatedValues.enableIntegrationData = false;
         updatedValues.enableUserData = false;
@@ -53,30 +42,20 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
     },
   });
 
-  const { mutateAsync, isPending } =
-    clientApi.serverSettings.saveSettings.useMutation({
-      onSettled: async () => {
-        await revalidatePathActionAsync("/manage/settings");
-      },
-    });
+  const { mutateAsync, isPending } = clientApi.serverSettings.saveSettings.useMutation({
+    onSettled: async () => {
+      await revalidatePathActionAsync("/manage/settings");
+    },
+  });
 
   return (
     <>
       <Title order={2}>{t("title")}</Title>
 
       <Card pos="relative" withBorder>
-        <LoadingOverlay
-          visible={isPending}
-          zIndex={1000}
-          overlayProps={{ radius: "sm", blur: 2 }}
-        />
+        <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         <Stack>
-          <SwitchSetting
-            form={form}
-            formKey="enableGeneral"
-            title={t("general.title")}
-            text={t("general.text")}
-          />
+          <SwitchSetting form={form} formKey="enableGeneral" title={t("general.title")} text={t("general.text")} />
           <SwitchSetting
             form={form}
             formKey="enableIntegrationData"
@@ -122,13 +101,7 @@ const SwitchSetting = ({
   }, [form, formKey]);
   return (
     <UnstyledButton onClick={handleClick}>
-      <Group
-        ms={ms}
-        justify="space-between"
-        gap="lg"
-        align="center"
-        wrap="nowrap"
-      >
+      <Group ms={ms} justify="space-between" gap="lg" align="center" wrap="nowrap">
         <Stack gap={0}>
           <Text fw="bold">{title}</Text>
           <Text c="gray.5">{text}</Text>

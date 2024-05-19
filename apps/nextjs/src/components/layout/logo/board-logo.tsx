@@ -28,10 +28,7 @@ interface CommonLogoWithTitleProps {
   hideTitleOnMobile?: boolean;
 }
 
-export const BoardLogoWithTitle = ({
-  size,
-  hideTitleOnMobile,
-}: CommonLogoWithTitleProps) => {
+export const BoardLogoWithTitle = ({ size, hideTitleOnMobile }: CommonLogoWithTitleProps) => {
   const board = useRequiredBoard();
   const imageOptions = useImageOptions();
   return (

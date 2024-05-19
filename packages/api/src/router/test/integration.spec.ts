@@ -118,17 +118,11 @@ describe("byId should return an integration by id", () => {
 
     const result = await caller.byId({ id: "1" });
     expect(result.secrets.length).toBe(3);
-    const username = expectToBeDefined(
-      result.secrets.find((secret) => secret.kind === "username"),
-    );
+    const username = expectToBeDefined(result.secrets.find((secret) => secret.kind === "username"));
     expect(username.value).not.toBeNull();
-    const password = expectToBeDefined(
-      result.secrets.find((secret) => secret.kind === "password"),
-    );
+    const password = expectToBeDefined(result.secrets.find((secret) => secret.kind === "password"));
     expect(password.value).toBeNull();
-    const apiKey = expectToBeDefined(
-      result.secrets.find((secret) => secret.kind === "apiKey"),
-    );
+    const apiKey = expectToBeDefined(result.secrets.find((secret) => secret.kind === "apiKey"));
     expect(apiKey.value).toBeNull();
   });
 });
@@ -200,9 +194,7 @@ describe("update should update an integration", () => {
       integrationId,
       updatedAt: lastWeek,
     };
-    await db
-      .insert(integrationSecrets)
-      .values([usernameToInsert, passwordToInsert]);
+    await db.insert(integrationSecrets).values([usernameToInsert, passwordToInsert]);
 
     const input = {
       id: integrationId,
@@ -231,15 +223,9 @@ describe("update should update an integration", () => {
     expect(dbIntegration!.url).toBe(input.url);
 
     expect(dbSecrets.length).toBe(3);
-    const username = expectToBeDefined(
-      dbSecrets.find((secret) => secret.kind === "username"),
-    );
-    const password = expectToBeDefined(
-      dbSecrets.find((secret) => secret.kind === "password"),
-    );
-    const apiKey = expectToBeDefined(
-      dbSecrets.find((secret) => secret.kind === "apiKey"),
-    );
+    const username = expectToBeDefined(dbSecrets.find((secret) => secret.kind === "username"));
+    const password = expectToBeDefined(dbSecrets.find((secret) => secret.kind === "password"));
+    const apiKey = expectToBeDefined(dbSecrets.find((secret) => secret.kind === "apiKey"));
     expect(username.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(password.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(apiKey.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
@@ -327,26 +313,23 @@ describe("testConnection should test the connection to an integration", () => {
         { kind: "password" as const, value: "Password123!" },
       ],
     ],
-  ])(
-    "should fail when a required secret is missing when creating %s integration",
-    async (kind, secrets) => {
-      const db = createDb();
-      const caller = integrationRouter.createCaller({
-        db,
-        session: null,
-      });
+  ])("should fail when a required secret is missing when creating %s integration", async (kind, secrets) => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: null,
+    });
 
-      const input: RouterInputs["integration"]["testConnection"] = {
-        id: null,
-        kind,
-        url: `http://${kind}.local`,
-        secrets,
-      };
+    const input: RouterInputs["integration"]["testConnection"] = {
+      id: null,
+      kind,
+      url: `http://${kind}.local`,
+      secrets,
+    };
 
-      const actAsync = async () => await caller.testConnection(input);
-      await expect(actAsync()).rejects.toThrow("SECRETS_NOT_DEFINED");
-    },
-  );
+    const actAsync = async () => await caller.testConnection(input);
+    await expect(actAsync()).rejects.toThrow("SECRETS_NOT_DEFINED");
+  });
 
   it.each([
     [

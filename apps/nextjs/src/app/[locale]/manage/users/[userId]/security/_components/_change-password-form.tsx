@@ -6,10 +6,7 @@ import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useZodForm } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
@@ -74,11 +71,7 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
               />
             )}
 
-            <PasswordInput
-              withAsterisk
-              label={t("user.field.password.label")}
-              {...form.getInputProps("password")}
-            />
+            <PasswordInput withAsterisk label={t("user.field.password.label")} {...form.getInputProps("password")} />
 
             <PasswordInput
               withAsterisk

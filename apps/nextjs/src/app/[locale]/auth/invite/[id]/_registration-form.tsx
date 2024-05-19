@@ -5,10 +5,7 @@ import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
@@ -32,9 +29,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     },
   });
 
-  const handleSubmit = (
-    values: z.infer<typeof validation.user.registration>,
-  ) => {
+  const handleSubmit = (values: z.infer<typeof validation.user.registration>) => {
     mutate(
       {
         ...values,
@@ -63,11 +58,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     <Stack gap="xl">
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="lg">
-          <TextInput
-            label={t("field.username.label")}
-            autoComplete="off"
-            {...form.getInputProps("username")}
-          />
+          <TextInput label={t("field.username.label")} autoComplete="off" {...form.getInputProps("username")} />
           <PasswordInput
             label={t("field.password.label")}
             autoComplete="new-password"

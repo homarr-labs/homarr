@@ -6,9 +6,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { createModal } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
-export const InviteCopyModal = createModal<
-  RouterOutputs["invite"]["createInvite"]
->(({ actions, innerProps }) => {
+export const InviteCopyModal = createModal<RouterOutputs["invite"]["createInvite"]>(({ actions, innerProps }) => {
   const t = useScopedI18n("management.page.user.invite");
   const inviteUrl = useInviteUrl(innerProps);
 
@@ -50,13 +48,9 @@ export const InviteCopyModal = createModal<
   },
 });
 
-const createPath = ({ id, token }: RouterOutputs["invite"]["createInvite"]) =>
-  `/auth/invite/${id}?token=${token}`;
+const createPath = ({ id, token }: RouterOutputs["invite"]["createInvite"]) => `/auth/invite/${id}?token=${token}`;
 
-const useInviteUrl = ({
-  id,
-  token,
-}: RouterOutputs["invite"]["createInvite"]) => {
+const useInviteUrl = ({ id, token }: RouterOutputs["invite"]["createInvite"]) => {
   const pathname = usePathname();
 
   return window.location.href.replace(pathname, createPath({ id, token }));

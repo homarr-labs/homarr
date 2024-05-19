@@ -93,8 +93,7 @@ export default {
     },
     testConnection: {
       action: "Verbindung überprüfen",
-      alertNotice:
-        "Der Button zum Speichern wird aktiviert, sobald die Verbindung erfolgreich überprüft wurde",
+      alertNotice: "Der Button zum Speichern wird aktiviert, sobald die Verbindung erfolgreich überprüft wurde",
       notification: {
         success: {
           title: "Verbindung erfolgreich",
@@ -121,8 +120,7 @@ export default {
     secrets: {
       title: "Zugangsdaten",
       lastUpdated: "Zuletzt geändert {date}",
-      secureNotice:
-        "Diese Zugangsdaten können nach der Erstellung nicht mehr ausgelesen werden",
+      secureNotice: "Diese Zugangsdaten können nach der Erstellung nicht mehr ausgelesen werden",
       reset: {
         title: "Zugangsdaten zurücksetzen",
         message: "Möchtest du diese Zugangsdaten wirklich zurücksetzen?",
@@ -172,8 +170,7 @@ export default {
       option: {
         is24HourFormat: {
           label: "24-Stunden Format",
-          description:
-            "Verwende das 24-Stunden Format anstelle des 12-Stunden Formats",
+          description: "Verwende das 24-Stunden Format anstelle des 12-Stunden Formats",
         },
         isLocaleTime: {
           label: "Lokale Zeit verwenden",

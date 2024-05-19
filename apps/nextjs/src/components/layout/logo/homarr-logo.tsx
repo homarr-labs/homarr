@@ -14,16 +14,12 @@ const imageOptions = {
   shouldUseNextImage: true,
 };
 
-export const HomarrLogo = ({ size }: LogoProps) => (
-  <Logo size={size} {...imageOptions} />
-);
+export const HomarrLogo = ({ size }: LogoProps) => <Logo size={size} {...imageOptions} />;
 
 interface CommonLogoWithTitleProps {
   size: LogoWithTitleProps["size"];
 }
 
 export const HomarrLogoWithTitle = ({ size }: CommonLogoWithTitleProps) => {
-  return (
-    <LogoWithTitle size={size} title={homarrPageTitle} image={imageOptions} />
-  );
+  return <LogoWithTitle size={size} title={homarrPageTitle} image={imageOptions} />;
 };

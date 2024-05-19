@@ -16,10 +16,7 @@ export const zodErrorMap = <
         message: error.message ?? ctx.defaultError,
       };
     return {
-      message: t(
-        error.key ? `common.zod.${error.key}` : "common.zod.errors.default",
-        error.params ?? {},
-      ),
+      message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", error.params ?? {}),
     };
   };
 };
@@ -134,6 +131,5 @@ export interface CustomErrorParams {
   };
 }
 
-export const createCustomErrorParams = (
-  i18n: CustomErrorParams["i18n"] | CustomErrorParams["i18n"]["key"],
-) => (typeof i18n === "string" ? { i18n: { key: i18n } } : { i18n });
+export const createCustomErrorParams = (i18n: CustomErrorParams["i18n"] | CustomErrorParams["i18n"]["key"]) =>
+  typeof i18n === "string" ? { i18n: { key: i18n } } : { i18n };

@@ -13,14 +13,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   return (
     <Grid>
       {objectEntries(widgetImports).map(([key, value]) => {
-        return (
-          <WidgetItem
-            key={key}
-            kind={key}
-            definition={value.definition}
-            closeModal={actions.closeModal}
-          />
-        );
+        return <WidgetItem key={key} kind={key} definition={value.definition} closeModal={actions.closeModal} />;
       })}
     </Grid>
   );
@@ -56,13 +49,7 @@ const WidgetItem = ({
             <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
               {t(`widget.${kind}.name`)}
             </Text>
-            <Text
-              lh={1.2}
-              style={{ whiteSpace: "normal" }}
-              size="xs"
-              ta="center"
-              c="dimmed"
-            >
+            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
               {t(`widget.${kind}.description`)}
             </Text>
           </Stack>

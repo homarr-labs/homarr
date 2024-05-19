@@ -8,7 +8,4 @@ export type Item = Section["items"][number];
 export type CategorySection = Extract<Section, { kind: "category" }>;
 export type EmptySection = Extract<Section, { kind: "empty" }>;
 
-export type ItemOfKind<TKind extends WidgetKind> = Extract<
-  Item,
-  { kind: TKind }
->;
+export type ItemOfKind<TKind extends WidgetKind> = Extract<Item, { kind: TKind }>;

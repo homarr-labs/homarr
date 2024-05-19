@@ -155,10 +155,7 @@ describe("getAllBoards should return all boards accessable to the current user",
 
     // Assert
     expect(result.length).toBe(2);
-    expect(result.map(({ name }) => name)).toStrictEqual([
-      "public",
-      "private2",
-    ]);
+    expect(result.map(({ name }) => name)).toStrictEqual(["public", "private2"]);
   });
 
   test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
@@ -221,10 +218,7 @@ describe("getAllBoards should return all boards accessable to the current user",
 
       // Assert
       expect(result.length).toBe(2);
-      expect(result.map(({ name }) => name)).toStrictEqual([
-        "public",
-        "private1",
-      ]);
+      expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
     },
   );
 
@@ -277,10 +271,7 @@ describe("getAllBoards should return all boards accessable to the current user",
 
       // Assert
       expect(result.length).toBe(2);
-      expect(result.map(({ name }) => name)).toStrictEqual([
-        "public",
-        "private1",
-      ]);
+      expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
     },
   );
 });
@@ -356,11 +347,7 @@ describe("rename board should rename board", () => {
     });
     expect(dbBoard).toBeDefined();
     expect(dbBoard?.name).toBe("newName");
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "full-access",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
   });
 
   test("should throw error when similar board name exists", async () => {
@@ -384,13 +371,10 @@ describe("rename board should rename board", () => {
     });
 
     // Act
-    const actAsync = async () =>
-      await caller.renameBoard({ id: boardId, name: "Newname" });
+    const actAsync = async () => await caller.renameBoard({ id: boardId, name: "Newname" });
 
     // Assert
-    await expect(actAsync()).rejects.toThrowError(
-      "Board with similar name already exists",
-    );
+    await expect(actAsync()).rejects.toThrowError("Board with similar name already exists");
   });
 
   test("should throw error when board not found", async () => {
@@ -399,8 +383,7 @@ describe("rename board should rename board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const actAsync = async () =>
-      await caller.renameBoard({ id: "nonExistentBoardId", name: "newName" });
+    const actAsync = async () => await caller.renameBoard({ id: "nonExistentBoardId", name: "newName" });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Board not found");
@@ -439,11 +422,7 @@ describe("changeBoardVisibility should change board visibility", () => {
       });
       expect(dbBoard).toBeDefined();
       expect(dbBoard?.isPublic).toBe(visibility === "public");
-      expect(spy).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        "full-access",
-      );
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
     },
   );
 });
@@ -473,11 +452,7 @@ describe("deleteBoard should delete board", () => {
       where: eq(boards.id, boardId),
     });
     expect(dbBoard).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "full-access",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
   });
 
   test("should throw error when board not found", async () => {
@@ -486,8 +461,7 @@ describe("deleteBoard should delete board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const actAsync = async () =>
-      await caller.deleteBoard({ id: "nonExistentBoardId" });
+    const actAsync = async () => await caller.deleteBoard({ id: "nonExistentBoardId" });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Board not found");
@@ -511,40 +485,29 @@ describe("getHomeBoard should return home board", () => {
       name: "home",
       ...fullBoardProps,
     });
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-view",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-view");
   });
 });
 
 describe("getBoardByName should return board by name", () => {
-  it.each([["default"], ["something"]])(
-    "should return board by name %s when present",
-    async (name) => {
-      // Arrange
-      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, session: defaultSession });
+  it.each([["default"], ["something"]])("should return board by name %s when present", async (name) => {
+    // Arrange
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-      const fullBoardProps = await createFullBoardAsync(db, name);
+    const fullBoardProps = await createFullBoardAsync(db, name);
 
-      // Act
-      const result = await caller.getBoardByName({ name });
+    // Act
+    const result = await caller.getBoardByName({ name });
 
-      // Assert
-      expectInputToBeFullBoardWithName(result, {
-        name,
-        ...fullBoardProps,
-      });
-      expect(spy).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        "board-view",
-      );
-    },
-  );
+    // Assert
+    expectInputToBeFullBoardWithName(result, {
+      name,
+      ...fullBoardProps,
+    });
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-view");
+  });
 
   it("should throw error when not present", async () => {
     // Arrange
@@ -553,8 +516,7 @@ describe("getBoardByName should return board by name", () => {
     await createFullBoardAsync(db, "default");
 
     // Act
-    const actAsync = async () =>
-      await caller.getBoardByName({ name: "nonExistentBoard" });
+    const actAsync = async () => await caller.getBoardByName({ name: "nonExistentBoard" });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Board not found");
@@ -611,9 +573,7 @@ describe("savePartialBoardSettings should save general settings", () => {
     expect(dbBoard?.metaTitle).toBe(newMetaTitle);
     expect(dbBoard?.logoImageUrl).toBe(newLogoImageUrl);
     expect(dbBoard?.faviconImageUrl).toBe(newFaviconImageUrl);
-    expect(dbBoard?.backgroundImageAttachment).toBe(
-      newBackgroundImageAttachment,
-    );
+    expect(dbBoard?.backgroundImageAttachment).toBe(newBackgroundImageAttachment);
     expect(dbBoard?.backgroundImageRepeat).toBe(newBackgroundImageRepeat);
     expect(dbBoard?.backgroundImageSize).toBe(newBackgroundImageSize);
     expect(dbBoard?.backgroundImageUrl).toBe(newBackgroundImageUrl);
@@ -623,11 +583,7 @@ describe("savePartialBoardSettings should save general settings", () => {
     expect(dbBoard?.primaryColor).toBe(newPrimaryColor);
     expect(dbBoard?.secondaryColor).toBe(newSecondaryColor);
 
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
 
   it("should throw error when board not found", async () => {
@@ -682,21 +638,14 @@ describe("saveBoard should save full board", () => {
     expect(definedBoard.sections.length).toBe(1);
     expect(definedBoard.sections[0]?.id).not.toBe(sectionId);
     expect(section).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
   it("should remove item when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const { boardId, itemId, sectionId } = await createFullBoardAsync(
-      db,
-      "default",
-    );
+    const { boardId, itemId, sectionId } = await createFullBoardAsync(db, "default");
 
     await caller.saveBoard({
       id: boardId,
@@ -742,11 +691,7 @@ describe("saveBoard should save full board", () => {
     expect(firstSection.items.length).toBe(1);
     expect(firstSection.items[0]?.id).not.toBe(itemId);
     expect(item).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
   it("should remove integration reference when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -759,8 +704,7 @@ describe("saveBoard should save full board", () => {
       url: "http://localhost:3000",
     } as const;
 
-    const { boardId, itemId, integrationId, sectionId } =
-      await createFullBoardAsync(db, "default");
+    const { boardId, itemId, integrationId, sectionId } = await createFullBoardAsync(db, "default");
     await db.insert(integrations).values(anotherIntegration);
 
     await caller.saveBoard({
@@ -813,71 +757,61 @@ describe("saveBoard should save full board", () => {
     expect(firstItem.integrations.length).toBe(1);
     expect(firstItem.integrations[0]?.integrationId).not.toBe(integrationId);
     expect(integration).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
-  it.each([
-    [{ kind: "empty" as const }],
-    [{ kind: "category" as const, name: "My first category" }],
-  ])("should add section when present in input", async (partialSection) => {
-    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, session: defaultSession });
+  it.each([[{ kind: "empty" as const }], [{ kind: "category" as const, name: "My first category" }]])(
+    "should add section when present in input",
+    async (partialSection) => {
+      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+      const db = createDb();
+      const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
+      const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
-    const newSectionId = createId();
-    await caller.saveBoard({
-      id: boardId,
-      sections: [
-        {
-          id: newSectionId,
-          position: 1,
-          items: [],
-          ...partialSection,
+      const newSectionId = createId();
+      await caller.saveBoard({
+        id: boardId,
+        sections: [
+          {
+            id: newSectionId,
+            position: 1,
+            items: [],
+            ...partialSection,
+          },
+          {
+            id: sectionId,
+            kind: "empty",
+            position: 0,
+            items: [],
+          },
+        ],
+      });
+
+      const board = await db.query.boards.findFirst({
+        where: eq(boards.id, boardId),
+        with: {
+          sections: true,
         },
-        {
-          id: sectionId,
-          kind: "empty",
-          position: 0,
-          items: [],
-        },
-      ],
-    });
+      });
 
-    const board = await db.query.boards.findFirst({
-      where: eq(boards.id, boardId),
-      with: {
-        sections: true,
-      },
-    });
+      const section = await db.query.sections.findFirst({
+        where: eq(sections.id, newSectionId),
+      });
 
-    const section = await db.query.sections.findFirst({
-      where: eq(sections.id, newSectionId),
-    });
-
-    const definedBoard = expectToBeDefined(board);
-    expect(definedBoard.sections.length).toBe(2);
-    const addedSection = expectToBeDefined(
-      definedBoard.sections.find((section) => section.id === newSectionId),
-    );
-    expect(addedSection).toBeDefined();
-    expect(addedSection.id).toBe(newSectionId);
-    expect(addedSection.kind).toBe(partialSection.kind);
-    expect(addedSection.position).toBe(1);
-    if ("name" in partialSection) {
-      expect(addedSection.name).toBe(partialSection.name);
-    }
-    expect(section).toBeDefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
-  });
+      const definedBoard = expectToBeDefined(board);
+      expect(definedBoard.sections.length).toBe(2);
+      const addedSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
+      expect(addedSection).toBeDefined();
+      expect(addedSection.id).toBe(newSectionId);
+      expect(addedSection.kind).toBe(partialSection.kind);
+      expect(addedSection.position).toBe(1);
+      if ("name" in partialSection) {
+        expect(addedSection.name).toBe(partialSection.name);
+      }
+      expect(section).toBeDefined();
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    },
+  );
   it("should add item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
@@ -928,25 +862,17 @@ describe("saveBoard should save full board", () => {
     expect(definedBoard.sections.length).toBe(1);
     const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const addedItem = expectToBeDefined(
-      firstSection.items.find((item) => item.id === newItemId),
-    );
+    const addedItem = expectToBeDefined(firstSection.items.find((item) => item.id === newItemId));
     expect(addedItem).toBeDefined();
     expect(addedItem.id).toBe(newItemId);
     expect(addedItem.kind).toBe("clock");
-    expect(addedItem.options).toBe(
-      SuperJSON.stringify({ is24HourFormat: true }),
-    );
+    expect(addedItem.options).toBe(SuperJSON.stringify({ is24HourFormat: true }));
     expect(addedItem.height).toBe(1);
     expect(addedItem.width).toBe(1);
     expect(addedItem.xOffset).toBe(3);
     expect(addedItem.yOffset).toBe(2);
     expect(item).toBeDefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
   it("should add integration reference when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -959,10 +885,7 @@ describe("saveBoard should save full board", () => {
       url: "http://plex.local",
     } as const;
 
-    const { boardId, itemId, sectionId } = await createFullBoardAsync(
-      db,
-      "default",
-    );
+    const { boardId, itemId, sectionId } = await createFullBoardAsync(db, "default");
     await db.insert(integrations).values(integration);
 
     await caller.saveBoard({
@@ -1011,17 +934,11 @@ describe("saveBoard should save full board", () => {
     expect(definedBoard.sections.length).toBe(1);
     const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const firstItem = expectToBeDefined(
-      firstSection.items.find((item) => item.id === itemId),
-    );
+    const firstItem = expectToBeDefined(firstSection.items.find((item) => item.id === itemId));
     expect(firstItem.integrations.length).toBe(1);
     expect(firstItem.integrations[0]?.integrationId).toBe(integration.id);
     expect(integrationItem).toBeDefined();
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
   it("should update section when present in input", async () => {
     const db = createDb();
@@ -1066,16 +983,12 @@ describe("saveBoard should save full board", () => {
 
     const definedBoard = expectToBeDefined(board);
     expect(definedBoard.sections.length).toBe(2);
-    const firstSection = expectToBeDefined(
-      definedBoard.sections.find((section) => section.id === sectionId),
-    );
+    const firstSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === sectionId));
     expect(firstSection.id).toBe(sectionId);
     expect(firstSection.kind).toBe("empty");
     expect(firstSection.position).toBe(1);
     expect(firstSection.name).toBe(null);
-    const secondSection = expectToBeDefined(
-      definedBoard.sections.find((section) => section.id === newSectionId),
-    );
+    const secondSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
     expect(secondSection.id).toBe(newSectionId);
     expect(secondSection.kind).toBe("category");
     expect(secondSection.position).toBe(0);
@@ -1086,10 +999,7 @@ describe("saveBoard should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
-    const { boardId, itemId, sectionId } = await createFullBoardAsync(
-      db,
-      "default",
-    );
+    const { boardId, itemId, sectionId } = await createFullBoardAsync(db, "default");
 
     await caller.saveBoard({
       id: boardId,
@@ -1129,24 +1039,15 @@ describe("saveBoard should save full board", () => {
     expect(definedBoard.sections.length).toBe(1);
     const firstSection = expectToBeDefined(definedBoard.sections[0]);
     expect(firstSection.items.length).toBe(1);
-    const firstItem = expectToBeDefined(
-      firstSection.items.find((item) => item.id === itemId),
-    );
+    const firstItem = expectToBeDefined(firstSection.items.find((item) => item.id === itemId));
     expect(firstItem.id).toBe(itemId);
     expect(firstItem.kind).toBe("clock");
-    expect(
-      SuperJSON.parse<{ is24HourFormat: boolean }>(firstItem.options)
-        .is24HourFormat,
-    ).toBe(false);
+    expect(SuperJSON.parse<{ is24HourFormat: boolean }>(firstItem.options).is24HourFormat).toBe(false);
     expect(firstItem.height).toBe(3);
     expect(firstItem.width).toBe(2);
     expect(firstItem.xOffset).toBe(7);
     expect(firstItem.yOffset).toBe(5);
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "board-change",
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
   });
   it("should fail when board not found", async () => {
     const db = createDb();
@@ -1216,9 +1117,7 @@ describe("getBoardPermissions should return board permissions", () => {
     const result = await caller.getBoardPermissions({ id: boardId });
 
     // Assert
-    expect(result.groupPermissions).toEqual([
-      { group: { id: groupId, name: "group1" }, permission: "board-view" },
-    ]);
+    expect(result.groupPermissions).toEqual([{ group: { id: groupId, name: "group1" }, permission: "board-view" }]);
     expect(result.userPermissions).toEqual(
       expect.arrayContaining([
         {
@@ -1231,14 +1130,8 @@ describe("getBoardPermissions should return board permissions", () => {
         },
       ]),
     );
-    expect(result.inherited).toEqual([
-      { group: { id: groupId, name: "group1" }, permission: "admin" },
-    ]);
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      "full-access",
-    );
+    expect(result.inherited).toEqual([{ group: { id: groupId, name: "group1" }, permission: "admin" }]);
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
   });
 });
 
@@ -1279,11 +1172,7 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
         where: eq(boardUserPermissions.userId, user1),
       });
       expect(dbUserPermission).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        "full-access",
-      );
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
     },
   );
 });
@@ -1330,11 +1219,7 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
         where: eq(boardGroupPermissions.groupId, groupId),
       });
       expect(dbGroupPermission).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        "full-access",
-      );
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
     },
   );
 });

@@ -21,9 +21,7 @@ interface InviteListComponentProps {
   initialInvites: RouterOutputs["invite"]["getAll"];
 }
 
-export const InviteListComponent = ({
-  initialInvites,
-}: InviteListComponentProps) => {
+export const InviteListComponent = ({ initialInvites }: InviteListComponentProps) => {
   const t = useScopedI18n("management.page.user.invite");
   const { data, isLoading } = clientApi.invite.getAll.useQuery(undefined, {
     initialData: initialInvites,
@@ -32,9 +30,7 @@ export const InviteListComponent = ({
     refetchOnReconnect: false,
   });
 
-  const columns = useMemo<
-    MRT_ColumnDef<RouterOutputs["invite"]["getAll"][number]>[]
-  >(
+  const columns = useMemo<MRT_ColumnDef<RouterOutputs["invite"]["getAll"][number]>[]>(
     () => [
       {
         accessorKey: "id",
@@ -100,11 +96,7 @@ const RenderTopToolbarCustomActions = () => {
   );
 };
 
-const RenderRowActions = ({
-  row,
-}: {
-  row: MRT_Row<RouterOutputs["invite"]["getAll"][number]>;
-}) => {
+const RenderRowActions = ({ row }: { row: MRT_Row<RouterOutputs["invite"]["getAll"][number]> }) => {
   const t = useScopedI18n("management.page.user.invite");
   const { mutate, isPending } = clientApi.invite.deleteInvite.useMutation();
   const utils = clientApi.useUtils();
@@ -121,12 +113,7 @@ const RenderRowActions = ({
   }, [openConfirmModal, row.original.id, mutate, utils, t]);
 
   return (
-    <ActionIcon
-      variant="subtle"
-      color="red"
-      onClick={handleDelete}
-      loading={isPending}
-    >
+    <ActionIcon variant="subtle" color="red" onClick={handleDelete} loading={isPending}>
       <IconTrash color="red" size={20} stroke={1.5} />
     </ActionIcon>
   );
