@@ -12,38 +12,37 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { formatNumber, formatPercentage } from "@homarr/common";
+import { formatNumber } from "@homarr/common";
+import type {
+  stringOrTranslation,
+  TranslationFunction,
+} from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
-import type { stringOrTranslation } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
+import { NoIntegrationSelectedError } from "../../errors";
 
 export default function DnsHoleSummaryWidget({
   options,
-  serverData,
   integrationIds,
 }: WidgetComponentProps<"dnsHoleSummary">) {
-  // TODO: this is an issue
-  const integrationId = integrationIds.at(0) as unknown as string | undefined;
-  const { data, isPending } = clientApi.widget.dnsHole.summary.useQuery(
+  const integrationId = integrationIds.at(0);
+
+  if (!integrationId) {
+    throw new NoIntegrationSelectedError();
+  }
+
+  const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
-      integrationId: integrationId!,
+      integrationId: integrationId,
     },
     {
-      enabled: Boolean(integrationId),
-      initialData:
-        serverData?.initialData?.integrationId === integrationId
-          ? serverData?.initialData
-          : undefined,
       refetchOnMount: false,
+      retry: false,
     },
   );
-
-  if (!data || isPending) {
-    return <div>Loading... {integrationId}</div>;
-  }
 
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)}>
@@ -68,8 +67,11 @@ const stats = [
   },
   {
     icon: IconPercentage,
-    value: ({ adsBlockedTodayPercentage }) =>
-      formatPercentage(adsBlockedTodayPercentage, 2),
+    value: ({ adsBlockedTodayPercentage }, t) =>
+      t("common.rtl", {
+        value: formatNumber(adsBlockedTodayPercentage, 2),
+        symbol: "%",
+      }),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
     color: "rgba(255, 165, 20, 0.4)",
   },
@@ -89,7 +91,10 @@ const stats = [
 
 interface StatItem {
   icon: TablerIcon;
-  value: (x: RouterOutputs["widget"]["dnsHole"]["summary"]) => string;
+  value: (
+    x: RouterOutputs["widget"]["dnsHole"]["summary"],
+    t: TranslationFunction,
+  ) => string;
   label: stringOrTranslation;
   color: string;
 }
@@ -132,7 +137,7 @@ const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
             }}
           >
             <Text ta="center" lh={1.2} size="md" fw="bold">
-              {item.value(data)}
+              {item.value(data, t)}
             </Text>
             {item.label && (
               <Text ta="center" lh={1.2} size="0.75rem">

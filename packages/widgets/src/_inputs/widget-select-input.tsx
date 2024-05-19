@@ -2,6 +2,10 @@
 
 import { Select } from "@mantine/core";
 
+import { translateIfNecessary } from "@homarr/translation";
+import type { stringOrTranslation } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
+
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -9,7 +13,7 @@ import { useFormContext } from "./form";
 export type SelectOption =
   | {
       value: string;
-      label: string;
+      label: stringOrTranslation;
     }
   | string;
 
@@ -25,14 +29,22 @@ export const WidgetSelectInput = ({
   kind,
   options,
 }: CommonWidgetInputProps<"select">) => {
-  const t = useWidgetInputTranslation(kind, property);
+  const t = useI18n();
+  const tWidget = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (
     <Select
-      label={t("label")}
-      data={options.options as unknown as SelectOption[]}
-      description={options.withDescription ? t("description") : undefined}
+      label={tWidget("label")}
+      data={options.options.map((option) =>
+        typeof option === "string"
+          ? option
+          : {
+              value: option.value,
+              label: translateIfNecessary(t, option.label)!,
+            },
+      )}
+      description={options.withDescription ? tWidget("description") : undefined}
       searchable={options.searchable}
       {...form.getInputProps(`options.${property}`)}
     />

@@ -19,7 +19,9 @@ export class PiHoleIntegration
     const result = summaryResponseSchema.safeParse(await response.json());
 
     if (!result.success) {
-      throw new Error(`Failed to parse summary: ${result.error.message}`);
+      throw new Error(
+        `Failed to parse summary, most likely your api key is wrong: ${result.error.message}`,
+      );
     }
 
     return {

@@ -15,7 +15,3 @@ export const formatNumber = (value: number, decimalPlaces: number) => {
   }
   return value.toFixed(decimalPlaces);
 };
-
-export const formatPercentage = (value: number, decimalPlaces: number) => {
-  return `${(value * 100).toFixed(decimalPlaces)}%`;
-};

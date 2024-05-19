@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 // Ignored because of gridstack attributes
 
-import { useMemo } from "react";
 import type { RefObject } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import {
@@ -11,8 +11,10 @@ import {
   IconPencil,
   IconTrash,
 } from "@tabler/icons-react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -24,6 +26,7 @@ import {
   WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
+import { WidgetError } from "@homarr/widgets/errors";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
@@ -113,21 +116,52 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
 
   return (
     <>
-      <ItemMenu offset={4} item={newItem} />
-      <Comp
-        options={options as never}
-        integrationIds={item.integrationIds}
-        serverData={serverData?.data as never}
-        isEditMode={editMode}
-        boardId={board.id}
-        itemId={item.id}
-        {...dimensions}
-      />
+      <QueryErrorResetBoundary>
+        {({ reset }) => (
+          <ErrorBoundary
+            onReset={reset}
+            fallbackRender={({ resetErrorBoundary, error }) => (
+              <>
+                <ItemMenu
+                  offset={4}
+                  item={newItem}
+                  resetErrorBoundary={resetErrorBoundary}
+                />
+                <WidgetError
+                  kind={item.kind}
+                  error={error as unknown}
+                  resetErrorBoundary={resetErrorBoundary}
+                />
+              </>
+            )}
+          >
+            <ItemMenu offset={4} item={newItem} />
+            <Comp
+              options={options as never}
+              integrationIds={item.integrationIds}
+              serverData={serverData?.data as never}
+              isEditMode={editMode}
+              boardId={board.id}
+              itemId={item.id}
+              {...dimensions}
+            />
+          </ErrorBoundary>
+        )}
+      </QueryErrorResetBoundary>
     </>
   );
 };
 
-const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
+const ItemMenu = ({
+  offset,
+  item,
+  resetErrorBoundary,
+}: {
+  offset: number;
+  item: Item;
+  resetErrorBoundary?: () => void;
+}) => {
+  const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
@@ -141,6 +175,14 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
     () => widgetImports[item.kind].definition,
     [item.kind],
   );
+
+  // Reset error boundary on next render if item has been edited
+  useEffect(() => {
+    if (refResetErrorBoundaryOnNextRender.current) {
+      resetErrorBoundary?.();
+      refResetErrorBoundaryOnNextRender.current = false;
+    }
+  }, [item, resetErrorBoundary]);
 
   if (!isEditMode || isPending) return null;
 
@@ -160,6 +202,7 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
           itemId: item.id,
           newIntegrations: integrationIds,
         });
+        refResetErrorBoundaryOnNextRender.current = true;
       },
       integrationData: (integrationData ?? []).filter(
         (integration) =>

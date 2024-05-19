@@ -1,6 +1,8 @@
 import type { LoaderComponent } from "next/dynamic";
+import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetImports } from ".";
@@ -80,6 +82,15 @@ export interface WidgetDefinition {
   icon: TablerIcon;
   supportedIntegrations?: IntegrationKind[];
   options: WidgetOptionsRecord;
+  errors?: Partial<
+    Record<
+      DefaultErrorData["code"],
+      {
+        icon: TablerIcon;
+        message: stringOrTranslation;
+      }
+    >
+  >;
 }
 
 export interface WidgetProps<TKind extends WidgetKind> {

@@ -533,7 +533,6 @@ export default {
         custom: {
           passwordsDoNotMatch: "Passwords do not match",
           boardAlreadyExists: "A board with this name already exists",
-          // TODO: Add custom error messages
         },
       },
     },
@@ -643,10 +642,10 @@ export default {
         layout: {
           label: "Layout",
           option: {
-            horizontal: {
+            row: {
               label: "Horizontal",
             },
-            vertical: {
+            column: {
               label: "Vertical",
             },
             grid: {
@@ -657,6 +656,9 @@ export default {
         usePiHoleColors: {
           label: "Use Pi-Hole colors",
         },
+      },
+      error: {
+        internalServerError: "Failed to fetch DNS Hole Summary",
       },
       data: {
         adsBlockedToday: "blocked today",
@@ -862,6 +864,13 @@ export default {
             fallback: "Unknown",
           },
         },
+      },
+      error: {
+        action: {
+          tryAgain: "Try again",
+          logs: "Check logs for more details",
+        },
+        noIntegration: "No integration selected",
       },
     },
     video: {

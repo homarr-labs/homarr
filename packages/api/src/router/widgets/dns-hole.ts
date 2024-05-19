@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { PiHoleIntegration } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
+import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -21,7 +22,8 @@ export const dnsHoleRouter = createTRPCRouter({
           ctx.integration.decryptedSecrets,
         );
 
-        return await client.getSummaryAsync().catch(() => {
+        return await client.getSummaryAsync().catch((err) => {
+          logger.error(err);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to fetch DNS Hole summary",
