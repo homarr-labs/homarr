@@ -1094,6 +1094,7 @@ export default {
             logs: "Logs",
           },
         },
+        settings: "Settings",
         help: {
           label: "Help",
           items: {
@@ -1259,6 +1260,30 @@ export default {
             title: "Permissions",
             form: {
               unsavedChanges: "You have unsaved changes!",
+            },
+          },
+        },
+      },
+      settings: {
+        title: "Settings",
+        section: {
+          analytics: {
+            title: "Analytics",
+            general: {
+              title: "Send anonymous analytics",
+              text: "Homarr will send anonymized analytics using the open source software Umami. It never collects any personal information and is therefore fully GDPR & CCPA compliant. We encourage you to enable analytics because it helps our open source team to identify issues and prioritize our backlog.",
+            },
+            widgetData: {
+              title: "Widget data",
+              text: "Send which widgets (and their quantity) you have configured. Does not include URLs, names or any other data.",
+            },
+            integrationData: {
+              title: "Integration data",
+              text: "Send which integrations (and their quantity) you have configured. Does not include URLs, names or any other data.",
+            },
+            usersData: {
+              title: "Users data",
+              text: "Send the amount of users and whether you've activated SSO",
             },
           },
         },

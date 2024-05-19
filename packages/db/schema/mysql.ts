@@ -285,6 +285,11 @@ export const iconRepositories = mysqlTable("iconRepository", {
   slug: varchar("iconRepository_slug", { length: 150 }).notNull(),
 });
 
+export const serverSettings = mysqlTable("serverSetting", {
+  settingKey: varchar("key", { length: 64 }).notNull().unique().primaryKey(),
+  value: text("value").default('{"json": {}}').notNull(), // empty superjson object
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],

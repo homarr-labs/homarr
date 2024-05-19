@@ -15,6 +15,13 @@
       "when": 1715885855801,
       "tag": "0001_wild_alex_wilder",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1716148439439,
+      "tag": "0002_freezing_black_panther",
+      "breakpoints": true
     }
   ]
 }
