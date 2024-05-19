@@ -2,10 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
-import type {
-  BoardItemAdvancedOptions,
-  BoardItemIntegration,
-} from "@homarr/validation";
+import type { BoardItemAdvancedOptions, BoardItemIntegration } from "@homarr/validation";
 
 import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
@@ -125,8 +122,7 @@ export const useItemActions = () => {
           ...previous,
           sections: previous.sections.map((section) => {
             // Return same section if item is not in it
-            if (!section.items.some((item) => item.id === itemId))
-              return section;
+            if (!section.items.some((item) => item.id === itemId)) return section;
             return {
               ...section,
               items: section.items.map((item) => {

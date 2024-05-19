@@ -8,10 +8,7 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import type {
-  BoardItemAdvancedOptions,
-  BoardItemIntegration,
-} from "@homarr/validation";
+import type { BoardItemAdvancedOptions, BoardItemIntegration } from "@homarr/validation";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,

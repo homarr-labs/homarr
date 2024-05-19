@@ -2,14 +2,7 @@
 
 import type { FocusEventHandler } from "react";
 import { useState } from "react";
-import {
-  Combobox,
-  Group,
-  Pill,
-  PillsInput,
-  Text,
-  useCombobox,
-} from "@mantine/core";
+import { Combobox, Group, Pill, PillsInput, Text, useCombobox } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -23,14 +16,7 @@ interface TextMultiSelectProps {
   error?: string;
 }
 
-export const TextMultiSelect = ({
-  label,
-  value = [],
-  onChange,
-  onBlur,
-  onFocus,
-  error,
-}: TextMultiSelectProps) => {
+export const TextMultiSelect = ({ label, value = [], onChange, onBlur, onFocus, error }: TextMultiSelectProps) => {
   const t = useI18n();
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -61,17 +47,9 @@ export const TextMultiSelect = ({
   ));
 
   return (
-    <Combobox
-      store={combobox}
-      onOptionSubmit={handleValueSelect}
-      withinPortal={false}
-    >
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput
-          label={label}
-          error={error}
-          onClick={() => combobox.openDropdown()}
-        >
+        <PillsInput label={label} error={error} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
             {values}
 
@@ -109,9 +87,7 @@ export const TextMultiSelect = ({
             <Combobox.Option value="$create">
               <Group>
                 <IconPlus size={12} />
-                <Text size="sm">
-                  {t("common.multiText.addLabel", { value: search })}
-                </Text>
+                <Text size="sm">{t("common.multiText.addLabel", { value: search })}</Text>
               </Group>
             </Combobox.Option>
           </Combobox.Options>

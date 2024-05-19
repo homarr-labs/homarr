@@ -956,8 +956,7 @@ export default {
       },
       customCss: {
         label: "Custom css for this board",
-        description:
-          "Further, customize your dashboard using CSS, only recommended for experienced users",
+        description: "Further, customize your dashboard using CSS, only recommended for experienced users",
         customClassesAlert: {
           title: "Custom classes",
           description:

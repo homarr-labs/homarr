@@ -22,8 +22,7 @@ interface Props {
 export const CustomCssSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const customCssT = useScopedI18n("board.field.customCss");
-  const { mutate: savePartialSettings, isPending } =
-    useSavePartialSettingsMutation(board);
+  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
   const form = useForm({
     initialValues: {
       customCss: board.customCss ?? "",
@@ -42,12 +41,7 @@ export const CustomCssSettingsContent = ({ board }: Props) => {
       <Stack>
         <CustomCssInput {...form.getInputProps("customCss")} />
 
-        <Alert
-          variant="light"
-          color="cyan"
-          title={customCssT("customClassesAlert.title")}
-          icon={<IconInfoCircle />}
-        >
+        <Alert variant="light" color="cyan" title={customCssT("customClassesAlert.title")} icon={<IconInfoCircle />}>
           {customCssT("customClassesAlert.description")}
         </Alert>
 
@@ -83,9 +77,7 @@ const CustomCssInput = ({ value, onChange }: CustomCssInputProps) => {
           textareaId="custom-css"
           onValueChange={onChange}
           value={value ?? ""}
-          highlight={(code) =>
-            highlight(code, languages.extend("css", {}), "css")
-          }
+          highlight={(code) => highlight(code, languages.extend("css", {}), "css")}
           padding={10}
           style={{
             fontFamily: '"Fira code", "Fira Mono", monospace',

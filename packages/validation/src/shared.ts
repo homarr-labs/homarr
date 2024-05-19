@@ -17,9 +17,7 @@ export const itemAdvancedOptionsSchema = z.object({
   customCssClasses: z.array(z.string()).default([]),
 });
 
-export type BoardItemAdvancedOptions = z.infer<
-  typeof itemAdvancedOptionsSchema
->;
+export type BoardItemAdvancedOptions = z.infer<typeof itemAdvancedOptionsSchema>;
 
 export const sharedItemSchema = z.object({
   id: z.string(),
