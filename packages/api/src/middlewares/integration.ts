@@ -10,69 +10,55 @@ import { publicProcedure } from "../trpc";
 
 // TODO: add access control in some way, most likely reusable middleware or something
 
-export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
-  ...kinds: TKind[]
-) => {
+export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
+  return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
+    const integration = await ctx.db.query.integrations.findFirst({
+      where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
+      with: {
+        secrets: true,
+      },
+    });
+
+    if (!integration) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `Integration with id ${input.integrationId} not found or not of kinds ${kinds.join(",")}`,
+      });
+    }
+
+    const { secrets, kind, ...rest } = integration;
+
+    return next({
+      ctx: {
+        integration: {
+          ...rest,
+          kind: kind as TKind,
+          decryptedSecrets: secrets.map((secret) => ({
+            ...secret,
+            value: decryptSecret(secret.value),
+          })),
+        },
+      },
+    });
+  });
+};
+
+export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
   return publicProcedure
-    .input(z.object({ integrationId: z.string() }))
-    .use(async ({ input, ctx, next }) => {
-      const integration = await ctx.db.query.integrations.findFirst({
-        where: and(
-          eq(integrations.id, input.integrationId),
-          inArray(integrations.kind, kinds),
-        ),
+    .input(z.object({ integrationIds: z.array(z.string()).min(1) }))
+    .use(async ({ ctx, input, next }) => {
+      const dbIntegrations = await ctx.db.query.integrations.findMany({
+        where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
         with: {
           secrets: true,
         },
       });
 
-      if (!integration) {
+      const offset = input.integrationIds.length - dbIntegrations.length;
+      if (offset !== 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Integration not found",
-        });
-      }
-
-      const { secrets, kind, ...rest } = integration;
-
-      return next({
-        ctx: {
-          integration: {
-            ...rest,
-            kind: kind as TKind,
-            decryptedSecrets: secrets.map((secret) => ({
-              ...secret,
-              value: decryptSecret(secret.value),
-            })),
-          },
-        },
-      });
-    });
-};
-
-export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
-  ...kinds: TKind[]
-) => {
-  return publicProcedure
-    .input(z.object({ integrationIds: z.array(z.string()) }))
-    .use(async ({ ctx, input, next }) => {
-      const dbIntegrations =
-        input.integrationIds.length >= 1
-          ? await ctx.db.query.integrations.findMany({
-              where: and(
-                inArray(integrations.id, input.integrationIds),
-                inArray(integrations.kind, kinds),
-              ),
-              with: {
-                secrets: true,
-              },
-            })
-          : [];
-
-      if (dbIntegrations.length !== input.integrationIds.length) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Integration not found",
+          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}`,
         });
       }
 

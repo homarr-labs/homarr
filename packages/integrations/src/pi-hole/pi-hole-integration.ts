@@ -3,24 +3,21 @@ import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/d
 import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-summary-types";
 import { summaryResponseSchema } from "./pi-hole-types";
 
-export class PiHoleIntegration
-  extends Integration
-  implements DnsHoleSummaryIntegration
-{
+export class PiHoleIntegration extends Integration implements DnsHoleSummaryIntegration {
   async getSummaryAsync(): Promise<DnsHoleSummary> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetch(
-      `${this.url}/admin/api.php?summaryRaw&auth=${apiKey}`,
-    );
+    const response = await fetch(`${this.integration.url}/admin/api.php?summaryRaw&auth=${apiKey}`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch summary: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch summary for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
     }
 
     const result = summaryResponseSchema.safeParse(await response.json());
 
     if (!result.success) {
       throw new Error(
-        `Failed to parse summary, most likely your api key is wrong: ${result.error.message}`,
+        `Failed to parse summary for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
       );
     }
 

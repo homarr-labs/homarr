@@ -4,14 +4,18 @@ import type { IntegrationSecret } from "./types";
 
 export abstract class Integration {
   constructor(
-    protected url: string,
-    protected secrets: IntegrationSecret[],
+    protected integration: {
+      id: string;
+      name: string;
+      url: string;
+      decryptedSecrets: IntegrationSecret[];
+    },
   ) {}
 
   protected getSecretValue(kind: IntegrationSecretKind) {
-    const secret = this.secrets.find((secret) => secret.kind === kind);
+    const secret = this.integration.decryptedSecrets.find((secret) => secret.kind === kind);
     if (!secret) {
-      throw new Error(`Secret with kind ${kind} not found`);
+      throw new Error(`No secret of kind ${kind} was found`);
     }
     return secret.value;
   }

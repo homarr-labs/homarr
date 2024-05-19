@@ -3,20 +3,12 @@
 import type { BoxProps } from "@mantine/core";
 import { Box, Card, Center, Flex, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import {
-  IconBarrierBlock,
-  IconPercentage,
-  IconSearch,
-  IconWorldWww,
-} from "@tabler/icons-react";
+import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
-import type {
-  stringOrTranslation,
-  TranslationFunction,
-} from "@homarr/translation";
+import type { stringOrTranslation, TranslationFunction } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -24,10 +16,7 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 
-export default function DnsHoleSummaryWidget({
-  options,
-  integrationIds,
-}: WidgetComponentProps<"dnsHoleSummary">) {
+export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<"dnsHoleSummary">) {
   const integrationId = integrationIds.at(0);
 
   if (!integrationId) {
@@ -47,12 +36,7 @@ export default function DnsHoleSummaryWidget({
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)}>
       {stats.map((item, index) => (
-        <StatCard
-          key={index}
-          item={item}
-          usePiHoleColors={options.usePiHoleColors}
-          data={data}
-        />
+        <StatCard key={index} item={item} usePiHoleColors={options.usePiHoleColors} data={data} />
       ))}
     </Box>
   );
@@ -63,7 +47,7 @@ const stats = [
     icon: IconBarrierBlock,
     value: ({ adsBlockedToday }) => formatNumber(adsBlockedToday, 2),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedToday"),
-    color: "rgba(240, 82, 60, 0.4)",
+    color: "rgba(240, 82, 60, 0.4)", // RED
   },
   {
     icon: IconPercentage,
@@ -73,28 +57,25 @@ const stats = [
         symbol: "%",
       }),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
-    color: "rgba(255, 165, 20, 0.4)",
+    color: "rgba(255, 165, 20, 0.4)", // YELLOW
   },
   {
     icon: IconSearch,
     value: ({ dnsQueriesToday }) => formatNumber(dnsQueriesToday, 2),
     label: (t) => t("widget.dnsHoleSummary.data.dnsQueriesToday"),
-    color: "rgba(0, 175, 218, 0.4)",
+    color: "rgba(0, 175, 218, 0.4)", // BLUE
   },
   {
     icon: IconWorldWww,
     value: ({ domainsBeingBlocked }) => formatNumber(domainsBeingBlocked, 2),
     label: (t) => t("widget.dnsHoleSummary.data.domainsBeingBlocked"),
-    color: "rgba(0, 176, 96, 0.4)",
+    color: "rgba(0, 176, 96, 0.4)", // GREEN
   },
 ] satisfies StatItem[];
 
 interface StatItem {
   icon: TablerIcon;
-  value: (
-    x: RouterOutputs["widget"]["dnsHole"]["summary"],
-    t: TranslationFunction,
-  ) => string;
+  value: (x: RouterOutputs["widget"]["dnsHole"]["summary"], t: TranslationFunction) => string;
   label: stringOrTranslation;
   color: string;
 }
@@ -112,8 +93,8 @@ const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
   return (
     <Card
       ref={ref}
-      m="0.4rem"
-      p="0.2rem"
+      m={6}
+      p={3}
       bg={usePiHoleColors ? item.color : "rgba(96, 96, 96, 0.1)"}
       style={{
         flex: 1,
@@ -121,13 +102,7 @@ const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
       withBorder
     >
       <Center h="100%" w="100%">
-        <Flex
-          h="100%"
-          w="100%"
-          align="center"
-          justify="space-evenly"
-          direction={isLong ? "row" : "column"}
-        >
+        <Flex h="100%" w="100%" align="center" justify="space-evenly" direction={isLong ? "row" : "column"}>
           <item.icon size={30} style={{ margin: "0 10" }} />
           <Flex
             justify="center"
@@ -151,9 +126,7 @@ const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
   );
 };
 
-const boxPropsByLayout = (
-  layout: WidgetProps<"dnsHoleSummary">["options"]["layout"],
-): BoxProps => {
+const boxPropsByLayout = (layout: WidgetProps<"dnsHoleSummary">["options"]["layout"]): BoxProps => {
   if (layout === "grid") {
     return {
       display: "grid",

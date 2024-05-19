@@ -22,20 +22,14 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
       <Stack gap={0}>
         <Text ta="center">{translateIfNecessary(t, props.message)}</Text>
         {props.showLogsLink && (
-          <Anchor
-            component={Link}
-            href="/manage/tools/logs"
-            target="_blank"
-            ta="center"
-            size="sm"
-          >
+          <Anchor component={Link} href="/manage/tools/logs" target="_blank" ta="center" size="sm">
             {t("widget.common.error.action.logs")}
           </Anchor>
         )}
       </Stack>
 
       <Button onClick={props.onRetry} size="sm" variant="light">
-        {t("widget.common.error.action.tryAgain")}
+        {t("common.action.tryAgain")}
       </Button>
     </Stack>
   );

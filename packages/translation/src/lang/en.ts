@@ -118,8 +118,7 @@ export default {
         label: "Delete user permanently",
         description:
           "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
-        confirm:
-          "Are you sure, that you want to delete the user {username} with his preferences?",
+        confirm: "Are you sure, that you want to delete the user {username} with his preferences?",
       },
       select: {
         label: "Select user",
@@ -144,8 +143,7 @@ export default {
         item: {
           admin: {
             label: "Administrator",
-            description:
-              "Members with this permission have full access to all features and settings",
+            description: "Members with this permission have full access to all features and settings",
           },
         },
       },
@@ -162,8 +160,7 @@ export default {
           },
           "modify-all": {
             label: "Modify all boards",
-            description:
-              "Allow members to modify all boards (Does not include access control and danger zone)",
+            description: "Allow members to modify all boards (Does not include access control and danger zone)",
           },
           "full-access": {
             label: "Full board access",
@@ -181,8 +178,7 @@ export default {
           },
           "use-all": {
             label: "Use all integrations",
-            description:
-              "Allows members to add any integrations to their boards",
+            description: "Allows members to add any integrations to their boards",
           },
           "interact-all": {
             label: "Interact with any integration",
@@ -190,8 +186,7 @@ export default {
           },
           "full-access": {
             label: "Full integration access",
-            description:
-              "Allow members to manage, use and interact with any integration",
+            description: "Allow members to manage, use and interact with any integration",
           },
         },
       },
@@ -211,8 +206,7 @@ export default {
       transfer: {
         label: "Transfer ownership",
         description: "Transfer ownership of this group to another user.",
-        confirm:
-          "Are you sure you want to transfer ownership for the group {name} to {username}?",
+        confirm: "Are you sure you want to transfer ownership for the group {name} to {username}?",
         notification: {
           success: {
             message: "Transfered group {group} successfully to {user}",
@@ -231,8 +225,7 @@ export default {
       },
       delete: {
         label: "Delete group",
-        description:
-          "Once you delete a group, there is no going back. Please be certain.",
+        description: "Once you delete a group, there is no going back. Please be certain.",
         confirm: "Are you sure you want to delete the group {name}?",
         notification: {
           success: {
@@ -383,8 +376,7 @@ export default {
     },
     testConnection: {
       action: "Test connection",
-      alertNotice:
-        "The Save button is enabled once a successful connection is established",
+      alertNotice: "The Save button is enabled once a successful connection is established",
       notification: {
         success: {
           title: "Connection successful",
@@ -452,10 +444,10 @@ export default {
       previous: "Previous",
       next: "Next",
       checkoutDocs: "Check out the documentation",
+      tryAgain: "Try again",
     },
     iconPicker: {
-      header:
-        "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+      header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
     },
     notification: {
       create: {
@@ -664,7 +656,7 @@ export default {
         adsBlockedToday: "blocked today",
         adsBlockedTodayPercentage: "blocked today",
         dnsQueriesToday: "Queries today",
-        domainsBeingBlocked: "Domains on adlists",
+        domainsBeingBlocked: "Domains on blocklist",
       },
     },
     clock: {
@@ -673,8 +665,7 @@ export default {
       option: {
         customTitleToggle: {
           label: "Custom Title/City display",
-          description:
-            "Show off a custom title or the name of the city/country on top of the clock.",
+          description: "Show off a custom title or the name of the city/country on top of the clock.",
         },
         customTitle: {
           label: "Title",
@@ -765,8 +756,7 @@ export default {
     },
     iframe: {
       name: "iFrame",
-      description:
-        "Embed any content from the internet. Some websites may restrict access.",
+      description: "Embed any content from the internet. Some websites may restrict access.",
       option: {
         embedUrl: {
           label: "Embed URL",
@@ -798,14 +788,12 @@ export default {
       },
       error: {
         noUrl: "No iFrame URL provided",
-        noBrowerSupport:
-          "Your Browser does not support iframes. Please update your browser.",
+        noBrowerSupport: "Your Browser does not support iframes. Please update your browser.",
       },
     },
     weather: {
       name: "Weather",
-      description:
-        "Displays the current weather information of a set location.",
+      description: "Displays the current weather information of a set location.",
       option: {
         isFormatFahrenheit: {
           label: "Temperature in Fahrenheit",
@@ -821,8 +809,7 @@ export default {
         },
         forecastDayCount: {
           label: "Amount of forecast days",
-          description:
-            "When the widget is not wide enough, less days are shown",
+          description: "When the widget is not wide enough, less days are shown",
         },
       },
       kind: {
@@ -867,7 +854,6 @@ export default {
       },
       error: {
         action: {
-          tryAgain: "Try again",
           logs: "Check logs for more details",
         },
         noIntegration: "No integration selected",
@@ -882,8 +868,7 @@ export default {
         },
         hasAutoPlay: {
           label: "Autoplay",
-          description:
-            "Autoplay only works when muted because of browser restrictions",
+          description: "Autoplay only works when muted because of browser restrictions",
         },
         isMuted: {
           label: "Muted",
@@ -956,13 +941,11 @@ export default {
         option: {
           repeat: {
             label: "Repeat",
-            description:
-              "The image is repeated as much as needed to cover the whole background image painting area.",
+            description: "The image is repeated as much as needed to cover the whole background image painting area.",
           },
           "no-repeat": {
             label: "No repeat",
-            description:
-              "The image is not repeated and may not fill the entire space.",
+            description: "The image is not repeated and may not fill the entire space.",
           },
           "repeat-x": {
             label: "Repeat X",
@@ -1016,8 +999,7 @@ export default {
       section: {
         general: {
           title: "General",
-          unrecognizedLink:
-            "The provided link is not recognized and won't preview, it might still work.",
+          unrecognizedLink: "The provided link is not recognized and won't preview, it might still work.",
         },
         layout: {
           title: "Layout",
@@ -1074,8 +1056,7 @@ export default {
           action: {
             rename: {
               label: "Rename board",
-              description:
-                "Changing the name will break any links to this board.",
+              description: "Changing the name will break any links to this board.",
               button: "Change name",
               modal: {
                 title: "Rename board",
@@ -1106,8 +1087,7 @@ export default {
             },
             delete: {
               label: "Delete this board",
-              description:
-                "Once you delete a board, there is no going back. Please be certain.",
+              description: "Once you delete a board, there is no going back. Please be certain.",
               button: "Delete this board",
               confirm: {
                 title: "Delete board",
