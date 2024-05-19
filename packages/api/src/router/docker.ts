@@ -73,17 +73,25 @@ export const dockerRouter = createTRPCRouter({
 
     return {
       containers: sanitizedContainers,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date(),
     };
   }),
 });
 
-function sanitizeContainers(containers: Docker.ContainerInfo[]) {
+export interface DockerContainer {
+  name: string;
+  id: string;
+  state: string;
+  image: string;
+  ports: Docker.Port[];
+}
+
+function sanitizeContainers(containers: Docker.ContainerInfo[]): DockerContainer[] {
   return containers.map((container) => {
     return {
-      name: container.Names[0],
+      name: container.Names[0] || "Unknown",
       id: container.Id,
-      status: container.State,
+      state: container.State,
       image: container.Image,
       ports: container.Ports,
     };
