@@ -312,11 +312,11 @@ export const iconRepositories = mysqlTable("iconRepository", {
 });
 
 export const serverSettings = mysqlTable("serverSetting", {
-  settingKey: varchar("serverSetting_settingKey", { length: 64 })
+  settingKey: varchar("key", { length: 64 })
     .notNull()
     .unique()
     .primaryKey(),
-  value: text("serverSetting_value").default('{"json": {}}').notNull(), // empty superjson object
+  value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
