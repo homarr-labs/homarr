@@ -19,8 +19,7 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useForm } from "@homarr/form";
 import type { defaultServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
-
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface AnalyticsSettingsProps {
   initialData: typeof defaultServerSettings.analytics;
@@ -56,7 +55,7 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
   const { mutateAsync, isPending } =
     clientApi.serverSettings.saveSettings.useMutation({
       onSettled: async () => {
-        await revalidatePathAction("/manage/settings");
+        await revalidatePathActionAsync("/manage/settings");
       },
     });
 
