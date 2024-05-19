@@ -1,6 +1,6 @@
 import { jobs } from "./jobs";
-import { seedServerSettings } from "./seed-server-settings";
+import { seedServerSettingsAsync } from "./seed-server-settings";
 
 jobs.startAll();
 
-void seedServerSettings();
+void seedServerSettingsAsync();

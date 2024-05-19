@@ -9,7 +9,7 @@ import {
   defaultServerSettingsKeys,
 } from "../../../packages/server-settings";
 
-export const seedServerSettings = async () => {
+export const seedServerSettingsAsync = async () => {
   const serverSettingsData = await db.query.serverSettings.findMany();
   let insertedSettingsCount = 0;
 
