@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
-import type { BoardItemAdvancedOptions, BoardItemIntegration } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation";
 
 import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";

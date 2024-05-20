@@ -12,8 +12,7 @@ export class NoIntegrationSelectedError extends ErrorBoundaryError {
   public getErrorBoundaryData() {
     return {
       icon: IconPlugX,
-      message: (t: TranslationFunction) =>
-        t("widget.common.error.noIntegration"),
+      message: (t: TranslationFunction) => t("widget.common.error.noIntegration"),
       showLogsLink: false,
     };
   }

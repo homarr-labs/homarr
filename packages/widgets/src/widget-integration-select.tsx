@@ -61,13 +61,7 @@ export const WidgetIntegrationSelect = ({
       return null;
     }
 
-    return (
-      <IntegrationPill
-        key={item}
-        option={option}
-        onRemove={() => handleValueRemove(item)}
-      />
-    );
+    return <IntegrationPill key={item} option={option} onRemove={() => handleValueRemove(item)} />;
   });
 
   const options = data.map((item) => {

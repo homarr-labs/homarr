@@ -15,48 +15,21 @@ interface WidgetErrorProps {
   resetErrorBoundary: () => void;
 }
 
-export const WidgetError = ({
-  error,
-  resetErrorBoundary,
-  kind,
-}: WidgetErrorProps) => {
-  const currentDefinition = useMemo(
-    () => widgetImports[kind].definition,
-    [kind],
-  );
+export const WidgetError = ({ error, resetErrorBoundary, kind }: WidgetErrorProps) => {
+  const currentDefinition = useMemo(() => widgetImports[kind].definition, [kind]);
 
   if (error instanceof ErrorBoundaryError) {
-    return (
-      <BaseWidgetError
-        {...error.getErrorBoundaryData()}
-        onRetry={resetErrorBoundary}
-      />
-    );
+    return <BaseWidgetError {...error.getErrorBoundaryData()} onRetry={resetErrorBoundary} />;
   }
 
   if (error instanceof TRPCClientError && "code" in error.data) {
     const errorData = error.data as DefaultErrorData;
 
-    if (
-      !(
-        "errors" in currentDefinition &&
-        errorData.code in currentDefinition.errors
-      )
-    )
-      return null;
+    if (!("errors" in currentDefinition && errorData.code in currentDefinition.errors)) return null;
 
-    const errorDefinition =
-      currentDefinition.errors[
-        errorData.code as keyof typeof currentDefinition.errors
-      ];
+    const errorDefinition = currentDefinition.errors[errorData.code as keyof typeof currentDefinition.errors];
 
-    return (
-      <BaseWidgetError
-        {...errorDefinition}
-        onRetry={resetErrorBoundary}
-        showLogsLink
-      />
-    );
+    return <BaseWidgetError {...errorDefinition} onRetry={resetErrorBoundary} showLogsLink />;
   }
 
   return (
