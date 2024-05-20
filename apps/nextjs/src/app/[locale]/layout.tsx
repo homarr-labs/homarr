@@ -11,12 +11,12 @@ import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 
+import { Analytics } from "~/components/layout/analytics";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { composeWrappers } from "./compose";
-import { Analytics } from "~/components/layout/analytics";
 
 const fontSans = Inter({
   subsets: ["latin"],
