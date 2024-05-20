@@ -16,7 +16,7 @@ export const dnsHoleRouter = createTRPCRouter({
       const client = new PiHoleIntegration(ctx.integration);
 
       return await client.getSummaryAsync().catch((err) => {
-        logger.error(`dns-hole router - `, err);
+        logger.error("dns-hole router - ", err);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: `Failed to fetch DNS Hole summary for ${ctx.integration.name} (${ctx.integration.id})`,
