@@ -363,6 +363,9 @@ importers:
       '@umami/node':
         specifier: ^0.3.0
         version: 0.3.0
+      superjson:
+        specifier: 2.2.1
+        version: 2.2.1
     devDependencies:
       '@homarr/db':
         specifier: workspace:^0.1.0
@@ -370,9 +373,15 @@ importers:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../server-settings
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript

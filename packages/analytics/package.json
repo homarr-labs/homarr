@@ -21,10 +21,12 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
-    "@homarr/tsconfig": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/server-settings": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5"
   },
@@ -35,6 +37,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@umami/node": "^0.3.0"
+    "@umami/node": "^0.3.0",
+    "superjson": "2.2.1"
   }
 }
