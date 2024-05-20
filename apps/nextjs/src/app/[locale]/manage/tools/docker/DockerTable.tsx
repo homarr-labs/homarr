@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Box, Button, Group, Stack, Text } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Group, Stack, Text } from "@mantine/core";
 import {
   IconPlayerPlay,
   IconPlayerStop,
@@ -12,6 +12,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import type { DockerContainer } from "node_modules/@homarr/api/src/router/docker";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import { OverflowBadge } from "@homarr/ui";
 
