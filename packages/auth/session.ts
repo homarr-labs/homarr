@@ -16,10 +16,7 @@ export const generateSessionToken = () => {
   return randomUUID();
 };
 
-export const getSessionFromTokenAsync = async (
-  db: Database,
-  token: string | undefined,
-): Promise<Session | null> => {
+export const getSessionFromTokenAsync = async (db: Database, token: string | undefined): Promise<Session | null> => {
   if (!token) {
     return null;
   }

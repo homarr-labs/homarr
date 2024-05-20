@@ -18,9 +18,7 @@ interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
 }
 
-export const createBoardContentPage = <
-  TParams extends Record<string, unknown>,
->({
+export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
 }: Props<TParams>) => {
   return {
@@ -32,21 +30,13 @@ export const createBoardContentPage = <
     page: () => {
       return <ClientBoard />;
     },
-    generateMetadataAsync: async ({
-      params,
-    }: {
-      params: TParams;
-    }): Promise<Metadata> => {
+    generateMetadataAsync: async ({ params }: { params: TParams }): Promise<Metadata> => {
       try {
         const board = await getInitialBoard(params);
         const t = await getI18n();
 
         return {
-          title:
-            board.metaTitle ??
-            createMetaTitle(
-              t("board.content.metaTitle", { boardName: board.name }),
-            ),
+          title: board.metaTitle ?? createMetaTitle(t("board.content.metaTitle", { boardName: board.name })),
           icons: {
             icon: board.faviconImageUrl ? board.faviconImageUrl : undefined,
           },

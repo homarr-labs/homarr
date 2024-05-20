@@ -20,14 +20,11 @@ describe("expireDateAfter should calculate date after specified seconds", () => 
     ["2023-07-01T00:00:00Z", 60 * 60 * 24 * 30, "2023-07-31T00:00:00Z"], // 30 days
     ["2023-07-01T00:00:00Z", 60 * 60 * 24 * 365, "2024-06-30T00:00:00Z"], // 1 year
     ["2023-07-01T00:00:00Z", 60 * 60 * 24 * 365 * 10, "2033-06-28T00:00:00Z"], // 10 years
-  ])(
-    "should calculate date %s and after %i seconds to equal %s",
-    (initialDate, seconds, expectedDate) => {
-      vi.setSystemTime(new Date(initialDate));
-      const result = expireDateAfter(seconds);
-      expect(result).toEqual(new Date(expectedDate));
-    },
-  );
+  ])("should calculate date %s and after %i seconds to equal %s", (initialDate, seconds, expectedDate) => {
+    vi.setSystemTime(new Date(initialDate));
+    const result = expireDateAfter(seconds);
+    expect(result).toEqual(new Date(expectedDate));
+  });
 });
 
 describe("generateSessionToken should return a random UUID", () => {

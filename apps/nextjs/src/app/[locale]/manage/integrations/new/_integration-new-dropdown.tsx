@@ -16,9 +16,7 @@ export const IntegrationCreateDropdownContent = () => {
   const [search, setSearch] = useState("");
 
   const filteredKinds = useMemo(() => {
-    return integrationKinds.filter((kind) =>
-      kind.includes(search.toLowerCase()),
-    );
+    return integrationKinds.filter((kind) => kind.includes(search.toLowerCase()));
   }, [search]);
 
   const handleSearch = React.useCallback(
@@ -38,11 +36,7 @@ export const IntegrationCreateDropdownContent = () => {
       {filteredKinds.length > 0 ? (
         <ScrollArea.Autosize mah={384}>
           {filteredKinds.map((kind) => (
-            <Menu.Item
-              component={Link}
-              href={`/manage/integrations/new?kind=${kind}`}
-              key={kind}
-            >
+            <Menu.Item component={Link} href={`/manage/integrations/new?kind=${kind}`} key={kind}>
               <Group>
                 <IntegrationAvatar kind={kind} size="sm" />
                 <Text size="sm">{getIntegrationName(kind)}</Text>

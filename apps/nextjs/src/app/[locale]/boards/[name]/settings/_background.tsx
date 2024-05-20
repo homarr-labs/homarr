@@ -2,11 +2,7 @@
 
 import { Button, Grid, Group, Stack, TextInput } from "@mantine/core";
 
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-} from "@homarr/definitions";
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -22,8 +18,7 @@ interface Props {
 }
 export const BackgroundSettingsContent = ({ board }: Props) => {
   const t = useI18n();
-  const { mutate: savePartialSettings, isPending } =
-    useSavePartialSettingsMutation(board);
+  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
   const form = useZodForm(validation.board.savePartialSettings, {
     initialValues: {
       backgroundImageUrl: board.backgroundImageUrl ?? "",
@@ -37,14 +32,8 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
     "backgroundImageAttachment",
     backgroundImageAttachments,
   );
-  const backgroundImageSizeData = useBackgroundOptionData(
-    "backgroundImageSize",
-    backgroundImageSizes,
-  );
-  const backgroundImageRepeatData = useBackgroundOptionData(
-    "backgroundImageRepeat",
-    backgroundImageRepeats,
-  );
+  const backgroundImageSizeData = useBackgroundOptionData("backgroundImageSize", backgroundImageSizes);
+  const backgroundImageRepeatData = useBackgroundOptionData("backgroundImageRepeat", backgroundImageRepeats);
 
   return (
     <form
@@ -96,13 +85,9 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
   );
 };
 
-type BackgroundImageKey =
-  | "backgroundImageAttachment"
-  | "backgroundImageSize"
-  | "backgroundImageRepeat";
+type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";
 
-type inferOptions<TKey extends BackgroundImageKey> =
-  TranslationObject["board"]["field"][TKey]["option"];
+type inferOptions<TKey extends BackgroundImageKey> = TranslationObject["board"]["field"][TKey]["option"];
 
 const useBackgroundOptionData = <
   TKey extends BackgroundImageKey,
@@ -120,9 +105,7 @@ const useBackgroundOptionData = <
     (value) =>
       ({
         label: t(`board.field.${key}.option.${value as string}.label` as never),
-        description: t(
-          `board.field.${key}.option.${value as string}.description` as never,
-        ),
+        description: t(`board.field.${key}.option.${value as string}.description` as never),
         value: value as string,
         badge:
           data.defaultValue === value

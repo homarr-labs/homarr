@@ -17,18 +17,13 @@ export type SelectOption =
     }
   | string;
 
-export type inferSelectOptionValue<TOption extends SelectOption> =
-  TOption extends {
-    value: infer TValue;
-  }
-    ? TValue
-    : TOption;
+export type inferSelectOptionValue<TOption extends SelectOption> = TOption extends {
+  value: infer TValue;
+}
+  ? TValue
+  : TOption;
 
-export const WidgetSelectInput = ({
-  property,
-  kind,
-  options,
-}: CommonWidgetInputProps<"select">) => {
+export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInputProps<"select">) => {
   const t = useI18n();
   const tWidget = useWidgetInputTranslation(kind, property);
   const form = useFormContext();

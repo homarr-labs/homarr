@@ -8,11 +8,7 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetMultiSelectInput = ({
-  property,
-  kind,
-  options,
-}: CommonWidgetInputProps<"multiSelect">) => {
+export const WidgetMultiSelectInput = ({ property, kind, options }: CommonWidgetInputProps<"multiSelect">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 

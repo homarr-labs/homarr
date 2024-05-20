@@ -20,8 +20,7 @@ export const DangerZoneSettingsContent = () => {
   const { openModal } = useModalAction(BoardRenameModal);
   const { mutate: changeVisibility, isPending: isChangeVisibilityPending } =
     clientApi.board.changeBoardVisibility.useMutation();
-  const { mutate: deleteBoard, isPending: isDeletePending } =
-    clientApi.board.deleteBoard.useMutation();
+  const { mutate: deleteBoard, isPending: isDeletePending } = clientApi.board.deleteBoard.useMutation();
   const utils = clientApi.useUtils();
   const visibility = board.isPublic ? "public" : "private";
 
@@ -37,12 +36,8 @@ export const DangerZoneSettingsContent = () => {
 
   const onVisibilityClick = useCallback(() => {
     openConfirmModal({
-      title: t(
-        `section.dangerZone.action.visibility.confirm.${visibility}.title`,
-      ),
-      children: t(
-        `section.dangerZone.action.visibility.confirm.${visibility}.description`,
-      ),
+      title: t(`section.dangerZone.action.visibility.confirm.${visibility}.title`),
+      children: t(`section.dangerZone.action.visibility.confirm.${visibility}.description`),
       onConfirm: () => {
         changeVisibility(
           {
@@ -98,12 +93,8 @@ export const DangerZoneSettingsContent = () => {
       <Divider />
       <DangerZoneRow
         label={t("section.dangerZone.action.visibility.label")}
-        description={t(
-          `section.dangerZone.action.visibility.description.${visibility}`,
-        )}
-        buttonText={t(
-          `section.dangerZone.action.visibility.button.${visibility}`,
-        )}
+        description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
+        buttonText={t(`section.dangerZone.action.visibility.button.${visibility}`)}
         onClick={onVisibilityClick}
         isPending={isChangeVisibilityPending}
       />
@@ -127,13 +118,7 @@ interface DangerZoneRowProps {
   onClick: () => void;
 }
 
-const DangerZoneRow = ({
-  label,
-  description,
-  buttonText,
-  onClick,
-  isPending,
-}: DangerZoneRowProps) => {
+const DangerZoneRow = ({ label, description, buttonText, onClick, isPending }: DangerZoneRowProps) => {
   return (
     <Group justify="space-between" px="md" className={classes.dangerZoneGroup}>
       <Stack gap={0}>
@@ -143,12 +128,7 @@ const DangerZoneRow = ({
         <Text size="sm">{description}</Text>
       </Stack>
       <Group justify="end" w={{ base: "100%", xs: "auto" }}>
-        <Button
-          variant="subtle"
-          color="red"
-          loading={isPending}
-          onClick={onClick}
-        >
+        <Button variant="subtle" color="red" loading={isPending} onClick={onClick}>
           {buttonText}
         </Button>
       </Group>

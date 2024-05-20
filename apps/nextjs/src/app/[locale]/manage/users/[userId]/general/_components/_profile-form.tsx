@@ -6,10 +6,7 @@ import { Button, Group, Stack, TextInput } from "@mantine/core";
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
@@ -25,16 +22,25 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
     async onSettled() {
       await revalidatePathActionAsync("/manage/users");
     },
-    onSuccess() {
+    onSuccess(_, variables) {
+      // Reset form initial values to reset dirty state
+      form.setInitialValues({
+        name: variables.name,
+        email: variables.email ?? "",
+      });
       showSuccessNotification({
         title: t("common.notification.update.success"),
         message: t("user.action.editProfile.notification.success.message"),
       });
     },
-    onError() {
+    onError(error) {
+      const message =
+        error.data?.code === "CONFLICT"
+          ? t("user.error.usernameTaken")
+          : t("user.action.editProfile.notification.error.message");
       showErrorNotification({
         title: t("common.notification.update.error"),
-        message: t("user.action.editProfile.notification.error.message"),
+        message,
       });
     },
   });
@@ -58,18 +64,11 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput
-          label={t("user.field.username.label")}
-          withAsterisk
-          {...form.getInputProps("name")}
-        />
-        <TextInput
-          label={t("user.field.email.label")}
-          {...form.getInputProps("email")}
-        />
+        <TextInput label={t("user.field.username.label")} withAsterisk {...form.getInputProps("name")} />
+        <TextInput label={t("user.field.email.label")} {...form.getInputProps("email")} />
 
         <Group justify="end">
-          <Button type="submit" color="teal" loading={isPending}>
+          <Button type="submit" color="teal" disabled={!form.isDirty()} loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>
         </Group>

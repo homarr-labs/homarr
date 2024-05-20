@@ -21,18 +21,11 @@ const iconProps = {
 interface BoardCardMenuDropdownProps {
   board: Pick<
     RouterOutputs["board"]["getAllBoards"][number],
-    | "id"
-    | "name"
-    | "creator"
-    | "userPermissions"
-    | "groupPermissions"
-    | "isPublic"
+    "id" | "name" | "creator" | "userPermissions" | "groupPermissions" | "isPublic"
   >;
 }
 
-export const BoardCardMenuDropdown = ({
-  board,
-}: BoardCardMenuDropdownProps) => {
+export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => {
   const t = useScopedI18n("management.page.board.action");
   const tCommon = useScopedI18n("common");
 
@@ -73,10 +66,7 @@ export const BoardCardMenuDropdown = ({
 
   return (
     <Menu.Dropdown>
-      <Menu.Item
-        onClick={handleSetHomeBoard}
-        leftSection={<IconHome {...iconProps} />}
-      >
+      <Menu.Item onClick={handleSetHomeBoard} leftSection={<IconHome {...iconProps} />}>
         {t("setHomeBoard.label")}
       </Menu.Item>
       {hasChangeAccess && (

@@ -36,6 +36,9 @@ export default {
         label: "Previous password",
       },
     },
+    error: {
+      usernameTaken: "Username already taken",
+    },
     action: {
       login: {
         label: "Login",
@@ -470,6 +473,10 @@ export default {
     multiSelect: {
       placeholder: "Pick one or more values",
     },
+    multiText: {
+      placeholder: "Add more values",
+      addLabel: `Add {value}`,
+    },
     select: {
       placeholder: "Pick value",
       badge: {
@@ -594,9 +601,16 @@ export default {
     },
     edit: {
       title: "Edit item",
+      advancedOptions: {
+        label: "Advanced options",
+        title: "Advanced item options",
+      },
       field: {
         integrations: {
           label: "Integrations",
+        },
+        customCssClasses: {
+          label: "Custom css classes",
         },
       },
     },
@@ -982,7 +996,13 @@ export default {
         label: "Opacity",
       },
       customCss: {
-        label: "Custom CSS",
+        label: "Custom css for this board",
+        description: "Further, customize your dashboard using CSS, only recommended for experienced users",
+        customClassesAlert: {
+          title: "Custom classes",
+          description:
+            "You can add custom classes to your board items in the advanced options of each item and use them in the custom CSS above.",
+        },
       },
       columnCount: {
         label: "Column count",
@@ -1132,6 +1152,7 @@ export default {
             logs: "Logs",
           },
         },
+        settings: "Settings",
         help: {
           label: "Help",
           items: {
@@ -1239,6 +1260,9 @@ export default {
             completed: {
               title: "User created",
             },
+            error: {
+              title: "User creation failed",
+            },
           },
           action: {
             createAnother: "Create another user",
@@ -1297,6 +1321,30 @@ export default {
             title: "Permissions",
             form: {
               unsavedChanges: "You have unsaved changes!",
+            },
+          },
+        },
+      },
+      settings: {
+        title: "Settings",
+        section: {
+          analytics: {
+            title: "Analytics",
+            general: {
+              title: "Send anonymous analytics",
+              text: "Homarr will send anonymized analytics using the open source software Umami. It never collects any personal information and is therefore fully GDPR & CCPA compliant. We encourage you to enable analytics because it helps our open source team to identify issues and prioritize our backlog.",
+            },
+            widgetData: {
+              title: "Widget data",
+              text: "Send which widgets (and their quantity) you have configured. Does not include URLs, names or any other data.",
+            },
+            integrationData: {
+              title: "Integration data",
+              text: "Send which integrations (and their quantity) you have configured. Does not include URLs, names or any other data.",
+            },
+            usersData: {
+              title: "Users data",
+              text: "Send the amount of users and whether you've activated SSO",
             },
           },
         },

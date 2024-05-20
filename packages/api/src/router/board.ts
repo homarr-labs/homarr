@@ -16,50 +16,35 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
-import {
-  createSectionSchema,
-  sharedItemSchema,
-  validation,
-  z,
-} from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation";
+import { createSectionSchema, sharedItemSchema, validation, z } from "@homarr/validation";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
-import {
-  createTRPCRouter,
-  permissionRequiredProcedure,
-  protectedProcedure,
-  publicProcedure,
-} from "../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 export const boardRouter = createTRPCRouter({
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
-    const permissionsOfCurrentUserWhenPresent =
-      await ctx.db.query.boardUserPermissions.findMany({
-        where: eq(boardUserPermissions.userId, userId ?? ""),
-      });
+    const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
+      where: eq(boardUserPermissions.userId, userId ?? ""),
+    });
 
-    const permissionsOfCurrentUserGroupsWhenPresent =
-      await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, userId ?? ""),
-        with: {
-          group: {
-            with: {
-              boardPermissions: {},
-            },
+    const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
+      where: eq(groupMembers.userId, userId ?? ""),
+      with: {
+        group: {
+          with: {
+            boardPermissions: {},
           },
         },
-      });
+      },
+    });
     const boardIds = permissionsOfCurrentUserWhenPresent
       .map((permission) => permission.boardId)
       .concat(
         permissionsOfCurrentUserGroupsWhenPresent
-          .map((groupMember) =>
-            groupMember.group.boardPermissions.map(
-              (permission) => permission.boardId,
-            ),
-          )
+          .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
           .flat(),
       );
 
@@ -89,9 +74,7 @@ export const boardRouter = createTRPCRouter({
             permissionsOfCurrentUserGroupsWhenPresent.length >= 1
               ? inArray(
                   boardGroupPermissions.groupId,
-                  permissionsOfCurrentUserGroupsWhenPresent.map(
-                    (groupMember) => groupMember.groupId,
-                  ),
+                  permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
                 )
               : undefined,
         },
@@ -129,61 +112,33 @@ export const boardRouter = createTRPCRouter({
         });
       });
     }),
-  renameBoard: protectedProcedure
-    .input(validation.board.rename)
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "full-access",
-      );
+  renameBoard: protectedProcedure.input(validation.board.rename).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
 
-      await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
+    await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
-      await ctx.db
-        .update(boards)
-        .set({ name: input.name })
-        .where(eq(boards.id, input.id));
-    }),
+    await ctx.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
+  }),
   changeBoardVisibility: protectedProcedure
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "full-access",
-      );
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
 
       await ctx.db
         .update(boards)
         .set({ isPublic: input.visibility === "public" })
         .where(eq(boards.id, input.id));
     }),
-  deleteBoard: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "full-access",
-      );
+  deleteBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
 
-      await ctx.db.delete(boards).where(eq(boards.id, input.id));
-    }),
-  setHomeBoard: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "board-view",
-      );
+    await ctx.db.delete(boards).where(eq(boards.id, input.id));
+  }),
+  setHomeBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "board-view");
 
-      await ctx.db
-        .update(users)
-        .set({ homeBoardId: input.id })
-        .where(eq(users.id, ctx.session.user.id));
-    }),
+    await ctx.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+  }),
   getHomeBoard: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const user = userId
@@ -192,39 +147,21 @@ export const boardRouter = createTRPCRouter({
         })
       : null;
 
-    const boardWhere = user?.homeBoardId
-      ? eq(boards.id, user.homeBoardId)
-      : eq(boards.name, "home");
+    const boardWhere = user?.homeBoardId ? eq(boards.id, user.homeBoardId) : eq(boards.name, "home");
     await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
-    return await getFullBoardWithWhereAsync(
-      ctx.db,
-      boardWhere,
-      ctx.session?.user.id ?? null,
-    );
+    return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
-  getBoardByName: publicProcedure
-    .input(validation.board.byName)
-    .query(async ({ input, ctx }) => {
-      const boardWhere = eq(boards.name, input.name);
-      await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
+  getBoardByName: publicProcedure.input(validation.board.byName).query(async ({ input, ctx }) => {
+    const boardWhere = eq(boards.name, input.name);
+    await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
 
-      return await getFullBoardWithWhereAsync(
-        ctx.db,
-        boardWhere,
-        ctx.session?.user.id ?? null,
-      );
-    }),
+    return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
+  }),
   savePartialBoardSettings: protectedProcedure
-    .input(
-      validation.board.savePartialSettings.and(z.object({ id: z.string() })),
-    )
+    .input(validation.board.savePartialSettings.and(z.object({ id: z.string() })))
     .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "board-change",
-      );
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "board-change");
 
       await ctx.db
         .update(boards)
@@ -254,271 +191,224 @@ export const boardRouter = createTRPCRouter({
         })
         .where(eq(boards.id, input.id));
     }),
-  saveBoard: protectedProcedure
-    .input(validation.board.save)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "board-change",
+  saveBoard: protectedProcedure.input(validation.board.save).mutation(async ({ input, ctx }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "board-change");
+
+    await ctx.db.transaction(async (transaction) => {
+      const dbBoard = await getFullBoardWithWhereAsync(transaction, eq(boards.id, input.id), ctx.session.user.id);
+
+      const addedSections = filterAddedItems(input.sections, dbBoard.sections);
+
+      if (addedSections.length > 0) {
+        await transaction.insert(sections).values(
+          addedSections.map((section) => ({
+            id: section.id,
+            kind: section.kind,
+            position: section.position,
+            name: "name" in section ? section.name : null,
+            boardId: dbBoard.id,
+          })),
+        );
+      }
+
+      const inputItems = input.sections.flatMap((section) =>
+        section.items.map((item) => ({ ...item, sectionId: section.id })),
+      );
+      const dbItems = dbBoard.sections.flatMap((section) =>
+        section.items.map((item) => ({ ...item, sectionId: section.id })),
       );
 
-      await ctx.db.transaction(async (transaction) => {
-        const dbBoard = await getFullBoardWithWhereAsync(
-          transaction,
-          eq(boards.id, input.id),
-          ctx.session.user.id,
+      const addedItems = filterAddedItems(inputItems, dbItems);
+
+      if (addedItems.length > 0) {
+        await transaction.insert(items).values(
+          addedItems.map((item) => ({
+            id: item.id,
+            kind: item.kind,
+            height: item.height,
+            width: item.width,
+            xOffset: item.xOffset,
+            yOffset: item.yOffset,
+            options: superjson.stringify(item.options),
+            advancedOptions: superjson.stringify(item.advancedOptions),
+            sectionId: item.sectionId,
+          })),
         );
+      }
 
-        const addedSections = filterAddedItems(
-          input.sections,
-          dbBoard.sections,
-        );
-
-        if (addedSections.length > 0) {
-          await transaction.insert(sections).values(
-            addedSections.map((section) => ({
-              id: section.id,
-              kind: section.kind,
-              position: section.position,
-              name: "name" in section ? section.name : null,
-              boardId: dbBoard.id,
-            })),
-          );
-        }
-
-        const inputItems = input.sections.flatMap((section) =>
-          section.items.map((item) => ({ ...item, sectionId: section.id })),
-        );
-        const dbItems = dbBoard.sections.flatMap((section) =>
-          section.items.map((item) => ({ ...item, sectionId: section.id })),
-        );
-
-        const addedItems = filterAddedItems(inputItems, dbItems);
-
-        if (addedItems.length > 0) {
-          await transaction.insert(items).values(
-            addedItems.map((item) => ({
-              id: item.id,
-              kind: item.kind,
-              height: item.height,
-              width: item.width,
-              xOffset: item.xOffset,
-              yOffset: item.yOffset,
-              options: superjson.stringify(item.options),
-              sectionId: item.sectionId,
-            })),
-          );
-        }
-
-        const inputIntegrationRelations = inputItems.flatMap(
-          ({ integrationIds, id: itemId }) =>
-            integrationIds.map((integrationId) => ({
-              integrationId,
-              itemId,
-            })),
-        );
-        const dbIntegrationRelations = dbItems.flatMap(
-          ({ integrationIds, id: itemId }) =>
-            integrationIds.map((integrationId) => ({
-              integrationId,
-              itemId,
-            })),
-        );
-        const addedIntegrationRelations = inputIntegrationRelations.filter(
-          (inputRelation) =>
-            !dbIntegrationRelations.some(
-              (dbRelation) =>
-                dbRelation.itemId === inputRelation.itemId &&
-                dbRelation.integrationId === inputRelation.integrationId,
-            ),
-        );
-
-        if (addedIntegrationRelations.length > 0) {
-          await transaction.insert(integrationItems).values(
-            addedIntegrationRelations.map((relation) => ({
-              itemId: relation.itemId,
-              integrationId: relation.integrationId,
-            })),
-          );
-        }
-
-        const updatedItems = filterUpdatedItems(inputItems, dbItems);
-
-        for (const item of updatedItems) {
-          await transaction
-            .update(items)
-            .set({
-              kind: item.kind,
-              height: item.height,
-              width: item.width,
-              xOffset: item.xOffset,
-              yOffset: item.yOffset,
-              options: superjson.stringify(item.options),
-              sectionId: item.sectionId,
-            })
-            .where(eq(items.id, item.id));
-        }
-
-        const updatedSections = filterUpdatedItems(
-          input.sections,
-          dbBoard.sections,
-        );
-
-        for (const section of updatedSections) {
-          const prev = dbBoard.sections.find(
-            (dbSection) => dbSection.id === section.id,
-          );
-          await transaction
-            .update(sections)
-            .set({
-              position: section.position,
-              name:
-                prev?.kind === "category" && "name" in section
-                  ? section.name
-                  : null,
-            })
-            .where(eq(sections.id, section.id));
-        }
-
-        const removedIntegrationRelations = dbIntegrationRelations.filter(
-          (dbRelation) =>
-            !inputIntegrationRelations.some(
-              (inputRelation) =>
-                dbRelation.itemId === inputRelation.itemId &&
-                dbRelation.integrationId === inputRelation.integrationId,
-            ),
-        );
-
-        for (const relation of removedIntegrationRelations) {
-          await transaction
-            .delete(integrationItems)
-            .where(
-              and(
-                eq(integrationItems.itemId, relation.itemId),
-                eq(integrationItems.integrationId, relation.integrationId),
-              ),
-            );
-        }
-
-        const removedItems = filterRemovedItems(inputItems, dbItems);
-
-        const itemIds = removedItems.map((item) => item.id);
-        if (itemIds.length > 0) {
-          await transaction.delete(items).where(inArray(items.id, itemIds));
-        }
-
-        const removedSections = filterRemovedItems(
-          input.sections,
-          dbBoard.sections,
-        );
-        const sectionIds = removedSections.map((section) => section.id);
-
-        if (sectionIds.length > 0) {
-          await transaction
-            .delete(sections)
-            .where(inArray(sections.id, sectionIds));
-        }
-      });
-    }),
-
-  getBoardPermissions: protectedProcedure
-    .input(validation.board.permissions)
-    .query(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "full-access",
+      const inputIntegrationRelations = inputItems.flatMap(({ integrationIds, id: itemId }) =>
+        integrationIds.map((integrationId) => ({
+          integrationId,
+          itemId,
+        })),
+      );
+      const dbIntegrationRelations = dbItems.flatMap(({ integrationIds, id: itemId }) =>
+        integrationIds.map((integrationId) => ({
+          integrationId,
+          itemId,
+        })),
+      );
+      const addedIntegrationRelations = inputIntegrationRelations.filter(
+        (inputRelation) =>
+          !dbIntegrationRelations.some(
+            (dbRelation) =>
+              dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
+          ),
       );
 
-      const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
-        where: inArray(
-          groupPermissions.permission,
-          getPermissionsWithParents([
-            "board-view-all",
-            "board-modify-all",
-            "board-full-access",
-          ]),
-        ),
-        columns: {
-          groupId: false,
+      if (addedIntegrationRelations.length > 0) {
+        await transaction.insert(integrationItems).values(
+          addedIntegrationRelations.map((relation) => ({
+            itemId: relation.itemId,
+            integrationId: relation.integrationId,
+          })),
+        );
+      }
+
+      const updatedItems = filterUpdatedItems(inputItems, dbItems);
+
+      for (const item of updatedItems) {
+        await transaction
+          .update(items)
+          .set({
+            kind: item.kind,
+            height: item.height,
+            width: item.width,
+            xOffset: item.xOffset,
+            yOffset: item.yOffset,
+            options: superjson.stringify(item.options),
+            advancedOptions: superjson.stringify(item.advancedOptions),
+            sectionId: item.sectionId,
+          })
+          .where(eq(items.id, item.id));
+      }
+
+      const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
+
+      for (const section of updatedSections) {
+        const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
+        await transaction
+          .update(sections)
+          .set({
+            position: section.position,
+            name: prev?.kind === "category" && "name" in section ? section.name : null,
+          })
+          .where(eq(sections.id, section.id));
+      }
+
+      const removedIntegrationRelations = dbIntegrationRelations.filter(
+        (dbRelation) =>
+          !inputIntegrationRelations.some(
+            (inputRelation) =>
+              dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
+          ),
+      );
+
+      for (const relation of removedIntegrationRelations) {
+        await transaction
+          .delete(integrationItems)
+          .where(
+            and(
+              eq(integrationItems.itemId, relation.itemId),
+              eq(integrationItems.integrationId, relation.integrationId),
+            ),
+          );
+      }
+
+      const removedItems = filterRemovedItems(inputItems, dbItems);
+
+      const itemIds = removedItems.map((item) => item.id);
+      if (itemIds.length > 0) {
+        await transaction.delete(items).where(inArray(items.id, itemIds));
+      }
+
+      const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
+      const sectionIds = removedSections.map((section) => section.id);
+
+      if (sectionIds.length > 0) {
+        await transaction.delete(sections).where(inArray(sections.id, sectionIds));
+      }
+    });
+  }),
+
+  getBoardPermissions: protectedProcedure.input(validation.board.permissions).query(async ({ input, ctx }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+
+    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+      where: inArray(
+        groupPermissions.permission,
+        getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-access"]),
+      ),
+      columns: {
+        groupId: false,
+      },
+      with: {
+        group: {
+          columns: {
+            id: true,
+            name: true,
+          },
         },
-        with: {
+      },
+    });
+
+    const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
+      where: eq(boardUserPermissions.boardId, input.id),
+      with: {
+        user: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    const dbGroupBoardPermission = await ctx.db.query.boardGroupPermissions.findMany({
+      where: eq(boardGroupPermissions.boardId, input.id),
+      with: {
+        group: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return {
+      inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+        return permissionA.group.name.localeCompare(permissionB.group.name);
+      }),
+      userPermissions: userPermissions
+        .map(({ user, permission }) => ({
+          user,
+          permission,
+        }))
+        .sort((permissionA, permissionB) => {
+          return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
+        }),
+      groupPermissions: dbGroupBoardPermission
+        .map(({ group, permission }) => ({
           group: {
-            columns: {
-              id: true,
-              name: true,
-            },
+            id: group.id,
+            name: group.name,
           },
-        },
-      });
-
-      const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
-        where: eq(boardUserPermissions.boardId, input.id),
-        with: {
-          user: {
-            columns: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
-        },
-      });
-
-      const dbGroupBoardPermission =
-        await ctx.db.query.boardGroupPermissions.findMany({
-          where: eq(boardGroupPermissions.boardId, input.id),
-          with: {
-            group: {
-              columns: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        });
-
-      return {
-        inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+          permission,
+        }))
+        .sort((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
-        userPermissions: userPermissions
-          .map(({ user, permission }) => ({
-            user,
-            permission,
-          }))
-          .sort((permissionA, permissionB) => {
-            return (permissionA.user.name ?? "").localeCompare(
-              permissionB.user.name ?? "",
-            );
-          }),
-        groupPermissions: dbGroupBoardPermission
-          .map(({ group, permission }) => ({
-            group: {
-              id: group.id,
-              name: group.name,
-            },
-            permission,
-          }))
-          .sort((permissionA, permissionB) => {
-            return permissionA.group.name.localeCompare(permissionB.group.name);
-          }),
-      };
-    }),
+    };
+  }),
   saveUserBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "full-access",
-      );
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
 
       await ctx.db.transaction(async (transaction) => {
-        await transaction
-          .delete(boardUserPermissions)
-          .where(eq(boardUserPermissions.boardId, input.id));
+        await transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.id));
         if (input.permissions.length === 0) {
           return;
         }
@@ -534,16 +424,10 @@ export const boardRouter = createTRPCRouter({
   saveGroupBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(
-        ctx,
-        eq(boards.id, input.id),
-        "full-access",
-      );
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
 
       await ctx.db.transaction(async (transaction) => {
-        await transaction
-          .delete(boardGroupPermissions)
-          .where(eq(boardGroupPermissions.boardId, input.id));
+        await transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.id));
         if (input.permissions.length === 0) {
           return;
         }
@@ -558,11 +442,7 @@ export const boardRouter = createTRPCRouter({
     }),
 });
 
-const noBoardWithSimilarNameAsync = async (
-  db: Database,
-  name: string,
-  ignoredIds: string[] = [],
-) => {
+const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredIds: string[] = []) => {
   const boards = await db.query.boards.findMany({
     columns: {
       id: true,
@@ -571,9 +451,7 @@ const noBoardWithSimilarNameAsync = async (
   });
 
   const board = boards.find(
-    (board) =>
-      board.name.toLowerCase() === name.toLowerCase() &&
-      !ignoredIds.includes(board.id),
+    (board) => board.name.toLowerCase() === name.toLowerCase() && !ignoredIds.includes(board.id),
   );
 
   if (board) {
@@ -584,11 +462,7 @@ const noBoardWithSimilarNameAsync = async (
   }
 };
 
-const getFullBoardWithWhereAsync = async (
-  db: Database,
-  where: SQL<unknown>,
-  userId: string | null,
-) => {
+const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, userId: string | null) => {
   const groupsOfCurrentUser = await db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, userId ?? ""),
   });
@@ -622,10 +496,7 @@ const getFullBoardWithWhereAsync = async (
         },
       },
       groupPermissions: {
-        where: inArray(
-          boardGroupPermissions.groupId,
-          groupsOfCurrentUser.map((group) => group.groupId).concat(""),
-        ),
+        where: inArray(boardGroupPermissions.groupId, groupsOfCurrentUser.map((group) => group.groupId).concat("")),
       },
     },
   });
@@ -644,13 +515,12 @@ const getFullBoardWithWhereAsync = async (
     sections: sections.map((section) =>
       parseSection({
         ...section,
-        items: section.items.map(
-          ({ integrations: itemIntegrations, ...item }) => ({
-            ...item,
-            integrationIds: itemIntegrations.map((item) => item.integration.id),
-            options: superjson.parse<Record<string, unknown>>(item.options),
-          }),
-        ),
+        items: section.items.map(({ integrations: itemIntegrations, ...item }) => ({
+          ...item,
+          integrationIds: itemIntegrations.map((item) => item.integration.id),
+          advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+          options: superjson.parse<Record<string, unknown>>(item.options),
+        })),
       }),
     ),
   };
@@ -662,9 +532,7 @@ const forKind = <T extends WidgetKind>(kind: T) =>
     options: z.record(z.unknown()),
   });
 
-const outputItemSchema = zodUnionFromArray(
-  widgetKinds.map((kind) => forKind(kind)),
-).and(sharedItemSchema);
+const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
 
 const parseSection = (section: unknown) => {
   const result = createSectionSchema(outputItemSchema).safeParse(section);
@@ -674,26 +542,11 @@ const parseSection = (section: unknown) => {
   return result.data;
 };
 
-const filterAddedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  inputArray.filter(
-    (inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id),
-  );
+const filterAddedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
+  inputArray.filter((inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id));
 
-const filterRemovedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  dbArray.filter(
-    (dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id),
-  );
+const filterRemovedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
+  dbArray.filter((dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id));
 
-const filterUpdatedItems = <TInput extends { id: string }>(
-  inputArray: TInput[],
-  dbArray: TInput[],
-) =>
-  inputArray.filter((inputItem) =>
-    dbArray.some((dbItem) => dbItem.id === inputItem.id),
-  );
+const filterUpdatedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
+  inputArray.filter((inputItem) => dbArray.some((dbItem) => dbItem.id === inputItem.id));

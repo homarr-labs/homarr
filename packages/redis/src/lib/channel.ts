@@ -32,9 +32,7 @@ export const createSubPubChannel = <TData>(name: string) => {
         if (!err) {
           return;
         }
-        logger.error(
-          `Error with channel '${channelName}': ${err.name} (${err.message})`,
-        );
+        logger.error(`Error with channel '${channelName}': ${err.name} (${err.message})`);
       });
       subscriber.on("message", (channel, message) => {
         if (channel !== channelName) return; // TODO: check if this is necessary - it should be handled by the redis client

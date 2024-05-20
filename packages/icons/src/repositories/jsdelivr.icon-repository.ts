@@ -11,14 +11,7 @@ export class JsdelivrIconRepository extends IconRepository {
     public readonly repositoryIndexingUrl: URL,
     public readonly repositoryBlobUrlTemplate: string,
   ) {
-    super(
-      name,
-      slug,
-      license,
-      repositoryUrl,
-      repositoryIndexingUrl,
-      repositoryBlobUrlTemplate,
-    );
+    super(name, slug, license, repositoryUrl, repositoryIndexingUrl, repositoryBlobUrlTemplate);
   }
 
   protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
@@ -29,18 +22,13 @@ export class JsdelivrIconRepository extends IconRepository {
       success: true,
       icons: listOfFiles.files
         .filter((file) =>
-          this.allowedImageFileTypes.some((allowedImageFileType) =>
-            file.name.includes(allowedImageFileType),
-          ),
+          this.allowedImageFileTypes.some((allowedImageFileType) => file.name.includes(allowedImageFileType)),
         )
         .map((file) => {
-          const fileNameWithExtension =
-            this.getFileNameWithoutExtensionFromPath(file.name);
+          const fileNameWithExtension = this.getFileNameWithoutExtensionFromPath(file.name);
 
           return {
-            imageUrl: new URL(
-              this.repositoryBlobUrlTemplate.replace("{0}", file.name),
-            ),
+            imageUrl: new URL(this.repositoryBlobUrlTemplate.replace("{0}", file.name)),
             fileNameWithExtension: fileNameWithExtension,
             local: false,
             sizeInBytes: file.size,

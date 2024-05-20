@@ -7,9 +7,7 @@ import type { SpotlightActionData, SpotlightActionGroup } from "./type";
 const defaultGroups = ["all", "web", "action"] as const;
 const reversedDefaultGroups = [...defaultGroups].reverse() as string[];
 const actionsAtom = atom<Record<string, readonly SpotlightActionData[]>>({});
-export const actionsAtomRead = atom((get) =>
-  Object.values(get(actionsAtom)).flatMap((item) => item),
-);
+export const actionsAtomRead = atom((get) => Object.values(get(actionsAtom)).flatMap((item) => item));
 
 export const groupsAtomRead = atom((get) =>
   Array.from(
@@ -43,8 +41,7 @@ export const useRegisterSpotlightActions = (
   const setActions = useSetAtom(actionsAtom);
 
   // Use deep compare effect if there are dependencies for the actions, this supports deep compare of the action dependencies
-  const useSpecificEffect =
-    dependencies.length >= 1 ? useDeepCompareEffect : useEffect;
+  const useSpecificEffect = dependencies.length >= 1 ? useDeepCompareEffect : useEffect;
 
   useSpecificEffect(() => {
     if (!registrations.has(key) || dependencies.length >= 1) {

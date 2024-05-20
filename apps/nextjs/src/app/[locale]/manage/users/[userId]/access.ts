@@ -1,9 +1,6 @@
 import type { Session } from "@homarr/auth";
 
-export const canAccessUserEditPage = (
-  session: Session | null,
-  userId: string,
-) => {
+export const canAccessUserEditPage = (session: Session | null, userId: string) => {
   if (!session) {
     return false;
   }

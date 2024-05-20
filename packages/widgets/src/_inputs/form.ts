@@ -5,4 +5,4 @@ import { createFormContext } from "@homarr/form";
 import type { WidgetEditModalState } from "../modals/widget-edit-modal";
 
 export const [FormProvider, useFormContext, useForm] =
-  createFormContext<WidgetEditModalState>();
+  createFormContext<Omit<WidgetEditModalState, "advancedOptions">>();

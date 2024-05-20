@@ -19,11 +19,7 @@ export const BoardEmptySection = ({ section, mainRef }: Props) => {
 
   return (
     <div
-      className={
-        section.items.length > 0 || isEditMode
-          ? defaultClasses
-          : `${defaultClasses} gridstack-empty-wrapper`
-      }
+      className={section.items.length > 0 || isEditMode ? defaultClasses : `${defaultClasses} gridstack-empty-wrapper`}
       style={{ transitionDuration: "0s" }}
       data-empty
       data-section-id={section.id}

@@ -17,17 +17,7 @@ export const UserAvatar = async ({ size }: UserAvatarProps) => {
 
   if (!currentSession?.user) return <Avatar {...commonProps} />;
   if (currentSession.user.image)
-    return (
-      <Avatar
-        {...commonProps}
-        src={currentSession.user.image}
-        alt={currentSession.user.name!}
-      />
-    );
+    return <Avatar {...commonProps} src={currentSession.user.image} alt={currentSession.user.name!} />;
 
-  return (
-    <Avatar {...commonProps}>
-      {currentSession.user.name!.substring(0, 2).toUpperCase()}
-    </Avatar>
-  );
+  return <Avatar {...commonProps}>{currentSession.user.name!.substring(0, 2).toUpperCase()}</Avatar>;
 };

@@ -15,6 +15,20 @@
       "when": 1715885855801,
       "tag": "0001_wild_alex_wilder",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1715980459023,
+      "tag": "0002_flimsy_deathbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1716148439439,
+      "tag": "0003_freezing_black_panther",
+      "breakpoints": true
     }
   ]
 }

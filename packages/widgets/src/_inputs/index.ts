@@ -20,8 +20,6 @@ const mapping = {
   app: WidgetAppInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
-export const getInputForType = <TType extends WidgetOptionType>(
-  type: TType,
-) => {
+export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {
   return mapping[type];
 };
