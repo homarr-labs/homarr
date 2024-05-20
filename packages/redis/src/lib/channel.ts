@@ -51,7 +51,40 @@ export const createSubPubChannel = <TData>(name: string) => {
   };
 };
 
-const cacheClient = createRedisConnection();
+const getSetClient = createRedisConnection();
+
+/**
+ * Creates a new redis channel for a list
+ * @param name name of channel
+ * @returns list channel object
+ */
+export const createListChannel = <TItem>(name: string) => {
+  const listChannelName = `list:${name}`;
+  return {
+    /**
+     * Get all items in list
+     * @returns an array of all items
+     */
+    getAllAsync: async () => {
+      const items = await getSetClient.lrange(listChannelName, 0, -1);
+      return items.map((item) => superjson.parse<TItem>(item));
+    },
+    /**
+     * Remove an item from the channels list by item
+     * @param item item to remove
+     */
+    removeAsync: async (item: TItem) => {
+      await getSetClient.lrem(listChannelName, 0, superjson.stringify(item));
+    },
+    /**
+     * Add an item to the channels list
+     * @param item item to add
+     */
+    addAsync: async (item: TItem) => {
+      await getSetClient.lpush(listChannelName, superjson.stringify(item));
+    },
+  };
+};
 
 /**
  * Creates a new cache channel.
@@ -66,7 +99,7 @@ export const createCacheChannel = <TData>(name: string) => {
      * @returns data or undefined if not found
      */
     getAsync: async () => {
-      const data = await cacheClient.get(cacheChannelName);
+      const data = await getSetClient.get(cacheChannelName);
       return data ? superjson.parse<TData>(data) : undefined;
     },
     /**
@@ -74,7 +107,7 @@ export const createCacheChannel = <TData>(name: string) => {
      * @param data data to be stored in the cache channel
      */
     setAsync: async (data: TData) => {
-      await cacheClient.set(cacheChannelName, superjson.stringify(data));
+      await getSetClient.set(cacheChannelName, superjson.stringify(data));
     },
   };
 };

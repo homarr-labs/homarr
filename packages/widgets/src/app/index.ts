@@ -9,6 +9,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     appId: factory.app(),
     openInNewTab: factory.switch({ defaultValue: true }),
     showDescriptionTooltip: factory.switch({ defaultValue: false }),
+    pingEnabled: factory.switch({ defaultValue: false }),
   })),
 })
   .withServerData(() => import("./serverData"))

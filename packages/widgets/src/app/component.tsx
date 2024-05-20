@@ -1,7 +1,8 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { useState } from "react";
+import { Box, Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconDeviceDesktopX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -30,6 +31,16 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       enabled: isQueryEnabled,
+    },
+  );
+  const [status, setStatus] = useState<number | null>(null);
+  clientApi.widget.app.ping.useSubscription(
+    { url: app?.href ?? "" },
+    {
+      enabled: Boolean(app?.href) && options.pingEnabled,
+      onData(data) {
+        setStatus(data.statusCode);
+      },
     },
   );
 
@@ -77,7 +88,7 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
 
   return (
     <AppLink href={app?.href ?? ""} openInNewTab={options.openInNewTab} enabled={Boolean(app?.href) && !isEditMode}>
-      <Flex align="center" justify="center" h="100%">
+      <Flex align="center" justify="center" h="100%" pos="relative">
         <Tooltip.Floating
           label={app?.description}
           position="right-start"
@@ -103,6 +114,20 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
             <img src={app?.iconUrl} alt={app?.name} className={classes.appIcon} />
           </Flex>
         </Tooltip.Floating>
+
+        {options.pingEnabled && (
+          <Box
+            bottom={4}
+            right={4}
+            pos="absolute"
+            style={{
+              borderRadius: "100%",
+              backgroundColor: !status ? "orange" : status?.toString().startsWith("5") ? "red" : "green",
+            }}
+            w={16}
+            h={16}
+          ></Box>
+        )}
       </Flex>
     </AppLink>
   );

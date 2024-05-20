@@ -41,15 +41,14 @@ export const createQueueClient = <TQueues extends Queues>(queues: TQueues) => {
         };
         return acc;
       },
-      {} as Record<
-        keyof TQueues,
-        (
-          data: z.infer<TQueues[keyof TQueues]["_input"]>,
+      {} as {
+        [key in keyof TQueues]: (
+          data: z.infer<TQueues[key]["_input"]>,
           props: {
             executionDate?: Date;
           } | void,
-        ) => Promise<void>
-      >,
+        ) => Promise<void>;
+      },
     ),
   };
 };
