@@ -5,3 +5,4 @@ export { UserAvatar } from "./user-avatar";
 export { UserAvatarGroup } from "./user-avatar-group";
 export { TablePagination } from "./table-pagination";
 export { SearchInput } from "./search-input";
+export { OverflowBadge } from "./overflow-badge";
