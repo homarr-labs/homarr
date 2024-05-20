@@ -93,10 +93,36 @@ function ContainerState({ state }: { state: string }) {
   }
 }
 
+const splitImage = (image: string) => image.split("/").pop()?.split(":")[0];
+
+function IconAvatar({ icon, name }: { icon: string; name: string }) {
+  const { data } = clientApi.icon.findIcons.useQuery({
+    searchText: splitImage(icon),
+  });
+  return (
+    <Avatar
+      variant="outline"
+      radius="lg"
+      size="md"
+      src={data?.icons[0]?.icons[0]?.url}
+    >
+      {name.at(0)?.toUpperCase()}
+    </Avatar>
+  );
+}
+
 const columns: MRT_ColumnDef<DockerContainer>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    Cell({ renderedCellValue, row }) {
+      return (
+        <Group gap="xs">
+          <IconAvatar icon={row.original.image} name={row.original.name} />
+          {renderedCellValue}
+        </Group>
+      );
+    },
   },
   {
     accessorKey: "state",
