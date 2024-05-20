@@ -13,6 +13,7 @@ import type { DockerContainer } from "node_modules/@homarr/api/src/router/docker
 
 import type { RouterOutputs } from "@homarr/api";
 import { useTimeAgo } from "@homarr/common";
+import { OverflowBadge } from "@homarr/ui";
 
 function ContainerActionBar() {
   return (
@@ -55,9 +56,10 @@ function ContainerActionBar() {
 
 function ContainerState({ state }: { state: string }) {
   const options = {
-    size: "md",
-    radius: "md",
-    variant: "outline",
+    size: "lg",
+    radius: "sm",
+    variant: "light",
+    w: 120,
   };
   switch (state) {
     case "running": {
@@ -99,6 +101,7 @@ const columns: MRT_ColumnDef<DockerContainer>[] = [
   {
     accessorKey: "state",
     header: "State",
+    size: 120,
     Cell({ cell }) {
       return <ContainerState state={cell.getValue<string>()} />;
     },
@@ -112,6 +115,19 @@ const columns: MRT_ColumnDef<DockerContainer>[] = [
         <Box maw={200}>
           <Text truncate="end">{renderedCellValue}</Text>
         </Box>
+      );
+    },
+  },
+  {
+    accessorKey: "ports",
+    header: "Ports",
+    Cell({ cell }) {
+      const ports = cell.getValue<{ IP: string; PrivatePort: number }[]>();
+      return (
+        <OverflowBadge
+          overflowCount={1}
+          data={ports.map((port) => port.PrivatePort.toString())}
+        />
       );
     },
   },
@@ -133,6 +149,13 @@ export function DockerTable({
     positionToolbarAlertBanner: "top",
     enableTableFooter: false,
     enableBottomToolbar: false,
+    positionGlobalFilter: "right",
+    mantineSearchTextInputProps: {
+      placeholder: `Search ${containers.length} containers`,
+      style: { minWidth: 300 },
+      autoFocus: true,
+    },
+
     initialState: { density: "xs", showGlobalFilter: true },
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
       const selectedRows = table.getSelectedRowModel();
