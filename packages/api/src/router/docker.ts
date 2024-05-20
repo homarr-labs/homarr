@@ -8,8 +8,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 // DOCKER_PORT: z.number().optional(),
 
 interface DockerInstance {
-  key: string;
-  remoteApi: Docker;
+  host: string;
+  instance: Docker;
 }
 
 class DockerSingleton {
@@ -17,23 +17,23 @@ class DockerSingleton {
 
   private createInstances() {
     const instances: DockerInstance[] = [];
-    // Get the docker socket from the environment variable
     const hostVariable = process.env.DOCKER_HOST;
     const portVariable = process.env.DOCKER_PORT;
     if (hostVariable === undefined || portVariable === undefined) {
-      instances.push({ key: "socket", remoteApi: new Docker() });
+      instances.push({ host: "socket", instance: new Docker() });
       return instances;
     }
-    // Split the instances at the comma
     const hosts = hostVariable.split(",");
     const ports = portVariable.split(",");
+
     if (hosts.length !== ports.length) {
       throw new Error("The number of hosts and ports must match");
     }
+
     hosts.forEach((host, i) => {
       instances.push({
-        key: `${host}:${ports[i]}`,
-        remoteApi: new Docker({
+        host: `${host}:${ports[i]}`,
+        instance: new Docker({
           host,
           port: parseInt(ports[i] || "", 10),
         }),
@@ -41,6 +41,10 @@ class DockerSingleton {
       return instances;
     });
     return instances;
+  }
+
+  public static findInstance(key: string): DockerInstance | undefined {
+    return this.instances.find((instance) => instance.host === key);
   }
 
   public static getInstance(): DockerInstance[] {
@@ -52,10 +56,9 @@ class DockerSingleton {
   }
 }
 
-const dockerCache = createCacheChannel<{ containers: (Docker.ContainerInfo & { instance: string })[] }>(
-  "/docker",
-  5 * 60 * 1000,
-);
+const dockerCache = createCacheChannel<{
+  containers: (Docker.ContainerInfo & { instance: string })[];
+}>("/docker", 5 * 60 * 1000);
 
 export const dockerRouter = createTRPCRouter({
   getContainers: publicProcedure.query(async () => {
@@ -68,11 +71,11 @@ export const dockerRouter = createTRPCRouter({
         timestamp: cachedData.timestamp,
       };
     }
-    const docker = DockerSingleton.getInstance();
+    const dockerInstances = DockerSingleton.getInstance();
     const containers = await Promise.all(
       // Return all the containers of all the instances into only one item
-      docker.map(({ remoteApi, key }) =>
-        remoteApi.listContainers({ all: true }).then((containers) =>
+      dockerInstances.map(({ instance, host: key }) =>
+        instance.listContainers({ all: true }).then((containers) =>
           containers.map((container) => ({
             ...container,
             instance: key,
@@ -102,10 +105,12 @@ export interface DockerContainer {
   ports: Docker.Port[];
 }
 
-function sanitizeContainers(containers: (Docker.ContainerInfo & { instance: string })[]): DockerContainer[] {
+function sanitizeContainers(
+  containers: (Docker.ContainerInfo & { instance: string })[],
+): DockerContainer[] {
   return containers.map((container) => {
     return {
-      name: container.Names[0] || "Unknown",
+      name: container.Names[0]?.split("/")[1] || "Unknown",
       id: container.Id,
       instance: container.instance,
       state: container.State,
