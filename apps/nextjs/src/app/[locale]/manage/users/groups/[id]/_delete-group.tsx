@@ -6,10 +6,7 @@ import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
@@ -63,15 +60,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
         );
       },
     });
-  }, [
-    tDelete,
-    tRoot,
-    openConfirmModal,
-    group.id,
-    group.name,
-    mutateAsync,
-    router,
-  ]);
+  }, [tDelete, tRoot, openConfirmModal, group.id, group.name, mutateAsync, router]);
 
   return (
     <Button variant="subtle" color="red" onClick={handleDeletion}>

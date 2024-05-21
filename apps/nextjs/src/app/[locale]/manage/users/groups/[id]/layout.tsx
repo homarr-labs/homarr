@@ -1,15 +1,6 @@
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
-import {
-  Button,
-  Container,
-  Grid,
-  GridCol,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Button, Container, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
 import { IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
@@ -21,10 +12,7 @@ interface LayoutProps {
   params: { id: string };
 }
 
-export default async function Layout({
-  children,
-  params,
-}: PropsWithChildren<LayoutProps>) {
+export default async function Layout({ children, params }: PropsWithChildren<LayoutProps>) {
   const t = await getI18n();
   const tGroup = await getScopedI18n("management.page.group");
   const group = await api.group.getById({ id: params.id });
@@ -38,12 +26,7 @@ export default async function Layout({
               <Title order={3}>{group.name}</Title>
               <Text c="gray.5">{t("group.name")}</Text>
             </Stack>
-            <Button
-              component={Link}
-              href="/manage/users/groups"
-              color="gray"
-              variant="light"
-            >
+            <Button component={Link} href="/manage/users/groups" color="gray" variant="light">
               {tGroup("back")}
             </Button>
           </Group>

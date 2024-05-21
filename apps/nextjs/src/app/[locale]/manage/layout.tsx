@@ -13,6 +13,7 @@ import {
   IconMailForward,
   IconPlug,
   IconQuestionMark,
+  IconSettings,
   IconTool,
   IconUser,
   IconUsers,
@@ -86,6 +87,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           href: "/manage/tools/logs",
         },
       ],
+    },
+    {
+      label: t("items.settings"),
+      href: "/manage/settings",
+      icon: IconSettings,
     },
     {
       label: t("items.help.label"),

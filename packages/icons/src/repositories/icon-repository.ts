@@ -19,9 +19,7 @@ export abstract class IconRepository {
     try {
       return await this.getAllIconsInternalAsync();
     } catch (err) {
-      logger.error(
-        `Unable to request icons from repository "${this.slug}": ${JSON.stringify(err)}`,
-      );
+      logger.error(`Unable to request icons from repository "${this.slug}": ${JSON.stringify(err)}`);
       return {
         success: false,
         icons: [],

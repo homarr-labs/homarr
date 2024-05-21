@@ -43,9 +43,7 @@ interface IntegrationsPageProps {
   };
 }
 
-export default async function IntegrationsPage({
-  searchParams,
-}: IntegrationsPageProps) {
+export default async function IntegrationsPage({ searchParams }: IntegrationsPageProps) {
   const integrations = await api.integration.all();
   const t = await getScopedI18n("integration");
 
@@ -54,18 +52,9 @@ export default async function IntegrationsPage({
       <Stack>
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>
-          <Menu
-            width={256}
-            trapFocus
-            position="bottom-start"
-            withinPortal
-            shadow="md"
-            keepMounted={false}
-          >
+          <Menu width={256} trapFocus position="bottom-start" withinPortal shadow="md" keepMounted={false}>
             <MenuTarget>
-              <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>
-                {t("action.create")}
-              </Button>
+              <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
             </MenuTarget>
             <MenuDropdown>
               <IntegrationCreateDropdownContent />
@@ -73,10 +62,7 @@ export default async function IntegrationsPage({
           </Menu>
         </Group>
 
-        <IntegrationList
-          integrations={integrations}
-          activeTab={searchParams.tab}
-        />
+        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
       </Stack>
     </Container>
   );
@@ -87,10 +73,7 @@ interface IntegrationListProps {
   activeTab?: IntegrationKind;
 }
 
-const IntegrationList = async ({
-  integrations,
-  activeTab,
-}: IntegrationListProps) => {
+const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps) => {
   const t = await getScopedI18n("integration");
 
   if (integrations.length === 0) {
@@ -134,12 +117,7 @@ const IntegrationList = async ({
                   <TableTr key={integration.id}>
                     <TableTd>{integration.name}</TableTd>
                     <TableTd>
-                      <Anchor
-                        href={integration.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        size="sm"
-                      >
+                      <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
                         {integration.url}
                       </Anchor>
                     </TableTd>
@@ -155,10 +133,7 @@ const IntegrationList = async ({
                           >
                             <IconPencil size={16} stroke={1.5} />
                           </ActionIcon>
-                          <DeleteIntegrationActionButton
-                            integration={integration}
-                            count={integrations.length}
-                          />
+                          <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
                         </ActionIconGroup>
                       </Group>
                     </TableTd>

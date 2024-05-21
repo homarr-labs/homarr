@@ -44,11 +44,7 @@ export const AccessSettingsContent = ({ board, initialPermissions }: Props) => {
         <Tabs.List grow>
           <TabItem value="user" count={counts.user} icon={IconUser} />
           <TabItem value="group" count={counts.group} icon={IconUsersGroup} />
-          <TabItem
-            value="inherited"
-            count={initialPermissions.inherited.length}
-            icon={IconUserDown}
-          />
+          <TabItem value="inherited" count={initialPermissions.inherited.length} icon={IconUserDown} />
         </Tabs.List>
 
         <Tabs.Panel value="user">

@@ -12,6 +12,7 @@ import { ClientShell } from "~/components/layout/shell";
 import type { Board } from "./_types";
 import { BoardProvider } from "./(content)/_context";
 import type { Params } from "./(content)/_creator";
+import { CustomCss } from "./(content)/_custom-css";
 import { BoardMantineProvider } from "./(content)/_theme";
 
 interface CreateBoardLayoutProps<TParams extends Params> {
@@ -41,12 +42,10 @@ export const createBoardLayout = <TParams extends Params>({
     });
 
     return (
-      <GlobalItemServerDataRunner
-        board={initialBoard}
-        shouldRun={isBoardContentPage}
-      >
+      <GlobalItemServerDataRunner board={initialBoard} shouldRun={isBoardContentPage}>
         <BoardProvider initialBoard={initialBoard}>
           <BoardMantineProvider>
+            <CustomCss />
             <ClientShell hasNavigation={false}>
               <MainHeader
                 logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}

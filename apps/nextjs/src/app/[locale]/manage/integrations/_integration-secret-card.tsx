@@ -2,17 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  Card,
-  Collapse,
-  Group,
-  Kbd,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { ActionIcon, Avatar, Button, Card, Collapse, Group, Kbd, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -36,8 +26,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
   const params = useParams<{ locale: string }>();
   const t = useI18n();
   const { isPublic } = integrationSecretKindObject[secret.kind];
-  const [publicSecretDisplayOpened, { toggle: togglePublicSecretDisplay }] =
-    useDisclosure(false);
+  const [publicSecretDisplayOpened, { toggle: togglePublicSecretDisplay }] = useDisclosure(false);
   const [editMode, setEditMode] = useState(false);
   const DisplayIcon = publicSecretDisplayOpened ? IconEye : IconEyeOff;
   const KindIcon = integrationSecretIcons[secret.kind];
@@ -50,9 +39,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
             <Avatar>
               <KindIcon size={16} />
             </Avatar>
-            <Text fw={500}>
-              {t(`integration.secrets.kind.${secret.kind}.label`)}
-            </Text>
+            <Text fw={500}>{t(`integration.secrets.kind.${secret.kind}.label`)}</Text>
             {publicSecretDisplayOpened ? <Kbd>{secret.value}</Kbd> : null}
           </Group>
           <Group>
@@ -62,11 +49,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
               })}
             </Text>
             {isPublic ? (
-              <ActionIcon
-                color="gray"
-                variant="subtle"
-                onClick={togglePublicSecretDisplay}
-              >
+              <ActionIcon color="gray" variant="subtle" onClick={togglePublicSecretDisplay}>
                 <DisplayIcon size={16} stroke={1.5} />
               </ActionIcon>
             ) : null}

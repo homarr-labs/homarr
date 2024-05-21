@@ -14,13 +14,5 @@ interface NavigationLinkProps {
 export const NavigationLink = ({ href, icon, label }: NavigationLinkProps) => {
   const pathName = usePathname();
 
-  return (
-    <NavLink
-      component={Link}
-      href={href}
-      active={pathName === href}
-      label={label}
-      leftSection={icon}
-    />
-  );
+  return <NavLink component={Link} href={href} active={pathName === href} label={label} leftSection={icon} />;
 };

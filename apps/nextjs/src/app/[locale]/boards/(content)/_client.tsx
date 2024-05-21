@@ -18,9 +18,7 @@ export const updateBoardName = (name: string | null) => {
   boardName = name;
 };
 
-type UpdateCallback = (
-  prev: RouterOutputs["board"]["getDefaultBoard"],
-) => RouterOutputs["board"]["getDefaultBoard"];
+type UpdateCallback = (prev: RouterOutputs["board"]["getHomeBoard"]) => RouterOutputs["board"]["getHomeBoard"];
 
 export const useUpdateBoard = () => {
   const utils = clientApi.useUtils();
@@ -46,9 +44,7 @@ export const ClientBoard = () => {
   const board = useRequiredBoard();
   const isReady = useIsBoardReady();
 
-  const sortedSections = board.sections.sort(
-    (sectionA, sectionB) => sectionA.position - sectionB.position,
-  );
+  const sortedSections = board.sections.sort((sectionA, sectionB) => sectionA.position - sectionB.position);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -61,24 +57,12 @@ export const ClientBoard = () => {
         loaderProps={{ size: "lg" }}
         h={fullHeightWithoutHeaderAndFooter}
       />
-      <Stack
-        ref={ref}
-        h="100%"
-        style={{ visibility: isReady ? "visible" : "hidden" }}
-      >
+      <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
         {sortedSections.map((section) =>
           section.kind === "empty" ? (
-            <BoardEmptySection
-              key={section.id}
-              section={section}
-              mainRef={ref}
-            />
+            <BoardEmptySection key={section.id} section={section} mainRef={ref} />
           ) : (
-            <BoardCategorySection
-              key={section.id}
-              section={section}
-              mainRef={ref}
-            />
+            <BoardCategorySection key={section.id} section={section} mainRef={ref} />
           ),
         )}
       </Stack>

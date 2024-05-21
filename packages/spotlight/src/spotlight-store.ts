@@ -13,12 +13,9 @@ export const setSelectedAction = (index: number, store: SpotlightStore) => {
 export const selectAction = (index: number, store: SpotlightStore): number => {
   const state = store.getState();
   const actionsList = document.getElementById(state.listId);
-  const selected =
-    actionsList?.querySelector<HTMLButtonElement>("[data-selected]");
-  const actions =
-    actionsList?.querySelectorAll<HTMLButtonElement>("[data-action]") ?? [];
-  const nextIndex =
-    index === -1 ? actions.length - 1 : index === actions.length ? 0 : index;
+  const selected = actionsList?.querySelector<HTMLButtonElement>("[data-selected]");
+  const actions = actionsList?.querySelectorAll<HTMLButtonElement>("[data-action]") ?? [];
+  const nextIndex = index === -1 ? actions.length - 1 : index === actions.length ? 0 : index;
 
   const selectedIndex = clamp(nextIndex, 0, actions.length - 1);
   selected?.removeAttribute("data-selected");
@@ -38,8 +35,6 @@ export const selectPreviousAction = (store: SpotlightStore) => {
 };
 export const triggerSelectedAction = (store: SpotlightStore) => {
   const state = store.getState();
-  const selected = document.querySelector<HTMLButtonElement>(
-    `#${state.listId} [data-selected]`,
-  );
+  const selected = document.querySelector<HTMLButtonElement>(`#${state.listId} [data-selected]`);
   selected?.click();
 };

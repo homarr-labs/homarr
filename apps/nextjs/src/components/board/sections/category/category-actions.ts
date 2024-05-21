@@ -2,11 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 
-import type {
-  CategorySection,
-  EmptySection,
-  Section,
-} from "~/app/[locale]/boards/_types";
+import type { CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
 
 interface AddCategory {
@@ -41,9 +37,7 @@ export const useCategoryActions = () => {
         sections: [
           // Place sections before the new category
           ...previous.sections.filter(
-            (section) =>
-              (section.kind === "category" || section.kind === "empty") &&
-              section.position < position,
+            (section) => (section.kind === "category" || section.kind === "empty") && section.position < position,
           ),
           {
             id: createId(),
@@ -62,8 +56,7 @@ export const useCategoryActions = () => {
           ...previous.sections
             .filter(
               (section): section is CategorySection | EmptySection =>
-                (section.kind === "category" || section.kind === "empty") &&
-                section.position >= position,
+                (section.kind === "category" || section.kind === "empty") && section.position >= position,
             )
             .map((section) => ({
               ...section,
@@ -134,29 +127,19 @@ export const useCategoryActions = () => {
     ({ id, direction }: MoveCategory) => {
       updateBoard((previous) => {
         const currentCategory = previous.sections.find(
-          (section): section is CategorySection =>
-            section.kind === "category" && section.id === id,
+          (section): section is CategorySection => section.kind === "category" && section.id === id,
         );
         if (!currentCategory) return previous;
-        if (currentCategory?.position === 1 && direction === "up")
-          return previous;
-        if (
-          currentCategory?.position === previous.sections.length - 2 &&
-          direction === "down"
-        )
-          return previous;
+        if (currentCategory?.position === 1 && direction === "up") return previous;
+        if (currentCategory?.position === previous.sections.length - 2 && direction === "down") return previous;
 
         return {
           ...previous,
           sections: previous.sections.map((section) => {
-            if (section.kind !== "category" && section.kind !== "empty")
-              return section;
+            if (section.kind !== "category" && section.kind !== "empty") return section;
             const offset = direction === "up" ? -2 : 2;
             // Move category and empty section
-            if (
-              section.position === currentCategory.position ||
-              section.position - 1 === currentCategory.position
-            ) {
+            if (section.position === currentCategory.position || section.position - 1 === currentCategory.position) {
               return {
                 ...section,
                 position: section.position + offset,
@@ -165,8 +148,7 @@ export const useCategoryActions = () => {
 
             if (
               direction === "up" &&
-              (section.position === currentCategory.position - 2 ||
-                section.position === currentCategory.position - 1)
+              (section.position === currentCategory.position - 2 || section.position === currentCategory.position - 1)
             ) {
               return {
                 ...section,
@@ -176,8 +158,7 @@ export const useCategoryActions = () => {
 
             if (
               direction === "down" &&
-              (section.position === currentCategory.position + 2 ||
-                section.position === currentCategory.position + 3)
+              (section.position === currentCategory.position + 2 || section.position === currentCategory.position + 3)
             ) {
               return {
                 ...section,
@@ -197,21 +178,18 @@ export const useCategoryActions = () => {
     ({ id: categoryId }: RemoveCategory) => {
       updateBoard((previous) => {
         const currentCategory = previous.sections.find(
-          (section): section is CategorySection =>
-            section.kind === "category" && section.id === categoryId,
+          (section): section is CategorySection => section.kind === "category" && section.id === categoryId,
         );
         if (!currentCategory) return previous;
 
         const aboveWrapper = previous.sections.find(
           (section): section is EmptySection =>
-            section.kind === "empty" &&
-            section.position === currentCategory.position - 1,
+            section.kind === "empty" && section.position === currentCategory.position - 1,
         );
 
         const removedWrapper = previous.sections.find(
           (section): section is EmptySection =>
-            section.kind === "empty" &&
-            section.position === currentCategory.position + 1,
+            section.kind === "empty" && section.position === currentCategory.position + 1,
         );
 
         if (!aboveWrapper || !removedWrapper) return previous;
@@ -232,16 +210,10 @@ export const useCategoryActions = () => {
         return {
           ...previous,
           sections: [
-            ...previous.sections.filter(
-              (section) => section.position < currentCategory.position - 1,
-            ),
+            ...previous.sections.filter((section) => section.position < currentCategory.position - 1),
             {
               ...aboveWrapper,
-              items: [
-                ...aboveWrapper.items,
-                ...previousCategoryItems,
-                ...previousBelowWrapperItems,
-              ],
+              items: [...aboveWrapper.items, ...previousCategoryItems, ...previousBelowWrapperItems],
             },
             ...previous.sections
               .filter(

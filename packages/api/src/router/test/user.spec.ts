@@ -73,7 +73,7 @@ describe("initUser should initialize the first user", () => {
         confirmPassword: "12345679",
       });
 
-    await expect(actAsync()).rejects.toThrow("Passwords do not match");
+    await expect(actAsync()).rejects.toThrow("passwordsDoNotMatch");
   });
 
   it("should not create a user if the password is too short", async () => {
@@ -218,10 +218,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
@@ -232,6 +229,7 @@ describe("editProfile shoud update user", () => {
       salt: null,
       password: null,
       image: null,
+      homeBoardId: null,
     });
   });
 
@@ -260,10 +258,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
@@ -274,6 +269,7 @@ describe("editProfile shoud update user", () => {
       salt: null,
       password: null,
       image: null,
+      homeBoardId: null,
     });
   });
 });
@@ -297,6 +293,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
       {
         id: userToDelete,
@@ -306,6 +303,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
       {
         id: createId(),
@@ -315,6 +313,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
     ];
 

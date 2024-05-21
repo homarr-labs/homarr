@@ -11,8 +11,7 @@ import { CategoryEditModal } from "./category-edit-modal";
 export const useCategoryMenuActions = (category: CategorySection) => {
   const { openModal } = useModalAction(CategoryEditModal);
   const { openConfirmModal } = useConfirmModal();
-  const { addCategory, moveCategory, removeCategory, renameCategory } =
-    useCategoryActions();
+  const { addCategory, moveCategory, removeCategory, renameCategory } = useCategoryActions();
   const t = useI18n();
 
   const createCategoryAtPosition = useCallback(

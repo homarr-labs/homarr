@@ -17,9 +17,7 @@ interface Props {
 
 export default async function UserSecurityPage({ params }: Props) {
   const session = await auth();
-  const tSecurity = await getScopedI18n(
-    "management.page.user.setting.security",
-  );
+  const tSecurity = await getScopedI18n("management.page.user.setting.security");
   const user = await api.user
     .getById({
       userId: params.userId,

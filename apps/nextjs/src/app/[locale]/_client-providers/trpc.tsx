@@ -5,12 +5,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import {
-  createWSClient,
-  loggerLink,
-  unstable_httpBatchStreamLink,
-  wsLink,
-} from "@trpc/client";
+import { createWSClient, loggerLink, unstable_httpBatchStreamLink, wsLink } from "@trpc/client";
 import superjson from "superjson";
 
 import type { AppRouter } from "@homarr/api";
@@ -37,8 +32,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       links: [
         loggerLink({
           enabled: (opts) =>
-            process.env.NODE_ENV === "development" ||
-            (opts.direction === "down" && opts.result instanceof Error),
+            process.env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
         }),
         (args) => {
           return ({ op, next }) => {
@@ -69,9 +63,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryStreamedHydration transformer={superjson}>
-          {props.children}
-        </ReactQueryStreamedHydration>
+        <ReactQueryStreamedHydration transformer={superjson}>{props.children}</ReactQueryStreamedHydration>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </clientApi.Provider>

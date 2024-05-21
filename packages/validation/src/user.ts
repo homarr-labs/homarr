@@ -1,25 +1,33 @@
 import { z } from "zod";
 
+import { createCustomErrorParams } from "./form/i18n";
+
 const usernameSchema = z.string().min(3).max(255);
 const passwordSchema = z.string().min(8).max(255);
+
+const confirmPasswordRefine = [
+  (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
+  {
+    path: ["confirmPassword"],
+    params: createCustomErrorParams("passwordsDoNotMatch"),
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+] satisfies [(args: any) => boolean, unknown];
 
 const createUserSchema = z
   .object({
     username: usernameSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
-    email: z.string().email().optional(),
+    email: z.string().email().or(z.string().length(0).optional()),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
+  .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
 
 const initUserSchema = createUserSchema;
 
 const signInSchema = z.object({
-  name: z.string(),
-  password: z.string(),
+  name: z.string().min(1),
+  password: z.string().min(1),
 });
 
 const registrationSchema = z
@@ -28,10 +36,7 @@ const registrationSchema = z
     password: passwordSchema,
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
+  .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
 
 const registrationSchemaApi = registrationSchema.and(
   z.object({
@@ -54,18 +59,13 @@ const editProfileSchema = z.object({
 
 const changePasswordSchema = z
   .object({
-    previousPassword: z.string(),
+    previousPassword: z.string().min(1),
     password: passwordSchema,
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
+  .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
 
-const changePasswordApiSchema = changePasswordSchema.and(
-  z.object({ userId: z.string() }),
-);
+const changePasswordApiSchema = changePasswordSchema.and(z.object({ userId: z.string() }));
 
 export const userSchemas = {
   signIn: signInSchema,

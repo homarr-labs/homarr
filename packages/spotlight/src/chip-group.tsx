@@ -2,17 +2,10 @@ import { Chip } from "@mantine/core";
 
 import { useScopedI18n } from "@homarr/translation/client";
 
-import {
-  selectNextAction,
-  selectPreviousAction,
-  spotlightStore,
-  triggerSelectedAction,
-} from "./spotlight-store";
+import { selectNextAction, selectPreviousAction, spotlightStore, triggerSelectedAction } from "./spotlight-store";
 import type { SpotlightActionGroup } from "./type";
 
-const disableArrowUpAndDown = (
-  event: React.KeyboardEvent<HTMLInputElement>,
-) => {
+const disableArrowUpAndDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
   if (event.key === "ArrowDown") {
     selectNextAction(spotlightStore);
     event.preventDefault();
@@ -27,8 +20,7 @@ const disableArrowUpAndDown = (
 const focusActiveByDefault = (event: React.FocusEvent<HTMLInputElement>) => {
   const relatedTarget = event.relatedTarget;
 
-  const isPreviousTargetRadio =
-    relatedTarget && "type" in relatedTarget && relatedTarget.type === "radio";
+  const isPreviousTargetRadio = relatedTarget && "type" in relatedTarget && relatedTarget.type === "radio";
   if (isPreviousTargetRadio) return;
 
   const group = event.currentTarget.parentElement?.parentElement;
@@ -45,12 +37,7 @@ interface Props {
 export const GroupChip = ({ group }: Props) => {
   const t = useScopedI18n("common.search.group");
   return (
-    <Chip
-      key={group}
-      value={group}
-      onFocus={focusActiveByDefault}
-      onKeyDown={disableArrowUpAndDown}
-    >
+    <Chip key={group} value={group} onFocus={focusActiveByDefault} onKeyDown={disableArrowUpAndDown}>
       {t(group)}
     </Chip>
   );

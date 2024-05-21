@@ -6,11 +6,7 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetSliderInput = ({
-  property,
-  kind,
-  options,
-}: CommonWidgetInputProps<"slider">) => {
+export const WidgetSliderInput = ({ property, kind, options }: CommonWidgetInputProps<"slider">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 

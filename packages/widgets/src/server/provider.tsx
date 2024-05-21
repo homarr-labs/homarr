@@ -12,31 +12,21 @@ type Data = Record<
 >;
 
 interface GlobalItemServerDataContext {
-  setItemServerData: (
-    id: string,
-    data: Record<string, unknown> | undefined,
-  ) => void;
+  setItemServerData: (id: string, data: Record<string, unknown> | undefined) => void;
   data: Data;
   initalItemIds: string[];
 }
 
-const GlobalItemServerDataContext =
-  createContext<GlobalItemServerDataContext | null>(null);
+const GlobalItemServerDataContext = createContext<GlobalItemServerDataContext | null>(null);
 
 interface Props {
   initalItemIds: string[];
 }
 
-export const GlobalItemServerDataProvider = ({
-  children,
-  initalItemIds,
-}: PropsWithChildren<Props>) => {
+export const GlobalItemServerDataProvider = ({ children, initalItemIds }: PropsWithChildren<Props>) => {
   const [data, setData] = useState<Data>({});
 
-  const setItemServerData = (
-    id: string,
-    itemData: Record<string, unknown> | undefined,
-  ) => {
+  const setItemServerData = (id: string, itemData: Record<string, unknown> | undefined) => {
     setData((prev) => ({
       ...prev,
       [id]: {
@@ -47,9 +37,7 @@ export const GlobalItemServerDataProvider = ({
   };
 
   return (
-    <GlobalItemServerDataContext.Provider
-      value={{ setItemServerData, data, initalItemIds }}
-    >
+    <GlobalItemServerDataContext.Provider value={{ setItemServerData, data, initalItemIds }}>
       {children}
     </GlobalItemServerDataContext.Provider>
   );
@@ -73,10 +61,7 @@ export const useServerDataFor = (id: string) => {
   return context.data[id];
 };
 
-export const useServerDataInitializer = (
-  id: string,
-  serverData: Record<string, unknown> | undefined,
-) => {
+export const useServerDataInitializer = (id: string, serverData: Record<string, unknown> | undefined) => {
   const context = useContext(GlobalItemServerDataContext);
 
   if (!context) {

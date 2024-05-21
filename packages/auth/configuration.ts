@@ -28,10 +28,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
     },
     trustHost: true,
     adapter,
-    providers: [
-      Credentials(createCredentialsConfiguration(db)),
-      EmptyNextAuthProvider(),
-    ],
+    providers: [Credentials(createCredentialsConfiguration(db)), EmptyNextAuthProvider()],
     callbacks: {
       session: createSessionCallback(db),
       signIn: createSignInCallback(adapter, isCredentialsRequest),

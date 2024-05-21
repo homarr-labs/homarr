@@ -4,11 +4,8 @@ import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { useZodForm } from "@homarr/form";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
@@ -24,18 +21,15 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
   const t = useScopedI18n("user");
   const router = useRouter();
   const { mutate, isPending } = clientApi.user.register.useMutation();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.registration),
+  const form = useZodForm(validation.user.registration, {
     initialValues: {
       username: "",
       password: "",
       confirmPassword: "",
     },
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
   });
 
-  const handleSubmit = (values: FormType) => {
+  const handleSubmit = (values: z.infer<typeof validation.user.registration>) => {
     mutate(
       {
         ...values,
@@ -50,10 +44,15 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
           });
           router.push("/auth/login");
         },
-        onError() {
+        onError(error) {
+          const message =
+            error.data?.code === "CONFLICT"
+              ? t("error.usernameTaken")
+              : t("action.register.notification.error.message");
+
           showErrorNotification({
             title: t("action.register.notification.error.title"),
-            message: t("action.register.notification.error.message"),
+            message,
           });
         },
       },
@@ -64,11 +63,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     <Stack gap="xl">
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="lg">
-          <TextInput
-            label={t("field.username.label")}
-            autoComplete="off"
-            {...form.getInputProps("username")}
-          />
+          <TextInput label={t("field.username.label")} autoComplete="off" {...form.getInputProps("username")} />
           <PasswordInput
             label={t("field.password.label")}
             autoComplete="new-password"
@@ -88,5 +83,3 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     </Stack>
   );
 };
-
-type FormType = z.infer<typeof validation.user.registration>;

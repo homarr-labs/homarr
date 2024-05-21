@@ -11,19 +11,15 @@ interface BaseSelectItem {
 }
 
 export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
-  extends Pick<
-    SelectProps,
-    "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder"
-  > {
+  extends Pick<SelectProps, "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder"> {
   data: TSelectItem[];
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
 }
 
-type Props<TSelectItem extends BaseSelectItem> =
-  SelectWithCustomItemsProps<TSelectItem> & {
-    SelectOption: React.ComponentType<TSelectItem>;
-  };
+type Props<TSelectItem extends BaseSelectItem> = SelectWithCustomItemsProps<TSelectItem> & {
+  SelectOption: React.ComponentType<TSelectItem>;
+};
 
 export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   data,
@@ -45,10 +41,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
     onChange,
   });
 
-  const selectedOption = useMemo(
-    () => data.find((item) => item.value === _value),
-    [data, _value],
-  );
+  const selectedOption = useMemo(() => data.find((item) => item.value === _value), [data, _value]);
 
   const options = data.map((item) => (
     <Combobox.Option value={item.value} key={item.value}>
@@ -69,11 +62,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   );
 
   return (
-    <Combobox
-      store={combobox}
-      withinPortal={false}
-      onOptionSubmit={onOptionSubmit}
-    >
+    <Combobox store={combobox} withinPortal={false} onOptionSubmit={onOptionSubmit}>
       <Combobox.Target>
         <InputBase
           {...props}
@@ -85,11 +74,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
           rightSectionPointerEvents="none"
           multiline
         >
-          {selectedOption ? (
-            <SelectOption {...selectedOption} />
-          ) : (
-            <Input.Placeholder>{placeholder}</Input.Placeholder>
-          )}
+          {selectedOption ? <SelectOption {...selectedOption} /> : <Input.Placeholder>{placeholder}</Input.Placeholder>}
         </InputBase>
       </Combobox.Target>
 
