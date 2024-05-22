@@ -3,12 +3,7 @@ import { Umami } from "@umami/node";
 import SuperJSON from "superjson";
 
 import { count, db, eq } from "@homarr/db";
-import {
-  integrations,
-  items,
-  serverSettings,
-  users,
-} from "@homarr/db/schema/sqlite";
+import { integrations, items, serverSettings, users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { defaultServerSettings } from "@homarr/server-settings";
 
@@ -28,14 +23,10 @@ export const sendServerAnalyticsAsync = async () => {
     return;
   }
 
-  const analyticsSettings = SuperJSON.parse<
-    typeof defaultServerSettings.analytics
-  >(setting.value);
+  const analyticsSettings = SuperJSON.parse<typeof defaultServerSettings.analytics>(setting.value);
 
   if (!analyticsSettings.enableGeneral) {
-    logger.info(
-      "Analytics are disabled. No data will be sent. Enable analytics in the settings",
-    );
+    logger.info("Analytics are disabled. No data will be sent. Enable analytics in the settings");
     return;
   }
 
@@ -52,15 +43,11 @@ export const sendServerAnalyticsAsync = async () => {
   logger.info(`Sent all analytics in ${stopWatch.getElapsedInHumanWords()}`);
 };
 
-const sendWidgetDataAsync = async (
-  umamiInstance: Umami,
-  analyticsSettings: typeof defaultServerSettings.analytics,
-) => {
+const sendWidgetDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof defaultServerSettings.analytics) => {
   if (!analyticsSettings.enableWidgetData) {
     return;
   }
-  const widgetCount =
-    (await db.select({ count: count(items.id) }).from(items))[0]?.count ?? 0;
+  const widgetCount = (await db.select({ count: count(items.id) }).from(items))[0]?.count ?? 0;
 
   const response = await umamiInstance.track("server-widget-data", {
     countWidgets: widgetCount,
@@ -72,15 +59,11 @@ const sendWidgetDataAsync = async (
   logger.warn("Unable to send track event data to Umami instance");
 };
 
-const sendUserDataAsync = async (
-  umamiInstance: Umami,
-  analyticsSettings: typeof defaultServerSettings.analytics,
-) => {
+const sendUserDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof defaultServerSettings.analytics) => {
   if (!analyticsSettings.enableUserData) {
     return;
   }
-  const userCount =
-    (await db.select({ count: count(users.id) }).from(users))[0]?.count ?? 0;
+  const userCount = (await db.select({ count: count(users.id) }).from(users))[0]?.count ?? 0;
 
   const response = await umamiInstance.track("server-user-data", {
     countUsers: userCount,
@@ -110,10 +93,7 @@ const sendIntegrationDataAsync = async (
     map[integrationKind.kind] = integrationKind.count;
   });
 
-  const response = await umamiInstance.track(
-    "server-integration-data-kind",
-    map,
-  );
+  const response = await umamiInstance.track("server-integration-data-kind", map);
   if (response.ok) {
     return;
   }

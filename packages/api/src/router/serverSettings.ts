@@ -3,10 +3,7 @@ import SuperJSON from "superjson";
 import { eq } from "@homarr/db";
 import { serverSettings } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
-import type {
-  defaultServerSettings,
-  ServerSettings,
-} from "@homarr/server-settings";
+import type { defaultServerSettings, ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import { z } from "@homarr/validation";
 
@@ -31,9 +28,7 @@ export const serverSettingsRouter = createTRPCRouter({
       } as (typeof defaultServerSettings)["analytics"];
     }
 
-    return SuperJSON.parse<(typeof defaultServerSettings)["analytics"]>(
-      setting.value,
-    );
+    return SuperJSON.parse<(typeof defaultServerSettings)["analytics"]>(setting.value);
   }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const settings = await ctx.db.query.serverSettings.findMany();

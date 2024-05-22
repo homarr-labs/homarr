@@ -19,9 +19,7 @@ export const analyticsJob = createCronJob(EVERY_WEEK, {
     return;
   }
 
-  const value = SuperJSON.parse<(typeof defaultServerSettings)["analytics"]>(
-    analyticSetting.value,
-  );
+  const value = SuperJSON.parse<(typeof defaultServerSettings)["analytics"]>(analyticSetting.value);
 
   if (!value.enableGeneral) {
     return;
