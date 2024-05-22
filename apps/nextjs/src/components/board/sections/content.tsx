@@ -1,13 +1,12 @@
 /* eslint-disable react/no-unknown-property */
 // Ignored because of gridstack attributes
 
-import { useMemo } from "react";
 import type { RefObject } from "react";
+import { useMemo } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 import combineClasses from "clsx";
-import { useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -21,8 +20,7 @@ import {
 } from "@homarr/widgets";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
-import { editModeAtom } from "../editMode";
+import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 import classes from "./item.module.css";
@@ -97,7 +95,7 @@ interface ItemContentProps {
 
 const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   const board = useRequiredBoard();
-  const editMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
@@ -112,7 +110,7 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
         options={options as never}
         integrations={item.integrations}
         serverData={serverData?.data as never}
-        isEditMode={editMode}
+        isEditMode={isEditMode}
         boardId={board.id}
         itemId={item.id}
         {...dimensions}
@@ -126,7 +124,7 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
-  const isEditMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, removeItem } = useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
