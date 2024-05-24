@@ -9,12 +9,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
-    "prettier": "^3.1.0"
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "prettier": "^3.2.5"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "prettier": "@homarr/prettier-config"
 }

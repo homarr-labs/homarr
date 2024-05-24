@@ -1,17 +1,13 @@
 "use client";
 
-import { Switch } from "@homarr/ui";
+import { Switch } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetSwitchInput = ({
-  property,
-  sort,
-  options,
-}: CommonWidgetInputProps<"switch">) => {
-  const t = useWidgetInputTranslation(sort, property);
+export const WidgetSwitchInput = ({ property, kind, options }: CommonWidgetInputProps<"switch">) => {
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (

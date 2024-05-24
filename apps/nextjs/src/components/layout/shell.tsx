@@ -1,10 +1,10 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import { AppShell } from "@mantine/core";
 import { useAtomValue } from "jotai";
 
-import { AppShell } from "@homarr/ui";
-
+import { useOptionalBackgroundProps } from "./background";
 import { navigationCollapsedAtom } from "./header/burger";
 
 interface ClientShellProps {
@@ -18,9 +18,11 @@ export const ClientShell = ({
   children,
 }: PropsWithChildren<ClientShellProps>) => {
   const collapsed = useAtomValue(navigationCollapsedAtom);
+  const backgroundProps = useOptionalBackgroundProps();
 
   return (
     <AppShell
+      {...backgroundProps}
       header={hasHeader ? { height: 60 } : undefined}
       navbar={
         hasNavigation

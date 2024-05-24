@@ -1,10 +1,6 @@
 "use client";
 
 import type { FocusEventHandler } from "react";
-
-import type { IntegrationKind } from "@homarr/definitions";
-import { getIconUrl } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
 import {
   Avatar,
   CheckIcon,
@@ -17,7 +13,11 @@ import {
   Stack,
   Text,
   useCombobox,
-} from "@homarr/ui";
+} from "@mantine/core";
+
+import type { IntegrationKind } from "@homarr/definitions";
+import { getIconUrl } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./widget-integration-select.module.css";
 
@@ -48,28 +48,24 @@ export const WidgetIntegrationSelect = ({
   const handleValueSelect = (selectedValue: string) =>
     onChange(
       multiSelectValues.includes(selectedValue)
-        ? multiSelectValues.filter((v) => v !== selectedValue)
+        ? multiSelectValues.filter((value) => value !== selectedValue)
         : [...multiSelectValues, selectedValue],
     );
 
-  const handleValueRemove = (val: string) =>
-    onChange(multiSelectValues.filter((v) => v !== val));
+  const handleValueRemove = (valueToRemove: string) =>
+    onChange(multiSelectValues.filter((value) => value !== valueToRemove));
 
   const values = multiSelectValues.map((item) => (
     <IntegrationPill
       key={item}
-      option={data.find((i) => i.id === item)!}
+      option={data.find((integration) => integration.id === item)!}
       onRemove={() => handleValueRemove(item)}
     />
   ));
 
   const options = data.map((item) => {
     return (
-      <Combobox.Option
-        value={item.id}
-        key={item.id}
-        active={multiSelectValues.includes(item.id)}
-      >
+      <Combobox.Option value={item.id} key={item.id} active={multiSelectValues.includes(item.id)}>
         <Group gap="sm" align="center">
           {multiSelectValues.includes(item.id) ? <CheckIcon size={12} /> : null}
           <Group gap={7} align="center">
@@ -87,25 +83,11 @@ export const WidgetIntegrationSelect = ({
   });
 
   return (
-    <Combobox
-      store={combobox}
-      onOptionSubmit={handleValueSelect}
-      withinPortal={false}
-    >
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput
-          pointer
-          onClick={() => combobox.toggleDropdown()}
-          {...props}
-        >
+        <PillsInput pointer onClick={() => combobox.toggleDropdown()} {...props}>
           <Pill.Group>
-            {values.length > 0 ? (
-              values
-            ) : (
-              <Input.Placeholder>
-                {t("common.multiSelect.placeholder")}
-              </Input.Placeholder>
-            )}
+            {values.length > 0 ? values : <Input.Placeholder>{t("common.multiSelect.placeholder")}</Input.Placeholder>}
 
             <Combobox.EventsTarget>
               <PillsInput.Field
@@ -115,9 +97,7 @@ export const WidgetIntegrationSelect = ({
                   if (event.key !== "Backspace") return;
 
                   event.preventDefault();
-                  handleValueRemove(
-                    multiSelectValues[multiSelectValues.length - 1]!,
-                  );
+                  handleValueRemove(multiSelectValues[multiSelectValues.length - 1]!);
                 }}
               />
             </Combobox.EventsTarget>
@@ -150,13 +130,6 @@ const IntegrationPill = ({ option, onRemove }: IntegrationPillProps) => (
     <Text span size="xs" lh={1} fw={500}>
       {option.name}
     </Text>
-    <CloseButton
-      onMouseDown={onRemove}
-      variant="transparent"
-      color="gray"
-      size={22}
-      iconSize={14}
-      tabIndex={-1}
-    />
+    <CloseButton onMouseDown={onRemove} variant="transparent" color="gray" size={22} iconSize={14} tabIndex={-1} />
   </Group>
 );

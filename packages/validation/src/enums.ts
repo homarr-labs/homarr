@@ -1,4 +1,9 @@
 import { z } from "zod";
 
-export const zodEnumFromArray = <T extends string>(arr: T[]) =>
-  z.enum([arr[0]!, ...arr.slice(1)]);
+type CouldBeReadonlyArray<T> = T[] | readonly T[];
+
+export const zodEnumFromArray = <T extends string>(array: CouldBeReadonlyArray<T>) =>
+  z.enum([array[0]!, ...array.slice(1)]);
+
+export const zodUnionFromArray = <T extends z.ZodTypeAny>(array: CouldBeReadonlyArray<T>) =>
+  z.union([array[0]!, array[1]!, ...array.slice(2)]);

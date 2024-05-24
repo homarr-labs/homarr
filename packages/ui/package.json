@@ -25,18 +25,17 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0"
   },
   "eslintConfig": {
     "extends": [
       "@homarr/eslint-config/base"
     ]
   },
-  "prettier": "@homarr/prettier-config",
-  "dependencies": {
-    "@mantine/core": "^7.4.0",
-    "@mantine/dates": "^7.4.0",
-    "@tabler/icons-react": "^2.42.0"
-  }
+  "prettier": "@homarr/prettier-config"
 }

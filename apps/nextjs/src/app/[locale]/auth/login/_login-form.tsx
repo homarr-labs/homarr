@@ -2,19 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Alert, Button, PasswordInput, rem, Stack, TextInput } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { signIn } from "@homarr/auth/client";
-import { useForm, zodResolver } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import {
-  Alert,
-  Button,
-  IconAlertTriangle,
-  PasswordInput,
-  rem,
-  Stack,
-  TextInput,
-} from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
@@ -23,15 +17,14 @@ export const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.signIn),
+  const form = useZodForm(validation.user.signIn, {
     initialValues: {
       name: "",
       password: "",
     },
   });
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: z.infer<typeof validation.user.signIn>) => {
     setIsLoading(true);
     setError(undefined);
     await signIn("credentials", {
@@ -40,32 +33,34 @@ export const LoginForm = () => {
       callbackUrl: "/",
     })
       .then((response) => {
-        if (!response?.ok) {
+        if (!response?.ok || response.error) {
           throw response?.error;
         }
 
-        void router.push("/");
+        showSuccessNotification({
+          title: t("action.login.notification.success.title"),
+          message: t("action.login.notification.success.message"),
+        });
+        router.push("/");
       })
       .catch((error: Error | string) => {
         setIsLoading(false);
         setError(error.toString());
+        showErrorNotification({
+          title: t("action.login.notification.error.title"),
+          message: t("action.login.notification.error.message"),
+        });
       });
   };
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit((v) => void handleSubmit(v))}>
+      <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
         <Stack gap="lg">
-          <TextInput
-            label={t("field.username.label")}
-            {...form.getInputProps("name")}
-          />
-          <PasswordInput
-            label={t("field.password.label")}
-            {...form.getInputProps("password")}
-          />
+          <TextInput label={t("field.username.label")} {...form.getInputProps("name")} />
+          <PasswordInput label={t("field.password.label")} {...form.getInputProps("password")} />
           <Button type="submit" fullWidth loading={isLoading}>
-            {t("action.login")}
+            {t("action.login.label")}
           </Button>
         </Stack>
       </form>
@@ -78,5 +73,3 @@ export const LoginForm = () => {
     </Stack>
   );
 };
-
-type FormType = z.infer<typeof validation.user.signIn>;

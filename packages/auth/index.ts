@@ -1,19 +1,22 @@
 import type { DefaultSession } from "@auth/core/types";
 
+import type { GroupPermissionKey } from "@homarr/definitions";
+
 import { createConfiguration } from "./configuration";
 
-export type { Session } from "next-auth";
+export type { Session } from "@auth/core/types";
 
-declare module "next-auth" {
+declare module "@auth/core/types" {
   interface Session {
     user: {
       id: string;
+      permissions: GroupPermissionKey[];
     } & DefaultSession["user"];
   }
 }
 
 export * from "./security";
 
-export const createHandlers = (isCredentialsRequest: boolean) =>
-  createConfiguration(isCredentialsRequest);
-export const { auth } = createConfiguration(false);
+export const createHandlers = (isCredentialsRequest: boolean) => createConfiguration(isCredentialsRequest);
+
+export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

@@ -5,56 +5,35 @@ import Credentials from "next-auth/providers/credentials";
 
 import { db } from "@homarr/db";
 
-import { credentialsConfiguration } from "./providers/credentials";
+import { createSessionCallback, createSignInCallback } from "./callbacks";
+import { createCredentialsConfiguration } from "./providers/credentials";
 import { EmptyNextAuthProvider } from "./providers/empty";
-import { expireDateAfter, generateSessionToken } from "./session";
+import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
 
 const adapter = DrizzleAdapter(db);
-const sessionMaxAgeInSeconds = 30 * 24 * 60 * 60; // 30 days
 
 export const createConfiguration = (isCredentialsRequest: boolean) =>
   NextAuth({
-    adapter,
-    providers: [Credentials(credentialsConfiguration), EmptyNextAuthProvider()],
-    callbacks: {
-      session: ({ session, user }) => ({
-        ...session,
-        user: {
-          ...session.user,
-          id: user.id,
-          name: user.name,
-        },
-      }),
-      signIn: async ({ user }) => {
-        if (!isCredentialsRequest) return true;
-
-        if (!user) return true;
-
-        const sessionToken = generateSessionToken();
-        const sessionExpiry = expireDateAfter(sessionMaxAgeInSeconds);
-
-        // https://github.com/nextauthjs/next-auth/issues/6106
-        if (!adapter?.createSession) {
-          return false;
+    logger: {
+      error: (code, ...message) => {
+        // Remove the big error message for failed login attempts
+        // as it is not useful for the user.
+        if (code.name === "CredentialsSignin") {
+          console.warn("The login attempt of a user was not successful.");
+          return;
         }
 
-        await adapter.createSession({
-          sessionToken: sessionToken,
-          userId: user.id,
-          expires: sessionExpiry,
-        });
-
-        cookies().set("next-auth.session-token", sessionToken, {
-          path: "/",
-          expires: sessionExpiry,
-          httpOnly: true,
-          sameSite: "lax",
-          secure: true,
-        });
-
-        return true;
+        console.error(code, ...message);
       },
     },
+    trustHost: true,
+    adapter,
+    providers: [Credentials(createCredentialsConfiguration(db)), EmptyNextAuthProvider()],
+    callbacks: {
+      session: createSessionCallback(db),
+      signIn: createSignInCallback(adapter, isCredentialsRequest),
+    },
+    secret: "secret-is-not-defined-yet", // TODO: This should be added later
     session: {
       strategy: "database",
       maxAge: sessionMaxAgeInSeconds,
@@ -65,7 +44,7 @@ export const createConfiguration = (isCredentialsRequest: boolean) =>
     },
     jwt: {
       encode() {
-        const cookie = cookies().get("next-auth.session-token")?.value;
+        const cookie = cookies().get(sessionTokenCookieName)?.value;
         return cookie ?? "";
       },
 

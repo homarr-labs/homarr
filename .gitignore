@@ -4,6 +4,7 @@
 node_modules
 .pnp
 .pnp.js
+.idea/
 
 # testing
 coverage
@@ -12,6 +13,9 @@ coverage
 .next/
 out/
 next-env.d.ts
+
+# nest.js
+apps/nestjs/dist
 
 # nitro
 .nitro/
@@ -45,3 +49,9 @@ yarn-error.log*
 
 # database
 db.sqlite
+
+# logs
+*.log
+
+apps/tasks/tasks.cjs
+apps/websocket/wssServer.cjs

@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
+import { Card, Center, Stack, Text, Title } from "@mantine/core";
 
 import { db } from "@homarr/db";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Card, Center, Stack, Text, Title } from "@homarr/ui";
 
-import { LogoWithTitle } from "~/components/layout/logo";
+import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { InitUserForm } from "./_init-user-form";
 
 export default async function InitUser() {
@@ -23,7 +23,7 @@ export default async function InitUser() {
   return (
     <Center>
       <Stack align="center" mt="xl">
-        <LogoWithTitle size="lg" />
+        <HomarrLogoWithTitle size="lg" />
         <Stack gap={6} align="center">
           <Title order={3} fw={400} ta="center">
             {t("title")}

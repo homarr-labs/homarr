@@ -1,9 +1,8 @@
 import type { PropsWithChildren } from "react";
-
-import { getScopedI18n } from "@homarr/translation/server";
+import { AppShellMain } from "@mantine/core";
 import {
-  AppShellMain,
   IconBook2,
+  IconBox,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
@@ -11,12 +10,18 @@ import {
   IconHome,
   IconInfoSmall,
   IconLayoutDashboard,
+  IconLogs,
   IconMailForward,
+  IconPlug,
   IconQuestionMark,
+  IconSettings,
   IconTool,
   IconUser,
   IconUsers,
-} from "@homarr/ui";
+  IconUsersGroup,
+} from "@tabler/icons-react";
+
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
 import type { NavigationLink } from "~/components/layout/navigation";
@@ -37,6 +42,16 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.boards"),
     },
     {
+      icon: IconBox,
+      href: "/manage/apps",
+      label: t("items.apps"),
+    },
+    {
+      icon: IconPlug,
+      href: "/manage/integrations",
+      label: t("items.integrations"),
+    },
+    {
       icon: IconUser,
       label: t("items.users.label"),
       items: [
@@ -50,6 +65,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconMailForward,
           href: "/manage/users/invites",
         },
+        {
+          label: t("items.users.items.groups"),
+          icon: IconUsersGroup,
+          href: "/manage/users/groups",
+        },
       ],
     },
     {
@@ -61,7 +81,17 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
         },
+        {
+          label: t("items.tools.items.logs"),
+          icon: IconLogs,
+          href: "/manage/tools/logs",
+        },
       ],
+    },
+    {
+      label: t("items.settings"),
+      href: "/manage/settings",
+      icon: IconSettings,
     },
     {
       label: t("items.help.label"),
@@ -101,7 +131,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   ];
 
   return (
-    <ClientShell hasNavigation={true}>
+    <ClientShell hasNavigation>
       <MainHeader></MainHeader>
       <MainNavigation links={navigationLinks}></MainNavigation>
       <AppShellMain>{children}</AppShellMain>

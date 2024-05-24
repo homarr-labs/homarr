@@ -2,35 +2,49 @@
   "name": "homarr",
   "private": true,
   "engines": {
-    "node": ">=18.18.2"
+    "node": ">=20.13.1"
   },
-  "packageManager": "pnpm@8.11.0",
+  "packageManager": "pnpm@9.1.1",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
-    "postinstall": "pnpm lint:ws",
-    "db:push": "pnpm -F db push",
+    "db:push": "pnpm -F db push:sqlite",
     "db:studio": "pnpm -F db studio",
+    "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
+    "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
+    "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
+    "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
     "dev": "turbo dev --parallel",
+    "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
+    "test": "cross-env NODE_ENV=development vitest run --coverage.enabled",
+    "test:ui": "cross-env NODE_ENV=development vitest --ui --coverage.enabled",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^1.10.16",
-    "prettier": "^3.1.0",
-    "turbo": "^1.10.16",
-    "typescript": "^5.3.3"
+    "@turbo/gen": "^1.13.3",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
+    "cross-env": "^7.0.3",
+    "jsdom": "^24.0.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.13.3",
+    "typescript": "^5.4.5",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.6.0"
   },
-  "pnpm": {
-    "overrides": {
-      "@auth/core": "0.18.0"
-    }
+  "dependencies": {
+    "@mantine/core": "^7.9.2",
+    "@mantine/dates": "^7.9.2",
+    "@tabler/icons-react": "^3.5.0",
+    "mantine-react-table": "2.0.0-beta.3"
   },
   "prettier": "@homarr/prettier-config"
 }

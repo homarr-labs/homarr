@@ -4,31 +4,15 @@ import "@homarr/auth/env.mjs";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  output: "standalone",
   reactStrictMode: true,
-  /** Enables hot reloading for local packages without a build step */
-  transpilePackages: [
-    "@homarr/api",
-    "@homarr/auth",
-    "@homarr/db",
-    "@homarr/ui",
-    "@homarr/validation",
-    "@homarr/form",
-    "@homarr/notifications",
-    "@homarr/spotlight",
-  ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   experimental: {
-    optimizePackageImports: [
-      "@mantine/core",
-      "@mantine/hooks",
-      "@mantine/dates",
-      "@mantine/notifications",
-      "@mantine/form",
-      "@mantine/spotlight",
-    ],
+    optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
   },
+  transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
     domains: ["cdn.jsdelivr.net"],
   },

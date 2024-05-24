@@ -1,12 +1,9 @@
-import Link from "next/link";
+import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
 
-import {
-  AppShellNavbar,
-  AppShellSection,
-  NavLink,
-  ScrollArea,
-} from "@homarr/ui";
-import type { TablerIconsProps } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
+
+import type { ClientNavigationLink } from "./navigation-link";
+import { CommonNavLink } from "./navigation-link";
 
 interface MainNavigationProps {
   headerSection?: JSX.Element;
@@ -14,11 +11,7 @@ interface MainNavigationProps {
   links: NavigationLink[];
 }
 
-export const MainNavigation = ({
-  headerSection,
-  footerSection,
-  links,
-}: MainNavigationProps) => {
+export const MainNavigation = ({ headerSection, footerSection, links }: MainNavigationProps) => {
   return (
     <AppShellNavbar p="md">
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
@@ -28,54 +21,34 @@ export const MainNavigation = ({
         mb={footerSection ? "md" : undefined}
         component={ScrollArea}
       >
-        {links.map((link) => (
-          <CommonNavLink key={link.label} {...link} />
-        ))}
+        {links.map((link, index) => {
+          const { icon: TablerIcon, ...props } = link;
+          const Icon = <TablerIcon size={20} stroke={1.5} />;
+          let clientLink: ClientNavigationLink;
+          if ("items" in props) {
+            clientLink = {
+              ...props,
+              items: props.items.map((item) => {
+                return {
+                  ...item,
+                  icon: <item.icon size={20} stroke={1.5} />,
+                };
+              }),
+            } as ClientNavigationLink;
+          } else {
+            clientLink = props as ClientNavigationLink;
+          }
+          return <CommonNavLink key={index} {...clientLink} icon={Icon} />;
+        })}
       </AppShellSection>
       {footerSection && <AppShellSection>{footerSection}</AppShellSection>}
     </AppShellNavbar>
   );
 };
 
-const CommonNavLink = (props: NavigationLink) =>
-  "href" in props ? (
-    <NavLinkHref {...props} />
-  ) : (
-    <NavLinkWithItems {...props} />
-  );
-
-const NavLinkHref = (props: NavigationLinkHref) =>
-  props.external ? (
-    <NavLink
-      component="a"
-      label={props.label}
-      leftSection={<props.icon size={20} stroke={1.5} />}
-      href={props.href}
-      target="_blank"
-    />
-  ) : (
-    <NavLink
-      component={Link}
-      label={props.label}
-      leftSection={<props.icon size={20} stroke={1.5} />}
-      href={props.href}
-    />
-  );
-
-const NavLinkWithItems = (props: NavigationLinkWithItems) => (
-  <NavLink
-    label={props.label}
-    leftSection={<props.icon size={20} stroke={1.5} />}
-  >
-    {props.items.map((item) => (
-      <NavLinkHref key={item.label} {...item} />
-    ))}
-  </NavLink>
-);
-
 interface CommonNavigationLinkProps {
   label: string;
-  icon: (props: TablerIconsProps) => JSX.Element;
+  icon: TablerIcon;
 }
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {
@@ -85,4 +58,5 @@ interface NavigationLinkHref extends CommonNavigationLinkProps {
 interface NavigationLinkWithItems extends CommonNavigationLinkProps {
   items: NavigationLinkHref[];
 }
+
 export type NavigationLink = NavigationLinkHref | NavigationLinkWithItems;

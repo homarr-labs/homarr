@@ -1,17 +1,13 @@
 "use client";
 
-import { TextInput } from "@homarr/ui";
+import { TextInput } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetTextInput = ({
-  property,
-  sort: widgetSort,
-  options,
-}: CommonWidgetInputProps<"text">) => {
-  const t = useWidgetInputTranslation(widgetSort, property);
+export const WidgetTextInput = ({ property, kind, options }: CommonWidgetInputProps<"text">) => {
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (

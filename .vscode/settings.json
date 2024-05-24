@@ -3,5 +3,13 @@
     {
       "mode": "auto"
     }
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+  "prettier.configPath": "./tooling/prettier/index.mjs",
+  "cSpell.words": [
+    "superjson",
+    "homarr",
+    "trpc"
   ]
 }

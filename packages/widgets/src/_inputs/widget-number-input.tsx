@@ -1,17 +1,13 @@
 "use client";
 
-import { NumberInput } from "@homarr/ui";
+import { NumberInput } from "@mantine/core";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetNumberInput = ({
-  property,
-  sort,
-  options,
-}: CommonWidgetInputProps<"number">) => {
-  const t = useWidgetInputTranslation(sort, property);
+export const WidgetNumberInput = ({ property, kind, options }: CommonWidgetInputProps<"number">) => {
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
   return (
