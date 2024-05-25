@@ -80,7 +80,7 @@ importers:
         version: link:../../packages/form
       '@homarr/gridstack':
         specifier: ^1.0.0
-        version: 1.0.0
+        version: 1.0.2
       '@homarr/log':
         specifier: workspace:^
         version: link:../../packages/log
@@ -1659,8 +1659,8 @@ packages:
   '@floating-ui/utils@0.2.1':
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
 
-  '@homarr/gridstack@1.0.0':
-    resolution: {integrity: sha512-KM9024BipLD9BmtM6jHI8OKLZ1Iy4vZdTfU53ww4qEda/330XQYhIC2SBcQgkNnDB2MTkn/laNSO5gTy+lJg9Q==}
+  '@homarr/gridstack@1.0.2':
+    resolution: {integrity: sha512-YL9oF9SwAhioto4QNaowHdMNEhjy2G6v22aN3BlGtumiAWPayo3Ni9P37ZQ7Zv/1s8qKmC2t3GZAp+IsCPjgUA==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -6222,7 +6222,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.1': {}
 
-  '@homarr/gridstack@1.0.0': {}
+  '@homarr/gridstack@1.0.2': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
