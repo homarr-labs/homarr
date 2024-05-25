@@ -43,7 +43,7 @@
   "dependencies": {
     "@mantine/core": "^7.9.2",
     "@mantine/dates": "^7.9.2",
-    "@tabler/icons-react": "^3.4.0",
+    "@tabler/icons-react": "^3.5.0",
     "mantine-react-table": "2.0.0-beta.3"
   },
   "prettier": "@homarr/prettier-config"

@@ -31,7 +31,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
-  logger.info(`tRPC request from ${source} by user '${session?.user.id}'`, session?.user);
+  logger.info(`tRPC request from ${source} by user '${session?.user.name} (${session?.user.id})'`, session?.user);
 
   return {
     session,

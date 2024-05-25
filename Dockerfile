@@ -55,6 +55,7 @@ RUN apk add --no-cache redis
 RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
+VOLUME /appdata
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs

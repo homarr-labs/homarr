@@ -50,7 +50,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Bump version and push tag
         id: githubTagAction
-        uses: anothrNick/github-tag-action@1.67.0
+        uses: anothrNick/github-tag-action@1.69.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
