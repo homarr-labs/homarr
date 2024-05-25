@@ -1,9 +1,9 @@
 "use client";
 
-import type { MantineSpacing } from "@mantine/core";
-import { Card, Group, LoadingOverlay, Stack, Switch, Text, Title, UnstyledButton } from "@mantine/core";
 import type { ReactNode } from "react";
 import React from "react";
+import type { MantineSpacing } from "@mantine/core";
+import { Card, Group, LoadingOverlay, Stack, Switch, Text, Title, UnstyledButton } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UseFormReturnType } from "@homarr/form";
