@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./errors": "./src/errors/component.tsx"
   },
   "typesVersions": {
     "*": {
@@ -39,6 +40,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
+    "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
