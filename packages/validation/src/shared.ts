@@ -25,7 +25,7 @@ export const sharedItemSchema = z.object({
   yOffset: z.number(),
   height: z.number(),
   width: z.number(),
-  integrations: z.array(integrationSchema),
+  integrationIds: z.array(z.string()),
   advancedOptions: itemAdvancedOptionsSchema,
 });
 

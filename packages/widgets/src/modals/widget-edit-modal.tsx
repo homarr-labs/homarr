@@ -6,7 +6,6 @@ import { Button, Group, Stack } from "@mantine/core";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import type { BoardItemIntegration } from "@homarr/validation";
 
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
@@ -19,8 +18,8 @@ import { WidgetAdvancedOptionsModal } from "./widget-advanced-options-modal";
 
 export interface WidgetEditModalState {
   options: Record<string, unknown>;
+  integrationIds: string[];
   advancedOptions: BoardItemAdvancedOptions;
-  integrations: BoardItemIntegration[];
 }
 
 interface ModalProps<TSort extends WidgetKind> {
@@ -57,7 +56,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             <WidgetIntegrationSelect
               label={t("item.edit.field.integrations.label")}
               data={innerProps.integrationData}
-              {...form.getInputProps("integrations")}
+              {...form.getInputProps("integrationIds")}
             />
           )}
           {Object.entries(definition.options).map(([key, value]: [string, OptionsBuilderResult[string]]) => {
