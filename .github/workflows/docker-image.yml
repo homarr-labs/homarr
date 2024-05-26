@@ -30,8 +30,20 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of an image has been triggered"
+          args: "Deployment of an image has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
       - uses: actions/checkout@v4
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: master
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Semver computed next tag to be ${{ steps.semver.outputs.next }}. Current is ${{ steps.semver.outputs.current }}"
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -44,23 +56,16 @@ jobs:
         run: pnpm install
       - name: Build artifacts
         run: pnpm build
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Bump version and push tag
-        id: githubTagAction
-        uses: anothrNick/github-tag-action@1.69.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: false
-          DRY_RUN: true
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Image has been tagged as ${{ steps.githubTagAction.outputs.new_tag }}"
+          args: "Built application artifacts. Building images..."
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -68,7 +73,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
-            type=raw,value=${{ steps.githubTagAction.outputs.new_tag }}
+            type=raw,value=${{ steps.semver.outputs.next }}
       - name: Build and push
         id: buildPushAction
         uses: docker/build-push-action@v5
@@ -86,4 +91,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Image built with ID ${{ steps.buildPushAction.outputs.imageid }}"
+          args: "Deployment of image has completed. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'. This was a dry run."
