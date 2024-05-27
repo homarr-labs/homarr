@@ -40,7 +40,7 @@
     "@tanstack/react-query": "^5.40.0",
     "@tanstack/react-query-devtools": "^5.40.0",
     "@tanstack/react-query-next-experimental": "5.40.0",
-    "@trpc/client": "11.0.0-rc.374",
+    "@trpc/client": "11.0.0-rc.377",
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
