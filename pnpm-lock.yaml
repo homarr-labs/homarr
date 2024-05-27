@@ -28,7 +28,7 @@ importers:
         specifier: ^1.13.3
         version: 1.13.3(@types/node@20.12.12)(typescript@5.4.5)
       '@vitejs/plugin-react':
-        specifier: ^4.2.1
+        specifier: ^4.3.0
         version: 4.3.0(vite@5.2.6(@types/node@20.12.12)(sass@1.77.2)(sugarss@4.0.1))
       '@vitest/coverage-v8':
         specifier: ^1.6.0
@@ -6078,7 +6078,7 @@ snapshots:
 
   '@babel/helper-module-imports@7.22.15':
     dependencies:
-      '@babel/types': 7.24.0
+      '@babel/types': 7.24.6
 
   '@babel/helper-module-imports@7.24.6':
     dependencies:
@@ -6106,7 +6106,7 @@ snapshots:
 
   '@babel/helper-simple-access@7.22.5':
     dependencies:
-      '@babel/types': 7.24.0
+      '@babel/types': 7.24.6
 
   '@babel/helper-simple-access@7.24.6':
     dependencies:
@@ -6187,9 +6187,9 @@ snapshots:
 
   '@babel/template@7.23.9':
     dependencies:
-      '@babel/code-frame': 7.23.5
-      '@babel/parser': 7.24.0
-      '@babel/types': 7.24.0
+      '@babel/code-frame': 7.24.6
+      '@babel/parser': 7.24.6
+      '@babel/types': 7.24.6
 
   '@babel/template@7.24.0':
     dependencies:
