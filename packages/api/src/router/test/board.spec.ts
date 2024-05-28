@@ -659,7 +659,7 @@ describe("saveBoard should save full board", () => {
               id: createId(),
               kind: "clock",
               options: { is24HourFormat: true },
-              integrations: [],
+              integrationIds: [],
               height: 1,
               width: 1,
               xOffset: 0,
@@ -720,7 +720,7 @@ describe("saveBoard should save full board", () => {
               id: itemId,
               kind: "clock",
               options: { is24HourFormat: true },
-              integrations: [anotherIntegration],
+              integrationIds: [anotherIntegration.id],
               height: 1,
               width: 1,
               xOffset: 0,
@@ -834,7 +834,7 @@ describe("saveBoard should save full board", () => {
               id: newItemId,
               kind: "clock",
               options: { is24HourFormat: true },
-              integrations: [],
+              integrationIds: [],
               height: 1,
               width: 1,
               xOffset: 3,
@@ -903,7 +903,7 @@ describe("saveBoard should save full board", () => {
               id: itemId,
               kind: "clock",
               options: { is24HourFormat: true },
-              integrations: [integration],
+              integrationIds: [integration.id],
               height: 1,
               width: 1,
               xOffset: 0,
@@ -1017,7 +1017,7 @@ describe("saveBoard should save full board", () => {
               id: itemId,
               kind: "clock",
               options: { is24HourFormat: false },
-              integrations: [],
+              integrationIds: [],
               height: 3,
               width: 2,
               xOffset: 7,
@@ -1245,10 +1245,9 @@ const expectInputToBeFullBoardWithName = (
   if (firstItem.kind === "clock") {
     expect(firstItem.options.is24HourFormat).toBe(true);
   }
-  expect(firstItem.integrations.length).toBe(1);
-  const firstIntegration = expectToBeDefined(firstItem.integrations[0]);
-  expect(firstIntegration.id).toBe(props.integrationId);
-  expect(firstIntegration.kind).toBe("adGuardHome");
+  expect(firstItem.integrationIds.length).toBe(1);
+  const firstIntegration = expectToBeDefined(firstItem.integrationIds[0]);
+  expect(firstIntegration).toBe(props.integrationId);
 };
 
 const createFullBoardAsync = async (db: Database, name: string) => {

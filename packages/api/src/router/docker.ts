@@ -61,67 +61,50 @@ class DockerSingleton {
 
 const dockerCache = createCacheChannel<{
   containers: (Docker.ContainerInfo & { instance: string; iconUrl: string | null })[];
-}>("/docker", 5 * 60 * 1000);
+}>("docker-containers", 5 * 60 * 1000);
 
 export const dockerRouter = createTRPCRouter({
   getContainers: publicProcedure.query(async () => {
-    // Check if the value already in the cache from redis
-    const cachedData = await dockerCache.getAsync();
-    const isCacheYoungerThan5Minutes = cachedData?.isFresh;
-
-    console.log(cachedData?.data.containers);
-
-    if (isCacheYoungerThan5Minutes) {
-      return {
-        containers: sanitizeContainers(cachedData.data.containers),
-        timestamp: cachedData.timestamp,
-      };
-    }
-    const dockerInstances = DockerSingleton.getInstance();
-    const containers = await Promise.all(
-      // Return all the containers of all the instances into only one item
-      dockerInstances.map(({ instance, host: key }) =>
-        instance.listContainers({ all: true }).then((containers) =>
-          containers.map((container) => ({
-            ...container,
-            instance: key,
-          })),
+    const { timestamp, data } = await dockerCache.consumeAsync(async () => {
+      const dockerInstances = DockerSingleton.getInstance();
+      const containers = await Promise.all(
+        // Return all the containers of all the instances into only one item
+        dockerInstances.map(({ instance, host: key }) =>
+          instance.listContainers({ all: true }).then((containers) =>
+            containers.map((container) => ({
+              ...container,
+              instance: key,
+            })),
+          ),
         ),
-      ),
-    ).then((containers) => containers.flat());
+      ).then((containers) => containers.flat());
 
-    const extractImage = (container: Docker.ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
-    const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
-    const dbIcons =
-      likeQueries.length >= 1
-        ? await db.query.icons.findMany({
-            where: or(...likeQueries),
-          })
-        : [];
+      const extractImage = (container: Docker.ContainerInfo) =>
+        container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+      const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
+      const dbIcons =
+        likeQueries.length >= 1
+          ? await db.query.icons.findMany({
+              where: or(...likeQueries),
+            })
+          : [];
 
-    console.log(dbIcons, dbIcons.length, dbIcons.at(0));
-
-    const containersWithIcons = containers.map((container) => ({
-      ...container,
-      iconUrl:
-        dbIcons.find((icon) => {
-          const extractedImage = extractImage(container);
-          if (!extractedImage) return false;
-          return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-        })?.url ?? null,
-    }));
-
-    // Only return the name, id, status, image, and ports of each containers from all instances
-    const sanitizedContainers = sanitizeContainers(containersWithIcons);
-
-    // Save the data into the cache
-    await dockerCache.setAsync({
-      containers: containersWithIcons,
+      return {
+        containers: containers.map((container) => ({
+          ...container,
+          iconUrl:
+            dbIcons.find((icon) => {
+              const extractedImage = extractImage(container);
+              if (!extractedImage) return false;
+              return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
+            })?.url ?? null,
+        })),
+      };
     });
 
     return {
-      containers: sanitizedContainers,
-      timestamp: new Date(),
+      containers: sanitizeContainers(data.containers),
+      timestamp,
     };
   }),
 });
@@ -139,7 +122,6 @@ function sanitizeContainers(
   containers: (Docker.ContainerInfo & { instance: string; iconUrl: string | null })[],
 ): DockerContainer[] {
   return containers.map((container) => {
-    console.log(container);
     return {
       name: container.Names[0]?.split("/")[1] || "Unknown",
       id: container.Id,

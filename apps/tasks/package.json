@@ -27,6 +27,7 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/analytics": "workspace:^0.1.0",
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3",
     "superjson": "2.2.1"
@@ -40,7 +41,7 @@
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "tsx": "4.10.5",
+    "tsx": "4.11.0",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {

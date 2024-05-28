@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
-import type { BoardItemAdvancedOptions, BoardItemIntegration } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation";
 
 import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
@@ -38,7 +38,7 @@ interface UpdateItemAdvancedOptions {
 
 interface UpdateItemIntegrations {
   itemId: string;
-  newIntegrations: BoardItemIntegration[];
+  newIntegrations: string[];
 }
 
 interface CreateItem {
@@ -63,7 +63,7 @@ export const useItemActions = () => {
           options: {},
           width: 1,
           height: 1,
-          integrations: [],
+          integrationIds: [],
           advancedOptions: {
             customCssClasses: [],
           },
@@ -157,7 +157,7 @@ export const useItemActions = () => {
                 if (item.id !== itemId) return item;
                 return {
                   ...item,
-                  ...("integrations" in item ? { integrations: newIntegrations } : {}),
+                  ...("integrationIds" in item ? { integrationIds: newIntegrations } : {}),
                 };
               }),
             };
