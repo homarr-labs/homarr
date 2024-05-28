@@ -52,7 +52,7 @@
     "dotenv": "^16.4.5",
     "flag-icons": "^7.2.2",
     "glob": "^10.4.1",
-    "jotai": "^2.8.1",
+    "jotai": "^2.8.2",
     "next": "^14.2.3",
     "postcss-preset-mantine": "^1.15.0",
     "react": "18.3.1",
