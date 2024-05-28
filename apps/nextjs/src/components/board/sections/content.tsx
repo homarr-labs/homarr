@@ -1,8 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 // Ignored because of gridstack attributes
 
-import { useMemo } from "react";
-import type { RefObject } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import {
@@ -13,6 +11,8 @@ import {
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useAtomValue } from "jotai";
+import type { RefObject } from "react";
+import { useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -25,8 +25,8 @@ import {
   widgetImports,
 } from "@homarr/widgets";
 
-import type { Item } from "~/app/[locale]/boards/_types";
 import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
+import type { Item } from "~/app/[locale]/boards/_types";
 import { editModeAtom } from "../editMode";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
@@ -74,17 +74,20 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
       gs-h={item.height}
       gs-min-w={1}
       gs-min-h={1}
-      gs-max-w={4}
-      gs-max-h={4}
       ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
     >
       <Card
         ref={ref}
-        className={combineClasses(classes.itemCard, "grid-stack-item-content")}
+        className={combineClasses(
+          classes.itemCard,
+          `${item.kind}-wrapper`,
+          "grid-stack-item-content",
+        )}
         withBorder
         styles={{
           root: {
             "--opacity": opacity / 100,
+            containerType: "size",
           },
         }}
         p={0}

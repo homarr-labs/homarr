@@ -7,8 +7,9 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "cSpell.words": [
-    "superjson",
+    "cqmin",
     "homarr",
+    "superjson",
     "trpc"
   ]
 }

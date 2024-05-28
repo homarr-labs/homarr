@@ -1,4 +1,4 @@
-import { Box, Tooltip } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import {
   IconCloud,
   IconCloudFog,
@@ -9,6 +9,7 @@ import {
   IconSnowflake,
   IconSun,
 } from "@tabler/icons-react";
+import dayjs from "dayjs";
 
 import type { TranslationObject } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -16,27 +17,75 @@ import type { TablerIcon } from "@homarr/ui";
 
 interface WeatherIconProps {
   code: number;
-  size?: number;
+  size?: string | number;
 }
 
 /**
  * Icon which should be displayed when specific code is defined
  * @param code weather code from api
- * @returns weather tile component
+ * @param size size of the icon, accepts relative sizes too
+ * @returns Icon corresponding to the weather code
  */
 export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
-  const t = useScopedI18n("widget.weather");
-
-  const { icon: Icon, name } =
+  const { icon: Icon } =
     weatherDefinitions.find((definition) => definition.codes.includes(code)) ??
     unknownWeather;
 
+  return <Icon style={{ float: "left" }} size={size} />;
+};
+
+interface WeatherDescriptionProps {
+  weatherOnly?: boolean;
+  time?: string;
+  weatherCode: number;
+  maxTemp?: string;
+  minTemp?: string;
+}
+
+/**
+ * Description Dropdown for a given set of parameters
+ * @param time date that can be formatted by dayjs
+ * @param weatherCode weather code from api
+ * @param maxTemp preformatted string for max temperature
+ * @param minTemp preformatted string for min temperature
+ * @returns Content for a HoverCard dropdown presenting weather information
+ */
+export const WeatherDescription = ({
+  weatherOnly,
+  time,
+  weatherCode,
+  maxTemp,
+  minTemp,
+}: WeatherDescriptionProps) => {
+  const t = useScopedI18n("widget.weather");
+  const tCommon = useScopedI18n("common");
+
+  const { name } =
+    weatherDefinitions.find((definition) =>
+      definition.codes.includes(weatherCode),
+    ) ?? unknownWeather;
+
+  if (weatherOnly) {
+    return <Text fz="16px">{t(`kind.${name}`)}</Text>;
+  }
+
   return (
-    <Tooltip withinPortal withArrow label={t(`kind.${name}`)}>
-      <Box>
-        <Icon style={{ float: "left" }} size={size} />
-      </Box>
-    </Tooltip>
+    <Stack align="center" gap="0">
+      <Text fz="24px">{dayjs(time).format("dddd MMMM D YYYY")}</Text>
+      <Text fz="16px">{t(`kind.${name}`)}</Text>
+      <Text fz="16px">
+        {tCommon("rtl", {
+          value: tCommon("information.max"),
+          symbol: tCommon("symbols.colon"),
+        }) + maxTemp}
+      </Text>
+      <Text fz="16px">
+        {tCommon("rtl", {
+          value: tCommon("information.min"),
+          symbol: tCommon("symbols.colon"),
+        }) + minTemp}
+      </Text>
+    </Stack>
   );
 };
 
