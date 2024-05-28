@@ -1,14 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
-import {
-  AccordionControl,
-  AccordionItem,
-  AccordionPanel,
-  Container,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { AccordionControl, AccordionItem, AccordionPanel, Container, Stack, Text, Title } from "@mantine/core";
 import {
   IconAlertTriangle,
   IconBrush,
@@ -26,7 +18,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
 import type { TablerIcon } from "@homarr/ui";
 
-import { getBoardPermissions } from "~/components/board/permissions/server";
+import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
 import { AccessSettingsContent } from "./_access";
 import { BackgroundSettingsContent } from "./_background";
@@ -45,10 +37,10 @@ interface Props {
   };
 }
 
-const getBoardAndPermissions = async (params: Props["params"]) => {
+const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
   try {
     const board = await api.board.getBoardByName({ name: params.name });
-    const { hasFullAccess } = await getBoardPermissions(board);
+    const { hasFullAccess } = await getBoardPermissionsAsync(board);
     const permissions = hasFullAccess
       ? await api.board.getBoardPermissions({ id: board.id })
       : {
@@ -69,22 +61,16 @@ const getBoardAndPermissions = async (params: Props["params"]) => {
   }
 };
 
-export default async function BoardSettingsPage({
-  params,
-  searchParams,
-}: Props) {
-  const { board, permissions } = await getBoardAndPermissions(params);
-  const { hasFullAccess } = await getBoardPermissions(board);
+export default async function BoardSettingsPage({ params, searchParams }: Props) {
+  const { board, permissions } = await getBoardAndPermissionsAsync(params);
+  const { hasFullAccess } = await getBoardPermissionsAsync(board);
   const t = await getScopedI18n("board.setting");
 
   return (
     <Container>
       <Stack>
         <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
-        <ActiveTabAccordion
-          variant="separated"
-          defaultValue={searchParams.tab ?? "general"}
-        >
+        <ActiveTabAccordion variant="separated" defaultValue={searchParams.tab ?? "general"}>
           <AccordionItemFor value="general" icon={IconSettings}>
             <GeneralSettingsContent board={board} />
           </AccordionItemFor>
@@ -98,22 +84,14 @@ export default async function BoardSettingsPage({
             <ColorSettingsContent board={board} />
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
-            <CustomCssSettingsContent />
+            <CustomCssSettingsContent board={board} />
           </AccordionItemFor>
           {hasFullAccess && (
             <>
               <AccordionItemFor value="access" icon={IconUser}>
-                <AccessSettingsContent
-                  board={board}
-                  initialPermissions={permissions}
-                />
+                <AccessSettingsContent board={board} initialPermissions={permissions} />
               </AccordionItemFor>
-              <AccordionItemFor
-                value="dangerZone"
-                icon={IconAlertTriangle}
-                danger
-                noPadding
-              >
+              <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
                 <DangerZoneSettingsContent />
               </AccordionItemFor>
             </>
@@ -131,13 +109,7 @@ type AccordionItemForProps = PropsWithChildren<{
   noPadding?: boolean;
 }>;
 
-const AccordionItemFor = async ({
-  value,
-  children,
-  icon: Icon,
-  danger,
-  noPadding,
-}: AccordionItemForProps) => {
+const AccordionItemFor = async ({ value, children, icon: Icon, danger, noPadding }: AccordionItemForProps) => {
   const t = await getScopedI18n("board.setting.section");
   return (
     <AccordionItem
@@ -158,13 +130,7 @@ const AccordionItemFor = async ({
           {t(`${value}.title`)}
         </Text>
       </AccordionControl>
-      <AccordionPanel
-        styles={
-          noPadding
-            ? { content: { paddingRight: 0, paddingLeft: 0 } }
-            : undefined
-        }
-      >
+      <AccordionPanel styles={noPadding ? { content: { paddingRight: 0, paddingLeft: 0 } } : undefined}>
         {children}
       </AccordionPanel>
     </AccordionItem>

@@ -22,7 +22,5 @@ export const UserAvatar = ({ user, size }: UserAvatarProps) => {
     return <Avatar {...commonProps} src={user.image} alt={user.name} />;
   }
 
-  return (
-    <Avatar {...commonProps}>{user.name.substring(0, 2).toUpperCase()}</Avatar>
-  );
+  return <Avatar {...commonProps}>{user.name.substring(0, 2).toUpperCase()}</Avatar>;
 };

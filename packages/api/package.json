@@ -23,10 +23,12 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/tasks": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/server-settings": "workspace:^0.1.0",
     "@trpc/client": "next",
     "@trpc/server": "next",
     "superjson": "2.2.1"

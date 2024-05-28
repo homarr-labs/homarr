@@ -1,16 +1,5 @@
 import Link from "next/link";
-import {
-  Anchor,
-  Center,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTr,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -29,20 +18,13 @@ interface GroupsDetailPageProps {
   };
 }
 
-export default async function GroupsDetailPage({
-  params,
-  searchParams,
-}: GroupsDetailPageProps) {
+export default async function GroupsDetailPage({ params, searchParams }: GroupsDetailPageProps) {
   const t = await getI18n();
   const tMembers = await getScopedI18n("management.page.group.setting.members");
   const group = await api.group.getById({ id: params.id });
 
   const filteredMembers = searchParams.search
-    ? group.members.filter((member) =>
-        member.name
-          ?.toLowerCase()
-          .includes(searchParams.search!.trim().toLowerCase()),
-      )
+    ? group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
     : group.members;
 
   return (
@@ -56,10 +38,7 @@ export default async function GroupsDetailPage({
           })}
           defaultValue={searchParams.search}
         />
-        <AddGroupMember
-          groupId={group.id}
-          presentUserIds={group.members.map((member) => member.id)}
-        />
+        <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
       </Group>
       {filteredMembers.length === 0 && (
         <Center py="sm">

@@ -10,6 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import { integrationSecretIcons } from "./_integration-secret-icons";
 
 interface IntegrationSecretInputProps {
+  withAsterisk?: boolean;
   label?: string;
   kind: IntegrationSecretKind;
   value?: string;
@@ -41,10 +42,7 @@ const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   );
 };
 
-const PrivateSecretInput = ({
-  kind,
-  ...props
-}: IntegrationSecretInputProps) => {
+const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   const t = useI18n();
   const Icon = integrationSecretIcons[kind];
 

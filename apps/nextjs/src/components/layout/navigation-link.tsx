@@ -6,11 +6,7 @@ import { usePathname } from "next/navigation";
 import { NavLink } from "@mantine/core";
 
 export const CommonNavLink = (props: ClientNavigationLink) =>
-  "href" in props ? (
-    <NavLinkHref {...props} />
-  ) : (
-    <NavLinkWithItems {...props} />
-  );
+  "href" in props ? <NavLinkHref {...props} /> : <NavLinkWithItems {...props} />;
 
 const NavLinkHref = (props: NavigationLinkHref) => {
   const pathname = usePathname();

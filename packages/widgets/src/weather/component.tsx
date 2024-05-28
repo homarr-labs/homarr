@@ -198,6 +198,4 @@ function Forecast({ weather, options }: WeatherProps) {
 }
 
 const getPreferredUnit = (value: number, isFahrenheit = false): string =>
-  isFahrenheit
-    ? `${(value * (9 / 5) + 32).toFixed(1)}°F`
-    : `${value.toFixed(1)}°C`;
+  isFahrenheit ? `${(value * (9 / 5) + 32).toFixed(1)}°F` : `${value.toFixed(1)}°C`;

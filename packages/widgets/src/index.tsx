@@ -8,6 +8,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import * as app from "./app";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
+import * as dnsHoleSummary from "./dns-hole/summary";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as notebook from "./notebook";
@@ -27,15 +28,13 @@ export const widgetImports = {
   notebook,
   iframe,
   video,
+  dnsHoleSummary,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
 export type WidgetImportKey = keyof WidgetImports;
 
-const loadedComponents = new Map<
-  WidgetKind,
-  ComponentType<WidgetComponentProps<WidgetKind>>
->();
+const loadedComponents = new Map<WidgetKind, ComponentType<WidgetComponentProps<WidgetKind>>>();
 
 export const loadWidgetDynamic = <TKind extends WidgetKind>(kind: TKind) => {
   const existingComponent = loadedComponents.get(kind);

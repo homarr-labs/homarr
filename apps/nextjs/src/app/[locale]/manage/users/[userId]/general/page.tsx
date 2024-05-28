@@ -5,15 +5,14 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
-import {
-  DangerZoneItem,
-  DangerZoneRoot,
-} from "~/components/manage/danger-zone";
+import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
-import { DeleteUserButton } from "./_delete-user-button";
-import { UserProfileAvatarForm } from "./_profile-avatar-form";
-import { UserProfileForm } from "./_profile-form";
-import { canAccessUserEditPage } from "./access";
+import { createMetaTitle } from "~/metadata";
+import { canAccessUserEditPage } from "../access";
+import { DeleteUserButton } from "./_components/_delete-user-button";
+import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
+import { UserProfileForm } from "./_components/_profile-form";
+import { ProfileLanguageChange } from "./_components/_profile-language-change";
 
 interface Props {
   params: {
@@ -34,10 +33,9 @@ export async function generateMetadata({ params }: Props) {
   }
 
   const t = await getScopedI18n("management.page.user.edit");
-  const metaTitle = `${t("metaTitle", { username: user?.name })} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle", { username: user?.name })),
   };
 }
 
@@ -66,6 +64,8 @@ export default async function EditUserPage({ params }: Props) {
           <UserProfileAvatarForm user={user} />
         </Box>
       </Group>
+
+      <ProfileLanguageChange />
 
       <DangerZoneRoot>
         <DangerZoneItem

@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { AddBoardModal } from "~/components/manage/boards/add-board-modal";
 
 interface CreateBoardButtonProps {
@@ -21,7 +21,7 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
 
   const { mutateAsync, isPending } = clientApi.board.createBoard.useMutation({
     onSettled: async () => {
-      await revalidatePathAction("/manage/boards");
+      await revalidatePathActionAsync("/manage/boards");
     },
   });
 
@@ -37,11 +37,7 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
   }, [mutateAsync, boardNames, openModal]);
 
   return (
-    <Button
-      leftSection={<IconCategoryPlus size="1rem" />}
-      onClick={onClick}
-      loading={isPending}
-    >
+    <Button leftSection={<IconCategoryPlus size="1rem" />} onClick={onClick} loading={isPending}>
       {t("management.page.board.action.new.label")}
     </Button>
   );

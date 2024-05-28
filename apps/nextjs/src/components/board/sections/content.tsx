@@ -3,16 +3,12 @@
 
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import {
-  IconDotsVertical,
-  IconLayoutKanban,
-  IconPencil,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
-import { useAtomValue } from "jotai";
 import type { RefObject } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -24,10 +20,10 @@ import {
   WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
+import { WidgetError } from "@homarr/widgets/errors";
 
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
+import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import type { Item } from "~/app/[locale]/boards/_types";
-import { editModeAtom } from "../editMode";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 import classes from "./item.module.css";
@@ -43,12 +39,7 @@ export const SectionContent = ({ items, refs }: Props) => {
   return (
     <>
       {items.map((item) => (
-        <BoardItem
-          key={item.id}
-          refs={refs}
-          item={item}
-          opacity={board.opacity}
-        />
+        <BoardItem key={item.id} refs={refs} item={item} opacity={board.opacity} />
       ))}
     </>
   );
@@ -82,6 +73,7 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
           classes.itemCard,
           `${item.kind}-wrapper`,
           "grid-stack-item-content",
+          item.advancedOptions.customCssClasses.join(" "),
         )}
         withBorder
         styles={{
@@ -106,7 +98,7 @@ interface ItemContentProps {
 
 const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   const board = useRequiredBoard();
-  const editMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
@@ -115,35 +107,59 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   if (!serverData?.isReady) return null;
 
   return (
-    <>
-      <ItemMenu offset={4} item={newItem} />
-      <Comp
-        options={options as never}
-        integrations={item.integrations}
-        serverData={serverData?.data as never}
-        isEditMode={editMode}
-        boardId={board.id}
-        itemId={item.id}
-        {...dimensions}
-      />
-    </>
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          fallbackRender={({ resetErrorBoundary, error }) => (
+            <>
+              <ItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />
+              <WidgetError kind={item.kind} error={error as unknown} resetErrorBoundary={resetErrorBoundary} />
+            </>
+          )}
+        >
+          <ItemMenu offset={4} item={newItem} />
+          <Comp
+            options={options as never}
+            integrationIds={item.integrationIds}
+            serverData={serverData?.data as never}
+            isEditMode={isEditMode}
+            boardId={board.id}
+            itemId={item.id}
+            {...dimensions}
+          />
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   );
 };
 
-const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
+const ItemMenu = ({
+  offset,
+  item,
+  resetErrorBoundary,
+}: {
+  offset: number;
+  item: Item;
+  resetErrorBoundary?: () => void;
+}) => {
+  const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
-  const isEditMode = useAtomValue(editModeAtom);
-  const { updateItemOptions, updateItemIntegrations, removeItem } =
-    useItemActions();
-  const { data: integrationData, isPending } =
-    clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(
-    () => widgetImports[item.kind].definition,
-    [item.kind],
-  );
+  const [isEditMode] = useEditMode();
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, removeItem } = useItemActions();
+  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
+
+  // Reset error boundary on next render if item has been edited
+  useEffect(() => {
+    if (refResetErrorBoundaryOnNextRender.current) {
+      resetErrorBoundary?.();
+      refResetErrorBoundaryOnNextRender.current = false;
+    }
+  }, [item, resetErrorBoundary]);
 
   if (!isEditMode || isPending) return null;
 
@@ -151,25 +167,29 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
     openModal({
       kind: item.kind,
       value: {
+        advancedOptions: item.advancedOptions,
         options: item.options,
-        integrations: item.integrations,
+        integrationIds: item.integrationIds,
       },
-      onSuccessfulEdit: ({ options, integrations }) => {
+      onSuccessfulEdit: ({ options, integrationIds, advancedOptions }) => {
         updateItemOptions({
           itemId: item.id,
           newOptions: options,
         });
+        updateItemAdvancedOptions({
+          itemId: item.id,
+          newAdvancedOptions: advancedOptions,
+        });
         updateItemIntegrations({
           itemId: item.id,
-          newIntegrations: integrations,
+          newIntegrations: integrationIds,
         });
+        refResetErrorBoundaryOnNextRender.current = true;
       },
       integrationData: (integrationData ?? []).filter(
         (integration) =>
           "supportedIntegrations" in currentDefinition &&
-          (currentDefinition.supportedIntegrations as string[]).some(
-            (kind) => kind === integration.kind,
-          ),
+          (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
     });
@@ -188,34 +208,19 @@ const ItemMenu = ({ offset, item }: { offset: number; item: Item }) => {
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon
-          variant="transparent"
-          pos="absolute"
-          top={offset}
-          right={offset}
-          style={{ zIndex: 1 }}
-        >
+        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 1 }}>
           <IconDotsVertical />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
         <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
-        <Menu.Item
-          leftSection={<IconPencil size={16} />}
-          onClick={openEditModal}
-        >
+        <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
           {tItem("action.edit")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>
-          {tItem("action.move")}
-        </Menu.Item>
+        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>{tItem("action.move")}</Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
-        <Menu.Item
-          c="red.6"
-          leftSection={<IconTrash size={16} />}
-          onClick={openRemoveModal}
-        >
+        <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
           {tItem("action.remove")}
         </Menu.Item>
       </Menu.Dropdown>

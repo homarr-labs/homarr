@@ -4,15 +4,13 @@ import { useCallback } from "react";
 import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { validation } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 export const AddGroup = () => {
   const t = useI18n();
@@ -32,7 +30,7 @@ export const AddGroup = () => {
 const AddGroupModal = createModal<void>(({ actions }) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.group.createGroup.useMutation();
-  const form = useForm({
+  const form = useZodForm(validation.group.create, {
     initialValues: {
       name: "",
     },
@@ -44,7 +42,7 @@ const AddGroupModal = createModal<void>(({ actions }) => {
         mutate(values, {
           onSuccess() {
             actions.closeModal();
-            void revalidatePathAction("/manage/users/groups");
+            void revalidatePathActionAsync("/manage/users/groups");
             showSuccessNotification({
               title: t("common.notification.create.success"),
               message: t("group.action.create.notification.success.message"),
@@ -60,11 +58,7 @@ const AddGroupModal = createModal<void>(({ actions }) => {
       })}
     >
       <Stack>
-        <TextInput
-          label={t("group.field.name")}
-          data-autofocus
-          {...form.getInputProps("name")}
-        />
+        <TextInput label={t("group.field.name")} data-autofocus {...form.getInputProps("name")} />
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}

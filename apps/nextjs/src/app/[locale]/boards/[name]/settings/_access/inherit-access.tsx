@@ -1,11 +1,4 @@
-import {
-  Stack,
-  Table,
-  TableTbody,
-  TableTh,
-  TableThead,
-  TableTr,
-} from "@mantine/core";
+import { Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { getPermissionsWithChildren } from "@homarr/definitions";
@@ -41,9 +34,7 @@ export const InheritTable = ({ initialPermissions }: InheritTableProps) => {
             const boardPermission =
               permission in mapPermissions
                 ? mapPermissions[permission as keyof typeof mapPermissions]
-                : getPermissionsWithChildren([permission]).includes(
-                      "board-full-access",
-                    )
+                : getPermissionsWithChildren([permission]).includes("board-full-access")
                   ? "board-full"
                   : null;
 

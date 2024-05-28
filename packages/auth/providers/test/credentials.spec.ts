@@ -4,18 +4,18 @@ import { createId } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { createSalt, hashPassword } from "../../security";
+import { createSaltAsync, hashPasswordAsync } from "../../security";
 import { createCredentialsConfiguration } from "../credentials";
 
 describe("Credentials authorization", () => {
   it("should authorize user with correct credentials", async () => {
     const db = createDb();
     const userId = createId();
-    const salt = await createSalt();
+    const salt = await createSaltAsync();
     await db.insert(users).values({
       id: userId,
       name: "test",
-      password: await hashPassword("test", salt),
+      password: await hashPasswordAsync("test", salt),
       salt,
     });
     const result = await createCredentialsConfiguration(db).authorize({
@@ -26,23 +26,17 @@ describe("Credentials authorization", () => {
     expect(result).toEqual({ id: userId, name: "test" });
   });
 
-  const passwordsThatShouldNotAuthorize = [
-    "wrong",
-    "Test",
-    "test ",
-    " test",
-    " test ",
-  ];
+  const passwordsThatShouldNotAuthorize = ["wrong", "Test", "test ", " test", " test "];
 
   passwordsThatShouldNotAuthorize.forEach((password) => {
     it(`should not authorize user with incorrect credentials (${password})`, async () => {
       const db = createDb();
       const userId = createId();
-      const salt = await createSalt();
+      const salt = await createSaltAsync();
       await db.insert(users).values({
         id: userId,
         name: "test",
-        password: await hashPassword("test", salt),
+        password: await hashPasswordAsync("test", salt),
         salt,
       });
       const result = await createCredentialsConfiguration(db).authorize({

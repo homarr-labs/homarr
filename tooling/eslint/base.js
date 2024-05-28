@@ -27,28 +27,53 @@ const config = {
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "turbo/no-undeclared-env-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-    ],
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       { prefer: "type-imports", fixStyle: "separate-type-imports" },
     ],
-    "@typescript-eslint/no-misused-promises": [
-      2,
-      { checksVoidReturn: { attributes: false } },
-    ],
+    "@typescript-eslint/no-misused-promises": [2, { checksVoidReturn: { attributes: false } }],
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "no-restricted-syntax": [
+      "error",
+      {
+        selector: "FunctionDeclaration[async=false][id.name=/Async$/]",
+        message: "Function ending in 'Async' must be declared async",
+      },
+      {
+        selector:
+          "FunctionDeclaration[async=true][id.name=/^[a-z].*$/][id.name=/ ^(?!generateMetadata$)[a-z].*$/][id.name!=/Async$/]",
+        message: "Async function name must end in 'Async' (function declaration)",
+      },
+      {
+        selector: "MethodDefinition[value.async=false][key.name=/Async$/]",
+        message: "Method ending in 'Async' must be declared async",
+      },
+      {
+        selector: "MethodDefinition[value.async=true][key.name!=/Async$/]",
+        message: "Async method name must end in 'Async'",
+      },
+      {
+        selector: "Property[value.type=/FunctionExpression$/][value.async=false][key.name=/Async$/]",
+        message: "Function ending in 'Async' must be declared async",
+      },
+      {
+        selector:
+          "Property[value.type=/FunctionExpression$/][value.async=true][key.name!=/^on(Success|Settled)$/][key.name!=/Async$/]",
+        message: "Async function name must end in 'Async' (property)",
+      },
+      {
+        selector: "VariableDeclarator[init.type=/FunctionExpression$/][init.async=false][id.name=/Async$/]",
+        message: "Function ending in 'Async' must be declared async",
+      },
+      {
+        selector:
+          "VariableDeclarator[init.type=/FunctionExpression$/][init.async=true][id.name=/^[a-z].*$/][id.name!=/Async$/]",
+        message: "Async function name must end in 'Async' (variable declarator)",
+      },
+    ],
   },
-  ignorePatterns: [
-    "**/.eslintrc.cjs",
-    "**/*.config.js",
-    "**/*.config.cjs",
-    ".next",
-    "dist",
-    "pnpm-lock.yaml",
-  ],
+  ignorePatterns: ["**/.eslintrc.cjs", "**/*.config.js", "**/*.config.cjs", ".next", "dist", "pnpm-lock.yaml"],
   reportUnusedDisableDirectives: true,
 };
 

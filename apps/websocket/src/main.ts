@@ -13,14 +13,12 @@ const wss = new WebSocketServer({
 const handler = applyWSSHandler({
   wss,
   router: appRouter,
+  // ignore error on next line because the createContext must be set with this name
+  // eslint-disable-next-line no-restricted-syntax
   createContext: async ({ req }) => {
     try {
       const headers = Object.entries(req.headers).map(
-        ([key, value]) =>
-          [key, typeof value === "string" ? value : value?.[0]] as [
-            string,
-            string,
-          ],
+        ([key, value]) => [key, typeof value === "string" ? value : value?.[0]] as [string, string],
       );
       const nextHeaders = new Headers(headers);
 
@@ -44,13 +42,9 @@ const handler = applyWSSHandler({
 });
 
 wss.on("connection", (websocket, incomingMessage) => {
-  logger.info(
-    `➕ Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`,
-  );
+  logger.info(`➕ Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`);
   websocket.once("close", (code, reason) => {
-    logger.info(
-      `➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`,
-    );
+    logger.info(`➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
   });
 });
 logger.info("✅ WebSocket Server listening on ws://localhost:3001");

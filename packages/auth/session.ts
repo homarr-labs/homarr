@@ -3,7 +3,7 @@ import type { Session } from "@auth/core/types";
 
 import type { Database } from "@homarr/db";
 
-import { getCurrentUserPermissions } from "./callbacks";
+import { getCurrentUserPermissionsAsync } from "./callbacks";
 
 export const sessionMaxAgeInSeconds = 30 * 24 * 60 * 60; // 30 days
 export const sessionTokenCookieName = "next-auth.session-token";
@@ -16,10 +16,7 @@ export const generateSessionToken = () => {
   return randomUUID();
 };
 
-export const getSessionFromToken = async (
-  db: Database,
-  token: string | undefined,
-): Promise<Session | null> => {
+export const getSessionFromTokenAsync = async (db: Database, token: string | undefined): Promise<Session | null> => {
   if (!token) {
     return null;
   }
@@ -48,7 +45,7 @@ export const getSessionFromToken = async (
   return {
     user: {
       ...session.user,
-      permissions: await getCurrentUserPermissions(db, session.user.id),
+      permissions: await getCurrentUserPermissionsAsync(db, session.user.id),
     },
     expires: session.expires.toISOString(),
   };

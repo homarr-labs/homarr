@@ -43,9 +43,7 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
       continue;
     }
 
-    const repositoryInDb = databaseIconGroups.find(
-      (dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug,
-    );
+    const repositoryInDb = databaseIconGroups.find((dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug);
     const repositoryIconGroupId: string = repositoryInDb?.id ?? createId();
     if (!repositoryInDb?.id) {
       newIconRepositories.push({
@@ -55,11 +53,7 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
     }
 
     for (const icon of repositoryIconGroup.icons) {
-      if (
-        databaseIconGroups
-          .flatMap((group) => group.icons)
-          .some((dbIcon) => dbIcon.checksum === icon.checksum)
-      ) {
+      if (databaseIconGroups.flatMap((group) => group.icons).some((dbIcon) => dbIcon.checksum === icon.checksum)) {
         skippedChecksums.push(icon.checksum);
         continue;
       }
@@ -87,18 +81,17 @@ export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
     if (newIcons.length >= 1) {
       await transaction.insert(icons).values(newIcons);
     }
-    await transaction.delete(icons).where(
-      deadIcons.length >= 1
-        ? inArray(
-            icons.checksum,
-            deadIcons.map((icon) => icon.checksum),
-          )
-        : undefined,
-    );
+    if (deadIcons.length >= 1) {
+      await transaction.delete(icons).where(
+        inArray(
+          icons.checksum,
+          deadIcons.map((icon) => icon.checksum),
+        ),
+      );
+    }
+
     countDeleted += deadIcons.length;
   });
 
-  logger.info(
-    `Updated database within ${stopWatch.getElapsedInHumanWords()} (-${countDeleted}, +${countInserted})`,
-  );
+  logger.info(`Updated database within ${stopWatch.getElapsedInHumanWords()} (-${countDeleted}, +${countInserted})`);
 });

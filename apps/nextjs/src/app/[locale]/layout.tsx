@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
+import "@homarr/ui/styles.css";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
-import "@mantine/core/styles.css";
 
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 
@@ -11,6 +11,7 @@ import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 
+import { Analytics } from "~/components/layout/analytics";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { AuthProvider } from "./_client-providers/session";
@@ -48,10 +49,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function Layout(props: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
   const colorScheme = "dark";
 
   const StackedProvider = composeWrappers([
@@ -61,9 +59,7 @@ export default function Layout(props: {
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
-    (innerProps) => (
-      <NextInternationalProvider {...innerProps} locale={props.params.locale} />
-    ),
+    (innerProps) => <NextInternationalProvider {...innerProps} locale={props.params.locale} />,
     (innerProps) => (
       <MantineProvider
         {...innerProps}
@@ -81,6 +77,7 @@ export default function Layout(props: {
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme={colorScheme} />
+        <Analytics />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>

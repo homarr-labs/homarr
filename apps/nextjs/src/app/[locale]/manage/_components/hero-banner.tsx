@@ -48,13 +48,7 @@ export const HeroBanner = () => {
           <Title>Homarr Dashboard</Title>
         </Group>
       </Stack>
-      <Box
-        className={classes.scrollContainer}
-        w={"30%"}
-        top={0}
-        right={0}
-        pos="absolute"
-      >
+      <Box className={classes.scrollContainer} w={"30%"} top={0} right={0} pos="absolute">
         <Grid>
           {Array(countIconGroups)
             .fill(0)
@@ -67,24 +61,12 @@ export const HeroBanner = () => {
                   }}
                 >
                   {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image
-                      key={`grid-column-${columnIndex}-scroll-1-${index}`}
-                      src={icon}
-                      radius="md"
-                      w={50}
-                      h={50}
-                    />
+                    <Image key={`grid-column-${columnIndex}-scroll-1-${index}`} src={icon} radius="md" w={50} h={50} />
                   ))}
 
                   {/* This is used for making the animation seem seamless */}
                   {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image
-                      key={`grid-column-${columnIndex}-scroll-2-${index}`}
-                      src={icon}
-                      radius="md"
-                      w={50}
-                      h={50}
-                    />
+                    <Image key={`grid-column-${columnIndex}-scroll-2-${index}`} src={icon} radius="md" w={50} h={50} />
                   ))}
                 </Stack>
               </GridCol>

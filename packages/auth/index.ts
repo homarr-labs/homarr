@@ -17,7 +17,6 @@ declare module "@auth/core/types" {
 
 export * from "./security";
 
-export const createHandlers = (isCredentialsRequest: boolean) =>
-  createConfiguration(isCredentialsRequest);
+export const createHandlers = (isCredentialsRequest: boolean) => createConfiguration(isCredentialsRequest);
 
-export { getSessionFromToken, sessionTokenCookieName } from "./session";
+export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

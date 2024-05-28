@@ -4,7 +4,7 @@ import { api } from "@homarr/api/server";
 
 import type { WidgetProps } from "../definition";
 
-export default async function getServerData({ options }: WidgetProps<"app">) {
+export default async function getServerDataAsync({ options }: WidgetProps<"app">) {
   try {
     const app = await api.app.byId({ id: options.appId });
     return { app };

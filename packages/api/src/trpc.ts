@@ -27,17 +27,11 @@ import { ZodError } from "@homarr/validation";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: {
-  headers: Headers;
-  session: Session | null;
-}) => {
+export const createTRPCContext = (opts: { headers: Headers; session: Session | null }) => {
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
-  logger.info(
-    `tRPC request from ${source} by user '${session?.user.id}'`,
-    session?.user,
-  );
+  logger.info(`tRPC request from ${source} by user '${session?.user.name} (${session?.user.id})'`, session?.user);
 
   return {
     session,

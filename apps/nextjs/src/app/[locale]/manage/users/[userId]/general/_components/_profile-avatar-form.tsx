@@ -8,14 +8,11 @@ import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface UserProfileAvatarForm {
   user: RouterOutputs["user"]["getById"];
@@ -44,27 +41,20 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
         {
           async onSuccess() {
             // Revalidate all as the avatar is used in multiple places
-            await revalidatePathAction("/");
+            await revalidatePathActionAsync("/");
             showSuccessNotification({
-              message: tManageAvatar(
-                "changeImage.notification.success.message",
-              ),
+              message: tManageAvatar("changeImage.notification.success.message"),
             });
           },
           onError(error) {
             if (error.shape?.data.code === "BAD_REQUEST") {
               showErrorNotification({
                 title: tManageAvatar("changeImage.notification.toLarge.title"),
-                message: tManageAvatar(
-                  "changeImage.notification.toLarge.message",
-                  { size: "256KB" },
-                ),
+                message: tManageAvatar("changeImage.notification.toLarge.message", { size: "256KB" }),
               });
             } else {
               showErrorNotification({
-                message: tManageAvatar(
-                  "changeImage.notification.error.message",
-                ),
+                message: tManageAvatar("changeImage.notification.error.message"),
               });
             }
           },
@@ -87,18 +77,14 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
           {
             async onSuccess() {
               // Revalidate all as the avatar is used in multiple places
-              await revalidatePathAction("/");
+              await revalidatePathActionAsync("/");
               showSuccessNotification({
-                message: tManageAvatar(
-                  "removeImage.notification.success.message",
-                ),
+                message: tManageAvatar("removeImage.notification.success.message"),
               });
             },
             onError() {
               showErrorNotification({
-                message: tManageAvatar(
-                  "removeImage.notification.error.message",
-                ),
+                message: tManageAvatar("removeImage.notification.error.message"),
               });
             },
           },
@@ -109,13 +95,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
 
   return (
     <Box pos="relative">
-      <Menu
-        opened={opened}
-        keepMounted
-        onChange={toggle}
-        position="bottom-start"
-        withArrow
-      >
+      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start" withArrow>
         <Menu.Target>
           <UnstyledButton onClick={toggle}>
             <UserAvatar user={user} size={200} />
@@ -134,24 +114,15 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
           </UnstyledButton>
         </Menu.Target>
         <Menu.Dropdown>
-          <FileButton
-            onChange={handleAvatarChange}
-            accept="image/png,image/jpeg,image/webp,image/gif"
-          >
+          <FileButton onChange={handleAvatarChange} accept="image/png,image/jpeg,image/webp,image/gif">
             {(props) => (
-              <Menu.Item
-                {...props}
-                leftSection={<IconPhotoEdit size={16} stroke={1.5} />}
-              >
+              <Menu.Item {...props} leftSection={<IconPhotoEdit size={16} stroke={1.5} />}>
                 {tManageAvatar("changeImage.label")}
               </Menu.Item>
             )}
           </FileButton>
           {user.image && (
-            <Menu.Item
-              onClick={handleRemoveAvatar}
-              leftSection={<IconPhotoX size={16} stroke={1.5} />}
-            >
+            <Menu.Item onClick={handleRemoveAvatar} leftSection={<IconPhotoX size={16} stroke={1.5} />}>
               {tManageAvatar("removeImage.label")}
             </Menu.Item>
           )}
@@ -161,7 +132,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
   );
 };
 
-const fileToBase64Async = (file: File): Promise<string> =>
+const fileToBase64Async = async (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

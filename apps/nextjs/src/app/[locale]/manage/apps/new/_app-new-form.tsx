@@ -4,15 +4,12 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { validation, z } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { AppForm } from "../_form";
 
 export const AppNewForm = () => {
@@ -25,7 +22,7 @@ export const AppNewForm = () => {
         title: t("success.title"),
         message: t("success.message"),
       });
-      void revalidatePathAction("/manage/apps").then(() => {
+      void revalidatePathActionAsync("/manage/apps").then(() => {
         router.push("/manage/apps");
       });
     },
@@ -44,16 +41,9 @@ export const AppNewForm = () => {
     [mutate],
   );
 
-  const submitButtonTranslation = useCallback(
-    (t: TranslationFunction) => t("common.action.create"),
-    [],
-  );
+  const submitButtonTranslation = useCallback((t: TranslationFunction) => t("common.action.create"), []);
 
   return (
-    <AppForm
-      submitButtonTranslation={submitButtonTranslation}
-      handleSubmit={handleSubmit}
-      isPending={isPending}
-    />
+    <AppForm submitButtonTranslation={submitButtonTranslation} handleSubmit={handleSubmit} isPending={isPending} />
   );
 };

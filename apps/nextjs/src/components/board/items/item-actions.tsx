@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
-import type { BoardItemIntegration } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation";
 
 import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
@@ -31,9 +31,14 @@ interface UpdateItemOptions {
   newOptions: Record<string, unknown>;
 }
 
+interface UpdateItemAdvancedOptions {
+  itemId: string;
+  newAdvancedOptions: BoardItemAdvancedOptions;
+}
+
 interface UpdateItemIntegrations {
   itemId: string;
-  newIntegrations: BoardItemIntegration[];
+  newIntegrations: string[];
 }
 
 interface CreateItem {
@@ -47,12 +52,8 @@ export const useItemActions = () => {
     ({ kind }: CreateItem) => {
       updateBoard((previous) => {
         const lastSection = previous.sections
-          .filter(
-            (section): section is EmptySection => section.kind === "empty",
-          )
-          .sort(
-            (sectionA, sectionB) => sectionB.position - sectionA.position,
-          )[0];
+          .filter((section): section is EmptySection => section.kind === "empty")
+          .sort((sectionA, sectionB) => sectionB.position - sectionA.position)[0];
 
         if (!lastSection) return previous;
 
@@ -62,7 +63,10 @@ export const useItemActions = () => {
           options: {},
           width: 1,
           height: 1,
-          integrations: [],
+          integrationIds: [],
+          advancedOptions: {
+            customCssClasses: [],
+          },
         } satisfies Omit<Item, "kind" | "yOffset" | "xOffset"> & {
           kind: WidgetKind;
         };
@@ -91,16 +95,42 @@ export const useItemActions = () => {
           ...previous,
           sections: previous.sections.map((section) => {
             // Return same section if item is not in it
-            if (!section.items.some((item) => item.id === itemId))
-              return section;
+            if (!section.items.some((item) => item.id === itemId)) return section;
             return {
               ...section,
               items: section.items.map((item) => {
-                // Return same item if item is not the one we're moving
+                // Return same item if item is not the one we're changing
                 if (item.id !== itemId) return item;
                 return {
                   ...item,
                   options: newOptions,
+                };
+              }),
+            };
+          }),
+        };
+      });
+    },
+    [updateBoard],
+  );
+
+  const updateItemAdvancedOptions = useCallback(
+    ({ itemId, newAdvancedOptions }: UpdateItemAdvancedOptions) => {
+      updateBoard((previous) => {
+        if (!previous) return previous;
+        return {
+          ...previous,
+          sections: previous.sections.map((section) => {
+            // Return same section if item is not in it
+            if (!section.items.some((item) => item.id === itemId)) return section;
+            return {
+              ...section,
+              items: section.items.map((item) => {
+                // Return same item if item is not the one we're changing
+                if (item.id !== itemId) return item;
+                return {
+                  ...item,
+                  advancedOptions: newAdvancedOptions,
                 };
               }),
             };
@@ -119,8 +149,7 @@ export const useItemActions = () => {
           ...previous,
           sections: previous.sections.map((section) => {
             // Return same section if item is not in it
-            if (!section.items.some((item) => item.id === itemId))
-              return section;
+            if (!section.items.some((item) => item.id === itemId)) return section;
             return {
               ...section,
               items: section.items.map((item) => {
@@ -128,9 +157,7 @@ export const useItemActions = () => {
                 if (item.id !== itemId) return item;
                 return {
                   ...item,
-                  ...("integrations" in item
-                    ? { integrations: newIntegrations }
-                    : {}),
+                  ...("integrationIds" in item ? { integrationIds: newIntegrations } : {}),
                 };
               }),
             };
@@ -168,18 +195,14 @@ export const useItemActions = () => {
   const moveItemToSection = useCallback(
     ({ itemId, sectionId, ...positionProps }: MoveItemToSection) => {
       updateBoard((previous) => {
-        const currentSection = previous.sections.find((section) =>
-          section.items.some((item) => item.id === itemId),
-        );
+        const currentSection = previous.sections.find((section) => section.items.some((item) => item.id === itemId));
 
         // If item is in the same section (on initial loading) don't do anything
         if (!currentSection) {
           return previous;
         }
 
-        const currentItem = currentSection.items.find(
-          (item) => item.id === itemId,
-        );
+        const currentItem = currentSection.items.find((item) => item.id === itemId);
         if (!currentItem) {
           return previous;
         }
@@ -236,6 +259,7 @@ export const useItemActions = () => {
     moveItemToSection,
     removeItem,
     updateItemOptions,
+    updateItemAdvancedOptions,
     updateItemIntegrations,
     createItem,
   };

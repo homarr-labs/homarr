@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface DeleteUserButtonProps {
   user: RouterOutputs["user"]["getById"];
@@ -18,14 +18,11 @@ interface DeleteUserButtonProps {
 export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
   const t = useI18n();
   const router = useRouter();
-  const { mutateAsync: mutateUserDeletionAsync } =
-    clientApi.user.delete.useMutation({
-      async onSuccess() {
-        await revalidatePathAction("/manage/users").then(() =>
-          router.push("/manage/users"),
-        );
-      },
-    });
+  const { mutateAsync: mutateUserDeletionAsync } = clientApi.user.delete.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/users").then(() => router.push("/manage/users"));
+    },
+  });
   const { openConfirmModal } = useConfirmModal();
 
   const handleDelete = useCallback(
@@ -33,6 +30,7 @@ export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
       openConfirmModal({
         title: t("user.action.delete.label"),
         children: t("user.action.delete.confirm", { username: user.name }),
+        // eslint-disable-next-line no-restricted-syntax
         async onConfirm() {
           await mutateUserDeletionAsync(user.id);
         },

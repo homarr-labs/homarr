@@ -6,10 +6,7 @@ interface CreateCronJobOptions {
   runOnStart?: boolean;
 }
 
-export const createCronJob = (
-  cronExpression: string,
-  options: CreateCronJobOptions = { runOnStart: false },
-) => {
+export const createCronJob = (cronExpression: string, options: CreateCronJobOptions = { runOnStart: false }) => {
   return {
     withCallback: (callback: () => MaybePromise<void>) => {
       if (options.runOnStart) {

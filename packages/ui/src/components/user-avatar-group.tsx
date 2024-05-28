@@ -10,11 +10,7 @@ interface UserAvatarGroupProps {
   users: UserProps[];
 }
 
-export const UserAvatarGroup = ({
-  size,
-  limit,
-  users,
-}: UserAvatarGroupProps) => {
+export const UserAvatarGroup = ({ size, limit, users }: UserAvatarGroupProps) => {
   return (
     <TooltipGroup openDelay={300} closeDelay={300}>
       <AvatarGroup>

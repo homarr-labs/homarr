@@ -6,13 +6,10 @@ import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface DeleteGroupProps {
   group: {
@@ -34,6 +31,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
       children: tDelete("confirm", {
         name: group.name,
       }),
+      // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         await mutateAsync(
           {
@@ -41,7 +39,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
           },
           {
             onSuccess() {
-              void revalidatePathAction("/manage/users/groups");
+              void revalidatePathActionAsync("/manage/users/groups");
               router.push("/manage/users/groups");
               showSuccessNotification({
                 title: tRoot("common.notification.delete.success"),
@@ -62,15 +60,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
         );
       },
     });
-  }, [
-    tDelete,
-    tRoot,
-    openConfirmModal,
-    group.id,
-    group.name,
-    mutateAsync,
-    router,
-  ]);
+  }, [tDelete, tRoot, openConfirmModal, group.id, group.name, mutateAsync, router]);
 
   return (
     <Button variant="subtle" color="red" onClick={handleDeletion}>
