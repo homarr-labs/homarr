@@ -35,8 +35,8 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "better-sqlite3": "^10.0.0",
     "drizzle-orm": "^0.30.10",
-    "mysql2": "3.9.7",
-    "drizzle-kit": "^0.21.2"
+    "mysql2": "3.9.8",
+    "drizzle-kit": "^0.21.4"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

@@ -236,15 +236,15 @@ export const boardRouter = createTRPCRouter({
         );
       }
 
-      const inputIntegrationRelations = inputItems.flatMap(({ integrations, id: itemId }) =>
-        integrations.map((integration) => ({
-          integrationId: integration.id,
+      const inputIntegrationRelations = inputItems.flatMap(({ integrationIds, id: itemId }) =>
+        integrationIds.map((integrationId) => ({
+          integrationId,
           itemId,
         })),
       );
-      const dbIntegrationRelations = dbItems.flatMap(({ integrations, id: itemId }) =>
-        integrations.map((integration) => ({
-          integrationId: integration.id,
+      const dbIntegrationRelations = dbItems.flatMap(({ integrationIds, id: itemId }) =>
+        integrationIds.map((integrationId) => ({
+          integrationId,
           itemId,
         })),
       );
@@ -277,6 +277,7 @@ export const boardRouter = createTRPCRouter({
             xOffset: item.xOffset,
             yOffset: item.yOffset,
             options: superjson.stringify(item.options),
+            advancedOptions: superjson.stringify(item.advancedOptions),
             sectionId: item.sectionId,
           })
           .where(eq(items.id, item.id));
@@ -514,9 +515,9 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
     sections: sections.map((section) =>
       parseSection({
         ...section,
-        items: section.items.map((item) => ({
+        items: section.items.map(({ integrations: itemIntegrations, ...item }) => ({
           ...item,
-          integrations: item.integrations.map((item) => item.integration),
+          integrationIds: itemIntegrations.map((item) => item.integration.id),
           advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
           options: superjson.parse<Record<string, unknown>>(item.options),
         })),

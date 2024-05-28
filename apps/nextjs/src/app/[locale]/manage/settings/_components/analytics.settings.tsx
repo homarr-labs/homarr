@@ -96,18 +96,23 @@ const SwitchSetting = ({
   title: string;
   text: ReactNode;
 }) => {
+  const disabled = formKey !== "enableGeneral" && !form.values.enableGeneral;
   const handleClick = React.useCallback(() => {
+    if (disabled) {
+      return;
+    }
     form.setFieldValue(formKey, !form.values[formKey]);
-  }, [form, formKey]);
+  }, [form, formKey, disabled]);
+
   return (
-    <UnstyledButton onClick={handleClick}>
-      <Group ms={ms} justify="space-between" gap="lg" align="center" wrap="nowrap">
+    <Group ms={ms} justify="space-between" gap="lg" align="center" wrap="nowrap">
+      <UnstyledButton style={{ flexGrow: 1 }} onClick={handleClick}>
         <Stack gap={0}>
           <Text fw="bold">{title}</Text>
           <Text c="gray.5">{text}</Text>
         </Stack>
-        <Switch {...form.getInputProps(formKey, { type: "checkbox" })} />
-      </Group>
-    </UnstyledButton>
+      </UnstyledButton>
+      <Switch disabled={disabled} onClick={handleClick} checked={form.values[formKey] && !disabled} />
+    </Group>
   );
 };
