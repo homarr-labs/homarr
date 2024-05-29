@@ -169,8 +169,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       flag-icons:
-        specifier: ^7.2.2
-        version: 7.2.2
+        specifier: ^7.2.3
+        version: 7.2.3
       glob:
         specifier: ^10.4.1
         version: 10.4.1
@@ -3679,8 +3679,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  flag-icons@7.2.2:
-    resolution: {integrity: sha512-9cC2y77npwpNJ1Whl3iACVFd/vR7ZQe9AwN8BRDJU2sZROMpEzIC3tOT1qbRRm/QS9b9UTXBHEKAO4I6d7L0xg==}
+  flag-icons@7.2.3:
+    resolution: {integrity: sha512-X2gUdteNuqdNqob2KKTJTS+ZCvyWeLCtDz9Ty8uJP17Y4o82Y+U/Vd4JNrdwTAjagYsRznOn9DZ+E/Q52qbmqg==}
 
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
@@ -8856,7 +8856,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  flag-icons@7.2.2: {}
+  flag-icons@7.2.3: {}
 
   flat-cache@3.2.0:
     dependencies:
