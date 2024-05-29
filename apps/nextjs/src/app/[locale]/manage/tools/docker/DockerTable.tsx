@@ -9,13 +9,16 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import type { RouterOutputs } from "@homarr/api";
 import { useTimeAgo } from "@homarr/common";
 import type { DockerContainerState } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import type { TranslationFunction } from "@homarr/translation";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { OverflowBadge } from "@homarr/ui";
 
-const columns: MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] = [
+const createColumns = (
+  t: TranslationFunction,
+): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
     accessorKey: "name",
-    header: "Name",
+    header: t("docker.field.name.label"),
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs">
@@ -29,7 +32,7 @@ const columns: MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["container
   },
   {
     accessorKey: "state",
-    header: "Status",
+    header: t("docker.field.state.label"),
     size: 120,
     Cell({ cell }) {
       return <ContainerStateBadge state={cell.row.original.state} />;
@@ -37,7 +40,7 @@ const columns: MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["container
   },
   {
     accessorKey: "image",
-    header: "Image",
+    header: t("docker.field.containerImage.label"),
     maxSize: 200,
     Cell({ renderedCellValue }) {
       return (
@@ -49,7 +52,7 @@ const columns: MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["container
   },
   {
     accessorKey: "ports",
-    header: "Ports",
+    header: t("docker.field.ports.label"),
     Cell({ cell }) {
       return (
         <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />
@@ -59,6 +62,7 @@ const columns: MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["container
 ];
 
 export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
+  const t = useI18n();
   const tDocker = useScopedI18n("docker");
   const relativeTime = useTimeAgo(timestamp);
   const table = useMantineReactTable({
@@ -94,7 +98,7 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
       );
     },
 
-    columns,
+    columns: createColumns(t),
   });
   return (
     <Stack>
