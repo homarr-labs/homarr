@@ -1,7 +1,7 @@
 "use client";
 
 import type { ButtonProps, MantineColor } from "@mantine/core";
-import { Avatar, Badge, Box, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
 import { IconPlayerPlay, IconPlayerStop, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
@@ -101,11 +101,10 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     columns: createColumns(t),
   });
   return (
-    <Stack>
-      <Title order={3}>{tDocker("title")}</Title>
+    <>
       <Text>{tDocker("table.updated", { when: relativeTime })}</Text>
       <MantineReactTable table={table} />
-    </Stack>
+    </>
   );
 }
 

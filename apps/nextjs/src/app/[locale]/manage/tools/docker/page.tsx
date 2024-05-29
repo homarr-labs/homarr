@@ -1,15 +1,18 @@
-import { Box } from "@mantine/core";
+import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { DockerTable } from "./DockerTable";
 
 export default async function DockerPage() {
   const { containers, timestamp } = await api.docker.getContainers();
+  const tDocker = await getScopedI18n("docker");
+
   return (
-    <Box style={{ borderRadius: 6 }} p="md" bg="black">
-      <h2>Welcome to docker !</h2>
+    <Stack>
+      <Title order={1}>{tDocker("title")}</Title>
       <DockerTable containers={containers} timestamp={timestamp} />
-    </Box>
+    </Stack>
   );
 }
