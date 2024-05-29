@@ -1,6 +1,6 @@
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
-import { dockerRouter } from "./router/docker";
+import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
 import { homeRouter } from "./router/home";
 import { iconsRouter } from "./router/icons";

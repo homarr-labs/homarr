@@ -1,4 +1,4 @@
-export const dockerContainerStatus = [
+export const dockerContainerStates = [
   "created",
   "running",
   "paused",
@@ -8,4 +8,4 @@ export const dockerContainerStatus = [
   "dead",
 ] as const;
 
-export type DockerContainerStatus = (typeof dockerContainerStatus)[number];
+export type DockerContainerState = (typeof dockerContainerStates)[number];

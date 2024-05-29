@@ -1,18 +1,18 @@
 "use client";
 
 import type { ButtonProps, MantineColor } from "@mantine/core";
-import { Avatar, Badge, Box, Button, Group, Stack, Text } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Group, Stack, Text, Title } from "@mantine/core";
 import { IconPlayerPlay, IconPlayerStop, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import type { DockerContainer } from "node_modules/@homarr/api/src/router/docker";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useTimeAgo } from "@homarr/common";
-import type { DockerContainerStatus } from "@homarr/definitions";
+import type { DockerContainerState } from "@homarr/definitions";
+import { useScopedI18n } from "@homarr/translation/client";
 import { OverflowBadge } from "@homarr/ui";
 
-const columns: MRT_ColumnDef<DockerContainer>[] = [
+const columns: MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -32,7 +32,7 @@ const columns: MRT_ColumnDef<DockerContainer>[] = [
     header: "Status",
     size: 120,
     Cell({ cell }) {
-      return <ContainerStatusBadge status={cell.row.original.state} />;
+      return <ContainerStateBadge state={cell.row.original.state} />;
     },
   },
   {
@@ -59,7 +59,8 @@ const columns: MRT_ColumnDef<DockerContainer>[] = [
 ];
 
 export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
-  const relateiveTime = useTimeAgo(timestamp, "en");
+  const tDocker = useScopedI18n("docker");
+  const relativeTime = useTimeAgo(timestamp);
   const table = useMantineReactTable({
     data: containers,
     enableDensityToggle: false,
@@ -72,22 +73,21 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     enableBottomToolbar: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
-      placeholder: `Search ${containers.length} containers`,
+      placeholder: tDocker("table.search", { count: containers.length }),
       style: { minWidth: 300 },
       autoFocus: true,
     },
 
     initialState: { density: "xs", showGlobalFilter: true },
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
-      const selectedRows = table.getSelectedRowModel();
-      const totalRows = table.getRowCount();
-      const selectedCount = selectedRows.rows.length;
-
       return (
         <Group gap={"sm"}>
           {groupedAlert}
           <Text fw={500}>
-            {selectedCount} of {totalRows} containers selected
+            {tDocker("table.selected", {
+              selectCount: table.getSelectedRowModel().rows.length,
+              totalCount: table.getRowCount(),
+            })}
           </Text>
           <ContainerActionBar />
         </Group>
@@ -98,14 +98,15 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
   });
   return (
     <Stack>
-      <h3>Containers</h3>
-      <p>Updated {relateiveTime}</p>
+      <Title order={3}>{tDocker("title")}</Title>
+      <Text>{tDocker("table.updated", { when: relativeTime })}</Text>
       <MantineReactTable table={table} />
     </Stack>
   );
 }
 
 const ContainerActionBar = () => {
+  const t = useScopedI18n("docker.action");
   const sharedButtonProps = {
     variant: "light",
     radius: "md",
@@ -113,23 +114,23 @@ const ContainerActionBar = () => {
 
   return (
     <Group gap="xs">
-      <Button leftSection={<IconRotateClockwise />} color="orange" {...sharedButtonProps}>
-        Restart
+      <Button leftSection={<IconPlayerPlay />} color="green" {...sharedButtonProps}>
+        {t("start")}
       </Button>
       <Button leftSection={<IconPlayerStop />} color="red" {...sharedButtonProps}>
-        Stop
+        {t("stop")}
       </Button>
-      <Button leftSection={<IconPlayerPlay />} color="green" {...sharedButtonProps}>
-        Start
+      <Button leftSection={<IconRotateClockwise />} color="orange" {...sharedButtonProps}>
+        {t("restart")}
       </Button>
       <Button leftSection={<IconTrash />} color="red" {...sharedButtonProps}>
-        Remove
+        {t("remove")}
       </Button>
     </Group>
   );
 };
 
-const containerStatus = {
+const containerStates = {
   created: "cyan",
   running: "green",
   paused: "yellow",
@@ -137,12 +138,14 @@ const containerStatus = {
   exited: "red",
   removing: "pink",
   dead: "dark",
-} satisfies Record<DockerContainerStatus, MantineColor>;
+} satisfies Record<DockerContainerState, MantineColor>;
 
-const ContainerStatusBadge = ({ status }: { status: DockerContainerStatus }) => {
+const ContainerStateBadge = ({ state }: { state: DockerContainerState }) => {
+  const t = useScopedI18n("docker.field.state.option");
+
   return (
-    <Badge size="lg" radius="sm" variant="light" w={120} color={containerStatus[status]}>
-      {status}
+    <Badge size="lg" radius="sm" variant="light" w={120} color={containerStates[state]}>
+      {t(state)}
     </Badge>
   );
 };
