@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
 import {
   IconBook2,
@@ -19,7 +20,6 @@ import {
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
-import type { PropsWithChildren } from "react";
 
 import { getScopedI18n } from "@homarr/translation/server";
 
