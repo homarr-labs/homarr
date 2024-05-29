@@ -1369,4 +1369,41 @@ export default {
       },
     },
   },
+  docker: {
+    title: "Containers",
+    table: {
+      updated: "Updated {when}",
+      search: "Seach {count} containers",
+      selected: "{selectCount} of {totalCount} containers selected",
+    },
+    field: {
+      name: {
+        label: "Name",
+      },
+      state: {
+        label: "State",
+        option: {
+          created: "Created",
+          running: "Running",
+          paused: "Paused",
+          restarting: "Restarting",
+          exited: "Exited",
+          removing: "Removing",
+          dead: "Dead",
+        },
+      },
+      containerImage: {
+        label: "Image",
+      },
+      ports: {
+        label: "Ports",
+      },
+    },
+    action: {
+      start: "Start",
+      stop: "Stop",
+      restart: "Restart",
+      remove: "Remove",
+    },
+  },
 } as const;
