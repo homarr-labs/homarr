@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Box, Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconDeviceDesktopX } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightActions } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -33,13 +34,16 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
       enabled: isQueryEnabled,
     },
   );
-  const [status, setStatus] = useState<number | null>(null);
-  clientApi.widget.app.ping.useSubscription(
+
+  const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"] | null>(null);
+
+  const shouldPingRun = Boolean(app?.href) && options.pingEnabled;
+  clientApi.widget.app.updatedPing.useSubscription(
     { url: app?.href ?? "" },
     {
-      enabled: Boolean(app?.href) && options.pingEnabled,
+      enabled: shouldPingRun,
       onData(data) {
-        setStatus(data.statusCode);
+        setPingResult(data);
       },
     },
   );
@@ -115,19 +119,7 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
           </Flex>
         </Tooltip.Floating>
 
-        {options.pingEnabled && (
-          <Box
-            bottom={4}
-            right={4}
-            pos="absolute"
-            style={{
-              borderRadius: "100%",
-              backgroundColor: !status ? "orange" : status?.toString().startsWith("5") ? "red" : "green",
-            }}
-            w={16}
-            h={16}
-          ></Box>
-        )}
+        {shouldPingRun && <PingIndicator pingResult={pingResult} />}
       </Flex>
     </AppLink>
   );
@@ -147,3 +139,31 @@ const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<Ap
   ) : (
     children
   );
+
+interface PingIndicatorProps {
+  pingResult: RouterOutputs["widget"]["app"]["ping"] | null;
+}
+
+const PingIndicator = ({ pingResult }: PingIndicatorProps) => {
+  return (
+    <Box bottom={4} right={4} pos="absolute">
+      <Tooltip
+        label={pingResult && "statusCode" in pingResult ? pingResult.statusCode : pingResult?.error}
+        disabled={!pingResult}
+      >
+        <Box
+          style={{
+            borderRadius: "100%",
+            backgroundColor: !pingResult
+              ? "orange"
+              : "error" in pingResult || pingResult.statusCode >= 500
+                ? "red"
+                : "green",
+          }}
+          w={16}
+          h={16}
+        ></Box>
+      </Tooltip>
+    </Box>
+  );
+};

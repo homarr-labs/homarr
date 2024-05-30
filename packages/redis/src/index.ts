@@ -3,7 +3,9 @@ import { createListChannel, createQueueChannel, createSubPubChannel } from "./li
 export { createCacheChannel } from "./lib/channel";
 
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");
-export const pingChannel = createSubPubChannel<{ url: string; statusCode: number }>("ping");
+export const pingChannel = createSubPubChannel<{ url: string; statusCode: number } | { url: string; error: string }>(
+  "ping",
+);
 export const pingUrlChannel = createListChannel<string>("ping-url");
 export const queueChannel = createQueueChannel<{
   name: string;

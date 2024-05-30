@@ -1,12 +1,21 @@
 import { observable } from "@trpc/server/observable";
 
+import { sendPingRequestAsync } from "@homarr/ping";
 import { pingChannel, pingUrlChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const appRouter = createTRPCRouter({
-  ping: publicProcedure
+  ping: publicProcedure.input(z.object({ url: z.string() })).query(async ({ input }) => {
+    const pingResult = await sendPingRequestAsync(input.url);
+
+    return {
+      url: input.url,
+      ...pingResult,
+    };
+  }),
+  updatedPing: publicProcedure
     .input(
       z.object({
         url: z.string(),
@@ -14,14 +23,11 @@ export const appRouter = createTRPCRouter({
     )
     .subscription(async ({ input }) => {
       await pingUrlChannel.addAsync(input.url);
-      const response = await fetch(input.url);
 
-      return observable<{ url: string; statusCode: number }>((emit) => {
-        emit.next({
-          url: input.url,
-          statusCode: response.status,
-        });
+      const pingResult = await sendPingRequestAsync(input.url);
 
+      return observable<{ url: string; statusCode: number } | { url: string; error: string }>((emit) => {
+        emit.next({ url: input.url, ...pingResult });
         pingChannel.subscribe((message) => {
           // Only emit if same url
           if (message.url !== input.url) return;

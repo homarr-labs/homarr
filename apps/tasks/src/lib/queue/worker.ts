@@ -1,3 +1,4 @@
+import { logger } from "@homarr/log";
 import { queueChannel } from "@homarr/redis";
 
 import { queueRegistry } from "~/queues";
@@ -14,7 +15,13 @@ export const queueWorkerAsync = async () => {
   for (const execution of executions) {
     const queue = queueRegistry.get(execution.name);
     if (!queue) continue;
-    await queue.callback(execution.data);
+
+    try {
+      await queue.callback(execution.data);
+    } catch (err) {
+      logger.error(err);
+    }
+
     await queueChannel.markAsDoneAsync(execution._id);
   }
 };
