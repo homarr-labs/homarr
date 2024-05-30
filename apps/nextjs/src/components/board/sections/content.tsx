@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unknown-property */
 // Ignored because of gridstack attributes
 
+import type { RefObject } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
-import type { RefObject } from "react";
-import { useEffect, useMemo, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
@@ -22,8 +22,8 @@ import {
 } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 
-import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import type { Item } from "~/app/[locale]/boards/_types";
+import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { useItemActions } from "../items/item-actions";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 import classes from "./item.module.css";

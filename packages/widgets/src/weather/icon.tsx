@@ -27,9 +27,7 @@ interface WeatherIconProps {
  * @returns Icon corresponding to the weather code
  */
 export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
-  const { icon: Icon } =
-    weatherDefinitions.find((definition) => definition.codes.includes(code)) ??
-    unknownWeather;
+  const { icon: Icon } = weatherDefinitions.find((definition) => definition.codes.includes(code)) ?? unknownWeather;
 
   return <Icon style={{ float: "left" }} size={size} />;
 };
@@ -50,20 +48,11 @@ interface WeatherDescriptionProps {
  * @param minTemp preformatted string for min temperature
  * @returns Content for a HoverCard dropdown presenting weather information
  */
-export const WeatherDescription = ({
-  weatherOnly,
-  time,
-  weatherCode,
-  maxTemp,
-  minTemp,
-}: WeatherDescriptionProps) => {
+export const WeatherDescription = ({ weatherOnly, time, weatherCode, maxTemp, minTemp }: WeatherDescriptionProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
 
-  const { name } =
-    weatherDefinitions.find((definition) =>
-      definition.codes.includes(weatherCode),
-    ) ?? unknownWeather;
+  const { name } = weatherDefinitions.find((definition) => definition.codes.includes(weatherCode)) ?? unknownWeather;
 
   if (weatherOnly) {
     return <Text fz="16px">{t(`kind.${name}`)}</Text>;
