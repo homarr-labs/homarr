@@ -571,14 +571,14 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       better-sqlite3:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^10.1.0
+        version: 10.1.0
       drizzle-kit:
         specifier: ^0.21.4
         version: 0.21.4
       drizzle-orm:
         specifier: ^0.30.10
-        version: 0.30.10(@types/better-sqlite3@7.6.10)(@types/react@18.3.3)(better-sqlite3@10.0.0)(mysql2@3.9.9)(react@18.3.1)
+        version: 0.30.10(@types/better-sqlite3@7.6.10)(@types/react@18.3.3)(better-sqlite3@10.1.0)(mysql2@3.9.9)(react@18.3.1)
       mysql2:
         specifier: 3.9.9
         version: 3.9.9
@@ -2989,8 +2989,8 @@ packages:
     resolution: {integrity: sha512-AGBHOG5hPYZ5Xl9KXzU5iKq9516yEmvCKDg3ecP5kX2aB6UqTeXZxk2ELnDgDm6BQSMlLt9rDB4LoSMx0rYwww==}
     engines: {node: '>= 10.0.0'}
 
-  better-sqlite3@10.0.0:
-    resolution: {integrity: sha512-rOz0JY8bt9oMgrFssP7GnvA5R3yln73y/NizzWqy3WlFth8Ux8+g4r/N9fjX97nn4X1YX6MTER2doNpTu5pqiA==}
+  better-sqlite3@10.1.0:
+    resolution: {integrity: sha512-hqpHJaCfKEZFaAWdMh6crdzRWyzQzfP6Ih8TYI0vFn01a6ZTDSbJIMXN+6AMBaBOh99DzUy8l3PsV9R3qnJDng==}
 
   big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
@@ -8201,7 +8201,7 @@ snapshots:
       - encoding
       - supports-color
 
-  better-sqlite3@10.0.0:
+  better-sqlite3@10.1.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.1
@@ -8679,11 +8679,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.30.10(@types/better-sqlite3@7.6.10)(@types/react@18.3.3)(better-sqlite3@10.0.0)(mysql2@3.9.9)(react@18.3.1):
+  drizzle-orm@0.30.10(@types/better-sqlite3@7.6.10)(@types/react@18.3.3)(better-sqlite3@10.1.0)(mysql2@3.9.9)(react@18.3.1):
     optionalDependencies:
       '@types/better-sqlite3': 7.6.10
       '@types/react': 18.3.3
-      better-sqlite3: 10.0.0
+      better-sqlite3: 10.1.0
       mysql2: 3.9.9
       react: 18.3.1
 
