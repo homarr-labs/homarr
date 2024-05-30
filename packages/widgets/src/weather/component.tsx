@@ -56,10 +56,10 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
       <Space h="1cqmin" />
       <Group className="weather-max-min-temp-group" wrap="nowrap" gap="1cqmin">
         <IconArrowUpRight size="12.5cqmin" />
-        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]!.maxTemp!, options.isFormatFahrenheit)}</Text>
+        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit)}</Text>
         <Space w="2.5cqmin" />
         <IconArrowDownRight size="12.5cqmin" />
-        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]!.minTemp!, options.isFormatFahrenheit)}</Text>
+        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit)}</Text>
       </Group>
       {options.showCity && (
         <>
@@ -123,16 +123,16 @@ function Forecast({ weather, options }: WeatherProps) {
               align="center"
             >
               <Text fz="10cqmin">{dayjs(dayWeather.time).format("dd")}</Text>
-              <WeatherIcon size="15cqmin" code={dayWeather.weatherCode!} />
-              <Text fz="10cqmin">{getPreferredUnit(dayWeather.maxTemp!, options.isFormatFahrenheit)}</Text>
+              <WeatherIcon size="15cqmin" code={dayWeather.weatherCode} />
+              <Text fz="10cqmin">{getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit)}</Text>
             </Stack>
           </HoverCard.Target>
           <HoverCard.Dropdown>
             <WeatherDescription
               time={dayWeather.time}
-              weatherCode={dayWeather.weatherCode!}
-              maxTemp={getPreferredUnit(dayWeather.maxTemp!, options.isFormatFahrenheit)}
-              minTemp={getPreferredUnit(dayWeather.minTemp!, options.isFormatFahrenheit)}
+              weatherCode={dayWeather.weatherCode}
+              maxTemp={getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit)}
+              minTemp={getPreferredUnit(dayWeather.minTemp, options.isFormatFahrenheit)}
             />
           </HoverCard.Dropdown>
         </HoverCard>
@@ -141,5 +141,5 @@ function Forecast({ weather, options }: WeatherProps) {
   );
 }
 
-const getPreferredUnit = (value: number, isFahrenheit = false): string =>
-  isFahrenheit ? `${(value * (9 / 5) + 32).toFixed(1)}°F` : `${value.toFixed(1)}°C`;
+const getPreferredUnit = (value?: number, isFahrenheit = false): string =>
+  value ? (isFahrenheit ? `${(value * (9 / 5) + 32).toFixed(1)}°F` : `${value.toFixed(1)}°C`) : "?";

@@ -14,11 +14,11 @@ export const weatherRouter = createTRPCRouter({
       daily: weather.daily.time.map((value, index) => {
         return {
           time: value,
-          weatherCode: weather.daily.weathercode[index],
+          weatherCode: weather.daily.weathercode[index] ?? 404,
           maxTemp: weather.daily.temperature_2m_max[index],
           minTemp: weather.daily.temperature_2m_min[index],
         };
-      }),
+      }) ?? [{ time: 0, weatherCode: 404 }],
     };
   }),
 });
