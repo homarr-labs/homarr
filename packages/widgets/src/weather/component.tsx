@@ -111,7 +111,7 @@ function Forecast({ weather, options }: WeatherProps) {
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="2.5cqmin">
       {weather.daily.slice(0, options.forecastDayCount).map((dayWeather, index) => (
-        <HoverCard withArrow shadow="10cqmin">
+        <HoverCard key={dayWeather.time} withArrow shadow="md">
           <HoverCard.Target>
             <Stack
               className={combineClasses(
