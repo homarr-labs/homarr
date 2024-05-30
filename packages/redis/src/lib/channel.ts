@@ -56,9 +56,10 @@ const cacheClient = createRedisConnection();
 /**
  * Creates a new cache channel.
  * @param name name of the channel
+ * @param cacheDurationMs duration in milliseconds to cache
  * @returns cache channel object
  */
-export const createCacheChannel = <TData>(name: string, cacheDurationSeconds: number = 5 * 60 * 1000) => {
+export const createCacheChannel = <TData>(name: string, cacheDurationMs: number = 5 * 60 * 1000) => {
   const cacheChannelName = `cache:${name}`;
 
   return {
@@ -73,7 +74,7 @@ export const createCacheChannel = <TData>(name: string, cacheDurationSeconds: nu
       const parsedData = superjson.parse<{ data: TData; timestamp: Date }>(data);
       const now = new Date();
       const diff = now.getTime() - parsedData.timestamp.getTime();
-      if (diff > cacheDurationSeconds) return null;
+      if (diff > cacheDurationMs) return null;
 
       return parsedData;
     },
@@ -102,7 +103,7 @@ export const createCacheChannel = <TData>(name: string, cacheDurationSeconds: nu
       const now = new Date();
       const diff = now.getTime() - parsedData.timestamp.getTime();
 
-      if (diff > cacheDurationSeconds) {
+      if (diff > cacheDurationMs) {
         return await getNewDataAsync();
       }
 
