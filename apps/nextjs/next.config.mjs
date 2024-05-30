@@ -1,6 +1,6 @@
 // Importing env files here to validate on build
-import "./src/env.mjs";
 import "@homarr/auth/env.mjs";
+import "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -9,6 +9,15 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  webpack: (config) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    config.module.rules.push({
+      test: /\.node$/,
+      loader: "node-loader",
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return config;
+  },
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
   },

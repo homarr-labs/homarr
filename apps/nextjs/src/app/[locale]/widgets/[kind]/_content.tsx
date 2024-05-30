@@ -3,21 +3,24 @@
 import { useCallback, useMemo, useState } from "react";
 import { ActionIcon, Affix, Card } from "@mantine/core";
 import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { BoardItemAdvancedOptions, BoardItemIntegration } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import {
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
   WidgetEditModal,
   widgetImports,
 } from "@homarr/widgets";
+import { WidgetError } from "@homarr/widgets/errors";
 
-import { PreviewDimensionsModal } from "./_dimension-modal";
 import type { Dimensions } from "./_dimension-modal";
+import { PreviewDimensionsModal } from "./_dimension-modal";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
@@ -41,11 +44,11 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
   });
   const [state, setState] = useState<{
     options: Record<string, unknown>;
-    integrations: BoardItemIntegration[];
+    integrationIds: string[];
     advancedOptions: BoardItemAdvancedOptions;
   }>({
     options: reduceWidgetOptionsWithDefaultValues(kind, {}),
-    integrations: [],
+    integrationIds: [],
     advancedOptions: {
       customCssClasses: [],
     },
@@ -86,17 +89,26 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
   return (
     <>
       <Card withBorder w={dimensions.width} h={dimensions.height} p={dimensions.height >= 96 ? undefined : 4}>
-        <Comp
-          options={state.options as never}
-          integrations={state.integrations.map(
-            (stateIntegration) => integrationData.find((integration) => integration.id === stateIntegration.id)!,
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary, error }) => (
+                <WidgetError kind={kind} error={error as unknown} resetErrorBoundary={resetErrorBoundary} />
+              )}
+            >
+              <Comp
+                options={state.options as never}
+                integrationIds={state.integrationIds}
+                width={dimensions.width}
+                height={dimensions.height}
+                isEditMode={editMode}
+                boardId={undefined}
+                itemId={undefined}
+              />
+            </ErrorBoundary>
           )}
-          width={dimensions.width}
-          height={dimensions.height}
-          isEditMode={editMode}
-          boardId={undefined}
-          itemId={undefined}
-        />
+        </QueryErrorResetBoundary>
       </Card>
       <Affix bottom={12} right={72}>
         <ActionIcon size={48} variant="default" radius="xl" onClick={handleOpenEditWidgetModal}>

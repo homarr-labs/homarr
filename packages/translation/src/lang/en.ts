@@ -447,6 +447,7 @@ export default {
       previous: "Previous",
       next: "Next",
       checkoutDocs: "Check out the documentation",
+      tryAgain: "Try again",
     },
     iconPicker: {
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
@@ -531,7 +532,6 @@ export default {
         custom: {
           passwordsDoNotMatch: "Passwords do not match",
           boardAlreadyExists: "A board with this name already exists",
-          // TODO: Add custom error messages
         },
       },
     },
@@ -639,6 +639,38 @@ export default {
           label: "No app",
           tooltip: "You have no valid app selected",
         },
+      },
+    },
+    dnsHoleSummary: {
+      name: "DNS Hole Summary",
+      description: "Displays the summary of your DNS Hole",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        usePiHoleColors: {
+          label: "Use Pi-Hole colors",
+        },
+      },
+      error: {
+        internalServerError: "Failed to fetch DNS Hole Summary",
+      },
+      data: {
+        adsBlockedToday: "blocked today",
+        adsBlockedTodayPercentage: "blocked today",
+        dnsQueriesToday: "Queries today",
+        domainsBeingBlocked: "Domains on blocklist",
       },
     },
     clock: {
@@ -833,6 +865,12 @@ export default {
             fallback: "Unknown",
           },
         },
+      },
+      error: {
+        action: {
+          logs: "Check logs for more details",
+        },
+        noIntegration: "No integration selected",
       },
     },
     video: {
@@ -1329,6 +1367,43 @@ export default {
           },
         },
       },
+    },
+  },
+  docker: {
+    title: "Containers",
+    table: {
+      updated: "Updated {when}",
+      search: "Seach {count} containers",
+      selected: "{selectCount} of {totalCount} containers selected",
+    },
+    field: {
+      name: {
+        label: "Name",
+      },
+      state: {
+        label: "State",
+        option: {
+          created: "Created",
+          running: "Running",
+          paused: "Paused",
+          restarting: "Restarting",
+          exited: "Exited",
+          removing: "Removing",
+          dead: "Dead",
+        },
+      },
+      containerImage: {
+        label: "Image",
+      },
+      ports: {
+        label: "Ports",
+      },
+    },
+    action: {
+      start: "Start",
+      stop: "Stop",
+      restart: "Restart",
+      remove: "Remove",
     },
   },
 } as const;

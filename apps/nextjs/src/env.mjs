@@ -27,6 +27,9 @@ export const env = createEnv({
     DB_USER: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_PASSWORD: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_NAME: isUsingDbUrl ? z.string().optional() : z.string(),
+    // Comma separated list of docker hostnames that can be used to connect to query the docker endpoints (localhost:2375,host.docker.internal:2375, ...)
+    DOCKER_HOSTNAMES: z.string().optional(),
+    DOCKER_PORTS: z.number().optional(),
   },
   /**
    * Specify your client-side environment variables schema here.
@@ -49,6 +52,8 @@ export const env = createEnv({
     DB_PORT: process.env.DB_PORT,
     DB_DRIVER: process.env.DB_DRIVER,
     NODE_ENV: process.env.NODE_ENV,
+    DOCKER_HOSTNAMES: process.env.DOCKER_HOSTNAMES,
+    DOCKER_PORTS: process.env.DOCKER_PORTS,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:

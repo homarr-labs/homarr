@@ -18,6 +18,7 @@ export default defineConfig({
       reporter: ["html", "json-summary", "json"],
       all: true,
       exclude: ["apps/nextjs/.next/"],
+      reportOnFailure: true
     },
 
     exclude: [...configDefaults.exclude, "apps/nextjs/.next"],

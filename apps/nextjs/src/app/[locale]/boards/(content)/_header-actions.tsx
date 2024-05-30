@@ -12,7 +12,6 @@ import {
   IconPlus,
   IconSettings,
 } from "@tabler/icons-react";
-import { useAtom, useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
@@ -20,16 +19,15 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
-import { editModeAtom } from "~/components/board/editMode";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { HeaderButton } from "~/components/layout/header/button";
-import { useRequiredBoard } from "./_context";
+import { useEditMode, useRequiredBoard } from "./_context";
 
 export const BoardContentHeaderActions = () => {
-  const isEditMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
 
@@ -107,7 +105,7 @@ const AddMenu = () => {
 };
 
 const EditModeMenu = () => {
-  const [isEditMode, setEditMode] = useAtom(editModeAtom);
+  const [isEditMode, setEditMode] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");

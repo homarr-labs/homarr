@@ -1,0 +1,23 @@
+name: Approve Renovate PRs
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  approve-renovate-prs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Approve Renovate PRs
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENOVATE_APPROVE_TOKEN }}
+        run: |
+          for pr in $(gh pr list --author homarr-renovate[bot] --json number --jq .[].number); do
+            gh pr review $pr --approve --body "Automatically approved by GitHub Action"
+          done

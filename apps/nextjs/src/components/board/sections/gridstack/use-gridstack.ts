@@ -1,12 +1,10 @@
 import type { MutableRefObject, RefObject } from "react";
 import { createRef, useCallback, useEffect, useMemo, useRef } from "react";
-import { useAtomValue } from "jotai";
 
 import type { GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
 import type { Section } from "~/app/[locale]/boards/_types";
-import { useMarkSectionAsReady, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
-import { editModeAtom } from "../../editMode";
+import { useEditMode, useMarkSectionAsReady, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { useItemActions } from "../../items/item-actions";
 import { initializeGridstack } from "./init-gridstack";
 
@@ -26,7 +24,7 @@ interface UseGridstackProps {
 }
 
 export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGristackReturnType => {
-  const isEditMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const markAsReady = useMarkSectionAsReady();
   const { moveAndResizeItem, moveItemToSection } = useItemActions();
   // define reference for wrapper - is used to calculate the width of the wrapper
