@@ -60,7 +60,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "^4.0.13",
-    "sass": "^1.77.3",
+    "sass": "^1.77.4",
     "superjson": "2.2.1",
     "use-deep-compare-effect": "^1.8.1"
   },
