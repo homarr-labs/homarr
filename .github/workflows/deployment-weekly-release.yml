@@ -30,7 +30,6 @@ jobs:
           token: ${{ github.token }}
           branch: dev
       - name: Create pull request
-        if: startsWith(github.ref, 'refs/heads/feature')
         uses: devops-infra/action-pull-request@v0.5.5
         id: create-pull-request
         with:
