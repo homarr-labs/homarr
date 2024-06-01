@@ -21,6 +21,8 @@ jobs:
           args: "Automatic release has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Get Next Version
         id: semver
         uses: ietf-tools/semver-action@v1
@@ -28,6 +30,7 @@ jobs:
           token: ${{ github.token }}
           branch: dev
       - name: Create pull request
+        if: startsWith(github.ref, 'refs/heads/feature')
         uses: devops-infra/action-pull-request@v0.5.5
         id: create-pull-request
         with:
