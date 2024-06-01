@@ -26,7 +26,7 @@ jobs:
         uses: ietf-tools/semver-action@v1
         with:
           token: ${{ github.token }}
-          branch: master
+          branch: main
       - name: Create pull request
         uses: devops-infra/action-pull-request@v0.5.5
         id: create-pull-request
