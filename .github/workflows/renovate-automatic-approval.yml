@@ -1,4 +1,4 @@
-name: Approve Renovate PRs
+name: "[Dependency Updates] Auto Approve"
 on:
   pull_request:
     types: [opened, synchronize]
