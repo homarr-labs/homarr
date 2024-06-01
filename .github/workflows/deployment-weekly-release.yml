@@ -1,3 +1,5 @@
+name: "[Deployment] Automatic Weekly Release"
+
 on:
   schedule:
     - cron: "0 19 * * 5" # https://crontab.guru/#0_19_*_*_5

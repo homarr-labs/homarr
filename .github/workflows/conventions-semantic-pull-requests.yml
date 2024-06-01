@@ -1,4 +1,4 @@
-name: "Lint PR"
+name: "[Conventions] Semantic PRs"
 
 on:
   pull_request_target:
@@ -11,8 +11,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  main:
-    name: Validate PR title
+  validate-pull-request-title:
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@v5
