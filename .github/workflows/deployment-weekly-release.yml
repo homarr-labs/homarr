@@ -35,6 +35,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           title: "(chore): automatic release ${{ steps.semver.outputs.next }}"
+          old_string: "**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``"
           source_branch: dev
           target_branch: main
       - name: Discord notification
@@ -52,7 +53,7 @@ jobs:
           MERGE_METHOD: merge # we prefer merge commits for merging to master
           MERGE_COMMIT_MESSAGE: "(chore): automatic release ${{ steps.semver.outputs.next }}"
           MERGE_DELETE_BRANCH: false # never set to true!
-          PULL_REQUEST: "${{ steps.create-pull-request.outputs.url }}"
+          PULL_REQUEST: "${{ steps.create-pull-request.outputs.pr_number }}"
           MERGE_RETRIES: 20 # 20 retries * MERGE_RETRY_SLEEP until step fails
           MERGE_RETRY_SLEEP: 10000 # 10 seconds * MERGE_RETRIES until step fails
           MERGE_REQUIRED_APPROVALS: 0 # do not require approvals
