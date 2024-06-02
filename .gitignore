@@ -55,3 +55,4 @@ db.sqlite
 
 apps/tasks/tasks.cjs
 apps/websocket/wssServer.cjs
+apps/nextjs/.million/store.json
