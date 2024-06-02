@@ -1,7 +1,5 @@
-
 # https://github.com/webiny/action-conventional-commits?tab=readme-ov-file
-
-name: Conventional Commits
+name: "[Conventions] Semantic Commits"
 
 on:
   pull_request:
