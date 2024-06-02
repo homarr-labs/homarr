@@ -477,8 +477,8 @@ importers:
   packages/auth:
     dependencies:
       '@auth/core':
-        specifier: ^0.31.0
-        version: 0.31.0
+        specifier: ^0.32.0
+        version: 0.32.0
       '@auth/drizzle-adapter':
         specifier: ^1.2.0
         version: 1.2.0
