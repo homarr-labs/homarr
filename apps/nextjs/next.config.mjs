@@ -1,5 +1,6 @@
 // Importing env files here to validate on build
 import "@homarr/auth/env.mjs";
+import MillionLint from "@million/lint";
 import "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */
@@ -27,4 +28,4 @@ const config = {
   },
 };
 
-export default config;
+export default MillionLint.next({ rsc: true })(config);
