@@ -1,4 +1,4 @@
-import type { Session } from "@auth/core/types";
+import type { Session } from "next-auth";
 
 export type BoardPermissionsProps = (
   | {
