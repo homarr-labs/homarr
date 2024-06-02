@@ -14,7 +14,10 @@ export const createCronJob = (cronExpression: string, options: CreateCronJobOpti
         try {
           await callback();
         } catch (error) {
-          logger.error(error);
+          logger.error(
+            `apps/tasks/src/lib/cron-job/creator.ts: The callback of a cron job failed, expression ${cronExpression}, with error:`,
+            error,
+          );
         }
       };
 

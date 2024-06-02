@@ -19,7 +19,12 @@ export const queueWorkerAsync = async () => {
     try {
       await queue.callback(execution.data);
     } catch (err) {
-      logger.error(err);
+      logger.error(
+        `apps/tasks/src/lib/queue/worker.ts: Error occured when executing queue ${execution.name} with data`,
+        execution.data,
+        "and error:",
+        err,
+      );
     }
 
     await queueChannel.markAsDoneAsync(execution._id);

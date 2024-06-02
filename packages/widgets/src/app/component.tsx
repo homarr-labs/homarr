@@ -37,11 +37,11 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
 
   const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"] | null>(null);
 
-  const shouldPingRun = Boolean(app?.href) && options.pingEnabled;
+  const shouldRunPing = Boolean(app?.href) && options.pingEnabled;
   clientApi.widget.app.updatedPing.useSubscription(
     { url: app?.href ?? "" },
     {
-      enabled: shouldPingRun,
+      enabled: shouldRunPing,
       onData(data) {
         setPingResult(data);
       },
@@ -119,7 +119,7 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
           </Flex>
         </Tooltip.Floating>
 
-        {shouldPingRun && <PingIndicator pingResult={pingResult} />}
+        {shouldRunPing && <PingIndicator pingResult={pingResult} />}
       </Flex>
     </AppLink>
   );
