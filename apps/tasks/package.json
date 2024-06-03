@@ -37,7 +37,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "@types/node": "^20.13.0",
+    "@types/node": "^20.14.1",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
     "prettier": "^3.3.0",
