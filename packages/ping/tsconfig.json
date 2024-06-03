@@ -1,6 +1,7 @@
 {
   "extends": "@homarr/tsconfig/base.json",
   "compilerOptions": {
+    "types": ["node"],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["*.ts", "src"],
