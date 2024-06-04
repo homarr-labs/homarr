@@ -36,7 +36,7 @@
     "better-sqlite3": "^11.0.0",
     "drizzle-orm": "^0.31.0",
     "mysql2": "3.10.0",
-    "drizzle-kit": "^0.22.1"
+    "drizzle-kit": "^0.22.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
