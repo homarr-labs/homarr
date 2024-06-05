@@ -429,6 +429,9 @@ export default {
   },
   common: {
     rtl: "{value}{symbol}",
+    symbols: {
+      colon: ": ",
+    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -451,6 +454,10 @@ export default {
     },
     iconPicker: {
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+    },
+    information: {
+      min: "Min",
+      max: "Max",
     },
     notification: {
       create: {

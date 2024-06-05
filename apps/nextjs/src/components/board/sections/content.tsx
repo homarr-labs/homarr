@@ -65,14 +65,13 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
       gs-h={item.height}
       gs-min-w={1}
       gs-min-h={1}
-      gs-max-w={4}
-      gs-max-h={4}
       ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
     >
       <Card
         ref={ref}
         className={combineClasses(
           classes.itemCard,
+          `${item.kind}-wrapper`,
           "grid-stack-item-content",
           item.advancedOptions.customCssClasses.join(" "),
         )}
@@ -80,6 +79,7 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
         styles={{
           root: {
             "--opacity": opacity / 100,
+            containerType: "size",
           },
         }}
         p={0}

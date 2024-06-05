@@ -8,8 +8,9 @@
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "prettier.configPath": "./tooling/prettier/index.mjs",
   "cSpell.words": [
-    "superjson",
+    "cqmin",
     "homarr",
+    "superjson",
     "trpc",
     "Umami"
   ]
