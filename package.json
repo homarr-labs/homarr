@@ -34,7 +34,7 @@
     "@vitest/ui": "^1.6.0",
     "cross-env": "^7.0.3",
     "jsdom": "^24.1.0",
-    "prettier": "^3.3.0",
+    "prettier": "^3.3.1",
     "turbo": "^1.13.4",
     "typescript": "^5.4.5",
     "vite-tsconfig-paths": "^4.3.2",
