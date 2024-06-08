@@ -72,7 +72,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
           <>
             <Menu.Item
               component={Link}
-              href={`/manage/users/${session.data?.user?.id}`}
+              href={`/manage/users/${session.data?.user.id}`}
               leftSection={<IconSettings size="1rem" />}
             >
               {t("preferences")}

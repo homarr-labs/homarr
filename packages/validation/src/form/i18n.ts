@@ -13,7 +13,7 @@ export const zodErrorMap = <
     const error = handleZodError(issue, ctx);
     if ("message" in error && error.message)
       return {
-        message: error.message ?? ctx.defaultError,
+        message: error.message,
       };
     return {
       message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", error.params ?? {}),

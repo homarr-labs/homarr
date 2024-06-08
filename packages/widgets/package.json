@@ -2,6 +2,7 @@
   "name": "@homarr/widgets",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "exports": {
     ".": "./index.ts",
     "./errors": "./src/errors/component.tsx"
@@ -16,7 +17,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
@@ -26,13 +27,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/prismjs": "^1.26.4",
     "@types/video.js": "^7.3.58",
-    "eslint": "^8.57.0",
+    "eslint": "^9.4.0",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {

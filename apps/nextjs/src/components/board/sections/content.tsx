@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unknown-property */
-// Ignored because of gridstack attributes
-
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
@@ -122,6 +119,7 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
           <Comp
             options={options as never}
             integrationIds={item.integrationIds}
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             serverData={serverData?.data as never}
             isEditMode={isEditMode}
             boardId={board.id}

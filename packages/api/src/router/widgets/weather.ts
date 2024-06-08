@@ -18,7 +18,7 @@ export const weatherRouter = createTRPCRouter({
           maxTemp: weather.daily.temperature_2m_max[index],
           minTemp: weather.daily.temperature_2m_min[index],
         };
-      }) ?? [{ time: 0, weatherCode: 404 }],
+      }),
     };
   }),
 });

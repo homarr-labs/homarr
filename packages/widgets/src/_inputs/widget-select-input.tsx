@@ -36,7 +36,7 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
           ? option
           : {
               value: option.value,
-              label: translateIfNecessary(t, option.label)!,
+              label: translateIfNecessary(t, option.label) ?? option.value,
             },
       )}
       description={options.withDescription ? tWidget("description") : undefined}

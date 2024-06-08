@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, it, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";

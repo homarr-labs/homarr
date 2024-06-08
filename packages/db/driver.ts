@@ -13,6 +13,7 @@ import * as sqliteSchema from "./schema/sqlite";
 type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 
 const init = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!connection) {
     switch (process.env.DB_DRIVER) {
       case "mysql2":
@@ -48,6 +49,7 @@ const initMySQL2 = () => {
   } else {
     connection = mysql.createConnection({
       host: process.env.DB_HOST,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       database: process.env.DB_NAME!,
       port: Number(process.env.DB_PORT),
       user: process.env.DB_USER,

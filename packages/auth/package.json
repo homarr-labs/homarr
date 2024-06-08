@@ -16,7 +16,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
@@ -40,15 +40,9 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.4.0",
     "prettier": "^3.3.1",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

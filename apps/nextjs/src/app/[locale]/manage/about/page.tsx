@@ -21,11 +21,11 @@ import { setStaticParamsLocale } from "next-international/server";
 
 import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
+import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import contributorsData from "../../../../../../../static-data/contributors.json";
 import translatorsData from "../../../../../../../static-data/translators.json";
-import logo from "../../../../../public/logo/logo.png";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
@@ -50,7 +50,7 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
     <div>
       <Center w="100%">
         <Group py="lg">
-          <Image src={logo} width={100} height={100} alt="" />
+          <Image src={homarrLogoPath} width={100} height={100} alt="" />
           <Stack gap={0}>
             <Title order={1} tt="uppercase">
               Homarr

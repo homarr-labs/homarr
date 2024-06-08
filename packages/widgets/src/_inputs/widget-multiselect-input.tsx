@@ -20,7 +20,7 @@ export const WidgetMultiSelectInput = ({ property, kind, options }: CommonWidget
           ? option
           : {
               value: option.value,
-              label: translateIfNecessary(t, option.label)!,
+              label: translateIfNecessary(t, option.label) ?? option.value,
             },
       )}
       description={options.withDescription ? t("description") : undefined}

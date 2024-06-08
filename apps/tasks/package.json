@@ -13,7 +13,7 @@
     "dev": "pnpm with-env tsx ./src/main.ts",
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
@@ -40,16 +40,10 @@
     "@types/node-cron": "^3.0.11",
     "@types/node": "^20.14.2",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^8.57.0",
+    "eslint": "^9.4.0",
     "prettier": "^3.3.1",
     "tsx": "4.14.0",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

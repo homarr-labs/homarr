@@ -24,7 +24,8 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
   const group = await api.group.getById({ id: params.id });
 
   const filteredMembers = searchParams.search
-    ? group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
+    ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
     : group.members;
 
   return (

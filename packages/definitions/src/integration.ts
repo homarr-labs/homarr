@@ -115,16 +115,16 @@ export const integrationDefs = {
   }
 >;
 
-export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration]?.iconUrl ?? null;
+export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
 export const getIntegrationName = (integration: IntegrationKind) => integrationDefs[integration].name;
 
 export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] =>
-  integrationDefs[integration]?.secretKinds[0];
+  integrationDefs[integration].secretKinds[0];
 
 export const getAllSecretKindOptions = (
   integration: IntegrationKind,
-): [IntegrationSecretKind[], ...IntegrationSecretKind[][]] => integrationDefs[integration]?.secretKinds;
+): [IntegrationSecretKind[], ...IntegrationSecretKind[][]] => integrationDefs[integration].secretKinds;
 
 export const integrationKinds = objectKeys(integrationDefs);
 

@@ -169,7 +169,7 @@ describe("byId should return group by id including members and permissions", () 
     expect(result.id).toBe(groupId);
     expect(result.members.length).toBe(1);
 
-    const userKeys = Object.keys(result?.members[0] ?? {});
+    const userKeys = Object.keys(result.members[0] ?? {});
     expect(userKeys.length).toBe(4);
     expect(["id", "name", "email", "image"].some((key) => userKeys.includes(key)));
     expect(result.permissions.length).toBe(1);

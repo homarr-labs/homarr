@@ -44,10 +44,8 @@ export const createSignInCallback =
   async ({ user }) => {
     if (!isCredentialsRequest) return true;
 
-    if (!user) return true;
-
     // https://github.com/nextauthjs/next-auth/issues/6106
-    if (!adapter?.createSession) {
+    if (!adapter.createSession) {
       return false;
     }
 
@@ -56,6 +54,7 @@ export const createSignInCallback =
 
     await adapter.createSession({
       sessionToken,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       userId: user.id!,
       expires: sessionExpiry,
     });

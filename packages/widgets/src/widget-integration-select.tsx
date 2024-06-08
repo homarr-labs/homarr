@@ -98,6 +98,7 @@ export const WidgetIntegrationSelect = ({
                   if (event.key !== "Backspace") return;
 
                   event.preventDefault();
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   handleValueRemove(multiSelectValues[multiSelectValues.length - 1]!);
                 }}
               />

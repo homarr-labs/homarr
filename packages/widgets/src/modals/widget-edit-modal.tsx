@@ -62,6 +62,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
           {Object.entries(definition.options).map(([key, value]: [string, OptionsBuilderResult[string]]) => {
             const Input = getInputForType(value.type);
 
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (!Input || value.shouldHide?.(form.values.options as never)) {
               return null;
             }

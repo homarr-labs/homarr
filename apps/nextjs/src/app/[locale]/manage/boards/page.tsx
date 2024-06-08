@@ -83,7 +83,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
             {board.creator && (
               <Group gap="xs">
                 <UserAvatar user={board.creator} size="sm" />
-                <Text>{board.creator?.name}</Text>
+                <Text>{board.creator.name}</Text>
               </Group>
             )}
           </Group>

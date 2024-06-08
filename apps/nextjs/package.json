@@ -7,7 +7,7 @@
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
-    "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
@@ -73,19 +73,11 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "concurrently": "^8.2.2",
-    "eslint": "^8.57.0",
+    "eslint": "^9.4.0",
     "node-loader": "^2.0.0",
     "prettier": "^3.3.1",
     "tsx": "4.14.0",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base",
-      "@homarr/eslint-config/nextjs",
-      "@homarr/eslint-config/react"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

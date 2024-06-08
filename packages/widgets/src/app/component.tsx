@@ -27,7 +27,7 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
     {
       initialData:
         // We need to check if the id's match because otherwise the same initialData for a changed id will be used
-        serverData?.app?.id === options.appId ? serverData?.app : undefined,
+        serverData?.app?.id === options.appId ? serverData.app : undefined,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -54,12 +54,12 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
       ? [
           {
             id: `app-${options.appId}`,
-            title: app?.name,
-            description: app?.description ?? "",
-            icon: app?.iconUrl,
+            title: app.name,
+            description: app.description ?? "",
+            icon: app.iconUrl,
             group: "app",
             type: "link",
-            href: app?.href,
+            href: app.href,
             openInNewTab: options.openInNewTab,
           },
         ]

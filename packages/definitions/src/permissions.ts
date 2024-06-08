@@ -34,6 +34,7 @@ export const getPermissionsWithParents = (permissions: GroupPermissionKey[]): Gr
 const getPermissionsInner = (permissionSet: Set<GroupPermissionKey>, permissions: GroupPermissionKey[]) => {
   permissions.forEach((permission) => {
     const children = groupPermissionParents[permission as keyof typeof groupPermissionParents];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (children) {
       getPermissionsInner(permissionSet, children);
     }
