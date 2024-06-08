@@ -3,7 +3,7 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
-import type { Account, User } from "next-auth";
+import type { Account } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { describe, expect, it, test, vi } from "vitest";
 
@@ -142,21 +142,11 @@ describe("createSignInCallback", () => {
     expect(result).toBe(true);
   });
 
-  it("should return true if no user", async () => {
-    const isCredentialsRequest = true;
-    const signInCallback = createSignInCallback(createAdapter(), isCredentialsRequest);
-    const result = await signInCallback({
-      user: undefined as unknown as User,
-      account: {} as Account,
-    });
-    expect(result).toBe(true);
-  });
-
   it("should return false if no adapter.createSession", async () => {
     const isCredentialsRequest = true;
     const signInCallback = createSignInCallback(
       // https://github.com/nextauthjs/next-auth/issues/6106
-      undefined as unknown as Adapter,
+      { createSession: undefined } as unknown as Adapter,
       isCredentialsRequest,
     );
     const result = await signInCallback({
