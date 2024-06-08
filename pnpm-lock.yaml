@@ -268,6 +268,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^
         version: link:../../packages/log
+      '@homarr/ping':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
@@ -312,8 +315,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       tsx:
-        specifier: 4.11.0
-        version: 4.11.0
+        specifier: 4.14.0
+        version: 4.14.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -5780,11 +5783,6 @@ packages:
   tsscmp@1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
     engines: {node: '>=0.6.x'}
-
-  tsx@4.11.0:
-    resolution: {integrity: sha512-vzGGELOgAupsNVssAmZjbUDfdm/pWP4R+Kg8TVdsonxbXk0bEpE1qh0yV6/QxUVXaVlNemgcPajGdJJ82n3stg==}
-    engines: {node: '>=18.0.0'}
-    hasBin: true
 
   tsx@4.14.0:
     resolution: {integrity: sha512-DsDLlJlusAPyCnz07S4y0gqJoUl8GciBeYcXQd75/5DqkZ4gfjKpvAUFUzmZf62nEotkcqC7JCWrdL8d+PXSng==}
@@ -11286,13 +11284,6 @@ snapshots:
   tslib@2.6.2: {}
 
   tsscmp@1.0.6: {}
-
-  tsx@4.11.0:
-    dependencies:
-      esbuild: 0.20.2
-      get-tsconfig: 4.7.5
-    optionalDependencies:
-      fsevents: 2.3.3
 
   tsx@4.14.0:
     dependencies:
