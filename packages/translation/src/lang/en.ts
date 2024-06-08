@@ -640,6 +640,9 @@ export default {
         showDescriptionTooltip: {
           label: "Show description tooltip",
         },
+        pingEnabled: {
+          label: "Enable simple ping",
+        },
       },
       error: {
         notFound: {

@@ -268,6 +268,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^
         version: link:../../packages/log
+      '@homarr/ping':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
@@ -427,6 +430,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^
         version: link:../log
+      '@homarr/ping':
+        specifier: workspace:^0.1.0
+        version: link:../ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -766,6 +772,31 @@ importers:
       '@mantine/notifications':
         specifier: ^7.10.1
         version: 7.10.1(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+
+  packages/ping:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0

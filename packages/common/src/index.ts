@@ -5,3 +5,4 @@ export * from "./array";
 export * from "./stopwatch";
 export * from "./hooks";
 export * from "./number";
+export * from "./error";

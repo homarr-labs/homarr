@@ -1,9 +1,11 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { useState } from "react";
+import { Box, Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconDeviceDesktopX } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightActions } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -30,6 +32,19 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       enabled: isQueryEnabled,
+    },
+  );
+
+  const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"] | null>(null);
+
+  const shouldRunPing = Boolean(app?.href) && options.pingEnabled;
+  clientApi.widget.app.updatedPing.useSubscription(
+    { url: app?.href ?? "" },
+    {
+      enabled: shouldRunPing,
+      onData(data) {
+        setPingResult(data);
+      },
     },
   );
 
@@ -77,7 +92,7 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
 
   return (
     <AppLink href={app?.href ?? ""} openInNewTab={options.openInNewTab} enabled={Boolean(app?.href) && !isEditMode}>
-      <Flex align="center" justify="center" h="100%">
+      <Flex align="center" justify="center" h="100%" pos="relative">
         <Tooltip.Floating
           label={app?.description}
           position="right-start"
@@ -103,6 +118,8 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
             <img src={app?.iconUrl} alt={app?.name} className={classes.appIcon} />
           </Flex>
         </Tooltip.Floating>
+
+        {shouldRunPing && <PingIndicator pingResult={pingResult} />}
       </Flex>
     </AppLink>
   );
@@ -122,3 +139,31 @@ const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<Ap
   ) : (
     children
   );
+
+interface PingIndicatorProps {
+  pingResult: RouterOutputs["widget"]["app"]["ping"] | null;
+}
+
+const PingIndicator = ({ pingResult }: PingIndicatorProps) => {
+  return (
+    <Box bottom={4} right={4} pos="absolute">
+      <Tooltip
+        label={pingResult && "statusCode" in pingResult ? pingResult.statusCode : pingResult?.error}
+        disabled={!pingResult}
+      >
+        <Box
+          style={{
+            borderRadius: "100%",
+            backgroundColor: !pingResult
+              ? "orange"
+              : "error" in pingResult || pingResult.statusCode >= 500
+                ? "red"
+                : "green",
+          }}
+          w={16}
+          h={16}
+        ></Box>
+      </Tooltip>
+    </Box>
+  );
+};
