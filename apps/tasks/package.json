@@ -41,7 +41,7 @@
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
     "prettier": "^3.3.1",
-    "tsx": "4.13.3",
+    "tsx": "4.14.0",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {
