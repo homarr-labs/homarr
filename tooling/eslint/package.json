@@ -29,7 +29,7 @@
     "@types/eslint": "^8.56.10",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.4.0",
     "typescript": "^5.4.5"
   },
   "eslintConfig": {
