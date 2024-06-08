@@ -38,6 +38,10 @@ export const initializeGridstack = ({ section, refs, sectionColumnCount }: Initi
   );
   const grid = newGrid.current;
 
+  // It actually can be undefined sometimes
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  // if (!grid) return false;
+
   // Must be used to update the column count after the initialization
   grid.column(sectionColumnCount, "none");
 
