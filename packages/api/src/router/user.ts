@@ -44,13 +44,6 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    if (!dbInvite || dbInvite.expirationDate < new Date()) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Invalid invite",
-      });
-    }
-
     await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
 
     await createUserAsync(ctx.db, input);

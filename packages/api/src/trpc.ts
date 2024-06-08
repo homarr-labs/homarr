@@ -122,7 +122,7 @@ export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 export const permissionRequiredProcedure = {
   requiresPermission: (permission: GroupPermissionKey) => {
     return protectedProcedure.use(({ ctx, input, next }) => {
-      if (!ctx.session?.user.permissions.includes(permission)) {
+      if (!ctx.session.user.permissions.includes(permission)) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Permission denied",

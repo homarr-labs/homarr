@@ -1,7 +1,6 @@
 void (async () => {
   const { logger } = await import("./index.mjs");
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
   const nextLogger = require("next/dist/build/output/log");
 
   const getWinstonMethodForConsole = (consoleMethod) => {
@@ -37,9 +36,7 @@ void (async () => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
   Object.keys(nextLogger.prefixes).forEach((method) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     nextLogger[method] = getWinstonMethodForNext(method);
   });
 })();

@@ -17,7 +17,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
@@ -31,11 +31,6 @@
   "dependencies": {
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

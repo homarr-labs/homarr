@@ -95,6 +95,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             {secretsKinds.map((kind, index) => (
               <SecretCard
                 key={kind}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 secret={secretsMap.get(kind)!}
                 onCancel={() =>
                   new Promise((res) => {
@@ -107,7 +108,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
                       children: t("integration.secrets.reset.message"),
                       onCancel: () => res(false),
                       onConfirm: () => {
-                        form.setFieldValue(`secrets.${index}.value`, secretsMap.get(kind)!.value ?? "");
+                        form.setFieldValue(`secrets.${index}.value`, secretsMap.get(kind)?.value ?? "");
                         res(true);
                       },
                     });

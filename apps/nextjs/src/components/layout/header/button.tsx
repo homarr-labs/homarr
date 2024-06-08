@@ -22,7 +22,6 @@ const headerButtonActionIconProps: ActionIconProps = {
   size: "lg",
 };
 
-// eslint-disable-next-line react/display-name
 export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((props, ref) => {
   if ("href" in props) {
     return (

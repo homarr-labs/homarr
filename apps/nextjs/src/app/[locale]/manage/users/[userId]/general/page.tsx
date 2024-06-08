@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props) {
   const t = await getScopedI18n("management.page.user.edit");
 
   return {
-    title: createMetaTitle(t("metaTitle", { username: user?.name })),
+    title: createMetaTitle(t("metaTitle", { username: user.name })),
   };
 }
 

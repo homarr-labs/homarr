@@ -71,7 +71,8 @@ export const UserCreateStepperComponent = () => {
 
   const allForms = useMemo(() => [generalForm, securityForm], [generalForm, securityForm]);
 
-  const isCurrentFormValid = allForms[active] ? (allForms[active]!.isValid satisfies () => boolean) : () => true;
+  const activeForm = allForms[active];
+  const isCurrentFormValid = activeForm ? activeForm.isValid : () => true;
   const canNavigateToNextStep = isCurrentFormValid();
 
   const controlledGoToNextStep = useCallback(async () => {

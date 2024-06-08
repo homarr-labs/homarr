@@ -32,6 +32,7 @@ export class GitHubIconRepository extends IconRepository {
           const fileNameWithExtension = this.getFileNameWithoutExtensionFromPath(treeItem.path);
 
           return {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             imageUrl: new URL(this.repositoryBlobUrlTemplate!.replace("{0}", treeItem.path)),
             fileNameWithExtension: fileNameWithExtension,
             local: false,

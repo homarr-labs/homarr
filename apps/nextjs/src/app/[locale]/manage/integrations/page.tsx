@@ -82,6 +82,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
 
   const grouppedIntegrations = integrations.reduce(
     (acc, integration) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[integration.kind]) {
         acc[integration.kind] = [];
       }

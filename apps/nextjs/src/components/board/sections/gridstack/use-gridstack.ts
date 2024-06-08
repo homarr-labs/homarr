@@ -54,15 +54,15 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
   const onChange = useCallback(
     (changedNode: GridStackNode) => {
       const itemId = changedNode.el?.getAttribute("data-id");
-      if (!itemId) return;
+      if (!itemId || !changedNode.x || !changedNode.y || !changedNode.w || !changedNode.h) return;
 
       // Updates the react-query state
       moveAndResizeItem({
         itemId,
-        xOffset: changedNode.x!,
-        yOffset: changedNode.y!,
-        width: changedNode.w!,
-        height: changedNode.h!,
+        xOffset: changedNode.x,
+        yOffset: changedNode.y,
+        width: changedNode.w,
+        height: changedNode.h,
       });
     },
     [moveAndResizeItem],
@@ -70,16 +70,16 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
   const onAdd = useCallback(
     (addedNode: GridStackNode) => {
       const itemId = addedNode.el?.getAttribute("data-id");
-      if (!itemId) return;
+      if (!itemId || !addedNode.x || !addedNode.y || !addedNode.w || !addedNode.h) return;
 
       // Updates the react-query state
       moveItemToSection({
         itemId,
         sectionId: section.id,
-        xOffset: addedNode.x!,
-        yOffset: addedNode.y!,
-        width: addedNode.w!,
-        height: addedNode.h!,
+        xOffset: addedNode.x,
+        yOffset: addedNode.y,
+        width: addedNode.w,
+        height: addedNode.h,
       });
     },
     [moveItemToSection, section.id],
@@ -121,7 +121,6 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
     }
 
     // Only run this effect when the section items change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length, section.items.length, board.columnCount]);
 
   return {

@@ -72,7 +72,7 @@ function sanitizeContainers(
 ): DockerContainer[] {
   return containers.map((container) => {
     return {
-      name: container.Names[0]?.split("/")[1] || "Unknown",
+      name: container.Names[0]?.split("/")[1] ?? "Unknown",
       id: container.Id,
       instance: container.instance,
       state: container.State as DockerContainerState,

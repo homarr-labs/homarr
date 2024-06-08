@@ -13,7 +13,7 @@
     "dev": "pnpm with-env tsx ./src/main.ts",
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
@@ -24,7 +24,6 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/icons": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
-    "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
@@ -42,14 +41,8 @@
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.4.0",
     "prettier": "^3.3.1",
-    "tsx": "4.14.0",
+    "tsx": "4.11.0",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

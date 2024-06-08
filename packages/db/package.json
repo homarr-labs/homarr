@@ -17,7 +17,7 @@
     "build:sqlite": "esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs",
     "build:mysql": "esbuild migrations/mysql/migrate.ts --bundle --platform=node --outfile=migrations/mysql/migrate.cjs",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "migration:sqlite:generate": "drizzle-kit generate --config ./configs/sqlite.config.ts",
     "migration:sqlite:run": "drizzle-kit migrate --config ./configs/sqlite.config.ts",
@@ -47,12 +47,6 @@
     "eslint": "^9.4.0",
     "prettier": "^3.3.1",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
   },
   "prettier": "@homarr/prettier-config"
 }

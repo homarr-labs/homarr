@@ -303,7 +303,9 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
             <RichTextEditor.BulletList title={tControls("bulletList")} />
             <RichTextEditor.OrderedList title={tControls("orderedList")} />
             <TaskListToggle />
-            {(editor?.isActive("taskList") || editor?.isActive("bulletList") || editor?.isActive("orderedList")) && (
+            {(Boolean(editor?.isActive("taskList")) ||
+              Boolean(editor?.isActive("bulletList")) ||
+              Boolean(editor?.isActive("orderedList"))) && (
               <>
                 <ListIndentIncrease />
                 <ListIndentDecrease />
@@ -680,7 +682,7 @@ function ListIndentIncrease() {
   }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
   });
 
   return (
@@ -704,7 +706,7 @@ function ListIndentDecrease() {
   }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
   });
 
   return (

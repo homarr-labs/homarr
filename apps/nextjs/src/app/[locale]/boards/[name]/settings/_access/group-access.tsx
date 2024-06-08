@@ -81,6 +81,7 @@ export const GroupsForm = ({ board, initialPermissions, onCountChange }: FormPro
               {form.values.items.map((row, index) => (
                 <BoardAccessSelectRow
                   key={row.itemId}
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   itemContent={<GroupItemContent group={groups.get(row.itemId)!} />}
                   permission={row.permission}
                   index={index}
