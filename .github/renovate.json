@@ -6,7 +6,8 @@
   "packageRules": [
     {
       "matchPackagePatterns": [
-        "^@homarr/"
+        "^@homarr/",
+        "tsx" // Disabled for now as version 0.14.4 did not work with the current version of homarr. It resulted in a ERR_MODULE_NOT_FOUND error
       ],
       "enabled": false
     },
