@@ -136,8 +136,8 @@ importers:
         specifier: ^5.40.1
         version: 5.40.1(@tanstack/react-query@5.40.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query-next-experimental':
-        specifier: 5.40.1
-        version: 5.40.1(@tanstack/react-query@5.40.1(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(react@18.3.1)
+        specifier: 5.41.0
+        version: 5.41.0(@tanstack/react-query@5.40.1(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(react@18.3.1)
       '@trpc/client':
         specifier: 11.0.0-rc.396
         version: 11.0.0-rc.396(@trpc/server@11.0.0-rc.396)
@@ -2215,8 +2215,8 @@ packages:
       '@tanstack/react-query': ^5.40.1
       react: ^18 || ^19
 
-  '@tanstack/react-query-next-experimental@5.40.1':
-    resolution: {integrity: sha512-AdKHxvdpzrSb165umw/GrNE3rYPM7XWWVd5AnZ93qypSS2VKj6TzXrcweaXPvh27/jDo2qqYVwkfhNU2WxQwSw==}
+  '@tanstack/react-query-next-experimental@5.41.0':
+    resolution: {integrity: sha512-TPdQW4My7aNGnM4tUHeiGLVkp7wOFGiD+bYsolgSj4Kp4KIiXLmv2ErwiV4Rq2/URPpz8uiVZ/qxYP4QeCcq+A==}
     peerDependencies:
       '@tanstack/react-query': ^5.40.1
       next: ^13 || ^14 || ^15
@@ -7166,7 +7166,7 @@ snapshots:
       '@tanstack/react-query': 5.40.1(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query-next-experimental@5.40.1(@tanstack/react-query@5.40.1(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(react@18.3.1)':
+  '@tanstack/react-query-next-experimental@5.41.0(@tanstack/react-query@5.40.1(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(react@18.3.1)':
     dependencies:
       '@tanstack/react-query': 5.40.1(react@18.3.1)
       next: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
