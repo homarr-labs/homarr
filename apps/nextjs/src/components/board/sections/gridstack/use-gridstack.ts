@@ -54,15 +54,19 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
   const onChange = useCallback(
     (changedNode: GridStackNode) => {
       const itemId = changedNode.el?.getAttribute("data-id");
-      if (!itemId || !changedNode.x || !changedNode.y || !changedNode.w || !changedNode.h) return;
+      if (!itemId) return;
 
       // Updates the react-query state
       moveAndResizeItem({
         itemId,
-        xOffset: changedNode.x,
-        yOffset: changedNode.y,
-        width: changedNode.w,
-        height: changedNode.h,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        xOffset: changedNode.x!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        yOffset: changedNode.y!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        width: changedNode.w!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        height: changedNode.h!,
       });
     },
     [moveAndResizeItem],
@@ -70,16 +74,20 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
   const onAdd = useCallback(
     (addedNode: GridStackNode) => {
       const itemId = addedNode.el?.getAttribute("data-id");
-      if (!itemId || !addedNode.x || !addedNode.y || !addedNode.w || !addedNode.h) return;
+      if (!itemId) return;
 
       // Updates the react-query state
       moveItemToSection({
         itemId,
         sectionId: section.id,
-        xOffset: addedNode.x,
-        yOffset: addedNode.y,
-        width: addedNode.w,
-        height: addedNode.h,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        xOffset: addedNode.x!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        yOffset: addedNode.y!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        width: addedNode.w!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        height: addedNode.h!,
       });
     },
     [moveItemToSection, section.id],
