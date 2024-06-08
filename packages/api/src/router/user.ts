@@ -4,7 +4,7 @@ import { observable } from "@trpc/server/observable";
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, schema } from "@homarr/db";
-import { invites, users } from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
 import { exampleChannel } from "@homarr/redis";
 import { validation, z } from "@homarr/validation";
 
@@ -25,7 +25,21 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    await createUserAsync(ctx.db, input);
+    const userId = await createUserAsync(ctx.db, input);
+    const groupId = createId();
+    await ctx.db.insert(groups).values({
+      id: groupId,
+      name: "admin",
+      ownerId: userId,
+    });
+    await ctx.db.insert(groupPermissions).values({
+      groupId,
+      permission: "admin",
+    });
+    await ctx.db.insert(groupMembers).values({
+      groupId,
+      userId,
+    });
   }),
   register: publicProcedure.input(validation.user.registrationApi).mutation(async ({ ctx, input }) => {
     const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
@@ -244,6 +258,7 @@ const createUserAsync = async (db: Database, input: z.infer<typeof validation.us
     password: hashedPassword,
     salt,
   });
+  return userId;
 };
 
 const checkUsernameAlreadyTakenAndThrowAsync = async (db: Database, username: string, ignoreId?: string) => {
