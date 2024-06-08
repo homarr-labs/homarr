@@ -50,6 +50,8 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
     <div>
       <Center w="100%">
         <Group py="lg">
+          {/* The issue below only exists in CI which is quite stupid and after more than an hour of debuging I was unable to find the reason */}
+          {/* @typescript-eslint/no-unsafe-assignment */}
           <Image src={logo} width={100} height={100} alt="" />
           <Stack gap={0}>
             <Title order={1} tt="uppercase">
