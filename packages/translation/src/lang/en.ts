@@ -637,6 +637,9 @@ export default {
         openInNewTab: {
           label: "Open in new tab",
         },
+        showTitle: {
+          label: "Show app name",
+        },
         showDescriptionTooltip: {
           label: "Show description tooltip",
         },
