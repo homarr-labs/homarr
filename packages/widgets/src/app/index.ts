@@ -8,6 +8,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
   options: optionsBuilder.from((factory) => ({
     appId: factory.app(),
     openInNewTab: factory.switch({ defaultValue: true }),
+    showTitle: factory.switch({ defaultValue: true }),
     showDescriptionTooltip: factory.switch({ defaultValue: false }),
     pingEnabled: factory.switch({ defaultValue: false }),
   })),
