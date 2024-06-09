@@ -677,8 +677,8 @@ export default {
         internalServerError: "Failed to fetch DNS Hole Summary",
       },
       data: {
-        adsBlockedToday: "blocked today",
-        adsBlockedTodayPercentage: "blocked today",
+        adsBlockedToday: "Blocked today",
+        adsBlockedTodayPercentage: "Blocked today",
         dnsQueriesToday: "Queries today",
         domainsBeingBlocked: "Domains on blocklist",
       },
