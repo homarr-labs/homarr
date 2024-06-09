@@ -4,6 +4,7 @@ import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { Box, Center, Flex, Loader, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconDeviceDesktopX } from "@tabler/icons-react";
+import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -13,7 +14,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
 
-export default function AppWidget({ options, serverData, isEditMode, width, height }: WidgetComponentProps<"app">) {
+export default function AppWidget({ options, serverData, isEditMode, width }: WidgetComponentProps<"app">) {
   const t = useScopedI18n("widget.app");
   const isQueryEnabled = Boolean(options.appId);
   const {
@@ -92,35 +93,31 @@ export default function AppWidget({ options, serverData, isEditMode, width, heig
 
   return (
     <AppLink href={app?.href ?? ""} openInNewTab={options.openInNewTab} enabled={Boolean(app?.href) && !isEditMode}>
-      <Flex align="center" justify="center" h="100%" pos="relative">
-        <Tooltip.Floating
-          label={app?.description}
-          position="right-start"
-          multiline
-          disabled={!options.showDescriptionTooltip || !app?.description}
-          styles={{ tooltip: { maxWidth: 300 } }}
+      <Tooltip.Floating
+        label={app?.description}
+        position="right-start"
+        multiline
+        disabled={!options.showDescriptionTooltip || !app?.description}
+        styles={{ tooltip: { maxWidth: 300 } }}
+      >
+        <Flex
+          className={combineClasses("app-flex-wrapper", app?.name, app?.id)}
+          h="100%"
+          w="100%"
+          direction="column"
+          p="7.5cqmin"
+          justify="center"
+          align="center"
         >
-          <Flex
-            h="100%"
-            direction="column"
-            align="center"
-            gap={0}
-            style={{
-              overflow: "visible",
-              flexGrow: 5,
-            }}
-          >
-            {height >= 96 && (
-              <Text fw={700} ta="center">
-                {app?.name}
-              </Text>
-            )}
-            <img src={app?.iconUrl} alt={app?.name} className={classes.appIcon} />
-          </Flex>
-        </Tooltip.Floating>
-
-        {shouldRunPing && <PingIndicator pingResult={pingResult} />}
-      </Flex>
+          {options.showTitle && (
+            <Text className="app-title" fw={700} size="12.5cqmin">
+              {app?.name}
+            </Text>
+          )}
+          <img src={app?.iconUrl} alt={app?.name} className={combineClasses(classes.appIcon, "app-icon")} />
+        </Flex>
+      </Tooltip.Floating>
+      {shouldRunPing && <PingIndicator pingResult={pingResult} />}
     </AppLink>
   );
 }
