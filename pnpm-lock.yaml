@@ -186,13 +186,13 @@ importers:
         specifier: ^1.15.0
         version: 1.15.0(postcss@8.4.38)
       prismjs:
-        specifier: 1.29.0
+        specifier: ^1.29.0
         version: 1.29.0
       react:
-        specifier: 18.3.1
+        specifier: ^18.3.1
         version: 18.3.1
       react-dom:
-        specifier: 18.3.1
+        specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-error-boundary:
         specifier: ^4.0.13
@@ -225,6 +225,9 @@ importers:
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2
+      '@types/prismjs':
+        specifier: ^1.26.4
+        version: 1.26.4
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -521,7 +524,7 @@ importers:
         specifier: 5.0.0-beta.19
         version: 5.0.0-beta.19(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(react@18.3.1)
       react:
-        specifier: 18.3.1
+        specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: 18.3.1
@@ -589,7 +592,7 @@ importers:
   packages/db:
     dependencies:
       '@auth/core':
-        specifier: 0.32.0
+        specifier: ^0.32.0
         version: 0.32.0
       '@homarr/common':
         specifier: workspace:^0.1.0
@@ -877,7 +880,7 @@ importers:
         specifier: 5.4.1
         version: 5.4.1
       superjson:
-        specifier: ^2.2.1
+        specifier: 2.2.1
         version: 2.2.1
     devDependencies:
       '@homarr/eslint-config':
@@ -1163,9 +1166,6 @@ importers:
       next:
         specifier: ^14.2.3
         version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
-      prismjs:
-        specifier: ^1.29.0
-        version: 1.29.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1182,9 +1182,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@types/prismjs':
-        specifier: ^1.26.4
-        version: 1.26.4
       '@types/video.js':
         specifier: ^7.3.58
         version: 7.3.58
