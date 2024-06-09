@@ -38,6 +38,7 @@ export const widgetImports = {
 export type WidgetImports = typeof widgetImports;
 export type WidgetImportKey = keyof WidgetImports;
 export type { WidgetComponentProps };
+export type { WidgetDefinition } from "./definition";
 
 const loadedComponents = new Map<WidgetKind, ComponentType<WidgetComponentProps<WidgetKind>>>();
 

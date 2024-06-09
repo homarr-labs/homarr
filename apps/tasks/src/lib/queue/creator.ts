@@ -1,6 +1,5 @@
-import type { z } from "zod";
-
 import type { MaybePromise } from "@homarr/common/types";
+import type { z } from "@homarr/validation";
 
 export const createQueue = <TInput extends z.ZodType>(input: TInput) => {
   return {

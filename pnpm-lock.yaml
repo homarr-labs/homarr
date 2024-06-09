@@ -7,19 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@mantine/core':
-        specifier: ^7.10.1
-        version: 7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mantine/dates':
-        specifier: ^7.10.1
-        version: 7.10.1(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tabler/icons-react':
-        specifier: ^3.5.0
-        version: 3.5.0(react@18.3.1)
-      mantine-react-table:
-        specifier: 2.0.0-beta.4
-        version: 2.0.0-beta.4(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.10.1(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(@tabler/icons-react@3.5.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -120,6 +107,9 @@ importers:
       '@mantine/colors-generator':
         specifier: ^7.10.1
         version: 7.10.1(chroma-js@2.4.2)
+      '@mantine/core':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.10.1
         version: 7.10.1(react@18.3.1)
@@ -132,6 +122,9 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.4.5)(zod@3.23.8)
+      '@tabler/icons-react':
+        specifier: ^3.5.0
+        version: 3.5.0(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.40.1
         version: 5.40.1(react@18.3.1)
@@ -142,7 +135,7 @@ importers:
         specifier: 5.41.0
         version: 5.41.0(@tanstack/react-query@5.40.1(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(react@18.3.1)
       '@trpc/client':
-        specifier: 11.0.0-rc.401
+        specifier: next
         version: 11.0.0-rc.401(@trpc/server@11.0.0-rc.401)
       '@trpc/next':
         specifier: next
@@ -192,6 +185,9 @@ importers:
       postcss-preset-mantine:
         specifier: ^1.15.0
         version: 1.15.0(postcss@8.4.38)
+      prismjs:
+        specifier: 1.29.0
+        version: 1.29.0
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -201,6 +197,9 @@ importers:
       react-error-boundary:
         specifier: ^4.0.13
         version: 4.0.13(react@18.3.1)
+      react-simple-code-editor:
+        specifier: ^0.13.1
+        version: 0.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       sass:
         specifier: ^1.77.4
         version: 1.77.4
@@ -387,6 +386,15 @@ importers:
 
   packages/analytics:
     dependencies:
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../server-settings
       '@umami/node':
         specifier: ^0.3.0
         version: 0.3.0
@@ -394,21 +402,12 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
     devDependencies:
-      '@homarr/db':
-        specifier: workspace:^0.1.0
-        version: link:../db
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
-      '@homarr/server-settings':
-        specifier: workspace:^0.1.0
-        version: link:../server-settings
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
@@ -454,12 +453,21 @@ importers:
       '@trpc/client':
         specifier: next
         version: 11.0.0-rc.401(@trpc/server@11.0.0-rc.401)
+      '@trpc/react-query':
+        specifier: next
+        version: 11.0.0-rc.401(@tanstack/react-query@5.40.1(react@18.3.1))(@trpc/client@11.0.0-rc.401(@trpc/server@11.0.0-rc.401))(@trpc/server@11.0.0-rc.401)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/server':
         specifier: next
         version: 11.0.0-rc.401
       dockerode:
         specifier: ^4.0.2
         version: 4.0.2
+      next:
+        specifier: ^14.2.3
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -551,6 +559,16 @@ importers:
         version: 5.4.5
 
   packages/common:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
+      next:
+        specifier: ^14.2.3
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -570,6 +588,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@auth/core':
+        specifier: 0.32.0
+        version: 0.32.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -585,6 +606,9 @@ importers:
       better-sqlite3:
         specifier: ^11.0.0
         version: 11.0.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       drizzle-kit:
         specifier: ^0.22.7
         version: 0.22.7
@@ -759,6 +783,15 @@ importers:
       '@homarr/ui':
         specifier: workspace:^0.1.0
         version: link:../ui
+      '@mantine/core':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks':
+        specifier: ^7.10.1
+        version: 7.10.1(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -784,6 +817,9 @@ importers:
       '@mantine/notifications':
         specifier: ^7.10.1
         version: 7.10.1(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tabler/icons-react':
+        specifier: ^3.5.0
+        version: 3.5.0(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -840,6 +876,9 @@ importers:
       ioredis:
         specifier: 5.4.1
         version: 5.4.1
+      superjson:
+        specifier: ^2.2.1
+        version: 2.2.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -883,9 +922,30 @@ importers:
       '@homarr/ui':
         specifier: workspace:^0.1.0
         version: link:../ui
+      '@mantine/core':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks':
+        specifier: ^7.10.1
+        version: 7.10.1(react@18.3.1)
       '@mantine/spotlight':
         specifier: ^7.10.1
         version: 7.10.1(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tabler/icons-react':
+        specifier: ^3.5.0
+        version: 3.5.0(react@18.3.1)
+      jotai:
+        specifier: ^2.8.3
+        version: 2.8.3(@types/react@18.3.3)(react@18.3.1)
+      next:
+        specifier: ^14.2.3
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      use-deep-compare-effect:
+        specifier: ^1.8.1
+        version: 1.8.1(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -905,6 +965,9 @@ importers:
 
   packages/translation:
     dependencies:
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
       next-international:
         specifier: ^1.2.4
         version: 1.2.4
@@ -933,6 +996,24 @@ importers:
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
+      '@mantine/core':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/dates':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/core@7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks':
+        specifier: ^7.10.1
+        version: 7.10.1(react@18.3.1)
+      '@tabler/icons-react':
+        specifier: ^3.5.0
+        version: 3.5.0(react@18.3.1)
+      next:
+        specifier: ^14.2.3
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1019,9 +1100,15 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      '@mantine/core':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.10.1
         version: 7.10.1(react@18.3.1)
+      '@tabler/icons-react':
+        specifier: ^3.5.0
+        version: 3.5.0(react@18.3.1)
       '@tiptap/extension-color':
         specifier: 2.4.0
         version: 2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.2.4)))
@@ -1067,12 +1154,21 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.4.0
         version: 2.4.0(@tiptap/pm@2.2.4)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
+      next:
+        specifier: ^14.2.3
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4)
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
-      react-simple-code-editor:
-        specifier: ^0.13.1
-        version: 0.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
       video.js:
         specifier: ^8.12.0
         version: 8.12.0
@@ -6630,7 +6726,7 @@ snapshots:
 
   '@babel/highlight@7.23.4':
     dependencies:
-      '@babel/helper-validator-identifier': 7.24.6
+      '@babel/helper-validator-identifier': 7.22.20
       chalk: 2.4.2
       js-tokens: 4.0.0
 

@@ -41,11 +41,5 @@
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"
   },
-  "dependencies": {
-    "@mantine/core": "^7.10.1",
-    "@mantine/dates": "^7.10.1",
-    "@tabler/icons-react": "^3.5.0",
-    "mantine-react-table": "2.0.0-beta.4"
-  },
   "prettier": "@homarr/prettier-config"
 }

@@ -22,7 +22,10 @@
   },
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
-    "@homarr/translation": "workspace:^0.1.0"
+    "@homarr/translation": "workspace:^0.1.0",
+    "react": "^18.3.1",
+    "@mantine/core": "^7.10.1",
+    "@mantine/hooks": "^7.10.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
