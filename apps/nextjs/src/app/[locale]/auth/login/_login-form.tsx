@@ -12,6 +12,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+
 export const LoginForm = () => {
   const t = useScopedI18n("user");
   const router = useRouter();
@@ -32,7 +34,7 @@ export const LoginForm = () => {
       redirect: false,
       callbackUrl: "/",
     })
-      .then((response) => {
+      .then(async (response) => {
         if (!response?.ok || response.error) {
           throw response?.error;
         }
@@ -41,6 +43,7 @@ export const LoginForm = () => {
           title: t("action.login.notification.success.title"),
           message: t("action.login.notification.success.message"),
         });
+        await revalidatePathActionAsync("/");
         router.push("/");
       })
       .catch((error: Error | string) => {
