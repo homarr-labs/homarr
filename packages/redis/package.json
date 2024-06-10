@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "ioredis": "5.4.1",
+    "superjson": "2.2.1",
     "@homarr/log": "workspace:^",
     "@homarr/db": "workspace:^",
     "@homarr/common": "workspace:^"

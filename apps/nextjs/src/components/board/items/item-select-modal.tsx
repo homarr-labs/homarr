@@ -1,12 +1,12 @@
 import { Button, Card, Center, Grid, Stack, Text } from "@mantine/core";
 
+import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { widgetImports } from "@homarr/widgets";
+import type { WidgetDefinition } from "@homarr/widgets";
 
-import { objectEntries } from "../../../../../../packages/common/src";
-import { widgetImports } from "../../../../../../packages/widgets/src";
-import type { WidgetDefinition } from "../../../../../../packages/widgets/src/definition";
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<void>(({ actions }) => {

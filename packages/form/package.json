@@ -20,6 +20,11 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@mantine/form": "^7.10.1",
+    "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0"
+  },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
@@ -27,10 +32,5 @@
     "eslint": "^9.4.0",
     "typescript": "^5.4.5"
   },
-  "prettier": "@homarr/prettier-config",
-  "dependencies": {
-    "@mantine/form": "^7.10.1",
-    "@homarr/validation": "workspace:^0.1.0",
-    "@homarr/translation": "workspace:^0.1.0"
-  }
+  "prettier": "@homarr/prettier-config"
 }
