@@ -1,4 +1,5 @@
-import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
+import type { StartedTestContainer } from "testcontainers";
+import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test } from "vitest";
 
 import { PiHoleIntegration } from "../src";
