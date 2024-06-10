@@ -2,12 +2,13 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
+import { encryptSecret } from "@homarr/common";
 import { createId } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
 import type { RouterInputs } from "../..";
-import { encryptSecret, integrationRouter } from "../integration";
+import { integrationRouter } from "../integration";
 import { expectToBeDefined } from "./helper";
 
 // Mock the auth module to return an empty session

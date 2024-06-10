@@ -818,6 +818,36 @@ export default {
         noBrowerSupport: "Your Browser does not support iframes. Please update your browser.",
       },
     },
+    "smartHome-entityState": {
+      name: "Entity State",
+      description: "Display the state of an entity and toggle it optionally",
+      option: {
+        entityId: {
+          label: "Entity ID",
+        },
+        displayName: {
+          label: "Display-name",
+        },
+        entityUnit: {
+          label: "Entity Unit",
+        },
+        clickable: {
+          label: "Clickable",
+        },
+      },
+    },
+    "smartHome-executeAutomation": {
+      name: "Execute Automation",
+      description: "Trigger an automation with one click",
+      option: {
+        displayName: {
+          label: "Display name",
+        },
+        automationId: {
+          label: "Automation ID",
+        },
+      },
+    },
     weather: {
       name: "Weather",
       description: "Displays the current weather information of a set location.",

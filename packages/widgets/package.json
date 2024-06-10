@@ -44,6 +44,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@mantine/hooks": "^7.10.1",
     "@tiptap/extension-color": "2.4.0",
     "@tiptap/extension-highlight": "2.4.0",
     "@tiptap/extension-image": "2.4.0",

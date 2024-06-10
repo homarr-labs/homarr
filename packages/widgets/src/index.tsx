@@ -12,6 +12,8 @@ import * as dnsHoleSummary from "./dns-hole/summary";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as notebook from "./notebook";
+import * as smartHomeEntityState from "./smart-home/entity-state";
+import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -29,10 +31,13 @@ export const widgetImports = {
   iframe,
   video,
   dnsHoleSummary,
+  "smartHome-entityState": smartHomeEntityState,
+  "smartHome-executeAutomation": smartHomeExecuteAutomation,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
 export type WidgetImportKey = keyof WidgetImports;
+export type { WidgetComponentProps };
 
 const loadedComponents = new Map<WidgetKind, ComponentType<WidgetComponentProps<WidgetKind>>>();
 
