@@ -29,7 +29,7 @@
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@turbo/gen": "^2.0.3",
-    "@vitejs/plugin-react": "^4.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-v8": "^1.6.0",
     "@vitest/ui": "^1.6.0",
     "cross-env": "^7.0.3",
