@@ -27,6 +27,8 @@
     "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
+    "@homarr/integrations": "workspace:^0.1.0",
+    "@homarr/widgets": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/analytics": "workspace:^0.1.0",
     "dotenv": "^16.4.5",

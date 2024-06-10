@@ -30,7 +30,9 @@
   },
   "dependencies": {
     "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0"
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0"
   },
   "prettier": "@homarr/prettier-config"
 }

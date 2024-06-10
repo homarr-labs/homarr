@@ -2,6 +2,7 @@ import { createTRPCRouter } from "../../trpc";
 import { appRouter } from "./app";
 import { dnsHoleRouter } from "./dns-hole";
 import { notebookRouter } from "./notebook";
+import { smartHomeRouter } from "./smart-home";
 import { weatherRouter } from "./weather";
 
 export const widgetRouter = createTRPCRouter({
@@ -9,4 +10,5 @@ export const widgetRouter = createTRPCRouter({
   weather: weatherRouter,
   app: appRouter,
   dnsHole: dnsHoleRouter,
+  smartHome: smartHomeRouter,
 });

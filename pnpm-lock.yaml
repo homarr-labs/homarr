@@ -262,6 +262,9 @@ importers:
       '@homarr/icons':
         specifier: workspace:^0.1.0
         version: link:../../packages/icons
+      '@homarr/integrations':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/integrations
       '@homarr/log':
         specifier: workspace:^
         version: link:../../packages/log
@@ -277,6 +280,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
+      '@homarr/widgets':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/widgets
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -439,9 +445,6 @@ importers:
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
-      '@homarr/tasks':
-        specifier: workspace:^0.1.0
-        version: link:../../apps/tasks
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
@@ -688,9 +691,15 @@ importers:
 
   packages/integrations:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
@@ -1007,6 +1016,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      '@mantine/hooks':
+        specifier: ^7.10.1
+        version: 7.10.1(react@18.3.1)
       '@tiptap/extension-color':
         specifier: 2.4.0
         version: 2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.2.4)))
