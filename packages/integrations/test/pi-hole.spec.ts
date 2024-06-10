@@ -1,4 +1,4 @@
-import { GenericContainer } from "testcontainers";
+import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test } from "vitest";
 
 import { PiHoleIntegration } from "../src";
@@ -14,10 +14,8 @@ describe("Pi-hole integration", () => {
         WEBPASSWORD: password,
       })
       .withExposedPorts(80)
+      .withWaitStrategy(Wait.forLogMessage(/Pi-hole Enabled/))
       .start();
-
-    // We need to wait until pi hole has actually started and is ready to get requests
-    await sleep(5000);
 
     const piHoleIntegration = new PiHoleIntegration({
       id: "1",
@@ -36,12 +34,11 @@ describe("Pi-hole integration", () => {
 
     // Assert
     expect(result.adsBlockedToday).toBe(0);
+    expect(result.adsBlockedTodayPercentage).toBe(0);
+    expect(result.dnsQueriesToday).toBe(0);
+    expect(result.domainsBeingBlocked).toBeGreaterThan(1);
 
     // Cleanup
     await piholeContainer.stop();
   }, 20_000); // Timeout of 20 seconds
 });
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
