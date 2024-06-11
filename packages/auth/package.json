@@ -27,7 +27,7 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
-    "next": "^14.2.3",
+    "next": "^14.2.4",
     "next-auth": "5.0.0-beta.19",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

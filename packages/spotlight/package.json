@@ -29,7 +29,7 @@
     "@mantine/spotlight": "^7.10.1",
     "@tabler/icons-react": "^3.5.0",
     "jotai": "^2.8.3",
-    "next": "^14.2.3",
+    "next": "^14.2.4",
     "react": "^18.3.1",
     "use-deep-compare-effect": "^1.8.1"
   },
