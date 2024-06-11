@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@next/eslint-plugin-next": "^14.2.3",
+    "@next/eslint-plugin-next": "^14.2.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "^2.0.3",
     "eslint-plugin-import": "^2.29.1",
