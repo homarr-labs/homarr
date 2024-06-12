@@ -16,6 +16,7 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as calendar from "./calendar";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
@@ -33,6 +34,7 @@ export const widgetImports = {
   dnsHoleSummary,
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
+  calendar: calendar
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
