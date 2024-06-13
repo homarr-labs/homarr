@@ -37,7 +37,7 @@
     "better-sqlite3": "^11.0.0",
     "drizzle-orm": "^0.31.2",
     "dotenv": "^16.4.5",
-    "mysql2": "3.10.0",
+    "mysql2": "3.10.1",
     "drizzle-kit": "^0.22.7"
   },
   "devDependencies": {
