@@ -64,7 +64,15 @@ export const TestConnection = ({ integration, removeDirty, isDirty }: TestConnec
         component="button"
         onClick={async () => {
           await mutateAsync(integration, {
-            onSuccess: () => {
+            onSuccess: (result) => {
+              if (!result.success) {
+                showErrorNotification({
+                  title: result.error.title,
+                  message: result.error.message,
+                });
+                return; // Do not remove dirty if test failed
+              }
+
               removeDirty();
               showSuccessNotification({
                 title: t("notification.success.title"),

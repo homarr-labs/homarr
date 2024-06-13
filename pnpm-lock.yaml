@@ -691,6 +691,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation

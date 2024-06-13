@@ -6,6 +6,7 @@ import { and, createId, eq } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions, integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
+import { PiHoleIntegration } from "@homarr/integrations";
 import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
@@ -196,6 +197,15 @@ export const integrationRouter = createTRPCRouter({
         });
       }
     }
+
+    const piHoleIntegration = new PiHoleIntegration({
+      id: "new",
+      decryptedSecrets: secrets,
+      name: "New",
+      url: input.url,
+    });
+
+    return await piHoleIntegration.testConnectionAsync();
 
     // TODO: actually test the connection
     // Probably by calling a function on the integration class

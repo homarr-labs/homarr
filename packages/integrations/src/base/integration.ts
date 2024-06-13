@@ -19,4 +19,18 @@ export abstract class Integration {
     }
     return secret.value;
   }
+
+  public abstract testConnectionAsync(): Promise<TestConnectionResult>;
 }
+
+export type TestConnectionResult =
+  | {
+      success: false;
+      error: {
+        title: string;
+        message: string;
+      };
+    }
+  | {
+      success: true;
+    };
