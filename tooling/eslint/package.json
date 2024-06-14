@@ -28,7 +28,7 @@
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.4.0",
+    "eslint": "^9.5.0",
     "typescript": "^5.4.5"
   },
   "prettier": "@homarr/prettier-config"
