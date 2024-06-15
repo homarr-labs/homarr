@@ -141,7 +141,9 @@ export const integrationSecrets = mysqlTable(
   {
     kind: varchar("kind", { length: 16 }).$type<IntegrationSecretKind>().notNull(),
     value: text("value").$type<`${string}.${string}`>().notNull(),
-    updatedAt: timestamp("updated_at").notNull(),
+    updatedAt: timestamp("updated_at")
+      .$onUpdateFn(() => new Date())
+      .notNull(),
     integrationId: varchar("integration_id", { length: 64 })
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
