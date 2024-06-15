@@ -1,4 +1,16 @@
-import { Badge, Box, Button, darken, Group, Image, lighten, ScrollArea, Stack, Text } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Button,
+  darken,
+  Group,
+  Image,
+  lighten,
+  ScrollArea,
+  Stack,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -11,6 +23,7 @@ interface CalendarEventListProps {
 }
 
 export const CalendarEventList = ({ events }: CalendarEventListProps) => {
+  const { colorScheme } = useMantineColorScheme();
   return (
     <ScrollArea
       offsetScrollbars
@@ -40,7 +53,11 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
             <Stack style={{ flexGrow: 1 }} gap={0}>
               <Group justify={"space-between"} align={"start"} mb={"xs"} wrap="nowrap">
                 <Stack gap={0}>
-                  {event.subName && <Text lineClamp={1} size="sm">{event.subName}</Text>}
+                  {event.subName && (
+                    <Text lineClamp={1} size="sm">
+                      {event.subName}
+                    </Text>
+                  )}
                   <Text fw={"bold"} lineClamp={1}>
                     {event.name}
                   </Text>
@@ -51,7 +68,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                 </Group>
               </Group>
               {event.description && (
-                <Text size={"xs"} color={"dimmed"} lineClamp={2}>
+                <Text size={"xs"} c={"dimmed"} lineClamp={2}>
                   {event.description}
                 </Text>
               )}
@@ -68,9 +85,9 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                       styles={{
                         root: {
                           backgroundColor: link.color,
-                          color: link.isDark ? "white" : "black",
+                          color: link.isDark && colorScheme === "dark" ? "white" : "black",
                           "&:hover":
-                            link.isDark && link.color
+                            link.color
                               ? {
                                   backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
                                 }

@@ -3,17 +3,17 @@ export interface CalendarEvent {
     subName: string;
     date: Date;
     description?: string;
-    thumbnail?: URL;
+    thumbnail?: string;
     mediaInformation?: {
         type: 'audio' | 'video' | 'tv' | 'movie';
         seasonNumber?: number;
         episodeNumber?: number;
     },
     links: {
-        href: URL;
+        href: string;
         name: string;
         color: string | undefined;
         isDark: boolean | undefined;
-        logo: string; // TODO: Allow React Icons here
+        logo: string;
     }[];
 }

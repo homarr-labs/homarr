@@ -9,9 +9,10 @@ import { CalendarEventList } from "./calendar-event-list";
 interface CalendarDayProps {
   date: Date;
   events: CalendarEvent[];
+  disabled: boolean;
 }
 
-export const CalendarDay = ({ date, events }: CalendarDayProps) => {
+export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
   const [opened, { close, open }] = useDisclosure(false);
   const { radius, primaryColor } = useMantineTheme();
 
@@ -27,6 +28,7 @@ export const CalendarDay = ({ date, events }: CalendarDayProps) => {
       }}
       onClose={close}
       opened={opened}
+      disabled={disabled}
     >
       <Popover.Target>
         <Container

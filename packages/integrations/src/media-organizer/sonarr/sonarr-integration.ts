@@ -27,15 +27,17 @@ export class SonarrIntegration extends Integration {
   async getCalendarEventsAsync(start: Date, end: Date, includeUnmonitored = true): Promise<CalendarEvent[]> {
     const url = new URL(this.integration.url);
     url.pathname = "/api/v3/calendar";
-    url.searchParams.append("apiKey", super.getSecretValue("apiKey")); // TODO: Send via header instead
     url.searchParams.append("start", start.toISOString());
     url.searchParams.append("end", end.toISOString());
     url.searchParams.append("includeSeries", "true");
     url.searchParams.append("includeEpisodeFile", "true");
     url.searchParams.append("includeEpisodeImages", "true");
     url.searchParams.append("unmonitored", includeUnmonitored ? "true" : "false");
-    logger.info(start.toISOString() + ", " + end.toISOString() + ", " + url.toString());
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        "X-Api-Key": super.getSecretValue("apiKey"),
+      },
+    });
     const sonarCalendarEvents = await z.array(sonarCalendarEventSchema).parseAsync(await response.json());
 
     return sonarCalendarEvents.map(
@@ -58,17 +60,17 @@ export class SonarrIntegration extends Integration {
   private getLinksForSonarCalendarEvent = (event: z.infer<typeof sonarCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [
       {
-        href: new URL(`${this.integration.url}/series/${event.series.titleSlug}`),
+        href: `${this.integration.url}/series/${event.series.titleSlug}`,
         name: "Sonarr",
         logo: "/images/apps/sonarr.svg",
         color: undefined,
-        isDark: undefined
+        isDark: true,
       },
     ];
 
     if (event.series.imdbId) {
       links.push({
-        href: new URL(`https://www.imdb.com/title/${event.series.imdbId}/`),
+        href: `https://www.imdb.com/title/${event.series.imdbId}/`,
         name: "IMDb",
         color: "#f5c518",
         isDark: false,
@@ -91,12 +93,12 @@ export class SonarrIntegration extends Integration {
     return sortedImages[0];
   };
 
-  private chooseBestImageAsURL = (event: z.infer<typeof sonarCalendarEventSchema>): URL | undefined => {
+  private chooseBestImageAsURL = (event: z.infer<typeof sonarCalendarEventSchema>): string | undefined => {
     const bestImage = this.chooseBestImage(event);
     if (!bestImage) {
       return undefined;
     }
-    return new URL(bestImage.remoteUrl);
+    return bestImage.remoteUrl;
   };
 }
 
