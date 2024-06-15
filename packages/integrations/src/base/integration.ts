@@ -29,6 +29,9 @@ export abstract class Integration {
     return secret.value;
   }
 
+  /**
+   * Test the connection to the integration
+   */
   public abstract testConnectionAsync(): Promise<void>;
 
   protected async handleTestConnectionResponseAsync({
