@@ -11,6 +11,7 @@
     "AUTH_SECRET",
     "AUTH_URL"
   ],
+  "ui": "stream",
   "tasks": {
     "topo": {
       "dependsOn": [
