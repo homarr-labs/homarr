@@ -1,8 +1,10 @@
-import { Box, Button, darken, Group, Image, Indicator, lighten, ScrollArea, Stack, Text } from "@mantine/core";
+import { Badge, Box, Button, darken, Group, Image, lighten, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
+
+import classes from "./calendar-event-list.module.css";
 
 interface CalendarEventListProps {
   events: CalendarEvent[];
@@ -24,20 +26,21 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
       <Stack>
         {events.map((event, eventIndex) => (
           <Group key={eventIndex} align={"stretch"} wrap="nowrap">
-            <Box w={70} h={120}>
-              <Indicator
-                position={"bottom-center"}
-                disabled={event.mediaInformation?.type !== "tv"}
-                label={`S${event.mediaInformation?.seasonNumber} / E${event.mediaInformation?.episodeNumber}`}
-                withBorder
-              >
-                <Image src={event.thumbnail} w={70} h={120} radius={"sm"} />
-              </Indicator>
+            <Box pos={"relative"} w={70} h={120}>
+              <Image src={event.thumbnail} w={70} h={120} radius={"sm"} />
+              {event.mediaInformation?.type === "tv" && (
+                <Badge
+                  pos={"absolute"}
+                  bottom={-6}
+                  left={"50%"}
+                  className={classes.badge}
+                >{`S${event.mediaInformation.seasonNumber} / E${event.mediaInformation.episodeNumber}`}</Badge>
+              )}
             </Box>
             <Stack style={{ flexGrow: 1 }} gap={0}>
-              <Group justify={"apart"} align={"start"} mb={"xs"} wrap="nowrap">
+              <Group justify={"space-between"} align={"start"} mb={"xs"} wrap="nowrap">
                 <Stack gap={0}>
-                  {event.subName && <Text lineClamp={1}>{event.subName}</Text>}
+                  {event.subName && <Text lineClamp={1} size="sm">{event.subName}</Text>}
                   <Text fw={"bold"} lineClamp={1}>
                     {event.name}
                   </Text>

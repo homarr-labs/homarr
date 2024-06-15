@@ -10,7 +10,6 @@ import type { WidgetComponentProps } from "@homarr/widgets";
 
 import { EVERY_MINUTE } from "~/lib/cron-job/constants";
 import { createCronJob } from "~/lib/cron-job/creator";
-import { logger } from "@homarr/log";
 
 export const mediaOrganizerJob = createCronJob(EVERY_MINUTE).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
@@ -40,8 +39,6 @@ export const mediaOrganizerJob = createCronJob(EVERY_MINUTE).withCallback(async 
     }
 
     const options = SuperJSON.parse<WidgetComponentProps<"calendar">["options"]>(itemForIntegration.options);
-
-    logger.info(JSON.stringify(options));
 
     const start = dayjs().subtract(Number(options.filterPastMonths), "months").toDate();
     const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();

@@ -1,5 +1,6 @@
 export interface CalendarEvent {
     name: string;
+    subName: string;
     date: Date;
     description?: string;
     thumbnail?: URL;
@@ -11,8 +12,8 @@ export interface CalendarEvent {
     links: {
         href: URL;
         name: string;
-        color: string;
-        isDark: boolean;
+        color: string | undefined;
+        isDark: boolean | undefined;
         logo: string; // TODO: Allow React Icons here
     }[];
 }
