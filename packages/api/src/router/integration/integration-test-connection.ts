@@ -37,7 +37,18 @@ export const testConnectionAsync = async (
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
 
-  const filteredSecrets = sourcedSecrets.filter((secret) => secretKinds.includes(secret.kind));
+  const filteredSecrets = secretKinds.map((kind) => {
+    const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
+    // Will never be undefined because of the check before
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (secrets.length === 1) return secrets[0]!;
+
+    // There will always be a matching secret because of the getSecretKindOption function
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
+  });
+
+  sourcedSecrets.filter((secret) => secretKinds.includes(secret.kind));
 
   const integrationInstance = integrationFactory(integration.kind, {
     id: integration.id,
