@@ -50,7 +50,7 @@ const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => 
     <PasswordInput
       {...props}
       label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
-      description={t(`integration.secrets.secureNotice`)}
+      description={t("integration.secrets.secureNotice")}
       w="100%"
       leftSection={<Icon size={20} stroke={1.5} />}
     />

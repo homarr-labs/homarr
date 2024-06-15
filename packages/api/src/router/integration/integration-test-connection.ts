@@ -48,8 +48,6 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  sourcedSecrets.filter((secret) => secretKinds.includes(secret.kind));
-
   const integrationInstance = integrationFactory(integration.kind, {
     id: integration.id,
     name: integration.name,
