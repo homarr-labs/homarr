@@ -43,8 +43,8 @@ export const mediaOrganizerJob = createCronJob(EVERY_MINUTE).withCallback(async 
 
     logger.info(JSON.stringify(options));
 
-    const start = dayjs().subtract(Number(options.filterPastMonths), "days").toDate();
-    const end = dayjs().add(Number(options.filterFutureMonths), "days").toDate();
+    const start = dayjs().subtract(Number(options.filterPastMonths), "months").toDate();
+    const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();
 
     const sonarr = new SonarrIntegration({
       ...integration,

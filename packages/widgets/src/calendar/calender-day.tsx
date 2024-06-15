@@ -4,6 +4,7 @@ import { Container, Indicator, Popover, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
+import { CalendarEventList } from "./calendar-event-list";
 
 interface CalendarDayProps {
   date: Date;
@@ -50,10 +51,7 @@ export const CalendarDay = ({ date, events }: CalendarDayProps) => {
         </Container>
       </Popover.Target>
       <Popover.Dropdown>
-        <span>Cool!</span>
-        {/*}
         <CalendarEventList events={events} />
-        */}
       </Popover.Dropdown>
     </Popover>
   );

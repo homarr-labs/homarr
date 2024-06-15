@@ -5,7 +5,14 @@ export interface CalendarEvent {
     thumbnail?: URL;
     mediaInformation?: {
         type: 'audio' | 'video' | 'tv' | 'movie';
-        season?: number;
-        episode?: number;
-    }
+        seasonNumber?: number;
+        episodeNumber?: number;
+    },
+    links: {
+        href: URL;
+        name: string;
+        color: string;
+        isDark: boolean;
+        logo: string; // TODO: Allow React Icons here
+    }[];
 }

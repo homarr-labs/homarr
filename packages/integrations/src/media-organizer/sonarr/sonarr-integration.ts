@@ -1,8 +1,8 @@
+import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
 import { Integration } from "../../base/integration";
 import type { CalendarEvent } from "../../calendar-types";
-import { logger } from "@homarr/log";
 
 export class SonarrIntegration extends Integration {
   private readonly priorities: z.infer<typeof sonarCalendarEventSchema>["images"][number]["coverType"][] = [
@@ -32,16 +32,17 @@ export class SonarrIntegration extends Integration {
     const response = await fetch(url);
     const sonarCalendarEvents = await z.array(sonarCalendarEventSchema).parseAsync(await response.json());
 
-    return sonarCalendarEvents.map((sonarCalendarEvent) => ({
+    return sonarCalendarEvents.map((sonarCalendarEvent): CalendarEvent => ({
       name: sonarCalendarEvent.title,
       description: sonarCalendarEvent.series.overview,
       thumbnail: this.chooseBestImageAsURL(sonarCalendarEvent.images),
       date: sonarCalendarEvent.airDateUtc,
       mediaInformation: {
         type: "tv",
-        episode: sonarCalendarEvent.episodeNumber,
-        season: sonarCalendarEvent.seasonNumber,
+        episodeNumber: sonarCalendarEvent.episodeNumber,
+        seasonNumber: sonarCalendarEvent.seasonNumber,
       },
+      links: [],
     }));
   }
 
@@ -64,7 +65,7 @@ export class SonarrIntegration extends Integration {
 
 const sonarCalendarEventSchema = z.object({
   title: z.string(),
-  airDateUtc: z.string().transform(value => new Date(value)),
+  airDateUtc: z.string().transform((value) => new Date(value)),
   seasonNumber: z.number().min(0),
   episodeNumber: z.number().min(0),
   series: z.object({
