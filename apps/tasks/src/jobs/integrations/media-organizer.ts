@@ -33,26 +33,23 @@ export const mediaOrganizerJob = createCronJob(EVERY_MINUTE).withCallback(async 
   });
 
   for (const itemForIntegration of itemsForIntegration) {
-    const integration = itemForIntegration.integrations[0]?.integration;
-    if (!integration) {
-      continue;
+    for (const integration of itemForIntegration.integrations) {
+      const options = SuperJSON.parse<WidgetComponentProps<"calendar">["options"]>(itemForIntegration.options);
+
+      const start = dayjs().subtract(Number(options.filterPastMonths), "months").toDate();
+      const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();
+
+      const sonarr = new SonarrIntegration({
+        ...integration.integration,
+        decryptedSecrets: integration.integration.secrets.map((secret) => ({
+          ...secret,
+          value: decryptSecret(secret.value),
+        })),
+      });
+      const events = await sonarr.getCalendarEventsAsync(start, end);
+
+      const cache = createCacheChannel(`calendar:${integration.integrationId}`);
+      await cache.setAsync(events);
     }
-
-    const options = SuperJSON.parse<WidgetComponentProps<"calendar">["options"]>(itemForIntegration.options);
-
-    const start = dayjs().subtract(Number(options.filterPastMonths), "months").toDate();
-    const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();
-
-    const sonarr = new SonarrIntegration({
-      ...integration,
-      decryptedSecrets: integration.secrets.map((secret) => ({
-        ...secret,
-        value: decryptSecret(secret.value),
-      })),
-    });
-    const events = await sonarr.getCalendarEventsAsync(start, end);
-
-    const cache = createCacheChannel(`calendar:${integration.id}`);
-    await cache.setAsync(events);
   }
 });

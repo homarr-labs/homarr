@@ -10,11 +10,11 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
   options: optionsBuilder.from((factory) => ({
     filterPastMonths: factory.number({
       validate: z.number().min(2).max(9999),
-      defaultValue: 2
+      defaultValue: 2,
     }),
     filterFutureMonths: factory.number({
       validate: z.number().min(2).max(9999),
-      defaultValue: 2
+      defaultValue: 2,
     }),
   })),
   supportedIntegrations: ["sonarr", "radarr", "lidarr", "readarr"],

@@ -12,5 +12,5 @@ export const widgetRouter = createTRPCRouter({
   app: appRouter,
   dnsHole: dnsHoleRouter,
   smartHome: smartHomeRouter,
-  calendar: calendarRouter
+  calendar: calendarRouter,
 });

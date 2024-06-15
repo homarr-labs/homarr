@@ -29,7 +29,7 @@ export default function CalendarWidget({ isEditMode, serverData }: WidgetCompone
       className={classes.calendar}
       styles={{
         calendarHeaderControl: {
-          pointerEvents: isEditMode ? 'none' : undefined
+          pointerEvents: isEditMode ? "none" : undefined,
         },
         levelsGroup: {
           height: "100%",

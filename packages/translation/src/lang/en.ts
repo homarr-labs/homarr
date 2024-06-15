@@ -907,17 +907,17 @@ export default {
         },
       },
     },
-    "calendar": {
+    calendar: {
       name: "Calendar",
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
         filterPastMonths: {
-          label: "Start from"
+          label: "Start from",
         },
         filterFutureMonths: {
-          label: "End at"
-        }
-      }
+          label: "End at",
+        },
+      },
     },
     weather: {
       name: "Weather",

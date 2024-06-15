@@ -38,7 +38,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
     >
       <Stack>
         {events.map((event, eventIndex) => (
-          <Group key={eventIndex} align={"stretch"} wrap="nowrap">
+          <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap">
             <Box pos={"relative"} w={70} h={120}>
               <Image src={event.thumbnail} w={70} h={120} radius={"sm"} />
               {event.mediaInformation?.type === "tv" && (
@@ -76,6 +76,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                 <Group pt={5} gap={5} mt={"auto"} wrap="nowrap">
                   {event.links.map((link) => (
                     <Button
+                      key={link.href}
                       component={"a"}
                       href={link.href.toString()}
                       target={"_blank"}
@@ -86,12 +87,11 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                         root: {
                           backgroundColor: link.color,
                           color: link.isDark && colorScheme === "dark" ? "white" : "black",
-                          "&:hover":
-                            link.color
-                              ? {
-                                  backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
-                                }
-                              : undefined,
+                          "&:hover": link.color
+                            ? {
+                                backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
+                              }
+                            : undefined,
                         },
                       }}
                       leftSection={link.logo ? <Image src={link.logo} w={20} h={20} /> : undefined}

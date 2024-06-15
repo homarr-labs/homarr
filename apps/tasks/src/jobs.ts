@@ -1,10 +1,10 @@
 import { iconsUpdaterJob } from "~/jobs/icons-updater";
 import { smartHomeEntityStateJob } from "~/jobs/integrations/home-assistant";
 import { analyticsJob } from "./jobs/analytics";
+import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { pingJob } from "./jobs/ping";
 import { queuesJob } from "./jobs/queue";
 import { createCronJobGroup } from "./lib/jobs";
-import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 
 export const jobs = createCronJobGroup({
   // Add your jobs here:

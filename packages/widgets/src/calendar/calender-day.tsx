@@ -4,6 +4,7 @@ import { Container, Indicator, Popover, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
+
 import { CalendarEventList } from "./calendar-event-list";
 
 interface CalendarDayProps {
@@ -36,7 +37,6 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
           h="100%"
           w="100%"
           style={{
-            padding: "18% !important",
             borderRadius: radius.md,
             borderStyle: "solid",
             borderWidth: "0.2rem",

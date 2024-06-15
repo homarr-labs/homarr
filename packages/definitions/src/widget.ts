@@ -8,6 +8,6 @@ export const widgetKinds = [
   "dnsHoleSummary",
   "smartHome-entityState",
   "smartHome-executeAutomation",
-  "calendar"
+  "calendar",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
