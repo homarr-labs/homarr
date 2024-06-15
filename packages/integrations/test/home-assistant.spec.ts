@@ -1,13 +1,19 @@
 import type { StartedTestContainer } from "testcontainers";
-import { GenericContainer, Wait } from "testcontainers";
-import { describe, expect, test } from "vitest";
+import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import { HomeAssistantIntegration, IntegrationTestConnectionError } from "../src";
 
 const DEFAULT_API_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjQwY2VjNDFjOGU0NGM5YmRlNWQ4ZmFjMjUzYWViZiIsImlhdCI6MTcxODQ3MTE1MSwiZXhwIjoyMDMzODMxMTUxfQ.uQCZ5FZTokipa6N27DtFhLHkwYEXU1LZr0fsVTryL2Q";
+const IMAGE_NAME = "ghcr.io/home-assistant/home-assistant:stable";
 
 describe("Home Assistant integration", () => {
+  beforeAll(async () => {
+    const containerRuntimeClient = await getContainerRuntimeClient();
+    await containerRuntimeClient.image.pull(ImageName.fromString(IMAGE_NAME));
+  }, 100_000);
+
   test("Test connection should work", async () => {
     // Arrange
     const startedContainer = await prepareHomeAssistantContainerAsync();
@@ -48,7 +54,7 @@ const prepareHomeAssistantContainerAsync = async () => {
 };
 
 const createHomeAssistantContainer = () => {
-  return new GenericContainer("ghcr.io/home-assistant/home-assistant:stable")
+  return new GenericContainer(IMAGE_NAME)
     .withCopyFilesToContainer([
       {
         source: __dirname + "/volumes/home-assistant-config.zip",
