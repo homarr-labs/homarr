@@ -36,6 +36,7 @@ export class SonarrIntegration extends Integration {
       name: sonarCalendarEvent.title,
       description: sonarCalendarEvent.series.overview,
       thumbnail: this.chooseBestImageAsURL(sonarCalendarEvent.images),
+      date: sonarCalendarEvent.airDateUtc,
       mediaInformation: {
         type: "tv",
         episode: sonarCalendarEvent.episodeNumber,

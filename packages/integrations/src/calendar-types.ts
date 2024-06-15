@@ -1,5 +1,6 @@
 export interface CalendarEvent {
     name: string;
+    date: Date;
     description?: string;
     thumbnail?: URL;
     mediaInformation?: {
