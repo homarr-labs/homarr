@@ -60,7 +60,7 @@ export class HomeAssistantIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await this.getAsync("/api/");
+        return await this.getAsync("/api/config");
       },
     });
   }
@@ -85,7 +85,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async postAsync(path: `/api/${string}`, body: Record<string, string>) {
-    return await fetch(appendPath(this.integration.url, "/services/automation/trigger"), {
+    return await fetch(appendPath(this.integration.url, path), {
       headers: this.getAuthHeaders(),
       body: JSON.stringify(body),
       method: "POST",

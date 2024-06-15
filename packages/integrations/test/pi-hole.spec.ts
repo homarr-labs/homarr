@@ -25,6 +25,36 @@ describe("Pi-hole integration", () => {
     // Cleanup
     await piholeContainer.stop();
   }, 20_000); // Timeout of 20 seconds
+
+  test("testConnectionAsync should not throw", async () => {
+    // Arrange
+    const piholeContainer = await createPiHoleContainer(DEFAULT_PASSWORD).start();
+    const piHoleIntegration = createPiHoleIntegration(piholeContainer, DEFAULT_API_KEY);
+
+    // Act
+    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+
+    // Assert
+    await expect(actAsync()).resolves.not.toThrow();
+
+    // Cleanup
+    await piholeContainer.stop();
+  }, 20_000); // Timeout of 20 seconds
+
+  test("testConnectionAsync should throw with wrong credentials", async () => {
+    // Arrange
+    const piholeContainer = await createPiHoleContainer(DEFAULT_PASSWORD).start();
+    const piHoleIntegration = createPiHoleIntegration(piholeContainer, "wrong-api-key");
+
+    // Act
+    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow();
+
+    // Cleanup
+    await piholeContainer.stop();
+  }, 20_000); // Timeout of 20 seconds
 });
 
 const createPiHoleContainer = (password: string) => {
