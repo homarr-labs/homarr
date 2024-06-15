@@ -5,7 +5,7 @@ import { integrations } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind } from "@homarr/definitions";
 import { z } from "@homarr/validation";
 
-import { decryptSecret } from "../router/integration";
+import { decryptSecret } from "../router/integration/integration-router";
 import { publicProcedure } from "../trpc";
 
 export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {

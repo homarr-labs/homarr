@@ -7,7 +7,7 @@ import { integrationSecretKindObject } from "@homarr/definitions";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import { integrationSecretIcons } from "./_integration-secret-icons";
+import { integrationSecretIcons } from "./integration-secret-icons";
 
 interface IntegrationSecretInputProps {
   withAsterisk?: boolean;

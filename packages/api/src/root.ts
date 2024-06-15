@@ -4,7 +4,7 @@ import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
 import { homeRouter } from "./router/home";
 import { iconsRouter } from "./router/icons";
-import { integrationRouter } from "./router/integration";
+import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
