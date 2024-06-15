@@ -27,10 +27,10 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
-    "next": "^14.2.3",
+    "next": "^14.2.4",
     "next-auth": "5.0.0-beta.19",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -40,8 +40,8 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
-    "eslint": "^9.4.0",
-    "prettier": "^3.3.1",
+    "eslint": "^9.5.0",
+    "prettier": "^3.3.2",
     "typescript": "^5.4.5"
   },
   "prettier": "@homarr/prettier-config"

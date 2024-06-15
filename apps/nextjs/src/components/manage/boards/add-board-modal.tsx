@@ -1,10 +1,9 @@
 import { Button, Group, Stack, TextInput } from "@mantine/core";
-import { boardSchemas } from "node_modules/@homarr/validation/src/board";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
+import { validation, z } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
 interface InnerProps {
@@ -16,7 +15,7 @@ export const AddBoardModal = createModal<InnerProps>(({ actions, innerProps }) =
   const t = useI18n();
   const form = useZodForm(
     z.object({
-      name: boardSchemas.byName.shape.name.refine((value) => !innerProps.boardNames.includes(value), {
+      name: validation.board.byName.shape.name.refine((value) => !innerProps.boardNames.includes(value), {
         params: createCustomErrorParams("boardAlreadyExists"),
       }),
     }),

@@ -1,9 +1,8 @@
+import { decryptSecret } from "@homarr/common";
 import type { Integration } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { integrationFactory, IntegrationTestConnectionError } from "@homarr/integrations";
-
-import { decryptSecret } from "./integration-router";
 
 type FormIntegration = Integration & {
   secrets: {

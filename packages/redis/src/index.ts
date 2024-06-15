@@ -7,6 +7,12 @@ export const pingChannel = createSubPubChannel<{ url: string; statusCode: number
   "ping",
 );
 export const pingUrlChannel = createListChannel<string>("ping-url");
+
+export const homeAssistantEntityState = createSubPubChannel<{
+  entityId: string;
+  state: string;
+}>("home-assistant/entity-state");
+
 export const queueChannel = createQueueChannel<{
   name: string;
   executionDate: Date;

@@ -137,4 +137,5 @@ export type IntegrationCategory =
   | "mediaSearch"
   | "mediaRequest"
   | "downloadClient"
-  | "useNetClient";
+  | "useNetClient"
+  | "smartHomeServer";

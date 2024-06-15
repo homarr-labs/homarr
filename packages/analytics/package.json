@@ -20,19 +20,19 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
-  "devDependencies": {
-    "@homarr/db": "workspace:^0.1.0",
-    "@homarr/eslint-config": "workspace:^0.2.0",
-    "@homarr/log": "workspace:^0.1.0",
-    "@homarr/prettier-config": "workspace:^0.1.0",
-    "@homarr/server-settings": "workspace:^0.1.0",
-    "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.4.0",
-    "typescript": "^5.4.5"
-  },
-  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@umami/node": "^0.3.0",
-    "superjson": "2.2.1"
-  }
+    "superjson": "2.2.1",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/server-settings": "workspace:^0.1.0"
+  },
+  "devDependencies": {
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "eslint": "^9.5.0",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@homarr/prettier-config"
 }

@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
+import { decryptSecret } from "@homarr/common";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind } from "@homarr/definitions";
 import { z } from "@homarr/validation";
 
-import { decryptSecret } from "../router/integration/integration-router";
 import { publicProcedure } from "../trpc";
 
 export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
