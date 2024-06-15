@@ -19,19 +19,20 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/icons": "workspace:^0.1.0",
+    "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
     "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@homarr/integrations": "workspace:^0.1.0",
-    "@homarr/widgets": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/cron-jobs-core": "workspace:^0.1.0",
+    "@homarr/widgets": "workspace:^0.1.0",
+    "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
     "superjson": "2.2.1",
     "undici": "6.19.2"

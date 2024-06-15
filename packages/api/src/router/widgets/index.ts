@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "../../trpc";
 import { appRouter } from "./app";
+import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
 import { notebookRouter } from "./notebook";
 import { smartHomeRouter } from "./smart-home";
@@ -11,4 +12,5 @@ export const widgetRouter = createTRPCRouter({
   app: appRouter,
   dnsHole: dnsHoleRouter,
   smartHome: smartHomeRouter,
+  calendar: calendarRouter
 });

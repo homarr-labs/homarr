@@ -1,27 +1,19 @@
+import type { CalendarEvent } from "@homarr/integrations/types";
 import { createCacheChannel } from "@homarr/redis";
+
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
     .unstable_concat(createManyIntegrationMiddleware("sonarr", "radarr", "readarr", "lidarr"))
-    .query(async ({ ctx }): Promise<Event[]> => {
-        for (const integration of ctx.integrations) {
-            const cache = createCacheChannel<Event[]>(`calendar:${integration.id}`);
+    .query(async ({ ctx }) => {
+      const data = ctx.integrations.map(async (integration) => {
+        const cache = createCacheChannel<CalendarEvent[]>(`calendar:${integration.id}`);
 
-            const { data } = await cache.consumeAsync(async () => {
-
-            });
-        }
+        return await cache.getAsync();
+      });
+      const a = await Promise.all(data);
+      return a;
     }),
 });
-
-export interface CalendarEvent {
-    name: string;
-    description: string;
-    thumbnail: URL;
-    mediaInformation?: {
-        season?: number;
-        episode?: number;
-    }
-}
