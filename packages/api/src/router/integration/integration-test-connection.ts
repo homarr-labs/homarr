@@ -66,7 +66,7 @@ interface SourcedIntegrationSecret {
 
 const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret[]) => {
   const matchingSecretKindOptions = getAllSecretKindOptions(kind).filter((secretKinds) =>
-    sourcedSecrets.every((secret) => secretKinds.includes(secret.kind)),
+    secretKinds.every((kind) => sourcedSecrets.some((secret) => secret.kind === kind)),
   );
 
   if (matchingSecretKindOptions.length === 0) {
