@@ -67,6 +67,8 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
             combobox.openDropdown();
             combobox.updateSelectedOptionIndex();
             setSearch(event.currentTarget.value);
+            setValue(event.currentTarget.value);
+            onChange(event.currentTarget.value);
           }}
           onClick={() => combobox.openDropdown()}
           onFocus={(event) => {
