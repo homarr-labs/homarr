@@ -25,7 +25,7 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "tsx": "4.13.3",
-    "ws": "^8.17.0",
+    "ws": "^8.17.1",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
