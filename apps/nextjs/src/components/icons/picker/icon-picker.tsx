@@ -81,7 +81,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           rightSectionPointerEvents="none"
           withAsterisk
           error={error}
-          label="Icon URL"
+          label={t("iconPicker.label")}
         />
       </Combobox.Target>
 

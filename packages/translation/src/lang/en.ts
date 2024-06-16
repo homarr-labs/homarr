@@ -317,6 +317,17 @@ export default {
         },
       },
     },
+    field: {
+      name: {
+        label: "Name",
+      },
+      description: {
+        label: "Description",
+      },
+      url: {
+        label: "Url",
+      },
+    },
   },
   integration: {
     page: {
@@ -453,6 +464,7 @@ export default {
       tryAgain: "Try again",
     },
     iconPicker: {
+      label: "Icon URL",
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
     },
     information: {

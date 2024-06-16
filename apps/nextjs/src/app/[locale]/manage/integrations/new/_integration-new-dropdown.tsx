@@ -29,6 +29,7 @@ export const IntegrationCreateDropdownContent = () => {
       <TextInput
         leftSection={<IconSearch stroke={1.5} size={20} />}
         placeholder={t("integration.page.list.search")}
+        data-autofocus
         value={search}
         onChange={handleSearch}
       />
