@@ -7,13 +7,14 @@ import { createId } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { integrationRouter } from "../..//integration/integration-router";
+import { integrationRouter } from "../../integration/integration-router";
 import { expectToBeDefined } from "../helper";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
-// eslint-disable-next-line @typescript-eslint/require-await
-vi.mock("../../integration/integration-test-connection", () => ({ testConnectionAsync: async () => undefined }));
+vi.mock("../../integration/integration-test-connection", () => ({
+  testConnectionAsync: async () => Promise.resolve(undefined),
+}));
 
 describe("all should return all integrations", () => {
   it("should return all integrations", async () => {

@@ -22,9 +22,8 @@ describe("Base integration", () => {
 
       const errorMessage = "The error message";
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.reject(new Error(errorMessage));
+        async queryFunctionAsync() {
+          return await Promise.reject(new Error(errorMessage));
         },
       };
 
@@ -41,9 +40,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.reject(new Error("Error", { cause: { code: "ENOTFOUND" } }));
+        async queryFunctionAsync() {
+          return await Promise.reject(new Error("Error", { cause: { code: "ENOTFOUND" } }));
         },
       };
 
@@ -59,9 +57,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.reject(new Error("Error", { cause: { code: "ECONNREFUSED" } }));
+        async queryFunctionAsync() {
+          return await Promise.reject(new Error("Error", { cause: { code: "ECONNREFUSED" } }));
         },
       };
 
@@ -77,9 +74,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.reject(new Error("Error", { cause: { code: "ECONNABORTED" } }));
+        async queryFunctionAsync() {
+          return await Promise.reject(new Error("Error", { cause: { code: "ECONNABORTED" } }));
         },
       };
 
@@ -96,9 +92,8 @@ describe("Base integration", () => {
 
       const errorMessage = "The error message";
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.reject(new Error(errorMessage));
+        async queryFunctionAsync() {
+          return await Promise.reject(new Error(errorMessage));
         },
       };
 
@@ -115,9 +110,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 400 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 400 }));
         },
       };
 
@@ -133,9 +127,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 401 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 401 }));
         },
       };
 
@@ -151,9 +144,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 403 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 403 }));
         },
       };
 
@@ -169,9 +161,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 404 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 404 }));
         },
       };
 
@@ -187,9 +178,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 500 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 500 }));
         },
       };
 
@@ -205,9 +195,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 503 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 503 }));
         },
       };
 
@@ -223,9 +212,8 @@ describe("Base integration", () => {
       const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
 
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 418 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 418 }));
         },
       };
 
@@ -242,12 +230,11 @@ describe("Base integration", () => {
 
       const errorMessage = "The error message";
       const props: HandleResponseProps = {
-        // eslint-disable-next-line no-restricted-syntax
-        queryFunctionAsync() {
-          return Promise.resolve(new Response(null, { status: 200 }));
+        async queryFunctionAsync() {
+          return await Promise.resolve(new Response(null, { status: 200 }));
         },
         async handleResponseAsync() {
-          return Promise.reject(new IntegrationTestConnectionError("commonError", errorMessage));
+          return await Promise.reject(new IntegrationTestConnectionError("commonError", errorMessage));
         },
       };
 
