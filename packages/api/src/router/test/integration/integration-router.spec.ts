@@ -13,7 +13,7 @@ import { expectToBeDefined } from "../helper";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 vi.mock("../../integration/integration-test-connection", () => ({
-  testConnectionAsync: async () => Promise.resolve(undefined),
+  testConnectionAsync: async () => await Promise.resolve(undefined),
 }));
 
 describe("all should return all integrations", () => {
