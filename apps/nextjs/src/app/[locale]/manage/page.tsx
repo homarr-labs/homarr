@@ -72,8 +72,8 @@ export default async function ManagementPage() {
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
         {links.map((link, index) => (
           <Card component={Link} href={link.href} key={`link-${index}`} withBorder>
-            <Group justify="space-between">
-              <Group>
+            <Group justify="space-between" wrap="nowrap">
+              <Group wrap="nowrap">
                 <Text size="2.4rem" fw="bolder">
                   {link.count}
                 </Text>

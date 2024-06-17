@@ -37,7 +37,7 @@ export default async function ManageBoardsPage() {
         <CreateBoardButton boardNames={boards.map((board) => board.name)} />
       </Group>
 
-      <Grid>
+      <Grid mb={{ base: "xl", md: 0 }}>
         {boards.map((board) => (
           <GridCol span={{ base: 12, md: 6, xl: 4 }} key={board.id}>
             <BoardCard board={board} />

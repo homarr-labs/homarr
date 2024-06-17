@@ -38,17 +38,17 @@ export const HeroBanner = () => {
   const gridSpan = 12 / countIconGroups;
 
   return (
-    <Box className={classes.bannerContainer} bg="dark.6" pos="relative">
+    <Box className={classes.bannerContainer} p={{ base: "lg", md: "3rem" }} bg="dark.6" pos="relative">
       <Stack gap={0}>
-        <Title order={2} c="dimmed">
+        <Title fz={{ base: "h4", md: "h2" }} c="dimmed">
           Welcome back to your
         </Title>
-        <Group gap="xs">
-          <Image src="/logo/logo.png" w={40} h={40} />
-          <Title>Homarr Dashboard</Title>
+        <Group gap="xs" wrap="nowrap">
+          <Image src="/logo/logo.png" w={{ base: 32, md: 40 }} h={{ base: 32, md: 40 }} />
+          <Title fz={{ base: "h3", md: "h1" }}>Homarr Board</Title>
         </Group>
       </Stack>
-      <Box className={classes.scrollContainer} w={"30%"} top={0} right={0} pos="absolute">
+      <Box visibleFrom="md" className={classes.scrollContainer} w={"30%"} top={0} right={0} pos="absolute">
         <Grid>
           {Array(countIconGroups)
             .fill(0)
