@@ -1,6 +1,6 @@
 import type { CalendarEvent } from "@homarr/integrations/types";
-import { createCacheChannel } from "@homarr/redis";
 
+import { createItemWithIntegrationChannel } from "../../../../redis/src/lib/channel";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -10,7 +10,8 @@ export const calendarRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const cache = createCacheChannel<CalendarEvent[]>(`calendar:${integration.id}`);
+          // TODO: pass item id via middleware
+          const cache = createItemWithIntegrationChannel<CalendarEvent[]>("", integration.id);
           return await cache.getAsync();
         }),
       );

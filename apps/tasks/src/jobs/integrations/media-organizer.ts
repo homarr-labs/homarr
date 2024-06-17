@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
+import { createItemWithIntegrationChannel } from "node_modules/@homarr/redis/src/lib/channel";
 import SuperJSON from "superjson";
 
 import { decryptSecret } from "@homarr/common";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { SonarrIntegration } from "@homarr/integrations";
-import { createCacheChannel } from "@homarr/redis";
+import { CalendarEvent } from "@homarr/integrations/types";
 import type { WidgetComponentProps } from "@homarr/widgets";
 
 import { EVERY_MINUTE } from "~/lib/cron-job/constants";
@@ -48,7 +49,7 @@ export const mediaOrganizerJob = createCronJob(EVERY_MINUTE).withCallback(async 
       });
       const events = await sonarr.getCalendarEventsAsync(start, end);
 
-      const cache = createCacheChannel(`calendar:${integration.integrationId}`);
+      const cache = createItemWithIntegrationChannel<CalendarEvent[]>(itemForIntegration.id, integration.integrationId);
       await cache.setAsync(events);
     }
   }
