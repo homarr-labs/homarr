@@ -4,21 +4,22 @@ import { IconApps, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { getI18n } from "@homarr/translation/server";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { AppDeleteButton } from "./_app-delete-button";
 
 export default async function AppsPage() {
   const apps = await api.app.all();
+  const t = await getScopedI18n("app");
 
   return (
     <Container>
       <Stack>
         <Group justify="space-between" align="center">
-          <Title>Apps</Title>
+          <Title>{t("page.list.title")}</Title>
           <MobileAffixButton component={Link} href="/manage/apps/new">
-            New app
+            {t("page.create.title")}
           </MobileAffixButton>
         </Group>
         {apps.length === 0 && <AppNoResults />}

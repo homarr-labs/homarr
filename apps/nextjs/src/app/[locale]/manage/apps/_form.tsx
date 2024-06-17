@@ -36,10 +36,10 @@ export const AppForm = (props: AppFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput {...form.getInputProps("name")} withAsterisk label="Name" />
+        <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker initialValue={initialValues?.iconUrl} {...form.getInputProps("iconUrl")} />
-        <Textarea {...form.getInputProps("description")} label="Description" />
-        <TextInput {...form.getInputProps("href")} label="URL" />
+        <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
+        <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
         <Group justify="end">
           <Button variant="default" component={Link} href="/manage/apps">
