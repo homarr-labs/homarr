@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback } from "react";
-import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
@@ -9,6 +8,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { UserSelectModal } from "~/app/[locale]/boards/[name]/settings/_access/user-select-modal";
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 
 interface AddGroupMemberProps {
   groupId: string;
@@ -40,8 +40,8 @@ export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps)
   }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd]);
 
   return (
-    <Button color="teal" onClick={handleAddMember}>
+    <MobileAffixButton color="teal" onClick={handleAddMember}>
       {tMembersAdd("label")}
-    </Button>
+    </MobileAffixButton>
   );
 };

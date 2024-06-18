@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Container, Group, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconApps, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
+import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { AppDeleteButton } from "./_app-delete-button";
 
@@ -14,7 +15,7 @@ export default async function AppsPage() {
   const t = await getScopedI18n("app");
 
   return (
-    <Container>
+    <ManageContainer>
       <Stack>
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>
@@ -31,7 +32,7 @@ export default async function AppsPage() {
           </Stack>
         )}
       </Stack>
-    </Container>
+    </ManageContainer>
   );
 }
 

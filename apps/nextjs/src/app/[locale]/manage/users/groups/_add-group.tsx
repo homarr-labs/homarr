@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 
 export const AddGroup = () => {
   const t = useI18n();
@@ -21,9 +22,9 @@ export const AddGroup = () => {
   }, [openModal]);
 
   return (
-    <Button onClick={handleAddGroup} color="teal">
+    <MobileAffixButton onClick={handleAddGroup} color="teal">
       {t("group.action.create.label")}
-    </Button>
+    </MobileAffixButton>
   );
 };
 

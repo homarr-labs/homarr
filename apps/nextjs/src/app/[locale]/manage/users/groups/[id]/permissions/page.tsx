@@ -101,7 +101,7 @@ interface PermissionRowProps {
 
 const PermissionRow = ({ name, label, description }: PermissionRowProps) => {
   return (
-    <Group justify="space-between" align="center">
+    <Group justify="space-between" align="center" wrap="nowrap">
       <Stack gap={0}>
         <Text fw={500}>{label}</Text>
         <Text c="gray.5">{description}</Text>
