@@ -1,10 +1,10 @@
 "use client";
 
-import { Flex, Group, Menu, ScrollArea, Text, TextInput } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
-import Link from "next/link";
 import type { ChangeEvent } from "react";
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
+import { Flex, Group, Menu, ScrollArea, Text, TextInput } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
 
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
