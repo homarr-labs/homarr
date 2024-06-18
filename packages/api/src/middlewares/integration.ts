@@ -49,6 +49,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(.
         where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
         with: {
           secrets: true,
+          items: true,
         },
       });
 

@@ -9,10 +9,11 @@ export const calendarRouter = createTRPCRouter({
     .unstable_concat(createManyIntegrationMiddleware("sonarr", "radarr", "readarr", "lidarr"))
     .query(async ({ ctx }) => {
       return await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          // TODO: pass item id via middleware
-          const cache = createItemWithIntegrationChannel<CalendarEvent[]>("", integration.id);
-          return await cache.getAsync();
+        ctx.integrations.flatMap(async (integration) => {
+          for (const item of integration.items) {
+            const cache = createItemWithIntegrationChannel<CalendarEvent[]>(item.itemId, integration.id);
+            return await cache.getAsync();
+          }
         }),
       );
     }),

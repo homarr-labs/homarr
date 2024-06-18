@@ -160,7 +160,8 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
   };
 };
 
-export const createItemWithIntegrationChannel = <T>(itemId: string, integrationId: string) => createCacheChannel<T>(`item:${itemId}:integration:${integrationId}`);
+export const createItemWithIntegrationChannel = <T>(itemId: string, integrationId: string) =>
+  createCacheChannel<T>(`item:${itemId}:integration:${integrationId}`);
 
 const queueClient = createRedisConnection();
 

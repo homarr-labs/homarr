@@ -14,7 +14,10 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     return {
       initialData: data
         .filter(
-          (item): item is Exclude<RouterOutputs["widget"]["calendar"]["findAllEvents"][number], null> => item !== null,
+          (
+            item,
+          ): item is Exclude<Exclude<RouterOutputs["widget"]["calendar"]["findAllEvents"][number], null>, undefined> =>
+            item !== null && item !== undefined,
         )
         .flatMap((item) => item.data),
     };
