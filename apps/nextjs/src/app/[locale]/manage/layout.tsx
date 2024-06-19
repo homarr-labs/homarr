@@ -19,6 +19,7 @@ import {
   IconUser,
   IconUsers,
   IconUsersGroup,
+  IconReport
 } from "@tabler/icons-react";
 
 import { getScopedI18n } from "@homarr/translation/server";
@@ -86,6 +87,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconLogs,
           href: "/manage/tools/logs",
         },
+        {
+          label: t("items.tools.items.tasks"),
+          icon: IconReport,
+          href: "/manage/tools/tasks"
+        }
       ],
     },
     {

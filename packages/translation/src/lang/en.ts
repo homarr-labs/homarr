@@ -1252,6 +1252,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            tasks: "Tasks"
           },
         },
         settings: "Settings",
