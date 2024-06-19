@@ -34,7 +34,7 @@
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3",
     "superjson": "2.2.1",
-    "undici": "6.18.2"
+    "undici": "6.19.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
