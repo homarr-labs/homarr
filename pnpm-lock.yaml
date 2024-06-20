@@ -503,8 +503,8 @@ importers:
   packages/auth:
     dependencies:
       '@auth/core':
-        specifier: ^0.32.0
-        version: 0.32.0
+        specifier: ^0.33.0
+        version: 0.33.0
       '@auth/drizzle-adapter':
         specifier: ^1.2.0
         version: 1.2.0
@@ -595,8 +595,8 @@ importers:
   packages/db:
     dependencies:
       '@auth/core':
-        specifier: ^0.32.0
-        version: 0.32.0
+        specifier: ^0.33.0
+        version: 0.33.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1269,6 +1269,20 @@ packages:
 
   '@auth/core@0.32.0':
     resolution: {integrity: sha512-3+ssTScBd+1fd0/fscAyQN1tSygXzuhysuVVzB942ggU4mdfiTbv36P0ccVnExKWYJKvu3E2r3/zxXCCAmTOrg==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
+
+  '@auth/core@0.33.0':
+    resolution: {integrity: sha512-QPWvnoAbolCO7I8/h3xITwS59bjA2fZRG+p4Qf2ZSMuPE3AFO9xYI3xjwdXZ0jl772aL7Ya8ZUedxCatXgwMZg==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -5005,6 +5019,9 @@ packages:
   oauth4webapi@2.10.3:
     resolution: {integrity: sha512-9FkXEXfzVKzH63GUOZz1zMr3wBaICSzk6DLXx+CGdrQ10ItNk2ePWzYYc1fdmKq1ayGFb2aX97sRCoZ2s0mkDw==}
 
+  oauth4webapi@2.11.0:
+    resolution: {integrity: sha512-UchKtYyLuWwrZLB7g9Px+0JScIAK/bD1awLK5gdOCIs0cjxc7ol+ESL+Rr4nOmEJSvib6kEgvdUHvXm8DrZQ+w==}
+
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -6538,6 +6555,16 @@ snapshots:
       cookie: 0.6.0
       jose: 5.2.2
       oauth4webapi: 2.10.3
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+
+  '@auth/core@0.33.0':
+    dependencies:
+      '@panva/hkdf': 1.1.1
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      jose: 5.2.2
+      oauth4webapi: 2.11.0
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
@@ -10565,6 +10592,8 @@ snapshots:
   nwsapi@2.2.10: {}
 
   oauth4webapi@2.10.3: {}
+
+  oauth4webapi@2.11.0: {}
 
   object-assign@4.1.1: {}
 
