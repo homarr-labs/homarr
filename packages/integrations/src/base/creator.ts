@@ -4,7 +4,7 @@ import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integra
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import type { IntegrationInput } from "./integration";
 
-export const integrationFactory = (kind: IntegrationKind, integration: IntegrationInput) => {
+export const integrationCreatorByKind = (kind: IntegrationKind, integration: IntegrationInput) => {
   switch (kind) {
     case "piHole":
       return new PiHoleIntegration(integration);

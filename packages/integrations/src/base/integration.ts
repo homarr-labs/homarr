@@ -31,6 +31,7 @@ export abstract class Integration {
 
   /**
    * Test the connection to the integration
+   * @throws {IntegrationTestConnectionError} if the connection fails
    */
   public abstract testConnectionAsync(): Promise<void>;
 

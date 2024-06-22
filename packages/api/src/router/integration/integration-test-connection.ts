@@ -2,7 +2,7 @@ import { decryptSecret } from "@homarr/common";
 import type { Integration } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
-import { integrationFactory, IntegrationTestConnectionError } from "@homarr/integrations";
+import { integrationCreatorByKind, IntegrationTestConnectionError } from "@homarr/integrations";
 
 type FormIntegration = Integration & {
   secrets: {
@@ -22,7 +22,7 @@ export const testConnectionAsync = async (
     .filter((secret) => secret.value !== null)
     .map((secret) => ({
       ...secret,
-      // Will never be null because of the check above, also will no longer be necessary in typescript 5.5
+      // We ensured above that the value is not null
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value: secret.value!,
       source: "form" as const,
@@ -48,7 +48,7 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  const integrationInstance = integrationFactory(integration.kind, {
+  const integrationInstance = integrationCreatorByKind(integration.kind, {
     id: integration.id,
     name: integration.name,
     url: integration.url,

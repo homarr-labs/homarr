@@ -4,4 +4,4 @@ export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integrat
 
 // Helpers
 export { IntegrationTestConnectionError } from "./base/test-connection-error";
-export { integrationFactory } from "./base/factory";
+export { integrationCreatorByKind } from "./base/creator";
