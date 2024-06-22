@@ -611,7 +611,7 @@ importers:
         specifier: ^3.0.11
         version: 3.0.11
       eslint:
-        specifier: ^9.4.0
+        specifier: ^9.5.0
         version: 9.5.0
       typescript:
         specifier: ^5.5.2
