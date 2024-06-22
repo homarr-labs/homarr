@@ -1,10 +1,12 @@
 {
-  "name": "@homarr/{{name}}",
+  "name": "@homarr/cron-jobs-core",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./expressions": "./src/expressions.ts",
+    "./logger": "./src/logger.ts"
   },
   "typesVersions": {
     "*": {
@@ -20,10 +22,15 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "@homarr/common": "workspace:^0.1.0"
+  },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node-cron": "^3.0.11",
     "eslint": "^9.5.0",
     "typescript": "^5.5.2"
   },

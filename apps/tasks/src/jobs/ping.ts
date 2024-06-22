@@ -1,11 +1,11 @@
+import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { logger } from "@homarr/log";
 import { sendPingRequestAsync } from "@homarr/ping";
 import { pingChannel, pingUrlChannel } from "@homarr/redis";
 
-import { EVERY_MINUTE } from "~/lib/cron-job/constants";
-import { createCronJob } from "~/lib/cron-job/creator";
+import { createCronJob } from "~/lib/jobs";
 
-export const pingJob = createCronJob(EVERY_MINUTE).withCallback(async () => {
+export const pingJob = createCronJob("ping", EVERY_MINUTE).withCallback(async () => {
   const urls = await pingUrlChannel.getAllAsync();
 
   for (const url of new Set(urls)) {
