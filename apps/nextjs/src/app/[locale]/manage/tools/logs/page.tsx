@@ -6,6 +6,7 @@ import "@xterm/xterm/css/xterm.css";
 
 import dynamic from "next/dynamic";
 
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { createMetaTitle } from "~/metadata";
 
@@ -23,8 +24,11 @@ const ClientSideTerminalComponent = dynamic(() => import("./terminal"), {
 
 export default function LogsManagementPage() {
   return (
-    <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
-      <ClientSideTerminalComponent />
-    </Box>
+    <>
+      <DynamicBreadcrumb />
+      <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
+        <ClientSideTerminalComponent />
+      </Box>
+    </>
   );
 }

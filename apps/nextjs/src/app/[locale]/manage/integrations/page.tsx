@@ -37,6 +37,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { IntegrationAvatar } from "./_integration-avatar";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
@@ -54,6 +55,7 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
 
   return (
     <ManageContainer>
+      <DynamicBreadcrumb />
       <Stack>
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>

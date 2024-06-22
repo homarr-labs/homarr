@@ -29,10 +29,12 @@ export default async function UserSecurityPage({ params }: Props) {
   }
 
   return (
-    <Stack>
-      <Title>{tSecurity("title")}</Title>
+    <>
+      <Stack>
+        <Title>{tSecurity("title")}</Title>
 
-      <ChangePasswordForm user={user} />
-    </Stack>
+        <ChangePasswordForm user={user} />
+      </Stack>
+    </>
   );
 }
