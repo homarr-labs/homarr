@@ -21,8 +21,10 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
       if (typeof key !== "string" || typeof job.name !== "string") continue;
 
       options.logger.logDebug(`Added job ${job.name} to the job registry.`);
-      // @ts-expect-error - TS doesn't know that the job.name is a string will be fixed in ts 5.5
-      jobRegistry.set(key, job);
+      jobRegistry.set(key, {
+        ...job,
+        name: job.name,
+      });
     }
 
     return {

@@ -614,7 +614,7 @@ importers:
         specifier: ^9.4.0
         version: 9.5.0
       typescript:
-        specifier: ^5.4.5
+        specifier: ^5.5.2
         version: 5.5.2
 
   packages/db:
