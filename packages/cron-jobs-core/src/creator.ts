@@ -37,20 +37,29 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
       }
     };
 
+    /**
+     * We are not using the runOnInit method as we want to run the job only once we start the cron job schedule manually.
+     * This allows us to always run it once we start it. Additionally it will not run the callback if only the cron job file is imported.
+     */
     const scheduledTask = cron.schedule(cronExpression, () => void catchingCallbackAsync(), {
       scheduled: false,
       name,
-      runOnInit: options.runOnStart,
       timezone: creatorOptions.timezone,
     });
     creatorOptions.logger.logDebug(
-      `The cron job '${name}' was created with expression ${cronExpression} in timezone ${creatorOptions.timezone} and runOnInit ${options.runOnStart}`,
+      `The cron job '${name}' was created with expression ${cronExpression} in timezone ${creatorOptions.timezone} and runOnStart ${options.runOnStart}`,
     );
 
     return {
       name,
       cronExpression,
       scheduledTask,
+      async onStartAsync() {
+        if (!options.runOnStart) return;
+
+        creatorOptions.logger.logDebug(`The cron job '${name}' is running because runOnStart is set to true`);
+        await catchingCallbackAsync();
+      },
     };
   };
 };

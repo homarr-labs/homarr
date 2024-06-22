@@ -26,16 +26,18 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
     }
 
     return {
-      start: (name: keyof TJobs) => {
+      startAsync: async (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);
         if (!job) return;
 
-        options.logger.logInfo(`Starting cron job ${job.name}.`);
+        options.logger.logInfo(`Starting schedule cron job ${job.name}.`);
+        await job.onStartAsync();
         job.scheduledTask.start();
       },
-      startAll: () => {
+      startAllAsync: async () => {
         for (const job of jobRegistry.values()) {
-          options.logger.logInfo(`Starting cron job ${job.name}.`);
+          options.logger.logInfo(`Starting schedule of cron job ${job.name}.`);
+          await job.onStartAsync();
           job.scheduledTask.start();
         }
       },
@@ -43,12 +45,12 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
         const job = jobRegistry.get(name as string);
         if (!job) return;
 
-        options.logger.logInfo(`Stopping cron job ${job.name}.`);
+        options.logger.logInfo(`Stopping schedule cron job ${job.name}.`);
         job.scheduledTask.stop();
       },
       stopAll: () => {
         for (const job of jobRegistry.values()) {
-          options.logger.logInfo(`Stopping cron job ${job.name}.`);
+          options.logger.logInfo(`Stopping schedule cron job ${job.name}.`);
           job.scheduledTask.stop();
         }
       },
