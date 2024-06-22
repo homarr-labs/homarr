@@ -1,14 +1,14 @@
 import SuperJSON from "superjson";
 
 import { sendServerAnalyticsAsync } from "@homarr/analytics";
+import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { serverSettings } from "@homarr/db/schema/sqlite";
 
-import { EVERY_WEEK } from "~/lib/cron-job/constants";
-import { createCronJob } from "~/lib/cron-job/creator";
+import { createCronJob } from "~/lib/jobs";
 import type { defaultServerSettings } from "../../../../packages/server-settings";
 
-export const analyticsJob = createCronJob(EVERY_WEEK, {
+export const analyticsJob = createCronJob("analytics", EVERY_WEEK, {
   runOnStart: true,
 }).withCallback(async () => {
   const analyticSetting = await db.query.serverSettings.findFirst({

@@ -258,6 +258,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
+      '@homarr/cron-jobs-core':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs-core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -590,6 +593,31 @@ importers:
         version: 9.5.0
       typescript:
         specifier: ^5.5.2
+        version: 5.5.2
+
+  packages/cron-jobs-core:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      node-cron:
+        specifier: ^3.0.3
+        version: 3.0.3
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.4.0
+        version: 9.5.0
+      typescript:
+        specifier: ^5.4.5
         version: 5.5.2
 
   packages/db:

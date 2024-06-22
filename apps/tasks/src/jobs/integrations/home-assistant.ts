@@ -1,6 +1,7 @@
 import SuperJSON from "superjson";
 
 import { decryptSecret } from "@homarr/common";
+import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { HomeAssistantIntegration } from "@homarr/integrations";
@@ -8,10 +9,9 @@ import { logger } from "@homarr/log";
 import { homeAssistantEntityState } from "@homarr/redis";
 import type { WidgetComponentProps } from "@homarr/widgets";
 
-import { EVERY_MINUTE } from "~/lib/cron-job/constants";
-import { createCronJob } from "~/lib/cron-job/creator";
+import { createCronJob } from "~/lib/jobs";
 
-export const smartHomeEntityStateJob = createCronJob(EVERY_MINUTE).withCallback(async () => {
+export const smartHomeEntityStateJob = createCronJob("smartHomeEntityState", EVERY_MINUTE).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
     where: eq(items.kind, "smartHome-entityState"),
     with: {

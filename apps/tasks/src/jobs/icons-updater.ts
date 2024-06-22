@@ -1,4 +1,5 @@
 import { Stopwatch } from "@homarr/common";
+import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
 import { db, inArray } from "@homarr/db";
 import { createId } from "@homarr/db/client";
@@ -6,10 +7,9 @@ import { iconRepositories, icons } from "@homarr/db/schema/sqlite";
 import { fetchIconsAsync } from "@homarr/icons";
 import { logger } from "@homarr/log";
 
-import { EVERY_WEEK } from "~/lib/cron-job/constants";
-import { createCronJob } from "~/lib/cron-job/creator";
+import { createCronJob } from "~/lib/jobs";
 
-export const iconsUpdaterJob = createCronJob(EVERY_WEEK, {
+export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   runOnStart: true,
 }).withCallback(async () => {
   logger.info("Updating icon repository cache...");
