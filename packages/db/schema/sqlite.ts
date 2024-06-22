@@ -144,7 +144,9 @@ export const integrationSecrets = sqliteTable(
   {
     kind: text("kind").$type<IntegrationSecretKind>().notNull(),
     value: text("value").$type<`${string}.${string}`>().notNull(),
-    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .$onUpdateFn(() => new Date())
+      .notNull(),
     integrationId: text("integration_id")
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),

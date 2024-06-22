@@ -389,7 +389,10 @@ export default {
       create: "New integration",
     },
     testConnection: {
-      action: "Test connection",
+      action: {
+        create: "Test connection and create",
+        edit: "Test connection and save",
+      },
       alertNotice: "The Save button is enabled once a successful connection is established",
       notification: {
         success: {
@@ -400,7 +403,7 @@ export default {
           title: "Invalid URL",
           message: "The URL is invalid",
         },
-        notAllSecretsProvided: {
+        secretNotDefined: {
           title: "Missing credentials",
           message: "Not all credentials were provided",
         },
@@ -411,6 +414,50 @@ export default {
         commonError: {
           title: "Connection failed",
           message: "The connection could not be established",
+        },
+        badRequest: {
+          title: "Bad request",
+          message: "The request was malformed",
+        },
+        unauthorized: {
+          title: "Unauthorized",
+          message: "Probably wrong credentials",
+        },
+        forbidden: {
+          title: "Forbidden",
+          message: "Probably missing permissions",
+        },
+        notFound: {
+          title: "Not found",
+          message: "Probably wrong url or path",
+        },
+        internalServerError: {
+          title: "Internal server error",
+          message: "The server encountered an error",
+        },
+        serviceUnavailable: {
+          title: "Service unavailable",
+          message: "The server is currently unavailable",
+        },
+        connectionAborted: {
+          title: "Connection aborted",
+          message: "The connection was aborted",
+        },
+        domainNotFound: {
+          title: "Domain not found",
+          message: "The domain could not be found",
+        },
+        connectionRefused: {
+          title: "Connection refused",
+          message: "The connection was refused",
+        },
+        invalidJson: {
+          title: "Invalid JSON",
+          message: "The response was not valid JSON",
+        },
+        wrongPath: {
+          title: "Wrong path",
+          message: "The path is probably not correct",
         },
       },
     },

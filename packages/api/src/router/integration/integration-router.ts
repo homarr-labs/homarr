@@ -5,10 +5,11 @@ import type { Database } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
+import { integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
 import { validation } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { testConnectionAsync } from "./integration-test-connection";
 
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
@@ -60,6 +61,14 @@ export const integrationRouter = createTRPCRouter({
     };
   }),
   create: publicProcedure.input(validation.integration.create).mutation(async ({ ctx, input }) => {
+    await testConnectionAsync({
+      id: "new",
+      name: input.name,
+      url: input.url,
+      kind: input.kind,
+      secrets: input.secrets,
+    });
+
     const integrationId = createId();
     await ctx.db.insert(integrations).values({
       id: integrationId,
@@ -68,13 +77,14 @@ export const integrationRouter = createTRPCRouter({
       kind: input.kind,
     });
 
-    for (const secret of input.secrets) {
-      await ctx.db.insert(integrationSecrets).values({
-        kind: secret.kind,
-        value: encryptSecret(secret.value),
-        updatedAt: new Date(),
-        integrationId,
-      });
+    if (input.secrets.length >= 1) {
+      await ctx.db.insert(integrationSecrets).values(
+        input.secrets.map((secret) => ({
+          kind: secret.kind,
+          value: encryptSecret(secret.value),
+          integrationId,
+        })),
+      );
     }
   }),
   update: publicProcedure.input(validation.integration.update).mutation(async ({ ctx, input }) => {
@@ -92,6 +102,17 @@ export const integrationRouter = createTRPCRouter({
       });
     }
 
+    await testConnectionAsync(
+      {
+        id: input.id,
+        name: input.name,
+        url: input.url,
+        kind: integration.kind,
+        secrets: input.secrets,
+      },
+      integration.secrets,
+    );
+
     await ctx.db
       .update(integrations)
       .set({
@@ -100,15 +121,14 @@ export const integrationRouter = createTRPCRouter({
       })
       .where(eq(integrations.id, input.id));
 
-    const decryptedSecrets = integration.secrets.map((secret) => ({
-      ...secret,
-      value: decryptSecret(secret.value),
-    }));
-
     const changedSecrets = input.secrets.filter(
       (secret): secret is { kind: IntegrationSecretKind; value: string } =>
         secret.value !== null && // only update secrets that have a value
-        !decryptedSecrets.find((dSecret) => dSecret.kind === secret.kind && dSecret.value === secret.value),
+        !integration.secrets.find(
+          // Checked above
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          (dbSecret) => dbSecret.kind === secret.kind && dbSecret.value === encryptSecret(secret.value!),
+        ),
     );
 
     if (changedSecrets.length > 0) {
@@ -118,7 +138,7 @@ export const integrationRouter = createTRPCRouter({
           value: changedSecret.value,
           kind: changedSecret.kind,
         };
-        if (!decryptedSecrets.some((secret) => secret.kind === changedSecret.kind)) {
+        if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
           await addSecretAsync(ctx.db, secretInput);
         } else {
           await updateSecretAsync(ctx.db, secretInput);
@@ -140,71 +160,6 @@ export const integrationRouter = createTRPCRouter({
 
     await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
   }),
-  testConnection: publicProcedure.input(validation.integration.testConnection).mutation(async ({ ctx, input }) => {
-    const secrets = input.secrets.filter((secret): secret is { kind: IntegrationSecretKind; value: string } =>
-      Boolean(secret.value),
-    );
-
-    // Find any matching secret kinds
-    let secretKinds = getAllSecretKindOptions(input.kind).find((secretKinds) =>
-      secretKinds.every((secretKind) => secrets.some((secret) => secret.kind === secretKind)),
-    );
-
-    if (!secretKinds && input.id === null) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "SECRETS_NOT_DEFINED",
-      });
-    }
-
-    if (!secretKinds && input.id !== null) {
-      const integration = await ctx.db.query.integrations.findFirst({
-        where: eq(integrations.id, input.id),
-        with: {
-          secrets: true,
-        },
-      });
-      if (!integration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "SECRETS_NOT_DEFINED",
-        });
-      }
-      const decryptedSecrets = integration.secrets.map((secret) => ({
-        ...secret,
-        value: decryptSecret(secret.value),
-      }));
-
-      // Add secrets that are not defined in the input from the database
-      for (const dbSecret of decryptedSecrets) {
-        if (!secrets.find((secret) => secret.kind === dbSecret.kind)) {
-          secrets.push({
-            kind: dbSecret.kind,
-            value: dbSecret.value,
-          });
-        }
-      }
-
-      secretKinds = getAllSecretKindOptions(input.kind).find((secretKinds) =>
-        secretKinds.every((secretKind) => secrets.some((secret) => secret.kind === secretKind)),
-      );
-
-      if (!secretKinds) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "SECRETS_NOT_DEFINED",
-        });
-      }
-    }
-
-    // TODO: actually test the connection
-    // Probably by calling a function on the integration class
-    // getIntegration(input.kind).testConnection(secrets)
-    // getIntegration(kind: IntegrationKind): Integration
-    // interface Integration {
-    //   testConnection(): Promise<void>;
-    // }
-  }),
 });
 
 interface UpdateSecretInput {
@@ -217,7 +172,6 @@ const updateSecretAsync = async (db: Database, input: UpdateSecretInput) => {
     .update(integrationSecrets)
     .set({
       value: encryptSecret(input.value),
-      updatedAt: new Date(),
     })
     .where(and(eq(integrationSecrets.integrationId, input.integrationId), eq(integrationSecrets.kind, input.kind)));
 };
@@ -231,7 +185,6 @@ const addSecretAsync = async (db: Database, input: AddSecretInput) => {
   await db.insert(integrationSecrets).values({
     kind: input.kind,
     value: encryptSecret(input.value),
-    updatedAt: new Date(),
     integrationId: input.integrationId,
   });
 };
