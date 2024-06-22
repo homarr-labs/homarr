@@ -4,5 +4,7 @@ import "./undici-log-agent-override";
 import { jobs } from "./jobs";
 import { seedServerSettingsAsync } from "./seed-server-settings";
 
-await jobs.startAllAsync();
-await seedServerSettingsAsync();
+void (async () => {
+  await jobs.startAllAsync();
+  await seedServerSettingsAsync();
+})();
