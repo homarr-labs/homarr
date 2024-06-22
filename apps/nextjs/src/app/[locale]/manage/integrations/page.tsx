@@ -156,7 +156,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                             href={`/manage/integrations/edit/${integration.id}`}
                             variant="subtle"
                             color="gray"
-                            aria-label="Edit integration"
+                            aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
                           >
                             <IconPencil size={16} stroke={1.5} />
                           </ActionIcon>
@@ -182,7 +182,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                           href={`/manage/integrations/edit/${integration.id}`}
                           variant="subtle"
                           color="gray"
-                          aria-label="Edit integration"
+                          aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
                         >
                           <IconPencil size={16} stroke={1.5} />
                         </ActionIcon>

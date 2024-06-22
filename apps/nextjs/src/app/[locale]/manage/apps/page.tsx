@@ -40,7 +40,9 @@ interface AppCardProps {
   app: RouterOutputs["app"]["all"][number];
 }
 
-const AppCard = ({ app }: AppCardProps) => {
+const AppCard = async ({ app }: AppCardProps) => {
+  const t = await getScopedI18n("app");
+
   return (
     <Card>
       <Group justify="space-between" wrap="nowrap">
@@ -78,7 +80,7 @@ const AppCard = ({ app }: AppCardProps) => {
               href={`/manage/apps/edit/${app.id}`}
               variant="subtle"
               color="gray"
-              aria-label="Edit app"
+              aria-label={t("page.edit.title")}
             >
               <IconPencil size={16} stroke={1.5} />
             </ActionIcon>
