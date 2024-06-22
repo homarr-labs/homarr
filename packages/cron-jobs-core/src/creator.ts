@@ -78,7 +78,7 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
   ) => {
     creatorOptions.logger.logDebug(`Validating cron expression '${cronExpression}' for job: ${name}`);
     if (!cron.validate(cronExpression)) {
-      throw new Error("Invalid cron expression for job: " + name);
+      throw new Error(`Invalid cron expression '${cronExpression}' for job '${name}'`);
     }
     creatorOptions.logger.logDebug(`Cron job expression '${cronExpression}' for job ${name} is valid`);
 
