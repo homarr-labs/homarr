@@ -49,7 +49,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   }, [app, mutate, t, openConfirmModal]);
 
   return (
-    <ActionIcon loading={isPending} variant="subtle" color="red" onClick={onClick} aria-label="Delete app">
+    <ActionIcon loading={isPending} variant="subtle" color="red" onClick={onClick} aria-label={t("title")}>
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>
   );

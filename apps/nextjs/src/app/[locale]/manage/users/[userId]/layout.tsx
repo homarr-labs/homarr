@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button, Container, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
+import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
 import { IconSettings, IconShieldLock } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
@@ -9,6 +9,7 @@ import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
+import { ManageContainer } from "~/components/manage/manage-container";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { NavigationLink } from "../groups/[id]/_navigation";
 import { canAccessUserEditPage } from "./access";
@@ -28,7 +29,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
   }
 
   return (
-    <Container size="xl">
+    <ManageContainer size="xl">
       <Grid>
         <GridCol span={12}>
           <Group justify="space-between" align="center">
@@ -64,6 +65,6 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
         </GridCol>
         <GridCol span={{ xs: 12, md: 8, lg: 9, xl: 10 }}>{children}</GridCol>
       </Grid>
-    </Container>
+    </ManageContainer>
   );
 }

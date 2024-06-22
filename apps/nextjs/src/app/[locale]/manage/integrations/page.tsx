@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+import type { PropsWithChildren } from "react";
 import Link from "next/link";
 import {
   AccordionControl,
@@ -5,9 +7,11 @@ import {
   AccordionPanel,
   ActionIcon,
   ActionIconGroup,
+  Affix,
   Anchor,
+  Box,
   Button,
-  Container,
+  Divider,
   Group,
   Menu,
   MenuDropdown,
@@ -22,7 +26,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconChevronDown, IconPencil } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -32,6 +36,7 @@ import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { CountBadge } from "@homarr/ui";
 
+import { ManageContainer } from "~/components/manage/manage-container";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { IntegrationAvatar } from "./_integration-avatar";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
@@ -48,25 +53,46 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
   const t = await getScopedI18n("integration");
 
   return (
-    <Container>
+    <ManageContainer>
       <Stack>
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>
-          <Menu width={256} trapFocus position="bottom-start" withinPortal shadow="md" keepMounted={false}>
-            <MenuTarget>
-              <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-            </MenuTarget>
-            <MenuDropdown>
-              <IntegrationCreateDropdownContent />
-            </MenuDropdown>
-          </Menu>
+
+          <Box>
+            <IntegrationSelectMenu>
+              <Affix hiddenFrom="md" position={{ bottom: 20, right: 20 }}>
+                <MenuTarget>
+                  <Button rightSection={<IconChevronUp size={16} stroke={1.5} />}>{t("action.create")}</Button>
+                </MenuTarget>
+              </Affix>
+            </IntegrationSelectMenu>
+          </Box>
+
+          <Box visibleFrom="md">
+            <IntegrationSelectMenu>
+              <MenuTarget>
+                <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
+              </MenuTarget>
+            </IntegrationSelectMenu>
+          </Box>
         </Group>
 
         <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
       </Stack>
-    </Container>
+    </ManageContainer>
   );
 }
+
+const IntegrationSelectMenu = ({ children }: PropsWithChildren) => {
+  return (
+    <Menu width={256} trapFocus position="bottom-end" withinPortal shadow="md" keepMounted={false}>
+      {children}
+      <MenuDropdown>
+        <IntegrationCreateDropdownContent />
+      </MenuDropdown>
+    </Menu>
+  );
+};
 
 interface IntegrationListProps {
   integrations: RouterOutputs["integration"]["all"];
@@ -105,7 +131,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
             </Group>
           </AccordionControl>
           <AccordionPanel>
-            <Table>
+            <Table visibleFrom="md">
               <TableThead>
                 <TableTr>
                   <TableTh>{t("field.name.label")}</TableTh>
@@ -130,7 +156,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                             href={`/manage/integrations/edit/${integration.id}`}
                             variant="subtle"
                             color="gray"
-                            aria-label="Edit integration"
+                            aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
                           >
                             <IconPencil size={16} stroke={1.5} />
                           </ActionIcon>
@@ -142,6 +168,34 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                 ))}
               </TableTbody>
             </Table>
+
+            <Stack gap="xs" hiddenFrom="md">
+              {integrations.map((integration, index) => (
+                <Fragment key={integration.id}>
+                  {index !== 0 && <Divider />}
+                  <Stack gap={0}>
+                    <Group justify="space-between" align="center" wrap="nowrap">
+                      <Text>{integration.name}</Text>
+                      <ActionIconGroup>
+                        <ActionIcon
+                          component={Link}
+                          href={`/manage/integrations/edit/${integration.id}`}
+                          variant="subtle"
+                          color="gray"
+                          aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                        >
+                          <IconPencil size={16} stroke={1.5} />
+                        </ActionIcon>
+                        <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                      </ActionIconGroup>
+                    </Group>
+                    <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
+                      {integration.url}
+                    </Anchor>
+                  </Stack>
+                </Fragment>
+              ))}
+            </Stack>
           </AccordionPanel>
         </AccordionItem>
       ))}
