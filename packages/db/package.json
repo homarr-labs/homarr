@@ -33,7 +33,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@auth/core": "^0.32.0",
+    "@auth/core": "^0.34.1",
     "better-sqlite3": "^11.0.0",
     "drizzle-orm": "^0.31.2",
     "dotenv": "^16.4.5",
@@ -48,7 +48,7 @@
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.5.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "prettier": "@homarr/prettier-config"
 }

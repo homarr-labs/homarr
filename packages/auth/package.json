@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@homarr/db": "workspace:^0.1.0",
-    "@auth/core": "^0.32.0",
-    "@auth/drizzle-adapter": "^1.2.0",
+    "@auth/core": "^0.34.1",
+    "@auth/drizzle-adapter": "^1.4.1",
     "@t3-oss/env-nextjs": "^0.10.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
@@ -42,7 +42,7 @@
     "@types/cookies": "0.9.0",
     "eslint": "^9.5.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "prettier": "@homarr/prettier-config"
 }
