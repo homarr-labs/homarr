@@ -7,7 +7,7 @@ import { iconRepositories, icons } from "@homarr/db/schema/sqlite";
 import { fetchIconsAsync } from "@homarr/icons";
 import { logger } from "@homarr/log";
 
-import { createCronJob } from "~/lib/jobs";
+import { createCronJob } from "../lib";
 
 export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   runOnStart: true,

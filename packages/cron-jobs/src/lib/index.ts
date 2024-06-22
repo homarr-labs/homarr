@@ -1,6 +1,8 @@
+import { beforeCallbackAsync, onCallbackErrorAsync, onCallbackSuccessAsync } from "@homarr/cron-job-status/publisher";
 import { createCronJobFunctions } from "@homarr/cron-jobs-core";
 import type { Logger } from "@homarr/cron-jobs-core/logger";
 import { logger } from "@homarr/log";
+import type { TranslationObject } from "@homarr/translation";
 
 class WinstonCronJobLogger implements Logger {
   logDebug(message: string) {
@@ -16,6 +18,9 @@ class WinstonCronJobLogger implements Logger {
   }
 }
 
-export const { createCronJob, createCronJobGroup } = createCronJobFunctions({
+export const { createCronJob, createCronJobGroup } = createCronJobFunctions<keyof TranslationObject["task"]["item"]>({
   logger: new WinstonCronJobLogger(),
+  beforeCallback: beforeCallbackAsync,
+  onCallbackSuccess: onCallbackSuccessAsync,
+  onCallbackError: onCallbackErrorAsync,
 });

@@ -1461,4 +1461,20 @@ export default {
       remove: "Remove",
     },
   },
+  task: {
+    item: {
+      smartHomeEntityState: {
+        label: "Smart Home Entity State",
+      },
+      ping: {
+        label: "Simple App Ping",
+      },
+      iconsUpdater: {
+        label: "Icons Updater",
+      },
+      analytics: {
+        label: "Analytics",
+      },
+    },
+  },
 } as const;

@@ -14,7 +14,7 @@ const lastDataClient = createRedisConnection();
  * @param name name of the channel
  * @returns pub/sub channel object
  */
-export const createSubPubChannel = <TData>(name: string) => {
+export const createSubPubChannel = <TData>(name: string, { persist }: { persist: boolean } = { persist: true }) => {
   const lastChannelName = `pubSub:last:${name}`;
   const channelName = `pubSub:${name}`;
   return {
@@ -23,11 +23,13 @@ export const createSubPubChannel = <TData>(name: string) => {
      * @param callback callback function to be called when new data is published
      */
     subscribe: (callback: (data: TData) => void) => {
-      void lastDataClient.get(lastChannelName).then((data) => {
-        if (data) {
-          callback(superjson.parse(data));
-        }
-      });
+      if (persist) {
+        void lastDataClient.get(lastChannelName).then((data) => {
+          if (data) {
+            callback(superjson.parse(data));
+          }
+        });
+      }
       void subscriber.subscribe(channelName, (err) => {
         if (!err) {
           return;
@@ -45,8 +47,14 @@ export const createSubPubChannel = <TData>(name: string) => {
      * @param data data to be published
      */
     publishAsync: async (data: TData) => {
-      await lastDataClient.set(lastChannelName, superjson.stringify(data));
+      if (persist) {
+        await lastDataClient.set(lastChannelName, superjson.stringify(data));
+      }
       await publisher.publish(channelName, superjson.stringify(data));
+    },
+    getLastDataAsync: async () => {
+      const data = await lastDataClient.get(lastChannelName);
+      return data ? superjson.parse<TData>(data) : null;
     },
   };
 };

@@ -1,5 +1,6 @@
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
+import { cronJobsRouter } from "./router/cron-jobs";
 import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
 import { homeRouter } from "./router/home";
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   home: homeRouter,
   docker: dockerRouter,
   serverSettings: serverSettingsRouter,
+  cronJobs: cronJobsRouter,
 });
 
 // export type definition of API

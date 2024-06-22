@@ -7,9 +7,10 @@ import { items } from "@homarr/db/schema/sqlite";
 import { HomeAssistantIntegration } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 import { homeAssistantEntityState } from "@homarr/redis";
-import type { WidgetComponentProps } from "@homarr/widgets";
 
-import { createCronJob } from "~/lib/jobs";
+// This import is done that way to avoid circular dependencies.
+import type { WidgetComponentProps } from "../../../../widgets";
+import { createCronJob } from "../../lib";
 
 export const smartHomeEntityStateJob = createCronJob("smartHomeEntityState", EVERY_MINUTE).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
