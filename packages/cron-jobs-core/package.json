@@ -30,6 +30,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node-cron": "^3.0.11",
     "eslint": "^9.4.0",
     "typescript": "^5.4.5"
   },

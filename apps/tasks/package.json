@@ -33,7 +33,6 @@
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/cron-jobs-core": "workspace:^0.1.0",
     "dotenv": "^16.4.5",
-    "node-cron": "^3.0.3",
     "superjson": "2.2.1",
     "undici": "6.19.2"
   },
@@ -41,7 +40,6 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node-cron": "^3.0.11",
     "@types/node": "^20.14.8",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.5.0",

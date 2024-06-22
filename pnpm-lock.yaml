@@ -294,9 +294,6 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
-      node-cron:
-        specifier: ^3.0.3
-        version: 3.0.3
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -316,9 +313,6 @@ importers:
       '@types/node':
         specifier: ^20.14.8
         version: 20.14.8
-      '@types/node-cron':
-        specifier: ^3.0.11
-        version: 3.0.11
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
@@ -613,6 +607,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
       eslint:
         specifier: ^9.4.0
         version: 9.5.0
