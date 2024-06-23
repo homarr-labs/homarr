@@ -1,26 +1,19 @@
 import { Button, Card, Center, Grid, Stack, Text } from "@mantine/core";
 
+import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { widgetImports } from "@homarr/widgets";
+import type { WidgetDefinition } from "@homarr/widgets";
 
-import { objectEntries } from "../../../../../../packages/common/src";
-import { widgetImports } from "../../../../../../packages/widgets/src";
-import type { WidgetDefinition } from "../../../../../../packages/widgets/src/definition";
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<void>(({ actions }) => {
   return (
     <Grid>
       {objectEntries(widgetImports).map(([key, value]) => {
-        return (
-          <WidgetItem
-            key={key}
-            kind={key}
-            definition={value.definition}
-            closeModal={actions.closeModal}
-          />
-        );
+        return <WidgetItem key={key} kind={key} definition={value.definition} closeModal={actions.closeModal} />;
       })}
     </Grid>
   );
@@ -56,13 +49,7 @@ const WidgetItem = ({
             <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
               {t(`widget.${kind}.name`)}
             </Text>
-            <Text
-              lh={1.2}
-              style={{ whiteSpace: "normal" }}
-              size="xs"
-              ta="center"
-              c="dimmed"
-            >
+            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
               {t(`widget.${kind}.description`)}
             </Text>
           </Stack>

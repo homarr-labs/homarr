@@ -5,9 +5,9 @@ import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { createConfiguration } from "./configuration";
 
-export type { Session } from "@auth/core/types";
+export type { Session } from "next-auth";
 
-declare module "@auth/core/types" {
+declare module "next-auth" {
   interface Session {
     user: {
       id: string;
@@ -18,7 +18,6 @@ declare module "@auth/core/types" {
 
 export * from "./security";
 
-export const createHandlers = (isCredentialsRequest: boolean) =>
-  createConfiguration(isCredentialsRequest, headers());
+export const createHandlers = (isCredentialsRequest: boolean) => createConfiguration(isCredentialsRequest, headers());
 
-export { getSessionFromToken, sessionTokenCookieName } from "./session";
+export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

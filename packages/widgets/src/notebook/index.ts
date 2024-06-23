@@ -4,27 +4,24 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { defaultContent } from "./default-content";
 
-export const { definition, componentLoader } = createWidgetDefinition(
-  "notebook",
-  {
-    icon: IconNotes,
-    options: optionsBuilder.from(
-      (factory) => ({
-        showToolbar: factory.switch({
-          defaultValue: true,
-        }),
-        allowReadOnlyCheck: factory.switch({
-          defaultValue: true,
-        }),
-        content: factory.text({
-          defaultValue: defaultContent,
-        }),
+export const { definition, componentLoader } = createWidgetDefinition("notebook", {
+  icon: IconNotes,
+  options: optionsBuilder.from(
+    (factory) => ({
+      showToolbar: factory.switch({
+        defaultValue: true,
       }),
-      {
-        content: {
-          shouldHide: () => true, // Hide the content option as it can be modified in the editor
-        },
+      allowReadOnlyCheck: factory.switch({
+        defaultValue: true,
+      }),
+      content: factory.text({
+        defaultValue: defaultContent,
+      }),
+    }),
+    {
+      content: {
+        shouldHide: () => true, // Hide the content option as it can be modified in the editor
       },
-    ),
-  },
-).withDynamicImport(() => import("./component"));
+    },
+  ),
+}).withDynamicImport(() => import("./component"));

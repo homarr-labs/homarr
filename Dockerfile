@@ -1,4 +1,4 @@
-FROM node:20.13.1-alpine AS base
+FROM node:20.14.0-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -55,6 +55,7 @@ RUN apk add --no-cache redis
 RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
+VOLUME /appdata
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs

@@ -21,18 +21,18 @@ import { setStaticParamsLocale } from "next-international/server";
 
 import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
+import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
+import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import contributorsData from "../../../../../../../static-data/contributors.json";
 import translatorsData from "../../../../../../../static-data/translators.json";
-import logo from "../../../../../public/logo/logo.png";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 
@@ -50,14 +50,12 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
     <div>
       <Center w="100%">
         <Group py="lg">
-          <Image src={logo} width={100} height={100} alt="" />
+          <Image src={homarrLogoPath} width={100} height={100} alt="" />
           <Stack gap={0}>
             <Title order={1} tt="uppercase">
               Homarr
             </Title>
-            <Title order={2}>
-              {t("version", { version: attributes.version })}
-            </Title>
+            <Title order={2}>{t("version", { version: attributes.version })}</Title>
           </Stack>
         </Group>
       </Center>
@@ -150,20 +148,10 @@ interface GenericContributorLinkCardProps {
   image: string;
 }
 
-const GenericContributorLinkCard = ({
-  name,
-  image,
-  link,
-}: GenericContributorLinkCardProps) => {
+const GenericContributorLinkCard = ({ name, image, link }: GenericContributorLinkCardProps) => {
   return (
     <AspectRatio ratio={1}>
-      <Card
-        className={classes.contributorCard}
-        component="a"
-        href={link}
-        target="_blank"
-        w={100}
-      >
+      <Card className={classes.contributorCard} component="a" href={link} target="_blank" w={100}>
         <Stack align="center">
           <Avatar src={image} alt={name} size={40} display="block" />
           <Text lineClamp={1} size="sm">

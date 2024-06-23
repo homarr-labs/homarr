@@ -15,19 +15,10 @@ export interface SelectItemWithDescriptionBadge {
 type Props = SelectWithCustomItemsProps<SelectItemWithDescriptionBadge>;
 
 export const SelectWithDescriptionBadge = (props: Props) => {
-  return (
-    <SelectWithCustomItems<SelectItemWithDescriptionBadge>
-      {...props}
-      SelectOption={SelectOption}
-    />
-  );
+  return <SelectWithCustomItems<SelectItemWithDescriptionBadge> {...props} SelectOption={SelectOption} />;
 };
 
-const SelectOption = ({
-  label,
-  description,
-  badge,
-}: SelectItemWithDescriptionBadge) => {
+const SelectOption = ({ label, description, badge }: SelectItemWithDescriptionBadge) => {
   return (
     <Group justify="space-between">
       <div>

@@ -12,27 +12,22 @@ import {
   IconPlus,
   IconSettings,
 } from "@tabler/icons-react";
-import { useAtom, useAtomValue } from "jotai";
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
-import { editModeAtom } from "~/components/board/editMode";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { HeaderButton } from "~/components/layout/header/button";
-import { useRequiredBoard } from "./_context";
+import { useEditMode, useRequiredBoard } from "./_context";
 
 export const BoardContentHeaderActions = () => {
-  const isEditMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
 
@@ -54,8 +49,7 @@ export const BoardContentHeaderActions = () => {
 };
 
 const AddMenu = () => {
-  const { openModal: openCategoryEditModal } =
-    useModalAction(CategoryEditModal);
+  const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { addCategoryToEnd } = useCategoryActions();
   const t = useI18n();
@@ -95,22 +89,14 @@ const AddMenu = () => {
         </HeaderButton>
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
-        <Menu.Item
-          leftSection={<IconBox size={20} />}
-          onClick={handleSelectItem}
-        >
+        <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectItem}>
           {t("item.action.create")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconPackageImport size={20} />}>
-          {t("item.action.import")}
-        </Menu.Item>
+        <Menu.Item leftSection={<IconPackageImport size={20} />}>{t("item.action.import")}</Menu.Item>
 
         <Menu.Divider />
 
-        <Menu.Item
-          leftSection={<IconBoxAlignTop size={20} />}
-          onClick={handleAddCategory}
-        >
+        <Menu.Item leftSection={<IconBoxAlignTop size={20} />} onClick={handleAddCategory}>
           {t("section.category.action.create")}
         </Menu.Item>
       </Menu.Dropdown>
@@ -119,28 +105,27 @@ const AddMenu = () => {
 };
 
 const EditModeMenu = () => {
-  const [isEditMode, setEditMode] = useAtom(editModeAtom);
+  const [isEditMode, setEditMode] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
-  const { mutate: saveBoard, isPending } =
-    clientApi.board.saveBoard.useMutation({
-      onSuccess() {
-        showSuccessNotification({
-          title: t("notification.success.title"),
-          message: t("notification.success.message"),
-        });
-        void utils.board.getBoardByName.invalidate({ name: board.name });
-        void revalidatePathAction(`/boards/${board.name}`);
-        setEditMode(false);
-      },
-      onError() {
-        showErrorNotification({
-          title: t("notification.error.title"),
-          message: t("notification.error.message"),
-        });
-      },
-    });
+  const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
+    onSuccess() {
+      showSuccessNotification({
+        title: t("notification.success.title"),
+        message: t("notification.success.message"),
+      });
+      void utils.board.getBoardByName.invalidate({ name: board.name });
+      void revalidatePathActionAsync(`/boards/${board.name}`);
+      setEditMode(false);
+    },
+    onError() {
+      showErrorNotification({
+        title: t("notification.error.title"),
+        message: t("notification.error.message"),
+      });
+    },
+  });
 
   const toggle = useCallback(() => {
     if (isEditMode) return saveBoard(board);
@@ -149,11 +134,7 @@ const EditModeMenu = () => {
 
   return (
     <HeaderButton onClick={toggle} loading={isPending}>
-      {isEditMode ? (
-        <IconPencilOff stroke={1.5} />
-      ) : (
-        <IconPencil stroke={1.5} />
-      )}
+      {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
     </HeaderButton>
   );
 };

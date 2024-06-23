@@ -8,13 +8,11 @@ import { z } from "@homarr/validation";
 import { env } from "../../../env.mjs";
 import { LdapClient } from "../ldap-client";
 
-export const authorizeWithLdapCredentials = async (
+export const authorizeWithLdapCredentialsAsync = async (
   adapter: Adapter,
   credentials: z.infer<typeof validation.user.signIn>,
 ) => {
-  logger.info(
-    `user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`,
-  );
+  logger.info(`user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`);
   const client = new LdapClient();
   await client.bindAsync({
     distinguishedName: env.AUTH_LDAP_BIND_DN,
@@ -28,10 +26,7 @@ export const authorizeWithLdapCredentials = async (
       options: {
         filter: createLdapUserFilter(credentials.name),
         scope: env.AUTH_LDAP_SEARCH_SCOPE,
-        attributes: [
-          env.AUTH_LDAP_USERNAME_ATTRIBUTE,
-          env.AUTH_LDAP_USER_MAIL_ATTRIBUTE,
-        ],
+        attributes: [env.AUTH_LDAP_USERNAME_ATTRIBUTE, env.AUTH_LDAP_USER_MAIL_ATTRIBUTE],
       },
     })
     .then((entries) => entries.at(0));
@@ -41,10 +36,7 @@ export const authorizeWithLdapCredentials = async (
   }
 
   // Validate email
-  const mailResult = await z
-    .string()
-    .email()
-    .safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
+  const mailResult = await z.string().email().safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
 
   if (!mailResult.success) {
     throw new Error(
@@ -64,9 +56,7 @@ export const authorizeWithLdapCredentials = async (
   });
   userClient.disconnect();
 
-  logger.info(
-    `User ${credentials.name} logged in successfully, retrieving user groups...`,
-  );
+  logger.info(`User ${credentials.name} logged in successfully, retrieving user groups...`);
 
   const userGroups = await client
     .searchAsync({
@@ -75,33 +65,24 @@ export const authorizeWithLdapCredentials = async (
         // For example, if the user is doejohn, the filter will be (&(objectClass=group)(uid=doejohn)) or (&(objectClass=group)(uid=doejohn)(sAMAccountType=1234))
         filter: `(&(objectClass=${env.AUTH_LDAP_GROUP_CLASS})(${
           env.AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE
-        }=${ldapUser[env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE]})${
-          env.AUTH_LDAP_GROUP_FILTER_EXTRA_ARG ?? ""
-        })`,
+        }=${ldapUser[env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE]})${env.AUTH_LDAP_GROUP_FILTER_EXTRA_ARG ?? ""})`,
         scope: env.AUTH_LDAP_SEARCH_SCOPE,
         attributes: "cn",
       },
     })
-    .then((entries) =>
-      entries
-        .map((entry) => entry.cn)
-        .filter((group): group is string => group !== undefined),
-    );
+    .then((entries) => entries.map((entry) => entry.cn).filter((group): group is string => group !== undefined));
 
-  logger.info(
-    `Found ${userGroups.length} groups for user ${credentials.name}.`,
-  );
+  logger.info(`Found ${userGroups.length} groups for user ${credentials.name}.`);
 
   client.disconnect();
 
   // Create or update user in the database
-  let user = await adapter.getUserByEmail!(mailResult.data);
+  let user = await adapter.getUserByEmail?.(mailResult.data);
 
   if (!user) {
-    logger.info(
-      `User ${credentials.name} not found in the database. Creating...`,
-    );
+    logger.info(`User ${credentials.name} not found in the database. Creating...`);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     user = await adapter.createUser!({
       id: createId(),
       name: credentials.name,
@@ -113,10 +94,9 @@ export const authorizeWithLdapCredentials = async (
   }
 
   if (user.name !== credentials.name) {
-    logger.warn(
-      `User ${credentials.name} found in the database but with different name. Updating...`,
-    );
+    logger.warn(`User ${credentials.name} found in the database but with different name. Updating...`);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     user = await adapter.updateUser!({
       id: user.id,
       name: credentials.name,

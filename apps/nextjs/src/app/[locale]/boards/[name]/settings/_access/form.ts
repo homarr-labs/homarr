@@ -8,7 +8,6 @@ export interface BoardAccessFormType {
   }[];
 }
 
-export const [FormProvider, useFormContext, useForm] =
-  createFormContext<BoardAccessFormType>();
+export const [FormProvider, useFormContext, useForm] = createFormContext<BoardAccessFormType>();
 
 export type OnCountChange = (callback: (prev: number) => number) => void;

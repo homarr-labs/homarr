@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
@@ -78,8 +79,8 @@ describe("byId should return an app by id", () => {
       session: null,
     });
 
-    const act = async () => await caller.byId({ id: "2" });
-    await expect(act()).rejects.toThrow("App not found");
+    const actAsync = async () => await caller.byId({ id: "2" });
+    await expect(actAsync()).rejects.toThrow("App not found");
   });
 });
 
@@ -174,7 +175,7 @@ describe("update should update an app", () => {
       session: null,
     });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.update({
         id: createId(),
         name: "Mantine",
@@ -182,7 +183,7 @@ describe("update should update an app", () => {
         description: null,
         href: null,
       });
-    await expect(act()).rejects.toThrow("App not found");
+    await expect(actAsync()).rejects.toThrow("App not found");
   });
 });
 

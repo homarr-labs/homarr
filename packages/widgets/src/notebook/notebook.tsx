@@ -16,11 +16,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  Link,
-  RichTextEditor,
-  useRichTextEditorContext,
-} from "@mantine/tiptap";
+import { Link, RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
 import {
   IconCheck,
   IconCircleOff,
@@ -78,12 +74,7 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-export function Notebook({
-  options,
-  isEditMode,
-  boardId,
-  itemId,
-}: WidgetComponentProps<"notebook">) {
+export function Notebook({ options, isEditMode, boardId, itemId }: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
   const [toSaveContent, setToSaveContent] = useState(content);
 
@@ -137,12 +128,9 @@ export function Notebook({
               backgroundColor: {
                 default: undefined,
                 renderHTML: (attributes) => ({
-                  style: attributes.backgroundColor
-                    ? `background-color: ${attributes.backgroundColor}`
-                    : undefined,
+                  style: attributes.backgroundColor ? `background-color: ${attributes.backgroundColor}` : undefined,
                 }),
-                parseHTML: (element) =>
-                  element.style.backgroundColor || undefined,
+                parseHTML: (element) => element.style.backgroundColor || undefined,
               },
             };
           },
@@ -178,9 +166,7 @@ export function Notebook({
     [toSaveContent],
   );
 
-  const handleOnReadOnlyCheck = (
-    event: CustomEventInit<{ node: Node; checked: boolean }>,
-  ) => {
+  const handleOnReadOnlyCheck = (event: CustomEventInit<{ node: Node; checked: boolean }>) => {
     if (!options.allowReadOnlyCheck) return;
     if (!editor) return;
 
@@ -251,8 +237,7 @@ export function Notebook({
             "& .ProseMirror": {
               padding: "0  !important",
             },
-            backgroundColor:
-              colorScheme === "dark" ? theme.colors.dark[6] : "white",
+            backgroundColor: colorScheme === "dark" ? theme.colors.dark[6] : "white",
             border: "none",
             borderRadius: "0.5rem",
             display: "flex",
@@ -270,8 +255,7 @@ export function Notebook({
       >
         <RichTextEditor.Toolbar
           style={{
-            display:
-              isEditing && options.showToolbar === true ? "flex" : "none",
+            display: isEditing && options.showToolbar === true ? "flex" : "none",
           }}
         >
           <RichTextEditor.ControlsGroup>
@@ -319,9 +303,9 @@ export function Notebook({
             <RichTextEditor.BulletList title={tControls("bulletList")} />
             <RichTextEditor.OrderedList title={tControls("orderedList")} />
             <TaskListToggle />
-            {(editor?.isActive("taskList") ||
-              editor?.isActive("bulletList") ||
-              editor?.isActive("orderedList")) && (
+            {(Boolean(editor?.isActive("taskList")) ||
+              Boolean(editor?.isActive("bulletList")) ||
+              Boolean(editor?.isActive("orderedList"))) && (
               <>
                 <ListIndentIncrease />
                 <ListIndentDecrease />
@@ -368,9 +352,7 @@ export function Notebook({
       {enabled && (
         <>
           <ActionIcon
-            title={
-              isEditing ? t("common.action.save") : t("common.action.edit")
-            }
+            title={isEditing ? t("common.action.save") : t("common.action.edit")}
             style={{
               zIndex: 1,
             }}
@@ -383,11 +365,7 @@ export function Notebook({
             radius={"md"}
             onClick={handleEditToggle}
           >
-            {isEditing ? (
-              <IconDeviceFloppy {...iconProps} />
-            ) : (
-              <IconEdit {...iconProps} />
-            )}
+            {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
           </ActionIcon>
           {isEditing && (
             <ActionIcon
@@ -482,9 +460,7 @@ function ColorCellControl() {
   const { editor } = useRichTextEditorContext();
 
   const getCurrent = useCallback(() => {
-    return editor?.getAttributes("tableCell").backgroundColor as
-      | string
-      | undefined;
+    return editor?.getAttributes("tableCell").backgroundColor as string | undefined;
   }, [editor]);
 
   const update = useCallback(
@@ -513,13 +489,7 @@ interface ColorControlProps {
   ariaLabel: string;
 }
 
-const ColorControl = ({
-  defaultColor,
-  getCurrent,
-  update,
-  icon: Icon,
-  ariaLabel,
-}: ColorControlProps) => {
+const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel }: ColorControlProps) => {
   const { editor } = useRichTextEditorContext();
   const [color, setColor] = useState(defaultColor);
   const { colors, white } = useMantineTheme();
@@ -591,33 +561,15 @@ const ColorControl = ({
       </Popover.Target>
       <Popover.Dropdown>
         <Stack gap={8}>
-          <ColorPicker
-            value={color}
-            onChange={setColor}
-            format="hexa"
-            swatches={palette}
-            swatchesPerRow={6}
-          />
+          <ColorPicker value={color} onChange={setColor} format="hexa" swatches={palette} swatchesPerRow={6} />
           <Group justify="right" gap={8}>
-            <ActionIcon
-              title={t("common.action.cancel")}
-              variant="default"
-              onClick={close}
-            >
+            <ActionIcon title={t("common.action.cancel")} variant="default" onClick={close}>
               <IconX stroke={1.5} size="1rem" />
             </ActionIcon>
-            <ActionIcon
-              title={t("common.action.apply")}
-              variant="default"
-              onClick={handleApplyColor}
-            >
+            <ActionIcon title={t("common.action.apply")} variant="default" onClick={handleApplyColor}>
               <IconCheck stroke={1.5} size="1rem" />
             </ActionIcon>
-            <ActionIcon
-              title={t("widget.notebook.popover.clearColor")}
-              variant="default"
-              onClick={handleClearColor}
-            >
+            <ActionIcon title={t("widget.notebook.popover.clearColor")} variant="default" onClick={handleClearColor}>
               <IconCircleOff stroke={1.5} size="1rem" />
             </ActionIcon>
           </Group>
@@ -676,11 +628,7 @@ function EmbedImage() {
       trapFocus
     >
       <Popover.Target>
-        <RichTextEditor.Control
-          onClick={toggle}
-          title={tControls("image")}
-          active={editor?.isActive("image")}
-        >
+        <RichTextEditor.Control onClick={toggle} title={tControls("image")} active={editor?.isActive("image")}>
           <IconPhoto stroke={1.5} size="1rem" />
         </RichTextEditor.Control>
       </Popover.Target>
@@ -734,7 +682,7 @@ function ListIndentIncrease() {
   }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
   });
 
   return (
@@ -758,7 +706,7 @@ function ListIndentDecrease() {
   }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
   });
 
   return (
@@ -777,11 +725,7 @@ const handleAddColumnBefore = (editor: Editor) => {
 };
 
 const TableAddColumnBefore = () => (
-  <TableControl
-    title="addColumnLeft"
-    onClick={handleAddColumnBefore}
-    icon={IconColumnInsertLeft}
-  />
+  <TableControl title="addColumnLeft" onClick={handleAddColumnBefore} icon={IconColumnInsertLeft} />
 );
 
 const handleAddColumnAfter = (editor: Editor) => {
@@ -789,11 +733,7 @@ const handleAddColumnAfter = (editor: Editor) => {
 };
 
 const TableAddColumnAfter = () => (
-  <TableControl
-    title="addColumnRight"
-    onClick={handleAddColumnAfter}
-    icon={IconColumnInsertRight}
-  />
+  <TableControl title="addColumnRight" onClick={handleAddColumnAfter} icon={IconColumnInsertRight} />
 );
 
 const handleRemoveColumn = (editor: Editor) => {
@@ -801,54 +741,31 @@ const handleRemoveColumn = (editor: Editor) => {
 };
 
 const TableRemoveColumn = () => (
-  <TableControl
-    title="deleteColumn"
-    onClick={handleRemoveColumn}
-    icon={IconColumnRemove}
-  />
+  <TableControl title="deleteColumn" onClick={handleRemoveColumn} icon={IconColumnRemove} />
 );
 
 const handleAddRowBefore = (editor: Editor) => {
   editor.commands.addRowBefore();
 };
 
-const TableAddRowBefore = () => (
-  <TableControl
-    title="addRowTop"
-    onClick={handleAddRowBefore}
-    icon={IconRowInsertTop}
-  />
-);
+const TableAddRowBefore = () => <TableControl title="addRowTop" onClick={handleAddRowBefore} icon={IconRowInsertTop} />;
 
 const handleAddRowAfter = (editor: Editor) => {
   editor.commands.addRowAfter();
 };
 
 const TableAddRowAfter = () => (
-  <TableControl
-    title="addRowBelow"
-    onClick={handleAddRowAfter}
-    icon={IconRowInsertBottom}
-  />
+  <TableControl title="addRowBelow" onClick={handleAddRowAfter} icon={IconRowInsertBottom} />
 );
 
 const handleRemoveRow = (editor: Editor) => {
   editor.commands.deleteRow();
 };
 
-const TableRemoveRow = () => (
-  <TableControl
-    title="deleteRow"
-    onClick={handleRemoveRow}
-    icon={IconRowRemove}
-  />
-);
+const TableRemoveRow = () => <TableControl title="deleteRow" onClick={handleRemoveRow} icon={IconRowRemove} />;
 
 interface TableControlProps {
-  title: Exclude<
-    keyof TranslationObject["widget"]["notebook"]["controls"],
-    "align" | "heading"
-  >;
+  title: Exclude<keyof TranslationObject["widget"]["notebook"]["controls"], "align" | "heading">;
   onClick: (editor: Editor) => void;
   icon: TablerIcon;
 }
@@ -862,10 +779,7 @@ const TableControl = ({ title, onClick, icon: Icon }: TableControlProps) => {
   }, [editor, onClick]);
 
   return (
-    <RichTextEditor.Control
-      title={tControls(title)}
-      onClick={handleControlClick}
-    >
+    <RichTextEditor.Control title={tControls(title)} onClick={handleControlClick}>
       <Icon {...controlIconProps} />
     </RichTextEditor.Control>
   );
@@ -958,26 +872,14 @@ function TableToggle() {
           active={isActive}
           onClick={handleControlClick}
         >
-          {isActive ? (
-            <IconTableOff stroke={1.5} size="1rem" />
-          ) : (
-            <IconTablePlus stroke={1.5} size="1rem" />
-          )}
+          {isActive ? <IconTableOff stroke={1.5} size="1rem" /> : <IconTablePlus stroke={1.5} size="1rem" />}
         </RichTextEditor.Control>
       </Popover.Target>
       <Popover.Dropdown>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap={5}>
-            <NumberInput
-              label={t("widget.notebook.popover.columns")}
-              min={1}
-              {...form.getInputProps("cols")}
-            />
-            <NumberInput
-              label={t("widget.notebook.popover.rows")}
-              min={1}
-              {...form.getInputProps("rows")}
-            />
+            <NumberInput label={t("widget.notebook.popover.columns")} min={1} {...form.getInputProps("cols")} />
+            <NumberInput label={t("widget.notebook.popover.rows")} min={1} {...form.getInputProps("rows")} />
             <Button type="submit" variant="default" mt={10} mb={5}>
               {t("common.action.insert")}
             </Button>

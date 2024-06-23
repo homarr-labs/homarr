@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ActionIcon,
+  Badge,
   Button,
   Card,
   CardSection,
@@ -9,18 +10,20 @@ import {
   Group,
   Menu,
   MenuTarget,
+  Stack,
   Text,
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDotsVertical, IconLock, IconWorld } from "@tabler/icons-react";
+import { IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
-import { getBoardPermissions } from "~/components/board/permissions/server";
+import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
+import { ManageContainer } from "~/components/manage/manage-container";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -30,20 +33,22 @@ export default async function ManageBoardsPage() {
   const boards = await api.board.getAllBoards();
 
   return (
-    <>
-      <Group justify="space-between">
-        <Title mb="md">{t("title")}</Title>
-        <CreateBoardButton boardNames={boards.map((board) => board.name)} />
-      </Group>
+    <ManageContainer>
+      <Stack>
+        <Group justify="space-between">
+          <Title mb="md">{t("title")}</Title>
+          <CreateBoardButton boardNames={boards.map((board) => board.name)} />
+        </Group>
 
-      <Grid>
-        {boards.map((board) => (
-          <GridCol span={{ base: 12, md: 6, xl: 4 }} key={board.id}>
-            <BoardCard board={board} />
-          </GridCol>
-        ))}
-      </Grid>
-    </>
+        <Grid mb={{ base: "xl", md: 0 }}>
+          {boards.map((board) => (
+            <GridCol span={{ base: 12, md: 6 }} key={board.id}>
+              <BoardCard board={board} />
+            </GridCol>
+          ))}
+        </Grid>
+      </Stack>
+    </ManageContainer>
   );
 }
 
@@ -53,7 +58,7 @@ interface BoardCardProps {
 
 const BoardCard = async ({ board }: BoardCardProps) => {
   const t = await getScopedI18n("management.page.board");
-  const { hasChangeAccess: isMenuVisible } = await getBoardPermissions(board);
+  const { hasChangeAccess: isMenuVisible } = await getBoardPermissionsAsync(board);
   const visibility = board.isPublic ? "public" : "private";
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
@@ -70,23 +75,28 @@ const BoardCard = async ({ board }: BoardCardProps) => {
             </Text>
           </Group>
 
-          {board.creator && (
-            <Group gap="xs">
-              <UserAvatar user={board.creator} size="sm" />
-              <Text>{board.creator?.name}</Text>
-            </Group>
-          )}
+          <Group>
+            {board.isHome && (
+              <Tooltip label={t("action.setHomeBoard.badge.tooltip")}>
+                <Badge tt="none" color="yellow" variant="light" leftSection={<IconHomeFilled size=".7rem" />}>
+                  {t("action.setHomeBoard.badge.label")}
+                </Badge>
+              </Tooltip>
+            )}
+
+            {board.creator && (
+              <Group gap="xs">
+                <UserAvatar user={board.creator} size="sm" />
+                <Text>{board.creator.name}</Text>
+              </Group>
+            )}
+          </Group>
         </Group>
       </CardSection>
 
       <CardSection p="sm">
         <Group wrap="nowrap">
-          <Button
-            component={Link}
-            href={`/boards/${board.name}`}
-            variant="default"
-            fullWidth
-          >
+          <Button component={Link} href={`/boards/${board.name}`} variant="default" fullWidth>
             {t("action.open.label")}
           </Button>
           {isMenuVisible && (

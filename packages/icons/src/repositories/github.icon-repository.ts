@@ -11,14 +11,7 @@ export class GitHubIconRepository extends IconRepository {
     public readonly repositoryIndexingUrl?: URL,
     public readonly repositoryBlobUrlTemplate?: string,
   ) {
-    super(
-      name,
-      slug,
-      license,
-      repositoryUrl,
-      repositoryIndexingUrl,
-      repositoryBlobUrlTemplate,
-    );
+    super(name, slug, license, repositoryUrl, repositoryIndexingUrl, repositoryBlobUrlTemplate);
   }
 
   protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
@@ -33,18 +26,14 @@ export class GitHubIconRepository extends IconRepository {
       success: true,
       icons: listOfFiles.tree
         .filter((treeItem) =>
-          this.allowedImageFileTypes.some((allowedExtension) =>
-            treeItem.path.includes(allowedExtension),
-          ),
+          this.allowedImageFileTypes.some((allowedExtension) => treeItem.path.includes(allowedExtension)),
         )
         .map((treeItem) => {
-          const fileNameWithExtension =
-            this.getFileNameWithoutExtensionFromPath(treeItem.path);
+          const fileNameWithExtension = this.getFileNameWithoutExtensionFromPath(treeItem.path);
 
           return {
-            imageUrl: new URL(
-              this.repositoryBlobUrlTemplate!.replace("{0}", treeItem.path),
-            ),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            imageUrl: new URL(this.repositoryBlobUrlTemplate!.replace("{0}", treeItem.path)),
             fileNameWithExtension: fileNameWithExtension,
             local: false,
             sizeInBytes: treeItem.size,

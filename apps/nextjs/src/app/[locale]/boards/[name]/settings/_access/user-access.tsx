@@ -1,17 +1,6 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
-import {
-  Anchor,
-  Box,
-  Button,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTh,
-  TableThead,
-  TableTr,
-} from "@mantine/core";
+import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -21,10 +10,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
 import type { Board } from "../../../_types";
-import {
-  BoardAccessDisplayRow,
-  BoardAccessSelectRow,
-} from "./board-access-table-rows";
+import { BoardAccessDisplayRow, BoardAccessSelectRow } from "./board-access-table-rows";
 import type { BoardAccessFormType, OnCountChange } from "./form";
 import { FormProvider, useForm } from "./form";
 import { UserSelectModal } from "./user-select-modal";
@@ -35,18 +21,11 @@ export interface FormProps {
   onCountChange: OnCountChange;
 }
 
-export const UsersForm = ({
-  board,
-  initialPermissions,
-  onCountChange,
-}: FormProps) => {
-  const { mutate, isPending } =
-    clientApi.board.saveUserBoardPermissions.useMutation();
+export const UsersForm = ({ board, initialPermissions, onCountChange }: FormProps) => {
+  const { mutate, isPending } = clientApi.board.saveUserBoardPermissions.useMutation();
   const utils = clientApi.useUtils();
   const [users, setUsers] = useState<Map<string, User>>(
-    new Map(
-      initialPermissions.userPermissions.map(({ user }) => [user.id, user]),
-    ),
+    new Map(initialPermissions.userPermissions.map(({ user }) => [user.id, user])),
   );
   const { openModal } = useModalAction(UserSelectModal);
   const t = useI18n();
@@ -81,9 +60,7 @@ export const UsersForm = ({
     const presentUserIds = form.values.items.map(({ itemId: id }) => id);
 
     openModal({
-      presentUserIds: board.creatorId
-        ? presentUserIds.concat(board.creatorId)
-        : presentUserIds,
+      presentUserIds: board.creatorId ? presentUserIds.concat(board.creatorId) : presentUserIds,
       onSelect: (user) => {
         setUsers((prev) => new Map(prev).set(user.id, user));
         form.setFieldValue("items", [
@@ -111,17 +88,13 @@ export const UsersForm = ({
             </TableThead>
             <TableTbody>
               {board.creator && (
-                <BoardAccessDisplayRow
-                  itemContent={<UserItemContent user={board.creator} />}
-                  permission="board-full"
-                />
+                <BoardAccessDisplayRow itemContent={<UserItemContent user={board.creator} />} permission="board-full" />
               )}
               {form.values.items.map((row, index) => (
                 <BoardAccessSelectRow
                   key={row.itemId}
-                  itemContent={
-                    <UserItemContent user={users.get(row.itemId)!} />
-                  }
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  itemContent={<UserItemContent user={users.get(row.itemId)!} />}
                   permission={row.permission}
                   index={index}
                   onCountChange={onCountChange}
@@ -131,11 +104,7 @@ export const UsersForm = ({
           </Table>
 
           <Group justify="space-between">
-            <Button
-              rightSection={<IconPlus size="1rem" />}
-              variant="light"
-              onClick={handleAddUser}
-            >
+            <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
               {t("common.action.add")}
             </Button>
             <Button type="submit" loading={isPending} color="teal">
@@ -154,12 +123,7 @@ const UserItemContent = ({ user }: { user: User }) => {
       <Box visibleFrom="xs">
         <UserAvatar user={user} size="sm" />
       </Box>
-      <Anchor
-        component={Link}
-        href={`/manage/users/${user.id}`}
-        size="sm"
-        style={{ whiteSpace: "nowrap" }}
-      >
+      <Anchor component={Link} href={`/manage/users/${user.id}`} size="sm" style={{ whiteSpace: "nowrap" }}>
         {user.name}
       </Anchor>
     </Group>

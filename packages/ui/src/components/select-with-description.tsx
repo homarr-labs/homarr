@@ -13,12 +13,7 @@ export interface SelectItemWithDescription {
 type Props = SelectWithCustomItemsProps<SelectItemWithDescription>;
 
 export const SelectWithDescription = (props: Props) => {
-  return (
-    <SelectWithCustomItems<SelectItemWithDescription>
-      {...props}
-      SelectOption={SelectOption}
-    />
-  );
+  return <SelectWithCustomItems<SelectItemWithDescription> {...props} SelectOption={SelectOption} />;
 };
 
 const SelectOption = ({ label, description }: SelectItemWithDescription) => {

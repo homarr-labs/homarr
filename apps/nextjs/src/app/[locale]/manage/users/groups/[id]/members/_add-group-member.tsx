@@ -1,24 +1,21 @@
 "use client";
 
 import { useCallback } from "react";
-import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UserSelectModal } from "~/app/[locale]/boards/[name]/settings/_access/user-select-modal";
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 
 interface AddGroupMemberProps {
   groupId: string;
   presentUserIds: string[];
 }
 
-export const AddGroupMember = ({
-  groupId,
-  presentUserIds,
-}: AddGroupMemberProps) => {
+export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps) => {
   const tMembersAdd = useScopedI18n("group.action.addMember");
   const { mutateAsync } = clientApi.group.addMember.useMutation();
   const { openModal } = useModalAction(UserSelectModal);
@@ -26,14 +23,13 @@ export const AddGroupMember = ({
   const handleAddMember = useCallback(() => {
     openModal(
       {
+        // eslint-disable-next-line no-restricted-syntax
         async onSelect({ id }) {
           await mutateAsync({
             userId: id,
             groupId,
           });
-          await revalidatePathAction(
-            `/manage/users/groups/${groupId}}/members`,
-          );
+          await revalidatePathActionAsync(`/manage/users/groups/${groupId}}/members`);
         },
         presentUserIds,
       },
@@ -44,8 +40,8 @@ export const AddGroupMember = ({
   }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd]);
 
   return (
-    <Button color="teal" onClick={handleAddMember}>
+    <MobileAffixButton color="teal" onClick={handleAddMember}>
       {tMembersAdd("label")}
-    </Button>
+    </MobileAffixButton>
   );
 };

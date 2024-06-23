@@ -5,6 +5,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { createMetaTitle } from "~/metadata";
 import { HeroBanner } from "./_components/hero-banner";
 
 interface LinkProps {
@@ -16,10 +17,9 @@ interface LinkProps {
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 
@@ -71,14 +71,9 @@ export default async function ManagementPage() {
       <Space h="md" />
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
         {links.map((link, index) => (
-          <Card
-            component={Link}
-            href={link.href}
-            key={`link-${index}`}
-            withBorder
-          >
-            <Group justify="space-between">
-              <Group>
+          <Card component={Link} href={link.href} key={`link-${index}`} withBorder>
+            <Group justify="space-between" wrap="nowrap">
+              <Group wrap="nowrap">
                 <Text size="2.4rem" fw="bolder">
                   {link.count}
                 </Text>

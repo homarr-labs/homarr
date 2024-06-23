@@ -27,14 +27,14 @@ describe("initUser should initialize the first user", () => {
       password: "test",
     });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.initUser({
         username: "test",
         password: "12345678",
         confirmPassword: "12345678",
       });
 
-    await expect(act()).rejects.toThrow("User already exists");
+    await expect(actAsync()).rejects.toThrow("User already exists");
   });
 
   it("should create a user if none exists", async () => {
@@ -66,14 +66,14 @@ describe("initUser should initialize the first user", () => {
       session: null,
     });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.initUser({
         username: "test",
         password: "12345678",
         confirmPassword: "12345679",
       });
 
-    await expect(act()).rejects.toThrow("Passwords do not match");
+    await expect(actAsync()).rejects.toThrow("passwordsDoNotMatch");
   });
 
   it("should not create a user if the password is too short", async () => {
@@ -83,14 +83,14 @@ describe("initUser should initialize the first user", () => {
       session: null,
     });
 
-    const act = async () =>
+    const actAsync = async () =>
       await caller.initUser({
         username: "test",
         password: "1234567",
         confirmPassword: "1234567",
       });
 
-    await expect(act()).rejects.toThrow("too_small");
+    await expect(actAsync()).rejects.toThrow("too_small");
   });
 });
 
@@ -175,7 +175,7 @@ describe("register should create a user with valid invitation", () => {
       });
 
       // Act
-      const act = async () =>
+      const actAsync = async () =>
         await caller.register({
           inviteId,
           token: inviteToken,
@@ -186,7 +186,7 @@ describe("register should create a user with valid invitation", () => {
         });
 
       // Assert
-      await expect(act()).rejects.toThrow("Invalid invite");
+      await expect(actAsync()).rejects.toThrow("Invalid invite");
     },
   );
 });
@@ -218,10 +218,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
@@ -232,6 +229,7 @@ describe("editProfile shoud update user", () => {
       salt: null,
       password: null,
       image: null,
+      homeBoardId: null,
     });
   });
 
@@ -260,10 +258,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
@@ -274,6 +269,7 @@ describe("editProfile shoud update user", () => {
       salt: null,
       password: null,
       image: null,
+      homeBoardId: null,
     });
   });
 });
@@ -297,6 +293,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
       {
         id: userToDelete,
@@ -306,6 +303,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
       {
         id: createId(),
@@ -315,6 +313,7 @@ describe("delete should delete user", () => {
         image: null,
         password: null,
         salt: null,
+        homeBoardId: null,
       },
     ];
 

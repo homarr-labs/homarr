@@ -1,20 +1,15 @@
-import { Card, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import {
-  IconArrowDownRight,
-  IconArrowUpRight,
-  IconMapPin,
-} from "@tabler/icons-react";
+import { Box, Group, HoverCard, Space, Stack, Text } from "@mantine/core";
+import { IconArrowDownRight, IconArrowUpRight, IconMapPin } from "@tabler/icons-react";
+import combineClasses from "clsx";
+import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { WeatherIcon } from "./icon";
+import { WeatherDescription, WeatherIcon } from "./icon";
 
-export default function WeatherWidget({
-  options,
-  width,
-}: WidgetComponentProps<"weather">) {
+export default function WeatherWidget({ options }: WidgetComponentProps<"weather">) {
   const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
     {
       latitude: options.location.latitude,
@@ -28,178 +23,123 @@ export default function WeatherWidget({
   );
 
   return (
-    <Stack w="100%" h="100%" justify="space-around" gap={0} align="center">
-      <WeeklyForecast
-        weather={weather}
-        width={width}
-        options={options}
-        shouldHide={!options.hasForecast}
-      />
-      <DailyWeather
-        weather={weather}
-        width={width}
-        options={options}
-        shouldHide={options.hasForecast}
-      />
+    <Stack align="center" justify="center" gap="0" w="100%" h="100%">
+      {options.hasForecast ? (
+        <WeeklyForecast weather={weather} options={options} />
+      ) : (
+        <DailyWeather weather={weather} options={options} />
+      )}
     </Stack>
   );
 }
 
-interface DailyWeatherProps
-  extends Pick<WidgetComponentProps<"weather">, "width" | "options"> {
-  shouldHide: boolean;
+interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> {
   weather: RouterOutputs["widget"]["weather"]["atLocation"];
 }
 
-const DailyWeather = ({
-  shouldHide,
-  width,
-  options,
-  weather,
-}: DailyWeatherProps) => {
-  if (shouldHide) {
-    return null;
-  }
-
+const DailyWeather = ({ options, weather }: WeatherProps) => {
   return (
     <>
-      <Flex
-        align="center"
-        gap={width < 120 ? "0.25rem" : "xs"}
-        justify={"center"}
-        direction={width < 200 ? "column" : "row"}
-      >
-        <WeatherIcon
-          size={width < 300 ? 30 : 50}
-          code={weather.current_weather.weathercode}
-        />
-        <Title order={2}>
-          {getPreferredUnit(
-            weather.current_weather.temperature,
-            options.isFormatFahrenheit,
-          )}
-        </Title>
-      </Flex>
-
-      {width > 200 && (
-        <Group wrap="nowrap" gap="xs">
-          <IconArrowUpRight />
-          {getPreferredUnit(
-            weather.daily.temperature_2m_max[0]!,
-            options.isFormatFahrenheit,
-          )}
-          <IconArrowDownRight />
-          {getPreferredUnit(
-            weather.daily.temperature_2m_min[0]!,
-            options.isFormatFahrenheit,
-          )}
-        </Group>
-      )}
-
+      <Group className="weather-day-group" gap="1cqmin">
+        <HoverCard>
+          <HoverCard.Target>
+            <Box>
+              <WeatherIcon size="20cqmin" code={weather.current.weathercode} />
+            </Box>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
+            <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
+          </HoverCard.Dropdown>
+        </HoverCard>
+        <Text fz="20cqmin">{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit)}</Text>
+      </Group>
+      <Space h="1cqmin" />
+      <Group className="weather-max-min-temp-group" wrap="nowrap" gap="1cqmin">
+        <IconArrowUpRight size="12.5cqmin" />
+        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit)}</Text>
+        <Space w="2.5cqmin" />
+        <IconArrowDownRight size="12.5cqmin" />
+        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit)}</Text>
+      </Group>
       {options.showCity && (
-        <Group wrap="nowrap" gap={4} align="center">
-          <IconMapPin height={15} width={15} />
-          <Text style={{ whiteSpace: "nowrap" }}>{options.location.name}</Text>
-        </Group>
-      )}
-    </>
-  );
-};
-
-interface WeeklyForecastProps
-  extends Pick<WidgetComponentProps<"weather">, "width" | "options"> {
-  shouldHide: boolean;
-  weather: RouterOutputs["widget"]["weather"]["atLocation"];
-}
-
-const WeeklyForecast = ({
-  shouldHide,
-  width,
-  options,
-  weather,
-}: WeeklyForecastProps) => {
-  if (shouldHide) {
-    return null;
-  }
-
-  return (
-    <>
-      <Flex
-        align="center"
-        gap={width < 120 ? "0.25rem" : "xs"}
-        justify="center"
-        direction="row"
-      >
-        {options.showCity && (
-          <Group wrap="nowrap" gap="xs" align="center">
-            <IconMapPin color="blue" size={30} />
-            <Text size="xl" style={{ whiteSpace: "nowrap" }}>
+        <>
+          <Space h="5cqmin" />
+          <Group className="weather-city-group" wrap="nowrap" gap="1cqmin">
+            <IconMapPin size="12.5cqmin" />
+            <Text size="12.5cqmin" style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
           </Group>
-        )}
-        <WeatherIcon
-          size={width < 300 ? 30 : 50}
-          code={weather.current_weather.weathercode}
-        />
-        <Title
-          order={2}
-          c={weather.current_weather.temperature > 20 ? "red" : "blue"}
-        >
-          {getPreferredUnit(
-            weather.current_weather.temperature,
-            options.isFormatFahrenheit,
-          )}
-        </Title>
-      </Flex>
-      <Forecast weather={weather} options={options} width={width} />
+        </>
+      )}
     </>
   );
 };
 
-interface ForecastProps
-  extends Pick<WidgetComponentProps<"weather">, "options" | "width"> {
-  weather: RouterOutputs["widget"]["weather"]["atLocation"];
-}
-
-function Forecast({ weather, options, width }: ForecastProps) {
+const WeeklyForecast = ({ options, weather }: WeatherProps) => {
   return (
-    <Flex align="center" direction="row" justify="space-between" w="100%">
-      {weather.daily.time
-        .slice(
-          0,
-          Math.min(options.forecastDayCount, width / (width < 300 ? 64 : 92)),
-        )
-        .map((time, index) => (
-          <Card key={time}>
-            <Flex direction="column" align="center">
-              <Text fw={700} lh="1.25rem">
-                {new Date(time).getDate().toString().padStart(2, "0")}
-              </Text>
-              <WeatherIcon
-                size={width < 300 ? 20 : 50}
-                code={weather.daily.weathercode[index]!}
-              />
-              <Text fz={width < 300 ? "xs" : "sm"} lh="1rem">
-                {getPreferredUnit(
-                  weather.daily.temperature_2m_max[index]!,
-                  options.isFormatFahrenheit,
-                )}
-              </Text>
-              <Text fz={width < 300 ? "xs" : "sm"} lh="1rem" c="grey">
-                {getPreferredUnit(
-                  weather.daily.temperature_2m_min[index]!,
-                  options.isFormatFahrenheit,
-                )}
-              </Text>
-            </Flex>
-          </Card>
-        ))}
-    </Flex>
+    <>
+      <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="5cqmin">
+        {options.showCity && (
+          <>
+            <IconMapPin size="20cqmin" />
+            <Text size="15cqmin" style={{ whiteSpace: "nowrap" }}>
+              {options.location.name}
+            </Text>
+            <Space w="20cqmin" />
+          </>
+        )}
+        <HoverCard>
+          <HoverCard.Target>
+            <Box>
+              <WeatherIcon size="20cqmin" code={weather.current.weathercode} />
+            </Box>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
+            <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
+          </HoverCard.Dropdown>
+        </HoverCard>
+        <Text fz="20cqmin">{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit)}</Text>
+      </Group>
+      <Space h="2.5cqmin" />
+      <Forecast weather={weather} options={options} />
+    </>
+  );
+};
+
+function Forecast({ weather, options }: WeatherProps) {
+  return (
+    <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="2.5cqmin">
+      {weather.daily.slice(0, options.forecastDayCount).map((dayWeather, index) => (
+        <HoverCard key={dayWeather.time} withArrow shadow="md">
+          <HoverCard.Target>
+            <Stack
+              className={combineClasses(
+                "weather-forecast-day-stack",
+                `weather-forecast-day${index}`,
+                `weather-forecast-weekday${dayjs(dayWeather.time).day()}`,
+              )}
+              gap="0"
+              align="center"
+            >
+              <Text fz="10cqmin">{dayjs(dayWeather.time).format("dd")}</Text>
+              <WeatherIcon size="15cqmin" code={dayWeather.weatherCode} />
+              <Text fz="10cqmin">{getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit)}</Text>
+            </Stack>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
+            <WeatherDescription
+              time={dayWeather.time}
+              weatherCode={dayWeather.weatherCode}
+              maxTemp={getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit)}
+              minTemp={getPreferredUnit(dayWeather.minTemp, options.isFormatFahrenheit)}
+            />
+          </HoverCard.Dropdown>
+        </HoverCard>
+      ))}
+    </Group>
   );
 }
 
-const getPreferredUnit = (value: number, isFahrenheit = false): string =>
-  isFahrenheit
-    ? `${(value * (9 / 5) + 32).toFixed(1)}°F`
-    : `${value.toFixed(1)}°C`;
+const getPreferredUnit = (value?: number, isFahrenheit = false): string =>
+  value ? (isFahrenheit ? `${(value * (9 / 5) + 32).toFixed(1)}°F` : `${value.toFixed(1)}°C`) : "?";

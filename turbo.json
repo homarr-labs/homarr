@@ -3,7 +3,16 @@
   "globalDependencies": [
     "**/.env"
   ],
-  "pipeline": {
+  "globalEnv": [
+    "DATABASE_URL",
+    "AUTH_DISCORD_ID",
+    "AUTH_DISCORD_SECRET",
+    "AUTH_REDIRECT_PROXY_URL",
+    "AUTH_SECRET",
+    "AUTH_URL"
+  ],
+  "ui": "stream",
+  "tasks": {
     "topo": {
       "dependsOn": [
         "^topo"
@@ -29,7 +38,7 @@
       "outputs": [
         "node_modules/.cache/.prettiercache"
       ],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "lint": {
       "dependsOn": [
@@ -53,13 +62,5 @@
     "//#clean": {
       "cache": false
     }
-  },
-  "globalEnv": [
-    "DATABASE_URL",
-    "AUTH_DISCORD_ID",
-    "AUTH_DISCORD_SECRET",
-    "AUTH_REDIRECT_PROXY_URL",
-    "AUTH_SECRET",
-    "AUTH_URL"
-  ]
+  }
 }

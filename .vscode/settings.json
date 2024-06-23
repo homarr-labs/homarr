@@ -4,11 +4,15 @@
       "mode": "auto"
     }
   ],
+  "eslint.experimental.useFlatConfig": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
-  "cSpell.words": [
-    "superjson",
-    "homarr",
-    "trpc"
-  ]
+  "prettier.configPath": "./tooling/prettier/index.mjs",
+  "cSpell.words": ["cqmin", "homarr", "superjson", "trpc", "Umami"],
+  "i18n-ally.dirStructure": "auto",
+  "i18n-ally.enabledFrameworks": ["next-international"],
+  "i18n-ally.localesPaths": ["./packages/translation/src/lang/"],
+  "i18n-ally.enabledParsers": ["ts"],
+  "i18n-ally.extract.keyMaxLength": 0,
+  "i18n-ally.keystyle": "flat"
 }

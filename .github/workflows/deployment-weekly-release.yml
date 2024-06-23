@@ -1,0 +1,82 @@
+name: "[Deployment] Automatic Weekly Release"
+
+on:
+  schedule:
+    - cron: "0 19 * * 5" # https://crontab.guru/#0_19_*_*_5
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-and-merge-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Automatic release has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: dev
+      - name: Create pull request
+        uses: devops-infra/action-pull-request@v0.5.5
+        id: create-pull-request
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: "(chore): automatic release ${{ steps.semver.outputs.next }}"
+          new_string: "**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``"
+          source_branch: dev
+          target_branch: main
+          label: automerge
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Created a release PR ${{ steps.create-pull-request.outputs.url }} for version ${{ steps.semver.outputs.next }} (new behaviour: ${{ steps.semver.outputs.bump }})"
+      - id: automerge
+        if: ${{ steps.semver.outputs.bump != 'major' }}
+        name: automerge
+        uses: "pascalgn/automerge-action@v0.16.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_METHOD: merge # we prefer merge commits for merging to master
+          MERGE_COMMIT_MESSAGE: "(chore): automatic release ${{ steps.semver.outputs.next }}"
+          MERGE_DELETE_BRANCH: false # never set to true!
+          PULL_REQUEST: "${{ steps.create-pull-request.outputs.pr_number }}"
+          MERGE_RETRIES: 20 # 20 retries * MERGE_RETRY_SLEEP until step fails
+          MERGE_RETRY_SLEEP: 10000 # 10 seconds * MERGE_RETRIES until step fails
+          MERGE_REQUIRED_APPROVALS: 0 # do not require approvals
+
+      - name: Merged Discord notification
+        if: ${{ steps.automerge.outputs.mergeResult == 'merged' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Merged PR ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}"
+      - name: Major Bump Discord notification
+        if: ${{ steps.semver.outputs.bump == 'major' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "The release PR must be manually merged because the next version is a major version: ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}"
+      - name: Discord Fail Notification
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "The automatic release workflow [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) has failed"

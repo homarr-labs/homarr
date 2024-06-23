@@ -1,25 +1,17 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
-import type { Account, User } from "next-auth";
+import type { Account } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { describe, expect, it, test, vi } from "vitest";
 
-import {
-  groupMembers,
-  groupPermissions,
-  groups,
-  users,
-} from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 import * as definitions from "@homarr/definitions";
 
-import {
-  createSessionCallback,
-  createSignInCallback,
-  getCurrentUserPermissions,
-} from "../callbacks";
+import { createSessionCallback, createSignInCallback, getCurrentUserPermissionsAsync } from "../callbacks";
 
 describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
@@ -30,7 +22,7 @@ describe("getCurrentUserPermissions", () => {
     });
 
     const userId = "1";
-    const result = await getCurrentUserPermissions(db, userId);
+    const result = await getCurrentUserPermissionsAsync(db, userId);
     expect(result).toEqual([]);
   });
   test("should return permissions for user", async () => {
@@ -56,7 +48,7 @@ describe("getCurrentUserPermissions", () => {
       permission: "admin",
     });
 
-    const result = await getCurrentUserPermissions(db, mockId);
+    const result = await getCurrentUserPermissionsAsync(db, mockId);
     expect(result).toEqual(["board-create"]);
     expect(getPermissionsWithChildrenMock).toHaveBeenCalledWith(["admin"]);
   });
@@ -96,9 +88,7 @@ describe("session callback", () => {
   });
 });
 
-type AdapterSessionInput = Parameters<
-  Exclude<Adapter["createSession"], undefined>
->[0];
+type AdapterSessionInput = Parameters<Exclude<Adapter["createSession"], undefined>>[0];
 
 const createAdapter = () => {
   const result = {
@@ -131,8 +121,7 @@ vi.mock("next/headers", async (importOriginal) => {
   const mod = await importOriginal<HeadersExport>();
 
   const result = {
-    set: (name: string, value: string, options: Partial<ResponseCookie>) =>
-      options as ResponseCookie,
+    set: (name: string, value: string, options: Partial<ResponseCookie>) => options as ResponseCookie,
   } as unknown as ReadonlyRequestCookies;
 
   vi.spyOn(result, "set");
@@ -145,25 +134,9 @@ vi.mock("next/headers", async (importOriginal) => {
 describe("createSignInCallback", () => {
   it("should return true if not credentials request", async () => {
     const isCredentialsRequest = false;
-    const signInCallback = createSignInCallback(
-      createAdapter(),
-      isCredentialsRequest,
-    );
+    const signInCallback = createSignInCallback(createAdapter(), isCredentialsRequest);
     const result = await signInCallback({
       user: { id: "1", emailVerified: new Date("2023-01-13") },
-      account: {} as Account,
-    });
-    expect(result).toBe(true);
-  });
-
-  it("should return true if no user", async () => {
-    const isCredentialsRequest = true;
-    const signInCallback = createSignInCallback(
-      createAdapter(),
-      isCredentialsRequest,
-    );
-    const result = await signInCallback({
-      user: undefined as unknown as User,
       account: {} as Account,
     });
     expect(result).toBe(true);
@@ -173,7 +146,7 @@ describe("createSignInCallback", () => {
     const isCredentialsRequest = true;
     const signInCallback = createSignInCallback(
       // https://github.com/nextauthjs/next-auth/issues/6106
-      undefined as unknown as Adapter,
+      { createSession: undefined } as unknown as Adapter,
       isCredentialsRequest,
     );
     const result = await signInCallback({
@@ -195,16 +168,12 @@ describe("createSignInCallback", () => {
       userId: user.id,
       expires: mockSessionExpiry,
     });
-    expect(cookies().set).toHaveBeenCalledWith(
-      "next-auth.session-token",
-      mockSessionToken,
-      {
-        path: "/",
-        expires: mockSessionExpiry,
-        httpOnly: true,
-        sameSite: "lax",
-        secure: true,
-      },
-    );
+    expect(cookies().set).toHaveBeenCalledWith("next-auth.session-token", mockSessionToken, {
+      path: "/",
+      expires: mockSessionExpiry,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+    });
   });
 });

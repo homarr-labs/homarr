@@ -7,17 +7,9 @@ import { eq, inArray } from "@homarr/db";
 import { groupMembers, groupPermissions } from "@homarr/db/schema/sqlite";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
-import {
-  expireDateAfter,
-  generateSessionToken,
-  sessionMaxAgeInSeconds,
-  sessionTokenCookieName,
-} from "./session";
+import { expireDateAfter, generateSessionToken, sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
 
-export const getCurrentUserPermissions = async (
-  db: Database,
-  userId: string,
-) => {
+export const getCurrentUserPermissionsAsync = async (db: Database, userId: string) => {
   const dbGroupMembers = await db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, userId),
   });
@@ -27,19 +19,13 @@ export const getCurrentUserPermissions = async (
       permission: groupPermissions.permission,
     })
     .from(groupPermissions)
-    .where(
-      groupIds.length > 0
-        ? inArray(groupPermissions.groupId, groupIds)
-        : undefined,
-    );
+    .where(groupIds.length > 0 ? inArray(groupPermissions.groupId, groupIds) : undefined);
   const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
 
   return getPermissionsWithChildren(permissionKeys);
 };
 
-export const createSessionCallback = (
-  db: Database,
-): NextAuthCallbackOf<"session"> => {
+export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session"> => {
   return async ({ session, user }) => {
     return {
       ...session,
@@ -47,24 +33,19 @@ export const createSessionCallback = (
         ...session.user,
         id: user.id,
         name: user.name,
-        permissions: await getCurrentUserPermissions(db, user.id),
+        permissions: await getCurrentUserPermissionsAsync(db, user.id),
       },
     };
   };
 };
 
 export const createSignInCallback =
-  (
-    adapter: Adapter,
-    isCredentialsRequest: boolean,
-  ): NextAuthCallbackOf<"signIn"> =>
+  (adapter: Adapter, isCredentialsRequest: boolean): NextAuthCallbackOf<"signIn"> =>
   async ({ user }) => {
     if (!isCredentialsRequest) return true;
 
-    if (!user) return true;
-
     // https://github.com/nextauthjs/next-auth/issues/6106
-    if (!adapter?.createSession) {
+    if (!adapter.createSession) {
       return false;
     }
 
@@ -73,6 +54,7 @@ export const createSignInCallback =
 
     await adapter.createSession({
       sessionToken,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       userId: user.id!,
       expires: sessionExpiry,
     });
@@ -89,5 +71,7 @@ export const createSignInCallback =
   };
 
 type NextAuthCallbackRecord = Exclude<NextAuthConfig["callbacks"], undefined>;
-export type NextAuthCallbackOf<TKey extends keyof NextAuthCallbackRecord> =
-  Exclude<NextAuthCallbackRecord[TKey], undefined>;
+export type NextAuthCallbackOf<TKey extends keyof NextAuthCallbackRecord> = Exclude<
+  NextAuthCallbackRecord[TKey],
+  undefined
+>;

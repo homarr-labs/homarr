@@ -4,8 +4,8 @@ import { createId } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { createSalt, hashPassword } from "../../security";
-import { authorizeWithBasicCredentials } from "../credentials/authorization/basic-authorization";
+import { createSaltAsync, hashPasswordAsync } from "../../security";
+import { authorizeWithBasicCredentialsAsync } from "../credentials/authorization/basic-authorization";
 
 const defaultUserId = createId();
 
@@ -13,16 +13,16 @@ describe("authorizeWithBasicCredentials", () => {
   test("should authorize user with correct credentials", async () => {
     // Arrange
     const db = createDb();
-    const salt = await createSalt();
+    const salt = await createSaltAsync();
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",
       salt,
-      password: await hashPassword("test", salt),
+      password: await hashPasswordAsync("test", salt),
     });
 
     // Act
-    const result = await authorizeWithBasicCredentials(db, {
+    const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "test",
       password: "test",
       credentialType: "basic",
@@ -35,16 +35,16 @@ describe("authorizeWithBasicCredentials", () => {
   test("should not authorize user with incorrect credentials", async () => {
     // Arrange
     const db = createDb();
-    const salt = await createSalt();
+    const salt = await createSaltAsync();
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",
       salt,
-      password: await hashPassword("test", salt),
+      password: await hashPasswordAsync("test", salt),
     });
 
     // Act
-    const result = await authorizeWithBasicCredentials(db, {
+    const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "test",
       password: "wrong",
       credentialType: "basic",
@@ -57,16 +57,16 @@ describe("authorizeWithBasicCredentials", () => {
   test("should not authorize user with incorrect username", async () => {
     // Arrange
     const db = createDb();
-    const salt = await createSalt();
+    const salt = await createSaltAsync();
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",
       salt,
-      password: await hashPassword("test", salt),
+      password: await hashPasswordAsync("test", salt),
     });
 
     // Act
-    const result = await authorizeWithBasicCredentials(db, {
+    const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "wrong",
       password: "test",
       credentialType: "basic",
@@ -85,7 +85,7 @@ describe("authorizeWithBasicCredentials", () => {
     });
 
     // Act
-    const result = await authorizeWithBasicCredentials(db, {
+    const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "test",
       password: "test",
       credentialType: "basic",

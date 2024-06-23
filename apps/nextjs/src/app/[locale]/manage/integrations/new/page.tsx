@@ -16,12 +16,9 @@ interface NewIntegrationPageProps {
   };
 }
 
-export default async function IntegrationsNewPage({
-  searchParams,
-}: NewIntegrationPageProps) {
-  const result = z
-    .enum([integrationKinds[0]!, ...integrationKinds.slice(1)])
-    .safeParse(searchParams.kind);
+export default async function IntegrationsNewPage({ searchParams }: NewIntegrationPageProps) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const result = z.enum([integrationKinds[0]!, ...integrationKinds.slice(1)]).safeParse(searchParams.kind);
   if (!result.success) {
     notFound();
   }

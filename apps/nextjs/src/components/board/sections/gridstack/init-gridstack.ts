@@ -15,18 +15,14 @@ interface InitializeGridstackProps {
   sectionColumnCount: number;
 }
 
-export const initializeGridstack = ({
-  section,
-  refs,
-  sectionColumnCount,
-}: InitializeGridstackProps) => {
+export const initializeGridstack = ({ section, refs, sectionColumnCount }: InitializeGridstackProps) => {
   if (!refs.wrapper.current) return false;
   // initialize gridstack
   const newGrid = refs.gridstack;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
-      margin: 10,
+      margin: Math.round(Math.max(Math.min(refs.wrapper.current.offsetWidth / 100, 10), 1)),
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,
@@ -41,7 +37,7 @@ export const initializeGridstack = ({
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
   );
   const grid = newGrid.current;
-  if (!grid) return false;
+
   // Must be used to update the column count after the initialization
   grid.column(sectionColumnCount, "none");
 

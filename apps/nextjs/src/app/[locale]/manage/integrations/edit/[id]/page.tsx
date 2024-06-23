@@ -11,9 +11,7 @@ interface EditIntegrationPageProps {
   params: { id: string };
 }
 
-export default async function EditIntegrationPage({
-  params,
-}: EditIntegrationPageProps) {
+export default async function EditIntegrationPage({ params }: EditIntegrationPageProps) {
   const t = await getScopedI18n("integration.page.edit");
   const integration = await api.integration.byId({ id: params.id });
 
@@ -22,9 +20,7 @@ export default async function EditIntegrationPage({
       <Stack>
         <Group align="center">
           <IntegrationAvatar kind={integration.kind} size="md" />
-          <Title>
-            {t("title", { name: getIntegrationName(integration.kind) })}
-          </Title>
+          <Title>{t("title", { name: getIntegrationName(integration.kind) })}</Title>
         </Group>
         <EditIntegrationForm integration={integration} />
       </Stack>

@@ -11,13 +11,12 @@ import {
   IconTransitionTop,
   IconTrash,
 } from "@tabler/icons-react";
-import { useAtomValue } from "jotai";
 
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
-import { editModeAtom } from "../../editMode";
+import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useCategoryMenuActions } from "./category-menu-actions";
 
 interface Props {
@@ -56,7 +55,7 @@ export const CategoryMenu = ({ category }: Props) => {
 };
 
 const useActions = (category: CategorySection) => {
-  const isEditMode = useAtomValue(editModeAtom);
+  const [isEditMode] = useEditMode();
   const editModeActions = useEditModeActions(category);
   const nonEditModeActions = useNonEditModeActions(category);
 
@@ -67,14 +66,8 @@ const useActions = (category: CategorySection) => {
 };
 
 const useEditModeActions = (category: CategorySection) => {
-  const {
-    addCategoryAbove,
-    addCategoryBelow,
-    moveCategoryUp,
-    moveCategoryDown,
-    edit,
-    remove,
-  } = useCategoryMenuActions(category);
+  const { addCategoryAbove, addCategoryBelow, moveCategoryUp, moveCategoryDown, edit, remove } =
+    useCategoryMenuActions(category);
 
   return [
     {

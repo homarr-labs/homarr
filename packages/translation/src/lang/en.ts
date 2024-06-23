@@ -36,6 +36,9 @@ export default {
         label: "Previous password",
       },
     },
+    error: {
+      usernameTaken: "Username already taken",
+    },
     action: {
       login: {
         label: "Login",
@@ -119,8 +122,7 @@ export default {
         label: "Delete user permanently",
         description:
           "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
-        confirm:
-          "Are you sure, that you want to delete the user {username} with his preferences?",
+        confirm: "Are you sure, that you want to delete the user {username} with his preferences?",
       },
       select: {
         label: "Select user",
@@ -145,8 +147,7 @@ export default {
         item: {
           admin: {
             label: "Administrator",
-            description:
-              "Members with this permission have full access to all features and settings",
+            description: "Members with this permission have full access to all features and settings",
           },
         },
       },
@@ -163,8 +164,7 @@ export default {
           },
           "modify-all": {
             label: "Modify all boards",
-            description:
-              "Allow members to modify all boards (Does not include access control and danger zone)",
+            description: "Allow members to modify all boards (Does not include access control and danger zone)",
           },
           "full-access": {
             label: "Full board access",
@@ -182,8 +182,7 @@ export default {
           },
           "use-all": {
             label: "Use all integrations",
-            description:
-              "Allows members to add any integrations to their boards",
+            description: "Allows members to add any integrations to their boards",
           },
           "interact-all": {
             label: "Interact with any integration",
@@ -191,8 +190,7 @@ export default {
           },
           "full-access": {
             label: "Full integration access",
-            description:
-              "Allow members to manage, use and interact with any integration",
+            description: "Allow members to manage, use and interact with any integration",
           },
         },
       },
@@ -212,8 +210,7 @@ export default {
       transfer: {
         label: "Transfer ownership",
         description: "Transfer ownership of this group to another user.",
-        confirm:
-          "Are you sure you want to transfer ownership for the group {name} to {username}?",
+        confirm: "Are you sure you want to transfer ownership for the group {name} to {username}?",
         notification: {
           success: {
             message: "Transfered group {group} successfully to {user}",
@@ -232,8 +229,7 @@ export default {
       },
       delete: {
         label: "Delete group",
-        description:
-          "Once you delete a group, there is no going back. Please be certain.",
+        description: "Once you delete a group, there is no going back. Please be certain.",
         confirm: "Are you sure you want to delete the group {name}?",
         notification: {
           success: {
@@ -322,6 +318,17 @@ export default {
         },
       },
     },
+    field: {
+      name: {
+        label: "Name",
+      },
+      description: {
+        label: "Description",
+      },
+      url: {
+        label: "Url",
+      },
+    },
   },
   integration: {
     page: {
@@ -383,9 +390,11 @@ export default {
       create: "New integration",
     },
     testConnection: {
-      action: "Test connection",
-      alertNotice:
-        "The Save button is enabled once a successful connection is established",
+      action: {
+        create: "Test connection and create",
+        edit: "Test connection and save",
+      },
+      alertNotice: "The Save button is enabled once a successful connection is established",
       notification: {
         success: {
           title: "Connection successful",
@@ -395,7 +404,7 @@ export default {
           title: "Invalid URL",
           message: "The URL is invalid",
         },
-        notAllSecretsProvided: {
+        secretNotDefined: {
           title: "Missing credentials",
           message: "Not all credentials were provided",
         },
@@ -406,6 +415,50 @@ export default {
         commonError: {
           title: "Connection failed",
           message: "The connection could not be established",
+        },
+        badRequest: {
+          title: "Bad request",
+          message: "The request was malformed",
+        },
+        unauthorized: {
+          title: "Unauthorized",
+          message: "Probably wrong credentials",
+        },
+        forbidden: {
+          title: "Forbidden",
+          message: "Probably missing permissions",
+        },
+        notFound: {
+          title: "Not found",
+          message: "Probably wrong url or path",
+        },
+        internalServerError: {
+          title: "Internal server error",
+          message: "The server encountered an error",
+        },
+        serviceUnavailable: {
+          title: "Service unavailable",
+          message: "The server is currently unavailable",
+        },
+        connectionAborted: {
+          title: "Connection aborted",
+          message: "The connection was aborted",
+        },
+        domainNotFound: {
+          title: "Domain not found",
+          message: "The domain could not be found",
+        },
+        connectionRefused: {
+          title: "Connection refused",
+          message: "The connection was refused",
+        },
+        invalidJson: {
+          title: "Invalid JSON",
+          message: "The response was not valid JSON",
+        },
+        wrongPath: {
+          title: "Wrong path",
+          message: "The path is probably not correct",
         },
       },
     },
@@ -435,6 +488,9 @@ export default {
   },
   common: {
     rtl: "{value}{symbol}",
+    symbols: {
+      colon: ": ",
+    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -453,10 +509,15 @@ export default {
       previous: "Previous",
       next: "Next",
       checkoutDocs: "Check out the documentation",
+      tryAgain: "Try again",
     },
     iconPicker: {
-      header:
-        "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+      label: "Icon URL",
+      header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+    },
+    information: {
+      min: "Min",
+      max: "Max",
     },
     notification: {
       create: {
@@ -478,6 +539,10 @@ export default {
     },
     multiSelect: {
       placeholder: "Pick one or more values",
+    },
+    multiText: {
+      placeholder: "Add more values",
+      addLabel: `Add {value}`,
     },
     select: {
       placeholder: "Pick value",
@@ -503,7 +568,7 @@ export default {
         preferences: "Your preferences",
         logout: "Logout",
         login: "Login",
-        navigateDefaultBoard: "Navigate to default board",
+        homeBoard: "Your home board",
         loggedOut: "Logged out",
       },
     },
@@ -512,6 +577,30 @@ export default {
     preview: {
       show: "Show preview",
       hide: "Hide preview",
+    },
+    zod: {
+      errors: {
+        default: "This field is invalid",
+        required: "This field is required",
+        string: {
+          startsWith: "This field must start with {startsWith}",
+          endsWith: "This field must end with {endsWith}",
+          includes: "This field must include {includes}",
+          invalidEmail: "This field must be a valid email",
+        },
+        tooSmall: {
+          string: "This field must be at least {minimum} characters long",
+          number: "This field must be greater than or equal to {minimum}",
+        },
+        tooBig: {
+          string: "This field must be at most {maximum} characters long",
+          number: "This field must be less than or equal to {maximum}",
+        },
+        custom: {
+          passwordsDoNotMatch: "Passwords do not match",
+          boardAlreadyExists: "A board with this name already exists",
+        },
+      },
     },
   },
   section: {
@@ -579,9 +668,16 @@ export default {
     },
     edit: {
       title: "Edit item",
+      advancedOptions: {
+        label: "Advanced options",
+        title: "Advanced item options",
+      },
       field: {
         integrations: {
           label: "Integrations",
+        },
+        customCssClasses: {
+          label: "Custom css classes",
         },
       },
     },
@@ -601,8 +697,14 @@ export default {
         openInNewTab: {
           label: "Open in new tab",
         },
+        showTitle: {
+          label: "Show app name",
+        },
         showDescriptionTooltip: {
           label: "Show description tooltip",
+        },
+        pingEnabled: {
+          label: "Enable simple ping",
         },
       },
       error: {
@@ -612,14 +714,45 @@ export default {
         },
       },
     },
+    dnsHoleSummary: {
+      name: "DNS Hole Summary",
+      description: "Displays the summary of your DNS Hole",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        usePiHoleColors: {
+          label: "Use Pi-Hole colors",
+        },
+      },
+      error: {
+        internalServerError: "Failed to fetch DNS Hole Summary",
+      },
+      data: {
+        adsBlockedToday: "Blocked today",
+        adsBlockedTodayPercentage: "Blocked today",
+        dnsQueriesToday: "Queries today",
+        domainsBeingBlocked: "Domains on blocklist",
+      },
+    },
     clock: {
       name: "Date and time",
       description: "Displays the current date and time.",
       option: {
         customTitleToggle: {
           label: "Custom Title/City display",
-          description:
-            "Show off a custom title or the name of the city/country on top of the clock.",
+          description: "Show off a custom title or the name of the city/country on top of the clock.",
         },
         customTitle: {
           label: "Title",
@@ -710,8 +843,7 @@ export default {
     },
     iframe: {
       name: "iFrame",
-      description:
-        "Embed any content from the internet. Some websites may restrict access.",
+      description: "Embed any content from the internet. Some websites may restrict access.",
       option: {
         embedUrl: {
           label: "Embed URL",
@@ -743,14 +875,42 @@ export default {
       },
       error: {
         noUrl: "No iFrame URL provided",
-        noBrowerSupport:
-          "Your Browser does not support iframes. Please update your browser.",
+        noBrowerSupport: "Your Browser does not support iframes. Please update your browser.",
+      },
+    },
+    "smartHome-entityState": {
+      name: "Entity State",
+      description: "Display the state of an entity and toggle it optionally",
+      option: {
+        entityId: {
+          label: "Entity ID",
+        },
+        displayName: {
+          label: "Display-name",
+        },
+        entityUnit: {
+          label: "Entity Unit",
+        },
+        clickable: {
+          label: "Clickable",
+        },
+      },
+    },
+    "smartHome-executeAutomation": {
+      name: "Execute Automation",
+      description: "Trigger an automation with one click",
+      option: {
+        displayName: {
+          label: "Display name",
+        },
+        automationId: {
+          label: "Automation ID",
+        },
       },
     },
     weather: {
       name: "Weather",
-      description:
-        "Displays the current weather information of a set location.",
+      description: "Displays the current weather information of a set location.",
       option: {
         isFormatFahrenheit: {
           label: "Temperature in Fahrenheit",
@@ -766,8 +926,7 @@ export default {
         },
         forecastDayCount: {
           label: "Amount of forecast days",
-          description:
-            "When the widget is not wide enough, less days are shown",
+          description: "When the widget is not wide enough, less days are shown",
         },
       },
       kind: {
@@ -810,6 +969,12 @@ export default {
           },
         },
       },
+      error: {
+        action: {
+          logs: "Check logs for more details",
+        },
+        noIntegration: "No integration selected",
+      },
     },
     video: {
       name: "Video Stream",
@@ -820,8 +985,7 @@ export default {
         },
         hasAutoPlay: {
           label: "Autoplay",
-          description:
-            "Autoplay only works when muted because of browser restrictions",
+          description: "Autoplay only works when muted because of browser restrictions",
         },
         isMuted: {
           label: "Muted",
@@ -894,13 +1058,11 @@ export default {
         option: {
           repeat: {
             label: "Repeat",
-            description:
-              "The image is repeated as much as needed to cover the whole background image painting area.",
+            description: "The image is repeated as much as needed to cover the whole background image painting area.",
           },
           "no-repeat": {
             label: "No repeat",
-            description:
-              "The image is not repeated and may not fill the entire space.",
+            description: "The image is not repeated and may not fill the entire space.",
           },
           "repeat-x": {
             label: "Repeat X",
@@ -937,7 +1099,13 @@ export default {
         label: "Opacity",
       },
       customCss: {
-        label: "Custom CSS",
+        label: "Custom css for this board",
+        description: "Further, customize your dashboard using CSS, only recommended for experienced users",
+        customClassesAlert: {
+          title: "Custom classes",
+          description:
+            "You can add custom classes to your board items in the advanced options of each item and use them in the custom CSS above.",
+        },
       },
       columnCount: {
         label: "Column count",
@@ -946,13 +1114,15 @@ export default {
         label: "Name",
       },
     },
+    content: {
+      metaTitle: "{boardName} board",
+    },
     setting: {
       title: "Settings for {boardName} board",
       section: {
         general: {
           title: "General",
-          unrecognizedLink:
-            "The provided link is not recognized and won't preview, it might still work.",
+          unrecognizedLink: "The provided link is not recognized and won't preview, it might still work.",
         },
         layout: {
           title: "Layout",
@@ -1009,8 +1179,7 @@ export default {
           action: {
             rename: {
               label: "Rename board",
-              description:
-                "Changing the name will break any links to this board.",
+              description: "Changing the name will break any links to this board.",
               button: "Change name",
               modal: {
                 title: "Rename board",
@@ -1041,8 +1210,7 @@ export default {
             },
             delete: {
               label: "Delete this board",
-              description:
-                "Once you delete a board, there is no going back. Please be certain.",
+              description: "Once you delete a board, there is no going back. Please be certain.",
               button: "Delete this board",
               confirm: {
                 title: "Delete board",
@@ -1087,6 +1255,7 @@ export default {
             logs: "Logs",
           },
         },
+        settings: "Settings",
         help: {
           label: "Help",
           items: {
@@ -1127,6 +1296,13 @@ export default {
           },
           settings: {
             label: "Settings",
+          },
+          setHomeBoard: {
+            label: "Set as your home board",
+            badge: {
+              label: "Home",
+              tooltip: "This board will show as your home board",
+            },
           },
           delete: {
             label: "Delete permanently",
@@ -1186,6 +1362,9 @@ export default {
             },
             completed: {
               title: "User created",
+            },
+            error: {
+              title: "User creation failed",
             },
           },
           action: {
@@ -1249,6 +1428,30 @@ export default {
           },
         },
       },
+      settings: {
+        title: "Settings",
+        section: {
+          analytics: {
+            title: "Analytics",
+            general: {
+              title: "Send anonymous analytics",
+              text: "Homarr will send anonymized analytics using the open source software Umami. It never collects any personal information and is therefore fully GDPR & CCPA compliant. We encourage you to enable analytics because it helps our open source team to identify issues and prioritize our backlog.",
+            },
+            widgetData: {
+              title: "Widget data",
+              text: "Send which widgets (and their quantity) you have configured. Does not include URLs, names or any other data.",
+            },
+            integrationData: {
+              title: "Integration data",
+              text: "Send which integrations (and their quantity) you have configured. Does not include URLs, names or any other data.",
+            },
+            usersData: {
+              title: "Users data",
+              text: "Send the amount of users and whether you've activated SSO",
+            },
+          },
+        },
+      },
       about: {
         version: "Version {version}",
         text: "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
@@ -1267,6 +1470,43 @@ export default {
           },
         },
       },
+    },
+  },
+  docker: {
+    title: "Containers",
+    table: {
+      updated: "Updated {when}",
+      search: "Seach {count} containers",
+      selected: "{selectCount} of {totalCount} containers selected",
+    },
+    field: {
+      name: {
+        label: "Name",
+      },
+      state: {
+        label: "State",
+        option: {
+          created: "Created",
+          running: "Running",
+          paused: "Paused",
+          restarting: "Restarting",
+          exited: "Exited",
+          removing: "Removing",
+          dead: "Dead",
+        },
+      },
+      containerImage: {
+        label: "Image",
+      },
+      ports: {
+        label: "Ports",
+      },
+    },
+    action: {
+      start: "Start",
+      stop: "Stop",
+      restart: "Restart",
+      remove: "Remove",
     },
   },
 } as const;

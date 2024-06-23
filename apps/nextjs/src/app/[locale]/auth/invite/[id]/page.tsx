@@ -18,18 +18,12 @@ interface InviteUsagePageProps {
   };
 }
 
-export default async function InviteUsagePage({
-  params,
-  searchParams,
-}: InviteUsagePageProps) {
+export default async function InviteUsagePage({ params, searchParams }: InviteUsagePageProps) {
   const session = await auth();
   if (session) notFound();
 
   const invite = await db.query.invites.findFirst({
-    where: and(
-      eq(invites.id, params.id),
-      eq(invites.token, searchParams.token),
-    ),
+    where: and(eq(invites.id, params.id), eq(invites.token, searchParams.token)),
     columns: {
       id: true,
       token: true,

@@ -1,8 +1,4 @@
-import type {
-  Client,
-  SearchOptions as LdapSearchOptions,
-  SearchEntry,
-} from "ldapjs";
+import type { Client, SearchOptions as LdapSearchOptions, SearchEntry } from "ldapjs";
 import ldap from "ldapjs";
 
 import { env } from "../../env.mjs";
@@ -84,14 +80,11 @@ export class LdapClient {
    * @returns search result object
    */
   private createSearchResult(entry: SearchEntry): SearchResult {
-    const reducedEntry = entry.pojo.attributes.reduce<Record<string, string>>(
-      (object, attribute) => {
-        // just take first element assuming there's only one (uid, mail)
-        object[attribute.type] = attribute.values.at(0)!;
-        return object;
-      },
-      {},
-    );
+    const reducedEntry = entry.pojo.attributes.reduce<Record<string, string>>((object, attribute) => {
+      // just take first element assuming there's only one (uid, mail)
+      object[attribute.type] = attribute.values.at(0) ?? "";
+      return object;
+    }, {});
 
     return {
       ...reducedEntry,
@@ -108,13 +101,9 @@ export class LdapClient {
    */
   private getEntryDn(entry: SearchEntry) {
     try {
-      return decodeURIComponent(
-        entry.pojo.objectName.replace(/(?<!\\)\\([0-9a-fA-F]{2})/g, "%$1"),
-      );
+      return decodeURIComponent(entry.pojo.objectName.replace(/(?<!\\)\\([0-9a-fA-F]{2})/g, "%$1"));
     } catch {
-      throw new Error(
-        `Cannot resolve distinguishedName for the entry ${entry.pojo.objectName}`,
-      );
+      throw new Error(`Cannot resolve distinguishedName for the entry ${entry.pojo.objectName}`);
     }
   }
 

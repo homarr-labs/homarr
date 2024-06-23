@@ -6,11 +6,7 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetSwitchInput = ({
-  property,
-  kind,
-  options,
-}: CommonWidgetInputProps<"switch">) => {
+export const WidgetSwitchInput = ({ property, kind, options }: CommonWidgetInputProps<"switch">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 

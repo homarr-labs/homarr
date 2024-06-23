@@ -12,17 +12,18 @@ import { ClientShell } from "~/components/layout/shell";
 import type { Board } from "./_types";
 import { BoardProvider } from "./(content)/_context";
 import type { Params } from "./(content)/_creator";
+import { CustomCss } from "./(content)/_custom-css";
 import { BoardMantineProvider } from "./(content)/_theme";
 
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
-  getInitialBoard: (params: TParams) => Promise<Board>;
+  getInitialBoardAsync: (params: TParams) => Promise<Board>;
   isBoardContentPage: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
-  getInitialBoard,
+  getInitialBoardAsync: getInitialBoard,
   isBoardContentPage,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
@@ -41,12 +42,10 @@ export const createBoardLayout = <TParams extends Params>({
     });
 
     return (
-      <GlobalItemServerDataRunner
-        board={initialBoard}
-        shouldRun={isBoardContentPage}
-      >
+      <GlobalItemServerDataRunner board={initialBoard} shouldRun={isBoardContentPage}>
         <BoardProvider initialBoard={initialBoard}>
           <BoardMantineProvider>
+            <CustomCss />
             <ClientShell hasNavigation={false}>
               <MainHeader
                 logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}

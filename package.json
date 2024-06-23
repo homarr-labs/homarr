@@ -2,9 +2,9 @@
   "name": "homarr",
   "private": true,
   "engines": {
-    "node": ">=20.13.1"
+    "node": ">=20.15.0"
   },
-  "packageManager": "pnpm@9.1.1",
+  "packageManager": "pnpm@9.4.0",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
@@ -28,23 +28,18 @@
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^1.13.3",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@turbo/gen": "^2.0.4",
+    "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-v8": "^1.6.0",
     "@vitest/ui": "^1.6.0",
     "cross-env": "^7.0.3",
-    "jsdom": "^24.0.0",
-    "prettier": "^3.2.5",
-    "turbo": "^1.13.3",
-    "typescript": "^5.4.5",
+    "jsdom": "^24.1.0",
+    "prettier": "^3.3.2",
+    "testcontainers": "^10.10.0",
+    "turbo": "^2.0.4",
+    "typescript": "^5.5.2",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"
-  },
-  "dependencies": {
-    "@mantine/core": "^7.9.1",
-    "@mantine/dates": "^7.9.1",
-    "@tabler/icons-react": "^3.3.0",
-    "mantine-react-table": "2.0.0-beta.3"
   },
   "prettier": "@homarr/prettier-config"
 }

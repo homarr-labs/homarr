@@ -4,11 +4,8 @@ import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useForm, zodResolver } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { useZodForm } from "@homarr/form";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
@@ -16,12 +13,8 @@ import { validation } from "@homarr/validation";
 export const InitUserForm = () => {
   const router = useRouter();
   const t = useScopedI18n("user");
-  const { mutateAsync, error, isPending } =
-    clientApi.user.initUser.useMutation();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.init),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
+  const { mutateAsync, error, isPending } = clientApi.user.initUser.useMutation();
+  const form = useZodForm(validation.user.init, {
     initialValues: {
       username: "",
       password: "",
@@ -29,7 +22,7 @@ export const InitUserForm = () => {
     },
   });
 
-  const handleSubmit = async (values: FormType) => {
+  const handleSubmitAsync = async (values: FormType) => {
     await mutateAsync(values, {
       onSuccess: () => {
         showSuccessNotification({
@@ -51,23 +44,14 @@ export const InitUserForm = () => {
     <Stack gap="xl">
       <form
         onSubmit={form.onSubmit(
-          (values) => void handleSubmit(values),
+          (values) => void handleSubmitAsync(values),
           (err) => console.log(err),
         )}
       >
         <Stack gap="lg">
-          <TextInput
-            label={t("field.username.label")}
-            {...form.getInputProps("username")}
-          />
-          <PasswordInput
-            label={t("field.password.label")}
-            {...form.getInputProps("password")}
-          />
-          <PasswordInput
-            label={t("field.passwordConfirm.label")}
-            {...form.getInputProps("confirmPassword")}
-          />
+          <TextInput label={t("field.username.label")} {...form.getInputProps("username")} />
+          <PasswordInput label={t("field.password.label")} {...form.getInputProps("password")} />
+          <PasswordInput label={t("field.passwordConfirm.label")} {...form.getInputProps("confirmPassword")} />
           <Button type="submit" fullWidth loading={isPending}>
             {t("action.create")}
           </Button>

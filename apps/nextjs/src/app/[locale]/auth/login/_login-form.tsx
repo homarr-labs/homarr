@@ -3,26 +3,18 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Alert,
-  Button,
-  Divider,
-  PasswordInput,
-  rem,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { Alert, Button, Divider, PasswordInput, rem, Stack, TextInput } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { signIn } from "@homarr/auth/client";
-import { useForm, zodResolver } from "@homarr/form";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import type { useForm } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
+
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface LoginFormProps {
   providers: string[];
@@ -31,18 +23,12 @@ interface LoginFormProps {
   callbackUrl: string;
 }
 
-export const LoginForm = ({
-  providers,
-  oidcClientName,
-  isOidcAutoLoginEnabled,
-  callbackUrl,
-}: LoginFormProps) => {
+export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, callbackUrl }: LoginFormProps) => {
   const t = useScopedI18n("user");
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string>();
-  const form = useForm<FormType>({
-    validate: zodResolver(validation.user.signIn),
+  const form = useZodForm(validation.user.signIn, {
     initialValues: {
       name: "",
       password: "",
@@ -50,13 +36,12 @@ export const LoginForm = ({
     },
   });
 
-  const credentialInputsVisible =
-    providers.includes("credentials") || providers.includes("ldap");
+  const credentialInputsVisible = providers.includes("credentials") || providers.includes("ldap");
 
   const onSuccess = useCallback(
-    (response: Awaited<ReturnType<typeof signIn>>) => {
-      if ((response && !response.ok) || response?.error) {
-        throw response?.error;
+    async (response: Awaited<ReturnType<typeof signIn>>) => {
+      if (response && (!response.ok || response.error)) {
+        throw response.error;
       }
 
       showSuccessNotification({
@@ -66,6 +51,7 @@ export const LoginForm = ({
 
       // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
       if (response) {
+        await revalidatePathActionAsync("/");
         void router.push(callbackUrl);
       }
     },
@@ -102,12 +88,7 @@ export const LoginForm = ({
   const isLoginInProgress = useRef(false);
 
   useEffect(() => {
-    if (
-      isOidcAutoLoginEnabled &&
-      !error &&
-      !isPending &&
-      !isLoginInProgress.current
-    ) {
+    if (isOidcAutoLoginEnabled && !error && !isPending && !isLoginInProgress.current) {
       isLoginInProgress.current = true;
       void signInAsync("oidc");
     }
@@ -118,54 +99,30 @@ export const LoginForm = ({
       <Stack gap="lg">
         {credentialInputsVisible && (
           <>
-            <form
-              onSubmit={form.onSubmit(
-                (credentials) => void signInAsync("credentials", credentials),
-              )}
-            >
+            <form onSubmit={form.onSubmit((credentials) => void signInAsync("credentials", credentials))}>
               <Stack gap="lg">
-                <TextInput
-                  label={t("field.username.label")}
-                  {...form.getInputProps("name")}
-                />
-                <PasswordInput
-                  label={t("field.password.label")}
-                  {...form.getInputProps("password")}
-                />
+                <TextInput label={t("field.username.label")} {...form.getInputProps("name")} />
+                <PasswordInput label={t("field.password.label")} {...form.getInputProps("password")} />
 
                 {providers.includes("credentials") && (
-                  <SubmitButton
-                    isPending={isPending}
-                    form={form}
-                    credentialType="basic"
-                  >
+                  <SubmitButton isPending={isPending} form={form} credentialType="basic">
                     {t("action.login.label")}
                   </SubmitButton>
                 )}
 
                 {providers.includes("ldap") && (
-                  <SubmitButton
-                    isPending={isPending}
-                    form={form}
-                    credentialType="ldap"
-                  >
+                  <SubmitButton isPending={isPending} form={form} credentialType="ldap">
                     {t("action.login.labelWith", { provider: "LDAP" })}
                   </SubmitButton>
                 )}
               </Stack>
             </form>
-            {providers.includes("oidc") && (
-              <Divider label="OIDC" labelPosition="center" />
-            )}
+            {providers.includes("oidc") && <Divider label="OIDC" labelPosition="center" />}
           </>
         )}
 
         {providers.includes("oidc") && (
-          <Button
-            fullWidth
-            variant="light"
-            onClick={async () => await signInAsync("oidc")}
-          >
+          <Button fullWidth variant="light" onClick={async () => await signInAsync("oidc")}>
             {t("action.login.labelWith", { provider: oidcClientName })}
           </Button>
         )}
@@ -186,14 +143,8 @@ interface SubmitButtonProps {
   credentialType: "basic" | "ldap";
 }
 
-const SubmitButton = ({
-  isPending,
-  form,
-  credentialType,
-  children,
-}: PropsWithChildren<SubmitButtonProps>) => {
-  const isCurrentProviderActive =
-    form.getValues().credentialType === credentialType;
+const SubmitButton = ({ isPending, form, credentialType, children }: PropsWithChildren<SubmitButtonProps>) => {
+  const isCurrentProviderActive = form.getValues().credentialType === credentialType;
 
   return (
     <Button

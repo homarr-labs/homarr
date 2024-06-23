@@ -1,16 +1,6 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
-import {
-  Anchor,
-  Button,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTh,
-  TableThead,
-  TableTr,
-} from "@mantine/core";
+import { Anchor, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -24,30 +14,21 @@ import { FormProvider, useForm } from "./form";
 import { GroupSelectModal } from "./group-select-modal";
 import type { FormProps } from "./user-access";
 
-export const GroupsForm = ({
-  board,
-  initialPermissions,
-  onCountChange,
-}: FormProps) => {
-  const { mutate, isPending } =
-    clientApi.board.saveGroupBoardPermissions.useMutation();
+export const GroupsForm = ({ board, initialPermissions, onCountChange }: FormProps) => {
+  const { mutate, isPending } = clientApi.board.saveGroupBoardPermissions.useMutation();
   const utils = clientApi.useUtils();
   const [groups, setGroups] = useState<Map<string, Group>>(
-    new Map(
-      initialPermissions.groupPermissions.map(({ group }) => [group.id, group]),
-    ),
+    new Map(initialPermissions.groupPermissions.map(({ group }) => [group.id, group])),
   );
   const { openModal } = useModalAction(GroupSelectModal);
   const t = useI18n();
   const tPermissions = useScopedI18n("board.setting.section.access.permission");
   const form = useForm({
     initialValues: {
-      items: initialPermissions.groupPermissions.map(
-        ({ group, permission }) => ({
-          itemId: group.id,
-          permission,
-        }),
-      ),
+      items: initialPermissions.groupPermissions.map(({ group, permission }) => ({
+        itemId: group.id,
+        permission,
+      })),
     },
   });
 
@@ -92,9 +73,7 @@ export const GroupsForm = ({
           <Table>
             <TableThead>
               <TableTr>
-                <TableTh style={{ whiteSpace: "nowrap" }}>
-                  {tPermissions("field.group.label")}
-                </TableTh>
+                <TableTh style={{ whiteSpace: "nowrap" }}>{tPermissions("field.group.label")}</TableTh>
                 <TableTh>{tPermissions("field.permission.label")}</TableTh>
               </TableTr>
             </TableThead>
@@ -102,9 +81,8 @@ export const GroupsForm = ({
               {form.values.items.map((row, index) => (
                 <BoardAccessSelectRow
                   key={row.itemId}
-                  itemContent={
-                    <GroupItemContent group={groups.get(row.itemId)!} />
-                  }
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  itemContent={<GroupItemContent group={groups.get(row.itemId)!} />}
                   permission={row.permission}
                   index={index}
                   onCountChange={onCountChange}
@@ -114,11 +92,7 @@ export const GroupsForm = ({
           </Table>
 
           <Group justify="space-between">
-            <Button
-              rightSection={<IconPlus size="1rem" />}
-              variant="light"
-              onClick={handleAddUser}
-            >
+            <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
               {t("common.action.add")}
             </Button>
             <Button type="submit" loading={isPending} color="teal">
@@ -133,16 +107,10 @@ export const GroupsForm = ({
 
 export const GroupItemContent = ({ group }: { group: Group }) => {
   return (
-    <Anchor
-      component={Link}
-      href={`/manage/users/groups/${group.id}`}
-      size="sm"
-      style={{ whiteSpace: "nowrap" }}
-    >
+    <Anchor component={Link} href={`/manage/users/groups/${group.id}`} size="sm" style={{ whiteSpace: "nowrap" }}>
       {group.name}
     </Anchor>
   );
 };
 
-type Group =
-  RouterOutputs["board"]["getBoardPermissions"]["groupPermissions"][0]["group"];
+type Group = RouterOutputs["board"]["getBoardPermissions"]["groupPermissions"][0]["group"];

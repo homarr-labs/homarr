@@ -6,8 +6,8 @@ import { createId, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { createSalt, hashPassword } from "../../security";
-import { authorizeWithLdapCredentials } from "../credentials/authorization/ldap-authorization";
+import { createSaltAsync, hashPasswordAsync } from "../../security";
+import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";
 import * as ldapClient from "../credentials/ldap-client";
 
 vi.mock("../../env.mjs", () => ({
@@ -31,7 +31,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentials(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -54,7 +54,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentials(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -84,16 +84,14 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentials(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
         name: "test",
         password: "test",
         credentialType: "ldap",
       });
 
     // Assert
-    await expect(act()).rejects.toThrow(
-      'User found but with invalid or non-existing Email. Not Supported: "test"',
-    );
+    await expect(act()).rejects.toThrow('User found but with invalid or non-existing Email. Not Supported: "test"');
   });
 
   test("should fail when user password is incorrect", async () => {
@@ -111,9 +109,7 @@ describe("authorizeWithLdapCredentials", () => {
       () =>
         ({
           bindAsync: vi.fn((props: ldapClient.BindOptions) =>
-            props.distinguishedName === "test"
-              ? Promise.reject(new Error("bindAsync"))
-              : Promise.resolve(),
+            props.distinguishedName === "test" ? Promise.reject(new Error("bindAsync")) : Promise.resolve(),
           ),
           searchAsync: searchSpy,
         }) as unknown as ldapClient.LdapClient,
@@ -121,7 +117,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentials(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -154,7 +150,7 @@ describe("authorizeWithLdapCredentials", () => {
     );
 
     // Act
-    const result = await authorizeWithLdapCredentials(adapter, {
+    const result = await authorizeWithLdapCredentialsAsync(adapter, {
       name: "test",
       password: "test",
       credentialType: "ldap",
@@ -176,17 +172,17 @@ describe("authorizeWithLdapCredentials", () => {
     const userId = createId();
     const db = createDb();
     const adapter = DrizzleAdapter(db);
-    const salt = await createSalt();
+    const salt = await createSaltAsync();
     await db.insert(users).values({
       id: userId,
       name: "test-old",
       salt,
-      password: await hashPassword("test", salt),
+      password: await hashPasswordAsync("test", salt),
       email: "test@gmail.com",
     });
 
     // Act
-    const result = await authorizeWithLdapCredentials(adapter, {
+    const result = await authorizeWithLdapCredentialsAsync(adapter, {
       name: "test",
       password: "test",
       credentialType: "ldap",

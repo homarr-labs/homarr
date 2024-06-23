@@ -5,15 +5,12 @@ import { useRouter } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { validation, z } from "@homarr/validation";
 
-import { revalidatePathAction } from "~/app/revalidatePathAction";
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { AppForm } from "../../_form";
 
 interface AppEditFormProps {
@@ -30,7 +27,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
         title: t("success.title"),
         message: t("success.message"),
       });
-      void revalidatePathAction("/manage/apps").then(() => {
+      void revalidatePathActionAsync("/manage/apps").then(() => {
         router.push("/manage/apps");
       });
     },
@@ -52,10 +49,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
     [mutate, app.id],
   );
 
-  const submitButtonTranslation = useCallback(
-    (t: TranslationFunction) => t("common.action.save"),
-    [],
-  );
+  const submitButtonTranslation = useCallback((t: TranslationFunction) => t("common.action.save"), []);
 
   return (
     <AppForm

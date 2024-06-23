@@ -1,11 +1,7 @@
-import type {
-  TranslationFunction,
-  TranslationObject,
-} from "@homarr/translation";
+import type { TranslationFunction, TranslationObject } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
-export type SpotlightActionGroup =
-  keyof TranslationObject["common"]["search"]["group"];
+export type SpotlightActionGroup = keyof TranslationObject["common"]["search"]["group"];
 
 interface BaseSpotlightAction {
   id: string;

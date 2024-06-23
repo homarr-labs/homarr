@@ -16,22 +16,22 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/core": "^0.31.0",
-    "@auth/drizzle-adapter": "^1.1.0",
     "@homarr/db": "workspace:^0.1.0",
+    "@auth/core": "^0.34.1",
+    "@auth/drizzle-adapter": "^1.4.1",
     "@t3-oss/env-nextjs": "^0.10.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
     "ldapjs": "^3.0.7",
-    "next": "^14.2.3",
-    "next-auth": "5.0.0-beta.18",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "next": "^14.2.4",
+    "next-auth": "5.0.0-beta.19",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@homarr/definitions": "workspace:^0.1.0",
@@ -43,15 +43,9 @@
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
     "@types/ldapjs": "^3.0.6",
-    "eslint": "^8.57.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
+    "eslint": "^9.5.0",
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.2"
   },
   "prettier": "@homarr/prettier-config"
 }

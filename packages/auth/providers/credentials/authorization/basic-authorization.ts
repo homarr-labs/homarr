@@ -6,7 +6,7 @@ import { users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { validation, z } from "@homarr/validation";
 
-export const authorizeWithBasicCredentials = async (
+export const authorizeWithBasicCredentialsAsync = async (
   db: Database,
   credentials: z.infer<typeof validation.user.signIn>,
 ) => {
@@ -20,10 +20,7 @@ export const authorizeWithBasicCredentials = async (
   }
 
   logger.info(`user ${user.name} is trying to log in. checking password...`);
-  const isValidPassword = await bcrypt.compare(
-    credentials.password,
-    user.password,
-  );
+  const isValidPassword = await bcrypt.compare(credentials.password, user.password);
 
   if (!isValidPassword) {
     logger.info(`password for user ${user.name} was incorrect`);

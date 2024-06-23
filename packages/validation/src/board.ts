@@ -16,7 +16,7 @@ const boardNameSchema = z
   .string()
   .min(1)
   .max(255)
-  .regex(/^[A-Za-z0-9-\\._]+$/);
+  .regex(/^[A-Za-z0-9-\\._]*$/);
 
 const byNameSchema = z.object({
   name: boardNameSchema,
@@ -53,12 +53,7 @@ const savePartialSettingsSchema = z
     customCss: z.string().max(16384),
     columnCount: z.number().min(1).max(24),
   })
-  .partial()
-  .and(
-    z.object({
-      id: z.string(),
-    }),
-  );
+  .partial();
 
 const saveSchema = z.object({
   id: z.string(),

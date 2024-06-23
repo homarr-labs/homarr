@@ -52,3 +52,6 @@ db.sqlite
 
 # logs
 *.log
+
+apps/tasks/tasks.cjs
+apps/websocket/wssServer.cjs

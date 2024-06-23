@@ -5,5 +5,8 @@ export const widgetKinds = [
   "iframe",
   "video",
   "notebook",
+  "dnsHoleSummary",
+  "smartHome-entityState",
+  "smartHome-executeAutomation",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

@@ -4,10 +4,7 @@ import type { AppShellProps } from "@mantine/core";
 import { useOptionalBoard } from "~/app/[locale]/boards/(content)/_context";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
-const isVideo = (url: string) =>
-  supportedVideoFormats.some((format) =>
-    url.toLowerCase().endsWith(`.${format}`),
-  );
+const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLowerCase().endsWith(`.${format}`));
 
 export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   const board = useOptionalBoard();
@@ -23,11 +20,11 @@ export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   }
 
   return {
-    bg: `url(${board?.backgroundImageUrl})`,
+    bg: `url(${board.backgroundImageUrl})`,
     bgp: "center center",
-    bgsz: board?.backgroundImageSize ?? "cover",
-    bgr: board?.backgroundImageRepeat ?? "no-repeat",
-    bga: board?.backgroundImageAttachment ?? "fixed",
+    bgsz: board.backgroundImageSize,
+    bgr: board.backgroundImageRepeat,
+    bga: board.backgroundImageAttachment,
   };
 };
 
@@ -52,7 +49,7 @@ export const BoardBackgroundVideo = () => {
         height: "100vh",
         top: 0,
         left: 0,
-        objectFit: board.backgroundImageSize ?? "cover",
+        objectFit: board.backgroundImageSize,
       }}
     >
       <source src={board.backgroundImageUrl} type={`video/${videoFormat}`} />

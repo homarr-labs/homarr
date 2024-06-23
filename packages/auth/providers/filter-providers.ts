@@ -2,10 +2,8 @@ import type { Provider } from "next-auth/providers";
 
 import { env } from "../env.mjs";
 
-export const filterProviders = (
-  providers: Exclude<Provider, () => unknown>[],
-) => {
-  const authProviders = env.AUTH_PROVIDERS ?? [];
+export const filterProviders = (providers: Exclude<Provider, () => unknown>[]) => {
+  const authProviders = env.AUTH_PROVIDERS;
 
   return providers.filter((provider) => {
     if (provider.id === "empty") {
@@ -14,9 +12,7 @@ export const filterProviders = (
 
     if (
       provider.id === "credentials" &&
-      ["ldap", "credentials"].some((credentialType) =>
-        authProviders.includes(credentialType),
-      )
+      ["ldap", "credentials"].some((credentialType) => authProviders.includes(credentialType))
     ) {
       return true;
     }

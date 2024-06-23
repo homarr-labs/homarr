@@ -39,10 +39,7 @@ interface CloseAllAction {
   canceled?: boolean;
 }
 
-export const modalReducer = (
-  state: ModalsState,
-  action: OpenAction | CloseAction | CloseAllAction,
-): ModalsState => {
+export const modalReducer = (state: ModalsState, action: OpenAction | CloseAction | CloseAllAction): ModalsState => {
   switch (action.type) {
     case "OPEN": {
       const newModal = {
@@ -62,12 +59,10 @@ export const modalReducer = (
 
       modal.props.onClose?.();
 
-      const remainingModals = state.modals.filter(
-        (modal) => modal.id !== action.modalId,
-      );
+      const remainingModals = state.modals.filter((modal) => modal.id !== action.modalId);
 
       return {
-        current: remainingModals[remainingModals.length - 1] || state.current,
+        current: remainingModals[remainingModals.length - 1] ?? state.current,
         modals: remainingModals,
       };
     }
@@ -95,9 +90,7 @@ export const modalReducer = (
   }
 };
 
-const getModal = <TModal extends ModalDefinition>(
-  modal: ModalState<TModal>,
-) => {
+const getModal = <TModal extends ModalDefinition>(modal: ModalState<TModal>) => {
   const ModalContent = modal.modal.component;
 
   const { innerProps, ...rest } = modal.props;

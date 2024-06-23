@@ -1,19 +1,10 @@
 import type { MutableRefObject, RefObject } from "react";
 import { createRef, useCallback, useEffect, useMemo, useRef } from "react";
-import { useAtomValue } from "jotai";
 
-import type {
-  GridItemHTMLElement,
-  GridStack,
-  GridStackNode,
-} from "@homarr/gridstack";
+import type { GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
 import type { Section } from "~/app/[locale]/boards/_types";
-import {
-  useMarkSectionAsReady,
-  useRequiredBoard,
-} from "~/app/[locale]/boards/(content)/_context";
-import { editModeAtom } from "../../editMode";
+import { useEditMode, useMarkSectionAsReady, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { useItemActions } from "../../items/item-actions";
 import { initializeGridstack } from "./init-gridstack";
 
@@ -32,11 +23,8 @@ interface UseGridstackProps {
   mainRef?: RefObject<HTMLDivElement>;
 }
 
-export const useGridstack = ({
-  section,
-  mainRef,
-}: UseGridstackProps): UseGristackReturnType => {
-  const isEditMode = useAtomValue(editModeAtom);
+export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGristackReturnType => {
+  const [isEditMode] = useEditMode();
   const markAsReady = useMarkSectionAsReady();
   const { moveAndResizeItem, moveItemToSection } = useItemActions();
   // define reference for wrapper - is used to calculate the width of the wrapper
@@ -71,9 +59,13 @@ export const useGridstack = ({
       // Updates the react-query state
       moveAndResizeItem({
         itemId,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         xOffset: changedNode.x!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         yOffset: changedNode.y!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         width: changedNode.w!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         height: changedNode.h!,
       });
     },
@@ -88,9 +80,13 @@ export const useGridstack = ({
       moveItemToSection({
         itemId,
         sectionId: section.id,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         xOffset: addedNode.x!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         yOffset: addedNode.y!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         width: addedNode.w!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         height: addedNode.h!,
       });
     },
@@ -133,7 +129,6 @@ export const useGridstack = ({
     }
 
     // Only run this effect when the section items change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length, section.items.length, board.columnCount]);
 
   return {
@@ -157,10 +152,7 @@ interface UseCssVariableConfiguration {
  * @param mainRef reference to the main div wrapping all sections
  * @param gridRef reference to the gridstack object
  */
-const useCssVariableConfiguration = ({
-  mainRef,
-  gridRef,
-}: UseCssVariableConfiguration) => {
+const useCssVariableConfiguration = ({ mainRef, gridRef }: UseCssVariableConfiguration) => {
   const board = useRequiredBoard();
 
   // Get reference to the :root element
@@ -177,10 +169,7 @@ const useCssVariableConfiguration = ({
       if (!mainRef?.current) return;
       const widgetWidth = mainRef.current.clientWidth / board.columnCount;
       // widget width is used to define sizes of gridstack items within global.scss
-      root?.style.setProperty(
-        "--gridstack-widget-width",
-        widgetWidth.toString(),
-      );
+      root?.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
       gridRef.current?.cellHeight(widgetWidth);
     };
     onResize();
@@ -194,9 +183,6 @@ const useCssVariableConfiguration = ({
 
   // Define column count by using the sectionColumnCount
   useEffect(() => {
-    root?.style.setProperty(
-      "--gridstack-column-count",
-      board.columnCount.toString(),
-    );
+    root?.style.setProperty("--gridstack-column-count", board.columnCount.toString());
   }, [board.columnCount, root]);
 };

@@ -20,14 +20,10 @@ const groupPermissionParents = {
   admin: ["board-full-access", "integration-full-access"],
 } satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey[]>>;
 
-export const getPermissionsWithParents = (
-  permissions: GroupPermissionKey[],
-): GroupPermissionKey[] => {
+export const getPermissionsWithParents = (permissions: GroupPermissionKey[]): GroupPermissionKey[] => {
   const res = permissions.map((permission) => {
     return objectEntries(groupPermissionParents)
-      .filter(([_key, value]: [string, GroupPermissionKey[]]) =>
-        value.includes(permission),
-      )
+      .filter(([_key, value]: [string, GroupPermissionKey[]]) => value.includes(permission))
       .map(([key]) => getPermissionsWithParents([key]))
       .flat();
   });
@@ -35,13 +31,10 @@ export const getPermissionsWithParents = (
   return permissions.concat(res.flat());
 };
 
-const getPermissionsInner = (
-  permissionSet: Set<GroupPermissionKey>,
-  permissions: GroupPermissionKey[],
-) => {
+const getPermissionsInner = (permissionSet: Set<GroupPermissionKey>, permissions: GroupPermissionKey[]) => {
   permissions.forEach((permission) => {
-    const children =
-      groupPermissionParents[permission as keyof typeof groupPermissionParents];
+    const children = groupPermissionParents[permission as keyof typeof groupPermissionParents];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (children) {
       getPermissionsInner(permissionSet, children);
     }
@@ -50,9 +43,7 @@ const getPermissionsInner = (
   });
 };
 
-export const getPermissionsWithChildren = (
-  permissions: GroupPermissionKey[],
-) => {
+export const getPermissionsWithChildren = (permissions: GroupPermissionKey[]) => {
   const permissionSet = new Set<GroupPermissionKey>();
   getPermissionsInner(permissionSet, permissions);
   return Array.from(permissionSet);
@@ -66,19 +57,14 @@ export type GroupPermissionKey = {
     : key;
 }[keyof GroupPermissions];
 
-export const groupPermissionKeys = objectKeys(groupPermissions).reduce(
-  (acc, key) => {
-    const item = groupPermissions[key];
-    if (typeof item !== "boolean") {
-      acc.push(
-        ...item.map((subKey) => `${key}-${subKey}` as GroupPermissionKey),
-      );
-    } else {
-      acc.push(key as GroupPermissionKey);
-    }
-    return acc;
-  },
-  [] as GroupPermissionKey[],
-);
+export const groupPermissionKeys = objectKeys(groupPermissions).reduce((acc, key) => {
+  const item = groupPermissions[key];
+  if (typeof item !== "boolean") {
+    acc.push(...item.map((subKey) => `${key}-${subKey}` as GroupPermissionKey));
+  } else {
+    acc.push(key as GroupPermissionKey);
+  }
+  return acc;
+}, [] as GroupPermissionKey[]);
 
 export type BoardPermission = (typeof boardPermissions)[number];

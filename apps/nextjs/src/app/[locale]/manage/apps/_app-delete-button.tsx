@@ -7,13 +7,10 @@ import { IconTrash } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathAction } from "../../../revalidatePathAction";
+import { revalidatePathActionAsync } from "../../../revalidatePathAction";
 
 interface AppDeleteButtonProps {
   app: RouterOutputs["app"]["all"][number];
@@ -37,7 +34,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
                 title: t("notification.success.title"),
                 message: t("notification.success.message"),
               });
-              void revalidatePathAction("/manage/apps");
+              void revalidatePathActionAsync("/manage/apps");
             },
             onError: () => {
               showErrorNotification({
@@ -52,13 +49,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   }, [app, mutate, t, openConfirmModal]);
 
   return (
-    <ActionIcon
-      loading={isPending}
-      variant="subtle"
-      color="red"
-      onClick={onClick}
-      aria-label="Delete app"
-    >
+    <ActionIcon loading={isPending} variant="subtle" color="red" onClick={onClick} aria-label={t("title")}>
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>
   );
