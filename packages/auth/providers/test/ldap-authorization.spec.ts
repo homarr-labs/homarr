@@ -1,4 +1,5 @@
 import type { Adapter } from "@auth/core/adapters";
+import { CredentialsSignin } from "@auth/core/errors";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { describe, expect, test, vi } from "vitest";
 
@@ -38,7 +39,7 @@ describe("authorizeWithLdapCredentials", () => {
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("bindAsync");
+    await expect(act()).rejects.toThrow(CredentialsSignin);
   });
 
   test("should fail when user not found", async () => {
@@ -47,7 +48,7 @@ describe("authorizeWithLdapCredentials", () => {
     spy.mockImplementation(
       () =>
         ({
-          bindAsync: vi.fn(),
+          bindAsync: vi.fn(() => Promise.resolve()),
           searchAsync: vi.fn(() => Promise.resolve([])),
         }) as unknown as ldapClient.LdapClient,
     );
@@ -61,7 +62,7 @@ describe("authorizeWithLdapCredentials", () => {
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("User test not found in LDAP");
+    await expect(act()).rejects.toThrow(CredentialsSignin);
   });
 
   test("should fail when user has invalid email", async () => {
@@ -70,7 +71,7 @@ describe("authorizeWithLdapCredentials", () => {
     spy.mockImplementation(
       () =>
         ({
-          bindAsync: vi.fn(),
+          bindAsync: vi.fn(() => Promise.resolve()),
           searchAsync: vi.fn(() =>
             Promise.resolve([
               {
@@ -91,7 +92,7 @@ describe("authorizeWithLdapCredentials", () => {
       });
 
     // Assert
-    await expect(act()).rejects.toThrow('User found but with invalid or non-existing Email. Not Supported: "test"');
+    await expect(act()).rejects.toThrow(CredentialsSignin);
   });
 
   test("should fail when user password is incorrect", async () => {
@@ -124,7 +125,7 @@ describe("authorizeWithLdapCredentials", () => {
       });
 
     // Assert
-    await expect(act()).rejects.toThrow("bindAsync");
+    await expect(act()).rejects.toThrow(CredentialsSignin);
     expect(searchSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -145,7 +146,7 @@ describe("authorizeWithLdapCredentials", () => {
               },
             ]),
           ),
-          disconnect: vi.fn(),
+          disconnectAsync: vi.fn(),
         }) as unknown as ldapClient.LdapClient,
     );
 
