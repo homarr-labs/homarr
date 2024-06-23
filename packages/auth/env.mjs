@@ -21,7 +21,7 @@ const authProvidersSchema = z
         return false;
       }),
   )
-  .default(["credentials"]);
+  .default("credentials");
 
 const booleanSchema = z
   .string()
