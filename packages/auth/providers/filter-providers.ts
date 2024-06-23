@@ -3,7 +3,9 @@ import type { Provider } from "next-auth/providers";
 import { env } from "../env.mjs";
 
 export const filterProviders = (providers: Exclude<Provider, () => unknown>[]) => {
-  const authProviders = env.AUTH_PROVIDERS;
+  // During build this will be undefined, so we default to an empty array
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const authProviders = env.AUTH_PROVIDERS ?? [];
 
   return providers.filter((provider) => {
     if (provider.id === "empty") {
