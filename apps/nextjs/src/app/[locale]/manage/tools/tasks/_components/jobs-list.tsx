@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ActionIcon, Badge, Card, Group, Stack, Text } from "@mantine/core";
+import { useListState } from "@mantine/hooks";
 import { IconPlayerPlay } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -22,7 +23,7 @@ interface JobState {
 
 export const JobsList = ({ initialJobs }: JobsListProps) => {
   const t = useScopedI18n("management.page.tool.tasks.job");
-  const [jobs, setJobs] = useState<JobState[]>(
+  const [jobs, handlers] = useListState<JobState>(
     initialJobs.map((job) => ({
       job: job,
       status: null,
@@ -42,13 +43,10 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
         "and current status is",
         data.status,
       );
-      setJobs([
-        ...jobs.filter((job) => job.job.name !== data.name),
-        {
-          ...jobByName,
-          status: data,
-        },
-      ]);
+      handlers.applyWhere(
+        (job) => job.job.name === data.name,
+        (job) => ({ ...job, status: data }),
+      );
     },
   });
   const { mutateAsync } = clientApi.cronJobs.triggerJob.useMutation();
