@@ -46,9 +46,9 @@ export class LdapClient {
     return searchEntries.map((entry) => {
       return {
         ...objectEntries(entry)
-          .map(([key, value]) => [key, this.convertEntryPropertyToString(value)] as const)
+          .map(([key, value]) => [key, LdapClient.convertEntryPropertyToString(value)] as const)
           .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Record<string, string>),
-        dn: this.getEntryDn(entry),
+        dn: LdapClient.getEntryDn(entry),
       } as {
         [key: string]: string;
         dn: string;
@@ -56,7 +56,7 @@ export class LdapClient {
     });
   }
 
-  private convertEntryPropertyToString(value: Entry[string]) {
+  private static convertEntryPropertyToString(value: Entry[string]) {
     const firstValue = Array.isArray(value) ? value[0] ?? "" : value;
 
     if (firstValue instanceof Buffer) {
@@ -72,7 +72,7 @@ export class LdapClient {
    * @param entry search entry from ldap
    * @returns normalized distinguishedName
    */
-  private getEntryDn(entry: Entry) {
+  private static getEntryDn(entry: Entry) {
     try {
       return decodeURIComponent(entry.dn.replace(/(?<!\\)\\([0-9a-fA-F]{2})/g, "%$1"));
     } catch {

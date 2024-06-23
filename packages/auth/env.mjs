@@ -1,6 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import { logger } from "@homarr/log";
+
 const trueStrings = ["1", "yes", "t", "true"];
 const falseStrings = ["0", "no", "f", "false"];
 
@@ -14,10 +16,11 @@ const authProvidersSchema = z
       .toLowerCase()
       .split(",")
       .filter((provider) => {
-        if (supportedAuthProviders.includes(provider)) return provider;
+        if (supportedAuthProviders.includes(provider)) return true;
         else if (!provider)
-          console.log(`One or more of the entries for AUTH_PROVIDER could not be parsed and/or returned null.`);
-        else console.log(`The value entered for AUTH_PROVIDER "${provider}" is incorrect.`);
+          logger.info("One or more of the entries for AUTH_PROVIDER could not be parsed and/or returned null.");
+        else logger.info(`The value entered for AUTH_PROVIDER "${provider}" is incorrect.`);
+        return false;
       }),
   )
   .default(["credentials"]);
