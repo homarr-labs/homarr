@@ -1,5 +1,7 @@
-import type { Client, SearchOptions as LdapSearchOptions, SearchEntry } from "ldapjs";
-import ldap from "ldapjs";
+import type { Entry, SearchOptions as LdapSearchOptions } from "ldapts";
+import { Client } from "ldapts";
+
+import { objectEntries } from "@homarr/common";
 
 import { env } from "../../env.mjs";
 
@@ -13,14 +15,11 @@ interface SearchOptions {
   options: LdapSearchOptions;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type SearchResult = Record<"dn" | (string & {}), string>;
-
 export class LdapClient {
   private client: Client;
 
   constructor() {
-    this.client = ldap.createClient({
+    this.client = new Client({
       url: env.AUTH_LDAP_URI,
     });
   }
@@ -32,15 +31,7 @@ export class LdapClient {
    * @returns void
    */
   public async bindAsync({ distinguishedName, password }: BindOptions) {
-    return new Promise<void>((resolve, reject) => {
-      this.client.bind(distinguishedName, password, (err) => {
-        if (err) {
-          reject(err);
-        }
-
-        resolve();
-      });
-    });
+    return await this.client.bind(distinguishedName, password);
   }
 
   /**
@@ -50,46 +41,28 @@ export class LdapClient {
    * @returns list of search results
    */
   public async searchAsync({ base, options }: SearchOptions) {
-    return new Promise<SearchResult[]>((resolve, reject) => {
-      this.client.search(base, options, (err, res) => {
-        const entries: SearchResult[] = [];
+    const { searchEntries } = await this.client.search(base, options);
 
-        res.on("error", (err) => {
-          reject(err);
-        });
-
-        res.on("searchEntry", (entry) => {
-          entries.push(this.createSearchResult(entry));
-        });
-
-        res.on("end", (result) => {
-          if (result?.status !== 0) {
-            reject(new Error(`Search failed with status ${result?.status}`));
-          }
-
-          resolve(entries);
-        });
-      });
+    return searchEntries.map((entry) => {
+      return {
+        ...objectEntries(entry)
+          .map(([key, value]) => [key, this.convertEntryPropertyToString(value)] as const)
+          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Record<string, string>),
+        dn: this.getEntryDn(entry),
+      } as {
+        [key: string]: string;
+        dn: string;
+      };
     });
   }
 
-  /**
-   * Creates a search result object from a search entry which contains a list of attributes with values.
-   * Additionally, it extracts the distinguishedName from the entry.
-   * @param entry search entry from ldap
-   * @returns search result object
-   */
-  private createSearchResult(entry: SearchEntry): SearchResult {
-    const reducedEntry = entry.pojo.attributes.reduce<Record<string, string>>((object, attribute) => {
-      // just take first element assuming there's only one (uid, mail)
-      object[attribute.type] = attribute.values.at(0) ?? "";
-      return object;
-    }, {});
+  private convertEntryPropertyToString(value: Entry[string]) {
+    const firstValue = Array.isArray(value) ? value[0] ?? "" : value;
 
-    return {
-      ...reducedEntry,
-      dn: this.getEntryDn(entry),
-    };
+    if (firstValue instanceof Buffer) {
+      return firstValue.toString("utf8");
+    }
+    return firstValue;
   }
 
   /**
@@ -99,18 +72,18 @@ export class LdapClient {
    * @param entry search entry from ldap
    * @returns normalized distinguishedName
    */
-  private getEntryDn(entry: SearchEntry) {
+  private getEntryDn(entry: Entry) {
     try {
-      return decodeURIComponent(entry.pojo.objectName.replace(/(?<!\\)\\([0-9a-fA-F]{2})/g, "%$1"));
+      return decodeURIComponent(entry.dn.replace(/(?<!\\)\\([0-9a-fA-F]{2})/g, "%$1"));
     } catch {
-      throw new Error(`Cannot resolve distinguishedName for the entry ${entry.pojo.objectName}`);
+      throw new Error(`Cannot resolve distinguishedName for the entry ${entry.dn}`);
     }
   }
 
   /**
    * Disconnects the client from the LDAP server.
    */
-  public disconnect() {
-    this.client.destroy();
+  public async disconnectAsync() {
+    await this.client.unbind();
   }
 }

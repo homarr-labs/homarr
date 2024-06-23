@@ -32,7 +32,7 @@ export const createCredentialsConfiguration = (db: Database) =>
       const data = await validation.user.signIn.parseAsync(credentials);
 
       if (data.credentialType === "ldap") {
-        return await authorizeWithLdapCredentialsAsync(adapter, data);
+        return await authorizeWithLdapCredentialsAsync(adapter, data).catch(() => null);
       }
 
       return await authorizeWithBasicCredentialsAsync(db, data);

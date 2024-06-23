@@ -1,4 +1,5 @@
 import type { Adapter } from "@auth/core/adapters";
+import { CredentialsSignin } from "@auth/core/errors";
 
 import { createId } from "@homarr/db";
 import { logger } from "@homarr/log";
@@ -14,10 +15,16 @@ export const authorizeWithLdapCredentialsAsync = async (
 ) => {
   logger.info(`user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`);
   const client = new LdapClient();
-  await client.bindAsync({
-    distinguishedName: env.AUTH_LDAP_BIND_DN,
-    password: env.AUTH_LDAP_BIND_PASSWORD,
-  });
+  await client
+    .bindAsync({
+      distinguishedName: env.AUTH_LDAP_BIND_DN,
+      password: env.AUTH_LDAP_BIND_PASSWORD,
+    })
+    .catch(() => {
+      logger.error("Failed to connect to LDAP server");
+      throw new CredentialsSignin();
+    });
+
   logger.info("Connected to LDAP server. Searching for user...");
 
   const ldapUser = await client
@@ -32,29 +39,34 @@ export const authorizeWithLdapCredentialsAsync = async (
     .then((entries) => entries.at(0));
 
   if (!ldapUser) {
-    throw new Error(`User ${credentials.name} not found in LDAP`);
+    logger.warn(`User ${credentials.name} not found in LDAP`);
+    throw new CredentialsSignin();
   }
 
   // Validate email
   const mailResult = await z.string().email().safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
 
   if (!mailResult.success) {
-    throw new Error(
-      `User found but with invalid or non-existing Email. Not Supported: "${
-        ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE] ?? " "
-      }"`,
+    logger.error(
+      `User ${credentials.name} found but with invalid or non-existing Email. Not Supported: "${ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]}"`,
     );
+    throw new CredentialsSignin();
   }
 
   logger.info(`User ${credentials.name} found in LDAP. Logging in...`);
 
   // Bind with user credentials to check if the password is correct
   const userClient = new LdapClient();
-  await userClient.bindAsync({
-    distinguishedName: ldapUser.dn,
-    password: credentials.password,
-  });
-  userClient.disconnect();
+  await userClient
+    .bindAsync({
+      distinguishedName: ldapUser.dn,
+      password: credentials.password,
+    })
+    .catch(() => {
+      logger.warn(`Wrong credentials for user ${credentials.name}`);
+      throw new CredentialsSignin();
+    });
+  await userClient.disconnectAsync();
 
   logger.info(`User ${credentials.name} logged in successfully, retrieving user groups...`);
 
@@ -67,14 +79,14 @@ export const authorizeWithLdapCredentialsAsync = async (
           env.AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE
         }=${ldapUser[env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE]})${env.AUTH_LDAP_GROUP_FILTER_EXTRA_ARG ?? ""})`,
         scope: env.AUTH_LDAP_SEARCH_SCOPE,
-        attributes: "cn",
+        attributes: ["cn"],
       },
     })
     .then((entries) => entries.map((entry) => entry.cn).filter((group): group is string => group !== undefined));
 
   logger.info(`Found ${userGroups.length} groups for user ${credentials.name}.`);
 
-  client.disconnect();
+  await client.disconnectAsync();
 
   // Create or update user in the database
   let user = await adapter.getUserByEmail?.(mailResult.data);

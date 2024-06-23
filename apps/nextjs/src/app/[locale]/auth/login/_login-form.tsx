@@ -3,8 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Divider, PasswordInput, rem, Stack, TextInput } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { Button, Divider, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { signIn } from "@homarr/auth/client";
 import type { useForm } from "@homarr/form";
@@ -27,7 +26,6 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const t = useScopedI18n("user");
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string>();
   const form = useZodForm(validation.user.signIn, {
     initialValues: {
       name: "",
@@ -58,22 +56,19 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
     [t, router, callbackUrl],
   );
 
-  const onError = useCallback(
-    (error: Error | string) => {
-      setIsPending(false);
-      setError(error.toString());
-      showErrorNotification({
-        title: t("action.login.notification.error.title"),
-        message: t("action.login.notification.error.message"),
-      });
-    },
-    [t],
-  );
+  const onError = useCallback(() => {
+    setIsPending(false);
+
+    showErrorNotification({
+      title: t("action.login.notification.error.title"),
+      message: t("action.login.notification.error.message"),
+      autoClose: 10000,
+    });
+  }, [t]);
 
   const signInAsync = useCallback(
     async (provider: string, options?: Parameters<typeof signIn>[1]) => {
       setIsPending(true);
-      setError(undefined);
       await signIn(provider, {
         ...options,
         redirect: false,
@@ -82,17 +77,17 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
         .then(onSuccess)
         .catch(onError);
     },
-    [setIsPending, setError, onSuccess, onError, callbackUrl],
+    [setIsPending, onSuccess, onError, callbackUrl],
   );
 
   const isLoginInProgress = useRef(false);
 
   useEffect(() => {
-    if (isOidcAutoLoginEnabled && !error && !isPending && !isLoginInProgress.current) {
+    if (isOidcAutoLoginEnabled && !isPending && !isLoginInProgress.current) {
       isLoginInProgress.current = true;
       void signInAsync("oidc");
     }
-  }, [signInAsync, isOidcAutoLoginEnabled, error, isPending]);
+  }, [signInAsync, isOidcAutoLoginEnabled, isPending]);
 
   return (
     <Stack gap="xl">
@@ -127,12 +122,6 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
           </Button>
         )}
       </Stack>
-
-      {error && (
-        <Alert icon={<IconAlertTriangle size={rem(16)} />} color="red">
-          {error}
-        </Alert>
-      )}
     </Stack>
   );
 };

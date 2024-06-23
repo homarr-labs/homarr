@@ -23,7 +23,7 @@ export const authorizeWithBasicCredentialsAsync = async (
   const isValidPassword = await bcrypt.compare(credentials.password, user.password);
 
   if (!isValidPassword) {
-    logger.info(`password for user ${user.name} was incorrect`);
+    logger.warn(`password for user ${user.name} was incorrect`);
     return null;
   }
 
