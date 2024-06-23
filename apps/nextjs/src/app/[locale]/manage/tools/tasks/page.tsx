@@ -1,7 +1,10 @@
+import { Box, Title } from "@mantine/core";
+
+import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Box, Card, Stack, Title, Text, Group, ActionIcon } from "@mantine/core";
-import { IconPlayerPlay } from "@tabler/icons-react";
+
 import { createMetaTitle } from "~/metadata";
+import { JobsList } from "./_components/jobs-list";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
@@ -11,36 +14,12 @@ export async function generateMetadata() {
   };
 }
 
-export default function TasksPage() {
+export default async function TasksPage() {
+  const jobs = await api.cronJobs.getJobs();
   return (
     <Box>
       <Title mb={"md"}>Tasks</Title>
-      <Stack>
-        <Card>
-          <Group justify={"space-between"} gap={"md"}>
-            <Stack gap={0}>
-              <Text>Icon Repositories</Text>
-              <Text size={"sm"} c={"dimmed"}>Last run 6 hours ago</Text>
-            </Stack>
-
-            <ActionIcon variant={"default"} size={"xl"} radius={"xl"}>
-              <IconPlayerPlay stroke={1.5}/>
-            </ActionIcon>
-          </Group>
-        </Card>
-        <Card>
-          <Group justify={"space-between"} gap={"md"}>
-            <Stack gap={0}>
-              <Text>Server Analytics</Text>
-              <Text size={"sm"} c={"dimmed"}>Currently running</Text>
-            </Stack>
-
-            <ActionIcon variant={"default"} size={"xl"} radius={"xl"} disabled>
-              <IconPlayerPlay stroke={1.5}/>
-            </ActionIcon>
-          </Group>
-        </Card>
-      </Stack>
+      <JobsList initialJobs={jobs} />
     </Box>
   );
 }
