@@ -3,7 +3,7 @@ import { logger } from "@homarr/log";
 import { sendPingRequestAsync } from "@homarr/ping";
 import { pingChannel, pingUrlChannel } from "@homarr/redis";
 
-import { createCronJob } from "~/lib/jobs";
+import { createCronJob } from "../lib";
 
 export const pingJob = createCronJob("ping", EVERY_MINUTE).withCallback(async () => {
   const urls = await pingUrlChannel.getAllAsync();
