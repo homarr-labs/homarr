@@ -6,9 +6,7 @@ import { createRedirectUri } from "../redirect";
 describe("redirect", () => {
   test("Callback should return http url when not defining protocol", () => {
     // Arrange
-    const headers = new Map<string, string>([
-      ["x-forwarded-host", "localhost:3000"],
-    ]) as unknown as ReadonlyHeaders;
+    const headers = new Map<string, string>([["x-forwarded-host", "localhost:3000"]]) as unknown as ReadonlyHeaders;
 
     // Act
     const result = createRedirectUri(headers, "/api/auth/callback/oidc");

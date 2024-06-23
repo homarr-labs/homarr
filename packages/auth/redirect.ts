@@ -6,10 +6,7 @@ import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapte
  * @param pathname
  * @returns
  */
-export const createRedirectUri = (
-  headers: ReadonlyHeaders | null,
-  pathname: string,
-) => {
+export const createRedirectUri = (headers: ReadonlyHeaders | null, pathname: string) => {
   if (!headers) {
     return pathname;
   }

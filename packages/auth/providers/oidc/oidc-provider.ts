@@ -13,9 +13,7 @@ interface Profile {
   email_verified: boolean;
 }
 
-export const OidcProvider = (
-  headers: ReadonlyHeaders | null,
-): OIDCConfig<Profile> => ({
+export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profile> => ({
   id: "oidc",
   name: env.AUTH_OIDC_CLIENT_NAME,
   type: "oidc",
@@ -32,9 +30,7 @@ export const OidcProvider = (
     return {
       id: profile.sub,
       // Use the name as the username if the preferred_username is an email address
-      name: profile.preferred_username.includes("@")
-        ? profile.name
-        : profile.preferred_username,
+      name: profile.preferred_username.includes("@") ? profile.name : profile.preferred_username,
       email: profile.email,
     };
   },

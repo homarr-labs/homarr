@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm with-env tsx ./src/main.ts",
-    "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --loader:.html=text --loader:.node=text",
+    "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
