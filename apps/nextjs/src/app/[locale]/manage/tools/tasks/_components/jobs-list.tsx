@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ActionIcon, Card, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Badge, Card, Group, Stack, Text } from "@mantine/core";
 import { IconPlayerPlay } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { TaskStatus } from "../../../../../../../../../packages/cron-job-status/src";
 
@@ -20,6 +21,7 @@ interface JobState {
 }
 
 export const JobsList = ({ initialJobs }: JobsListProps) => {
+  const t = useScopedI18n("management.page.tool.tasks.job");
   const [jobs, setJobs] = useState<JobState[]>(
     initialJobs.map((job) => ({
       job: job,
@@ -32,6 +34,14 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
       if (!jobByName) {
         return;
       }
+      console.log(
+        "received status update for",
+        data.name,
+        "where last state is",
+        data.lastExecutionStatus,
+        "and current status is",
+        data.status,
+      );
       setJobs([
         ...jobs.filter((job) => job.job.name !== data.name),
         {
@@ -54,7 +64,12 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
         <Card>
           <Group justify={"space-between"} gap={"md"}>
             <Stack gap={0}>
-              <Text>{job.job.name}</Text>
+              <Group>
+                <Text>{t(`${job.job.name}.label`)}</Text>
+                {job.status?.status === "idle" && <Badge variant="default">Idle</Badge>}
+                {job.status?.status === "running" && <Badge color="green">Running</Badge>}
+                {job.status?.lastExecutionStatus === "error" && <Badge color="red">Error</Badge>}
+              </Group>
               {job.status && <TimeAgo timestamp={job.status.lastExecutionTimestamp} />}
             </Stack>
 

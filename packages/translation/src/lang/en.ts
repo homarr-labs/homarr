@@ -1452,6 +1452,25 @@ export default {
           },
         },
       },
+      tool: {
+        tasks: {
+          title: 'Tasks',
+          job: {
+            iconsUpdater: {
+              label: 'Icons Updater'
+            },
+            analytics: {
+              label: 'Analytics'
+            },
+            smartHomeEntityState: {
+              label: 'Smart Home Entity State'
+            },
+            ping: {
+              label: 'Pings'
+            }
+          }
+        }
+      },
       about: {
         version: "Version {version}",
         text: "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
