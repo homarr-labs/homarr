@@ -47,8 +47,6 @@ COPY --from=builder /app/migration-out/full/ .
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION=true
-ARG AUTH_PROVIDERS=credentials
-ARG AUTH_SECRET=JUST_A_PLACEHOLDER_FOR_DURING_BUILD
 RUN corepack enable pnpm && pnpm turbo run build
 
 FROM base AS runner
