@@ -35,14 +35,6 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
       if (!jobByName) {
         return;
       }
-      console.log(
-        "received status update for",
-        data.name,
-        "where last state is",
-        data.lastExecutionStatus,
-        "and current status is",
-        data.status,
-      );
       handlers.applyWhere(
         (job) => job.job.name === data.name,
         (job) => ({ ...job, status: data }),
@@ -88,7 +80,7 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
 };
 
 const TimeAgo = ({ timestamp }: { timestamp: string }) => {
-  const [_, setCurrentTime] = useState(Date.now());
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -98,11 +90,22 @@ const TimeAgo = ({ timestamp }: { timestamp: string }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const diffSeconds = dayjs(timestamp).diff(currentTime, 'seconds');
+
+  if (diffSeconds > -60) {
+    return (
+      <Text size={"sm"} c={"dimmed"}>
+        {Math.abs(diffSeconds)} seconds ago
+      </Text>
+    );
+  }
+
   return (
     <Text size={"sm"} c={"dimmed"}>
-      {dayjs(timestamp).fromNow()}
+      {dayjs(timestamp).from(currentTime)}
     </Text>
   );
 };
 
 export default TimeAgo;
+
