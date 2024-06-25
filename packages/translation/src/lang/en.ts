@@ -1252,7 +1252,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
-            tasks: "Tasks"
+            tasks: "Tasks",
           },
         },
         settings: "Settings",
@@ -1454,22 +1454,22 @@ export default {
       },
       tool: {
         tasks: {
-          title: 'Tasks',
+          title: "Tasks",
           job: {
             iconsUpdater: {
-              label: 'Icons Updater'
+              label: "Icons Updater",
             },
             analytics: {
-              label: 'Analytics'
+              label: "Analytics",
             },
             smartHomeEntityState: {
-              label: 'Smart Home Entity State'
+              label: "Smart Home Entity State",
             },
             ping: {
-              label: 'Pings'
-            }
-          }
-        }
+              label: "Pings",
+            },
+          },
+        },
       },
       about: {
         version: "Version {version}",

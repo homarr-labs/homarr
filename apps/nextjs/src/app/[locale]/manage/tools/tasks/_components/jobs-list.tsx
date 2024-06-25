@@ -90,7 +90,7 @@ const TimeAgo = ({ timestamp }: { timestamp: string }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const diffSeconds = dayjs(timestamp).diff(currentTime, 'seconds');
+  const diffSeconds = dayjs(timestamp).diff(currentTime, "seconds");
 
   if (diffSeconds > -60) {
     return (
@@ -108,4 +108,3 @@ const TimeAgo = ({ timestamp }: { timestamp: string }) => {
 };
 
 export default TimeAgo;
-

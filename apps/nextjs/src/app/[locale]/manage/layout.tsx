@@ -14,12 +14,12 @@ import {
   IconMailForward,
   IconPlug,
   IconQuestionMark,
+  IconReport,
   IconSettings,
   IconTool,
   IconUser,
   IconUsers,
   IconUsersGroup,
-  IconReport
 } from "@tabler/icons-react";
 
 import { getScopedI18n } from "@homarr/translation/server";
@@ -90,8 +90,8 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.tools.items.tasks"),
           icon: IconReport,
-          href: "/manage/tools/tasks"
-        }
+          href: "/manage/tools/tasks",
+        },
       ],
     },
     {
