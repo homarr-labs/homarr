@@ -36,7 +36,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/hooks": "^7.10.2",
     "@mantine/core": "^7.10.2",
-    "@tabler/icons-react": "^3.6.0",
+    "@tabler/icons-react": "^3.7.0",
     "@tiptap/extension-color": "2.4.0",
     "@tiptap/extension-highlight": "2.4.0",
     "@tiptap/extension-image": "2.4.0",
