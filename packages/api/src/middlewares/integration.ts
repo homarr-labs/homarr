@@ -75,3 +75,47 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(.
       });
     });
 };
+
+export const createManyIntegrationOfOneItemMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
+  return publicProcedure
+    .input(z.object({ integrationIds: z.array(z.string()).min(1), itemId: z.string() }))
+    .use(async ({ ctx, input, next }) => {
+      const dbIntegrations = await ctx.db.query.integrations.findMany({
+        where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
+        with: {
+          secrets: true,
+          items: true,
+        },
+      });
+
+      const offset = input.integrationIds.length - dbIntegrations.length;
+      if (offset !== 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}`,
+        });
+      }
+
+      const dbIntegrationWithItem = dbIntegrations.filter(integration => integration.items.some(item => item.itemId === input.itemId));
+
+      if (dbIntegrationWithItem.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Integration for item was not found"
+        })
+      }
+
+      return next({
+        ctx: {
+          integrations: dbIntegrationWithItem.map(({ secrets, kind, ...rest }) => ({
+            ...rest,
+            kind: kind as TKind,
+            decryptedSecrets: secrets.map((secret) => ({
+              ...secret,
+              value: decryptSecret(secret.value),
+            })),
+          })),
+        },
+      });
+    });
+};
