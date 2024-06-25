@@ -18,12 +18,12 @@
   "dependencies": {
     "@next/eslint-plugin-next": "^14.2.4",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.0.4",
+    "eslint-config-turbo": "^2.0.5",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "typescript-eslint": "^7.13.1"
+    "typescript-eslint": "^7.14.1"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
