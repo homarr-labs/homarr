@@ -18,7 +18,7 @@ export default async function EditIntegrationPage({ params }: EditIntegrationPag
 
   return (
     <>
-      <DynamicBreadcrumb dynamicMappings={new Map([[params.id, integration.name]])} />
+      <DynamicBreadcrumb dynamicMappings={new Map([[params.id, integration.name]])} nonInteractable={["edit"]} />
       <Container>
         <Stack>
           <Group align="center">

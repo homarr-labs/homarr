@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { Anchor, Badge, Breadcrumbs, Text } from "@mantine/core";
 import { IconHomeFilled } from "@tabler/icons-react";
-import { TranslationKeys } from "node_modules/@homarr/translation/src/lang";
 
+import type { TranslationKeys } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 interface DynamicBreadcrumbProps {
@@ -15,7 +15,7 @@ interface DynamicBreadcrumbProps {
 }
 
 /**
- * Breadcrumb is server side rendered. Elements are automatically
+ * Breadcrumb is client side rendered. Elements are automatically
  * calculated and translated using dynamic keys.
  * For dynamic routes (e.g. UIDs, names , ...),
  * you can pass dynamic mappings to define their values
@@ -31,10 +31,11 @@ export const DynamicBreadcrumb = ({
   const pathname = usePathname();
   const pathnameParts = pathname.split("/").filter((part) => part.length > 0);
   const t = useScopedI18n("navigationStructure");
+  const tNavbar = useScopedI18n("management.navbar.items");
 
   const length = pathnameParts.filter((part) => part !== customHome).length;
 
-  if (length == 0) {
+  if (length === 0) {
     return null;
   }
 
@@ -43,13 +44,13 @@ export const DynamicBreadcrumb = ({
       <Badge
         styles={{ root: { cursor: "pointer" } }}
         component={"a"}
-        href={customHomeLink ?? "/"}
+        href={customHomeLink}
         leftSection={<IconHomeFilled size="1rem" />}
         variant="default"
         tt="initial"
         h="auto"
       >
-        <Text fw="bold">Home</Text>
+        <Text fw="bold">{tNavbar("home")}</Text>
       </Badge>
       {pathnameParts.map((pathnamePart, index) => {
         if (pathnamePart === customHome) {
@@ -59,14 +60,22 @@ export const DynamicBreadcrumb = ({
         const translationKey = `${pathnameParts.slice(0, index + 1).join(".")}`;
 
         if (nonInteractable?.includes(pathnamePart)) {
-          return <Text>{t(`${translationKey}.label` as TranslationKeys)}</Text>;
+          return <Text key={href}>{t(`${translationKey}.label` as TranslationKeys)}</Text>;
         }
 
         if (dynamicMappings?.has(pathnamePart)) {
-          return <Anchor href={href}>{dynamicMappings.get(pathnamePart)}</Anchor>;
+          return (
+            <Anchor key={href} href={href}>
+              {dynamicMappings.get(pathnamePart)}
+            </Anchor>
+          );
         }
 
-        return <Anchor href={href}>{t(`${translationKey}.label` as TranslationKeys)}</Anchor>;
+        return (
+          <Anchor key={href} href={href}>
+            {t(`${translationKey}.label` as TranslationKeys)}
+          </Anchor>
+        );
       })}
     </Breadcrumbs>
   );
