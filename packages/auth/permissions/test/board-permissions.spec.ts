@@ -33,7 +33,7 @@ describe("constructBoardPermissions", () => {
     expect(result.hasViewAccess).toBe(true);
   });
 
-  test("should return hasFullAccess as true when session permissions include board-full-access", () => {
+  test("should return hasFullAccess as true when session permissions include board-full-all", () => {
     // Arrange
     const board = {
       creator: {

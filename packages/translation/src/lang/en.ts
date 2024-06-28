@@ -187,7 +187,7 @@ export default {
             label: "Interact with any integration",
             description: "Allow members to interact with any integration",
           },
-          "full-access": {
+          "full-all": {
             label: "Full integration access",
             description: "Allow members to manage, use and interact with any integration",
           },

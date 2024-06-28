@@ -44,7 +44,7 @@ export const groupPermissions = {
 /**
  * In the following object is described how the permissions are related to each other.
  * For example everybody with the permission "board-modify-all" also has the permission "board-view-all".
- * Or admin has all permissions (board-full-access and integration-full-access which will resolve in an array of every permission).
+ * Or admin has all permissions (board-full-all and integration-full-all which will resolve in an array of every permission).
  */
 const groupPermissionParents = {
   "board-modify-all": ["board-view-all"],
