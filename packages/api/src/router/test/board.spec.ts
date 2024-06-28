@@ -158,7 +158,7 @@ describe("getAllBoards should return all boards accessable to the current user",
     expect(result.map(({ name }) => name)).toStrictEqual(["public", "private2"]);
   });
 
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "with %s group board permission it should show board",
     async (permission) => {
       // Arrange
@@ -222,7 +222,7 @@ describe("getAllBoards should return all boards accessable to the current user",
     },
   );
 
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "with %s user board permission it should show board",
     async (permission) => {
       // Arrange
@@ -1091,12 +1091,12 @@ describe("getBoardPermissions should return board permissions", () => {
     await db.insert(boardUserPermissions).values([
       {
         userId: user1,
-        permission: "board-view",
+        permission: "view",
         boardId,
       },
       {
         userId: user2,
-        permission: "board-change",
+        permission: "modify",
         boardId,
       },
     ]);
@@ -1109,7 +1109,7 @@ describe("getBoardPermissions should return board permissions", () => {
 
     await db.insert(boardGroupPermissions).values({
       groupId,
-      permission: "board-view",
+      permission: "view",
       boardId,
     });
 
@@ -1122,16 +1122,16 @@ describe("getBoardPermissions should return board permissions", () => {
     const result = await caller.getBoardPermissions({ id: boardId });
 
     // Assert
-    expect(result.groupPermissions).toEqual([{ group: { id: groupId, name: "group1" }, permission: "board-view" }]);
-    expect(result.userPermissions).toEqual(
+    expect(result.groups).toEqual([{ group: { id: groupId, name: "group1" }, permission: "view" }]);
+    expect(result.users).toEqual(
       expect.arrayContaining([
         {
           user: { id: user1, name: null, image: null },
-          permission: "board-view",
+          permission: "view",
         },
         {
           user: { id: user2, name: null, image: null },
-          permission: "board-change",
+          permission: "modify",
         },
       ]),
     );
@@ -1141,7 +1141,7 @@ describe("getBoardPermissions should return board permissions", () => {
 });
 
 describe("saveUserBoardPermissions should save user board permissions", () => {
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "should save user board permissions",
     async (permission) => {
       // Arrange
@@ -1163,10 +1163,10 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
 
       // Act
       await caller.saveUserBoardPermissions({
-        id: boardId,
+        entityId: boardId,
         permissions: [
           {
-            itemId: user1,
+            principalId: user1,
             permission,
           },
         ],
@@ -1183,7 +1183,7 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
 });
 
 describe("saveGroupBoardPermissions should save group board permissions", () => {
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "should save group board permissions",
     async (permission) => {
       // Arrange
@@ -1210,10 +1210,10 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
 
       // Act
       await caller.saveGroupBoardPermissions({
-        id: boardId,
+        entityId: boardId,
         permissions: [
           {
-            itemId: groupId,
+            principalId: groupId,
             permission,
           },
         ],

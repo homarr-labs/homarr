@@ -49,7 +49,7 @@ export const throwIfActionForbiddenAsync = async (
     return; // As full access is required and user has full access, allow
   }
 
-  if (["change", "view"].includes(permission) && hasChangeAccess) {
+  if (["modify", "view"].includes(permission) && hasChangeAccess) {
     return; // As change access is required and user has change access, allow
   }
 
