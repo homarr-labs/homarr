@@ -96,13 +96,15 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
         });
       }
 
-      const dbIntegrationWithItem = dbIntegrations.filter(integration => integration.items.some(item => item.itemId === input.itemId));
+      const dbIntegrationWithItem = dbIntegrations.filter((integration) =>
+        integration.items.some((item) => item.itemId === input.itemId),
+      );
 
       if (dbIntegrationWithItem.length === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Integration for item was not found"
-        })
+          message: "Integration for item was not found",
+        });
       }
 
       return next({

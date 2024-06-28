@@ -1,9 +1,7 @@
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { createItemWithIntegrationChannel } from "../../../../redis/src/lib/channel";
-import {
-  createManyIntegrationOfOneItemMiddleware
-} from "../../middlewares/integration";
+import { createManyIntegrationOfOneItemMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const calendarRouter = createTRPCRouter({

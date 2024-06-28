@@ -7,7 +7,7 @@ import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { SonarrIntegration } from "@homarr/integrations";
-import { CalendarEvent } from "@homarr/integrations/types";
+import type { CalendarEvent } from "@homarr/integrations/types";
 import type { WidgetComponentProps } from "@homarr/widgets";
 
 import { createCronJob } from "~/lib/jobs";

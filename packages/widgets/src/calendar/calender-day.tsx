@@ -64,17 +64,24 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
   );
 };
 
-interface ArrIndicatorProps {
+interface NotificationIndicatorProps {
   events: CalendarEvent[];
 }
 
-const NotificationIndicator = ({ events }: ArrIndicatorProps) => {
+const NotificationIndicator = ({ events }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
   return (
     <Container h="0.7cqmin" w="80%" display="flex" p={0} style={{ flexDirection: "row", justifyContent: "center" }}>
       {notificationEvents.map((notificationEvent) => {
         return (
-          <Container h="100%" bg={notificationEvent} mx="0.25cqmin" p={0} style={{ flex: 1, borderRadius: "1000px" }} />
+          <Container
+            key={notificationEvent}
+            bg={notificationEvent}
+            h="100%"
+            mx="0.25cqmin"
+            p={0}
+            style={{ flex: 1, borderRadius: "1000px" }}
+          />
         );
       })}
     </Container>
