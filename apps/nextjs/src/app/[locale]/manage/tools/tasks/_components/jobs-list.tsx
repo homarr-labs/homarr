@@ -7,10 +7,9 @@ import { IconPlayerPlay } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
-
+import { useTimeAgo } from "@homarr/common";
 import type { TaskStatus } from "@homarr/cron-job-status";
-import {useTimeAgo} from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface JobsListProps {
   initialJobs: RouterOutputs["cronJobs"]["getJobs"];
@@ -25,7 +24,7 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
   const t = useScopedI18n("management.page.tool.tasks.job");
   const [jobs, handlers] = useListState<JobState>(
     initialJobs.map((job) => ({
-      job: job,
+      job,
       status: null,
     })),
   );
@@ -42,16 +41,19 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
     },
   });
   const { mutateAsync } = clientApi.cronJobs.triggerJob.useMutation();
-  const handleJobTrigger = React.useCallback(async (job: JobState) => {
-    if (job.status?.status === "running") {
-      return;
-    }
-    await mutateAsync(job.job.name);
-  }, [mutateAsync]);
+  const handleJobTrigger = React.useCallback(
+    async (job: JobState) => {
+      if (job.status?.status === "running") {
+        return;
+      }
+      await mutateAsync(job.job.name);
+    },
+    [mutateAsync],
+  );
   return (
     <Stack>
       {jobs.map((job) => (
-        <Card>
+        <Card key={job.job.name}>
           <Group justify={"space-between"} gap={"md"}>
             <Stack gap={0}>
               <Group>
