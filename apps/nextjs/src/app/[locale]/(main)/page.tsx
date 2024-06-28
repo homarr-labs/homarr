@@ -1,5 +1,3 @@
-"use client";
-
 import { Stack, Title } from "@mantine/core";
 
 export default function HomePage() {

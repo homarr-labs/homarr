@@ -62,6 +62,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
+      '@homarr/cron-job-status':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-job-status
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -438,6 +441,9 @@ importers:
       '@homarr/cron-job-runner':
         specifier: workspace:^0.1.0
         version: link:../cron-job-runner
+      '@homarr/cron-job-status':
+        specifier: workspace:^0.1.0
+        version: link:../cron-job-status
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../cron-jobs

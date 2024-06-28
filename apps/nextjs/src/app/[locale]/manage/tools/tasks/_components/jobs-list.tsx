@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ActionIcon, Badge, Card, Group, Stack, Text } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { IconPlayerPlay } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import type { TaskStatus } from "../../../../../../../../../packages/cron-job-status/src";
+import type { TaskStatus } from "@homarr/cron-job-status";
+import {useTimeAgo} from "@homarr/common";
 
 interface JobsListProps {
   initialJobs: RouterOutputs["cronJobs"]["getJobs"];
@@ -42,12 +42,12 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
     },
   });
   const { mutateAsync } = clientApi.cronJobs.triggerJob.useMutation();
-  const handleJobTrigger = React.useCallback((job: JobState) => {
+  const handleJobTrigger = React.useCallback(async (job: JobState) => {
     if (job.status?.status === "running") {
       return;
     }
-    void mutateAsync(job.job.name);
-  }, []);
+    await mutateAsync(job.job.name);
+  }, [mutateAsync]);
   return (
     <Stack>
       {jobs.map((job) => (
@@ -80,31 +80,11 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
 };
 
 const TimeAgo = ({ timestamp }: { timestamp: string }) => {
-  const [currentTime, setCurrentTime] = useState(Date.now());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const diffSeconds = dayjs(timestamp).diff(currentTime, "seconds");
-
-  if (diffSeconds > -60) {
-    return (
-      <Text size={"sm"} c={"dimmed"}>
-        {Math.abs(diffSeconds)} seconds ago
-      </Text>
-    );
-  }
+  const timeAgo = useTimeAgo(timestamp);
 
   return (
     <Text size={"sm"} c={"dimmed"}>
-      {dayjs(timestamp).from(currentTime)}
+      {timeAgo}
     </Text>
   );
 };
-
-export default TimeAgo;

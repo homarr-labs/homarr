@@ -4,8 +4,8 @@ import { jobNameSchema, triggerCronJobAsync } from "@homarr/cron-job-runner";
 import { jobGroup } from "@homarr/cron-jobs";
 import { logger } from "@homarr/log";
 
-import type { TaskStatus } from "../../../cron-job-status/src";
-import { createCronJobStatusChannel } from "../../../cron-job-status/src";
+import type { TaskStatus } from "@homarr/cron-job-status";
+import { createCronJobStatusChannel } from "@homarr/cron-job-status";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const cronJobsRouter = createTRPCRouter({
