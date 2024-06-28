@@ -23,7 +23,7 @@ export default async function IntegrationsNewPage({ searchParams }: NewIntegrati
     notFound();
   }
 
-  const t = await getScopedI18n("integration.page.create");
+  const tCreate = await getScopedI18n("integration.page.create");
 
   const currentKind = result.data;
 
@@ -32,7 +32,7 @@ export default async function IntegrationsNewPage({ searchParams }: NewIntegrati
       <Stack>
         <Group align="center">
           <IntegrationAvatar kind={currentKind} size="md" />
-          <Title>{t("title", { name: getIntegrationName(currentKind) })}</Title>
+          <Title>{tCreate("title", { name: getIntegrationName(currentKind) })}</Title>
         </Group>
         <NewIntegrationForm searchParams={searchParams} />
       </Stack>

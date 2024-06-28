@@ -2,13 +2,19 @@ import { TRPCError } from "@trpc/server";
 
 import { decryptSecret, encryptSecret } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, createId, eq } from "@homarr/db";
-import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
+import { and, createId, eq, inArray } from "@homarr/db";
+import {
+  groupPermissions,
+  integrationGroupPermissions,
+  integrations,
+  integrationSecrets,
+  integrationUserPermissions,
+} from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
-import { integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
+import { getPermissionsWithParents, integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
 import { validation } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { testConnectionAsync } from "./integration-test-connection";
 
 export const integrationRouter = createTRPCRouter({
@@ -160,6 +166,119 @@ export const integrationRouter = createTRPCRouter({
 
     await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
   }),
+  getIntegrationPermissions: protectedProcedure.input(validation.board.permissions).query(async ({ input, ctx }) => {
+    // await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+
+    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+      where: inArray(
+        groupPermissions.permission,
+        getPermissionsWithParents(["integration-use-all", "integration-interact-all", "integration-full-all"]),
+      ),
+      columns: {
+        groupId: false,
+      },
+      with: {
+        group: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    const userPermissions = await ctx.db.query.integrationUserPermissions.findMany({
+      where: eq(integrationUserPermissions.integrationId, input.id),
+      with: {
+        user: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    const dbGroupIntegrationPermission = await ctx.db.query.integrationGroupPermissions.findMany({
+      where: eq(integrationGroupPermissions.integrationId, input.id),
+      with: {
+        group: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return {
+      inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
+        return permissionA.group.name.localeCompare(permissionB.group.name);
+      }),
+      users: userPermissions
+        .map(({ user, permission }) => ({
+          user,
+          permission,
+        }))
+        .sort((permissionA, permissionB) => {
+          return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
+        }),
+      groups: dbGroupIntegrationPermission
+        .map(({ group, permission }) => ({
+          group: {
+            id: group.id,
+            name: group.name,
+          },
+          permission,
+        }))
+        .sort((permissionA, permissionB) => {
+          return permissionA.group.name.localeCompare(permissionB.group.name);
+        }),
+    };
+  }),
+  saveUserIntegrationPermissions: protectedProcedure
+    .input(validation.integration.savePermissions)
+    .mutation(async ({ input, ctx }) => {
+      // await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+
+      await ctx.db.transaction(async (transaction) => {
+        await transaction
+          .delete(integrationUserPermissions)
+          .where(eq(integrationUserPermissions.integrationId, input.entityId));
+        if (input.permissions.length === 0) {
+          return;
+        }
+        await transaction.insert(integrationUserPermissions).values(
+          input.permissions.map((permission) => ({
+            userId: permission.principalId,
+            permission: permission.permission,
+            integrationId: input.entityId,
+          })),
+        );
+      });
+    }),
+  saveGroupIntegrationPermissions: protectedProcedure
+    .input(validation.integration.savePermissions)
+    .mutation(async ({ input, ctx }) => {
+      // await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "modify");
+
+      await ctx.db.transaction(async (transaction) => {
+        await transaction
+          .delete(integrationGroupPermissions)
+          .where(eq(integrationGroupPermissions.integrationId, input.entityId));
+        if (input.permissions.length === 0) {
+          return;
+        }
+        await transaction.insert(integrationGroupPermissions).values(
+          input.permissions.map((permission) => ({
+            groupId: permission.principalId,
+            permission: permission.permission,
+            integrationId: input.entityId,
+          })),
+        );
+      });
+    }),
 });
 
 interface UpdateSecretInput {

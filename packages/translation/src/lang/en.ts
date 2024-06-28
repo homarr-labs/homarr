@@ -165,7 +165,7 @@ export default {
             label: "Modify all boards",
             description: "Allow members to modify all boards (Does not include access control and danger zone)",
           },
-          "full-access": {
+          "full-all": {
             label: "Full board access",
             description:
               "Allow members to view, modify, and delete all boards (Including access control and danger zone)",
@@ -483,6 +483,11 @@ export default {
           newLabel: "New password",
         },
       },
+    },
+    permission: {
+      use: "Select integrations in items",
+      interact: "Interact with integrations",
+      full: "Full integration access",
     },
   },
   common: {
@@ -1138,36 +1143,14 @@ export default {
         access: {
           title: "Access control",
           permission: {
-            userSelect: {
-              title: "Add user permission",
-            },
-            groupSelect: {
-              title: "Add group permission",
-            },
-            tab: {
-              user: "Users",
-              group: "Groups",
-              inherited: "Inherited groups",
-            },
-            field: {
-              user: {
-                label: "User",
-              },
-              group: {
-                label: "Group",
-              },
-              permission: {
-                label: "Permission",
-              },
-            },
             item: {
-              "board-view": {
+              view: {
                 label: "View board",
               },
-              "board-change": {
-                label: "Change board",
+              modify: {
+                label: "Modify board",
               },
-              "board-full": {
+              full: {
                 label: "Full access",
               },
             },
@@ -1506,6 +1489,35 @@ export default {
       stop: "Stop",
       restart: "Restart",
       remove: "Remove",
+    },
+  },
+  permission: {
+    title: "Permissions",
+    userSelect: {
+      title: "Add user permission",
+    },
+    groupSelect: {
+      title: "Add group permission",
+    },
+    tab: {
+      user: "Users",
+      group: "Groups",
+      inherited: "Inherited groups",
+    },
+    field: {
+      user: {
+        label: "User",
+      },
+      group: {
+        label: "Group",
+      },
+      permission: {
+        label: "Permission",
+      },
+    },
+    action: {
+      saveUser: "Save user permission",
+      saveGroup: "Save group permission",
     },
   },
 } as const;

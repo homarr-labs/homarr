@@ -113,7 +113,7 @@ export const boardRouter = createTRPCRouter({
       });
     }),
   renameBoard: protectedProcedure.input(validation.board.rename).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
@@ -122,7 +122,7 @@ export const boardRouter = createTRPCRouter({
   changeBoardVisibility: protectedProcedure
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
       await ctx.db
         .update(boards)
@@ -130,12 +130,12 @@ export const boardRouter = createTRPCRouter({
         .where(eq(boards.id, input.id));
     }),
   deleteBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     await ctx.db.delete(boards).where(eq(boards.id, input.id));
   }),
   setHomeBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "board-view");
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
 
     await ctx.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
   }),
@@ -148,20 +148,20 @@ export const boardRouter = createTRPCRouter({
       : null;
 
     const boardWhere = user?.homeBoardId ? eq(boards.id, user.homeBoardId) : eq(boards.name, "home");
-    await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
+    await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
   getBoardByName: publicProcedure.input(validation.board.byName).query(async ({ input, ctx }) => {
     const boardWhere = eq(boards.name, input.name);
-    await throwIfActionForbiddenAsync(ctx, boardWhere, "board-view");
+    await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
   savePartialBoardSettings: protectedProcedure
     .input(validation.board.savePartialSettings.and(z.object({ id: z.string() })))
     .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "board-change");
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
       await ctx.db
         .update(boards)
@@ -192,7 +192,7 @@ export const boardRouter = createTRPCRouter({
         .where(eq(boards.id, input.id));
     }),
   saveBoard: protectedProcedure.input(validation.board.save).mutation(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "board-change");
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
     await ctx.db.transaction(async (transaction) => {
       const dbBoard = await getFullBoardWithWhereAsync(transaction, eq(boards.id, input.id), ctx.session.user.id);
@@ -332,12 +332,12 @@ export const boardRouter = createTRPCRouter({
   }),
 
   getBoardPermissions: protectedProcedure.input(validation.board.permissions).query(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
       where: inArray(
         groupPermissions.permission,
-        getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-access"]),
+        getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-all"]),
       ),
       columns: {
         groupId: false,
@@ -381,7 +381,7 @@ export const boardRouter = createTRPCRouter({
       inherited: dbGroupPermissions.sort((permissionA, permissionB) => {
         return permissionA.group.name.localeCompare(permissionB.group.name);
       }),
-      userPermissions: userPermissions
+      users: userPermissions
         .map(({ user, permission }) => ({
           user,
           permission,
@@ -389,7 +389,7 @@ export const boardRouter = createTRPCRouter({
         .sort((permissionA, permissionB) => {
           return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
         }),
-      groupPermissions: dbGroupBoardPermission
+      groups: dbGroupBoardPermission
         .map(({ group, permission }) => ({
           group: {
             id: group.id,
@@ -405,18 +405,18 @@ export const boardRouter = createTRPCRouter({
   saveUserBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
       await ctx.db.transaction(async (transaction) => {
-        await transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.id));
+        await transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId));
         if (input.permissions.length === 0) {
           return;
         }
         await transaction.insert(boardUserPermissions).values(
           input.permissions.map((permission) => ({
-            userId: permission.itemId,
+            userId: permission.principalId,
             permission: permission.permission,
-            boardId: input.id,
+            boardId: input.entityId,
           })),
         );
       });
@@ -424,18 +424,18 @@ export const boardRouter = createTRPCRouter({
   saveGroupBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full-access");
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "modify");
 
       await ctx.db.transaction(async (transaction) => {
-        await transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.id));
+        await transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId));
         if (input.permissions.length === 0) {
           return;
         }
         await transaction.insert(boardGroupPermissions).values(
           input.permissions.map((permission) => ({
-            groupId: permission.itemId,
+            groupId: permission.principalId,
             permission: permission.permission,
-            boardId: input.id,
+            boardId: input.entityId,
           })),
         );
       });
