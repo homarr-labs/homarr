@@ -30,15 +30,37 @@ export default function CalendarWidget({ isEditMode, serverData }: WidgetCompone
       styles={{
         calendarHeaderControl: {
           pointerEvents: isEditMode ? "none" : undefined,
+          height: "12cqmin",
+          width: "12cqmin",
+          borderRadius: "3.5cqmin",
+        },
+        calendarHeaderLevel: {
+          height: "12cqmin",
+          fontSize: "6cqmin",
+          pointerEvents: "none",
         },
         levelsGroup: {
           height: "100%",
+          padding: "2.5cqmin",
         },
         calendarHeader: {
           maxWidth: "unset",
+          marginBottom: 0,
         },
         day: {
-          width: "100%",
+          width: "12cqmin",
+          height: "12cqmin",
+          borderRadius: "3.5cqmin",
+        },
+        monthCell: {
+          textAlign: "center",
+        },
+        month: {
+          height: "100%",
+        },
+        weekday: {
+          fontSize: "5.5cqmin",
+          padding: 0,
         },
       }}
       renderDay={(date) => {

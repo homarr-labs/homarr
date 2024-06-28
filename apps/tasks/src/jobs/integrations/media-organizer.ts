@@ -3,16 +3,16 @@ import { createItemWithIntegrationChannel } from "node_modules/@homarr/redis/src
 import SuperJSON from "superjson";
 
 import { decryptSecret } from "@homarr/common";
+import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { SonarrIntegration } from "@homarr/integrations";
 import { CalendarEvent } from "@homarr/integrations/types";
 import type { WidgetComponentProps } from "@homarr/widgets";
 
-import { EVERY_MINUTE } from "~/lib/cron-job/constants";
-import { createCronJob } from "~/lib/cron-job/creator";
+import { createCronJob } from "~/lib/jobs";
 
-export const mediaOrganizerJob = createCronJob(EVERY_MINUTE).withCallback(async () => {
+export const mediaOrganizerJob = createCronJob("media-organizer", EVERY_MINUTE).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
     where: eq(items.kind, "calendar"),
     with: {

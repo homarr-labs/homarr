@@ -9,7 +9,7 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
   try {
     const data = await api.widget.calendar.findAllEvents({
       integrationIds,
-      itemId: "" // TODO: Get actual item ID here
+      itemId: "", // TODO: Get actual item ID here
     });
 
     return {

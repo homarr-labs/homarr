@@ -13,6 +13,7 @@ export interface CalendarEvent {
     href: string;
     name: string;
     color: string | undefined;
+    notificationColor?: string | undefined;
     isDark: boolean | undefined;
     logo: string;
   }[];

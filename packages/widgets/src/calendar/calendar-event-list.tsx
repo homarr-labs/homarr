@@ -32,7 +32,6 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
       styles={{
         viewport: {
           maxHeight: 450,
-          minHeight: 210,
         },
       }}
     >
