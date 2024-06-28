@@ -424,7 +424,7 @@ export const boardRouter = createTRPCRouter({
   saveGroupBoardPermissions: protectedProcedure
     .input(validation.board.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "modify");
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
       await ctx.db.transaction(async (transaction) => {
         await transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId));
