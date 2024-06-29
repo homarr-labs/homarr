@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-import { integrationKinds, integrationSecretKinds } from "@homarr/definitions";
+import { integrationKinds, integrationPermissions, integrationSecretKinds } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
+import { createSavePermissionsSchema } from "./permissions";
 
 const integrationCreateSchema = z.object({
   name: z.string().nonempty().max(127),
@@ -44,10 +45,13 @@ const testConnectionSchema = z.object({
   ),
 });
 
+const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(integrationPermissions));
+
 export const integrationSchemas = {
   create: integrationCreateSchema,
   update: integrationUpdateSchema,
   delete: idSchema,
   byId: idSchema,
   testConnection: testConnectionSchema,
+  savePermissions: savePermissionsSchema,
 };

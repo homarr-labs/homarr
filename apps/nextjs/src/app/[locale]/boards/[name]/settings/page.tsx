@@ -20,8 +20,8 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
-import { AccessSettingsContent } from "./_access";
 import { BackgroundSettingsContent } from "./_background";
+import { BoardAccessSettings } from "./_board-access";
 import { ColorSettingsContent } from "./_colors";
 import { CustomCssSettingsContent } from "./_customCss";
 import { DangerZoneSettingsContent } from "./_danger";
@@ -44,8 +44,8 @@ const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
     const permissions = hasFullAccess
       ? await api.board.getBoardPermissions({ id: board.id })
       : {
-          userPermissions: [],
-          groupPermissions: [],
+          users: [],
+          groups: [],
           inherited: [],
         };
 
@@ -89,7 +89,7 @@ export default async function BoardSettingsPage({ params, searchParams }: Props)
           {hasFullAccess && (
             <>
               <AccordionItemFor value="access" icon={IconUser}>
-                <AccessSettingsContent board={board} initialPermissions={permissions} />
+                <BoardAccessSettings board={board} initialPermissions={permissions} />
               </AccordionItemFor>
               <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
                 <DangerZoneSettingsContent />

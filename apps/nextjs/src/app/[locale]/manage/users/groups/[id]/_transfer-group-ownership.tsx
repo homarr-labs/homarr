@@ -8,7 +8,7 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { UserSelectModal } from "~/app/[locale]/boards/[name]/settings/_access/user-select-modal";
+import { UserSelectModal } from "~/components/access/user-select-modal";
 
 interface TransferGroupOwnershipProps {
   group: {
