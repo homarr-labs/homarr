@@ -18,7 +18,9 @@ class WinstonCronJobLogger implements Logger {
   }
 }
 
-export const { createCronJob, createCronJobGroup } = createCronJobFunctions<keyof TranslationObject["management"]["page"]["tool"]["tasks"]["job"]>({
+export const { createCronJob, createCronJobGroup } = createCronJobFunctions<
+  keyof TranslationObject["management"]["page"]["tool"]["tasks"]["job"]
+>({
   logger: new WinstonCronJobLogger(),
   beforeCallback: beforeCallbackAsync,
   onCallbackSuccess: onCallbackSuccessAsync,

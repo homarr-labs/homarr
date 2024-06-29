@@ -1455,6 +1455,11 @@ export default {
       tool: {
         tasks: {
           title: "Tasks",
+          status: {
+            idle: "Idle",
+            running: "Running",
+            error: "Error",
+          },
           job: {
             iconsUpdater: {
               label: "Icons Updater",

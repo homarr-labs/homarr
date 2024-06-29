@@ -9,6 +9,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type { TaskStatus } from "@homarr/cron-job-status";
+import { TranslationKeys } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 interface JobsListProps {
@@ -21,7 +22,7 @@ interface JobState {
 }
 
 export const JobsList = ({ initialJobs }: JobsListProps) => {
-  const t = useScopedI18n("management.page.tool.tasks.job");
+  const t = useScopedI18n("management.page.tool.tasks");
   const [jobs, handlers] = useListState<JobState>(
     initialJobs.map((job) => ({
       job,
@@ -57,10 +58,10 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
           <Group justify={"space-between"} gap={"md"}>
             <Stack gap={0}>
               <Group>
-                <Text>{t(`${job.job.name}.label`)}</Text>
-                {job.status?.status === "idle" && <Badge variant="default">Idle</Badge>}
-                {job.status?.status === "running" && <Badge color="green">Running</Badge>}
-                {job.status?.lastExecutionStatus === "error" && <Badge color="red">Error</Badge>}
+                <Text>{t(`${job.job.name}.label` as TranslationKeys)}</Text>
+                {job.status?.status === "idle" && <Badge variant="default">{t("status.idle")}</Badge>}
+                {job.status?.status === "running" && <Badge color="green">{t("status.running")}</Badge>}
+                {job.status?.lastExecutionStatus === "error" && <Badge color="red">{t("status.error")}</Badge>}
               </Group>
               {job.status && <TimeAgo timestamp={job.status.lastExecutionTimestamp} />}
             </Stack>
@@ -82,7 +83,7 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
 };
 
 const TimeAgo = ({ timestamp }: { timestamp: string }) => {
-  const timeAgo = useTimeAgo(timestamp);
+  const timeAgo = useTimeAgo(new Date(timestamp));
 
   return (
     <Text size={"sm"} c={"dimmed"}>
