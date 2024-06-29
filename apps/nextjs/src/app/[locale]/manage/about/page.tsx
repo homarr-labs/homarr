@@ -22,6 +22,7 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import contributorsData from "../../../../../../../static-data/contributors.json";
@@ -48,6 +49,7 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
   const attributes = await getPackageAttributesAsync();
   return (
     <div>
+      <DynamicBreadcrumb />
       <Center w="100%">
         <Group py="lg">
           <Image src={homarrLogoPath} width={100} height={100} alt="" />

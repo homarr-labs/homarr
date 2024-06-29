@@ -1508,4 +1508,53 @@ export default {
       remove: "Remove",
     },
   },
+  navigationStructure: {
+    manage: {
+      label: "Manage",
+      boards: {
+        label: "Boards",
+      },
+      integrations: {
+        label: "Integrations",
+        edit: {
+          label: "Edit",
+        },
+        new: {
+          label: "New",
+        },
+      },
+      apps: {
+        label: "Apps",
+        new: {
+          label: "New App",
+        },
+        edit: {
+          label: "Edit App",
+        },
+      },
+      users: {
+        label: "Users",
+        create: {
+          label: "Create",
+        },
+        general: "General",
+        security: "Security",
+      },
+      tools: {
+        label: "Tools",
+        docker: {
+          label: "Docker",
+        },
+        logs: {
+          label: "Logs",
+        },
+      },
+      settings: {
+        label: "Settings",
+      },
+      about: {
+        label: "About",
+      },
+    },
+  },
 } as const;
