@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { createItemWithIntegrationChannel } from "@homarr/redis";
 import SuperJSON from "superjson";
 
 import { decryptSecret } from "@homarr/common";
@@ -8,10 +7,11 @@ import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { SonarrIntegration } from "@homarr/integrations";
 import type { CalendarEvent } from "@homarr/integrations/types";
-import { createCronJob } from "../../lib";
+import { createItemWithIntegrationChannel } from "@homarr/redis";
 
 // This import is done that way to avoid circular dependencies.
 import type { WidgetComponentProps } from "../../../../widgets";
+import { createCronJob } from "../../lib";
 
 export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({

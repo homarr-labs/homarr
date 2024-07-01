@@ -8,8 +8,8 @@ import type { WidgetProps } from "../definition";
 export default async function getServerDataAsync({ integrationIds, itemId }: WidgetProps<"calendar">) {
   if (!itemId) {
     return {
-      initialData: []
-    }
+      initialData: [],
+    };
   }
   try {
     const data = await api.widget.calendar.findAllEvents({

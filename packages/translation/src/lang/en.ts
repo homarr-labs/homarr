@@ -1486,8 +1486,8 @@ export default {
               label: "Pings",
             },
             mediaOrganizer: {
-              label: "Media Organizers"
-            }
+              label: "Media Organizers",
+            },
           },
         },
       },
