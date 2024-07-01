@@ -23,10 +23,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@homarr/common": "workspace:^0.1.0",
+    "@jellyfin/sdk": "^0.10.0",
     "@homarr/translation": "workspace:^0.1.0"
   },
   "devDependencies": {

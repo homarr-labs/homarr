@@ -206,7 +206,7 @@ const ItemMenu = ({
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 1 }}>
+        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 2 }}>
           <IconDotsVertical />
         </ActionIcon>
       </Menu.Target>

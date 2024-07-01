@@ -1,6 +1,7 @@
 import superjson from "superjson";
 
 import { createId } from "@homarr/db";
+import { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import { createRedisConnection } from "./connection";
@@ -164,6 +165,33 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
      */
     setAsync: async (data: TData) => {
       await getSetClient.set(cacheChannelName, superjson.stringify({ data, timestamp: new Date() }));
+    },
+  };
+};
+
+export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
+  const channelName = `item:${kind}:${integrationId}`;
+  return {
+    subscribeAsync: async (callback: (data: TData) => void) => {
+      await subscriber.subscribe(channelName);
+      subscriber.on("message", (channel, message) => {
+        if (channel !== channelName) {
+          logger.warn("received message on " + channel + " but was looking for " + channelName);
+          return;
+        }
+        callback(superjson.parse(message));
+        logger.info("sent message on" + channelName + "!");
+      });
+    },
+    publishAndUpdateLastStateAsync: async (data: TData) => {
+      await publisher.publish(channelName, superjson.stringify(data));
+      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+    },
+    getAsync: async () => {
+      const data = await getSetClient.get(channelName);
+      if (!data) return null;
+
+      return superjson.parse<{ data: TData; timestamp: Date }>(data);
     },
   };
 };

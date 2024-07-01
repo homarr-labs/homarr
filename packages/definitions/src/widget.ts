@@ -8,5 +8,6 @@ export const widgetKinds = [
   "dnsHoleSummary",
   "smartHome-entityState",
   "smartHome-executeAutomation",
+  "mediaServer",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

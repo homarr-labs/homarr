@@ -11,6 +11,7 @@ import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
@@ -33,6 +34,7 @@ export const widgetImports = {
   dnsHoleSummary,
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
+  mediaServer,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
