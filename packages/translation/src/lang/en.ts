@@ -1480,8 +1480,8 @@ export default {
               label: "Pings",
             },
             mediaServer: {
-              label: "Media Server"
-            }
+              label: "Media Server",
+            },
           },
         },
       },

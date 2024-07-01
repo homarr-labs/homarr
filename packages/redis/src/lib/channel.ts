@@ -1,7 +1,7 @@
 import superjson from "superjson";
 
 import { createId } from "@homarr/db";
-import { WidgetKind } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import { createRedisConnection } from "./connection";

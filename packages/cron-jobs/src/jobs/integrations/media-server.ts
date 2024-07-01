@@ -4,6 +4,7 @@ import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { JellyfinIntegration } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
+
 import { createCronJob } from "../../lib";
 
 export const mediaServerJob = createCronJob("mediaServer", EVERY_5_SECONDS).withCallback(async () => {
