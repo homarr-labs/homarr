@@ -92,6 +92,7 @@ export default function MediaServerWidget({
     enableHiding: false,
     enableTopToolbar: false,
     enableColumnActions: false,
+    enableStickyHeader: true,
     initialState: {
       density: "xs",
     },
@@ -101,6 +102,11 @@ export default function MediaServerWidget({
       withBorder: false,
       style: {
         flexDirection: "column",
+      },
+    },
+    mantineTableProps: {
+      style: {
+        tableLayout: "fixed",
       },
     },
     mantineTableContainerProps: {
