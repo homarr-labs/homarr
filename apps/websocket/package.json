@@ -35,7 +35,7 @@
     "@types/ws": "^8.5.10",
     "eslint": "^9.6.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }
