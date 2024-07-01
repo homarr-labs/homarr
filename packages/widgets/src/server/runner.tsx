@@ -45,6 +45,7 @@ const ItemDataLoader = async ({ item }: ItemDataLoaderProps) => {
   const data = await loader.default({
     ...item,
     options: optionsWithDefault as never,
+    itemId: item.id,
   });
   return <ClientServerDataInitalizer id={item.id} serverData={data} />;
 };
