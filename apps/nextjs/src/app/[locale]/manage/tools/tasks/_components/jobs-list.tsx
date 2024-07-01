@@ -9,7 +9,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type { TaskStatus } from "@homarr/cron-job-status";
-import { TranslationKeys } from "@homarr/translation";
+import type { TranslationKeys } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 interface JobsListProps {
