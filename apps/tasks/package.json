@@ -47,7 +47,7 @@
     "eslint": "^9.6.0",
     "prettier": "^3.3.2",
     "tsx": "4.13.3",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }
