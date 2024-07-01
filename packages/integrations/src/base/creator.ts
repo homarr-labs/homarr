@@ -11,6 +11,6 @@ export const integrationCreatorByKind = (kind: IntegrationKind, integration: Int
     case "homeAssistant":
       return new HomeAssistantIntegration(integration);
     default:
-      throw new Error(`Unknown integration kind ${kind}`);
+      throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
   }
 };

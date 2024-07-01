@@ -1252,6 +1252,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            tasks: "Tasks",
           },
         },
         settings: "Settings",
@@ -1447,6 +1448,30 @@ export default {
             usersData: {
               title: "Users data",
               text: "Send the amount of users and whether you've activated SSO",
+            },
+          },
+        },
+      },
+      tool: {
+        tasks: {
+          title: "Tasks",
+          status: {
+            idle: "Idle",
+            running: "Running",
+            error: "Error",
+          },
+          job: {
+            iconsUpdater: {
+              label: "Icons Updater",
+            },
+            analytics: {
+              label: "Analytics",
+            },
+            smartHomeEntityState: {
+              label: "Smart Home Entity State",
+            },
+            ping: {
+              label: "Pings",
             },
           },
         },

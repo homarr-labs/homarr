@@ -1,0 +1,45 @@
+{
+  "name": "@homarr/cron-jobs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/cron-job-status": "workspace:^0.1.0",
+    "@homarr/cron-jobs-core": "workspace:^0.1.0",
+    "@homarr/analytics": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/server-settings": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/icons": "workspace:^0.1.0",
+    "@homarr/integrations": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/ping": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0"
+  },
+  "devDependencies": {
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.2"
+  },
+  "prettier": "@homarr/prettier-config"
+}

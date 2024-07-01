@@ -4,9 +4,9 @@ import { sendServerAnalyticsAsync } from "@homarr/analytics";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { serverSettings } from "@homarr/db/schema/sqlite";
+import type { defaultServerSettings } from "@homarr/server-settings";
 
-import { createCronJob } from "~/lib/jobs";
-import type { defaultServerSettings } from "../../../../packages/server-settings";
+import { createCronJob } from "../lib";
 
 export const analyticsJob = createCronJob("analytics", EVERY_WEEK, {
   runOnStart: true,
