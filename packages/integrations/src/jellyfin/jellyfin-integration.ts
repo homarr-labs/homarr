@@ -53,8 +53,8 @@ export class JellyfinIntegration extends Integration {
         sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
         user: {
           profilePictureUrl: `${this.integration.url}/Users/${sessionInfo.UserId}/Images/Primary`,
-          userId: sessionInfo.UserId ?? '',
-          username: sessionInfo.UserName ?? '',
+          userId: sessionInfo.UserId ?? "",
+          username: sessionInfo.UserName ?? "",
         },
         currentlyPlaying: nowPlaying,
       };
