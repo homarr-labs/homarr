@@ -170,7 +170,7 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
 };
 
 export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
-  const channelName = `item:${kind}:${integrationId}`;
+  const channelName = `item:${kind}:integration:${integrationId}`;
   return {
     subscribeAsync: async (callback: (data: TData) => void) => {
       await subscriber.subscribe(channelName);
@@ -187,6 +187,9 @@ export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integra
       await publisher.publish(channelName, superjson.stringify(data));
       await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
     },
+    setAsync: async (data: TData) => {
+      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+    },
     getAsync: async () => {
       const data = await getSetClient.get(channelName);
       if (!data) return null;
@@ -195,9 +198,6 @@ export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integra
     },
   };
 };
-
-export const createItemWithIntegrationChannel = <T>(itemId: string, integrationId: string) =>
-  createCacheChannel<T>(`item:${itemId}:integration:${integrationId}`);
 
 const queueClient = createRedisConnection();
 

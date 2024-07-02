@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconLayoutKanban, IconPencil, IconSettings, IconTrash } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { ErrorBoundary } from "react-error-boundary";
@@ -206,8 +206,8 @@ const ItemMenu = ({
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 2 }}>
-          <IconDotsVertical />
+        <ActionIcon variant="default" radius={"xl"} pos="absolute" top={offset} right={offset} style={{ zIndex: 10 }}>
+          <IconSettings size={"1rem"} />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>

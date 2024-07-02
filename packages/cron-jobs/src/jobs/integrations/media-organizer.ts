@@ -7,7 +7,7 @@ import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { SonarrIntegration } from "@homarr/integrations";
 import type { CalendarEvent } from "@homarr/integrations/types";
-import { createItemWithIntegrationChannel } from "@homarr/redis";
+import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 // This import is done that way to avoid circular dependencies.
 import type { WidgetComponentProps } from "../../../../widgets";
@@ -50,7 +50,7 @@ export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).w
       });
       const events = await sonarr.getCalendarEventsAsync(start, end);
 
-      const cache = createItemWithIntegrationChannel<CalendarEvent[]>(itemForIntegration.id, integration.integrationId);
+      const cache = createItemAndIntegrationChannel<CalendarEvent[]>("calendar", integration.integrationId);
       await cache.setAsync(events);
     }
   }
