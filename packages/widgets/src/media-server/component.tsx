@@ -62,7 +62,7 @@ export default function MediaServerWidget({
       enabled: !isEditMode,
       onData(data) {
         currentStreamsHandlers.applyWhere(
-          (pair) => pair.integrationId == data.integrationId,
+          (pair) => pair.integrationId === data.integrationId,
           (pair) => {
             return {
               ...pair,

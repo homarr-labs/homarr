@@ -176,11 +176,11 @@ export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integra
       await subscriber.subscribe(channelName);
       subscriber.on("message", (channel, message) => {
         if (channel !== channelName) {
-          logger.warn("received message on " + channel + " but was looking for " + channelName);
+          logger.warn(`received message on ${channel} channel but was looking for ${channelName}`);
           return;
         }
         callback(superjson.parse(message));
-        logger.info("sent message on" + channelName + "!");
+        logger.debug(`sent message on ${channelName}`);
       });
     },
     publishAndUpdateLastStateAsync: async (data: TData) => {
