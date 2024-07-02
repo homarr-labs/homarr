@@ -16,7 +16,7 @@ export default {
       },
       init: {
         title: "New Homarr installation",
-        subtitle: "Please create the initial administator user",
+        subtitle: "Please create the initial administrator user",
       },
     },
     field: {
@@ -907,6 +907,18 @@ export default {
         },
       },
     },
+    calendar: {
+      name: "Calendar",
+      description: "Display events from your integrations in a calendar view within a certain relative time period",
+      option: {
+        filterPastMonths: {
+          label: "Start from",
+        },
+        filterFutureMonths: {
+          label: "End at",
+        },
+      },
+    },
     weather: {
       name: "Weather",
       description: "Displays the current weather information of a set location.",
@@ -1472,6 +1484,9 @@ export default {
             },
             ping: {
               label: "Pings",
+            },
+            mediaOrganizer: {
+              label: "Media Organizers",
             },
           },
         },

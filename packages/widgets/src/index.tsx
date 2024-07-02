@@ -6,6 +6,7 @@ import { Loader as UiLoader } from "@mantine/core";
 import type { WidgetKind } from "@homarr/definitions";
 
 import * as app from "./app";
+import * as calendar from "./calendar";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleSummary from "./dns-hole/summary";
@@ -33,6 +34,7 @@ export const widgetImports = {
   dnsHoleSummary,
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
+  calendar,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
