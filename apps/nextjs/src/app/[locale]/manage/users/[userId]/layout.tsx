@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
+import { Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
 import { IconSettings, IconShieldLock } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
@@ -10,6 +9,7 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { NavigationLink } from "../groups/[id]/_navigation";
 import { canAccessUserEditPage } from "./access";
@@ -30,21 +30,23 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
 
   return (
     <ManageContainer size="xl">
+      <DynamicBreadcrumb
+        dynamicMappings={
+          new Map([
+            [params.userId, user.name ?? ""],
+            ["general", t("navigationStructure.manage.users.general")],
+            ["security", t("navigationStructure.manage.users.security")],
+          ])
+        }
+      />
       <Grid>
         <GridCol span={12}>
           <Group justify="space-between" align="center">
-            <Group>
-              <UserAvatar user={user} size="lg" />
-              <Stack gap={0}>
-                <Title order={3}>{user.name}</Title>
-                <Text c="gray.5">{t("user.name")}</Text>
-              </Stack>
-            </Group>
-            {session?.user.permissions.includes("admin") && (
-              <Button component={Link} href="/manage/users" color="gray" variant="light">
-                {tUser("back")}
-              </Button>
-            )}
+            <UserAvatar user={user} size="lg" />
+            <Stack gap={0}>
+              <Title order={3}>{user.name}</Title>
+              <Text c="gray.5">{t("user.name")}</Text>
+            </Stack>
           </Group>
         </GridCol>
         <GridCol span={{ xs: 12, md: 4, lg: 3, xl: 2 }}>

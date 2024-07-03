@@ -7,6 +7,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { IntegrationAvatar } from "../_integration-avatar";
 import { NewIntegrationForm } from "./_integration-new-form";
 
@@ -28,14 +29,17 @@ export default async function IntegrationsNewPage({ searchParams }: NewIntegrati
   const currentKind = result.data;
 
   return (
-    <Container>
-      <Stack>
-        <Group align="center">
-          <IntegrationAvatar kind={currentKind} size="md" />
-          <Title>{tCreate("title", { name: getIntegrationName(currentKind) })}</Title>
-        </Group>
-        <NewIntegrationForm searchParams={searchParams} />
-      </Stack>
-    </Container>
+    <>
+      <DynamicBreadcrumb />
+      <Container>
+        <Stack>
+          <Group align="center">
+            <IntegrationAvatar kind={currentKind} size="md" />
+            <Title>{tCreate("title", { name: getIntegrationName(currentKind) })}</Title>
+          </Group>
+          <NewIntegrationForm searchParams={searchParams} />
+        </Stack>
+      </Container>
+    </>
   );
 }

@@ -4,6 +4,7 @@ import { api } from "@homarr/api/server";
 import { getIntegrationName } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { IntegrationAccessSettings } from "../../_components/integration-access-settings";
 import { IntegrationAvatar } from "../../_integration-avatar";
 import { EditIntegrationForm } from "./_integration-edit-form";
@@ -19,19 +20,22 @@ export default async function EditIntegrationPage({ params }: EditIntegrationPag
   const integrationPermissions = await api.integration.getIntegrationPermissions({ id: integration.id });
 
   return (
-    <Container>
-      <Stack>
-        <Group align="center">
-          <IntegrationAvatar kind={integration.kind} size="md" />
-          <Title>{editT("title", { name: getIntegrationName(integration.kind) })}</Title>
-        </Group>
-        <EditIntegrationForm integration={integration} />
+    <>
+      <DynamicBreadcrumb dynamicMappings={new Map([[params.id, integration.name]])} nonInteractable={["edit"]} />
+      <Container>
+        <Stack>
+          <Group align="center">
+            <IntegrationAvatar kind={integration.kind} size="md" />
+            <Title>{editT("title", { name: getIntegrationName(integration.kind) })}</Title>
+          </Group>
+          <EditIntegrationForm integration={integration} />
 
-        <Title order={2}>{t("permission.title")}</Title>
-        <Fieldset>
-          <IntegrationAccessSettings integration={integration} initialPermissions={integrationPermissions} />
-        </Fieldset>
-      </Stack>
-    </Container>
+          <Title order={2}>{t("permission.title")}</Title>
+          <Fieldset>
+            <IntegrationAccessSettings integration={integration} initialPermissions={integrationPermissions} />
+          </Fieldset>
+        </Stack>
+      </Container>
+    </>
   );
 }

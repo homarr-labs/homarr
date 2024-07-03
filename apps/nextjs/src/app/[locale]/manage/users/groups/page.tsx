@@ -8,6 +8,7 @@ import { SearchInput, TablePagination, UserAvatarGroup } from "@homarr/ui";
 import { z } from "@homarr/validation";
 
 import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AddGroup } from "./_add-group";
 
 const searchParamsSchema = z.object({
@@ -31,6 +32,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
 
   return (
     <ManageContainer size="xl">
+      <DynamicBreadcrumb />
       <Stack>
         <Title>{t("group.title")}</Title>
         <Group justify="space-between">

@@ -1,5 +1,6 @@
 import cron from "node-cron";
 
+import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 
 import type { Logger } from "./logger";
@@ -27,9 +28,14 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
     const catchingCallbackAsync = async () => {
       try {
         creatorOptions.logger.logDebug(`The callback of '${name}' cron job started`);
+        const stopwatch = new Stopwatch();
         await creatorOptions.beforeCallback?.(name);
+        const beforeCallbackTook = stopwatch.getElapsedInHumanWords();
         await callback();
-        creatorOptions.logger.logInfo(`The callback of '${name}' cron job succeeded`);
+        const callbackTook = stopwatch.getElapsedInHumanWords();
+        creatorOptions.logger.logInfo(
+          `The callback of '${name}' cron job succeeded (before callback took ${beforeCallbackTook}, callback took ${callbackTook})`,
+        );
         await creatorOptions.onCallbackSuccess?.(name);
       } catch (error) {
         creatorOptions.logger.logError(error);

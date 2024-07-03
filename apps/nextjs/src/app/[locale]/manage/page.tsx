@@ -5,6 +5,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
 import { HeroBanner } from "./_components/hero-banner";
 
@@ -67,6 +68,7 @@ export default async function ManagementPage() {
   ];
   return (
     <>
+      <DynamicBreadcrumb />
       <HeroBanner />
       <Space h="md" />
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>

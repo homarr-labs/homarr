@@ -24,6 +24,7 @@ import { UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -34,6 +35,7 @@ export default async function ManageBoardsPage() {
 
   return (
     <ManageContainer>
+      <DynamicBreadcrumb />
       <Stack>
         <Group justify="space-between">
           <Title mb="md">{t("title")}</Title>

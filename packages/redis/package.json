@@ -25,14 +25,15 @@
     "superjson": "2.2.1",
     "@homarr/log": "workspace:^",
     "@homarr/db": "workspace:^",
-    "@homarr/common": "workspace:^"
+    "@homarr/common": "workspace:^",
+    "@homarr/definitions": "workspace:^"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.5.0",
-    "typescript": "^5.5.2"
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }

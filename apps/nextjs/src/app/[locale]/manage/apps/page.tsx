@@ -8,6 +8,7 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AppDeleteButton } from "./_app-delete-button";
 
 export default async function AppsPage() {
@@ -16,6 +17,7 @@ export default async function AppsPage() {
 
   return (
     <ManageContainer>
+      <DynamicBreadcrumb />
       <Stack>
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>

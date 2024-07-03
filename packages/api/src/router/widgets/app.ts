@@ -27,14 +27,19 @@ export const appRouter = createTRPCRouter({
       const pingResult = await sendPingRequestAsync(input.url);
 
       return observable<{ url: string; statusCode: number } | { url: string; error: string }>((emit) => {
+        let isConnectionClosed = false;
+
         emit.next({ url: input.url, ...pingResult });
         pingChannel.subscribe((message) => {
+          if (isConnectionClosed) return;
+
           // Only emit if same url
           if (message.url !== input.url) return;
           emit.next(message);
         });
 
         return () => {
+          isConnectionClosed = true;
           void pingUrlChannel.removeAsync(input.url);
         };
       });

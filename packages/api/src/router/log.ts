@@ -9,10 +9,17 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 export const logRouter = createTRPCRouter({
   subscribe: publicProcedure.subscription(() => {
     return observable<LoggerMessage>((emit) => {
+      let isConnectionClosed = false;
+
       loggingChannel.subscribe((data) => {
+        if (isConnectionClosed) return;
         emit.next(data);
       });
       logger.info("A tRPC client has connected to the logging procedure");
+
+      return () => {
+        isConnectionClosed = true;
+      };
     });
   }),
 });

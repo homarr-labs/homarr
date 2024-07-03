@@ -21,6 +21,9 @@
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/cron-job-runner": "workspace:^0.1.0",
+    "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
@@ -42,9 +45,9 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "^3.3.29",
-    "eslint": "^9.5.0",
+    "eslint": "^9.6.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }
