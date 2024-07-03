@@ -1033,6 +1033,11 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    rssFeeds: {
+      name: "RSS feeds",
+      description: "Monitor and display one or more generic RSS, ATOM or JSON feed",
+      option: {}
+    }
   },
   widgetPreview: {
     toggle: {
@@ -1494,6 +1499,9 @@ export default {
             mediaOrganizer: {
               label: "Media Organizers",
             },
+            rssFeeds: {
+              label: "RSS feeds"
+            }
           },
         },
       },

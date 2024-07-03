@@ -18,6 +18,7 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as rssFeed from "./rssFeed";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
@@ -37,6 +38,7 @@ export const widgetImports = {
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   mediaServer,
   calendar,
+  rssFeed
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
