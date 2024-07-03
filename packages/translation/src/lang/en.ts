@@ -986,6 +986,7 @@ export default {
         },
         noIntegration: "No integration selected",
       },
+      option: {},
     },
     video: {
       name: "Video Stream",
@@ -1009,6 +1010,11 @@ export default {
         noUrl: "No Video URL provided",
         forYoutubeUseIframe: "For YouTube videos use the iframe option",
       },
+    },
+    mediaServer: {
+      name: "Current media server streams",
+      description: "Show the current streams on your media servers",
+      option: {},
     },
   },
   widgetPreview: {
@@ -1484,6 +1490,9 @@ export default {
             },
             ping: {
               label: "Pings",
+            },
+            mediaServer: {
+              label: "Media Server",
             },
             mediaOrganizer: {
               label: "Media Organizers",

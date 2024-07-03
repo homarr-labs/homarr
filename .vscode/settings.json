@@ -11,10 +11,11 @@
   "cSpell.words": [
     "cqmin",
     "homarr",
-    "Sonarr",
+    "jellyfin",
     "superjson",
     "trpc",
-    "Umami"
+    "Umami",
+    "Sonarr"
   ],
   "i18n-ally.dirStructure": "auto",
   "i18n-ally.enabledFrameworks": ["next-international"],

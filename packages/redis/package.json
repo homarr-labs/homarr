@@ -25,7 +25,8 @@
     "superjson": "2.2.1",
     "@homarr/log": "workspace:^",
     "@homarr/db": "workspace:^",
-    "@homarr/common": "workspace:^"
+    "@homarr/common": "workspace:^",
+    "@homarr/definitions": "workspace:^"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
