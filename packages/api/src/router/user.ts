@@ -1,11 +1,9 @@
 import { TRPCError } from "@trpc/server";
-import { observable } from "@trpc/server/observable";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, schema } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
-import { exampleChannel } from "@homarr/redis";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -231,16 +229,6 @@ export const userRouter = createTRPCRouter({
         password: hashedPassword,
       })
       .where(eq(users.id, input.userId));
-  }),
-  setMessage: publicProcedure.input(z.string()).mutation(async ({ input }) => {
-    await exampleChannel.publishAsync({ message: input });
-  }),
-  test: publicProcedure.subscription(() => {
-    return observable<{ message: string }>((emit) => {
-      exampleChannel.subscribe((message) => {
-        emit.next(message);
-      });
-    });
   }),
 });
 

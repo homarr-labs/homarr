@@ -21,14 +21,22 @@ export const cronJobsRouter = createTRPCRouter({
   }),
   subscribeToStatusUpdates: publicProcedure.subscription(() => {
     return observable<TaskStatus>((emit) => {
+      let isConnectionClosed = false;
+
       for (const job of jobGroup.getJobRegistry().values()) {
         const channel = createCronJobStatusChannel(job.name);
         channel.subscribe((data) => {
+          if (isConnectionClosed) return;
+
           emit.next(data);
         });
       }
 
       logger.info("A tRPC client has connected to the cron job status updates procedure");
+
+      return () => {
+        isConnectionClosed = true;
+      };
     });
   }),
 });

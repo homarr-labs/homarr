@@ -13,12 +13,19 @@ export const smartHomeRouter = createTRPCRouter({
       entityId: string;
       state: string;
     }>((emit) => {
+      let isConnectionClosed = false;
+
       homeAssistantEntityState.subscribe((message) => {
+        if (isConnectionClosed) return;
         if (message.entityId !== input.entityId) {
           return;
         }
         emit.next(message);
       });
+
+      return () => {
+        isConnectionClosed = true;
+      };
     });
   }),
   switchEntity: publicProcedure
