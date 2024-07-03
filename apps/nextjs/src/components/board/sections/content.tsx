@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconLayoutKanban, IconPencil, IconDotsVertical, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { ErrorBoundary } from "react-error-boundary";
