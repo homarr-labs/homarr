@@ -18,9 +18,6 @@ const expectActToBeAsync = async (act: () => Promise<void>, success: boolean) =>
   await expect(act()).resolves.toBeUndefined();
 };
 
-// TODO: most of this test can be used for constructBoardPermissions
-// TODO: the tests for the board-access can be reduced to about 4 tests (as the unit has shrunk)
-
 describe("throwIfActionForbiddenAsync should check access to board and return boolean", () => {
   test.each([
     ["full" as const, true],
