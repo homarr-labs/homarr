@@ -14,11 +14,12 @@ import type { IntegrationSecretKind } from "@homarr/definitions";
 import { getPermissionsWithParents, integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
 import { validation } from "@homarr/validation";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
+import { throwIfActionForbiddenAsync } from "./integration-access";
 import { testConnectionAsync } from "./integration-test-connection";
 
 export const integrationRouter = createTRPCRouter({
-  all: publicProcedure.query(async ({ ctx }) => {
+  all: protectedProcedure.query(async ({ ctx }) => {
     const integrations = await ctx.db.query.integrations.findMany();
     return integrations
       .map((integration) => ({
@@ -32,7 +33,8 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
-  byId: publicProcedure.input(validation.integration.byId).query(async ({ ctx, input }) => {
+  byId: protectedProcedure.input(validation.integration.byId).query(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
     const integration = await ctx.db.query.integrations.findFirst({
       where: eq(integrations.id, input.id),
       with: {
@@ -66,34 +68,39 @@ export const integrationRouter = createTRPCRouter({
       })),
     };
   }),
-  create: publicProcedure.input(validation.integration.create).mutation(async ({ ctx, input }) => {
-    await testConnectionAsync({
-      id: "new",
-      name: input.name,
-      url: input.url,
-      kind: input.kind,
-      secrets: input.secrets,
-    });
+  create: permissionRequiredProcedure
+    .requiresPermission("integration-create")
+    .input(validation.integration.create)
+    .mutation(async ({ ctx, input }) => {
+      await testConnectionAsync({
+        id: "new",
+        name: input.name,
+        url: input.url,
+        kind: input.kind,
+        secrets: input.secrets,
+      });
 
-    const integrationId = createId();
-    await ctx.db.insert(integrations).values({
-      id: integrationId,
-      name: input.name,
-      url: input.url,
-      kind: input.kind,
-    });
+      const integrationId = createId();
+      await ctx.db.insert(integrations).values({
+        id: integrationId,
+        name: input.name,
+        url: input.url,
+        kind: input.kind,
+      });
 
-    if (input.secrets.length >= 1) {
-      await ctx.db.insert(integrationSecrets).values(
-        input.secrets.map((secret) => ({
-          kind: secret.kind,
-          value: encryptSecret(secret.value),
-          integrationId,
-        })),
-      );
-    }
-  }),
-  update: publicProcedure.input(validation.integration.update).mutation(async ({ ctx, input }) => {
+      if (input.secrets.length >= 1) {
+        await ctx.db.insert(integrationSecrets).values(
+          input.secrets.map((secret) => ({
+            kind: secret.kind,
+            value: encryptSecret(secret.value),
+            integrationId,
+          })),
+        );
+      }
+    }),
+  update: protectedProcedure.input(validation.integration.update).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+
     const integration = await ctx.db.query.integrations.findFirst({
       where: eq(integrations.id, input.id),
       with: {
@@ -152,7 +159,9 @@ export const integrationRouter = createTRPCRouter({
       }
     }
   }),
-  delete: publicProcedure.input(validation.integration.delete).mutation(async ({ ctx, input }) => {
+  delete: protectedProcedure.input(validation.integration.delete).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+
     const integration = await ctx.db.query.integrations.findFirst({
       where: eq(integrations.id, input.id),
     });
@@ -167,7 +176,7 @@ export const integrationRouter = createTRPCRouter({
     await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
   }),
   getIntegrationPermissions: protectedProcedure.input(validation.board.permissions).query(async ({ input, ctx }) => {
-    // await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
 
     const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
       where: inArray(
@@ -240,7 +249,7 @@ export const integrationRouter = createTRPCRouter({
   saveUserIntegrationPermissions: protectedProcedure
     .input(validation.integration.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      // await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
       await ctx.db.transaction(async (transaction) => {
         await transaction
@@ -261,7 +270,7 @@ export const integrationRouter = createTRPCRouter({
   saveGroupIntegrationPermissions: protectedProcedure
     .input(validation.integration.savePermissions)
     .mutation(async ({ input, ctx }) => {
-      // await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "modify");
+      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
       await ctx.db.transaction(async (transaction) => {
         await transaction
