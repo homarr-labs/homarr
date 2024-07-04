@@ -126,8 +126,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.5.3)(zod@3.23.8)
       '@tabler/icons-react':
-        specifier: ^3.8.0
-        version: 3.8.0(react@18.3.1)
+        specifier: ^3.9.0
+        version: 3.9.0(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.49.2
         version: 5.49.2(react@18.3.1)
@@ -139,16 +139,16 @@ importers:
         version: 5.49.2(@tanstack/react-query@5.49.2(react@18.3.1))(next@14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6))(react@18.3.1)
       '@trpc/client':
         specifier: next
-        version: 11.0.0-rc.436(@trpc/server@11.0.0-rc.436)
+        version: 11.0.0-rc.444(@trpc/server@11.0.0-rc.444)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/react-query@11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/server@11.0.0-rc.436)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.436)(next@14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/react-query@11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/server@11.0.0-rc.444)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.444)(next@14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/server@11.0.0-rc.436)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/server@11.0.0-rc.444)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-rc.436
+        version: 11.0.0-rc.444
       '@xterm/addon-canvas':
         specifier: ^0.7.0
         version: 0.7.0(@xterm/xterm@5.5.0)
@@ -181,7 +181,7 @@ importers:
         version: 2.8.4(@types/react@18.3.3)(react@18.3.1)
       mantine-react-table:
         specifier: 2.0.0-beta.5
-        version: 2.0.0-beta.5(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(@tabler/icons-react@3.8.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.0.0-beta.5(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(@tabler/icons-react@3.9.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.4
         version: 14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6)
@@ -476,13 +476,13 @@ importers:
         version: link:../validation
       '@trpc/client':
         specifier: next
-        version: 11.0.0-rc.436(@trpc/server@11.0.0-rc.436)
+        version: 11.0.0-rc.444(@trpc/server@11.0.0-rc.444)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/server@11.0.0-rc.436)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/server@11.0.0-rc.444)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-rc.436
+        version: 11.0.0-rc.444
       dockerode:
         specifier: ^4.0.2
         version: 4.0.2
@@ -981,8 +981,8 @@ importers:
         specifier: ^7.11.1
         version: 7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tabler/icons-react':
-        specifier: ^3.8.0
-        version: 3.8.0(react@18.3.1)
+        specifier: ^3.9.0
+        version: 3.9.0(react@18.3.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1098,8 +1098,8 @@ importers:
         specifier: ^7.11.1
         version: 7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tabler/icons-react':
-        specifier: ^3.8.0
-        version: 3.8.0(react@18.3.1)
+        specifier: ^3.9.0
+        version: 3.9.0(react@18.3.1)
       jotai:
         specifier: ^2.8.4
         version: 2.8.4(@types/react@18.3.3)(react@18.3.1)
@@ -1172,8 +1172,8 @@ importers:
         specifier: ^7.11.1
         version: 7.11.1(react@18.3.1)
       '@tabler/icons-react':
-        specifier: ^3.8.0
-        version: 3.8.0(react@18.3.1)
+        specifier: ^3.9.0
+        version: 3.9.0(react@18.3.1)
       next:
         specifier: ^14.2.4
         version: 14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6)
@@ -1273,8 +1273,8 @@ importers:
         specifier: ^7.11.1
         version: 7.11.1(react@18.3.1)
       '@tabler/icons-react':
-        specifier: ^3.8.0
-        version: 3.8.0(react@18.3.1)
+        specifier: ^3.9.0
+        version: 3.9.0(react@18.3.1)
       '@tiptap/extension-color':
         specifier: 2.4.0
         version: 2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.2.4))(@tiptap/extension-text-style@2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.2.4)))
@@ -1328,7 +1328,7 @@ importers:
         version: 1.11.11
       mantine-react-table:
         specifier: 2.0.0-beta.5
-        version: 2.0.0-beta.5(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(@tabler/icons-react@3.8.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.0.0-beta.5(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(@tabler/icons-react@3.9.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.4
         version: 14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6)
@@ -2406,13 +2406,13 @@ packages:
       typescript:
         optional: true
 
-  '@tabler/icons-react@3.8.0':
-    resolution: {integrity: sha512-+M7x4uCmaZlFBuAXKnu7cCvjX48Ml//GJxgGTOoAq8N5R6NkIGV0o7UmGVlb9Vfw2GhJ638MSSJ7mksSjdSXgQ==}
+  '@tabler/icons-react@3.9.0':
+    resolution: {integrity: sha512-7Fbcrb5LYBGd9rwfkgrJsvLYGqPqO4WV3u6lfqE2wRzEVcevDQcdvo8toKp5Jcc66MPMEmMg+/tnUGwFIKQmUQ==}
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons@3.8.0':
-    resolution: {integrity: sha512-SVZSrb0REaTEu+soj+9RTnPpCqIWFYHJ0lhyk+oo6uXr33Ecx2JBcBGeEo/WbIWZg4UF8NIZSVKQgI2PHBokJA==}
+  '@tabler/icons@3.9.0':
+    resolution: {integrity: sha512-wZAwEu4iI0WmUA/bjstzNYri13D8X14f/SCRrzr2MyU+WP/6Vd+xq4YLM52dOS8V6ZVt+ujuE9IFkuJdsdSVAQ==}
 
   '@tanstack/match-sorter-utils@8.15.1':
     resolution: {integrity: sha512-PnVV3d2poenUM31ZbZi/yXkBu3J7kd5k2u51CGwwNojag451AjTH9N6n41yjXz2fpLeewleyLBmNS6+HcGDlXw==}
@@ -2660,18 +2660,18 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@trpc/client@11.0.0-rc.436':
-    resolution: {integrity: sha512-xI2+6PTs0rhFEIABhZdcGUtn/bfngkqzrcerXez3un2SGbf/7BRt93J0rg9qjiVi716U0QAc88ZD52s6iMvlew==}
+  '@trpc/client@11.0.0-rc.444':
+    resolution: {integrity: sha512-d06BBgv8nbo+iOof33IYiQzk9tKjMdmPgofEPiqBuUo/VQaIeGoJ1Ya77j38DEs1T172Zg95VB7xvMePhvNhxQ==}
     peerDependencies:
-      '@trpc/server': 11.0.0-rc.436+fbb4a2fb4
+      '@trpc/server': 11.0.0-rc.444+18aad1614
 
-  '@trpc/next@11.0.0-rc.436':
-    resolution: {integrity: sha512-aydKI4GkXyWtGufjPXvtQ2hjjphETByspreytHmgMs6hyTwl6ds4yI8XfAmwtjA5TE5Za1eZe+tJ69gGM40Itg==}
+  '@trpc/next@11.0.0-rc.444':
+    resolution: {integrity: sha512-k6wkpthEngPCKLl46yBDncDUKiVb8JI2Fb7gRloFn+uFzhiaLWtbjEN0zYRJArfs6T/639zlvyRMnULEh2QmpA==}
     peerDependencies:
-      '@tanstack/react-query': ^5.40.0
-      '@trpc/client': 11.0.0-rc.436+fbb4a2fb4
-      '@trpc/react-query': 11.0.0-rc.436+fbb4a2fb4
-      '@trpc/server': 11.0.0-rc.436+fbb4a2fb4
+      '@tanstack/react-query': ^5.49.2
+      '@trpc/client': 11.0.0-rc.444+18aad1614
+      '@trpc/react-query': 11.0.0-rc.444+18aad1614
+      '@trpc/server': 11.0.0-rc.444+18aad1614
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -2681,17 +2681,17 @@ packages:
       '@trpc/react-query':
         optional: true
 
-  '@trpc/react-query@11.0.0-rc.436':
-    resolution: {integrity: sha512-9xnA2+rjSrC2ng0KJ9dAc/YaSUyZ6MdjyhhLUJoDnMUKwB0vRMLqnaFlRYPVvIg+SzNcsqdyqAK173OlbZVVnw==}
+  '@trpc/react-query@11.0.0-rc.444':
+    resolution: {integrity: sha512-G6JdyNFmUel66XGnHoD7yIfEzUIdHSQF5D2BNwo7fj53Rmo2LH2GiCwgsnuBOr9Mo3e8V//40EyXc5BJTqoPhg==}
     peerDependencies:
-      '@tanstack/react-query': ^5.40.0
-      '@trpc/client': 11.0.0-rc.436+fbb4a2fb4
-      '@trpc/server': 11.0.0-rc.436+fbb4a2fb4
+      '@tanstack/react-query': ^5.49.2
+      '@trpc/client': 11.0.0-rc.444+18aad1614
+      '@trpc/server': 11.0.0-rc.444+18aad1614
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
 
-  '@trpc/server@11.0.0-rc.436':
-    resolution: {integrity: sha512-Nm6b010lb6DuUQTnn95zU+IppD8YnSk/NCrpcj8o8umj9Ap07s1AOZLUfJaZzlDQltC2UVuLpH+shArryypBLg==}
+  '@trpc/server@11.0.0-rc.444':
+    resolution: {integrity: sha512-B0hrwHkzSQfIOhgSyL9Uv51sdOeAjDhGXBl5AvrJrjvLbP3YUWz51bjEtcuPBQj36kfumeJ87nq+5C7L9cEZcw==}
 
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -7451,12 +7451,12 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.3
 
-  '@tabler/icons-react@3.8.0(react@18.3.1)':
+  '@tabler/icons-react@3.9.0(react@18.3.1)':
     dependencies:
-      '@tabler/icons': 3.8.0
+      '@tabler/icons': 3.9.0
       react: 18.3.1
 
-  '@tabler/icons@3.8.0': {}
+  '@tabler/icons@3.9.0': {}
 
   '@tanstack/match-sorter-utils@8.15.1':
     dependencies:
@@ -7705,30 +7705,30 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436)':
+  '@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444)':
     dependencies:
-      '@trpc/server': 11.0.0-rc.436
+      '@trpc/server': 11.0.0-rc.444
 
-  '@trpc/next@11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/react-query@11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/server@11.0.0-rc.436)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.436)(next@14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@trpc/next@11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/react-query@11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/server@11.0.0-rc.444)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.444)(next@14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@trpc/client': 11.0.0-rc.436(@trpc/server@11.0.0-rc.436)
-      '@trpc/server': 11.0.0-rc.436
+      '@trpc/client': 11.0.0-rc.444(@trpc/server@11.0.0-rc.444)
+      '@trpc/server': 11.0.0-rc.444
       next: 14.2.4(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
       '@tanstack/react-query': 5.49.2(react@18.3.1)
-      '@trpc/react-query': 11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/server@11.0.0-rc.436)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@trpc/react-query': 11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/server@11.0.0-rc.444)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@trpc/react-query@11.0.0-rc.436(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.436(@trpc/server@11.0.0-rc.436))(@trpc/server@11.0.0-rc.436)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@trpc/react-query@11.0.0-rc.444(@tanstack/react-query@5.49.2(react@18.3.1))(@trpc/client@11.0.0-rc.444(@trpc/server@11.0.0-rc.444))(@trpc/server@11.0.0-rc.444)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/react-query': 5.49.2(react@18.3.1)
-      '@trpc/client': 11.0.0-rc.436(@trpc/server@11.0.0-rc.436)
-      '@trpc/server': 11.0.0-rc.436
+      '@trpc/client': 11.0.0-rc.444(@trpc/server@11.0.0-rc.444)
+      '@trpc/server': 11.0.0-rc.444
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@trpc/server@11.0.0-rc.436': {}
+  '@trpc/server@11.0.0-rc.444': {}
 
   '@tsconfig/node10@1.0.9': {}
 
@@ -10387,12 +10387,12 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  mantine-react-table@2.0.0-beta.5(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(@tabler/icons-react@3.8.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  mantine-react-table@2.0.0-beta.5(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(@tabler/icons-react@3.9.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@mantine/core': 7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/dates': 7.11.1(@mantine/core@7.11.1(@mantine/hooks@7.11.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.1(react@18.3.1))(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.11.1(react@18.3.1)
-      '@tabler/icons-react': 3.8.0(react@18.3.1)
+      '@tabler/icons-react': 3.9.0(react@18.3.1)
       '@tanstack/match-sorter-utils': 8.15.1
       '@tanstack/react-table': 8.17.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-virtual': 3.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
