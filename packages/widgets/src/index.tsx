@@ -6,11 +6,13 @@ import { Loader as UiLoader } from "@mantine/core";
 import type { WidgetKind } from "@homarr/definitions";
 
 import * as app from "./app";
+import * as calendar from "./calendar";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
@@ -33,6 +35,8 @@ export const widgetImports = {
   dnsHoleSummary,
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
+  mediaServer,
+  calendar,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

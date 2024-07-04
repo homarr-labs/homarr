@@ -25,7 +25,7 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "tsx": "4.13.3",
-    "ws": "^8.17.1",
+    "ws": "^8.18.0",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
@@ -33,9 +33,9 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.5.10",
-    "eslint": "^9.5.0",
+    "eslint": "^9.6.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }

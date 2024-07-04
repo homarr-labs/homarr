@@ -1,4 +1,4 @@
-import { objectEntries } from "@homarr/common";
+import { objectEntries, objectKeys } from "@homarr/common";
 
 import type { JobCallback } from "./creator";
 import type { Logger } from "./logger";
@@ -43,6 +43,13 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
           job.scheduledTask.start();
         }
       },
+      runManually: (name: keyof TJobs) => {
+        const job = jobRegistry.get(name as string);
+        if (!job) return;
+
+        options.logger.logInfo(`Running schedule cron job ${job.name} manually.`);
+        job.scheduledTask.now();
+      },
       stop: (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);
         if (!job) return;
@@ -58,6 +65,9 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
       },
       getJobRegistry() {
         return jobRegistry as Map<TAllowedNames, ReturnType<JobCallback<TAllowedNames, TAllowedNames>>>;
+      },
+      getKeys() {
+        return objectKeys(jobs);
       },
     };
   };

@@ -8,7 +8,15 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "prettier.configPath": "./tooling/prettier/index.mjs",
-  "cSpell.words": ["cqmin", "homarr", "superjson", "trpc", "Umami"],
+  "cSpell.words": [
+    "cqmin",
+    "homarr",
+    "jellyfin",
+    "superjson",
+    "trpc",
+    "Umami",
+    "Sonarr"
+  ],
   "i18n-ally.dirStructure": "auto",
   "i18n-ally.enabledFrameworks": ["next-international"],
   "i18n-ally.localesPaths": ["./packages/translation/src/lang/"],

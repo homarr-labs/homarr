@@ -34,21 +34,21 @@
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@auth/core": "^0.34.1",
-    "better-sqlite3": "^11.0.0",
+    "better-sqlite3": "^11.1.2",
     "drizzle-orm": "^0.31.2",
     "dotenv": "^16.4.5",
-    "mysql2": "3.10.1",
-    "drizzle-kit": "^0.22.7"
+    "mysql2": "3.10.2",
+    "drizzle-kit": "^0.22.8"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/better-sqlite3": "7.6.10",
+    "@types/better-sqlite3": "7.6.11",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^9.5.0",
+    "eslint": "^9.6.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }

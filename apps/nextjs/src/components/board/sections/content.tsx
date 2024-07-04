@@ -206,8 +206,8 @@ const ItemMenu = ({
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 1 }}>
-          <IconDotsVertical />
+        <ActionIcon variant="default" radius={"xl"} pos="absolute" top={offset} right={offset} style={{ zIndex: 10 }}>
+          <IconDotsVertical size={"1rem"} />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>

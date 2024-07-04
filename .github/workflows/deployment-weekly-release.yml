@@ -34,7 +34,7 @@ jobs:
         id: create-pull-request
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          title: "(chore): automatic release ${{ steps.semver.outputs.next }}"
+          title: "chore(release): automatic release ${{ steps.semver.outputs.next }}"
           new_string: "**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``"
           source_branch: dev
           target_branch: main
@@ -52,7 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           MERGE_METHOD: merge # we prefer merge commits for merging to master
-          MERGE_COMMIT_MESSAGE: "(chore): automatic release ${{ steps.semver.outputs.next }}"
+          MERGE_COMMIT_MESSAGE: "chore(release): automatic release ${{ steps.semver.outputs.next }}"
           MERGE_DELETE_BRANCH: false # never set to true!
           PULL_REQUEST: "${{ steps.create-pull-request.outputs.pr_number }}"
           MERGE_RETRIES: 20 # 20 retries * MERGE_RETRY_SLEEP until step fails

@@ -8,5 +8,7 @@ export const widgetKinds = [
   "dnsHoleSummary",
   "smartHome-entityState",
   "smartHome-executeAutomation",
+  "mediaServer",
+  "calendar",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

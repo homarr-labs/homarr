@@ -24,11 +24,11 @@
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
-    "@mantine/core": "^7.10.2",
-    "@mantine/hooks": "^7.10.2",
-    "@mantine/spotlight": "^7.10.2",
-    "@tabler/icons-react": "^3.6.0",
-    "jotai": "^2.8.3",
+    "@mantine/core": "^7.11.1",
+    "@mantine/hooks": "^7.11.1",
+    "@mantine/spotlight": "^7.11.1",
+    "@tabler/icons-react": "^3.8.0",
+    "jotai": "^2.8.4",
     "next": "^14.2.4",
     "react": "^18.3.1",
     "use-deep-compare-effect": "^1.8.1"
@@ -37,8 +37,8 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.5.0",
-    "typescript": "^5.5.2"
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }

@@ -1,6 +1,7 @@
 import superjson from "superjson";
 
 import { createId } from "@homarr/db";
+import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import { createRedisConnection } from "./connection";
@@ -14,7 +15,7 @@ const lastDataClient = createRedisConnection();
  * @param name name of the channel
  * @returns pub/sub channel object
  */
-export const createSubPubChannel = <TData>(name: string) => {
+export const createSubPubChannel = <TData>(name: string, { persist }: { persist: boolean } = { persist: true }) => {
   const lastChannelName = `pubSub:last:${name}`;
   const channelName = `pubSub:${name}`;
   return {
@@ -23,11 +24,13 @@ export const createSubPubChannel = <TData>(name: string) => {
      * @param callback callback function to be called when new data is published
      */
     subscribe: (callback: (data: TData) => void) => {
-      void lastDataClient.get(lastChannelName).then((data) => {
-        if (data) {
-          callback(superjson.parse(data));
-        }
-      });
+      if (persist) {
+        void lastDataClient.get(lastChannelName).then((data) => {
+          if (data) {
+            callback(superjson.parse(data));
+          }
+        });
+      }
       void subscriber.subscribe(channelName, (err) => {
         if (!err) {
           return;
@@ -45,8 +48,14 @@ export const createSubPubChannel = <TData>(name: string) => {
      * @param data data to be published
      */
     publishAsync: async (data: TData) => {
-      await lastDataClient.set(lastChannelName, superjson.stringify(data));
+      if (persist) {
+        await lastDataClient.set(lastChannelName, superjson.stringify(data));
+      }
       await publisher.publish(channelName, superjson.stringify(data));
+    },
+    getLastDataAsync: async () => {
+      const data = await lastDataClient.get(lastChannelName);
+      return data ? superjson.parse<TData>(data) : null;
     },
   };
 };
@@ -156,6 +165,36 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
      */
     setAsync: async (data: TData) => {
       await getSetClient.set(cacheChannelName, superjson.stringify({ data, timestamp: new Date() }));
+    },
+  };
+};
+
+export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
+  const channelName = `item:${kind}:integration:${integrationId}`;
+  return {
+    subscribeAsync: async (callback: (data: TData) => void) => {
+      await subscriber.subscribe(channelName);
+      subscriber.on("message", (channel, message) => {
+        if (channel !== channelName) {
+          logger.warn(`received message on ${channel} channel but was looking for ${channelName}`);
+          return;
+        }
+        callback(superjson.parse(message));
+        logger.debug(`sent message on ${channelName}`);
+      });
+    },
+    publishAndUpdateLastStateAsync: async (data: TData) => {
+      await publisher.publish(channelName, superjson.stringify(data));
+      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+    },
+    setAsync: async (data: TData) => {
+      await getSetClient.set(channelName, superjson.stringify({ data, timestamp: new Date() }));
+    },
+    getAsync: async () => {
+      const data = await getSetClient.get(channelName);
+      if (!data) return null;
+
+      return superjson.parse<{ data: TData; timestamp: Date }>(data);
     },
   };
 };

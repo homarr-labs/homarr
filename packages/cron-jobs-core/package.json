@@ -31,8 +31,8 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "eslint": "^9.5.0",
-    "typescript": "^5.5.2"
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
 }

@@ -16,7 +16,7 @@ export default {
       },
       init: {
         title: "New Homarr installation",
-        subtitle: "Please create the initial administator user",
+        subtitle: "Please create the initial administrator user",
       },
     },
     field: {
@@ -908,6 +908,18 @@ export default {
         },
       },
     },
+    calendar: {
+      name: "Calendar",
+      description: "Display events from your integrations in a calendar view within a certain relative time period",
+      option: {
+        filterPastMonths: {
+          label: "Start from",
+        },
+        filterFutureMonths: {
+          label: "End at",
+        },
+      },
+    },
     weather: {
       name: "Weather",
       description: "Displays the current weather information of a set location.",
@@ -975,6 +987,7 @@ export default {
         },
         noIntegration: "No integration selected",
       },
+      option: {},
     },
     video: {
       name: "Video Stream",
@@ -998,6 +1011,11 @@ export default {
         noUrl: "No Video URL provided",
         forYoutubeUseIframe: "For YouTube videos use the iframe option",
       },
+    },
+    mediaServer: {
+      name: "Current media server streams",
+      description: "Show the current streams on your media servers",
+      option: {},
     },
   },
   widgetPreview: {
@@ -1253,6 +1271,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            tasks: "Tasks",
           },
         },
         settings: "Settings",
@@ -1452,6 +1471,36 @@ export default {
           },
         },
       },
+      tool: {
+        tasks: {
+          title: "Tasks",
+          status: {
+            idle: "Idle",
+            running: "Running",
+            error: "Error",
+          },
+          job: {
+            iconsUpdater: {
+              label: "Icons Updater",
+            },
+            analytics: {
+              label: "Analytics",
+            },
+            smartHomeEntityState: {
+              label: "Smart Home Entity State",
+            },
+            ping: {
+              label: "Pings",
+            },
+            mediaServer: {
+              label: "Media Server",
+            },
+            mediaOrganizer: {
+              label: "Media Organizers",
+            },
+          },
+        },
+      },
       about: {
         version: "Version {version}",
         text: "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
@@ -1507,6 +1556,55 @@ export default {
       stop: "Stop",
       restart: "Restart",
       remove: "Remove",
+    },
+  },
+  navigationStructure: {
+    manage: {
+      label: "Manage",
+      boards: {
+        label: "Boards",
+      },
+      integrations: {
+        label: "Integrations",
+        edit: {
+          label: "Edit",
+        },
+        new: {
+          label: "New",
+        },
+      },
+      apps: {
+        label: "Apps",
+        new: {
+          label: "New App",
+        },
+        edit: {
+          label: "Edit App",
+        },
+      },
+      users: {
+        label: "Users",
+        create: {
+          label: "Create",
+        },
+        general: "General",
+        security: "Security",
+      },
+      tools: {
+        label: "Tools",
+        docker: {
+          label: "Docker",
+        },
+        logs: {
+          label: "Logs",
+        },
+      },
+      settings: {
+        label: "Settings",
+      },
+      about: {
+        label: "About",
+      },
     },
   },
 } as const;

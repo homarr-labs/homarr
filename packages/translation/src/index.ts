@@ -8,6 +8,7 @@ export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 export const defaultLocale = "en";
 export { languageMapping } from "./lang";
+export type { TranslationKeys } from "./lang";
 
 export const translateIfNecessary = (t: TranslationFunction, value: stringOrTranslation | undefined) => {
   if (typeof value === "function") {
