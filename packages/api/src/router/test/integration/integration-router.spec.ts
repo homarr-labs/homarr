@@ -1,14 +1,25 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { encryptSecret } from "@homarr/common";
 import { createId } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
+import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { integrationRouter } from "../../integration/integration-router";
 import { expectToBeDefined } from "../helper";
+
+const defaultUserId = createId();
+const defaultSessionWithPermissions = (permissions: GroupPermissionKey[] = []) =>
+  ({
+    user: {
+      id: defaultUserId,
+      permissions,
+    },
+    expires: new Date().toISOString(),
+  }) satisfies Session;
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
@@ -17,11 +28,11 @@ vi.mock("../../integration/integration-test-connection", () => ({
 }));
 
 describe("all should return all integrations", () => {
-  it("should return all integrations", async () => {
+  test("with any session should return all integrations", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(),
     });
 
     await db.insert(integrations).values([
@@ -47,11 +58,11 @@ describe("all should return all integrations", () => {
 });
 
 describe("byId should return an integration by id", () => {
-  it("should return an integration by id", async () => {
+  test("with full access should return an integration by id", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     await db.insert(integrations).values([
@@ -73,22 +84,22 @@ describe("byId should return an integration by id", () => {
     expect(result.kind).toBe("plex");
   });
 
-  it("should throw an error if the integration does not exist", async () => {
+  test("with full access should throw an error if the integration does not exist", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     const actAsync = async () => await caller.byId({ id: "2" });
     await expect(actAsync()).rejects.toThrow("Integration not found");
   });
 
-  it("should only return the public secret values", async () => {
+  test("with full access should only return the public secret values", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     await db.insert(integrations).values([
@@ -129,14 +140,38 @@ describe("byId should return an integration by id", () => {
     const apiKey = expectToBeDefined(result.secrets.find((secret) => secret.kind === "apiKey"));
     expect(apiKey.value).toBeNull();
   });
-});
 
-describe("create should create a new integration", () => {
-  it("should create a new integration", async () => {
+  test("without full access should throw integration not found error", async () => {
+    // Arrange
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-interact-all"]),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Home assistant",
+        kind: "homeAssistant",
+        url: "http://homeassist.local",
+      },
+    ]);
+
+    // Act
+    const actAsync = async () => await caller.byId({ id: "1" });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Integration not found");
+  });
+});
+
+describe("create should create a new integration", () => {
+  test("with create integration access should create a new integration", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: defaultSessionWithPermissions(["integration-create"]),
     });
     const input = {
       name: "Jellyfin",
@@ -164,14 +199,35 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
   });
-});
 
-describe("update should update an integration", () => {
-  it("should update an integration", async () => {
+  test("without create integration access should throw permission error", async () => {
+    // Arrange
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-interact-all"]),
+    });
+    const input = {
+      name: "Jellyfin",
+      kind: "jellyfin" as const,
+      url: "http://jellyfin.local",
+      secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+    };
+
+    // Act
+    const actAsync = async () => await caller.create(input);
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Permission denied");
+  });
+});
+
+describe("update should update an integration", () => {
+  test("with full access should update an integration", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     const lastWeek = new Date("2023-06-24T00:00:00Z");
@@ -241,11 +297,11 @@ describe("update should update an integration", () => {
     expect(apiKey.value).not.toEqual(input.secrets[2]!.value);
   });
 
-  it("should throw an error if the integration does not exist", async () => {
+  test("with full access should throw an error if the integration does not exist", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     const actAsync = async () =>
@@ -257,14 +313,35 @@ describe("update should update an integration", () => {
       });
     await expect(actAsync()).rejects.toThrow("Integration not found");
   });
-});
 
-describe("delete should delete an integration", () => {
-  it("should delete an integration", async () => {
+  test("without full access should throw permission error", async () => {
+    // Arrange
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
-      session: null,
+      session: defaultSessionWithPermissions(["integration-interact-all"]),
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.update({
+        id: createId(),
+        name: "Pi Hole",
+        url: "http://hole.local",
+        secrets: [],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Integration not found");
+  });
+});
+
+describe("delete should delete an integration", () => {
+  test("with full access should delete an integration", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     const integrationId = createId();
@@ -290,5 +367,20 @@ describe("delete should delete an integration", () => {
     expect(dbIntegration).toBeUndefined();
     const dbSecrets = await db.query.integrationSecrets.findMany();
     expect(dbSecrets.length).toBe(0);
+  });
+
+  test("without full access should throw permission error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: defaultSessionWithPermissions(["integration-interact-all"]),
+    });
+
+    // Act
+    const actAsync = async () => await caller.delete({ id: createId() });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Integration not found");
   });
 });
