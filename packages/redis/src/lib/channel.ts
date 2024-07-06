@@ -4,8 +4,8 @@ import { createId } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
+import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
-import { SubscriptionManager } from "./subscription-manager";
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
@@ -31,7 +31,7 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
           }
         });
       }
-      return SubscriptionManager.subscribe(channelName, (message) => {
+      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
       });
     },
@@ -165,7 +165,7 @@ export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integra
   const channelName = `item:${kind}:integration:${integrationId}`;
   return {
     subscribe: (callback: (data: TData) => void) => {
-      return SubscriptionManager.subscribe(channelName, (message) => {
+      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
       });
     },

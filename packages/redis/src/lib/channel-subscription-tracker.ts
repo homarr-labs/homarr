@@ -7,7 +7,14 @@ import { createRedisConnection } from "./connection";
 
 type SubscriptionCallback = (message: string) => MaybePromise<void>;
 
-export class SubscriptionManager {
+/**
+ * This class is used to deduplicate redis subscriptions.
+ * It keeps track of all subscriptions and only subscribes to a channel if there are any subscriptions to it.
+ * It also provides a way to remove the callback from the channel.
+ * It fixes a potential memory leak where the redis client would keep creating new subscriptions to the same channel.
+ * @see https://github.com/homarr-labs/homarr/issues/744
+ */
+export class ChannelSubscriptionTracker {
   private static subscriptions = new Map<string, Map<string, SubscriptionCallback>>();
   private static redis = createRedisConnection();
   private static listenerActive = false;
@@ -51,11 +58,13 @@ export class SubscriptionManager {
       channelSubscriptions.delete(id);
 
       // If there are no subscriptions to the channel, unsubscribe from it
-      if (channelSubscriptions.size === 0) {
-        logger.debug(`Unsubscribing from redis channel channel='${channelName}'`);
-        void this.redis.unsubscribe(channelName);
-        this.subscriptions.delete(channelName);
+      if (channelSubscriptions.size >= 1) {
+        return;
       }
+
+      logger.debug(`Unsubscribing from redis channel channel='${channelName}'`);
+      void this.redis.unsubscribe(channelName);
+      this.subscriptions.delete(channelName);
     };
   }
 
