@@ -1,6 +1,6 @@
 import Docker from "dockerode";
 
-export interface DockerInstance {
+interface DockerInstance {
   host: string;
   instance: Docker;
 }
