@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { Avatar, Button, Group, Text, ThemeIcon, Title } from "@mantine/core";
+import { Anchor, Button, Group, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
@@ -10,6 +10,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { UserAvatar } from "@homarr/ui";
 
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
@@ -29,12 +30,12 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
         header: t("user.field.username.label"),
         grow: 100,
         Cell: ({ renderedCellValue, row }) => (
-          <Link href={`/manage/users/${row.original.id}/general`}>
-            <Group>
-              <Avatar size="sm"></Avatar>
+          <Group>
+            <UserAvatar size="sm" user={row.original} />
+            <Anchor component={Link} href={`/manage/users/${row.original.id}/general`}>
               {renderedCellValue}
-            </Group>
-          </Link>
+            </Anchor>
+          </Group>
         ),
       },
       {
