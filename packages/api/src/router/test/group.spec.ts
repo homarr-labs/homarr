@@ -364,7 +364,7 @@ describe("savePermissions should save permissions for group", () => {
     // Act
     await caller.savePermissions({
       groupId,
-      permissions: ["integration-use-all", "board-full-access"],
+      permissions: ["integration-use-all", "board-full-all"],
     });
 
     // Assert
@@ -373,7 +373,7 @@ describe("savePermissions should save permissions for group", () => {
     });
 
     expect(permissions.length).toBe(2);
-    expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-access"]);
+    expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-all"]);
   });
 
   test("with non existing group it should throw not found error", async () => {
@@ -390,7 +390,7 @@ describe("savePermissions should save permissions for group", () => {
     const actAsync = async () =>
       await caller.savePermissions({
         groupId: createId(),
-        permissions: ["integration-create", "board-full-access"],
+        permissions: ["integration-create", "board-full-all"],
       });
 
     // Assert

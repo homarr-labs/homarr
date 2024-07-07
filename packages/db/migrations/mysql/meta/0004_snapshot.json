@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4e382d0d-a432-4953-bd5e-04f3f33e26a4",
-  "prevId": "ba2dd885-4e7f-4a45-99a0-7b45cbd0a5c2",
+  "id": "4af9bcc1-5573-4e00-8629-3c8de4c3a826",
+  "prevId": "4e382d0d-a432-4953-bd5e-04f3f33e26a4",
   "tables": {
     "account": {
       "name": "account",
@@ -636,6 +636,60 @@
       },
       "uniqueConstraints": {}
     },
+    "integrationGroupPermissions": {
+      "name": "integrationGroupPermissions",
+      "columns": {
+        "integration_id": {
+          "name": "integration_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "integrationGroupPermissions_integration_id_integration_id_fk": {
+          "name": "integrationGroupPermissions_integration_id_integration_id_fk",
+          "tableFrom": "integrationGroupPermissions",
+          "tableTo": "integration",
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "integrationGroupPermissions_group_id_group_id_fk": {
+          "name": "integrationGroupPermissions_group_id_group_id_fk",
+          "tableFrom": "integrationGroupPermissions",
+          "tableTo": "group",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integrationGroupPermissions_integration_id_group_id_permission_pk": {
+          "name": "integrationGroupPermissions_integration_id_group_id_permission_pk",
+          "columns": ["integration_id", "group_id", "permission"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "integration_item": {
       "name": "integration_item",
       "columns": {
@@ -742,6 +796,60 @@
         "integrationSecret_integration_id_kind_pk": {
           "name": "integrationSecret_integration_id_kind_pk",
           "columns": ["integration_id", "kind"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "integrationUserPermission": {
+      "name": "integrationUserPermission",
+      "columns": {
+        "integration_id": {
+          "name": "integration_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "integrationUserPermission_integration_id_integration_id_fk": {
+          "name": "integrationUserPermission_integration_id_integration_id_fk",
+          "tableFrom": "integrationUserPermission",
+          "tableTo": "integration",
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "integrationUserPermission_user_id_user_id_fk": {
+          "name": "integrationUserPermission_user_id_user_id_fk",
+          "tableFrom": "integrationUserPermission",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integrationUserPermission_integration_id_user_id_permission_pk": {
+          "name": "integrationUserPermission_integration_id_user_id_permission_pk",
+          "columns": ["integration_id", "user_id", "permission"]
         }
       },
       "uniqueConstraints": {}
@@ -999,6 +1107,40 @@
       },
       "uniqueConstraints": {}
     },
+    "serverSetting": {
+      "name": "serverSetting",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "('{\"json\": {}}')"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "serverSetting_key": {
+          "name": "serverSetting_key",
+          "columns": ["key"]
+        }
+      },
+      "uniqueConstraints": {
+        "serverSetting_key_unique": {
+          "name": "serverSetting_key_unique",
+          "columns": ["key"]
+        }
+      }
+    },
     "session": {
       "name": "session",
       "columns": {
@@ -1170,5 +1312,9 @@
     "schemas": {},
     "tables": {},
     "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
   }
 }

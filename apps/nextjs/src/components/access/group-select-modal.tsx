@@ -63,5 +63,5 @@ export const GroupSelectModal = createModal<InnerProps>(({ actions, innerProps }
     </form>
   );
 }).withOptions({
-  defaultTitle: (t) => t("board.setting.section.access.permission.groupSelect.title"),
+  defaultTitle: (t) => t("permission.groupSelect.title"),
 });

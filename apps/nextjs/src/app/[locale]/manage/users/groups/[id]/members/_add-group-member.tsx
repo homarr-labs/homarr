@@ -6,8 +6,8 @@ import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { UserSelectModal } from "~/app/[locale]/boards/[name]/settings/_access/user-select-modal";
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+import { UserSelectModal } from "~/components/access/user-select-modal";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 
 interface AddGroupMemberProps {
