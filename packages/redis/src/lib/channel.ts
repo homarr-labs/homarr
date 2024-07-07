@@ -4,9 +4,9 @@ import { createId } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
+import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
 
-const subscriber = createRedisConnection(); // Used for subscribing to channels - after subscribing it can only be used for subscribing
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
 
@@ -31,15 +31,7 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
           }
         });
       }
-      void subscriber.subscribe(channelName, (err) => {
-        if (!err) {
-          return;
-        }
-        logger.error(`Error with channel '${channelName}': ${err.name} (${err.message})`);
-      });
-      subscriber.on("message", (channel, message) => {
-        if (channel !== channelName) return; // TODO: check if this is necessary - it should be handled by the redis client
-
+      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
       });
     },
@@ -172,15 +164,9 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
 export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
   const channelName = `item:${kind}:integration:${integrationId}`;
   return {
-    subscribeAsync: async (callback: (data: TData) => void) => {
-      await subscriber.subscribe(channelName);
-      subscriber.on("message", (channel, message) => {
-        if (channel !== channelName) {
-          logger.warn(`received message on ${channel} channel but was looking for ${channelName}`);
-          return;
-        }
+    subscribe: (callback: (data: TData) => void) => {
+      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
-        logger.debug(`sent message on ${channelName}`);
       });
     },
     publishAndUpdateLastStateAsync: async (data: TData) => {

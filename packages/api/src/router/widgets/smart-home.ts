@@ -13,10 +13,7 @@ export const smartHomeRouter = createTRPCRouter({
       entityId: string;
       state: string;
     }>((emit) => {
-      let isConnectionClosed = false;
-
-      homeAssistantEntityState.subscribe((message) => {
-        if (isConnectionClosed) return;
+      const unsubscribe = homeAssistantEntityState.subscribe((message) => {
         if (message.entityId !== input.entityId) {
           return;
         }
@@ -24,7 +21,7 @@ export const smartHomeRouter = createTRPCRouter({
       });
 
       return () => {
-        isConnectionClosed = true;
+        unsubscribe();
       };
     });
   }),

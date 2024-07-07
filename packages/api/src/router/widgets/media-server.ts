@@ -25,20 +25,21 @@ export const mediaServerRouter = createTRPCRouter({
     .unstable_concat(createManyIntegrationMiddleware("jellyfin", "plex"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; data: StreamSession[] }>((emit) => {
-        let isConnectionClosed = false;
-
+        const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
           const channel = createItemAndIntegrationChannel<StreamSession[]>("mediaServer", integration.id);
-          void channel.subscribeAsync((sessions) => {
-            if (isConnectionClosed) return;
+          const unsubscribe = channel.subscribe((sessions) => {
             emit.next({
               integrationId: integration.id,
               data: sessions,
             });
           });
+          unsubscribes.push(unsubscribe);
         }
         return () => {
-          isConnectionClosed = true;
+          unsubscribes.forEach((unsubscribe) => {
+            unsubscribe();
+          });
         };
       });
     }),
