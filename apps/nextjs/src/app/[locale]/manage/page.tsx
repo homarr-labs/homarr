@@ -37,13 +37,13 @@ export default async function ManagementPage() {
     },
     {
       count: statistics.countUsers,
-      href: "/manage/boards",
+      href: "/manage/users",
       subtitle: t("statisticLabel.authentication"),
       title: t("statistic.createUser"),
     },
     {
       count: statistics.countInvites,
-      href: "/manage/boards",
+      href: "/manage/users/invites",
       subtitle: t("statisticLabel.authentication"),
       title: t("statistic.createInvite"),
     },
