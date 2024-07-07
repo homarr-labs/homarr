@@ -3,7 +3,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
-import { UserListComponent } from "./_components/user-list.component";
+import { UserListComponent } from "./_components/user-list";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management.page.user.list");
