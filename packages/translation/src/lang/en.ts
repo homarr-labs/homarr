@@ -1551,10 +1551,58 @@ export default {
       },
     },
     action: {
-      start: "Start",
-      stop: "Stop",
-      restart: "Restart",
-      remove: "Remove",
+      start: {
+        label: "Start",
+        notification: {
+          success: {
+            title: "Containers started",
+            message: "The containers were started successfully",
+          },
+          error: {
+            title: "Containers not started",
+            message: "The containers could not be started",
+          },
+        },
+      },
+      stop: {
+        label: "Stop",
+        notification: {
+          success: {
+            title: "Containers stopped",
+            message: "The containers were stopped successfully",
+          },
+          error: {
+            title: "Containers not stopped",
+            message: "The containers could not be stopped",
+          },
+        },
+      },
+      restart: {
+        label: "Restart",
+        notification: {
+          success: {
+            title: "Containers restarted",
+            message: "The containers were restarted successfully",
+          },
+          error: {
+            title: "Containers not restarted",
+            message: "The containers could not be restarted",
+          },
+        },
+      },
+      remove: {
+        label: "Remove",
+        notification: {
+          success: {
+            title: "Containers removed",
+            message: "The containers were removed successfully",
+          },
+          error: {
+            title: "Containers not removed",
+            message: "The containers could not be removed",
+          },
+        },
+      },
     },
   },
   navigationStructure: {
