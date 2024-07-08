@@ -276,6 +276,8 @@ export const sections = sqliteTable("section", {
   parentSectionId: text("parent_section_id").references((): AnySQLiteColumn => sections.id, {
     onDelete: "cascade",
   }),
+  width: int("width"),
+  height: int("height"),
 });
 
 export const items = sqliteTable("item", {

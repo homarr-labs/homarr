@@ -12,6 +12,8 @@ CREATE TABLE `section` (
 	`kind` text NOT NULL,
 	`x_offset` integer NOT NULL,
 	`y_offset` integer NOT NULL,
+	`width` integer,
+	`height` integer,
 	`name` text,
     `parent_section_id` text,
 	FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON UPDATE no action ON DELETE cascade

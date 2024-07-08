@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a4222041-7a34-43bb-ae3e-6f946800ee70",
+  "id": "4fd93df1-8e28-41fd-a814-e1f2e7f7fe97",
   "prevId": "4af9bcc1-5573-4e00-8629-3c8de4c3a826",
   "tables": {
     "account": {
@@ -1220,6 +1220,20 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "name": {

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "55e738f4-3e95-449c-aaad-7cc4ed12c6b2",
+  "id": "d06a677d-f0f5-4fdf-9726-41f0d5d4f1fa",
   "prevId": "17473af6-8220-4f3b-970f-1cfe9e9f2ebe",
   "tables": {
     "account": {
@@ -1178,6 +1178,20 @@
         "parent_section_id": {
           "name": "parent_section_id",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
