@@ -6,7 +6,8 @@ import SuperJSON from "superjson";
 
 // This import is done that way to avoid circular dependencies.
 import type { WidgetComponentProps } from "../../../widgets";
-import { extract, FeedData } from "@extractus/feed-extractor";
+import type { FeedData } from "@extractus/feed-extractor";
+import { extract } from "@extractus/feed-extractor";
 import { createItemChannel } from "@homarr/redis";
 
 export const rssFeedsJob = createCronJob("rssFeeds", EVERY_5_MINUTES).withCallback(async () => {
@@ -17,9 +18,19 @@ export const rssFeedsJob = createCronJob("rssFeeds", EVERY_5_MINUTES).withCallba
   for (const item of itemsForIntegration) {
     const options = SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options);
 
-    const feeds = await Promise.all(options.feedUrls.map(async (feedUrl) => ({ itemId: item.id, feedUrl, feed: await extract(feedUrl) })));
+    const feeds = await Promise.all(options.feedUrls.map(async (feedUrl) => ({
+      itemId: item.id,
+      feedUrl,
+      feed: await extract(feedUrl)
+    })));
 
-    const channel = createItemChannel<{itemId: string, feedUrl: string, feed: FeedData }[]>(item.id);
-    channel.publishAndUpdateLastStateAsync(feeds);
+    const channel = createItemChannel<RssFeed[]>(item.id);
+    await channel.publishAndUpdateLastStateAsync(feeds);
   }
-})
+});
+
+export interface RssFeed {
+  feedUrl: string;
+  feed: FeedData;
+}
+

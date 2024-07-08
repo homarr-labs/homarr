@@ -13,7 +13,9 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
   icon: IconRss,
   options: optionsBuilder.from(
     (factory) => ({
-      feedUrls: factory.multiText(),
+      feedUrls: factory.multiText({
+        defaultValue: []
+      }),
       sanitizeContent: factory.switch({
         defaultValue: true
       }),
