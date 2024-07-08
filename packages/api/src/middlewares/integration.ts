@@ -6,7 +6,7 @@ import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
-import { integrations } from "@homarr/db/schema/sqlite";
+import { integrations, items } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind } from "@homarr/definitions";
 import { z } from "@homarr/validation";
 
@@ -27,6 +27,29 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
 ) => {
+
+export const createOneItemMiddleware = (itemId: string) => {
+  return publicProcedure.input(z.object({ itemId: z.string() })).use(async ({ input, ctx, next }) => {
+    const item = await ctx.db.query.items.findFirst({
+      where: eq(items.id, itemId),
+    });
+
+    if (!item) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `Item with id ${input.itemId} not found`,
+      });
+    }
+
+    return next({
+      ctx: {
+        item
+      },
+    });
+  });
+};
+
+export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
   return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
     const integration = await ctx.db.query.integrations.findFirst({
       where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
