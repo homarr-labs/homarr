@@ -1,6 +1,6 @@
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import type { z } from "@homarr/validation";
+import type { z, ZodType } from "@homarr/validation";
 
 import { widgetImports } from ".";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
@@ -91,10 +91,12 @@ const optionsFactory = {
     },
     withDescription: input?.withDescription ?? false,
   }),
-  multiText: (input?: CommonInput<string[]>) => ({
+  multiText: (input?: CommonInput<string[]> & { validate?: ZodType }) => ({
     type: "multiText" as const,
     defaultValue: input?.defaultValue ?? [],
     withDescription: input?.withDescription ?? false,
+    values: [] as string[],
+    validate: input?.validate
   }),
   app: (input?: Omit<CommonInput<string>, "defaultValue">) => ({
     type: "app" as const,

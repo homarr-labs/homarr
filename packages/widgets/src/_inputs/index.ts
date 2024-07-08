@@ -7,12 +7,13 @@ import { WidgetSelectInput } from "./widget-select-input";
 import { WidgetSliderInput } from "./widget-slider-input";
 import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
+import { WidgetMultiTextInput } from "./widget-multi-text-input";
 
 const mapping = {
   text: WidgetTextInput,
   location: WidgetLocationInput,
   multiSelect: WidgetMultiSelectInput,
-  multiText: () => null,
+  multiText: WidgetMultiTextInput,
   number: WidgetNumberInput,
   select: WidgetSelectInput,
   slider: WidgetSliderInput,

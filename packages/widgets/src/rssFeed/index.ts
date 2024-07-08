@@ -14,7 +14,8 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
   options: optionsBuilder.from(
     (factory) => ({
       feedUrls: factory.multiText({
-        defaultValue: []
+        defaultValue: [],
+        validate: z.string().url()
       }),
       sanitizeContent: factory.switch({
         defaultValue: true
