@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
-    .unstable_concat(createManyIntegrationOfOneItemMiddleware("sonarr", "radarr", "readarr", "lidarr"))
+    .unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "sonarr", "radarr", "readarr", "lidarr"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.flatMap(async (integration) => {

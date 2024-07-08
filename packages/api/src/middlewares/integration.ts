@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
+import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema/sqlite";
@@ -8,12 +10,32 @@ import { z } from "@homarr/validation";
 
 import { publicProcedure } from "../trpc";
 
-export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
+type IntegrationAction = "query" | "interact";
+
+export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
+  action: IntegrationAction,
+  ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
+) => {
   return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
     const integration = await ctx.db.query.integrations.findFirst({
       where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
       with: {
         secrets: true,
+        groupPermissions: true,
+        userPermissions: true,
+        items: {
+          with: {
+            item: {
+              with: {
+                section: {
+                  columns: {
+                    boardId: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -22,6 +44,24 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(..
         code: "NOT_FOUND",
         message: `Integration with id ${input.integrationId} not found or not of kinds ${kinds.join(",")}`,
       });
+    }
+
+    if (action === "interact") {
+      const { hasInteractAccess } = constructIntegrationPermissions(integration, ctx.session);
+      if (!hasInteractAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User does not have permission to interact with this integration",
+        });
+      }
+    } else {
+      const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(ctx.db, [integration], ctx.session);
+      if (!hasQueryAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User does not have permission to query this integration",
+        });
+      }
     }
 
     const { secrets, kind, ...rest } = integration;
@@ -41,7 +81,10 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(..
   });
 };
 
-export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
+export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
+  action: IntegrationAction,
+  ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
+) => {
   return publicProcedure
     .input(z.object({ integrationIds: z.array(z.string()).min(1) }))
     .use(async ({ ctx, input, next }) => {
@@ -49,7 +92,21 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(.
         where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
         with: {
           secrets: true,
-          items: true,
+          items: {
+            with: {
+              item: {
+                with: {
+                  section: {
+                    columns: {
+                      boardId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          userPermissions: true,
+          groupPermissions: true,
         },
       });
 
@@ -59,6 +116,26 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(.
           code: "NOT_FOUND",
           message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}`,
         });
+      }
+
+      if (action === "interact") {
+        const haveAllInteractAccess = dbIntegrations
+          .map((integration) => constructIntegrationPermissions(integration, ctx.session))
+          .every(({ hasInteractAccess }) => hasInteractAccess);
+        if (!haveAllInteractAccess) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User does not have permission to interact with at least one of the specified integrations",
+          });
+        }
+      } else {
+        const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(ctx.db, dbIntegrations, ctx.session);
+        if (!hasQueryAccess) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User does not have permission to query at least one of the specified integration",
+          });
+        }
       }
 
       return next({
@@ -76,7 +153,10 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(.
     });
 };
 
-export const createManyIntegrationOfOneItemMiddleware = <TKind extends IntegrationKind>(...kinds: TKind[]) => {
+export const createManyIntegrationOfOneItemMiddleware = <TKind extends IntegrationKind>(
+  action: IntegrationAction,
+  ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
+) => {
   return publicProcedure
     .input(z.object({ integrationIds: z.array(z.string()).min(1), itemId: z.string() }))
     .use(async ({ ctx, input, next }) => {
@@ -84,7 +164,21 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
         where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
         with: {
           secrets: true,
-          items: true,
+          items: {
+            with: {
+              item: {
+                with: {
+                  section: {
+                    columns: {
+                      boardId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          userPermissions: true,
+          groupPermissions: true,
         },
       });
 
@@ -94,6 +188,26 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
           code: "NOT_FOUND",
           message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}`,
         });
+      }
+
+      if (action === "interact") {
+        const haveAllInteractAccess = dbIntegrations
+          .map((integration) => constructIntegrationPermissions(integration, ctx.session))
+          .every(({ hasInteractAccess }) => hasInteractAccess);
+        if (!haveAllInteractAccess) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User does not have permission to interact with at least one of the specified integrations",
+          });
+        }
+      } else {
+        const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(ctx.db, dbIntegrations, ctx.session);
+        if (!hasQueryAccess) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "User does not have permission to query at least one of the specified integration",
+          });
+        }
       }
 
       const dbIntegrationWithItem = dbIntegrations.filter((integration) =>
