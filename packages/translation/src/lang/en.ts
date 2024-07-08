@@ -1033,11 +1033,21 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
-    rssFeeds: {
+    rssFeed: {
       name: "RSS feeds",
       description: "Monitor and display one or more generic RSS, ATOM or JSON feed",
-      option: {}
-    }
+      option: {
+        feedUrls: {
+          label: "Feed URLs"
+        },
+        textLinesClamp: {
+          label: "Description line clamp"
+        },
+        maximumAmountPosts: {
+          label: "Amount posts limit"
+        }
+      },
+    },
   },
   widgetPreview: {
     toggle: {
@@ -1500,8 +1510,8 @@ export default {
               label: "Media Organizers",
             },
             rssFeeds: {
-              label: "RSS feeds"
-            }
+              label: "RSS feeds",
+            },
           },
         },
       },

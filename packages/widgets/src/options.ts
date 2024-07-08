@@ -96,7 +96,7 @@ const optionsFactory = {
     defaultValue: input?.defaultValue ?? [],
     withDescription: input?.withDescription ?? false,
     values: [] as string[],
-    validate: input?.validate
+    validate: input?.validate,
   }),
   app: (input?: Omit<CommonInput<string>, "defaultValue">) => ({
     type: "app" as const,

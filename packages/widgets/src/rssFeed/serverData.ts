@@ -1,20 +1,21 @@
 "use server";
 
-import type { WidgetProps } from "../definition";
 import { api } from "@homarr/api/server";
+
+import type { WidgetProps } from "../definition";
 
 export default async function getServerDataAsync({ itemId }: WidgetProps<"rssFeed">) {
   if (!itemId) {
     return {
       initialData: undefined,
-      lastUpdatedAt: null
-    }
+      lastUpdatedAt: null,
+    };
   }
   const data = await api.widget.rssFeed.getFeeds({
-    itemId
+    itemId,
   });
   return {
     initialData: data?.data,
-    lastUpdatedAt: data?.timestamp
-  }
+    lastUpdatedAt: data?.timestamp,
+  };
 }

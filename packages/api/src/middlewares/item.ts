@@ -1,9 +1,11 @@
-import { publicProcedure } from "../trpc";
-import { z } from "@homarr/validation";
+import { TRPCError } from "@trpc/server";
+
 import { and, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
-import { TRPCError } from "@trpc/server";
 import type { WidgetKind } from "@homarr/definitions";
+import { z } from "@homarr/validation";
+
+import { publicProcedure } from "../trpc";
 
 export const createOneItemMiddleware = (kind: WidgetKind) => {
   return publicProcedure.input(z.object({ itemId: z.string() })).use(async ({ input, ctx, next }) => {
@@ -20,7 +22,7 @@ export const createOneItemMiddleware = (kind: WidgetKind) => {
 
     return next({
       ctx: {
-        item
+        item,
       },
     });
   });

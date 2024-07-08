@@ -14,11 +14,11 @@ import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
+import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as rssFeed from "./rssFeed";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
@@ -38,7 +38,7 @@ export const widgetImports = {
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   mediaServer,
   calendar,
-  rssFeed
+  rssFeed,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

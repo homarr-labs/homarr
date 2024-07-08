@@ -1,7 +1,9 @@
+import { IconRss } from "@tabler/icons-react";
+
 import { z } from "@homarr/validation";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
-import { IconRss } from "@tabler/icons-react";
 
 /**
  * Feed must conform to one of the following standards:
@@ -11,25 +13,20 @@ import { IconRss } from "@tabler/icons-react";
  */
 export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("rssFeed", {
   icon: IconRss,
-  options: optionsBuilder.from(
-    (factory) => ({
-      feedUrls: factory.multiText({
-        defaultValue: [],
-        validate: z.string().url()
-      }),
-      sanitizeContent: factory.switch({
-        defaultValue: true
-      }),
-      textLinesClamp: factory.number({
-        defaultValue: 5,
-        validate: z.number().min(1).max(50)
-      }),
-      maximumAmountPosts: factory.number({
-        defaultValue: 100,
-        validate: z.number().min(1).max(9999)
-      })
+  options: optionsBuilder.from((factory) => ({
+    feedUrls: factory.multiText({
+      defaultValue: [],
+      validate: z.string().url(),
     }),
-  ),
+    textLinesClamp: factory.number({
+      defaultValue: 5,
+      validate: z.number().min(1).max(50),
+    }),
+    maximumAmountPosts: factory.number({
+      defaultValue: 100,
+      validate: z.number().min(1).max(9999),
+    }),
+  })),
 })
   .withServerData(() => import("./serverData"))
   .withDynamicImport(() => import("./component"));

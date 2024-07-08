@@ -1,9 +1,9 @@
-import type { WidgetComponentProps } from "../definition";
+import React from "react";
 import { Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
-import React from "react";
 import dayjs from "dayjs";
 
+import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
 export default function RssFeed({ serverData, options }: WidgetComponentProps<"rssFeed">) {
@@ -12,9 +12,9 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
   }
 
   const entries = serverData.initialData
-    .filter(feedGroup => feedGroup.feed.entries !== undefined)
-    .flatMap(feedGroup => feedGroup.feed.entries)
-    .filter(entry => entry !== undefined)
+    .filter((feedGroup) => feedGroup.feed.entries !== undefined)
+    .flatMap((feedGroup) => feedGroup.feed.entries)
+    .filter((entry) => entry !== undefined)
     .sort((entryA, entryB) => {
       if (!entryA.published || !entryB.published) {
         return -1;
@@ -36,11 +36,7 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
             w="100%"
           >
             {feedEntry.enclosure && (
-              <img
-                className={classes.backgroundImage}
-                src={feedEntry.enclosure}
-                alt="backdrop"
-              />
+              <img className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
             )}
 
             <Flex gap={2} direction="column" w="100%">
@@ -55,20 +51,18 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
                 />
               )}
 
-              {feedEntry.published && (
-                <InfoDisplay date={dayjs(feedEntry.published).fromNow()}/>
-              )}
+              {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
             </Flex>
           </Card>
         ))}
       </Stack>
     </ScrollArea>
-  )
+  );
 }
 
-const InfoDisplay = ({ date }: { date: string; }) => (
+const InfoDisplay = ({ date }: { date: string }) => (
   <Group mt={4} gap="xs">
-    <IconClock size={14}/>
+    <IconClock size={14} />
     <Text size="xs" c="dimmed">
       {date}
     </Text>
