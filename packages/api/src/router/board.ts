@@ -290,7 +290,7 @@ export const boardRouter = createTRPCRouter({
         await transaction
           .update(sections)
           .set({
-            position: section.position,
+            yOffset: section.position,
             name: prev?.kind === "category" && "name" in section ? section.name : null,
           })
           .where(eq(sections.id, section.id));

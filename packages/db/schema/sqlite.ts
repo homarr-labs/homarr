@@ -270,8 +270,12 @@ export const sections = sqliteTable("section", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text("kind").$type<SectionKind>().notNull(),
-  position: int("position").notNull(),
+  xOffset: int("x_offset").notNull(),
+  yOffset: int("y_offset").notNull(),
   name: text("name"),
+  parentSectionId: text("parent_section_id").references((): AnySQLiteColumn => sections.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const items = sqliteTable("item", {
