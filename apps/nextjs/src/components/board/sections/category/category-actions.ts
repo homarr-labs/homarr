@@ -37,7 +37,6 @@ export const useCategoryActions = () => {
         sections: [
           // Place sections before the new category
           ...previous.sections.filter(
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             (section) => (section.kind === "category" || section.kind === "empty") && section.yOffset < yOffset,
           ),
           {
@@ -59,7 +58,6 @@ export const useCategoryActions = () => {
           ...previous.sections
             .filter(
               (section): section is CategorySection | EmptySection =>
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 (section.kind === "category" || section.kind === "empty") && section.yOffset >= yOffset,
             )
             .map((section) => ({
@@ -78,7 +76,6 @@ export const useCategoryActions = () => {
         const lastSection = previous.sections
           .filter(
             (section): section is CategorySection | EmptySection =>
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               section.kind === "empty" || section.kind === "category",
           )
           .sort((sectionA, sectionB) => sectionB.yOffset - sectionA.yOffset)
@@ -143,7 +140,6 @@ export const useCategoryActions = () => {
         return {
           ...previous,
           sections: previous.sections.map((section) => {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (section.kind !== "category" && section.kind !== "empty") return section;
             const offset = direction === "up" ? -2 : 2;
             // Move category and empty section

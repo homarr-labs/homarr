@@ -45,7 +45,6 @@ export const ClientBoard = () => {
   const isReady = useIsBoardReady();
 
   const fullWidthSortedSections = board.sections
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     .filter((section) => section.kind === "empty" || section.kind === "category")
     .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
 
