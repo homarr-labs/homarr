@@ -770,8 +770,8 @@ importers:
         specifier: ^0.22.8
         version: 0.22.8
       drizzle-orm:
-        specifier: ^0.31.3
-        version: 0.31.3(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.2)(react@18.3.1)
+        specifier: ^0.31.4
+        version: 0.31.4(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.2)(react@18.3.1)
       mysql2:
         specifier: 3.10.2
         version: 3.10.2
@@ -1404,7 +1404,7 @@ importers:
     dependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.3.0
-        version: 4.3.0(prettier@3.3.2)
+        version: 4.3.0(@vue/compiler-sfc@3.4.31)(prettier@3.3.2)
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
@@ -3767,8 +3767,8 @@ packages:
     resolution: {integrity: sha512-VjI4wsJjk3hSqHSa3TwBf+uvH6M6pRHyxyoVbt935GUzP9tUR/BRZ+MhEJNgryqbzN2Za1KP0eJMTgKEPsalYQ==}
     hasBin: true
 
-  drizzle-orm@0.31.3:
-    resolution: {integrity: sha512-EpBqJeeUHH3jQrXSojCnclCoP5jMZafzSQs0NO1cu7t6cf4F+8acC9DjyWhanCqEmRn+0nJyAEU6xHQDYTEjnQ==}
+  drizzle-orm@0.31.4:
+    resolution: {integrity: sha512-VGD9SH9aStF2z4QOTnVlVX/WghV/EnuEzTmsH3fSVp2E4fFgc8jl3viQrS/XUJx1ekW4rVVLJMH42SfGQdjX3Q==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -3794,6 +3794,7 @@ packages:
       mysql2: '>=2'
       pg: '>=8'
       postgres: '>=3'
+      prisma: '*'
       react: '>=18'
       sql.js: '>=1'
       sqlite3: '>=5'
@@ -3813,6 +3814,8 @@ packages:
       '@opentelemetry/api':
         optional: true
       '@planetscale/database':
+        optional: true
+      '@prisma/client':
         optional: true
       '@tidbcloud/serverless':
         optional: true
@@ -3843,6 +3846,8 @@ packages:
       pg:
         optional: true
       postgres:
+        optional: true
+      prisma:
         optional: true
       react:
         optional: true
@@ -7178,7 +7183,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.3.0': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.3.0(prettier@3.3.2)':
+  '@ianvs/prettier-plugin-sort-imports@4.3.0(@vue/compiler-sfc@3.4.31)(prettier@3.3.2)':
     dependencies:
       '@babel/core': 7.24.6
       '@babel/generator': 7.24.6
@@ -7187,6 +7192,8 @@ snapshots:
       '@babel/types': 7.24.6
       prettier: 3.3.2
       semver: 7.6.0
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.4.31
     transitivePeerDependencies:
       - supports-color
 
@@ -7387,7 +7394,8 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@prisma/client@5.16.1': {}
+  '@prisma/client@5.16.1':
+    optional: true
 
   '@remirror/core-constants@2.0.2': {}
 
@@ -9109,10 +9117,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.31.3(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.2)(react@18.3.1):
-    dependencies:
-      '@prisma/client': 5.16.1
+  drizzle-orm@0.31.4(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.2)(react@18.3.1):
     optionalDependencies:
+      '@prisma/client': 5.16.1
       '@types/better-sqlite3': 7.6.11
       '@types/react': 18.3.3
       better-sqlite3: 11.1.2
