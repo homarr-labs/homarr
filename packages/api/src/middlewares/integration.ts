@@ -1,8 +1,10 @@
 import { TRPCError } from "@trpc/server";
 
+import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common";
+import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind } from "@homarr/definitions";
@@ -12,6 +14,15 @@ import { publicProcedure } from "../trpc";
 
 type IntegrationAction = "query" | "interact";
 
+/**
+ * Creates a middleware that provides the integration in the context that is of the specified kinds
+ * @param action query for showing data or interact for mutating data
+ * @param kinds kinds of integrations that are supported
+ * @returns middleware that can be used with trpc
+ * @example publicProcedure.unstable_concat(createOneIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
+ * @throws TRPCError NOT_FOUND if the integration was not found
+ * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on the specified integration
+ */
 export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
@@ -46,23 +57,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
       });
     }
 
-    if (action === "interact") {
-      const { hasInteractAccess } = constructIntegrationPermissions(integration, ctx.session);
-      if (!hasInteractAccess) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "User does not have permission to interact with this integration",
-        });
-      }
-    } else {
-      const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(ctx.db, [integration], ctx.session);
-      if (!hasQueryAccess) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "User does not have permission to query this integration",
-        });
-      }
-    }
+    await throwIfActionIsNotAllowedAsync(action, ctx.db, [integration], ctx.session);
 
     const {
       secrets,
@@ -88,6 +83,16 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
   });
 };
 
+/**
+ * Creates a middleware that provides the integrations in the context that are of the specified kinds and have the specified item
+ * It also ensures that the user has permission to perform the specified action on the integrations
+ * @param action query for showing data or interact for mutating data
+ * @param kinds kinds of integrations that are supported
+ * @returns middleware that can be used with trpc
+ * @example publicProcedure.unstable_concat(createManyIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
+ * @throws TRPCError NOT_FOUND if the integration was not found
+ * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
+ */
 export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
@@ -125,25 +130,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
         });
       }
 
-      if (action === "interact") {
-        const haveAllInteractAccess = dbIntegrations
-          .map((integration) => constructIntegrationPermissions(integration, ctx.session))
-          .every(({ hasInteractAccess }) => hasInteractAccess);
-        if (!haveAllInteractAccess) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "User does not have permission to interact with at least one of the specified integrations",
-          });
-        }
-      } else {
-        const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(ctx.db, dbIntegrations, ctx.session);
-        if (!hasQueryAccess) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "User does not have permission to query at least one of the specified integration",
-          });
-        }
-      }
+      await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
 
       return next({
         ctx: {
@@ -162,6 +149,16 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
     });
 };
 
+/**
+ * Creates a middleware that provides the integrations and their items in the context that are of the specified kinds and have the specified item
+ * It also ensures that the user has permission to perform the specified action on the integrations
+ * @param action query for showing data or interact for mutating data
+ * @param kinds kinds of integrations that are supported
+ * @returns middleware that can be used with trpc
+ * @example publicProcedure.unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "piHole", "homeAssistant")).query(...)
+ * @throws TRPCError NOT_FOUND if the integration for the item was not found
+ * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
+ */
 export const createManyIntegrationOfOneItemMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
@@ -199,25 +196,7 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
         });
       }
 
-      if (action === "interact") {
-        const haveAllInteractAccess = dbIntegrations
-          .map((integration) => constructIntegrationPermissions(integration, ctx.session))
-          .every(({ hasInteractAccess }) => hasInteractAccess);
-        if (!haveAllInteractAccess) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "User does not have permission to interact with at least one of the specified integrations",
-          });
-        }
-      } else {
-        const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(ctx.db, dbIntegrations, ctx.session);
-        if (!hasQueryAccess) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "User does not have permission to query at least one of the specified integration",
-          });
-        }
-      }
+      await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
 
       const dbIntegrationWithItem = dbIntegrations.filter((integration) =>
         integration.items.some((item) => item.itemId === input.itemId),
@@ -245,4 +224,40 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
         },
       });
     });
+};
+
+/**
+ * Throws a TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
+ * @param action action to perform
+ * @param db db instance
+ * @param integrations integrations to check permissions for
+ * @param session session of the user
+ * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
+ */
+const throwIfActionIsNotAllowedAsync = async (
+  action: IntegrationAction,
+  db: Database,
+  integrations: Parameters<typeof hasQueryAccessToIntegrationsAsync>[1],
+  session: Session | null,
+) => {
+  if (action === "interact") {
+    const haveAllInteractAccess = integrations
+      .map((integration) => constructIntegrationPermissions(integration, session))
+      .every(({ hasInteractAccess }) => hasInteractAccess);
+    if (haveAllInteractAccess) return;
+
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "User does not have permission to interact with at least one of the specified integrations",
+    });
+  }
+
+  const hasQueryAccess = await hasQueryAccessToIntegrationsAsync(db, integrations, session);
+
+  if (hasQueryAccess) return;
+
+  throw new TRPCError({
+    code: "FORBIDDEN",
+    message: "User does not have permission to query at least one of the specified integration",
+  });
 };
