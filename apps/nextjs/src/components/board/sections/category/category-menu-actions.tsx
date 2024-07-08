@@ -14,7 +14,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
   const { addCategory, moveCategory, removeCategory, renameCategory } = useCategoryActions();
   const t = useI18n();
 
-  const createCategoryAtPosition = useCallback(
+  const createCategoryAtYOffset = useCallback(
     (position: number) => {
       openModal(
         {
@@ -40,15 +40,15 @@ export const useCategoryMenuActions = (category: CategorySection) => {
 
   // creates a new category above the current
   const addCategoryAbove = useCallback(() => {
-    const abovePosition = category.position;
-    createCategoryAtPosition(abovePosition);
-  }, [category.position, createCategoryAtPosition]);
+    const aboveYOffset = category.yOffset;
+    createCategoryAtYOffset(aboveYOffset);
+  }, [category.yOffset, createCategoryAtYOffset]);
 
   // creates a new category below the current
   const addCategoryBelow = useCallback(() => {
-    const belowPosition = category.position + 2;
-    createCategoryAtPosition(belowPosition);
-  }, [category.position, createCategoryAtPosition]);
+    const belowYOffset = category.yOffset + 2;
+    createCategoryAtYOffset(belowYOffset);
+  }, [category.yOffset, createCategoryAtYOffset]);
 
   const moveCategoryUp = useCallback(() => {
     moveCategory({
