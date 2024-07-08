@@ -26,14 +26,14 @@ export const smartHomeRouter = createTRPCRouter({
     });
   }),
   switchEntity: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("homeAssistant"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", "homeAssistant"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const client = new HomeAssistantIntegration(ctx.integration);
       return await client.triggerToggleAsync(input.entityId);
     }),
   executeAutomation: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("homeAssistant"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", "homeAssistant"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const client = new HomeAssistantIntegration(ctx.integration);
