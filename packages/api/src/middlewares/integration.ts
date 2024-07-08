@@ -64,7 +64,14 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
       }
     }
 
-    const { secrets, kind, ...rest } = integration;
+    const {
+      secrets,
+      kind,
+      items: _ignore1,
+      groupPermissions: _ignore2,
+      userPermissions: _ignore3,
+      ...rest
+    } = integration;
 
     return next({
       ctx: {
@@ -140,14 +147,16 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
 
       return next({
         ctx: {
-          integrations: dbIntegrations.map(({ secrets, kind, ...rest }) => ({
-            ...rest,
-            kind: kind as TKind,
-            decryptedSecrets: secrets.map((secret) => ({
-              ...secret,
-              value: decryptSecret(secret.value),
-            })),
-          })),
+          integrations: dbIntegrations.map(
+            ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
+              ...rest,
+              kind: kind as TKind,
+              decryptedSecrets: secrets.map((secret) => ({
+                ...secret,
+                value: decryptSecret(secret.value),
+              })),
+            }),
+          ),
         },
       });
     });
@@ -223,14 +232,16 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
 
       return next({
         ctx: {
-          integrations: dbIntegrationWithItem.map(({ secrets, kind, ...rest }) => ({
-            ...rest,
-            kind: kind as TKind,
-            decryptedSecrets: secrets.map((secret) => ({
-              ...secret,
-              value: decryptSecret(secret.value),
-            })),
-          })),
+          integrations: dbIntegrationWithItem.map(
+            ({ secrets, kind, groupPermissions: _ignore1, userPermissions: _ignore2, ...rest }) => ({
+              ...rest,
+              kind: kind as TKind,
+              decryptedSecrets: secrets.map((secret) => ({
+                ...secret,
+                value: decryptSecret(secret.value),
+              })),
+            }),
+          ),
         },
       });
     });
