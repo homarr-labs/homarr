@@ -20,7 +20,7 @@ CREATE TABLE `section` (
 	FOREIGN KEY (`parent_section_id`) REFERENCES `section`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-INSERT INTO `section` SELECT `id`, `board_id`, `kind`, 0, `position`, `name`, null FROM `__section_old`;
+INSERT INTO `section` SELECT `id`, `board_id`, `kind`, 0, `position`, null, null, `name`, null FROM `__section_old`;
 --> statement-breakpoint
 DROP TABLE `__section_old`;
 --> statement-breakpoint
