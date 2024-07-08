@@ -107,7 +107,8 @@ export const boardRouter = createTRPCRouter({
         await transaction.insert(sections).values({
           id: createId(),
           kind: "empty",
-          position: 0,
+          xOffset: 0,
+          yOffset: 0,
           boardId,
         });
       });
@@ -204,7 +205,8 @@ export const boardRouter = createTRPCRouter({
           addedSections.map((section) => ({
             id: section.id,
             kind: section.kind,
-            position: section.position,
+            yOffset: section.yOffset,
+            xOffset: 0,
             name: "name" in section ? section.name : null,
             boardId: dbBoard.id,
           })),
@@ -290,7 +292,7 @@ export const boardRouter = createTRPCRouter({
         await transaction
           .update(sections)
           .set({
-            yOffset: section.position,
+            yOffset: section.yOffset,
             name: prev?.kind === "category" && "name" in section ? section.name : null,
           })
           .where(eq(sections.id, section.id));

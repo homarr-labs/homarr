@@ -25,7 +25,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
           onSuccess: (category) => {
             addCategory({
               name: category.name,
-              position,
+              yOffset: position,
             });
           },
           submitLabel: t("section.category.create.submit"),

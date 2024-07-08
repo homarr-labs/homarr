@@ -41,7 +41,8 @@ const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TIte
     id: z.string(),
     name: z.string(),
     kind: z.literal("category"),
-    position: z.number(),
+    yOffset: z.number(),
+    xOffset: z.number(),
     items: z.array(itemSchema),
   });
 
@@ -49,7 +50,8 @@ const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSc
   z.object({
     id: z.string(),
     kind: z.literal("empty"),
-    position: z.number(),
+    yOffset: z.number(),
+    xOffset: z.number(),
     items: z.array(itemSchema),
   });
 
