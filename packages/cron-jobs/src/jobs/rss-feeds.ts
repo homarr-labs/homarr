@@ -25,11 +25,10 @@ export const rssFeedsJob = createCronJob("rssFeeds", EVERY_5_MINUTES).withCallba
       feedUrl,
       feed: (await extract(feedUrl, {
         getExtraEntryFields: (feedEntry) => {
-          const media = getFirstMediaProperty(feedEntry);
+          const media = attemptGetImageFromEntry(feedUrl, feedEntry);
           if (!media) {
             return {};
           }
-          logger.info('found media: ' + media);
           return {
             enclosure: media
           }
@@ -42,7 +41,30 @@ export const rssFeedsJob = createCronJob("rssFeeds", EVERY_5_MINUTES).withCallba
   }
 });
 
+const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {
+  const media = getFirstMediaProperty(entry);
+  if (media !== null) {
+    return media;
+  }
+  return getImageFromStringAsFallback(feedUrl, JSON.stringify(entry));
+}
+
+const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
+  const regex = /https?:\/\/\S+?\.(jpg|jpeg|png|gif|bmp|svg|webp|tiff)/i;
+  const result = regex.exec(content);
+
+  if (result == null) {
+    return null;
+  }
+
+  console.debug(`Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`);
+  return result[0];
+}
+
 const mediaProperties = [
+  {
+    path: ["enclosure", "@_url"]
+  },
   {
     path: ["media:content", "@_url"]
   }
