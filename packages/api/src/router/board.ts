@@ -538,6 +538,7 @@ const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kin
 
 const parseSection = (section: unknown) => {
   const result = createSectionSchema(outputItemSchema).safeParse(section);
+
   if (!result.success) {
     throw new Error(result.error.message);
   }

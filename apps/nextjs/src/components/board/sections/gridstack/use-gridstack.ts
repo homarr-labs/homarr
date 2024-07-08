@@ -1,5 +1,6 @@
 import type { MutableRefObject, RefObject } from "react";
-import { createRef, useCallback, useEffect, useMemo, useRef } from "react";
+import { createRef, useCallback, useEffect, useRef } from "react";
+import { useElementSize } from "@mantine/hooks";
 
 import type { GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
@@ -18,31 +19,34 @@ interface UseGristackReturnType {
   refs: UseGridstackRefs;
 }
 
-interface UseGridstackProps {
-  section: Section;
-  mainRef?: RefObject<HTMLDivElement>;
-}
-
-export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGristackReturnType => {
+export const useGridstack = (section: Omit<Section, "items">, itemIds: string[]): UseGristackReturnType => {
   const [isEditMode] = useEditMode();
   const markAsReady = useMarkSectionAsReady();
   const { moveAndResizeItem, moveItemToSection } = useItemActions();
   // define reference for wrapper - is used to calculate the width of the wrapper
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { ref: wrapperRef, width } = useElementSize<HTMLDivElement>();
   // references to the diffrent items contained in the gridstack
   const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement>>>({});
   // reference of the gridstack object for modifications after initialization
   const gridRef = useRef<GridStack>();
 
-  useCssVariableConfiguration({ mainRef, gridRef });
-
   const board = useRequiredBoard();
 
-  const items = useMemo(() => section.items, [section.items]);
+  const columnCount =
+    section.kind === "dynamic" && "width" in section && typeof section.width === "number"
+      ? section.width
+      : board.columnCount;
+
+  useCssVariableConfiguration({
+    columnCount,
+    gridRef,
+    wrapperRef,
+    width,
+  });
 
   // define items in itemRefs for easy access and reference to items
-  if (Object.keys(itemRefs.current).length !== items.length) {
-    items.forEach(({ id }: { id: keyof typeof itemRefs.current }) => {
+  if (Object.keys(itemRefs.current).length !== itemIds.length) {
+    itemIds.forEach((id) => {
       itemRefs.current[id] = itemRefs.current[id] ?? createRef();
     });
   }
@@ -116,12 +120,13 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
   useEffect(() => {
     const isReady = initializeGridstack({
       section,
+      itemIds,
       refs: {
         items: itemRefs,
         wrapper: wrapperRef,
         gridstack: gridRef,
       },
-      sectionColumnCount: board.columnCount,
+      sectionColumnCount: columnCount,
     });
 
     if (isReady) {
@@ -129,7 +134,7 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
     }
 
     // Only run this effect when the section items change
-  }, [items.length, section.items.length, board.columnCount]);
+  }, [itemIds.length, columnCount]);
 
   return {
     refs: {
@@ -143,46 +148,50 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
 interface UseCssVariableConfiguration {
   mainRef?: RefObject<HTMLDivElement>;
   gridRef: UseGridstackRefs["gridstack"];
+  wrapperRef: UseGridstackRefs["wrapper"];
+  width: number;
+  columnCount: number;
 }
 
 /**
  * This hook is used to configure the css variables for the gridstack
  * Those css variables are used to define the size of the gridstack items
  * @see gridstack.scss
- * @param mainRef reference to the main div wrapping all sections
  * @param gridRef reference to the gridstack object
+ * @param wrapperRef reference to the wrapper of the gridstack
+ * @param width width of the section
+ * @param columnCount column count of the gridstack
  */
-const useCssVariableConfiguration = ({ mainRef, gridRef }: UseCssVariableConfiguration) => {
-  const board = useRequiredBoard();
-
-  // Get reference to the :root element
-  const typeofDocument = typeof document;
-  const root = useMemo(() => {
-    if (typeofDocument === "undefined") return;
-    return document.documentElement;
-  }, [typeofDocument]);
+const useCssVariableConfiguration = ({ gridRef, wrapperRef, width, columnCount }: UseCssVariableConfiguration) => {
+  const onResize = useCallback(() => {
+    if (!wrapperRef.current) return;
+    const widgetWidth = wrapperRef.current.clientWidth / columnCount;
+    // widget width is used to define sizes of gridstack items within global.scss
+    wrapperRef.current.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
+    gridRef.current?.cellHeight(widgetWidth);
+  }, [columnCount, wrapperRef, gridRef]);
 
   // Define widget-width by calculating the width of one column with mainRef width and column count
   useEffect(() => {
-    if (typeof document === "undefined") return;
-    const onResize = () => {
-      if (!mainRef?.current) return;
-      const widgetWidth = mainRef.current.clientWidth / board.columnCount;
-      // widget width is used to define sizes of gridstack items within global.scss
-      root?.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
-      gridRef.current?.cellHeight(widgetWidth);
-    };
     onResize();
     if (typeof window === "undefined") return;
     window.addEventListener("resize", onResize);
+    const wrapper = wrapperRef.current;
+    wrapper?.addEventListener("resize", onResize);
     return () => {
       if (typeof window === "undefined") return;
       window.removeEventListener("resize", onResize);
+      wrapper?.removeEventListener("resize", onResize);
     };
-  }, [board.columnCount, mainRef, root, gridRef]);
+  }, [wrapperRef, gridRef, onResize]);
+
+  // Handle resize of inner sections when there size changes
+  useEffect(() => {
+    onResize();
+  }, [width, onResize]);
 
   // Define column count by using the sectionColumnCount
   useEffect(() => {
-    root?.style.setProperty("--gridstack-column-count", board.columnCount.toString());
-  }, [board.columnCount, root]);
+    wrapperRef.current?.style.setProperty("--gridstack-column-count", columnCount.toString());
+  }, [columnCount, wrapperRef]);
 };

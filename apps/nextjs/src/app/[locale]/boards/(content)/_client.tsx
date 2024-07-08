@@ -62,9 +62,9 @@ export const ClientBoard = () => {
       <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
         {fullWidthSortedSections.map((section) =>
           section.kind === "empty" ? (
-            <BoardEmptySection key={section.id} section={section} mainRef={ref} />
+            <BoardEmptySection key={section.id} section={section} />
           ) : (
-            <BoardCategorySection key={section.id} section={section} mainRef={ref} />
+            <BoardCategorySection key={section.id} section={section} />
           ),
         )}
       </Stack>
