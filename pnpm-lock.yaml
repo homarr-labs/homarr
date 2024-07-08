@@ -33,8 +33,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       testcontainers:
-        specifier: ^10.10.1
-        version: 10.10.1
+        specifier: ^10.10.2
+        version: 10.10.2
       turbo:
         specifier: ^2.0.6
         version: 2.0.6
@@ -6067,8 +6067,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@10.10.1:
-    resolution: {integrity: sha512-bw86BLq2/ljJ/gLg3PBsyhYOoDBkyo87/MnpWLavYTAyWR7feGFnAA87qRLq2SSCOSFLHsgCA8+u7Eg+opSmTQ==}
+  testcontainers@10.10.2:
+    resolution: {integrity: sha512-Wbzi7enfpKFtmb7kffs6EBksPX7J6jHFWIsLYe2VOSrnscX2hRs84TNvl9Hfro8WTCtAfuY/935kunCcdlzi8A==}
 
   text-decoder@1.1.0:
     resolution: {integrity: sha512-TmLJNj6UgX8xcUZo4UDStGQtDiTzF7BzWlzn9g7UWrjkpHr5uJTK1ld16wZ3LXb2vb6jH8qU89dW5whuMdXYdw==}
@@ -11721,7 +11721,7 @@ snapshots:
       glob: 10.4.3
       minimatch: 9.0.4
 
-  testcontainers@10.10.1:
+  testcontainers@10.10.2:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.29
