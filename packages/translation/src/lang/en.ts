@@ -1038,14 +1038,14 @@ export default {
       description: "Monitor and display one or more generic RSS, ATOM or JSON feed",
       option: {
         feedUrls: {
-          label: "Feed URLs"
+          label: "Feed URLs",
         },
         textLinesClamp: {
-          label: "Description line clamp"
+          label: "Description line clamp",
         },
         maximumAmountPosts: {
-          label: "Amount posts limit"
-        }
+          label: "Amount posts limit",
+        },
       },
     },
   },

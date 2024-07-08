@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Combobox, Pill, PillsInput, useCombobox } from "@mantine/core";
 
+import { useScopedI18n } from "@homarr/translation/client";
+
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
 export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetInputProps<"multiText">) => {
   const t = useWidgetInputTranslation(kind, property);
+  const tCommon = useScopedI18n("common");
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
@@ -54,7 +57,7 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
                 onFocus={() => combobox.openDropdown()}
                 onBlur={() => combobox.closeDropdown()}
                 value={search}
-                placeholder="Add values..."
+                placeholder={tCommon("multiText.placeholder")}
                 onChange={(event) => {
                   combobox.updateSelectedOptionIndex();
                   setSearch(event.currentTarget.value);

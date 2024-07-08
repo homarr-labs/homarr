@@ -20,7 +20,8 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
         return -1;
       }
       return new Date(entryB.published).getTime() - new Date(entryA.published).getTime();
-    });
+    })
+    .slice(0, options.maximumAmountPosts as number);
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" p={"sm"}>
