@@ -26,14 +26,28 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
     onChange(values.filter((_, index) => index !== optionIndex));
   };
 
-  const isValidUrl = React.useMemo(() => {
+  const currentValidationResult = React.useMemo(() => {
     if (!options.validate) {
-      return true;
+      return {
+        success: false,
+        result: null,
+      };
     }
 
     const validationResult = options.validate.safeParse(search);
-    return validationResult.success;
+    return {
+      success: validationResult.success,
+      result: validationResult,
+    };
   }, [search]);
+
+  const error = React.useMemo(() => {
+    /* hide the error when nothing is being typed since "" is not valid but is not an explicit error */
+    if (!currentValidationResult.success && currentValidationResult.result && search.length !== 0) {
+      return currentValidationResult.result.error?.issues[0]?.message;
+    }
+    return null;
+  }, [currentValidationResult, search]);
 
   return (
     <Combobox store={combobox}>
@@ -42,8 +56,7 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
           label={t("label")}
           description={options.withDescription ? t("description") : undefined}
           onClick={() => combobox.openDropdown()}
-          /* hide the error when nothing is being typed since "" is not valid but is not an explicit error */
-          error={!isValidUrl && search.length !== 0 ? "Provided URL is not valid" : undefined}
+          error={error}
         >
           <Pill.Group>
             {values.map((option, index) => (
@@ -68,7 +81,7 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
                     onChange(values.slice(0, -1));
                   } else if (event.key === "Enter") {
                     event.preventDefault();
-                    if (search.length === 0 || !isValidUrl) {
+                    if (search.length === 0 || !currentValidationResult.success) {
                       return;
                     }
                     if (values.includes(search)) {
