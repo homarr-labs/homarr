@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -8,7 +8,7 @@ import classes from "./component.module.scss";
 
 export default function RssFeed({ serverData, options }: WidgetComponentProps<"rssFeed">) {
   if (serverData?.initialData === undefined) {
-    return <span>No data</span>; // TODO: Add proper message here
+    return null;
   }
 
   const entries = serverData.initialData
@@ -37,7 +37,7 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
             w="100%"
           >
             {feedEntry.enclosure && (
-              <img className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
+              <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
             )}
 
             <Flex gap={2} direction="column" w="100%">
