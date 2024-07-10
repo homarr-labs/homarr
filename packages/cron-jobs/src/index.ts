@@ -7,6 +7,7 @@ import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { createCronJobGroup } from "./lib";
+import { mediaRequestsJob } from "./jobs/integrations/media-requests";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,
@@ -15,6 +16,7 @@ export const jobGroup = createCronJobGroup({
   smartHomeEntityState: smartHomeEntityStateJob,
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
+  mediaRequests: mediaRequestsJob,
   rssFeeds: rssFeedsJob,
 });
 

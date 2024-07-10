@@ -1509,6 +1509,9 @@ export default {
             mediaOrganizer: {
               label: "Media Organizers",
             },
+            mediaRequests: {
+              label: "Media Requests"
+            },
             rssFeeds: {
               label: "RSS feeds",
             },
