@@ -1,9 +1,5 @@
 import type { WidgetComponentProps } from "../../definition";
 
-export default function MediaServerWidget({
-                                            serverData,
-                                            integrationIds,
-                                            isEditMode,
-                                          }: WidgetComponentProps<"mediaRequests-requestStats">) {
-  return <span>A</span>
+export default function MediaServerWidget({ serverData }: WidgetComponentProps<"mediaRequests-requestStats">) {
+  return <span>{JSON.stringify(serverData)}</span>
 }

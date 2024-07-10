@@ -1480,6 +1480,9 @@ export default {
             mediaOrganizer: {
               label: "Media Organizers",
             },
+            mediaRequests: {
+              label: "Media Requests"
+            }
           },
         },
       },
