@@ -1035,7 +1035,7 @@ export default {
     },
     rssFeed: {
       name: "RSS feeds",
-      description: "Monitor and display one or more generic RSS, ATOM or JSON feed",
+      description: "Monitor and display one or more generic RSS, ATOM or JSON feeds",
       option: {
         feedUrls: {
           label: "Feed URLs",
