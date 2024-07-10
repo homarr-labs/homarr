@@ -19,6 +19,8 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as mediaRequestsList from "./media-requests/list";
+import * as mediaRequestsStats from "./media-requests/stats";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
@@ -38,6 +40,8 @@ export const widgetImports = {
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   mediaServer,
   calendar,
+  "mediaRequests-requestList": mediaRequestsList,
+  "mediaRequests-requestStats": mediaRequestsStats,
   rssFeed,
 } satisfies WidgetImportRecord;
 

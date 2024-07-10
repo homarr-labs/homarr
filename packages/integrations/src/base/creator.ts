@@ -5,6 +5,8 @@ import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import type { IntegrationInput } from "./integration";
+import { OverseerrIntegration } from "../overseerr/overseerr-integration";
+import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 
 export const integrationCreatorByKind = (kind: IntegrationKind, integration: IntegrationInput) => {
   switch (kind) {
@@ -16,6 +18,10 @@ export const integrationCreatorByKind = (kind: IntegrationKind, integration: Int
       return new JellyfinIntegration(integration);
     case "sonarr":
       return new SonarrIntegration(integration);
+    case "jellyseerr":
+      return new JellyseerrIntegration(integration);
+    case "overseerr":
+      return new OverseerrIntegration(integration);
     default:
       throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
   }
