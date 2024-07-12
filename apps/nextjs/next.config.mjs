@@ -1,5 +1,5 @@
 // Importing env files here to validate on build
-import "@homarr/auth/env.mjs";
+import "../../packages/auth/env.mjs";
 import "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */

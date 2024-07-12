@@ -17,6 +17,7 @@
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
     "dev": "turbo dev --parallel",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
+    "docker:build": "cross-env SKIP_ENV_VALIDATION=true docker build . -t local-homarr",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
