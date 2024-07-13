@@ -34,7 +34,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.5.11",
     "eslint": "^9.7.0",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
