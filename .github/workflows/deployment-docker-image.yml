@@ -13,6 +13,7 @@ permissions:
   packages: write
 
 env:
+  CI: true
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   TURBO_TELEMETRY_DISABLED: 1
