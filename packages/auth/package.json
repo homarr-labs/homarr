@@ -42,7 +42,7 @@
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
     "eslint": "^9.7.0",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
