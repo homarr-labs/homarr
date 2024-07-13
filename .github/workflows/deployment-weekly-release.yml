@@ -8,6 +8,7 @@ on:
       send-notifications:
         type: boolean
         required: false
+        default: true
         description: Send notifications
 
 permissions:
@@ -46,6 +47,17 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: "Created a release PR ${{ steps.create-pull-request.outputs.url }} for version ${{ steps.semver.outputs.next }} (new behaviour: ${{ steps.semver.outputs.bump }})"
+      - name: Obtain token
+        id: obtainApprovalToken
+        uses: tibdex/github-app-token@v2
+        with:
+          private_key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          app_id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+      - name: Approve PR
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
+        run: |
+          gh pr review --approve --body "Automatically approved by GitHub Action"
       - id: automerge
         if: ${{ steps.semver.outputs.bump != 'major' }}
         name: automerge
