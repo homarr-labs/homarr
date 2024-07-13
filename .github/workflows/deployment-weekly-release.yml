@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 19 * * 5" # https://crontab.guru/#0_19_*_*_5
   workflow_dispatch:
+    inputs:
+      send-notifications:
+        type: boolean
+        required: false
+        description: Send notifications
 
 permissions:
   contents: write
@@ -14,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -30,17 +36,9 @@ jobs:
           token: ${{ github.token }}
           branch: dev
       - name: Create pull request
-        uses: devops-infra/action-pull-request@v0.5.5
-        id: create-pull-request
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          title: "chore(release): automatic release ${{ steps.semver.outputs.next }}"
-          old_string: "**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``"
-          new_string: "Test"
-          source_branch: dev
-          target_branch: main
-          label: automerge
+        run: "gh pr create --title \"chore(release): automatic release ${{ steps.semver.outputs.next }}\" --body \"**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``\" --base main --head dev --label automerge"
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -61,21 +59,21 @@ jobs:
           MERGE_REQUIRED_APPROVALS: 0 # do not require approvals
 
       - name: Merged Discord notification
-        if: ${{ steps.automerge.outputs.mergeResult == 'merged' }}
+        if: ${{ steps.automerge.outputs.mergeResult == 'merged' && github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
           args: "Merged PR ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}"
       - name: Major Bump Discord notification
-        if: ${{ steps.semver.outputs.bump == 'major' }}
+        if: ${{ steps.semver.outputs.bump == 'major' && github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
           args: "The release PR must be manually merged because the next version is a major version: ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}"
       - name: Discord Fail Notification
-        if: failure()
+        if: failure() && github.events.inputs.send-notifications
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
