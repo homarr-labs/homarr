@@ -89,6 +89,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           network: host
+        env:
+          CI: true
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
