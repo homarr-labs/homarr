@@ -58,12 +58,18 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
         run: |
           gh pr review --approve --body "Automatically approved by GitHub Action"
+      - name: Obtain token
+        id: obtainMergeToken
+        uses: tibdex/github-app-token@v2
+        with:
+          private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
+          app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
       - id: automerge
         if: ${{ steps.semver.outputs.bump != 'major' }}
         name: automerge
         uses: "pascalgn/automerge-action@v0.16.3"
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ steps.obtainMergeToken.outputs.token }}
           MERGE_METHOD: merge # we prefer merge commits for merging to master
           MERGE_COMMIT_MESSAGE: "chore(release): automatic release ${{ steps.semver.outputs.next }}"
           MERGE_DELETE_BRANCH: false # never set to true!
