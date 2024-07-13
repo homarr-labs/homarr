@@ -22,7 +22,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mantine/notifications": "^7.11.1",
+    "@mantine/notifications": "^7.11.2",
     "@homarr/ui": "workspace:^0.1.0",
     "@tabler/icons-react": "^3.10.0"
   },
