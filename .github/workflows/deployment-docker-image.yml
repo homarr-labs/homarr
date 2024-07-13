@@ -6,7 +6,13 @@ on:
       - closed
     branches:
       - main
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      send-notifications:
+        type: boolean
+        required: false
+        default: true
+        description: Send notifications
 
 permissions:
   contents: write
@@ -29,6 +35,7 @@ jobs:
         node-version: [20]
     steps:
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -42,6 +49,7 @@ jobs:
           token: ${{ github.token }}
           branch: dev
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -60,6 +68,7 @@ jobs:
       - name: Build artifacts
         run: pnpm build
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -92,6 +101,7 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: true
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
