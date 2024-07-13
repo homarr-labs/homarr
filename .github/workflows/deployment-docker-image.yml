@@ -13,7 +13,7 @@ permissions:
   packages: write
 
 env:
-  CI: true
+  SKIP_ENV_VALIDATION: true
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   TURBO_TELEMETRY_DISABLED: 1
@@ -90,7 +90,7 @@ jobs:
           cache-to: type=gha,mode=max
           network: host
         env:
-          CI: true
+          SKIP_ENV_VALIDATION: true
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
