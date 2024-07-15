@@ -1021,6 +1021,25 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    "mediaRequests-requestList": {
+      name: "Media Requests List",
+      description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
+      option: {
+        linksTargetNewTab: {
+          label: "Open links in new tab"
+        },
+      },
+      pending: {
+        approve: "Approve request",
+        approving: "Approving request...",
+        decline: "Decline request",
+      },
+    },
+    "mediaRequests-requestStats": {
+      name: "Media Requests Stats",
+      description: "Statistics about your media requests",
+      option: {}
+    },
   },
   widgetPreview: {
     toggle: {
