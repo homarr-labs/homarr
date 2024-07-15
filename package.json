@@ -30,8 +30,8 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@turbo/gen": "^2.0.6",
     "@vitejs/plugin-react": "^4.3.1",
-    "@vitest/coverage-v8": "^2.0.2",
-    "@vitest/ui": "^2.0.2",
+    "@vitest/coverage-v8": "^2.0.3",
+    "@vitest/ui": "^2.0.3",
     "cross-env": "^7.0.3",
     "jsdom": "^24.1.0",
     "prettier": "^3.3.3",
@@ -39,7 +39,7 @@
     "turbo": "^2.0.6",
     "typescript": "^5.5.3",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.0.2"
+    "vitest": "^2.0.3"
   },
   "prettier": "@homarr/prettier-config"
 }
