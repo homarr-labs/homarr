@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
 
-export default function WeatherWidget({ options }: WidgetComponentProps<"weather">) {
+export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
     {
       latitude: options.location.latitude,
@@ -23,7 +23,14 @@ export default function WeatherWidget({ options }: WidgetComponentProps<"weather
   );
 
   return (
-    <Stack align="center" justify="center" gap="0" w="100%" h="100%">
+    <Stack
+      align="center"
+      justify="center"
+      gap="0"
+      w="100%"
+      h="100%"
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+    >
       {options.hasForecast ? (
         <WeeklyForecast weather={weather} options={options} />
       ) : (
