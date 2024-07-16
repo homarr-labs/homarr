@@ -506,8 +506,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/dockerode':
-        specifier: ^3.3.29
-        version: 3.3.29
+        specifier: ^3.3.30
+        version: 3.3.30
       eslint:
         specifier: ^9.7.0
         version: 9.7.0
@@ -2729,8 +2729,8 @@ packages:
   '@types/docker-modem@3.0.6':
     resolution: {integrity: sha512-yKpAGEuKRSS8wwx0joknWxsmLha78wNMe9R2S3UNsVOkZded8UqOrV8KoeDXoXsjndxwyF3eIhyClGbO1SEhEg==}
 
-  '@types/dockerode@3.3.29':
-    resolution: {integrity: sha512-5PRRq/yt5OT/Jf77ltIdz4EiR9+VLnPF+HpU4xGFwUqmV24Co2HKBNW3w+slqZ1CYchbcDeqJASHDYWzZCcMiQ==}
+  '@types/dockerode@3.3.30':
+    resolution: {integrity: sha512-MuxQQ7yQ+VzLbrIV2D8K2YqOYBd5Mz4yGbauEipFcn894bLnGwewNKXGKLlb7wpXTG4dn+13lk51qPXmKJ2+YA==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -7799,7 +7799,7 @@ snapshots:
       '@types/node': 20.14.10
       '@types/ssh2': 1.15.0
 
-  '@types/dockerode@3.3.29':
+  '@types/dockerode@3.3.30':
     dependencies:
       '@types/docker-modem': 3.0.6
       '@types/node': 20.14.10
@@ -11721,7 +11721,7 @@ snapshots:
   testcontainers@10.10.3:
     dependencies:
       '@balena/dockerignore': 1.0.2
-      '@types/dockerode': 3.3.29
+      '@types/dockerode': 3.3.30
       archiver: 5.3.2
       async-lock: 1.4.1
       byline: 5.0.0
