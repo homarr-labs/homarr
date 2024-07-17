@@ -24,13 +24,13 @@
   "dependencies": {
     "dayjs": "^1.11.11",
     "react": "^18.3.1",
-    "next": "^14.2.4"
+    "next": "^14.2.5"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.6.0",
+    "eslint": "^9.7.0",
     "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"
