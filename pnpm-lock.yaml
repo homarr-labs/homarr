@@ -186,8 +186,8 @@ importers:
         specifier: ^14.2.5
         version: 14.2.5(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.8)
       postcss-preset-mantine:
-        specifier: ^1.15.0
-        version: 1.15.0(postcss@8.4.38)
+        specifier: ^1.16.0
+        version: 1.16.0(postcss@8.4.38)
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -5337,8 +5337,8 @@ packages:
     peerDependencies:
       postcss: ^8.2.14
 
-  postcss-preset-mantine@1.15.0:
-    resolution: {integrity: sha512-OKPs6uoORSXlU/GFH1ZtFaslecHBPwuoSikdL5W3WKJm4ZPAQM0mw9x9m3toa/Mo1JhoBmYMM28i+zEdav5Edg==}
+  postcss-preset-mantine@1.16.0:
+    resolution: {integrity: sha512-KIxo2ysUDY2PaiE/n6iZFwKOxsF7K4t6RvxdtukENHGq/3B70fEty7Ws2FQOH+Yyuic6HWwcE4Mp3WOnolgBIQ==}
     peerDependencies:
       postcss: '>=8.0.0'
 
@@ -10864,7 +10864,7 @@ snapshots:
       postcss: 8.4.38
       postcss-selector-parser: 6.0.15
 
-  postcss-preset-mantine@1.15.0(postcss@8.4.38):
+  postcss-preset-mantine@1.16.0(postcss@8.4.38):
     dependencies:
       postcss: 8.4.38
       postcss-mixins: 9.0.4(postcss@8.4.38)
