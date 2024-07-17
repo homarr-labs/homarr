@@ -12,10 +12,13 @@
     "cqmin",
     "homarr",
     "jellyfin",
+    "mantine",
+    "overseerr",
+    "Sonarr",
     "superjson",
+    "tabler",
     "trpc",
-    "Umami",
-    "Sonarr"
+    "Umami"
   ],
   "i18n-ally.dirStructure": "auto",
   "i18n-ally.enabledFrameworks": ["next-international"],

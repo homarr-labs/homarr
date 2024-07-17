@@ -58,15 +58,15 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
             <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
           </HoverCard.Dropdown>
         </HoverCard>
-        <Text fz="20cqmin">{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit)}</Text>
+        <Text fz="17.5cqmin">{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit)}</Text>
       </Group>
       <Space h="1cqmin" />
       <Group className="weather-max-min-temp-group" wrap="nowrap" gap="1cqmin">
         <IconArrowUpRight size="12.5cqmin" />
-        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit)}</Text>
+        <Text fz="10cqmin">{getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit)}</Text>
         <Space w="2.5cqmin" />
         <IconArrowDownRight size="12.5cqmin" />
-        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit)}</Text>
+        <Text fz="10cqmin">{getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit)}</Text>
       </Group>
       {options.showCity && (
         <>

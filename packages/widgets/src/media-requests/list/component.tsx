@@ -3,7 +3,11 @@ import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { MediaRequest, MediaRequestStatus } from "../../../../integrations/src/interfaces/media-requests/media-request";
+import {
+  MediaAvailability,
+  MediaRequest,
+  MediaRequestStatus,
+} from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MediaServerWidget({
@@ -28,7 +32,6 @@ export default function MediaServerWidget({
   return (
     <ScrollArea
       className="mediaRequests-list-scrollArea"
-      h="100%"
       scrollbarSize="2cqmin"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
@@ -36,8 +39,7 @@ export default function MediaServerWidget({
         {sortedMediaRequests.map((mediaRequest) => (
           <Card
             className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${mediaRequest.type} mediaRequests-list-item-${mediaRequest.status}`}
-            key={mediaRequest.createdAt.toISOString()}
-            w="100%"
+            key={mediaRequest.id}
             h="20cqmin"
             radius="2cqmin"
             p="2cqmin"
@@ -61,8 +63,9 @@ export default function MediaServerWidget({
               style={{ zIndex: 1 }}
               justify="space-between"
               wrap="nowrap"
+              gap={0}
             >
-              <Group className="mediaRequests-list-item-left-side" h="100%" gap="4cqmin" wrap="nowrap">
+              <Group className="mediaRequests-list-item-left-side" h="100%" gap="4cqmin" wrap="nowrap" flex={1}>
                 <Image
                   className="mediaRequests-list-item-poster"
                   src={mediaRequest.posterImagePath}
@@ -71,22 +74,21 @@ export default function MediaServerWidget({
                   radius="1cqmin"
                 />
                 <Stack className="mediaRequests-list-item-media-infos" gap="1cqmin">
-                  <Group className="mediaRequests-list-item-info-first-line" gap="2cqmin">
+                  <Group className="mediaRequests-list-item-info-first-line" gap="2cqmin" wrap="nowrap">
                     <Text className="mediaRequests-list-item-media-year" size="3.5cqmin" pt="0.75cqmin">
-                      {mediaRequest.createdAt.getFullYear()}
-                      {/*Change date property above to release date*/}
+                      {mediaRequest.airDate?.getFullYear() ?? t("toBeDetermined")}
                     </Text>
                     <Badge
                       className="mediaRequests-list-item-media-status"
-                      color={GetAvailabilityColor("2")}
+                      color={GetAvailabilityProperties(mediaRequest.availability).color}
                       variant="light"
-                      size="5cqmin"
                       fz="3.5cqmin"
                       lh="4cqmin"
+                      size="5cqmin"
                       pt="0.75cqmin"
+                      px="2cqmin"
                     >
-                      {/*Change GetAvailablityColor above, make table for translation under and replace with availability property*/}
-                      {mediaRequest.status}
+                      {GetAvailabilityProperties(mediaRequest.availability).label}
                     </Badge>
                   </Group>
                   <Anchor
@@ -94,8 +96,8 @@ export default function MediaServerWidget({
                     href={mediaRequest.href}
                     c="var(--mantine-color-text)"
                     target={options.linksTargetNewTab ? "_blank" : "_self"}
-                    lineClamp={1}
                     fz="5cqmin"
+                    lineClamp={1}
                     display="-webkit-box"
                   >
                     {/*Remove display property above after updating to mantine 7.11.2*/}
@@ -116,7 +118,11 @@ export default function MediaServerWidget({
                     c="var(--mantine-color-text)"
                     target={options.linksTargetNewTab ? "_blank" : "_self"}
                     fz="5cqmin"
+                    lineClamp={1}
+                    style={{ wordBreak: "break-all" }}
+                    display="-webkit-box"
                   >
+                    {/*Remove display property above after updating to mantine 7.11.2*/}
                     {(mediaRequest.requestedBy?.username ?? "") || "unknown"}
                   </Anchor>
                 </Group>
@@ -159,19 +165,18 @@ export default function MediaServerWidget({
   );
 }
 
-function GetAvailabilityColor(mediaRequestAvailability: string) {
+function GetAvailabilityProperties(mediaRequestAvailability: MediaAvailability) {
+  const t = useScopedI18n("widget.mediaRequests-requestList");
   switch (mediaRequestAvailability) {
-    case "1":
-      return "green";
-    case "2":
-      return "yellow";
-    case "3":
-      return "red";
-    case "4":
-      return "violet";
-    case "5":
-      return "orange";
+    case MediaAvailability.Available:
+      return { color: "green", label: t("availability.available") };
+    case MediaAvailability.PartiallyAvailable:
+      return { color: "yellow", label: t("availability.partiallyAvailable") };
+    case MediaAvailability.Pending:
+      return { color: "violet", label: t("availability.pending") };
+    case MediaAvailability.Processing:
+      return { color: "blue", label: t("availability.processing") };
     default:
-      return "blue";
+      return { color: "red", label: t("availability.unknown") };
   }
 }

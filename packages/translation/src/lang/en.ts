@@ -1034,11 +1034,34 @@ export default {
         approving: "Approving request...",
         decline: "Decline request",
       },
+      availability: {
+        unknown: "Unknown",
+        pending: "Pending",
+        processing: "Processing",
+        partiallyAvailable: "Partial",
+        available: "Available",
+      },
+      toBeDetermined: "TBD",
     },
     "mediaRequests-requestStats": {
       name: "Media Requests Stats",
       description: "Statistics about your media requests",
-      option: {}
+      option: {},
+      titles: {
+        stats: {
+          main: "Media Stats",
+          approved: "Already approved",
+          pending: "Pending approvals",
+          declined: "Already declined",
+          shows: "TV requests",
+          movies: "Movie requests",
+          total: "Total",
+        },
+        users: {
+          main: "Top Users",
+          requests: "Requests",
+        },
+      },
     },
   },
   widgetPreview: {
