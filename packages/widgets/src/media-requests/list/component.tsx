@@ -98,9 +98,7 @@ export default function MediaServerWidget({
                     target={options.linksTargetNewTab ? "_blank" : "_self"}
                     fz="5cqmin"
                     lineClamp={1}
-                    display="-webkit-box"
                   >
-                    {/*Remove display property above after updating to mantine 7.11.2*/}
                     {mediaRequest.name || "unknown"}
                   </Anchor>
                 </Stack>
@@ -120,9 +118,7 @@ export default function MediaServerWidget({
                     fz="5cqmin"
                     lineClamp={1}
                     style={{ wordBreak: "break-all" }}
-                    display="-webkit-box"
                   >
-                    {/*Remove display property above after updating to mantine 7.11.2*/}
                     {(mediaRequest.requestedBy?.username ?? "") || "unknown"}
                   </Anchor>
                 </Group>
