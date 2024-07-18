@@ -1,5 +1,5 @@
 import { createCronJob } from "../../lib";
-import { EVERY_5_MINUTES } from "@homarr/cron-jobs-core/expressions";
+import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
 import { db, eq, or } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import type { MediaRequest} from "@homarr/integrations";
@@ -8,7 +8,7 @@ import { decryptSecret } from "@homarr/common";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { logger } from "@homarr/log";
 
-export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_MINUTES).withCallback(async () => {
+export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
     where: or(eq(items.kind, "mediaRequests-requestList"), eq(items.kind, "mediaRequests-requestStats")),
     with: {
