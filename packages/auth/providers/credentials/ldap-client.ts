@@ -57,7 +57,7 @@ export class LdapClient {
   }
 
   private static convertEntryPropertyToString(value: Entry[string]) {
-    const firstValue = Array.isArray(value) ? value[0] ?? "" : value;
+    const firstValue = Array.isArray(value) ? (value[0] ?? "") : value;
 
     if (firstValue instanceof Buffer) {
       return firstValue.toString("utf8");
