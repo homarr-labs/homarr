@@ -1021,6 +1021,48 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    "mediaRequests-requestList": {
+      name: "Media Requests List",
+      description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
+      option: {
+        linksTargetNewTab: {
+          label: "Open links in new tab"
+        },
+      },
+      pending: {
+        approve: "Approve request",
+        approving: "Approving request...",
+        decline: "Decline request",
+      },
+      availability: {
+        unknown: "Unknown",
+        pending: "Pending",
+        processing: "Processing",
+        partiallyAvailable: "Partial",
+        available: "Available",
+      },
+      toBeDetermined: "TBD",
+    },
+    "mediaRequests-requestStats": {
+      name: "Media Requests Stats",
+      description: "Statistics about your media requests",
+      option: {},
+      titles: {
+        stats: {
+          main: "Media Stats",
+          approved: "Already approved",
+          pending: "Pending approvals",
+          declined: "Already declined",
+          shows: "TV requests",
+          movies: "Movie requests",
+          total: "Total",
+        },
+        users: {
+          main: "Top Users",
+          requests: "Requests",
+        },
+      },
+    },
   },
   widgetPreview: {
     toggle: {
