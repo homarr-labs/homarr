@@ -22,7 +22,8 @@ export class OverseerrIntegration extends Integration {
     }
 
     public async getRequestsAsync(): Promise<MediaRequest[]> {
-      const response = await fetch(`${this.integration.url}/api/v1/request`, {
+      //Change 20 to integration setting
+      const response = await fetch(`${this.integration.url}/api/v1/request?take=20`, {
         headers: {
           'X-Api-Key': this.getSecretValue('apiKey')
         }
