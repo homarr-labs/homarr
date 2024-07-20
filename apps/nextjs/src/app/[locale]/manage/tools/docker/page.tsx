@@ -4,7 +4,7 @@ import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { DockerTable } from "./DockerTable";
+import { DockerTable } from "./docker-table";
 
 export default async function DockerPage() {
   const { containers, timestamp } = await api.docker.getContainers();

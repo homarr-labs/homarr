@@ -1,11 +1,14 @@
+import { TRPCError } from "@trpc/server";
 import type Docker from "dockerode";
+import type { Container } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema/sqlite";
 import type { DockerContainerState } from "@homarr/definitions";
 import { createCacheChannel } from "@homarr/redis";
+import { z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../../trpc";
 import { DockerSingleton } from "./docker-singleton";
 
 const dockerCache = createCacheChannel<{
@@ -56,7 +59,88 @@ export const dockerRouter = createTRPCRouter({
       timestamp,
     };
   }),
+  startAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input }) => {
+      await Promise.allSettled(
+        input.ids.map(async (id) => {
+          const container = await getContainerOrThrowAsync(id);
+          await container.start();
+        }),
+      );
+
+      await dockerCache.invalidateAsync();
+    }),
+  stopAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input }) => {
+      await Promise.allSettled(
+        input.ids.map(async (id) => {
+          const container = await getContainerOrThrowAsync(id);
+          await container.stop();
+        }),
+      );
+
+      await dockerCache.invalidateAsync();
+    }),
+  restartAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input }) => {
+      await Promise.allSettled(
+        input.ids.map(async (id) => {
+          const container = await getContainerOrThrowAsync(id);
+          await container.restart();
+        }),
+      );
+
+      await dockerCache.invalidateAsync();
+    }),
+  removeAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input }) => {
+      await Promise.allSettled(
+        input.ids.map(async (id) => {
+          const container = await getContainerOrThrowAsync(id);
+          await container.remove();
+        }),
+      );
+
+      await dockerCache.invalidateAsync();
+    }),
 });
+
+const getContainerOrDefaultAsync = async (instance: Docker, id: string) => {
+  const container = instance.getContainer(id);
+
+  return await new Promise<Container | null>((resolve) => {
+    container.inspect((err, data) => {
+      if (err || !data) {
+        resolve(null);
+      } else {
+        resolve(container);
+      }
+    });
+  });
+};
+
+const getContainerOrThrowAsync = async (id: string) => {
+  const dockerInstances = DockerSingleton.getInstance();
+  const containers = await Promise.all(dockerInstances.map(({ instance }) => getContainerOrDefaultAsync(instance, id)));
+  const foundContainer = containers.find((container) => container) ?? null;
+
+  if (!foundContainer) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Container not found",
+    });
+  }
+
+  return foundContainer;
+};
 
 interface DockerContainer {
   name: string;

@@ -9,7 +9,7 @@ import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
-  summary: publicProcedure.unstable_concat(createOneIntegrationMiddleware("piHole")).query(async ({ ctx }) => {
+  summary: publicProcedure.unstable_concat(createOneIntegrationMiddleware("query", "piHole")).query(async ({ ctx }) => {
     const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${ctx.integration.id}`);
 
     const { data } = await cache.consumeAsync(async () => {

@@ -72,7 +72,7 @@ export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps })
     </form>
   );
 }).withOptions({
-  defaultTitle: (t) => t("board.setting.section.access.permission.userSelect.title"),
+  defaultTitle: (t) => t("permission.userSelect.title"),
 });
 
 const iconProps = {

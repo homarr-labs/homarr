@@ -1,16 +1,19 @@
 "use client";
 
-import type { ButtonProps, MantineColor } from "@mantine/core";
+import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
 import { IconPlayerPlay, IconPlayerStop, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type { DockerContainerState } from "@homarr/definitions";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
 const createColumns = (
@@ -61,12 +64,18 @@ const createColumns = (
   },
 ];
 
-export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["getContainers"]) {
+export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"]) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const relativeTime = useTimeAgo(timestamp);
+  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
+    initialData,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+  const relativeTime = useTimeAgo(data.timestamp);
   const table = useMantineReactTable({
-    data: containers,
+    data: data.containers,
     enableDensityToggle: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -77,7 +86,7 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
     enableBottomToolbar: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
-      placeholder: tDocker("table.search", { count: containers.length }),
+      placeholder: tDocker("table.search", { count: data.containers.length }),
       style: { minWidth: 300 },
       autoFocus: true,
     },
@@ -93,13 +102,14 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
               totalCount: table.getRowCount(),
             })}
           </Text>
-          <ContainerActionBar />
+          <ContainerActionBar selectedIds={table.getSelectedRowModel().rows.map((row) => row.original.id)} />
         </Group>
       );
     },
 
     columns: createColumns(t),
   });
+
   return (
     <>
       <Text>{tDocker("table.updated", { when: relativeTime })}</Text>
@@ -108,28 +118,67 @@ export function DockerTable({ containers, timestamp }: RouterOutputs["docker"]["
   );
 }
 
-const ContainerActionBar = () => {
-  const t = useScopedI18n("docker.action");
-  const sharedButtonProps = {
-    variant: "light",
-    radius: "md",
-  } satisfies Partial<ButtonProps>;
+interface ContainerActionBarProps {
+  selectedIds: string[];
+}
 
+const ContainerActionBar = ({ selectedIds }: ContainerActionBarProps) => {
   return (
     <Group gap="xs">
-      <Button leftSection={<IconPlayerPlay />} color="green" {...sharedButtonProps}>
-        {t("start")}
-      </Button>
-      <Button leftSection={<IconPlayerStop />} color="red" {...sharedButtonProps}>
-        {t("stop")}
-      </Button>
-      <Button leftSection={<IconRotateClockwise />} color="orange" {...sharedButtonProps}>
-        {t("restart")}
-      </Button>
-      <Button leftSection={<IconTrash />} color="red" {...sharedButtonProps}>
-        {t("remove")}
-      </Button>
+      <ContainerActionBarButton icon={IconPlayerPlay} color="green" action="start" selectedIds={selectedIds} />
+      <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
+      <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
+      <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
     </Group>
+  );
+};
+
+interface ContainerActionBarButtonProps {
+  icon: TablerIcon;
+  color: MantineColor;
+  action: "start" | "stop" | "restart" | "remove";
+  selectedIds: string[];
+}
+
+const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
+  const t = useScopedI18n("docker.action");
+  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation();
+  const utils = clientApi.useUtils();
+
+  const handleClickAsync = async () => {
+    await mutateAsync(
+      { ids: props.selectedIds },
+      {
+        async onSettled() {
+          await utils.docker.getContainers.invalidate();
+        },
+        onSuccess() {
+          showSuccessNotification({
+            title: t(`${props.action}.notification.success.title`),
+            message: t(`${props.action}.notification.success.message`),
+          });
+        },
+        onError() {
+          showErrorNotification({
+            title: t(`${props.action}.notification.error.title`),
+            message: t(`${props.action}.notification.error.message`),
+          });
+        },
+      },
+    );
+  };
+
+  return (
+    <Button
+      leftSection={<props.icon />}
+      color={props.color}
+      onClick={handleClickAsync}
+      loading={isPending}
+      variant="light"
+      radius="md"
+    >
+      {t(`${props.action}.label`)}
+    </Button>
   );
 };
 

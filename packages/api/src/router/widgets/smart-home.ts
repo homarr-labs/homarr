@@ -13,10 +13,7 @@ export const smartHomeRouter = createTRPCRouter({
       entityId: string;
       state: string;
     }>((emit) => {
-      let isConnectionClosed = false;
-
-      homeAssistantEntityState.subscribe((message) => {
-        if (isConnectionClosed) return;
+      const unsubscribe = homeAssistantEntityState.subscribe((message) => {
         if (message.entityId !== input.entityId) {
           return;
         }
@@ -24,19 +21,19 @@ export const smartHomeRouter = createTRPCRouter({
       });
 
       return () => {
-        isConnectionClosed = true;
+        unsubscribe();
       };
     });
   }),
   switchEntity: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("homeAssistant"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", "homeAssistant"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const client = new HomeAssistantIntegration(ctx.integration);
       return await client.triggerToggleAsync(input.entityId);
     }),
   executeAutomation: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("homeAssistant"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", "homeAssistant"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const client = new HomeAssistantIntegration(ctx.integration);

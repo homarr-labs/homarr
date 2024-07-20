@@ -7,6 +7,7 @@
     "./next": "./next.ts",
     "./security": "./security.ts",
     "./client": "./client.ts",
+    "./server": "./server.ts",
     "./shared": "./shared.ts",
     "./env.mjs": "./env.mjs"
   },
@@ -32,7 +33,7 @@
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
     "ldapts": "7.0.12",
-    "next": "^14.2.4",
+    "next": "^14.2.5",
     "next-auth": "5.0.0-beta.19",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -43,8 +44,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
+    "eslint": "^9.7.0",
+    "prettier": "^3.3.3",
     "typescript": "^5.5.3"
   },
   "prettier": "@homarr/prettier-config"

@@ -14,12 +14,15 @@ export const getCurrentUserPermissionsAsync = async (db: Database, userId: strin
     where: eq(groupMembers.userId, userId),
   });
   const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
+
+  if (groupIds.length === 0) return [];
+
   const dbGroupPermissions = await db
     .selectDistinct({
       permission: groupPermissions.permission,
     })
     .from(groupPermissions)
-    .where(groupIds.length > 0 ? inArray(groupPermissions.groupId, groupIds) : undefined);
+    .where(inArray(groupPermissions.groupId, groupIds));
   const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
 
   return getPermissionsWithChildren(permissionKeys);

@@ -1,5 +1,7 @@
 import type { Session } from "next-auth";
 
+import type { BoardPermission } from "@homarr/definitions";
+
 export type BoardPermissionsProps = (
   | {
       creator: {
@@ -11,10 +13,10 @@ export type BoardPermissionsProps = (
     }
 ) & {
   userPermissions: {
-    permission: string;
+    permission: BoardPermission;
   }[];
   groupPermissions: {
-    permission: string;
+    permission: BoardPermission;
   }[];
   isPublic: boolean;
 };
@@ -23,11 +25,11 @@ export const constructBoardPermissions = (board: BoardPermissionsProps, session:
   const creatorId = "creator" in board ? board.creator?.id : board.creatorId;
 
   return {
-    hasFullAccess: session?.user.id === creatorId || session?.user.permissions.includes("board-full-access"),
+    hasFullAccess: session?.user.id === creatorId || session?.user.permissions.includes("board-full-all"),
     hasChangeAccess:
       session?.user.id === creatorId ||
-      board.userPermissions.some(({ permission }) => permission === "board-change") ||
-      board.groupPermissions.some(({ permission }) => permission === "board-change") ||
+      board.userPermissions.some(({ permission }) => permission === "modify") ||
+      board.groupPermissions.some(({ permission }) => permission === "modify") ||
       session?.user.permissions.includes("board-modify-all"),
     hasViewAccess:
       session?.user.id === creatorId ||

@@ -166,7 +166,7 @@ export default {
             label: "Modify all boards",
             description: "Allow members to modify all boards (Does not include access control and danger zone)",
           },
-          "full-access": {
+          "full-all": {
             label: "Full board access",
             description:
               "Allow members to view, modify, and delete all boards (Including access control and danger zone)",
@@ -188,7 +188,7 @@ export default {
             label: "Interact with any integration",
             description: "Allow members to interact with any integration",
           },
-          "full-access": {
+          "full-all": {
             label: "Full integration access",
             description: "Allow members to manage, use and interact with any integration",
           },
@@ -484,6 +484,11 @@ export default {
           newLabel: "New password",
         },
       },
+    },
+    permission: {
+      use: "Select integrations in items",
+      interact: "Interact with integrations",
+      full: "Full integration access",
     },
   },
   common: {
@@ -1157,36 +1162,14 @@ export default {
         access: {
           title: "Access control",
           permission: {
-            userSelect: {
-              title: "Add user permission",
-            },
-            groupSelect: {
-              title: "Add group permission",
-            },
-            tab: {
-              user: "Users",
-              group: "Groups",
-              inherited: "Inherited groups",
-            },
-            field: {
-              user: {
-                label: "User",
-              },
-              group: {
-                label: "Group",
-              },
-              permission: {
-                label: "Permission",
-              },
-            },
             item: {
-              "board-view": {
+              view: {
                 label: "View board",
               },
-              "board-change": {
-                label: "Change board",
+              modify: {
+                label: "Modify board",
               },
-              "board-full": {
+              full: {
                 label: "Full access",
               },
             },
@@ -1552,10 +1535,87 @@ export default {
       },
     },
     action: {
-      start: "Start",
-      stop: "Stop",
-      restart: "Restart",
-      remove: "Remove",
+      start: {
+        label: "Start",
+        notification: {
+          success: {
+            title: "Containers started",
+            message: "The containers were started successfully",
+          },
+          error: {
+            title: "Containers not started",
+            message: "The containers could not be started",
+          },
+        },
+      },
+      stop: {
+        label: "Stop",
+        notification: {
+          success: {
+            title: "Containers stopped",
+            message: "The containers were stopped successfully",
+          },
+          error: {
+            title: "Containers not stopped",
+            message: "The containers could not be stopped",
+          },
+        },
+      },
+      restart: {
+        label: "Restart",
+        notification: {
+          success: {
+            title: "Containers restarted",
+            message: "The containers were restarted successfully",
+          },
+          error: {
+            title: "Containers not restarted",
+            message: "The containers could not be restarted",
+          },
+        },
+      },
+      remove: {
+        label: "Remove",
+        notification: {
+          success: {
+            title: "Containers removed",
+            message: "The containers were removed successfully",
+          },
+          error: {
+            title: "Containers not removed",
+            message: "The containers could not be removed",
+          },
+        },
+      },
+    },
+  },
+  permission: {
+    title: "Permissions",
+    userSelect: {
+      title: "Add user permission",
+    },
+    groupSelect: {
+      title: "Add group permission",
+    },
+    tab: {
+      user: "Users",
+      group: "Groups",
+      inherited: "Inherited groups",
+    },
+    field: {
+      user: {
+        label: "User",
+      },
+      group: {
+        label: "Group",
+      },
+      permission: {
+        label: "Permission",
+      },
+    },
+    action: {
+      saveUser: "Save user permission",
+      saveGroup: "Save group permission",
     },
   },
   navigationStructure: {

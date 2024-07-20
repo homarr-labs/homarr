@@ -1,24 +1,19 @@
-import type { AvatarProps, MantineSize } from "@mantine/core";
-import { Avatar } from "@mantine/core";
+import type { MantineSize } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
+import { UserAvatar } from "@homarr/ui";
 
 interface UserAvatarProps {
   size: MantineSize;
 }
 
-export const UserAvatar = async ({ size }: UserAvatarProps) => {
+export const CurrentUserAvatar = async ({ size }: UserAvatarProps) => {
   const currentSession = await auth();
 
-  const commonProps = {
-    size,
-    color: "primaryColor",
-  } satisfies Partial<AvatarProps>;
+  const user = {
+    name: currentSession?.user.name ?? null,
+    image: currentSession?.user.image ?? null,
+  };
 
-  if (!currentSession?.user) return <Avatar {...commonProps} />;
-  if (currentSession.user.image)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return <Avatar {...commonProps} src={currentSession.user.image} alt={currentSession.user.name!} />;
-
-  return <Avatar {...commonProps}>{currentSession.user.name?.substring(0, 2).toUpperCase()}</Avatar>;
+  return <UserAvatar user={user} size={size} />;
 };
