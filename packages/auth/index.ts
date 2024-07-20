@@ -1,4 +1,5 @@
-import type { DefaultSession } from "next-auth";
+import { headers } from "next/headers";
+import type { DefaultSession } from "@auth/core/types";
 
 import type { GroupPermissionKey } from "@homarr/definitions";
 
@@ -17,6 +18,6 @@ declare module "next-auth" {
 
 export * from "./security";
 
-export const createHandlers = (isCredentialsRequest: boolean) => createConfiguration(isCredentialsRequest);
+export const createHandlers = (isCredentialsRequest: boolean) => createConfiguration(isCredentialsRequest, headers());
 
 export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

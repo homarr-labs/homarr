@@ -2,7 +2,7 @@ import { cache } from "react";
 
 import { createConfiguration } from "./configuration";
 
-const { auth: defaultAuth } = createConfiguration(false);
+const { auth: defaultAuth } = createConfiguration(false, null);
 
 /**
  * This is the main way to get session data for your RSCs.
