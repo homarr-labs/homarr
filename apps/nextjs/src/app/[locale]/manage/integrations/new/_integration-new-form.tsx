@@ -34,7 +34,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     initialValues: {
       name: searchParams.name ?? getIntegrationName(searchParams.kind),
       url: searchParams.url ?? "",
-      secrets: secretKinds[0].map((kind) => ({
+      secrets: secretKinds[0]?.map((kind) => ({
         kind,
         value: "",
       })),

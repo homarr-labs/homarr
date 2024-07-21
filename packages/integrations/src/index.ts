@@ -3,6 +3,8 @@ export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration"
 export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
 export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
 export { DownloadClientIntegration } from "./interfaces/downloads/download-client-integration";
+export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
+export { DashDotIntegration } from "./dashdot/dashdot-integration";
 export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
 export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
@@ -17,6 +19,13 @@ export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
 export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
 
 // Types
+export type { IntegrationInput } from "./base/integration";
+export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
+export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
+export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
+export type { CpuLoad } from "./interfaces/hardware-usage/cpu-load";
+export type { MemoryLoad } from "./interfaces/hardware-usage/memory-load";
+export type { NetworkLoad } from "./interfaces/hardware-usage/network-load";
 export type { HealthMonitoring } from "./interfaces/health-monitoring/healt-monitoring";
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
