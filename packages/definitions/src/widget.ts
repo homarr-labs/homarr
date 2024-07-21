@@ -11,6 +11,7 @@ export const widgetKinds = [
   "smartHome-executeAutomation",
   "mediaServer",
   "calendar",
+  "hardwareUsage",
   "downloads",
   "mediaRequests-requestList",
   "mediaRequests-requestStats",

@@ -130,6 +130,7 @@ const optionMapping: OptionMapping = {
     fileSystem: (oldOptions) => oldOptions.fileSystem,
   },
   app: null,
+  hardwareUsage: {},
 };
 
 /**

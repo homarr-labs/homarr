@@ -29,6 +29,14 @@ export abstract class Integration {
     return secret.value;
   }
 
+  protected appendPathToUrlWithEndingSlash(basename: string, path: string) {
+    if (basename.endsWith("/")) {
+      return `${basename}${path}`;
+    }
+
+    return `${basename}/${path}`;
+  }
+
   /**
    * Test the connection to the integration
    * @throws {IntegrationTestConnectionError} if the connection fails

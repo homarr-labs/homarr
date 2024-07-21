@@ -12,7 +12,7 @@ export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
 interface integrationDefinition {
   name: string;
   iconUrl: string;
-  secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
+  secretKinds: IntegrationSecretKind[][];
   category: AtLeastOneOf<IntegrationCategory>;
   supportsSearch: boolean;
 }
@@ -137,6 +137,12 @@ export const integrationDefs = {
     category: ["smartHomeServer"],
     supportsSearch: false,
   },
+  getDashDot: {
+    name: "Dash.",
+    secretKinds: [[]],
+    category: ["hardware"],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dashdot.png",
+  },
   openmediavault: {
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
@@ -210,4 +216,5 @@ export type IntegrationCategory =
   | "torrent"
   | "smartHomeServer"
   | "indexerManager"
-  | "healthMonitoring";
+  | "healthMonitoring"
+  | "hardware";

@@ -3,6 +3,7 @@ import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
 import { downloadsRouter } from "./downloads";
+import { hardwareUsageRouter } from "./hardware-usage";
 import { healthMonitoringRouter } from "./health-monitoring";
 import { indexerManagerRouter } from "./indexer-manager";
 import { mediaRequestsRouter } from "./media-requests";
@@ -20,6 +21,7 @@ export const widgetRouter = createTRPCRouter({
   smartHome: smartHomeRouter,
   mediaServer: mediaServerRouter,
   calendar: calendarRouter,
+  hardwareUsage: hardwareUsageRouter,
   downloads: downloadsRouter,
   mediaRequests: mediaRequestsRouter,
   rssFeed: rssFeedRouter,
