@@ -1,0 +1,7 @@
+.gridElement:not(:nth-child(6n)) {
+  border-right: 0.5cqmin solid var(--app-shell-border-color);
+}
+
+.gridElement:not(:nth-last-child(-n + 6)) {
+  border-bottom: 0.5cqmin solid var(--app-shell-border-color);
+}
