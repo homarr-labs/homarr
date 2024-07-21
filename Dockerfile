@@ -46,8 +46,7 @@ COPY --from=builder /app/migration-out/full/ .
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
-ARG SKIP_ENV_VALIDATION=true
-RUN corepack enable pnpm && pnpm turbo run build
+RUN corepack enable pnpm && SKIP_ENV_VALIDATION='true' && pnpm turbo run build
 
 FROM base AS runner
 WORKDIR /app
