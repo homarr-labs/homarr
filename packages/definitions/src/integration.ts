@@ -119,6 +119,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: ["smartHomeServer"],
   },
+  getDashDot: {
+    name: "Dash.",
+    secretKinds: [[]],
+    category: [],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dashdot.png",
+  },
   openmediavault: {
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
