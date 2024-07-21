@@ -28,7 +28,7 @@ export const GridStack = ({ section, ...props }: Props) => {
         className={combineClasses(`grid-stack grid-stack-${section.kind}`, props.className)}
         ref={refs.wrapper}
       >
-        <SectionContent items={section.items} refs={refs} />
+        <SectionContent />
       </Box>
     </SectionProvider>
   );

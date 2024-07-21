@@ -5,7 +5,7 @@ import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 
 interface SectionContextProps {
   section: Section;
-  innerSections: Section[];
+  innerSections: Exclude<Section, { kind: "category" } | { kind: "empty" }>[];
   refs: UseGridstackRefs;
 }
 

@@ -1,0 +1,49 @@
+import type { PropsWithChildren } from "react";
+import { Box } from "@mantine/core";
+import type { BoxProps } from "@mantine/core";
+import combineClasses from "clsx";
+
+import type { SectionKind, WidgetKind } from "@homarr/definitions";
+
+interface Props extends BoxProps {
+  id: string;
+  type: "item" | "section";
+  kind: WidgetKind | SectionKind;
+  xOffset: number;
+  yOffset: number;
+  width: number;
+  height: number;
+  innerRef: React.RefObject<HTMLDivElement>;
+}
+
+export const GridStackItem = ({
+  id,
+  type,
+  kind,
+  xOffset,
+  yOffset,
+  width,
+  height,
+  innerRef,
+  children,
+  ...boxProps
+}: PropsWithChildren<Props>) => {
+  return (
+    <Box
+      {...boxProps}
+      className={combineClasses("grid-stack-item", boxProps.className)}
+      data-id={id}
+      data-type={type}
+      data-kind={kind}
+      gs-x={xOffset}
+      gs-y={yOffset}
+      gs-w={width}
+      gs-h={height}
+      gs-min-w={1}
+      gs-min-h={1}
+      ref={innerRef}
+    >
+      {children}
+    </Box>
+  );
+};
