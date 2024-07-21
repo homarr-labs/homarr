@@ -1,4 +1,3 @@
-import {Integration} from "../base/integration";
 import { Client as NzbGetClient } from "@jc21/nzbget-jsonrpc-api";
 import type {UsenetQueueItem} from "../interfaces/usnet-downloads/usenet-queue-item";
 import type {UsenetHistoryItem} from "../interfaces/usnet-downloads/usenet-history-item";

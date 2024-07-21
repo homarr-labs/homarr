@@ -1,7 +1,8 @@
 import {createTRPCRouter, publicProcedure} from "../../trpc";
 import {createManyIntegrationMiddleware} from "../../middlewares/integration";
 import {createItemAndIntegrationChannel} from "@homarr/redis";
-import {NzbGetIntegration, SabnzbdIntegration, UsenetQueueItem} from "@homarr/integrations";
+import type { UsenetQueueItem} from "@homarr/integrations";
+import {NzbGetIntegration, SabnzbdIntegration} from "@homarr/integrations";
 import {observable} from "@trpc/server/observable";
 import {TRPCError} from "@trpc/server";
 

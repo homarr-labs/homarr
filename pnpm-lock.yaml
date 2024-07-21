@@ -902,9 +902,6 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.10.0
         version: 0.10.0(axios@1.7.2)
-      dayjs:
-        specifier: ^1.11.12
-        version: 1.11.12
       sabnzbd-api:
         specifier: ^1.5.0
         version: 1.5.0

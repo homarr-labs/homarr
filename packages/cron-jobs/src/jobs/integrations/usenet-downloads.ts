@@ -2,8 +2,8 @@ import {createCronJob} from "../../lib";
 import {EVERY_5_SECONDS} from "@homarr/cron-jobs-core/expressions";
 import {db, eq,} from "@homarr/db";
 import {items} from "@homarr/db/schema/sqlite";
-import {NzbGetIntegration, UsenetQueueItem} from "@homarr/integrations";
-import {SabnzbdIntegration} from "@homarr/integrations";
+import type { UsenetQueueItem} from "@homarr/integrations";
+import {NzbGetIntegration, SabnzbdIntegration} from "@homarr/integrations";
 import {decryptSecret} from "@homarr/common";
 import {createItemAndIntegrationChannel} from "@homarr/redis";
 
