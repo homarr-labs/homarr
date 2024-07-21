@@ -5,6 +5,7 @@ import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { mediaServerJob } from "./jobs/integrations/media-server";
 import { pingJob } from "./jobs/ping";
 import { createCronJobGroup } from "./lib";
+import { usenetDownloadsJob } from "./jobs/integrations/usenet-downloads";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,
@@ -13,6 +14,7 @@ export const jobGroup = createCronJobGroup({
   smartHomeEntityState: smartHomeEntityStateJob,
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
+  usenetDownloads: usenetDownloadsJob
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];

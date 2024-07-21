@@ -1481,6 +1481,9 @@ export default {
             mediaOrganizer: {
               label: "Media Organizers",
             },
+            "usenet-downloads": {
+              label: "Usenet downloads"
+            }
           },
         },
       },
