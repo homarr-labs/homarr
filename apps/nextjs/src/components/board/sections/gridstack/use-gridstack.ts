@@ -7,6 +7,7 @@ import type { GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/grid
 import type { Section } from "~/app/[locale]/boards/_types";
 import { useEditMode, useMarkSectionAsReady, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { useItemActions } from "../../items/item-actions";
+import { useSectionActions } from "../section-actions";
 import { initializeGridstack } from "./init-gridstack";
 
 export interface UseGridstackRefs {
@@ -23,6 +24,8 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   const [isEditMode] = useEditMode();
   const markAsReady = useMarkSectionAsReady();
   const { moveAndResizeItem, moveItemToSection } = useItemActions();
+  const { moveAndResizeInnerSection, moveInnerSectionToSection } = useSectionActions();
+
   // define reference for wrapper - is used to calculate the width of the wrapper
   const { ref: wrapperRef, width } = useElementSize<HTMLDivElement>();
   // references to the diffrent items contained in the gridstack
@@ -57,44 +60,89 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
   const onChange = useCallback(
     (changedNode: GridStackNode) => {
-      const itemId = changedNode.el?.getAttribute("data-id");
-      if (!itemId) return;
+      const id = changedNode.el?.getAttribute("data-id");
+      const type = changedNode.el?.getAttribute("data-type");
 
-      // Updates the react-query state
-      moveAndResizeItem({
-        itemId,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        xOffset: changedNode.x!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        yOffset: changedNode.y!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        width: changedNode.w!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        height: changedNode.h!,
-      });
+      if (!id || !type) return;
+
+      if (type === "item") {
+        // Updates the react-query state
+        moveAndResizeItem({
+          itemId: id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          xOffset: changedNode.x!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          yOffset: changedNode.y!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          width: changedNode.w!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          height: changedNode.h!,
+        });
+        return;
+      }
+
+      if (type === "section") {
+        moveAndResizeInnerSection({
+          innerSectionId: id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          xOffset: changedNode.x!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          yOffset: changedNode.y!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          width: changedNode.w!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          height: changedNode.h!,
+        });
+        return;
+      }
+
+      console.error(`Unknown grid-stack-item type to move.  type='${type}' id='${id}'`);
     },
-    [moveAndResizeItem],
+    [moveAndResizeItem, moveAndResizeInnerSection],
   );
   const onAdd = useCallback(
     (addedNode: GridStackNode) => {
-      const itemId = addedNode.el?.getAttribute("data-id");
-      if (!itemId) return;
+      const id = addedNode.el?.getAttribute("data-id");
+      const type = addedNode.el?.getAttribute("data-type");
 
-      // Updates the react-query state
-      moveItemToSection({
-        itemId,
-        sectionId: section.id,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        xOffset: addedNode.x!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        yOffset: addedNode.y!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        width: addedNode.w!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        height: addedNode.h!,
-      });
+      if (!id || !type) return;
+
+      if (type === "item") {
+        // Updates the react-query state
+        moveItemToSection({
+          itemId: id,
+          sectionId: section.id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          xOffset: addedNode.x!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          yOffset: addedNode.y!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          width: addedNode.w!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          height: addedNode.h!,
+        });
+        return;
+      }
+
+      if (type === "section") {
+        moveInnerSectionToSection({
+          innerSectionId: id,
+          sectionId: section.id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          xOffset: addedNode.x!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          yOffset: addedNode.y!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          width: addedNode.w!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          height: addedNode.h!,
+        });
+        return;
+      }
+
+      console.error(`Unknown grid-stack-item type to add.  type='${type}' id='${id}'`);
     },
-    [moveItemToSection, section.id],
+    [moveItemToSection, moveInnerSectionToSection, section.id],
   );
 
   useEffect(() => {
