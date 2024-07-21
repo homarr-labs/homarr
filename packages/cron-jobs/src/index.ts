@@ -1,6 +1,7 @@
 import { analyticsJob } from "./jobs/analytics";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { downloadsJob } from "./jobs/integrations/downloads";
+import { hardwareUsageJob } from "./jobs/integrations/hardware-usage";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
@@ -21,6 +22,7 @@ export const jobGroup = createCronJobGroup({
   downloads: downloadsJob,
   mediaRequests: mediaRequestsJob,
   rssFeeds: rssFeedsJob,
+  hardwareUsage: hardwareUsageJob,
   indexerManager: indexerManagerJob,
 });
 
