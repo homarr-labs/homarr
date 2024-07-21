@@ -1,24 +1,24 @@
 "use client";
 
-import { useCallback } from "react";
+import {useCallback} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Alert, Button, Fieldset, Group, SegmentedControl, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions } from "@homarr/definitions";
-import type { UseFormReturnType } from "@homarr/form";
-import { useZodForm } from "@homarr/form";
-import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
-import { validation } from "@homarr/validation";
+import {clientApi} from "@homarr/api/client";
+import type {IntegrationKind, IntegrationSecretKind} from "@homarr/definitions";
+import {getAllSecretKindOptions} from "@homarr/definitions";
+import type {UseFormReturnType} from "@homarr/form";
+import {useZodForm} from "@homarr/form";
+import {convertIntegrationTestConnectionError} from "@homarr/integrations/client";
+import {showErrorNotification, showSuccessNotification} from "@homarr/notifications";
+import {useI18n, useScopedI18n} from "@homarr/translation/client";
+import type {z} from "@homarr/validation";
+import {validation} from "@homarr/validation";
 
-import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
-import { revalidatePathActionAsync } from "../../../../revalidatePathAction";
+import {IntegrationSecretInput} from "../_components/secrets/integration-secret-inputs";
+import {revalidatePathActionAsync} from "../../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof validation.integration.create>> & {
@@ -26,21 +26,21 @@ interface NewIntegrationFormProps {
   };
 }
 
-export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({searchParams}: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(searchParams.kind);
   const router = useRouter();
-  const form = useZodForm(validation.integration.create.omit({ kind: true }), {
+  const form = useZodForm(validation.integration.create.omit({kind: true}), {
     initialValues: {
       name: searchParams.name ?? "",
       url: searchParams.url ?? "",
-      secrets: secretKinds[0].map((kind) => ({
+      secrets: secretKinds[0]?.map((kind) => ({
         kind,
         value: "",
       })),
     },
   });
-  const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
+  const {mutateAsync, isPending} = clientApi.integration.create.useMutation();
 
   const handleSubmitAsync = async (values: FormType) => {
     await mutateAsync(
@@ -122,7 +122,7 @@ interface SecretKindsSegmentedControlProps {
   form: UseFormReturnType<FormType, (values: FormType) => FormType>;
 }
 
-const SecretKindsSegmentedControl = ({ secretKinds, form }: SecretKindsSegmentedControlProps) => {
+const SecretKindsSegmentedControl = ({secretKinds, form}: SecretKindsSegmentedControlProps) => {
   const t = useScopedI18n("integration.secrets");
 
   const secretKindGroups = secretKinds.map((kinds) => ({
