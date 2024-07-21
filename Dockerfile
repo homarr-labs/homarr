@@ -46,7 +46,8 @@ COPY --from=builder /app/migration-out/full/ .
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
-RUN corepack enable pnpm && SKIP_ENV_VALIDATION='true' && pnpm turbo run build
+ARG SKIP_ENV_VALIDATION='true'
+RUN corepack enable pnpm && pnpm turbo run build
 
 FROM base AS runner
 WORKDIR /app
@@ -83,6 +84,6 @@ COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'
-ENV AUTH_PROVIDERS=credentials
+ENV AUTH_PROVIDERS='credentials'
 
 CMD ["sh", "run.sh"]
