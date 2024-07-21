@@ -19,7 +19,7 @@ importers:
         version: 4.3.1(vite@5.2.6(@types/node@20.14.11)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
       '@vitest/coverage-v8':
         specifier: ^2.0.3
-        version: 2.0.3(vitest@2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.0)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
+        version: 2.0.3(vitest@2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
       '@vitest/ui':
         specifier: ^2.0.3
         version: 2.0.3(vitest@2.0.3)
@@ -27,8 +27,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       jsdom:
-        specifier: ^24.1.0
-        version: 24.1.0
+        specifier: ^24.1.1
+        version: 24.1.1
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -46,7 +46,7 @@ importers:
         version: 4.3.2(typescript@5.5.3)(vite@5.2.6(@types/node@20.14.11)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
       vitest:
         specifier: ^2.0.3
-        version: 2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.0)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+        version: 2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
 
   apps/nextjs:
     dependencies:
@@ -4390,6 +4390,10 @@ packages:
     resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
     engines: {node: '>= 14'}
 
+  https-proxy-agent@7.0.5:
+    resolution: {integrity: sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==}
+    engines: {node: '>= 14'}
+
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
@@ -4712,8 +4716,8 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jsdom@24.1.0:
-    resolution: {integrity: sha512-6gpM7pRXCwIOKxX47cgOyvyQDN/Eh0f1MeKySBV2xGdKtqJBLj8P25eY3EVCWo2mglDDzozR2r2MW4T+JiNUZA==}
+  jsdom@24.1.1:
+    resolution: {integrity: sha512-5O1wWV99Jhq4DV7rCLIoZ/UIhyQeDR7wHVyZAHAshbrvZsLs+Xzz7gtwnlJTJDjleiTKh54F4dXrX70vJQTyJQ==}
     engines: {node: '>=18'}
     peerDependencies:
       canvas: ^2.11.2
@@ -5148,8 +5152,8 @@ packages:
     resolution: {integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==}
     deprecated: This package is no longer supported.
 
-  nwsapi@2.2.10:
-    resolution: {integrity: sha512-QK0sRs7MKv0tKe1+5uZIQk/C8XGza4DAnztJG8iD+TpJIORARrCxczA738awHrZoHeTjSSoHqao2teO0dC/gFQ==}
+  nwsapi@2.2.12:
+    resolution: {integrity: sha512-qXDmcVlZV4XRtKFzddidpfVP4oMSGhga+xdMc25mv8kaLUHtgzCDhUxkrN8exkGdTlLNaXj7CV3GtON7zuGZ+w==}
 
   oauth4webapi@2.10.3:
     resolution: {integrity: sha512-9FkXEXfzVKzH63GUOZz1zMr3wBaICSzk6DLXx+CGdrQ10ItNk2ePWzYYc1fdmKq1ayGFb2aX97sRCoZ2s0mkDw==}
@@ -5682,8 +5686,8 @@ packages:
   rrweb-cssom@0.6.0:
     resolution: {integrity: sha512-APM0Gt1KoXBz0iIkkdB/kfvGOwC4UuJFeG/c+yV7wSc7q96cG/kJ0HiYCnzivD9SB53cLV1MlHFNfOuPaadYSw==}
 
-  rrweb-cssom@0.7.0:
-    resolution: {integrity: sha512-KlSv0pm9kgQSRxXEMgtivPJ4h826YHsuob8pSHcfSZsSXGtvpEAie8S0AnXuObEJ7nhikOb4ahwxDm0H2yW17g==}
+  rrweb-cssom@0.7.1:
+    resolution: {integrity: sha512-TrEMa7JGdVm0UThDJSx7ddw5nVm3UJS9o9CCIZ72B1vSyEZoziDqBYP3XIoi/12lKrJR8rE3jeFHMok2F/Mnsg==}
 
   run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
@@ -8070,7 +8074,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.0.3(vitest@2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.0)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))':
+  '@vitest/coverage-v8@2.0.3(vitest@2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -8085,7 +8089,7 @@ snapshots:
       strip-literal: 2.1.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.0)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vitest: 2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -8124,7 +8128,7 @@ snapshots:
       pathe: 1.1.2
       sirv: 2.0.4
       tinyrainbow: 1.2.0
-      vitest: 2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.0)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vitest: 2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
 
   '@vitest/utils@2.0.3':
     dependencies:
@@ -9890,6 +9894,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  https-proxy-agent@7.0.5:
+    dependencies:
+      agent-base: 7.1.0
+      debug: 4.3.5
+    transitivePeerDependencies:
+      - supports-color
+
   human-signals@2.1.0: {}
 
   human-signals@5.0.0: {}
@@ -10218,7 +10229,7 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jsdom@24.1.0:
+  jsdom@24.1.1:
     dependencies:
       cssstyle: 4.0.1
       data-urls: 5.0.0
@@ -10226,11 +10237,11 @@ snapshots:
       form-data: 4.0.0
       html-encoding-sniffer: 4.0.0
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.4
+      https-proxy-agent: 7.0.5
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.10
+      nwsapi: 2.2.12
       parse5: 7.1.2
-      rrweb-cssom: 0.7.0
+      rrweb-cssom: 0.7.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 4.1.4
@@ -10660,7 +10671,7 @@ snapshots:
       gauge: 3.0.2
       set-blocking: 2.0.0
 
-  nwsapi@2.2.10: {}
+  nwsapi@2.2.12: {}
 
   oauth4webapi@2.10.3: {}
 
@@ -11305,7 +11316,7 @@ snapshots:
 
   rrweb-cssom@0.6.0: {}
 
-  rrweb-cssom@0.7.0: {}
+  rrweb-cssom@0.7.1: {}
 
   run-async@2.4.1: {}
 
@@ -12157,7 +12168,7 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.38)
       terser: 5.31.0
 
-  vitest@2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.0)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0):
+  vitest@2.0.3(@types/node@20.14.11)(@vitest/ui@2.0.3)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.3
@@ -12181,7 +12192,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.14.11
       '@vitest/ui': 2.0.3(vitest@2.0.3)
-      jsdom: 24.1.0
+      jsdom: 24.1.1
     transitivePeerDependencies:
       - less
       - lightningcss
