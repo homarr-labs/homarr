@@ -39,7 +39,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.7.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"
 }

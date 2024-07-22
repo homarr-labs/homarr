@@ -82,7 +82,7 @@
     "eslint": "^9.7.0",
     "node-loader": "^2.0.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"
 }
