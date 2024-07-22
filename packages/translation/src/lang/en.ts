@@ -470,6 +470,10 @@ export default {
         title: "Reset secret",
         message: "Are you sure you want to reset this secret?",
       },
+      noSecretsRequired: {
+        segmentTitle: "No secrets",
+        text: "No secrets required for this integration",
+      },
       kind: {
         username: {
           label: "Username",
