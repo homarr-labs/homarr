@@ -35,6 +35,7 @@ RUN corepack enable pnpm && pnpm install
 
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/next-out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN corepack enable pnpm && pnpm install
 
 RUN corepack enable pnpm && pnpm install sharp -w
 
@@ -48,7 +49,7 @@ COPY --from=builder /app/migration-out/full/ .
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG DISABLE_REDIS_LOGS='true'
-RUN corepack enable pnpm && pnpm turbo run build
+RUN corepack enable pnpm && pnpm build
 
 FROM base AS runner
 WORKDIR /app

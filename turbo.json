@@ -25,6 +25,7 @@
     "AUTH_PROVIDERS",
     "AUTH_SECRET",
     "CI",
+    "DISABLE_REDIS_LOGS",
     "DB_URL",
     "DB_HOST",
     "DB_USER",
