@@ -63,10 +63,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build artifacts
-        run: pnpm build
       - name: Discord notification
         if: ${{ github.events.inputs.send-notifications }}
         env:
