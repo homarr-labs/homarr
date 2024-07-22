@@ -24,29 +24,32 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
     .slice(0, options.maximumAmountPosts as number);
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" p={"sm"}>
-      <Stack w={"100%"} gap={"xs"}>
+    <ScrollArea className="scroll-area-w100" w="100%" p="4cqmin">
+      <Stack w={"100%"} gap="4cqmin">
         {entries.map((feedEntry) => (
           <Card
             key={feedEntry.id}
             withBorder
             component={"a"}
             href={feedEntry.link}
-            radius="md"
+            radius="2.5cqmin"
             target="_blank"
             w="100%"
+            p="2.5cqmin"
           >
             {feedEntry.enclosure && (
               <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
             )}
 
-            <Flex gap={2} direction="column" w="100%">
-              <Text lineClamp={2}>{feedEntry.title}</Text>
+            <Flex gap="2.5cqmin" direction="column" w="100%">
+              <Text fz="4cqmin" lh="5cqmin" lineClamp={2}>
+                {feedEntry.title}
+              </Text>
               {feedEntry.description && (
                 <Text
                   className={feedEntry.description}
                   c="dimmed"
-                  size="xs"
+                  size="3.5cqmin"
                   lineClamp={options.textLinesClamp as number}
                   dangerouslySetInnerHTML={{ __html: feedEntry.description }}
                 />
@@ -62,9 +65,9 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
 }
 
 const InfoDisplay = ({ date }: { date: string }) => (
-  <Group mt={4} gap="xs">
-    <IconClock size={14} />
-    <Text size="xs" c="dimmed">
+  <Group gap="2.5cqmin">
+    <IconClock size="2.5cqmin" />
+    <Text size="2.5cqmin" c="dimmed" pt="1cqmin">
       {date}
     </Text>
   </Group>
