@@ -18,7 +18,7 @@ export const testConnectionAsync = async (
     value: `${string}.${string}`;
   }[] = [],
 ) => {
-  const formSecrets = integration.secrets !== null ? integration.secrets
+  const formSecrets = integration.secrets
     .filter((secret) => secret.value !== null)
     .map((secret) => ({
       ...secret,
@@ -26,7 +26,7 @@ export const testConnectionAsync = async (
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value: secret.value!,
       source: "form" as const,
-    })) : [];
+    }));
 
   const decryptedDbSecrets = dbSecrets.map((secret) => ({
     ...secret,
@@ -35,9 +35,7 @@ export const testConnectionAsync = async (
   }));
 
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
-  console.log('sourcedSecrets' + JSON.stringify(sourcedSecrets));
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
-  console.log('secretKinds' + JSON.stringify(secretKinds));
 
   const filteredSecrets = secretKinds.map((kind) => {
     const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);

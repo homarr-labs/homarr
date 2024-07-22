@@ -107,7 +107,7 @@ export const integrationDefs = {
   },
   getDashDot: {
     name: "Dash.",
-    secretKinds: [],
+    secretKinds: [[]],
     category: [],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dashdot.png",
   }
@@ -116,7 +116,7 @@ export const integrationDefs = {
   {
     name: string;
     iconUrl: string;
-    secretKinds: [...IntegrationSecretKind[][]];
+    secretKinds: [IntegrationSecretKind[], ...IntegrationSecretKind[][]]; // at least one secret kind set is required
     category: IntegrationCategory[];
   }
 >;
@@ -125,12 +125,12 @@ export const getIconUrl = (integration: IntegrationKind) => integrationDefs[inte
 
 export const getIntegrationName = (integration: IntegrationKind) => integrationDefs[integration].name;
 
-export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] | undefined =>
+export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] =>
   integrationDefs[integration].secretKinds[0];
 
 export const getAllSecretKindOptions = (
   integration: IntegrationKind,
-): [...IntegrationSecretKind[][]] => integrationDefs[integration].secretKinds;
+): [IntegrationSecretKind[], ...IntegrationSecretKind[][]] => integrationDefs[integration].secretKinds;
 
 export const integrationKinds = objectKeys(integrationDefs);
 

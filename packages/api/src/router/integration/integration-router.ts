@@ -77,7 +77,7 @@ export const integrationRouter = createTRPCRouter({
         name: input.name,
         url: input.url,
         kind: input.kind,
-        secrets: !input.secrets ? null : input.secrets,
+        secrets: input.secrets,
       });
 
       const integrationId = createId();
@@ -88,7 +88,7 @@ export const integrationRouter = createTRPCRouter({
         kind: input.kind,
       });
 
-      if (input.secrets && input.secrets.length >= 1) {
+      if (input.secrets.length >= 1) {
         await ctx.db.insert(integrationSecrets).values(
           input.secrets.map((secret) => ({
             kind: secret.kind,
