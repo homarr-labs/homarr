@@ -310,8 +310,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       undici:
-        specifier: 6.19.3
-        version: 6.19.3
+        specifier: 6.19.4
+        version: 6.19.4
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -6313,8 +6313,8 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici@6.19.3:
-    resolution: {integrity: sha512-xWvTmUYvfiKATSKntAVRpPO5bfRcrG9FpiHI916j8dK8nUMjeM0uE8dx7ftKoPUQ2RtRi0KMDL10/03orVgTMA==}
+  undici@6.19.4:
+    resolution: {integrity: sha512-i3uaEUwNdkRq2qtTRRJb13moW5HWqviu7Vl7oYRYz++uPtGHJj+x7TGjcEuwS5Mt2P4nA0U9dhIX3DdB6JGY0g==}
     engines: {node: '>=18.17'}
 
   universalify@0.2.0:
@@ -12000,7 +12000,7 @@ snapshots:
 
   undici-types@5.26.5: {}
 
-  undici@6.19.3: {}
+  undici@6.19.4: {}
 
   universalify@0.2.0: {}
 
