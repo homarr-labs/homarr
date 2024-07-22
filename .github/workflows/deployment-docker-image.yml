@@ -86,7 +86,7 @@ jobs:
         id: buildPushAction
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64,linux/arm/v7,linux/amd64
           context: .
           push: false
           tags: ${{ steps.meta.outputs.tags }}
