@@ -7,7 +7,6 @@
   "packageManager": "pnpm@9.5.0",
   "scripts": {
     "build": "turbo build",
-    "build:profile": "turbo build --profile profile.json",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "db:push": "pnpm -F db push:sqlite",
