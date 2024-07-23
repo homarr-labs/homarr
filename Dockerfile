@@ -51,7 +51,8 @@ COPY --from=builder /app/migration-out/full/ .
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG DISABLE_REDIS_LOGS='true'
-RUN corepack enable pnpm && pnpm build
+RUN corepack enable pnpm && pnpm build:profile
+RUN cat profile.json && exit 1
 
 FROM base AS runner
 WORKDIR /app
