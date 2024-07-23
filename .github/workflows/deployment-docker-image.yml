@@ -86,13 +86,11 @@ jobs:
         id: buildPushAction
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/arm64
+          platforms: linux/amd64 # we currently do't build for linux/arm64 as it's really slow and we'll move to a self hosted runner for that or use the official github runner, once it's available
           context: .
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          #cache-from: type=gha
-          #cache-to: type=gha,mode=max
           network: host
         env:
           SKIP_ENV_VALIDATION: true
