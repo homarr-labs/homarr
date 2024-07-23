@@ -779,8 +779,8 @@ importers:
         specifier: ^0.23.0
         version: 0.23.0
       drizzle-orm:
-        specifier: ^0.32.0
-        version: 0.32.0(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.3)(react@18.3.1)
+        specifier: ^0.32.1
+        version: 0.32.1(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.3)(react@18.3.1)
       mysql2:
         specifier: 3.10.3
         version: 3.10.3
@@ -3743,8 +3743,8 @@ packages:
     resolution: {integrity: sha512-w9jE97z193dd4jzAyj4Uv2SOh8Ydue70Ki6W0awy4bGM1aPXan6zD6Yv+nNTA6oGgNTDl2MJFxutjHG4fden5g==}
     hasBin: true
 
-  drizzle-orm@0.32.0:
-    resolution: {integrity: sha512-99IlfVGPNHzOFEXo9Phyu5At5TALLsY2t6WxFFy68rYd9Ej4cHX/7WjdPOn7JNRW69MNeNtP8XrDQg43SppuAA==}
+  drizzle-orm@0.32.1:
+    resolution: {integrity: sha512-Wq1J+lL8PzwR5K3a1FfoWsbs8powjr3pGA4+5+2ueN1VTLDNFYEolUyUWFtqy8DVRvYbL2n7sXZkgVmK9dQkng==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -9050,7 +9050,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.0(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.3)(react@18.3.1):
+  drizzle-orm@0.32.1(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.3)(better-sqlite3@11.1.2)(mysql2@3.10.3)(react@18.3.1):
     optionalDependencies:
       '@prisma/client': 5.16.1
       '@types/better-sqlite3': 7.6.11
