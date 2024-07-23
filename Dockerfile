@@ -1,12 +1,9 @@
-FROM debian:12 AS base
-RUN apt-get update -y
-RUN apt-get install ca-certificates curl -y
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN apt-get install -y nodejs redis
+FROM node:20.15.1-alpine AS base
 
 FROM base AS builder
-#RUN apk add --no-cache libc6-compat
-#RUN apk update
+RUN apk add --no-cache libc6-compat
+RUN apk update
+
 # Set working directory
 WORKDIR /app
 COPY . .
@@ -18,6 +15,8 @@ RUN turbo prune @homarr/db --docker --out-dir ./migration-out
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
+RUN apk add --no-cache libc6-compat curl bash
+RUN apk update
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
@@ -56,6 +55,7 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
+RUN apk add --no-cache redis
 RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
