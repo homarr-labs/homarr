@@ -184,6 +184,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     // Only run this effect when the section items change
   }, [itemIds.length, columnCount]);
 
+  const sectionHeight = section.kind === "dynamic" && "height" in section ? section.height as number : null;
+
+  useEffect(() => {
+    if (!sectionHeight) return;
+    gridRef.current?.row(sectionHeight);
+  }, [sectionHeight]);
+
   return {
     refs: {
       items: itemRefs,
