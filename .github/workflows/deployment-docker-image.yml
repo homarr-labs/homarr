@@ -6,13 +6,22 @@ on:
       - closed
     branches:
       - main
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      send-notifications:
+        type: boolean
+        required: false
+        default: true
+        description: Send notifications
 
 permissions:
   contents: write
   packages: write
 
 env:
+  SKIP_ENV_VALIDATION: true
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
   TURBO_TELEMETRY_DISABLED: 1
 
 concurrency: production
@@ -26,6 +35,7 @@ jobs:
         node-version: [20]
     steps:
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -37,8 +47,9 @@ jobs:
         uses: ietf-tools/semver-action@v1
         with:
           token: ${{ github.token }}
-          branch: master
+          branch: dev
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -52,11 +63,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build artifacts
-        run: pnpm build
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -78,15 +86,16 @@ jobs:
         id: buildPushAction
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/arm64,linux/riscv64,linux/arm/v7,linux/arm/v6
+          platforms: linux/amd64 # we currently do't build for linux/arm64 as it's really slow and we'll move to a self hosted runner for that or use the official github runner, once it's available
           context: .
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           network: host
+        env:
+          SKIP_ENV_VALIDATION: true
       - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master

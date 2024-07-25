@@ -8,7 +8,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const mediaServerRouter = createTRPCRouter({
   getCurrentStreams: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("jellyfin", "plex"))
+    .unstable_concat(createManyIntegrationMiddleware("query", "jellyfin", "plex"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -22,7 +22,7 @@ export const mediaServerRouter = createTRPCRouter({
       );
     }),
   subscribeToCurrentStreams: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("jellyfin", "plex"))
+    .unstable_concat(createManyIntegrationMiddleware("query", "jellyfin", "plex"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; data: StreamSession[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];

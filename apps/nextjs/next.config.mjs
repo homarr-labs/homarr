@@ -9,11 +9,14 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.node$/,
-      loader: "node-loader",
-    });
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.module.rules.push({
+        test: /\.node$/,
+        loader: "node-loader",
+      });
+    }
+
     return config;
   },
   experimental: {

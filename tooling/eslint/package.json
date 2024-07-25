@@ -16,20 +16,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@next/eslint-plugin-next": "^14.2.4",
+    "@next/eslint-plugin-next": "^14.2.5",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.0.6",
+    "eslint-config-turbo": "^2.0.9",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.9.0",
-    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "typescript-eslint": "^7.15.0"
+    "typescript-eslint": "^7.17.0"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.6.0",
-    "typescript": "^5.5.3"
+    "eslint": "^9.7.0",
+    "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"
 }

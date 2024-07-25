@@ -42,6 +42,7 @@ export default {
     action: {
       login: {
         label: "Login",
+        labelWith: "Login with {provider}",
         notification: {
           success: {
             title: "Login successful",
@@ -468,6 +469,10 @@ export default {
       reset: {
         title: "Reset secret",
         message: "Are you sure you want to reset this secret?",
+      },
+      noSecretsRequired: {
+        segmentTitle: "No secrets",
+        text: "No secrets required for this integration",
       },
       kind: {
         username: {

@@ -17,6 +17,14 @@ describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
     const db = createDb();
 
+    await db.insert(groups).values({
+      id: "2",
+      name: "test",
+    });
+    await db.insert(groupPermissions).values({
+      groupId: "2",
+      permission: "admin",
+    });
     await db.insert(users).values({
       id: "2",
     });
@@ -25,6 +33,27 @@ describe("getCurrentUserPermissions", () => {
     const result = await getCurrentUserPermissionsAsync(db, userId);
     expect(result).toEqual([]);
   });
+
+  test("should return empty permissions when user has no groups", async () => {
+    const db = createDb();
+    const userId = "1";
+
+    await db.insert(groups).values({
+      id: "2",
+      name: "test",
+    });
+    await db.insert(groupPermissions).values({
+      groupId: "2",
+      permission: "admin",
+    });
+    await db.insert(users).values({
+      id: userId,
+    });
+
+    const result = await getCurrentUserPermissionsAsync(db, userId);
+    expect(result).toEqual([]);
+  });
+
   test("should return permissions for user", async () => {
     const db = createDb();
     const getPermissionsWithChildrenMock = vi
