@@ -1,8 +1,8 @@
+import { useEffect } from "react";
+import type { PropsWithChildren } from "react";
 import type { BoxProps } from "@mantine/core";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
-import { useEffect  } from "react";
-import type {PropsWithChildren} from "react";
 
 import type { SectionKind, WidgetKind } from "@homarr/definitions";
 import type { GridItemHTMLElement } from "@homarr/gridstack";
@@ -17,7 +17,7 @@ interface Props extends BoxProps {
   height: number;
   minWidth?: number;
   minHeight?: number;
-  innerRef: React.RefObject<GridItemHTMLElement>;
+  innerRef: React.RefObject<GridItemHTMLElement> | undefined;
 }
 
 export const GridStackItem = ({
@@ -34,10 +34,9 @@ export const GridStackItem = ({
   children,
   ...boxProps
 }: PropsWithChildren<Props>) => {
-
-  // TODO: move to where it makes sense
   useEffect(() => {
-    if (!innerRef.current?.gridstackNode) return;
+    if (!innerRef?.current?.gridstackNode) return;
+    if (type !== "section") return;
     innerRef.current.gridstackNode.minW = minWidth;
     innerRef.current.gridstackNode.minH = minHeight;
   }, [minWidth, minHeight, innerRef]);

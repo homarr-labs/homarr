@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 
+import type { DynamicSection, Item, Section } from "~/app/[locale]/boards/_types";
+import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { BoardItemContent } from "../items/item-content";
 import { BoardDynamicSection } from "./dynamic-section";
 import { GridStackItem } from "./gridstack/gridstack-item";
 import { useSectionContext } from "./section-context";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
-import type { DynamicSection } from "~/app/[locale]/boards/_types";
 
 export const SectionContent = () => {
   const { section, innerSections, refs } = useSectionContext();
@@ -28,7 +28,7 @@ export const SectionContent = () => {
       {sortedItems.map((item) => (
         <GridStackItem
           key={item.id}
-          innerRef={refs.items.current[item.id] as React.RefObject<HTMLDivElement>}
+          innerRef={refs.items.current[item.id]}
           width={item.width}
           height={item.height}
           xOffset={item.xOffset}
@@ -36,12 +36,35 @@ export const SectionContent = () => {
           kind={item.kind}
           id={item.id}
           type={item.type}
-          minWidth={item.type === 'section' ? Math.max(...item.items.map(item => item.xOffset + item.width), ...board.sections.filter((section): section is DynamicSection => section.kind === 'dynamic' && section.parentSectionId === item.id).map(item => item.xOffset + item.width), 1) : undefined}
-          minHeight={item.type === 'section' ? Math.max(...item.items.map(item => item.yOffset  + item.height), ...board.sections.filter((section): section is DynamicSection => section.kind === 'dynamic' && section.parentSectionId === item.id).map(item => item.yOffset + item.height), 1) : undefined}
+          minWidth={item.type === "section" ? getMinSize("x", item.items, board.sections, item.id) : undefined}
+          minHeight={item.type === "section" ? getMinSize("y", item.items, board.sections, item.id) : undefined}
         >
           {item.type === "item" ? <BoardItemContent item={item} /> : <BoardDynamicSection section={item} />}
         </GridStackItem>
       ))}
     </>
+  );
+};
+
+/**
+ * Calculates the min width / height of a section by taking the maximum of
+ * the sum of the offset and size of all items and dynamic sections inside.
+ * @param direction either "x" or "y"
+ * @param items items of the section
+ * @param sections sections of the board to look for dynamic sections
+ * @param parentSectionId the id of the section we want to calculate the min size for
+ * @returns the min size
+ */
+const getMinSize = (direction: "x" | "y", items: Item[], sections: Section[], parentSectionId: string) => {
+  const size = direction === "x" ? "width" : "height";
+  return Math.max(
+    ...items.map((item) => item[`${direction}Offset`] + item[size]),
+    ...sections
+      .filter(
+        (section): section is DynamicSection =>
+          section.kind === "dynamic" && section.parentSectionId === parentSectionId,
+      )
+      .map((item) => item[`${direction}Offset`] + item[size]),
+    1, // Minimum size
   );
 };

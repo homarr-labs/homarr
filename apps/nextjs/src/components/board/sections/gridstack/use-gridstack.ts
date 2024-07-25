@@ -45,6 +45,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     gridRef,
     wrapperRef,
     width,
+    isDynamic: section.kind === "dynamic",
   });
 
   // define items in itemRefs for easy access and reference to items
@@ -184,7 +185,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     // Only run this effect when the section items change
   }, [itemIds.length, columnCount]);
 
-  const sectionHeight = section.kind === "dynamic" && "height" in section ? section.height as number : null;
+  const sectionHeight = section.kind === "dynamic" && "height" in section ? (section.height as number) : null;
 
   useEffect(() => {
     if (!sectionHeight) return;
@@ -201,11 +202,11 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 };
 
 interface UseCssVariableConfiguration {
-  mainRef?: RefObject<HTMLDivElement>;
   gridRef: UseGridstackRefs["gridstack"];
   wrapperRef: UseGridstackRefs["wrapper"];
   width: number;
   columnCount: number;
+  isDynamic: boolean;
 }
 
 /**
@@ -217,14 +218,27 @@ interface UseCssVariableConfiguration {
  * @param width width of the section
  * @param columnCount column count of the gridstack
  */
-const useCssVariableConfiguration = ({ gridRef, wrapperRef, width, columnCount }: UseCssVariableConfiguration) => {
+const useCssVariableConfiguration = ({
+  gridRef,
+  wrapperRef,
+  width,
+  columnCount,
+  isDynamic,
+}: UseCssVariableConfiguration) => {
   const onResize = useCallback(() => {
     if (!wrapperRef.current) return;
-    const widgetWidth = wrapperRef.current.clientWidth / columnCount;
+    const actualColumnCount = isDynamic
+      ? Number(gridRef.current?.el.parentElement?.parentElement?.getAttribute("gs-w") ?? 1)
+      : columnCount;
+    if (isDynamic) {
+      console.log("resizing", gridRef.current, actualColumnCount);
+      wrapperRef.current.style.setProperty("--gridstack-column-count", actualColumnCount.toString());
+    }
+    const widgetWidth = wrapperRef.current.clientWidth / actualColumnCount;
     // widget width is used to define sizes of gridstack items within global.scss
     wrapperRef.current.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
     gridRef.current?.cellHeight(widgetWidth);
-  }, [columnCount, wrapperRef, gridRef]);
+  }, [columnCount, wrapperRef, gridRef, isDynamic]);
 
   // Define widget-width by calculating the width of one column with mainRef width and column count
   useEffect(() => {

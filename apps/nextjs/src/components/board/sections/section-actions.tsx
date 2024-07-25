@@ -23,7 +23,6 @@ export const useSectionActions = () => {
 
   const moveAndResizeInnerSection = useCallback(
     ({ innerSectionId, ...positionProps }: MoveAndResizeInnerSection) => {
-      console.log("moveAndResizeInnerSection", innerSectionId, positionProps);
       updateBoard((previous) => ({
         ...previous,
         sections: previous.sections.map((section) => {
@@ -41,7 +40,6 @@ export const useSectionActions = () => {
 
   const moveInnerSectionToSection = useCallback(
     ({ innerSectionId, sectionId, ...positionProps }: MoveInnerSectionToSection) => {
-      console.log("moveInnerSectionToSection", innerSectionId, sectionId, positionProps);
       updateBoard((previous) => {
         return {
           ...previous,
