@@ -3,6 +3,7 @@ import { Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, UserAvatar } from "@homarr/ui";
 
@@ -39,7 +40,9 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
           })}
           defaultValue={searchParams.search}
         />
-        <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        {isProviderEnabled("credentials") && (
+          <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        )}
       </Group>
       {filteredMembers.length === 0 && (
         <Center py="sm">
@@ -60,7 +63,7 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
 }
 
 interface RowProps {
-  member: RouterOutputs["group"]["getPaginated"]["items"][number]["members"][number];
+  member: RouterOutputs["group"]["getById"]["members"][number];
   groupId: string;
 }
 
@@ -70,13 +73,13 @@ const Row = ({ member, groupId }: RowProps) => {
       <TableTd>
         <Group>
           <UserAvatar size="sm" user={member} />
-          <Anchor component={Link} href={`/manage/users/${member.id}`}>
+          <Anchor component={Link} href={`/manage/users/${member.id}/general`}>
             {member.name}
           </Anchor>
         </Group>
       </TableTd>
       <TableTd w={100}>
-        <RemoveGroupMember user={member} groupId={groupId} />
+        {member.provider === "credentials" && <RemoveGroupMember user={member} groupId={groupId} />}
       </TableTd>
     </TableTr>
   );
