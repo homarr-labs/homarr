@@ -57,19 +57,17 @@ export default async function EditUserPage({ params }: Props) {
 
   return (
     <Stack>
-      {isCredentialsUser && (
-        <Stack>
-          <Title>{tGeneral("title")}</Title>
-          <Group gap="xl">
-            <Box flex={1}>
-              <UserProfileForm user={user} />
-            </Box>
-            <Box w={{ base: "100%", lg: 200 }}>
-              <UserProfileAvatarForm user={user} />
-            </Box>
-          </Group>
-        </Stack>
-      )}
+      <Stack>
+        <Title>{tGeneral("title")}</Title>
+        <Group gap="xl">
+          <Box flex={1}>
+            <UserProfileForm user={user} />
+          </Box>
+          <Box w={{ base: "100%", lg: 200 }}>
+            <UserProfileAvatarForm user={user} />
+          </Box>
+        </Group>
+      </Stack>
 
       <ProfileLanguageChange />
 
