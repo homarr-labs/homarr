@@ -1,8 +1,9 @@
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import type { DnsHoleControls } from "../interfaces/dns-hole-controls/dns-hole-controls-types";
 import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-summary-types";
-import { summaryResponseSchema } from "./pi-hole-types";
+import { controlsInputSchema, summaryResponseSchema } from "./pi-hole-types";
 
 export class PiHoleIntegration extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
@@ -23,6 +24,7 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
     }
 
     return {
+      status: result.data.status,
       adsBlockedToday: result.data.ads_blocked_today,
       adsBlockedTodayPercentage: result.data.ads_percentage_today,
       domainsBeingBlocked: result.data.domains_being_blocked,
@@ -48,5 +50,53 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
         throw new IntegrationTestConnectionError("invalidCredentials");
       },
     });
+  }
+
+  public async enableAsync(): Promise<DnsHoleControls> {
+    const apiKey = super.getSecretValue("apiKey");
+    const response = await fetch(`${this.integration.url}/admin/api.php?enable&auth=${apiKey}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
+    }
+
+    const result = controlsInputSchema.safeParse(await response.json());
+
+    if (!result.success) {
+      throw new Error(
+        `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
+      );
+    }
+
+    return {
+      status: result.data.status,
+      action: "enable",
+    };
+  }
+
+  public async disableAsync(duration?: number): Promise<DnsHoleControls> {
+    const apiKey = super.getSecretValue("apiKey");
+    const url = `${this.integration.url}/admin/api.php?disable${duration ? `=${duration}` : ""}&auth=${apiKey}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
+    }
+
+    const result = controlsInputSchema.safeParse(await response.json());
+
+    if (!result.success) {
+      throw new Error(
+        `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
+      );
+    }
+
+    return {
+      status: result.data.status,
+      action: "disable",
+      duration: duration ?? 0,
+    };
   }
 }

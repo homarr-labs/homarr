@@ -751,6 +751,39 @@ export default {
         domainsBeingBlocked: "Domains on blocklist",
       },
     },
+    dnsHoleControls: {
+      name: "DNS Hole Controls",
+      description: "Control PiHole or AdGuard from your dashboard",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        showToggleAllButtons: {
+          label: "Show Toggle All Buttons",
+        },
+      },
+      error: {
+        internalServerError: "Failed to control DNS Hole",
+      },
+      controls: {
+        enableAll: "Enable All",
+        disableAll: "Disable All",
+        setTimer: "Set Timer",
+        enabled: "Enabled",
+        disabled: "Disabled",
+      },
+    },
     clock: {
       name: "Date and time",
       description: "Displays the current date and time.",

@@ -6,6 +6,7 @@ export const widgetKinds = [
   "video",
   "notebook",
   "dnsHoleSummary",
+  "dnsHoleControls",
   "smartHome-entityState",
   "smartHome-executeAutomation",
   "mediaServer",

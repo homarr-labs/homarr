@@ -7,3 +7,9 @@ export const summaryResponseSchema = z.object({
   dns_queries_today: z.number(),
   ads_percentage_today: z.number(),
 });
+
+export const controlsInputSchema = z.object({
+  status: z.enum(["enabled", "disabled"]),
+  action: z.enum(["enable", "disable"]),
+  duration: z.number().optional(),
+});

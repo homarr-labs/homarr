@@ -29,4 +29,16 @@ export const dnsHoleRouter = createTRPCRouter({
       integrationId: ctx.integration.id,
     };
   }),
+
+  enable: publicProcedure
+    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole"))
+    .mutation(async ({ ctx }) => {
+      await new PiHoleIntegration(ctx.integration).enableAsync();
+    }),
+
+  disable: publicProcedure
+    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole"))
+    .mutation(async ({ ctx }) => {
+      await new PiHoleIntegration(ctx.integration).disableAsync();
+    }),
 });
