@@ -7,9 +7,12 @@ import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { assertCredentialsEnabled } from "./invite/asserts";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
+    assertCredentialsEnabled();
+
     const firstUser = await ctx.db.query.users.findFirst({
       columns: {
         id: true,
@@ -40,6 +43,7 @@ export const userRouter = createTRPCRouter({
     });
   }),
   register: publicProcedure.input(validation.user.registrationApi).mutation(async ({ ctx, input }) => {
+    assertCredentialsEnabled();
     const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
     const dbInvite = await ctx.db.query.invites.findFirst({
       columns: {
@@ -64,6 +68,7 @@ export const userRouter = createTRPCRouter({
     await ctx.db.delete(invites).where(inviteWhere);
   }),
   create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
+    assertCredentialsEnabled();
     await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
 
     await createUserAsync(ctx.db, input);
@@ -93,6 +98,7 @@ export const userRouter = createTRPCRouter({
         columns: {
           id: true,
           image: true,
+          provider: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -101,6 +107,13 @@ export const userRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",
+        });
+      }
+
+      if (user.provider !== "credentials") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Profile image can not be changed for users with external providers",
         });
       }
 
@@ -119,6 +132,7 @@ export const userRouter = createTRPCRouter({
         email: true,
         emailVerified: true,
         image: true,
+        provider: true,
       },
     });
   }),
@@ -139,6 +153,7 @@ export const userRouter = createTRPCRouter({
         email: true,
         emailVerified: true,
         image: true,
+        provider: true,
       },
       where: eq(users.id, input.userId),
     });
@@ -154,7 +169,7 @@ export const userRouter = createTRPCRouter({
   }),
   editProfile: publicProcedure.input(validation.user.editProfile).mutation(async ({ input, ctx }) => {
     const user = await ctx.db.query.users.findFirst({
-      columns: { email: true },
+      columns: { email: true, provider: true },
       where: eq(users.id, input.id),
     });
 
@@ -162,6 +177,13 @@ export const userRouter = createTRPCRouter({
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "User not found",
+      });
+    }
+
+    if (user.provider !== "credentials") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Username and email can not be changed for users with external providers",
       });
     }
 
@@ -190,26 +212,34 @@ export const userRouter = createTRPCRouter({
       });
     }
 
+    const dbUser = await ctx.db.query.users.findFirst({
+      columns: {
+        id: true,
+        password: true,
+        salt: true,
+        provider: true,
+      },
+      where: eq(users.id, input.userId),
+    });
+
+    if (!dbUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    if (dbUser.provider !== "credentials") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Password can not be changed for users with external providers",
+      });
+    }
+
     // Admins can change the password of other users without providing the previous password
     const isPreviousPasswordRequired = ctx.session.user.id === input.userId;
 
     if (isPreviousPasswordRequired) {
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-          password: true,
-          salt: true,
-        },
-        where: eq(users.id, input.userId),
-      });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
       const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");
       const isValid = previousPasswordHash === dbUser.password;
 
