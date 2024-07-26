@@ -53,27 +53,35 @@ export default async function EditUserPage({ params }: Props) {
     notFound();
   }
 
+  const isCredentialsUser = user.provider === "credentials";
+
   return (
     <Stack>
-      <Title>{tGeneral("title")}</Title>
-      <Group gap="xl">
-        <Box flex={1}>
-          <UserProfileForm user={user} />
-        </Box>
-        <Box w={{ base: "100%", lg: 200 }}>
-          <UserProfileAvatarForm user={user} />
-        </Box>
-      </Group>
+      {isCredentialsUser && (
+        <Stack>
+          <Title>{tGeneral("title")}</Title>
+          <Group gap="xl">
+            <Box flex={1}>
+              <UserProfileForm user={user} />
+            </Box>
+            <Box w={{ base: "100%", lg: 200 }}>
+              <UserProfileAvatarForm user={user} />
+            </Box>
+          </Group>
+        </Stack>
+      )}
 
       <ProfileLanguageChange />
 
-      <DangerZoneRoot>
-        <DangerZoneItem
-          label={t("user.action.delete.label")}
-          description={t("user.action.delete.description")}
-          action={<DeleteUserButton user={user} />}
-        />
-      </DangerZoneRoot>
+      {isCredentialsUser && (
+        <DangerZoneRoot>
+          <DangerZoneItem
+            label={t("user.action.delete.label")}
+            description={t("user.action.delete.description")}
+            action={<DeleteUserButton user={user} />}
+          />
+        </DangerZoneRoot>
+      )}
     </Stack>
   );
 }
