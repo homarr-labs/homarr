@@ -91,8 +91,10 @@ jobs:
         with:
           images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           tags: |
-            type=raw,value=latest
-            type=raw,value=${{ steps.semver.outputs.next }}
+            type=raw,value=alpha
+#          tags: |
+#            type=raw,value=latest
+#            type=raw,value=${{ steps.semver.outputs.next }}
       - name: Build and push
         id: buildPushAction
         uses: docker/build-push-action@v6
