@@ -43,7 +43,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
       />
       <Grid>
         <GridCol span={12}>
-          <Group justify="space-between" align="center">
+          <Group align="center">
             <UserAvatar user={user} size="lg" />
             <Stack gap={0}>
               <Title order={3}>{user.name}</Title>
