@@ -93,7 +93,7 @@ jobs:
         with:
           platforms: linux/amd64 # we currently do't build for linux/arm64 as it's really slow and we'll move to a self hosted runner for that or use the official github runner, once it's available
           context: .
-          push: ${{ github.events.inputs.push-image }}
+          push: "${{ github.events.inputs.push-image }}"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           network: host
