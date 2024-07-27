@@ -11,11 +11,13 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     };
   }
 
-  const currentStreams = await api.widget.mediaServer.getCurrentStreams({
+  const cpuHistory = await api.widget.hardwareUsage.getCpuHistory({
     integrationIds,
   });
 
   return {
-    initialData: currentStreams,
+    initialData: {
+      cpuHistory: cpuHistory
+    },
   };
 }
