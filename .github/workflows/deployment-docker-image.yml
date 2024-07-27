@@ -76,7 +76,7 @@ jobs:
         with:
           args: "Built application artifacts. Building images..."
       - name: Log in to the Container registry
-        uses: docker/login-action
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
