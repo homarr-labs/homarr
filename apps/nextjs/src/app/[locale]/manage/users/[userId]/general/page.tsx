@@ -62,17 +62,15 @@ export default async function EditUserPage({ params }: Props) {
         {t("management.page.user.fieldsDisabledExternalProvider")}
       </Alert>
 
-      <Stack>
-        <Title>{tGeneral("title")}</Title>
-        <Group gap="xl">
-          <Box flex={1}>
-            <UserProfileForm user={user} />
-          </Box>
-          <Box w={{ base: "100%", lg: 200 }}>
-            <UserProfileAvatarForm user={user} />
-          </Box>
-        </Group>
-      </Stack>
+      <Title>{tGeneral("title")}</Title>
+      <Group gap="xl">
+        <Box flex={1}>
+          <UserProfileForm user={user} />
+        </Box>
+        <Box w={{ base: "100%", lg: 200 }}>
+          <UserProfileAvatarForm user={user} />
+        </Box>
+      </Group>
 
       <ProfileLanguageChange />
 
