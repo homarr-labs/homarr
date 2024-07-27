@@ -1,5 +1,7 @@
 import "dayjs/locale/en";
 
+import { MRT_Localization_EN } from "mantine-react-table/locales/en/index.cjs";
+
 export default {
   user: {
     title: "Users",
@@ -615,6 +617,7 @@ export default {
         },
       },
     },
+    mantineReactTable: MRT_Localization_EN,
   },
   section: {
     category: {
