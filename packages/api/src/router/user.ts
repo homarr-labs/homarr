@@ -5,14 +5,15 @@ import type { Database } from "@homarr/db";
 import { and, createId, eq, schema } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
 import type { SupportedAuthProvider } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { assertCredentialsEnabled } from "./invite/asserts";
+import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
-    assertCredentialsEnabled();
+    throwIfCredentialsDisabled();
 
     const firstUser = await ctx.db.query.users.findFirst({
       columns: {
@@ -44,7 +45,7 @@ export const userRouter = createTRPCRouter({
     });
   }),
   register: publicProcedure.input(validation.user.registrationApi).mutation(async ({ ctx, input }) => {
-    assertCredentialsEnabled();
+    throwIfCredentialsDisabled();
     const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
     const dbInvite = await ctx.db.query.invites.findFirst({
       columns: {
@@ -69,7 +70,7 @@ export const userRouter = createTRPCRouter({
     await ctx.db.delete(invites).where(inviteWhere);
   }),
   create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
-    assertCredentialsEnabled();
+    throwIfCredentialsDisabled();
     await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
     await createUserAsync(ctx.db, input);
@@ -239,6 +240,10 @@ export const userRouter = createTRPCRouter({
 
     // Admins can change the password of other users without providing the previous password
     const isPreviousPasswordRequired = ctx.session.user.id === input.userId;
+
+    logger.info(
+      `User ${user.id} is changing password for user ${input.userId}, previous password is required: ${isPreviousPasswordRequired}`,
+    );
 
     if (isPreviousPasswordRequired) {
       const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");

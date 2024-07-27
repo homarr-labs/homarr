@@ -6,11 +6,11 @@ import { invites } from "@homarr/db/schema/sqlite";
 import { z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { assertCredentialsEnabled } from "./invite/asserts";
+import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const inviteRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
-    assertCredentialsEnabled();
+    throwIfCredentialsDisabled();
     const dbInvites = await ctx.db.query.invites.findMany({
       orderBy: asc(invites.expirationDate),
       columns: {
@@ -34,7 +34,7 @@ export const inviteRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      assertCredentialsEnabled();
+      throwIfCredentialsDisabled();
       const id = createId();
       const token = randomBytes(20).toString("hex");
 
@@ -57,7 +57,7 @@ export const inviteRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      assertCredentialsEnabled();
+      throwIfCredentialsDisabled();
       const dbInvite = await ctx.db.query.invites.findFirst({
         where: eq(invites.id, input.id),
       });
