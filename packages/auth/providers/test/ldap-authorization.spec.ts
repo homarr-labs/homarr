@@ -190,7 +190,7 @@ describe("authorizeWithLdapCredentials", () => {
     await db.insert(users).values({
       id: createId(),
       name: "test",
-      salt: salt,
+      salt,
       password: await hashPasswordAsync("test", salt),
       email: "test@gmail.com",
       provider: "credentials",
