@@ -4,6 +4,7 @@ import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, schema } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
+import type { SupportedAuthProvider } from "@homarr/definitions";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -60,7 +61,7 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
     await createUserAsync(ctx.db, input);
 
@@ -69,7 +70,7 @@ export const userRouter = createTRPCRouter({
   }),
   create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
     assertCredentialsEnabled();
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
     await createUserAsync(ctx.db, input);
   }),
@@ -187,7 +188,7 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.name, input.id);
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.name, input.id);
 
     const emailDirty = input.email && user.email !== input.email;
     await ctx.db
@@ -279,9 +280,14 @@ const createUserAsync = async (db: Database, input: z.infer<typeof validation.us
   return userId;
 };
 
-const checkUsernameAlreadyTakenAndThrowAsync = async (db: Database, username: string, ignoreId?: string) => {
+const checkUsernameAlreadyTakenAndThrowAsync = async (
+  db: Database,
+  provider: SupportedAuthProvider,
+  username: string,
+  ignoreId?: string,
+) => {
   const user = await db.query.users.findFirst({
-    where: eq(users.name, username.toLowerCase()),
+    where: and(eq(users.name, username.toLowerCase()), eq(users.provider, provider)),
   });
 
   if (!user) return;

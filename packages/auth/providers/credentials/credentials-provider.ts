@@ -3,7 +3,6 @@ import type Credentials from "@auth/core/providers/credentials";
 import type { Database } from "@homarr/db";
 import { validation } from "@homarr/validation";
 
-import { adapter } from "../../adapter";
 import { authorizeWithBasicCredentialsAsync } from "./authorization/basic-authorization";
 import { authorizeWithLdapCredentialsAsync } from "./authorization/ldap-authorization";
 
@@ -32,7 +31,7 @@ export const createCredentialsConfiguration = (db: Database) =>
       const data = await validation.user.signIn.parseAsync(credentials);
 
       if (data.credentialType === "ldap") {
-        return await authorizeWithLdapCredentialsAsync(adapter, data).catch(() => null);
+        return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);
       }
 
       return await authorizeWithBasicCredentialsAsync(db, data);
