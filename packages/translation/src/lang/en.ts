@@ -1680,6 +1680,12 @@ export default {
         },
         general: "General",
         security: "Security",
+        groups: {
+          label: "Groups",
+        },
+        invites: {
+          label: "Invites",
+        },
       },
       tools: {
         label: "Tools",
