@@ -92,6 +92,7 @@ jobs:
           images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           tags: |
             type=raw,value=alpha
+            type=raw,value=early-adopters
 #          tags: |
 #            type=raw,value=latest
 #            type=raw,value=${{ steps.semver.outputs.next }}
