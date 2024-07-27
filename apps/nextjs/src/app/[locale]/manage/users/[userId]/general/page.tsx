@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { Box, Group, Stack, Title } from "@mantine/core";
+import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -57,6 +58,10 @@ export default async function EditUserPage({ params }: Props) {
 
   return (
     <Stack>
+      <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+        {t("management.page.user.fieldsDisabledExternalProvider")}
+      </Alert>
+
       <Stack>
         <Title>{tGeneral("title")}</Title>
         <Group gap="xl">

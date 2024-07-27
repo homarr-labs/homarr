@@ -195,6 +195,10 @@ export default {
         },
       },
     },
+    memberNotice: {
+      mixed: "Some members are from external providers and cannot be managed here",
+      external: "All members are from external providers and cannot be managed here",
+    },
     action: {
       create: {
         label: "New group",
@@ -1334,6 +1338,8 @@ export default {
       },
       user: {
         back: "Back to users",
+        fieldsDisabledExternalProvider:
+          "Certain fields are disabled because they are managed by an external authentication provider.",
         setting: {
           general: {
             title: "General",
@@ -1379,7 +1385,7 @@ export default {
           },
         },
         invite: {
-          title: "Manager user invites",
+          title: "Manage user invites",
           action: {
             new: {
               title: "New invite",
