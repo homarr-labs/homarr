@@ -9,7 +9,5 @@ export const summaryResponseSchema = z.object({
 });
 
 export const controlsInputSchema = z.object({
-  status: z.enum(["enabled", "disabled"]),
-  action: z.enum(["enable", "disable"]),
   duration: z.number().optional(),
 });

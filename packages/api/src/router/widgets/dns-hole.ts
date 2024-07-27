@@ -5,6 +5,7 @@ import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
+import { controlsInputSchema } from "../../../../integrations/src/pi-hole/pi-hole-types";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -37,8 +38,10 @@ export const dnsHoleRouter = createTRPCRouter({
     }),
 
   disable: publicProcedure
+    .input(controlsInputSchema)
     .unstable_concat(createOneIntegrationMiddleware("interact", "piHole"))
-    .mutation(async ({ ctx }) => {
-      await new PiHoleIntegration(ctx.integration).disableAsync();
+    .mutation(async ({ ctx, input }) => {
+      const { duration } = input;
+      await new PiHoleIntegration(ctx.integration).disableAsync(duration);
     }),
 });

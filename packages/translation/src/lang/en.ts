@@ -780,8 +780,12 @@ export default {
         enableAll: "Enable All",
         disableAll: "Disable All",
         setTimer: "Set Timer",
+        set: "Set",
         enabled: "Enabled",
         disabled: "Disabled",
+        hours: "Hours",
+        minutes: "Minutes",
+        unlimited: "Leave blank to unlimited",
       },
     },
     clock: {

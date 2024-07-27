@@ -1,9 +1,8 @@
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
-import type { DnsHoleControls } from "../interfaces/dns-hole-controls/dns-hole-controls-types";
 import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-summary-types";
-import { controlsInputSchema, summaryResponseSchema } from "./pi-hole-types";
+import { summaryResponseSchema } from "./pi-hole-types";
 
 export class PiHoleIntegration extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
@@ -52,7 +51,7 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
     });
   }
 
-  public async enableAsync(): Promise<DnsHoleControls> {
+  public async enableAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetch(`${this.integration.url}/admin/api.php?enable&auth=${apiKey}`);
     if (!response.ok) {
@@ -60,22 +59,9 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
         `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
       );
     }
-
-    const result = controlsInputSchema.safeParse(await response.json());
-
-    if (!result.success) {
-      throw new Error(
-        `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
-      );
-    }
-
-    return {
-      status: result.data.status,
-      action: "enable",
-    };
   }
 
-  public async disableAsync(duration?: number): Promise<DnsHoleControls> {
+  public async disableAsync(duration?: number): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
     const url = `${this.integration.url}/admin/api.php?disable${duration ? `=${duration}` : ""}&auth=${apiKey}`;
     const response = await fetch(url);
@@ -84,19 +70,5 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
         `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
       );
     }
-
-    const result = controlsInputSchema.safeParse(await response.json());
-
-    if (!result.success) {
-      throw new Error(
-        `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
-      );
-    }
-
-    return {
-      status: result.data.status,
-      action: "disable",
-      duration: duration ?? 0,
-    };
   }
 }
