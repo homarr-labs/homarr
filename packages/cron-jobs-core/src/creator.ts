@@ -38,7 +38,8 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         );
         await creatorOptions.onCallbackSuccess?.(name);
       } catch (error) {
-        creatorOptions.logger.logError(error);
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        creatorOptions.logger.logError(`Failed to run job '${name}': ${error}`);
         await creatorOptions.onCallbackError?.(name, error);
       }
     };
