@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.12",
+    "mantine-react-table": "2.0.0-beta.6",
     "next-international": "^1.2.4"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 import "dayjs/locale/de";
 
 import dayjs from "dayjs";
+import { MRT_Localization_DE } from "mantine-react-table/locales/de/index.cjs";
 
 dayjs.locale("de");
 
@@ -159,6 +160,7 @@ export default {
       placeholder: "Suche nach etwas",
       nothingFound: "Nichts gefunden",
     },
+    mantineReactTable: MRT_Localization_DE,
   },
   widget: {
     editModal: {
