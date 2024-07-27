@@ -28,6 +28,8 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
     notFound();
   }
 
+  const isCredentialsUser = user.provider === "credentials";
+
   return (
     <ManageContainer size="xl">
       <DynamicBreadcrumb
@@ -57,11 +59,13 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
                 label={tUser("setting.general.title")}
                 icon={<IconSettings size="1rem" stroke={1.5} />}
               />
-              <NavigationLink
-                href={`/manage/users/${params.userId}/security`}
-                label={tUser("setting.security.title")}
-                icon={<IconShieldLock size="1rem" stroke={1.5} />}
-              />
+              {isCredentialsUser && (
+                <NavigationLink
+                  href={`/manage/users/${params.userId}/security`}
+                  label={tUser("setting.security.title")}
+                  icon={<IconShieldLock size="1rem" stroke={1.5} />}
+                />
+              )}
             </Stack>
           </Stack>
         </GridCol>

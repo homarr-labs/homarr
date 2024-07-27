@@ -57,6 +57,7 @@ export const groupRouter = createTRPCRouter({
                 name: true,
                 email: true,
                 image: true,
+                provider: true,
               },
             },
           },

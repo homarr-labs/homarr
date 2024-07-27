@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
+import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { env } from "@homarr/auth/env.mjs";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, UserAvatar } from "@homarr/ui";
 
@@ -28,9 +31,22 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
       group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
     : group.members;
 
+  const providerTypes = isProviderEnabled("credentials")
+    ? env.AUTH_PROVIDERS.length > 1
+      ? "mixed"
+      : "credentials"
+    : "external";
+
   return (
     <Stack>
       <Title>{tMembers("title")}</Title>
+
+      {providerTypes !== "credentials" && (
+        <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+          {t(`group.memberNotice.${providerTypes}`)}
+        </Alert>
+      )}
+
       <Group justify="space-between">
         <SearchInput
           placeholder={t("common.rtl", {
@@ -39,7 +55,9 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
           })}
           defaultValue={searchParams.search}
         />
-        <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        {isProviderEnabled("credentials") && (
+          <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
+        )}
       </Group>
       {filteredMembers.length === 0 && (
         <Center py="sm">
@@ -60,7 +78,7 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
 }
 
 interface RowProps {
-  member: RouterOutputs["group"]["getPaginated"]["items"][number]["members"][number];
+  member: RouterOutputs["group"]["getById"]["members"][number];
   groupId: string;
 }
 
@@ -70,13 +88,13 @@ const Row = ({ member, groupId }: RowProps) => {
       <TableTd>
         <Group>
           <UserAvatar size="sm" user={member} />
-          <Anchor component={Link} href={`/manage/users/${member.id}`}>
+          <Anchor component={Link} href={`/manage/users/${member.id}/general`}>
             {member.name}
           </Anchor>
         </Group>
       </TableTd>
       <TableTd w={100}>
-        <RemoveGroupMember user={member} groupId={groupId} />
+        {member.provider === "credentials" && <RemoveGroupMember user={member} groupId={groupId} />}
       </TableTd>
     </TableTr>
   );

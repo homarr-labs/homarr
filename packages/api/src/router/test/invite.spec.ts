@@ -22,6 +22,15 @@ vi.mock("@homarr/auth", async () => {
   return { ...mod, auth: () => ({}) as Session };
 });
 
+// Mock the env module to return the credentials provider
+vi.mock("@homarr/auth/env.mjs", () => {
+  return {
+    env: {
+      AUTH_PROVIDERS: ["credentials"],
+    },
+  };
+});
+
 describe("all should return all existing invites without sensitive informations", () => {
   test("invites should not contain sensitive informations", async () => {
     // Arrange
