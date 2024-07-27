@@ -75,6 +75,12 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: "Built application artifacts. Building images..."
+      - name: Log in to the Container registry
+        uses: docker/login-action
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
