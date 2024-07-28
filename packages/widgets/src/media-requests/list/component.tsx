@@ -9,6 +9,7 @@ import {
   MediaRequestStatus,
 } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
+import {clientApi} from "@homarr/api/client";
 
 export default function MediaServerWidget({
   isEditMode,
@@ -28,6 +29,8 @@ export default function MediaServerWidget({
   });
 
   const t = useScopedI18n("widget.mediaRequests-requestList");
+
+  const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 
   return (
     <ScrollArea
