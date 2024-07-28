@@ -524,8 +524,8 @@ importers:
         specifier: ^0.34.2
         version: 0.34.2
       '@auth/drizzle-adapter':
-        specifier: ^1.4.1
-        version: 1.4.1
+        specifier: ^1.4.2
+        version: 1.4.2
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1471,20 +1471,6 @@ packages:
       nodemailer:
         optional: true
 
-  '@auth/core@0.34.1':
-    resolution: {integrity: sha512-tuYU2VIbI8rFbkSwP710LmybB2FXJsPN7j3sjRVfN9SXVQBK2ej6LdewQaofpBGp4Mk+cC2UeiGNH0or4tgaeA==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-
   '@auth/core@0.34.2':
     resolution: {integrity: sha512-KywHKRgLiF3l7PLyL73fjLSIBe1YNcA6sMeew4yMP6cfCWGXZrkkXd32AjRi1hlJ9nvovUBGZHvbn+LijO6ZeQ==}
     peerDependencies:
@@ -1499,8 +1485,8 @@ packages:
       nodemailer:
         optional: true
 
-  '@auth/drizzle-adapter@1.4.1':
-    resolution: {integrity: sha512-pUC8D0jfANDvThH1CrcUXmjZyF98ccVMY3iEZUQzUTr0U1csuppvRoz5JccOLzjv3tu+Nb9Qd6SvrmmsnuYgSw==}
+  '@auth/drizzle-adapter@1.4.2':
+    resolution: {integrity: sha512-rqukaT9CeWB8VOt6g2bQ6uYMHVOQIYCBkzddZXWshi8aqwLABatpRWAc+pehpcMDn0RSW/uvKMs7tkON+Bho9Q==}
 
   '@babel/code-frame@7.24.6':
     resolution: {integrity: sha512-ZJhac6FkEd1yhG2AHOmfcXG4ceoLltoCVJjN5XsWN9BifBQr+cHJbWi0h68HZuSORq+3WtJ2z0hwF2NG1b5kcA==}
@@ -6738,16 +6724,6 @@ snapshots:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
-  '@auth/core@0.34.1':
-    dependencies:
-      '@panva/hkdf': 1.1.1
-      '@types/cookie': 0.6.0
-      cookie: 0.6.0
-      jose: 5.2.2
-      oauth4webapi: 2.11.0
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-
   '@auth/core@0.34.2':
     dependencies:
       '@panva/hkdf': 1.1.1
@@ -6758,9 +6734,9 @@ snapshots:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
-  '@auth/drizzle-adapter@1.4.1':
+  '@auth/drizzle-adapter@1.4.2':
     dependencies:
-      '@auth/core': 0.34.1
+      '@auth/core': 0.34.2
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
