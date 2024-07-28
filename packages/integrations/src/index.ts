@@ -9,6 +9,8 @@ export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 // Types
 export type { StreamSession } from "./interfaces/media-server/session";
 export type { MediaRequest } from "./interfaces/media-requests/media-request";
+export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
+export type { MediaRequestStats } from "./interfaces/media-requests/media-request-stats";
 
 // Helpers
 export { IntegrationTestConnectionError } from "./base/test-connection-error";

@@ -1,5 +1,5 @@
-import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import {ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {useElementSize} from "@mantine/hooks";
 import {
   IconDeviceTv,
   IconExternalLink,
@@ -11,23 +11,31 @@ import {
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import {useScopedI18n} from "@homarr/translation/client";
 
-import type { WidgetComponentProps } from "../../definition";
+import type {WidgetComponentProps} from "../../definition";
 import classes from "./component.module.css";
-import type { RequestUser } from "../../../../integrations/src/interfaces/media-requests/media-request";
+import type {RequestUser} from "../../../../integrations/src/interfaces/media-requests/media-request";
+import {MediaRequestStats} from "@homarr/integrations";
 
 export default function MediaServerWidget({
-  isEditMode,
-  serverData,
-}: WidgetComponentProps<"mediaRequests-requestStats">) {
-  //Uncomment this when there is actual serverData
-  //if (!serverData?.initialData) return null;
+                                            isEditMode,
+                                            serverData,
+                                          }: WidgetComponentProps<"mediaRequests-requestStats">) {
+  if (!serverData?.initialData) return null;
 
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const tCommon = useScopedI18n("common");
 
-  const { width, height, ref } = useElementSize();
+  const {width, height, ref} = useElementSize();
+
+  const flatMediaRequestStats = serverData?.initialData.reduce((a, b) => ({
+    ...b,
+    values: b.values.map((value) => ({
+      ...value,
+      value: value.value + a.values.find((aValue) => aValue.name === value.name).value
+    }))
+  } as MediaRequestStats));
 
   const data = [
     {
@@ -63,7 +71,7 @@ export default function MediaServerWidget({
   ];
 
   //Replace all this here with user list from serverData
-  const usersData = Array.from({ length: 5 }).fill({
+  const usersData = Array.from({length: 5}).fill({
     id: 1,
     profilePictureUrl: "",
     username: "tester",
@@ -87,8 +95,9 @@ export default function MediaServerWidget({
       gap="2cqmin"
       p="2cqmin"
       align="center"
-      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      style={{pointerEvents: isEditMode ? "none" : undefined}}
     >
+      <span>{JSON.stringify(flatMediaRequestStats)}</span>
       <Text className="mediaRequests-stats-stats-title" size="6.5cqmin">
         {t("titles.stats.main")}
       </Text>
@@ -105,7 +114,7 @@ export default function MediaServerWidget({
           >
             <Tooltip label={t(`titles.stats.${stat.name}`)}>
               <Stack className="mediaRequests-stats-stat-stack" align="center" gap="2cqmin" p="2cqmin">
-                <stat.icon className="mediaRequests-stats-stat-icon" size="7.5cqmin" />
+                <stat.icon className="mediaRequests-stats-stat-icon" size="7.5cqmin"/>
                 <Text className="mediaRequests-stats-stat-value" size="5cqmin">
                   {stat.number}
                 </Text>
@@ -124,7 +133,7 @@ export default function MediaServerWidget({
         ref={ref}
         display="flex"
         gap="2cqmin"
-        style={{ overflow: "hidden" }}
+        style={{overflow: "hidden"}}
       >
         {users.map((user) => (
           <Card
@@ -153,11 +162,11 @@ export default function MediaServerWidget({
                   {user.username}
                 </Text>
                 <Text className="mediaRequests-stats-users-user-request-count" size="4cqmin">
-                  {tCommon("rtl", { value: t("titles.users.requests"), symbol: tCommon("symbols.colon") }) +
+                  {tCommon("rtl", {value: t("titles.users.requests"), symbol: tCommon("symbols.colon")}) +
                     user.userRequestCount}
                 </Text>
               </Stack>
-              <Space flex={1} />
+              <Space flex={1}/>
               <ActionIcon
                 className="mediaRequests-stats-users-user-link-button"
                 variant="light"
@@ -166,7 +175,7 @@ export default function MediaServerWidget({
                 component="a"
                 href={user.link}
               >
-                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size="7.5cqmin" />
+                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size="7.5cqmin"/>
               </ActionIcon>
             </Group>
           </Card>
