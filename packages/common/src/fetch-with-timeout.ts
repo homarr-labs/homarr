@@ -10,8 +10,7 @@ export const fetchWithTimeout = (...[url, requestInit]: Parameters<typeof fetch>
   // 10 seconds timeout:
   const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  return fetch(url, { signal: controller.signal, ...requestInit }).then((response) => {
+  return fetch(url, { signal: controller.signal, ...requestInit }).finally(() => {
     clearTimeout(timeoutId);
-    return response;
   });
 };
