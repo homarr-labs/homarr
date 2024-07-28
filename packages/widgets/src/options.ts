@@ -1,6 +1,7 @@
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import type { z, ZodType } from "@homarr/validation";
+import type { ZodType } from "@homarr/validation";
+import { z } from "@homarr/validation";
 
 import { widgetImports } from ".";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
@@ -90,6 +91,11 @@ const optionsFactory = {
       longitude: 0,
     },
     withDescription: input?.withDescription ?? false,
+    validate: z.object({
+      name: z.string().min(1),
+      latitude: z.number(),
+      longitude: z.number(),
+    }),
   }),
   multiText: (input?: CommonInput<string[]> & { validate?: ZodType }) => ({
     type: "multiText" as const,
