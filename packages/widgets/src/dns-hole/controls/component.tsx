@@ -2,18 +2,19 @@
 
 import { useState } from "react";
 import type { BoxProps } from "@mantine/core";
-import { ActionIcon, Badge, Box, Button, Card, Flex, Group, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Badge, Box, Button, Card, Flex, Image, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { integrationDefs } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 import TimerModal from "./TimerModal";
 
-const dnsLightStatus = (currentStatus: string): "blue" | "green" | "red" => {
+const dnsLightStatus = (currentStatus: string): "green" | "red" => {
   if (currentStatus === "enabled") {
     return "green";
   }
@@ -27,6 +28,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
     throw new NoIntegrationSelectedError();
   }
 
+  const PiHoleIntegrationDef = integrationDefs.piHole;
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
       integrationId,
@@ -39,15 +41,14 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
 
   const t = useI18n();
   const [status, setStatus] = useState<string>(data.status);
-  const [duration, setDuration] = useState<number>(0);
   const [opened, { close, open }] = useDisclosure(false);
 
-  const { mutate: enableQueue } = clientApi.widget.dnsHole.enable.useMutation({
+  const { mutate: enableDnsControl } = clientApi.widget.dnsHole.enable.useMutation({
     onSuccess: () => {
       setStatus("enabled");
     },
   });
-  const { mutate: disableQueue } = clientApi.widget.dnsHole.disable.useMutation({
+  const { mutate: disableDnsControl } = clientApi.widget.dnsHole.disable.useMutation({
     onSuccess: () => {
       setStatus("disabled");
     },
@@ -55,45 +56,62 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
 
   const toggleDns = () => {
     if (status === "enabled") {
-      disableQueue({ duration, integrationId });
+      disableDnsControl({ integrationId, duration: 0 });
     } else {
-      enableQueue({ integrationId });
+      enableDnsControl({ integrationId });
     }
   };
 
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)}>
       {options.showToggleAllButtons && (
-        <Flex gap="xs">
+        <Flex gap="xs" m="2.5cqmin" p="2.5cqmin">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
-            <Button variant="light" color="green" fullWidth h="2rem">
+            <Button
+              onClick={() => {
+                enableDnsControl({ integrationId });
+              }}
+              disabled={status === "enabled"}
+              variant="light"
+              color="green"
+              fullWidth
+              h="2rem"
+            >
               <IconPlayerPlay size={20} />
             </Button>
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
-            <Button variant="light" color="yellow" fullWidth h="2rem">
+            <Button onClick={open} disabled={status === "disabled"} variant="light" color="yellow" fullWidth h="2rem">
               <IconClockPause size={20} />
             </Button>
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
-            <Button variant="light" color="red" fullWidth h="2rem">
+            <Button
+              onClick={() => {
+                disableDnsControl({ integrationId });
+              }}
+              disabled={status === "disabled"}
+              variant="light"
+              color="red"
+              fullWidth
+              h="2rem"
+            >
               <IconPlayerStop size={20} />
             </Button>
           </Tooltip>
         </Flex>
       )}
 
-      <Card withBorder={true} key={1} p="xs" radius="md">
-        <Group>
-          <Box>
-            {/* <Image src={} /> */}
-            <Text>PiHole Icon</Text>
+      <Card withBorder={true} m="2.5cqmin" p="2.5cqmin" radius="md">
+        <Flex>
+          <Box m="1.5cqmin" p="1.5cqmin">
+            <Image src={PiHoleIntegrationDef.iconUrl} width={50} height={50} fit="contain" />
           </Box>
-          <Stack>
-            <Text>PiHole</Text>
-            <Flex direction="row" gap="md">
+          <Flex direction="column" m="1.5cqmin" p="1.5cqmin" gap="1cqmin">
+            <Badge variant="default">{PiHoleIntegrationDef.name}</Badge>
+            <Flex direction="row" gap="2cqmin">
               <UnstyledButton onClick={toggleDns}>
                 <Badge variant="dot" color={dnsLightStatus(status)}>
                   {status === "enabled"
@@ -101,14 +119,21 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
                     : t("widget.dnsHoleControls.controls.disabled")}
                 </Badge>
               </UnstyledButton>
-              <ActionIcon size={20} radius="xl" top="2.67px" variant="default" onClick={open}>
+              <ActionIcon
+                disabled={status === "disabled"}
+                size={20}
+                radius="xl"
+                top="2.67px"
+                variant="default"
+                onClick={open}
+              >
                 <IconClockPause size={20} color="red" />
               </ActionIcon>
             </Flex>
-          </Stack>
-        </Group>
+          </Flex>
+        </Flex>
       </Card>
-      <TimerModal opened={opened} close={close} integrationId={integrationId} disableQueue={disableQueue} />
+      <TimerModal opened={opened} close={close} integrationId={integrationId} disableDnsControl={disableDnsControl} />
     </Box>
   );
 }

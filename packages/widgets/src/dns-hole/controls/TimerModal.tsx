@@ -9,10 +9,10 @@ interface TimerModalProps {
   opened: boolean;
   close: () => void;
   integrationId: string;
-  disableQueue: (data: { duration: number; integrationId: string }) => void;
+  disableDnsControl: (data: { duration: number; integrationId: string }) => void;
 }
 
-const TimerModal = ({ opened, close, integrationId, disableQueue }: TimerModalProps) => {
+const TimerModal = ({ opened, close, integrationId, disableDnsControl }: TimerModalProps) => {
   const t = useI18n();
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -21,7 +21,7 @@ const TimerModal = ({ opened, close, integrationId, disableQueue }: TimerModalPr
 
   const handleSetTimer = () => {
     const duration = hours * 3600 + minutes * 60;
-    disableQueue({ duration, integrationId });
+    disableDnsControl({ duration, integrationId });
     setHours(0);
     setMinutes(0);
     close();

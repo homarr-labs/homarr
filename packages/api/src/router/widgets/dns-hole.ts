@@ -41,7 +41,6 @@ export const dnsHoleRouter = createTRPCRouter({
     .input(controlsInputSchema)
     .unstable_concat(createOneIntegrationMiddleware("interact", "piHole"))
     .mutation(async ({ ctx, input }) => {
-      const { duration } = input;
-      await new PiHoleIntegration(ctx.integration).disableAsync(duration);
+      await new PiHoleIntegration(ctx.integration).disableAsync(input.duration);
     }),
 });
