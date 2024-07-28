@@ -11,10 +11,11 @@ export const zodErrorMap = <
 ) => {
   return (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
     const error = handleZodError(issue, ctx);
-    if ("message" in error && error.message)
+    if ("message" in error && error.message) {
       return {
         message: error.message,
       };
+    }
     return {
       message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", error.params ?? {}),
     };
@@ -103,6 +104,7 @@ const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
       params: {},
     } as const;
   }
+
   if (issue.code === ZodIssueCode.invalid_string) {
     return handleStringError(issue);
   }
@@ -111,6 +113,13 @@ const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
   }
   if (issue.code === ZodIssueCode.too_big) {
     return handleTooBigError(issue);
+  }
+  if (issue.code === ZodIssueCode.invalid_type && ctx.data === "") {
+    console.log("hi");
+    return {
+      key: "errors.required",
+      params: {},
+    } as const;
   }
   if (issue.code === ZodIssueCode.custom && issue.params?.i18n) {
     const { i18n } = issue.params as CustomErrorParams;
