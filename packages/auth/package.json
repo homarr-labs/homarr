@@ -28,7 +28,7 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@auth/core": "^0.34.2",
-    "@auth/drizzle-adapter": "^1.4.1",
+    "@auth/drizzle-adapter": "^1.4.2",
     "@t3-oss/env-nextjs": "^0.11.0",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
