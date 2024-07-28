@@ -53,6 +53,22 @@ export class OverseerrIntegration extends Integration {
       }));
     }
 
+    public async approveRequestAsync(requestId: number): Promise<void> {
+      await fetch(`${this.integration.url}/api/v1/request/${requestId}/approve`, {
+        headers: {
+          'X-Api-Key': this.getSecretValue('apiKey')
+        }
+      });
+    }
+
+  public async declineRequestAsync(requestId: number): Promise<void> {
+    await fetch(`${this.integration.url}/api/v1/request/${requestId}/decline`, {
+      headers: {
+        'X-Api-Key': this.getSecretValue('apiKey')
+      }
+    });
+  }
+
     private async getItemInformationAsync(id: number, type: MediaRequest['type']): Promise<MediaInformation> {
       const response = await fetch(`${this.integration.url}/api/v1/${type}/${id}`, {
         headers: {
