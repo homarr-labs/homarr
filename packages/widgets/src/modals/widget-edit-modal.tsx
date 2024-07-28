@@ -72,18 +72,13 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
 
   return (
     <form
-      onSubmit={form.onSubmit(
-        (values) => {
-          innerProps.onSuccessfulEdit({
-            ...values,
-            advancedOptions,
-          });
-          actions.closeModal();
-        },
-        (errors) => {
-          console.log(`validation failed:`, errors, form.values);
-        },
-      )}
+      onSubmit={form.onSubmit((values) => {
+        innerProps.onSuccessfulEdit({
+          ...values,
+          advancedOptions,
+        });
+        actions.closeModal();
+      })}
     >
       <FormProvider form={form}>
         <Stack>

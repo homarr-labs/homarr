@@ -115,7 +115,6 @@ const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
     return handleTooBigError(issue);
   }
   if (issue.code === ZodIssueCode.invalid_type && ctx.data === "") {
-    console.log("hi");
     return {
       key: "errors.required",
       params: {},
