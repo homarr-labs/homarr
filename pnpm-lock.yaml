@@ -868,6 +868,9 @@ importers:
 
   packages/icons:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
