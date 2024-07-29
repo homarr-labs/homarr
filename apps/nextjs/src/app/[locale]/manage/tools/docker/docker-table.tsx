@@ -4,7 +4,7 @@ import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
 import { IconPlayerPlay, IconPlayerStop, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -15,6 +15,7 @@ import type { TranslationFunction } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 const createColumns = (
   t: TranslationFunction,
@@ -74,7 +75,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     refetchOnReconnect: false,
   });
   const relativeTime = useTimeAgo(data.timestamp);
-  const table = useMantineReactTable({
+  const table = useTranslatedMantineReactTable({
     data: data.containers,
     enableDensityToggle: false,
     enableColumnActions: false,

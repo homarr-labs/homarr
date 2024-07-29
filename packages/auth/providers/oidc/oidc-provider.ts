@@ -32,6 +32,7 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
       // Use the name as the username if the preferred_username is an email address
       name: profile.preferred_username.includes("@") ? profile.name : profile.preferred_username,
       email: profile.email,
+      provider: "oidc",
     };
   },
 });

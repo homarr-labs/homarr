@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from "@homarr/common";
+
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
 import { IconRepository } from "./icon-repository";
@@ -19,7 +21,7 @@ export class GitHubIconRepository extends IconRepository {
       throw new Error("Repository URLs are required for this repository");
     }
 
-    const response = await fetch(this.repositoryIndexingUrl);
+    const response = await fetchWithTimeout(this.repositoryIndexingUrl);
     const listOfFiles = (await response.json()) as GitHubApiResponse;
 
     return {

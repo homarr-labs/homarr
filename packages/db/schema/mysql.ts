@@ -13,6 +13,7 @@ import type {
   IntegrationPermission,
   IntegrationSecretKind,
   SectionKind,
+  SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
@@ -25,6 +26,7 @@ export const users = mysqlTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  provider: varchar("provider", { length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: varchar("homeBoardId", { length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),

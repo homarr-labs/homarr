@@ -163,6 +163,14 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
 
 export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
   const channelName = `item:${kind}:integration:${integrationId}`;
+  return createChannelWithLatestAndEvents<TData>(channelName);
+};
+
+export const createItemChannel = <TData>(itemId: string) => {
+  return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
+};
+
+const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
   return {
     subscribe: (callback: (data: TData) => void) => {
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {

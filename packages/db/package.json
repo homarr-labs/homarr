@@ -33,11 +33,11 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@auth/core": "^0.34.1",
+    "@auth/core": "^0.34.2",
     "better-sqlite3": "^11.1.2",
-    "drizzle-orm": "^0.32.0",
+    "drizzle-orm": "^0.32.1",
     "dotenv": "^16.4.5",
-    "mysql2": "3.10.3",
+    "mysql2": "3.11.0",
     "drizzle-kit": "^0.23.0"
   },
   "devDependencies": {
@@ -46,9 +46,9 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.11",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^9.7.0",
+    "eslint": "^9.8.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"
 }
