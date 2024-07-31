@@ -23,13 +23,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ctrl/deluge": "^6.1.0",
+    "@ctrl/qbittorrent": "^8.2.0",
+    "@ctrl/transmission": "^6.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@jellyfin/sdk": "^0.10.0",
-    "sabnzbd-api": "^1.5.0"
+    "@jc21/nzbget-jsonrpc-api": "^1.0.0",
+    "@jellyfin/sdk": "^0.10.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

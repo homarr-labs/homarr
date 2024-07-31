@@ -7,6 +7,9 @@ const ranges = [
   { divider: 1e3, suffix: "k" },
 ];
 
+//64bit limit for Number stops at EiB
+const siRanges = ["B", "kiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
+
 export const formatNumber = (value: number, decimalPlaces: number) => {
   for (const range of ranges) {
     if (value < range.divider) continue;
@@ -18,4 +21,20 @@ export const formatNumber = (value: number, decimalPlaces: number) => {
 
 export const randomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+/**
+ *  Number of bytes to si format. (division by 1024)
+ *  Does not accept floats, size in bytes are should be integer.
+ */
+export const humanFileSize = (size: number) => {
+  if (!Number.isInteger(size)) return NaN;
+  let count = 0;
+  while (true) {
+    const tempSize = size / Math.pow(1024, count);
+    if (tempSize < 1024 || count === siRanges.length - 1) {
+      return tempSize.toFixed(Math.min(count, 1)) + siRanges[count];
+    }
+    count++;
+  }
 };

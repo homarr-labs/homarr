@@ -1,0 +1,21 @@
+.downloads-widget-table {
+  .mrt-table-head-cell-labels {
+    min-height: var(--ratioWidth);
+    gap: 0;
+    padding: 0;
+  }
+  .mrt-grab-handle-button {
+    margin: unset;
+    width: var(--dragButtonSize);
+    min-width: var(--dragButtonSize);
+    height: var(--dragButtonSize);
+    min-height: var(--dragButtonSize);
+  }
+  .mrt-table-head-sort-button {
+    margin: unset;
+    width: var(--sortButtonSize);
+    min-width: var(--sortButtonSize);
+    height: var(--sortButtonSize);
+    min-height: var(--sortButtonSize);
+  }
+}

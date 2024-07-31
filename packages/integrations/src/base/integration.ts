@@ -1,5 +1,5 @@
 import { extractErrorMessage } from "@homarr/common";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import type { TranslationObject } from "@homarr/translation";
 import { z } from "@homarr/validation";
@@ -16,6 +16,10 @@ export interface IntegrationInput {
   name: string;
   url: string;
   decryptedSecrets: IntegrationSecret[];
+}
+
+export interface SanitizedIntegration extends Omit<IntegrationInput, "decryptedSecrets"> {
+  kind: IntegrationKind;
 }
 
 export abstract class Integration {
