@@ -36,6 +36,13 @@
       "when": 1720036615408,
       "tag": "0004_peaceful_red_ghost",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1722014142492,
+      "tag": "0005_lean_random",
+      "breakpoints": true
     }
   ]
 }

@@ -58,7 +58,7 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
           <Group justify={"space-between"} gap={"md"}>
             <Stack gap={0}>
               <Group>
-                <Text>{t(`${job.job.name}.label` as TranslationKeys)}</Text>
+                <Text>{t(`job.${job.job.name}.label` as TranslationKeys)}</Text>
                 {job.status?.status === "idle" && <Badge variant="default">{t("status.idle")}</Badge>}
                 {job.status?.status === "running" && <Badge color="green">{t("status.running")}</Badge>}
                 {job.status?.lastExecutionStatus === "error" && <Badge color="red">{t("status.error")}</Badge>}

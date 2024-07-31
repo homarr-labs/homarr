@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { Button, Group, Stack } from "@mantine/core";
 
+import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
+import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { z } from "@homarr/validation";
+import { zodErrorMap } from "@homarr/validation/form";
 
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
@@ -33,8 +37,34 @@ interface ModalProps<TSort extends WidgetKind> {
 export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
+
+  // Translate the error messages
+  z.setErrorMap(zodErrorMap(t));
   const form = useForm({
+    mode: "controlled",
     initialValues: innerProps.value,
+    validate: zodResolver(
+      z.object({
+        options: z.object(
+          objectEntries(widgetImports[innerProps.kind].definition.options).reduce(
+            (acc, [key, value]: [string, { validate?: z.ZodType<unknown> }]) => {
+              if (value.validate) {
+                acc[key] = value.validate;
+              }
+
+              return acc;
+            },
+            {} as Record<string, z.ZodType<unknown>>,
+          ),
+        ),
+        integrationIds: z.array(z.string()),
+        advancedOptions: z.object({
+          customCssClasses: z.array(z.string()),
+        }),
+      }),
+    ),
+    validateInputOnBlur: true,
+    validateInputOnChange: true,
   });
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 

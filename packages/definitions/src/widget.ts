@@ -11,5 +11,6 @@ export const widgetKinds = [
   "mediaServer",
   "calendar",
   "downloads",
+  "rssFeed",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

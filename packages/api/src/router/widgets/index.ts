@@ -5,6 +5,7 @@ import { dnsHoleRouter } from "./dns-hole";
 import { downloadsRouter } from "./downloads";
 import { mediaServerRouter } from "./media-server";
 import { notebookRouter } from "./notebook";
+import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { weatherRouter } from "./weather";
 
@@ -17,4 +18,5 @@ export const widgetRouter = createTRPCRouter({
   mediaServer: mediaServerRouter,
   calendar: calendarRouter,
   downloads: downloadsRouter,
+  rssFeed: rssFeedRouter,
 });

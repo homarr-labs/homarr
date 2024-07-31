@@ -11,7 +11,7 @@ export class SonarrIntegration extends Integration {
    * Types at the start of the list are better than those at the end.
    * We do this to attempt to find the best quality image for the show.
    */
-  private readonly priorities: z.infer<typeof sonarCalendarEventSchema>["images"][number]["coverType"][] = [
+  private readonly priorities: z.infer<typeof sonarrCalendarEventSchema>["images"][number]["coverType"][] = [
     "poster", // Official, perfect aspect ratio
     "banner", // Official, bad aspect ratio
     "fanart", // Unofficial, possibly bad quality
@@ -39,7 +39,7 @@ export class SonarrIntegration extends Integration {
         "X-Api-Key": super.getSecretValue("apiKey"),
       },
     });
-    const sonarCalendarEvents = await z.array(sonarCalendarEventSchema).parseAsync(await response.json());
+    const sonarCalendarEvents = await z.array(sonarrCalendarEventSchema).parseAsync(await response.json());
 
     return sonarCalendarEvents.map(
       (sonarCalendarEvent): CalendarEvent => ({
@@ -58,7 +58,7 @@ export class SonarrIntegration extends Integration {
     );
   }
 
-  private getLinksForSonarCalendarEvent = (event: z.infer<typeof sonarCalendarEventSchema>) => {
+  private getLinksForSonarCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [
       {
         href: `${this.integration.url}/series/${event.series.titleSlug}`,
@@ -84,8 +84,8 @@ export class SonarrIntegration extends Integration {
   };
 
   private chooseBestImage = (
-    event: z.infer<typeof sonarCalendarEventSchema>,
-  ): z.infer<typeof sonarCalendarEventSchema>["images"][number] | undefined => {
+    event: z.infer<typeof sonarrCalendarEventSchema>,
+  ): z.infer<typeof sonarrCalendarEventSchema>["images"][number] | undefined => {
     const flatImages = [...event.images, ...event.series.images];
 
     const sortedImages = flatImages.sort(
@@ -95,7 +95,7 @@ export class SonarrIntegration extends Integration {
     return sortedImages[0];
   };
 
-  private chooseBestImageAsURL = (event: z.infer<typeof sonarCalendarEventSchema>): string | undefined => {
+  private chooseBestImageAsURL = (event: z.infer<typeof sonarrCalendarEventSchema>): string | undefined => {
     const bestImage = this.chooseBestImage(event);
     if (!bestImage) {
       return undefined;
@@ -114,24 +114,24 @@ export class SonarrIntegration extends Integration {
   }
 }
 
-const sonarCalendarEventImageSchema = z.array(
+const sonarrCalendarEventImageSchema = z.array(
   z.object({
     coverType: z.enum(["screenshot", "poster", "banner", "fanart", "clearlogo"]),
     remoteUrl: z.string().url(),
   }),
 );
 
-const sonarCalendarEventSchema = z.object({
+const sonarrCalendarEventSchema = z.object({
   title: z.string(),
   airDateUtc: z.string().transform((value) => new Date(value)),
   seasonNumber: z.number().min(0),
   episodeNumber: z.number().min(0),
   series: z.object({
-    overview: z.string(),
+    overview: z.string().optional(),
     title: z.string(),
     titleSlug: z.string(),
-    images: sonarCalendarEventImageSchema,
+    images: sonarrCalendarEventImageSchema,
     imdbId: z.string().optional(),
   }),
-  images: sonarCalendarEventImageSchema,
+  images: sonarrCalendarEventImageSchema,
 });
