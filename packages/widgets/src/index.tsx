@@ -14,6 +14,7 @@ import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
+import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
@@ -38,7 +39,8 @@ export const widgetImports = {
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   mediaServer,
   calendar,
-  "usenet-downloads": usenetDownloads
+  "usenet-downloads": usenetDownloads,
+  rssFeed,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

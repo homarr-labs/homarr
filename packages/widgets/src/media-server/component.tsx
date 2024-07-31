@@ -4,10 +4,11 @@ import { useMemo } from "react";
 import { Avatar, Box, Group, Text } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import type { StreamSession } from "@homarr/integrations";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -78,7 +79,7 @@ export default function MediaServerWidget({
   // Otherwise it will always create a new array reference and cause the table to re-render
   const flatSessions = useMemo(() => currentStreams.flatMap((pair) => pair.sessions), [currentStreams]);
 
-  const table = useMantineReactTable({
+  const table = useTranslatedMantineReactTable({
     columns,
     data: flatSessions,
     enableRowSelection: false,

@@ -43,6 +43,7 @@ export const BoardBackgroundVideo = () => {
       autoPlay
       muted
       loop
+      playsInline
       style={{
         position: "fixed",
         width: "100vw",

@@ -22,6 +22,7 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
@@ -65,6 +66,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.users.items.invites"),
           icon: IconMailForward,
           href: "/manage/users/invites",
+          hidden: !isProviderEnabled("credentials"),
         },
         {
           label: t("items.users.items.groups"),

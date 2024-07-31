@@ -3,7 +3,8 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button, Fieldset, Group, SegmentedControl, Stack, TextInput } from "@mantine/core";
+import { Alert, Button, Fieldset, Group, SegmentedControl, Stack, Text, TextInput } from "@mantine/core";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
@@ -95,6 +96,11 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
                 {...form.getInputProps(`secrets.${index}.value`)}
               />
             ))}
+            {form.values.secrets.length === 0 && (
+              <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
+                <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
+              </Alert>
+            )}
           </Stack>
         </Fieldset>
 
@@ -120,12 +126,20 @@ const SecretKindsSegmentedControl = ({ secretKinds, form }: SecretKindsSegmented
   const t = useScopedI18n("integration.secrets");
 
   const secretKindGroups = secretKinds.map((kinds) => ({
-    label: kinds.map((kind) => t(`kind.${kind}.label`)).join(" & "),
-    value: kinds.join("-"),
+    label:
+      kinds.length === 0
+        ? t("noSecretsRequired.segmentTitle")
+        : kinds.map((kind) => t(`kind.${kind}.label`)).join(" & "),
+    value: kinds.length === 0 ? "empty" : kinds.join("-"),
   }));
 
   const onChange = useCallback(
     (value: string) => {
+      if (value === "empty") {
+        form.setFieldValue("secrets", []);
+        return;
+      }
+
       const kinds = value.split("-") as IntegrationSecretKind[];
       const secrets = kinds.map((kind) => ({
         kind,

@@ -1,7 +1,8 @@
-import type { Adapter } from "@auth/core/adapters";
 import { CredentialsSignin } from "@auth/core/errors";
 
-import { createId } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { and, createId, eq } from "@homarr/db";
+import { users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
@@ -10,7 +11,7 @@ import { env } from "../../../env.mjs";
 import { LdapClient } from "../ldap-client";
 
 export const authorizeWithLdapCredentialsAsync = async (
-  adapter: Adapter,
+  db: Database,
   credentials: z.infer<typeof validation.user.signIn>,
 ) => {
   logger.info(`user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`);
@@ -89,18 +90,30 @@ export const authorizeWithLdapCredentialsAsync = async (
   await client.disconnectAsync();
 
   // Create or update user in the database
-  let user = await adapter.getUserByEmail?.(mailResult.data);
+  let user = await db.query.users.findFirst({
+    columns: {
+      id: true,
+      name: true,
+      image: true,
+      email: true,
+      emailVerified: true,
+      provider: true,
+    },
+    where: and(eq(users.email, mailResult.data), eq(users.provider, "ldap")),
+  });
 
   if (!user) {
     logger.info(`User ${credentials.name} not found in the database. Creating...`);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    user = await adapter.createUser!({
+    user = {
       id: createId(),
       name: credentials.name,
       email: mailResult.data,
       emailVerified: new Date(), // assume email is verified
-    });
+      image: null,
+      provider: "ldap",
+    };
+    await db.insert(users).values(user);
 
     logger.info(`User ${credentials.name} created successfully.`);
   }
@@ -108,11 +121,9 @@ export const authorizeWithLdapCredentialsAsync = async (
   if (user.name !== credentials.name) {
     logger.warn(`User ${credentials.name} found in the database but with different name. Updating...`);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    user = await adapter.updateUser!({
-      id: user.id,
-      name: credentials.name,
-    });
+    user.name = credentials.name;
+
+    await db.update(users).set({ name: user.name }).where(eq(users.id, user.id));
 
     logger.info(`User ${credentials.name} updated successfully.`);
   }

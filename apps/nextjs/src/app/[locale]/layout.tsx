@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "@homarr/ui/styles.css";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
+import "~/styles/scroll-area.scss";
 
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 
