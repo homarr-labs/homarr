@@ -49,6 +49,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 //TODO:
+// - NzbGet API not working I think
 // - Data Subscription permission issues                    <- Need help
 // - table tbody hide under thead and keep transparency     <- Need help
 // - Add integrations to shouldHide options                 <- Potential help needed
@@ -156,7 +157,7 @@ export default function DownloadClientsWidget({
                 (type === "torrent" &&
                   ((progress === 1 &&
                     options.showCompletedTorrent &&
-                    upSpeed! >= Number(options.activeTorrentThreshold) * 1024) ||
+                    (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
                     progress !== 1)) ||
                 (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)),
             )
@@ -199,7 +200,7 @@ export default function DownloadClientsWidget({
             )
             .reduce(
               ({ totalUp, totalDown }, { sent, size, progress }) => ({
-                totalUp: isTorrent ? totalUp! + sent! : undefined,
+                totalUp: isTorrent ? (totalUp ?? 0) + (sent ?? 0) : undefined,
                 totalDown: totalDown + size * progress,
               }),
               { totalDown: 0, totalUp: isTorrent ? 0 : undefined },
@@ -211,7 +212,8 @@ export default function DownloadClientsWidget({
             ratio: totalUp === undefined ? undefined : totalUp / totalDown,
             ...pair.data.status,
           };
-        }).sort(({type: typeA},{type: typeB}) => typeA.length - typeB.length),
+        })
+        .sort(({ type: typeA }, { type: typeB }) => typeA.length - typeB.length),
     [currentItems, integrationIds, options],
   );
 
@@ -383,7 +385,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const downSpeed = cell.getValue<ExtendedDownloadClientItem["downSpeed"]>();
-          return <Text>{downSpeed !== undefined && humanFileSize(downSpeed) + "/s"}</Text>;
+          return <Text>{downSpeed !== undefined && humanFileSize(downSpeed)?.toString().concat("/s")}</Text>;
         },
       },
       {
@@ -510,7 +512,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const upSpeed = cell.getValue<ExtendedDownloadClientItem["upSpeed"]>();
-          return upSpeed !== undefined && <Text>{humanFileSize(upSpeed) + "/s"}</Text>;
+          return upSpeed !== undefined && <Text>{humanFileSize(upSpeed)?.toString().concat("/s")}</Text>;
         },
       },
     ],
@@ -584,8 +586,8 @@ export default function DownloadClientsWidget({
     .filter(({ integration: { kind } }) => ["qBittorrent", "deluge", "transmission"].includes(kind))
     .reduce(
       ({ up, down }, { totalUp, totalDown }) => ({
-        up: up + totalUp!,
-        down: down + totalDown!,
+        up: up + (totalUp ?? 0),
+        down: down + (totalDown ?? 0),
       }),
       { up: 0, down: 0 },
     );
@@ -620,11 +622,11 @@ interface ItemInfoModalProps {
 }
 
 const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalProps) => {
-  const item = useMemo<ExtendedDownloadClientItem | undefined>(() => items[currentIndex], [currentIndex, opened]);
+  const item = useMemo<ExtendedDownloadClientItem | undefined>(() => items[currentIndex], [items, currentIndex, opened]);
   const t = useScopedI18n("widget.downloads.states");
-  if (item === undefined) return;
   return (
-    <Modal opened={opened} onClose={onClose} centered title={item.id} size="auto">
+    <Modal opened={opened} onClose={onClose} centered title={item?.id ?? "ERROR"} size="auto">
+        {item === undefined ? <Center>{"No item found"}</Center> :
       <Stack align="center">
         <Title>{item.name}</Title>
         <Group>
@@ -636,11 +638,11 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
         <NormalizedLine itemKey="state" values={t(item.state)} />
         <NormalizedLine
           itemKey="upSpeed"
-          values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed) + "/s"}
+          values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed)?.toString().concat("/s")}
         />
         <NormalizedLine
           itemKey="downSpeed"
-          values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed) + "/s"}
+          values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed)?.toString().concat("/s")}
         />
         <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
         <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
@@ -652,10 +654,10 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           )}
         />
         <NormalizedLine itemKey="ratio" values={item.ratio} />
-        <NormalizedLine itemKey="added" values={item.added == undefined ? "unknown" : dayjs(item.added).format()} />
+        <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
         <NormalizedLine itemKey="time" values={dayjs().add(item.time).format()} />
         <NormalizedLine itemKey="category" values={item.category} />
-      </Stack>
+      </Stack>}
     </Modal>
   );
 };
@@ -667,7 +669,7 @@ const NormalizedLine = ({
   itemKey: Exclude<keyof ExtendedDownloadClientItem, "integration" | "actions" | "name" | "id">;
   values?: number | string | string[];
 }) => {
-  if (typeof values !== "number" && (values === undefined || values.length === 0)) return;
+  if (typeof values !== "number" && (values === undefined || values.length === 0)) return null;
   const t = useScopedI18n("widget.downloads.items");
   const tCommon = useScopedI18n("common");
   const translatedKey = t(`${itemKey}.detailsTitle`);
@@ -686,7 +688,7 @@ const NormalizedLine = ({
       {Array.isArray(values) ? (
         <Stack>
           {values.map((value) => (
-            <Text>{value}</Text>
+            <Text key={value}>{value}</Text>
           ))}
         </Stack>
       ) : (
@@ -704,10 +706,10 @@ interface ClientsControlProps {
 const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const pausedIntegrations: string[] = [];
   const activeIntegrations: string[] = [];
-  clients.map((client) =>
+  clients.forEach((client) =>
     client.paused ? pausedIntegrations.push(client.integration.id) : activeIntegrations.push(client.integration.id),
   );
-  const totalSpeed = humanFileSize(clients.reduce((count, { rates: { down } }) => count + down, 0)) + "/s";
+  const totalSpeed = humanFileSize(clients.reduce((count, { rates: { down } }) => count + down, 0))?.toString().concat("/s");
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
   const [opened, { open, close }] = useDisclosure(false);
@@ -742,18 +744,24 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                     <Stack gap={0} pt={5} h={60} justify="center" flex={1}>
                       {client.rates.up !== undefined ? (
                         <Group display="flex" justify="center" c="green" w="100%" gap={5}>
-                          <Text flex={1} ta="right">{"↑ " + humanFileSize(client.rates.up) + "/s"}</Text>
+                          <Text flex={1} ta="right">
+                            {`↑ ${humanFileSize(client.rates.up)}/s`}
+                          </Text>
                           <Text>{"-"}</Text>
-                          <Text flex={1} ta="left">{humanFileSize(client.totalUp ?? 0)}</Text>
+                          <Text flex={1} ta="left">
+                            {humanFileSize(client.totalUp ?? 0)}
+                          </Text>
                         </Group>
                       ) : undefined}
-                      <Text c="blue">
                       <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
-                          <Text flex={1} ta="right">{"↓ " + humanFileSize(client.rates.down) + "/s"}</Text>
-                          <Text>{"-"}</Text>
-                          <Text flex={1} ta="left">{humanFileSize(Math.floor(client.totalDown ?? 0))}</Text>
-                        </Group>
-                      </Text>
+                        <Text flex={1} ta="right">
+                          {`↓ ${humanFileSize(client.rates.down)}/s`}
+                        </Text>
+                        <Text>{"-"}</Text>
+                        <Text flex={1} ta="left">
+                          {humanFileSize(Math.floor(client.totalDown ?? 0))}
+                        </Text>
+                      </Group>
                     </Stack>
                   </Group>
                 </Paper>

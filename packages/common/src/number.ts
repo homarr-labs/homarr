@@ -30,11 +30,12 @@ export const randomInt = (min: number, max: number) => {
 export const humanFileSize = (size: number) => {
   if (!Number.isInteger(size)) return NaN;
   let count = 0;
-  while (true) {
+  while (count < siRanges.length) {
     const tempSize = size / Math.pow(1024, count);
-    if (tempSize < 1024 || count === siRanges.length - 1) {
+    if (tempSize < 1024) {
       return tempSize.toFixed(Math.min(count, 1)) + siRanges[count];
     }
     count++;
   }
+  return "∞";
 };

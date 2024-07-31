@@ -26,7 +26,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     };
     const items = queue.slots
       .map((slot): DownloadClientItem => {
-        const state = this.getNzbQueueState(slot.status);
+        const state = SabnzbdIntegration.getNzbQueueState(slot.status);
         const times = slot.timeleft.split(":").reverse();
         const time = dayjs
           .duration({
@@ -52,7 +52,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       })
       .concat(
         history.slots.map((slot, index): DownloadClientItem => {
-          const state = this.getNzbHistoryState(slot.status);
+          const state = SabnzbdIntegration.getNzbHistoryState(slot.status);
           return {
             type,
             id: slot.nzo_id,
@@ -109,12 +109,12 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       url.searchParams.append(key, value);
     });
     url.searchParams.append("apikey", this.getSecretValue("apiKey"));
-    return fetch(url)
+    return await fetch(url)
       .then((response) => {
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        return response.json();
+        return response.json() as Promise<unknown>;
       })
       .catch((error) => {
         if (error instanceof Error) {
@@ -125,7 +125,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       });
   }
 
-  private getNzbQueueState(status: string): DownloadClientItem["state"] {
+  private static getNzbQueueState(status: string): DownloadClientItem["state"] {
     switch (status) {
       case "Queued":
         return "queued";
@@ -136,7 +136,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     }
   }
 
-  private getNzbHistoryState(status: string): DownloadClientItem["state"] {
+  private static getNzbHistoryState(status: string): DownloadClientItem["state"] {
     switch (status) {
       case "Completed":
         return "completed";

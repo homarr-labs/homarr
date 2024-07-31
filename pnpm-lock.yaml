@@ -673,7 +673,7 @@ importers:
     dependencies:
       '@extractus/feed-extractor':
         specifier: ^7.1.3
-        version: 7.1.3
+        version: 7.1.3(encoding@0.1.13)
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../analytics
@@ -1271,7 +1271,7 @@ importers:
     dependencies:
       '@extractus/feed-extractor':
         specifier: ^7.1.3
-        version: 7.1.3
+        version: 7.1.3(encoding@0.1.13)
       '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../api
@@ -2449,13 +2449,8 @@ packages:
   '@swc/helpers@0.5.5':
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
 
-  '@szmarczak/http-timer@4.0.6':
-    resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
-    engines: {node: '>=10'}
-
   '@t3-oss/env-core@0.11.0':
     resolution: {integrity: sha512-PSalC5bG0a7XbyoLydiQdAnx3gICX6IQNctvh+TyLrdFxsxgocdj9Ui7sd061UlBzi+z4aIGjnem1kZx9QtUgQ==}
-
     peerDependencies:
       typescript: '>=5.0.0'
       zod: ^3.0.0
@@ -6548,10 +6543,6 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
 
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
-    hasBin: true
-
   uuidjs@4.2.14:
     resolution: {integrity: sha512-Z4iL8AWHlTWeAmi6v1TCPKBF5QkTxpdLDS2yrAm9cA9GvEwWFxnRm7uEEcDY5TrZuO2A/cLQyeuXjlohAMcCIQ==}
     hasBin: true
@@ -7295,10 +7286,10 @@ snapshots:
 
   '@eslint/object-schema@2.1.4': {}
 
-  '@extractus/feed-extractor@7.1.3':
+  '@extractus/feed-extractor@7.1.3(encoding@0.1.13)':
     dependencies:
       bellajs: 11.2.0
-      cross-fetch: 4.0.0
+      cross-fetch: 4.0.0(encoding@0.1.13)
       fast-xml-parser: 4.4.0
       html-entities: 2.5.2
     transitivePeerDependencies:
@@ -7657,10 +7648,6 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
       tslib: 2.6.2
-
-  '@szmarczak/http-timer@4.0.6':
-    dependencies:
-      defer-to-connect: 2.0.1
 
   '@t3-oss/env-core@0.11.0(typescript@5.5.4)(zod@3.23.8)':
     dependencies:
@@ -8035,14 +8022,7 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.14.11
-
-  '@types/cacheable-request@6.0.3':
-    dependencies:
-      '@types/http-cache-semantics': 4.0.4
-      '@types/keyv': 3.1.4
-      '@types/node': 20.14.11
-      '@types/responselike': 1.0.3
+      '@types/node': 20.14.13
 
   '@types/chroma-js@2.4.4': {}
 
@@ -8101,9 +8081,7 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.14.11
-
-  '@types/http-cache-semantics@4.0.4': {}
+      '@types/node': 20.14.13
 
   '@types/http-errors@2.0.4': {}
 
@@ -9075,9 +9053,9 @@ snapshots:
     dependencies:
       cross-spawn: 7.0.3
 
-  cross-fetch@4.0.0:
+  cross-fetch@4.0.0(encoding@0.1.13):
     dependencies:
-      node-fetch: 2.7.0
+      node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
@@ -12038,7 +12016,6 @@ snapshots:
       docker-compose: 0.24.8
       dockerode: 3.3.5
       get-port: 5.1.1
-      node-fetch: 2.7.0(encoding@0.1.13)
       proper-lockfile: 4.1.2
       properties-reader: 2.3.0
       ssh-remote-port-forward: 1.0.4
@@ -12380,8 +12357,6 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  uuid@9.0.1: {}
-
   uuidjs@4.2.14: {}
 
   v8-compile-cache-lib@3.0.1: {}
@@ -12699,8 +12674,6 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.5.2
-
-
 
   zipcodes-regex@1.0.3: {}
 

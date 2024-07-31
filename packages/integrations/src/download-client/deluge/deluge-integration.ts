@@ -23,7 +23,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
       ...(torrent as { completed_time: number } & typeof torrent),
       id,
     }));
-    const paused = torrents.find(({ state }) => this.getTorrentState(state) !== "paused") === undefined;
+    const paused = torrents.find(({ state }) => DelugeIntegration.getTorrentState(state) !== "paused") === undefined;
     const status: DownloadClientStatus = {
       paused,
       rates: {
@@ -33,7 +33,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
       type,
     };
     const items = torrents.map((torrent): DownloadClientItem => {
-      const state = this.getTorrentState(torrent.state);
+      const state = DelugeIntegration.getTorrentState(torrent.state);
       return {
         type,
         id: torrent.id,
@@ -96,7 +96,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
     });
   }
 
-  private getTorrentState(state: string): DownloadClientItem["state"] {
+  private static getTorrentState(state: string): DownloadClientItem["state"] {
     switch (state) {
       case "Queued":
       case "Checking":

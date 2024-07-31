@@ -47,7 +47,8 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
         step: 1,
       }),
       categoryFilter: factory.multiText({
-        //defaultValue: [] as string[];
+        defaultValue: [] as string[],
+        validate: z.string(),
       }),
       filterIsWhitelist: factory.switch({
         defaultValue: false,

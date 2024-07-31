@@ -25,7 +25,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     };
     const items = queue
       .map((file): DownloadClientItem => {
-        const state = this.getNzbQueueState(file.Status);
+        const state = NzbGetIntegration.getNzbQueueState(file.Status);
         return {
           type,
           id: file.NZBID.toString(),
@@ -42,7 +42,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
       })
       .concat(
         history.map((file, index): DownloadClientItem => {
-          const state = this.getNzbHistoryState(file.ScriptStatus);
+          const state = NzbGetIntegration.getNzbHistoryState(file.ScriptStatus);
           return {
             type,
             id: file.NZBID.toString(),
@@ -98,7 +98,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     return new NzbGetClient(url);
   }
 
-  private getNzbQueueState(status: string): DownloadClientItem["state"] {
+  private static getNzbQueueState(status: string): DownloadClientItem["state"] {
     switch (status) {
       case "QUEUED":
         return "queued";
@@ -109,7 +109,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     }
   }
 
-  private getNzbHistoryState(status: string): DownloadClientItem["state"] {
+  private static getNzbHistoryState(status: string): DownloadClientItem["state"] {
     switch (status) {
       case "FAILURE":
         return "failed";

@@ -19,10 +19,10 @@ export class TransmissionIntegration extends DownloadClientIntegration {
       ({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }),
       { down: 0, up: 0 },
     );
-    const paused = torrents.find(({ status }) => this.getTorrentState(status) !== "paused") === undefined;
+    const paused = torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, type };
     const items = torrents.map((torrent): DownloadClientItem => {
-      const state = this.getTorrentState(torrent.status);
+      const state = TransmissionIntegration.getTorrentState(torrent.status);
       return {
         type,
         id: torrent.hashString,
@@ -78,7 +78,7 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     });
   }
 
-  private getTorrentState(status: number): DownloadClientItem["state"] {
+  private static getTorrentState(status: number): DownloadClientItem["state"] {
     switch (status) {
       case 0:
         return "paused";
