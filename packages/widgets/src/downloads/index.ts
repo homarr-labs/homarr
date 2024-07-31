@@ -4,6 +4,7 @@ import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
 export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
@@ -30,7 +31,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
             "time",
             "type",
             "upSpeed",
-          ] as const
+          ] as const satisfies (keyof ExtendedDownloadClientItem)[]
         ).map((value) => ({ value, label: (t) => t(`widget.downloads.items.${value}.columnTitle`) })),
         searchable: true,
       }),
@@ -65,6 +66,9 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
         shouldHide: () => false, //Get from presence of usenet client in integration list
       },
       showCompletedTorrent: {
+        shouldHide: () => false, //Get from presence of torrent client in integration list
+      },
+      activeTorrentThreshold: {
         shouldHide: () => false, //Get from presence of torrent client in integration list
       },
       applyFilterToRatio: {

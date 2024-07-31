@@ -444,7 +444,7 @@ export default function DownloadClientsWidget({
                 h="calc(var(--ratioWidth)*0.25)"
                 w="100%"
                 value={progress * 100}
-                color={progress === 1 ? "green" : row.original.state === "paused" ? "yellow" : "blue"}
+                color={row.original.state === "paused" ? "yellow" : progress === 1 ? "green" : "blue"}
                 radius={999}
               />
             </Stack>
