@@ -227,17 +227,17 @@ const useCssVariableConfiguration = ({
 }: UseCssVariableConfiguration) => {
   const onResize = useCallback(() => {
     if (!wrapperRef.current) return;
-    const actualColumnCount = isDynamic
-      ? Number(gridRef.current?.el.parentElement?.parentElement?.getAttribute("gs-w") ?? 1)
-      : columnCount;
+    if (!gridRef.current) return;
+
+    wrapperRef.current.style.setProperty("--gridstack-column-count", gridRef.current.getColumn().toString());
+    wrapperRef.current.style.setProperty("--gridstack-row-count", gridRef.current.getRow().toString());
+
+    let cellHeight = wrapperRef.current.clientWidth / gridRef.current.getColumn();
     if (isDynamic) {
-      console.log("resizing", gridRef.current, actualColumnCount);
-      wrapperRef.current.style.setProperty("--gridstack-column-count", actualColumnCount.toString());
+      cellHeight = wrapperRef.current.clientHeight / gridRef.current.getRow();
     }
-    const widgetWidth = wrapperRef.current.clientWidth / actualColumnCount;
-    // widget width is used to define sizes of gridstack items within global.scss
-    wrapperRef.current.style.setProperty("--gridstack-widget-width", widgetWidth.toString());
-    gridRef.current?.cellHeight(widgetWidth);
+
+    gridRef.current.cellHeight(cellHeight);
   }, [columnCount, wrapperRef, gridRef, isDynamic]);
 
   // Define widget-width by calculating the width of one column with mainRef width and column count

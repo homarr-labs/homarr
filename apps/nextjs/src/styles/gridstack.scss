@@ -3,6 +3,7 @@
 :root {
   --gridstack-widget-width: 64;
   --gridstack-column-count: 12;
+  --gridstack-row-count: 1;
 }
 
 .grid-stack-placeholder > .placeholder-content {
@@ -38,13 +39,13 @@
 
 @for $i from 1 to 96 {
   .grid-stack > .grid-stack-item[gs-h="#{$i}"] {
-    height: calc(#{$i}px * #{var(--gridstack-widget-width)});
+    height: calc(100% / var(--gridstack-row-count) * #{$i});
   }
   .grid-stack > .grid-stack-item[gs-min-h="#{$i}"] {
-    min-height: calc(#{$i}px * #{var(--gridstack-widget-width)});
+    min-height: calc(100% / var(--gridstack-row-count) * #{$i});
   }
   .grid-stack > .grid-stack-item[gs-max-h="#{$i}"] {
-    max-height: calc(#{$i}px * #{var(--gridstack-widget-width)});
+    max-height: calc(100% / var(--gridstack-row-count) * #{$i});
   }
 }
 
@@ -56,8 +57,12 @@
 
 @for $i from 1 to 96 {
   .grid-stack > .grid-stack-item[gs-y="#{$i}"] {
-    top: calc(#{$i}px * #{var(--gridstack-widget-width)});
+    top: calc(100% / var(--gridstack-row-count) * #{$i});
   }
+}
+
+.grid-stack[data-kind="dynamic"] {
+  height: 100% !important;
 }
 
 // General gridstack styling
