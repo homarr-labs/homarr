@@ -9,7 +9,7 @@ import { WidgetEditModal, widgetImports } from "@homarr/widgets";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
-import { useItemActions } from "../items/item-actions";
+import { useItemActions } from "./item-actions";
 
 export const BoardItemMenu = ({
   offset,

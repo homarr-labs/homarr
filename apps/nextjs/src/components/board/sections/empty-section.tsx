@@ -17,7 +17,7 @@ export const BoardEmptySection = ({ section }: Props) => {
     <GridStack
       section={section}
       style={{ transitionDuration: "0s" }}
-      className={combineClasses(`min-row`, itemIds.length > 0 || isEditMode ? undefined : `grid-stack-empty-wrapper`)}
+      className={combineClasses("min-row", itemIds.length > 0 || isEditMode ? undefined : "grid-stack-empty-wrapper")}
     />
   );
 };
