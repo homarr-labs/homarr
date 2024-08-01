@@ -16,7 +16,7 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     return {
       initialData: data,
     };
-  } catch (error) {
+  } catch {
     return {
       initialData: undefined,
     };
