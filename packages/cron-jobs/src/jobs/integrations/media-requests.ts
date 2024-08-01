@@ -31,7 +31,7 @@ export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).
   });
 
   for (const itemForIntegration of itemsForIntegration) {
-    for (const { integration } of itemForIntegration.integrations) {
+    for (const { integration, integrationId } of itemForIntegration.integrations) {
       const integrationWithSecrets = {
         ...integration,
         decryptedSecrets: integration.secrets.map((secret) => ({
@@ -57,7 +57,7 @@ export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).
       const requestsUsers = await requestsIntegration.getUsersAsync();
       const requestListChannel = createItemAndIntegrationChannel<MediaRequestList>(
         "mediaRequests-requestList",
-        integration.id,
+        integrationId,
       );
       await requestListChannel.publishAndUpdateLastStateAsync({
         integration: { id: integration.id },
@@ -66,7 +66,7 @@ export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).
 
       const requestStatsChannel = createItemAndIntegrationChannel<MediaRequestStats>(
         "mediaRequests-requestStats",
-        integration.id,
+        integrationId,
       );
       await requestStatsChannel.publishAndUpdateLastStateAsync({
         integration: { kind: integration.kind, name: integration.name },

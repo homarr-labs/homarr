@@ -23,35 +23,60 @@ import {
   MediaRequestStatus,
 } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
+import type { ScopedTranslationFunction } from "@homarr/translation";
 
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   options,
   serverData,
+  itemId
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const tCommon = useScopedI18n("common");
-
-  if (!serverData?.initialData) return <Center h="100%">{tCommon("errors.noData")}</Center>;
-
-  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
+  const isQueryEnabled = Boolean(itemId);
+  const {
+    data: mediaRequests,
+    isError: _isError,
+  } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
+    {
+      integrationIds,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      itemId: itemId!,
+    },
+    {
+      initialData:
+        !serverData ? [] : serverData.initialData,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      enabled: integrationIds.length > 0 && isQueryEnabled,
+    },
+  );
 
   const sortedMediaRequests = useMemo(
     () =>
-      serverData.initialData.sort(({ status: statusA }, { status: statusB }) => {
-        if (statusA === MediaRequestStatus.PendingApproval) {
-          return -1;
-        }
-        if (statusB === MediaRequestStatus.PendingApproval) {
-          return 1;
-        }
-        return 0;
-      }),
-    [serverData, integrationIds],
+      mediaRequests
+        .filter((group) => group != null)
+        .flatMap((group) => group.data)
+        .flatMap(({ medias, integration }) => medias.map((media) => ({ ...media, integrationId: integration.id })))
+        .sort(({ status: statusA }, { status: statusB }) => {
+          if (statusA === MediaRequestStatus.PendingApproval) {
+            return -1;
+          }
+          if (statusB === MediaRequestStatus.PendingApproval) {
+            return 1;
+          }
+          return 0;
+        }),
+    [mediaRequests, integrationIds],
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
+
+  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
+
+  if (sortedMediaRequests.length === 0) return <Center h="100%">{tCommon("errors.noData")}</Center>;
 
   return (
     <ScrollArea
@@ -104,7 +129,7 @@ export default function MediaServerWidget({
                     </Text>
                     <Badge
                       className="mediaRequests-list-item-media-status"
-                      color={GetAvailabilityProperties(mediaRequest.availability).color}
+                      color={GetAvailabilityProperties(mediaRequest.availability, t).color}
                       variant="light"
                       fz="3.5cqmin"
                       lh="4cqmin"
@@ -112,7 +137,7 @@ export default function MediaServerWidget({
                       pt="0.75cqmin"
                       px="2cqmin"
                     >
-                      {GetAvailabilityProperties(mediaRequest.availability).label}
+                      {GetAvailabilityProperties(mediaRequest.availability, t).label}
                     </Badge>
                   </Group>
                   <Anchor
@@ -193,8 +218,7 @@ export default function MediaServerWidget({
   );
 }
 
-function GetAvailabilityProperties(mediaRequestAvailability: MediaAvailability) {
-  const t = useScopedI18n("widget.mediaRequests-requestList");
+function GetAvailabilityProperties(mediaRequestAvailability: MediaAvailability, t: ScopedTranslationFunction<"widget.mediaRequests-requestList">) {
   switch (mediaRequestAvailability) {
     case MediaAvailability.Available:
       return { color: "green", label: t("availability.available") };

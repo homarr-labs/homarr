@@ -29,16 +29,12 @@ export default function MediaServerWidget({
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const tCommon = useScopedI18n("common");
 
-  if (!serverData?.initialData) return <Center h="100%">{tCommon("errors.noData")}</Center>;
-
-  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
-
   const { width, height, ref } = useElementSize();
 
-  const stats = useMemo(() => serverData.initialData.flatMap(({ stats }) => stats), [serverData, integrationIds]);
+  const stats = useMemo(() => serverData?.initialData.flatMap(({ stats }) => stats), [serverData, integrationIds]);
   const users = useMemo(
     () =>
-      serverData.initialData
+      serverData?.initialData
         .flatMap(({ integration, users }) =>
           users.flatMap((user) => ({ ...user, appKind: integration.kind, appName: integration.name })),
         )
@@ -46,6 +42,10 @@ export default function MediaServerWidget({
         .slice(0, Math.max(Math.trunc((height / width) * 5), 1)),
     [serverData, integrationIds, width, height],
   );
+
+  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
+
+  if (!users || users.length === 0 || !stats || stats.length === 0) return <Center h="100%">{tCommon("errors.noData")}</Center>;
 
   //Add processing and available
   const data = [
