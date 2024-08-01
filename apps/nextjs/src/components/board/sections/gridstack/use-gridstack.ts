@@ -35,6 +35,10 @@ const handleResizeChange = (
     cellHeight = wrapper.clientHeight / height;
   }
 
+  if (!isDynamic) {
+    document.body.style.setProperty("--gridstack-cell-size", cellHeight.toString());
+  }
+
   gridstack.cellHeight(cellHeight);
 };
 

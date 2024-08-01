@@ -1,9 +1,9 @@
 @import "@homarr/gridstack/dist/gridstack.min.css";
 
 :root {
-  --gridstack-widget-width: 64;
   --gridstack-column-count: 12;
   --gridstack-row-count: 1;
+  --gridstack-cell-size: 0;
 }
 
 .grid-stack-placeholder > .placeholder-content {
@@ -22,6 +22,22 @@
 .grid-stack > .grid-stack-item {
   min-width: calc(100% / var(--gridstack-column-count));
   min-height: calc(100% / var(--gridstack-row-count));
+}
+
+.grid-stack > .grid-stack-item.ui-draggable-dragging {
+  min-width: calc(var(--gridstack-cell-size) * 1px) !important;
+  min-height: calc(var(--gridstack-cell-size) * 1px) !important;
+}
+
+// Define fix size while dragging
+@for $i from 1 to 96 {
+  .grid-stack > .grid-stack-item.ui-draggable-dragging[gs-w="#{$i}"] {
+    width: calc(var(--gridstack-cell-size) * #{$i} * 1px) !important;
+  }
+
+  .grid-stack > .grid-stack-item.ui-draggable-dragging[gs-h="#{$i}"] {
+    height: calc(var(--gridstack-cell-size) * #{$i} * 1px) !important;
+  }
 }
 
 // Styling for grid-stack main area
