@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import { ActionIcon, Avatar, Card, Center, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
+import type { Icon } from "@tabler/icons-react";
 import {
-  Icon,
   IconDeviceTv,
   IconExternalLink,
   IconHourglass,
@@ -27,21 +28,24 @@ export default function MediaServerWidget({
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const tCommon = useScopedI18n("common");
-  const integrationError = useScopedI18n("integration.permission")("use");
 
   if (!serverData?.initialData) return <Center h="100%">{tCommon("errors.noData")}</Center>;
 
-  if (integrationIds.length === 0) return <Center h="100%">{integrationError}</Center>;
+  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
 
   const { width, height, ref } = useElementSize();
 
-  const stats = serverData.initialData.flatMap(({ stats }) => stats);
-  const users = serverData.initialData
-    .flatMap(({ integration, users }) =>
-      users.flatMap((user) => ({ ...user, appKind: integration.kind, appName: integration.name })),
-    )
-    .sort(({ requestCount: a }, { requestCount: b }) => b - a)
-    .slice(0, Math.max(Math.trunc((height / width) * 5), 1));
+  const stats = useMemo(() => serverData.initialData.flatMap(({ stats }) => stats), [serverData, integrationIds]);
+  const users = useMemo(
+    () =>
+      serverData.initialData
+        .flatMap(({ integration, users }) =>
+          users.flatMap((user) => ({ ...user, appKind: integration.kind, appName: integration.name })),
+        )
+        .sort(({ requestCount: countA }, { requestCount: countB }) => countB - countA)
+        .slice(0, Math.max(Math.trunc((height / width) * 5), 1)),
+    [serverData, integrationIds, width, height],
+  );
 
   //Add processing and available
   const data = [

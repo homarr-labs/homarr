@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   ActionIcon,
   Anchor,
@@ -31,21 +32,24 @@ export default function MediaServerWidget({
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const tCommon = useScopedI18n("common");
-  const integrationError = useScopedI18n("integration.permission")("use");
 
   if (!serverData?.initialData) return <Center h="100%">{tCommon("errors.noData")}</Center>;
 
-  if (integrationIds.length === 0) return <Center h="100%">{integrationError}</Center>;
+  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
 
-  const sortedMediaRequests = serverData.initialData.sort(({ status: statusA }, { status: statusB }) => {
-    if (statusA === MediaRequestStatus.PendingApproval) {
-      return -1;
-    }
-    if (statusB === MediaRequestStatus.PendingApproval) {
-      return 1;
-    }
-    return 0;
-  });
+  const sortedMediaRequests = useMemo(
+    () =>
+      serverData.initialData.sort(({ status: statusA }, { status: statusB }) => {
+        if (statusA === MediaRequestStatus.PendingApproval) {
+          return -1;
+        }
+        if (statusB === MediaRequestStatus.PendingApproval) {
+          return 1;
+        }
+        return 0;
+      }),
+    [serverData, integrationIds],
+  );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 

@@ -509,6 +509,7 @@ export default {
     error: "Error",
     errors: {
       noData: "No data to show",
+      noIntegration: "No integration selected",
     },
     action: {
       add: "Add",

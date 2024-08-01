@@ -14,6 +14,7 @@ export default [
       ...hooksPlugin.configs.recommended.rules,
       // context.getSource is not a function
       "react-hooks/exhaustive-deps": "off",
+      "react-hooks/rules-of-hooks": "off",
     },
     languageOptions: {
       globals: {
