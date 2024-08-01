@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { Box, Group, Stack, Title } from "@mantine/core";
+import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -53,8 +54,14 @@ export default async function EditUserPage({ params }: Props) {
     notFound();
   }
 
+  const isCredentialsUser = user.provider === "credentials";
+
   return (
     <Stack>
+      <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+        {t("management.page.user.fieldsDisabledExternalProvider")}
+      </Alert>
+
       <Title>{tGeneral("title")}</Title>
       <Group gap="xl">
         <Box flex={1}>
@@ -67,13 +74,15 @@ export default async function EditUserPage({ params }: Props) {
 
       <ProfileLanguageChange />
 
-      <DangerZoneRoot>
-        <DangerZoneItem
-          label={t("user.action.delete.label")}
-          description={t("user.action.delete.description")}
-          action={<DeleteUserButton user={user} />}
-        />
-      </DangerZoneRoot>
+      {isCredentialsUser && (
+        <DangerZoneRoot>
+          <DangerZoneItem
+            label={t("user.action.delete.label")}
+            description={t("user.action.delete.description")}
+            action={<DeleteUserButton user={user} />}
+          />
+        </DangerZoneRoot>
+      )}
     </Stack>
   );
 }

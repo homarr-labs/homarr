@@ -1,9 +1,8 @@
-import type { Adapter } from "@auth/core/adapters";
 import { CredentialsSignin } from "@auth/core/errors";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { describe, expect, test, vi } from "vitest";
 
-import { createId, eq } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { and, createId, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
@@ -32,7 +31,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -55,7 +54,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -85,7 +84,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -118,7 +117,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Act
     const act = () =>
-      authorizeWithLdapCredentialsAsync(null as unknown as Adapter, {
+      authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
         credentialType: "ldap",
@@ -132,7 +131,6 @@ describe("authorizeWithLdapCredentials", () => {
   test("should authorize user with correct credentials and create user", async () => {
     // Arrange
     const db = createDb();
-    const adapter = DrizzleAdapter(db);
     const spy = vi.spyOn(ldapClient, "LdapClient");
     spy.mockImplementation(
       () =>
@@ -151,7 +149,7 @@ describe("authorizeWithLdapCredentials", () => {
     );
 
     // Act
-    const result = await authorizeWithLdapCredentialsAsync(adapter, {
+    const result = await authorizeWithLdapCredentialsAsync(db, {
       name: "test",
       password: "test",
       credentialType: "ldap",
@@ -166,13 +164,68 @@ describe("authorizeWithLdapCredentials", () => {
     expect(dbUser?.id).toBe(result.id);
     expect(dbUser?.email).toBe("test@gmail.com");
     expect(dbUser?.emailVerified).not.toBeNull();
+    expect(dbUser?.provider).toBe("ldap");
+  });
+
+  test("should authorize user with correct credentials and create user with same email when credentials user already exists", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(ldapClient, "LdapClient");
+    const salt = await createSaltAsync();
+    spy.mockImplementation(
+      () =>
+        ({
+          bindAsync: vi.fn(() => Promise.resolve()),
+          searchAsync: vi.fn(() =>
+            Promise.resolve([
+              {
+                dn: "test",
+                mail: "test@gmail.com",
+              },
+            ]),
+          ),
+          disconnectAsync: vi.fn(),
+        }) as unknown as ldapClient.LdapClient,
+    );
+    await db.insert(users).values({
+      id: createId(),
+      name: "test",
+      salt,
+      password: await hashPasswordAsync("test", salt),
+      email: "test@gmail.com",
+      provider: "credentials",
+    });
+
+    // Act
+    const result = await authorizeWithLdapCredentialsAsync(db, {
+      name: "test",
+      password: "test",
+      credentialType: "ldap",
+    });
+
+    // Assert
+    expect(result.name).toBe("test");
+    const dbUser = await db.query.users.findFirst({
+      where: and(eq(users.name, "test"), eq(users.provider, "ldap")),
+    });
+    expect(dbUser).toBeDefined();
+    expect(dbUser?.id).toBe(result.id);
+    expect(dbUser?.email).toBe("test@gmail.com");
+    expect(dbUser?.emailVerified).not.toBeNull();
+    expect(dbUser?.provider).toBe("ldap");
+
+    const credentialsUser = await db.query.users.findFirst({
+      where: and(eq(users.name, "test"), eq(users.provider, "credentials")),
+    });
+
+    expect(credentialsUser).toBeDefined();
+    expect(credentialsUser?.id).not.toBe(result.id);
   });
 
   test("should authorize user with correct credentials and update name", async () => {
     // Arrange
     const userId = createId();
     const db = createDb();
-    const adapter = DrizzleAdapter(db);
     const salt = await createSaltAsync();
     await db.insert(users).values({
       id: userId,
@@ -180,10 +233,11 @@ describe("authorizeWithLdapCredentials", () => {
       salt,
       password: await hashPasswordAsync("test", salt),
       email: "test@gmail.com",
+      provider: "ldap",
     });
 
     // Act
-    const result = await authorizeWithLdapCredentialsAsync(adapter, {
+    const result = await authorizeWithLdapCredentialsAsync(db, {
       name: "test",
       password: "test",
       credentialType: "ldap",
@@ -200,5 +254,6 @@ describe("authorizeWithLdapCredentials", () => {
     expect(dbUser?.id).toBe(userId);
     expect(dbUser?.name).toBe("test");
     expect(dbUser?.email).toBe("test@gmail.com");
+    expect(dbUser?.provider).toBe("ldap");
   });
 });

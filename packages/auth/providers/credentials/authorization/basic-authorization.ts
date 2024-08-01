@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
 import type { Database } from "@homarr/db";
-import { eq } from "@homarr/db";
+import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { validation, z } from "@homarr/validation";
@@ -11,7 +11,7 @@ export const authorizeWithBasicCredentialsAsync = async (
   credentials: z.infer<typeof validation.user.signIn>,
 ) => {
   const user = await db.query.users.findFirst({
-    where: eq(users.name, credentials.name),
+    where: and(eq(users.name, credentials.name), eq(users.provider, "credentials")),
   });
 
   if (!user?.password) {

@@ -28,6 +28,10 @@ export default async function UserSecurityPage({ params }: Props) {
     notFound();
   }
 
+  if (user.provider !== "credentials") {
+    notFound();
+  }
+
   return (
     <Stack>
       <Title>{tSecurity("title")}</Title>

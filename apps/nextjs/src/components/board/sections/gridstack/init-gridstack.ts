@@ -47,7 +47,9 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   grid.removeAll(false);
   itemIds.forEach((id) => {
     const ref = refs.items.current[id]?.current;
-    ref && grid.makeWidget(ref);
+    if (!ref) return;
+
+    grid.makeWidget(ref);
   });
   grid.batchUpdate(false);
   return true;

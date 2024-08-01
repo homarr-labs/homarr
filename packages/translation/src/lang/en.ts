@@ -1,5 +1,7 @@
 import "dayjs/locale/en";
 
+import { MRT_Localization_EN } from "mantine-react-table/locales/en/index.cjs";
+
 export default {
   user: {
     title: "Users",
@@ -194,6 +196,10 @@ export default {
           },
         },
       },
+    },
+    memberNotice: {
+      mixed: "Some members are from external providers and cannot be managed here",
+      external: "All members are from external providers and cannot be managed here",
     },
     action: {
       create: {
@@ -500,6 +506,7 @@ export default {
     symbols: {
       colon: ": ",
     },
+    error: "Error",
     action: {
       add: "Add",
       apply: "Apply",
@@ -611,6 +618,7 @@ export default {
         },
       },
     },
+    mantineReactTable: MRT_Localization_EN,
   },
   section: {
     category: {
@@ -1026,6 +1034,21 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    rssFeed: {
+      name: "RSS feeds",
+      description: "Monitor and display one or more generic RSS, ATOM or JSON feeds",
+      option: {
+        feedUrls: {
+          label: "Feed URLs",
+        },
+        textLinesClamp: {
+          label: "Description line clamp",
+        },
+        maximumAmountPosts: {
+          label: "Amount posts limit",
+        },
+      },
+    },
   },
   widgetPreview: {
     toggle: {
@@ -1334,6 +1357,8 @@ export default {
       },
       user: {
         back: "Back to users",
+        fieldsDisabledExternalProvider:
+          "Certain fields are disabled because they are managed by an external authentication provider.",
         setting: {
           general: {
             title: "General",
@@ -1379,7 +1404,7 @@ export default {
           },
         },
         invite: {
-          title: "Manager user invites",
+          title: "Manage user invites",
           action: {
             new: {
               title: "New invite",
@@ -1484,6 +1509,9 @@ export default {
             },
             mediaOrganizer: {
               label: "Media Organizers",
+            },
+            rssFeeds: {
+              label: "RSS feeds",
             },
           },
         },
@@ -1653,6 +1681,12 @@ export default {
         },
         general: "General",
         security: "Security",
+        groups: {
+          label: "Groups",
+        },
+        invites: {
+          label: "Invites",
+        },
       },
       tools: {
         label: "Tools",

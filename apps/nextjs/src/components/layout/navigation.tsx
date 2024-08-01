@@ -22,18 +22,24 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
         component={ScrollArea}
       >
         {links.map((link, index) => {
+          if (link.hidden) {
+            return null;
+          }
+
           const { icon: TablerIcon, ...props } = link;
           const Icon = <TablerIcon size={20} stroke={1.5} />;
           let clientLink: ClientNavigationLink;
           if ("items" in props) {
             clientLink = {
               ...props,
-              items: props.items.map((item) => {
-                return {
-                  ...item,
-                  icon: <item.icon size={20} stroke={1.5} />,
-                };
-              }),
+              items: props.items
+                .filter((item) => !item.hidden)
+                .map((item) => {
+                  return {
+                    ...item,
+                    icon: <item.icon size={20} stroke={1.5} />,
+                  };
+                }),
             } as ClientNavigationLink;
           } else {
             clientLink = props as ClientNavigationLink;
@@ -49,6 +55,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
 interface CommonNavigationLinkProps {
   label: string;
   icon: TablerIcon;
+  hidden?: boolean;
 }
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {

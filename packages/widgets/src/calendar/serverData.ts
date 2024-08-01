@@ -27,7 +27,7 @@ export default async function getServerDataAsync({ integrationIds, itemId }: Wid
         )
         .flatMap((item) => item.data),
     };
-  } catch (error) {
+  } catch {
     return {
       initialData: [],
     };

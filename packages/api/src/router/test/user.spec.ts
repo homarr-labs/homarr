@@ -13,6 +13,15 @@ vi.mock("@homarr/auth", async () => {
   return { ...mod, auth: () => ({}) as Session };
 });
 
+// Mock the env module to return the credentials provider
+vi.mock("@homarr/auth/env.mjs", () => {
+  return {
+    env: {
+      AUTH_PROVIDERS: ["credentials"],
+    },
+  };
+});
+
 describe("initUser should initialize the first user", () => {
   it("should throw an error if a user already exists", async () => {
     const db = createDb();
@@ -230,6 +239,7 @@ describe("editProfile shoud update user", () => {
       password: null,
       image: null,
       homeBoardId: null,
+      provider: "credentials",
     });
   });
 
@@ -270,6 +280,7 @@ describe("editProfile shoud update user", () => {
       password: null,
       image: null,
       homeBoardId: null,
+      provider: "credentials",
     });
   });
 });
@@ -294,6 +305,7 @@ describe("delete should delete user", () => {
         password: null,
         salt: null,
         homeBoardId: null,
+        provider: "ldap" as const,
       },
       {
         id: userToDelete,
@@ -314,6 +326,7 @@ describe("delete should delete user", () => {
         password: null,
         salt: null,
         homeBoardId: null,
+        provider: "oidc" as const,
       },
     ];
 

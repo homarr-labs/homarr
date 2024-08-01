@@ -51,8 +51,12 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
     },
   });
 
+  // Only credentials users can edit their profile
+  const isProviderCredentials = user.provider === "credentials";
+
   const handleSubmit = useCallback(
     (values: FormType) => {
+      if (!isProviderCredentials) return;
       mutate({
         ...values,
         id: user.id,
@@ -64,14 +68,25 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput label={t("user.field.username.label")} withAsterisk {...form.getInputProps("name")} />
-        <TextInput label={t("user.field.email.label")} {...form.getInputProps("email")} />
+        <TextInput
+          disabled={!isProviderCredentials}
+          label={t("user.field.username.label")}
+          withAsterisk
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          disabled={!isProviderCredentials}
+          label={t("user.field.email.label")}
+          {...form.getInputProps("email")}
+        />
 
-        <Group justify="end">
-          <Button type="submit" color="teal" disabled={!form.isDirty()} loading={isPending}>
-            {t("common.action.saveChanges")}
-          </Button>
-        </Group>
+        {isProviderCredentials && (
+          <Group justify="end">
+            <Button type="submit" color="teal" disabled={!form.isDirty()} loading={isPending}>
+              {t("common.action.saveChanges")}
+            </Button>
+          </Group>
+        )}
       </Stack>
     </form>
   );

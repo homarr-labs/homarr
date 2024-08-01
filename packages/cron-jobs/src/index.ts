@@ -4,6 +4,8 @@ import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { mediaServerJob } from "./jobs/integrations/media-server";
 import { pingJob } from "./jobs/ping";
+import type { RssFeed } from "./jobs/rss-feeds";
+import { rssFeedsJob } from "./jobs/rss-feeds";
 import { createCronJobGroup } from "./lib";
 
 export const jobGroup = createCronJobGroup({
@@ -13,6 +15,8 @@ export const jobGroup = createCronJobGroup({
   smartHomeEntityState: smartHomeEntityStateJob,
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
+  rssFeeds: rssFeedsJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
+export type { RssFeed };

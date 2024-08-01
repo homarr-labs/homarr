@@ -41,7 +41,7 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
         try {
           const result = (await response.json()) as unknown;
           if (typeof result === "object" && result !== null && "status" in result) return;
-        } catch (error) {
+        } catch {
           throw new IntegrationTestConnectionError("invalidJson");
         }
 

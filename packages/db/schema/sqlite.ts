@@ -15,6 +15,7 @@ import type {
   IntegrationPermission,
   IntegrationSecretKind,
   SectionKind,
+  SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
 
@@ -26,6 +27,7 @@ export const users = sqliteTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  provider: text("provider").$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
