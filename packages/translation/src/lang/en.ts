@@ -1040,6 +1040,15 @@ export default {
         columns: {
           label: "Columns to show",
         },
+        enableRowSorting: {
+          label: "Enable items sorting",
+        },
+        defaultSort: {
+          label: "Column used for sorting by default",
+        },
+        descendingDefaultSort: {
+          label: "Invert sorting",
+        },
         showCompletedUsenet: {
           label: "Show usenet entries marked as completed",
         },
@@ -1057,9 +1066,6 @@ export default {
         },
         applyFilterToRatio: {
           label: "Use filter to calculate Ratio",
-        },
-        enableRowSorting: {
-          label: "Enable items sorting",
         },
       },
       errors: {

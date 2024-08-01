@@ -6,34 +6,45 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
+const columnsList = [
+  "id",
+  "actions",
+  "added",
+  "category",
+  "downSpeed",
+  "index",
+  "integration",
+  "name",
+  "progress",
+  "ratio",
+  "received",
+  "sent",
+  "size",
+  "state",
+  "time",
+  "type",
+  "upSpeed"
+] as const satisfies (keyof ExtendedDownloadClientItem)[]
+const columnsSort = columnsList.filter((v) => !["actions","id","state"].includes(v));
+
 export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
   options: optionsBuilder.from(
     (factory) => ({
       columns: factory.multiSelect({
         defaultValue: ["integration", "name", "progress", "time", "actions"],
-        options: (
-          [
-            "id",
-            "actions",
-            "added",
-            "category",
-            "downSpeed",
-            "index",
-            "integration",
-            "name",
-            "progress",
-            "ratio",
-            "received",
-            "sent",
-            "size",
-            "state",
-            "time",
-            "type",
-            "upSpeed",
-          ] as const satisfies (keyof ExtendedDownloadClientItem)[]
-        ).map((value) => ({ value, label: (t) => t(`widget.downloads.items.${value}.columnTitle`) })),
+        options: columnsList.map((value) => ({ value, label: (t) => t(`widget.downloads.items.${value}.columnTitle`) })),
         searchable: true,
+      }),
+      enableRowSorting: factory.switch({
+        defaultValue: false,
+      }),
+      defaultSort: factory.select({
+        defaultValue: "type",
+        options: columnsSort.map((value) => ({ value, label: (t) => t(`widget.downloads.items.${value}.columnTitle`) })),
+      }),
+      descendingDefaultSort: factory.switch({
+        defaultValue: false,
       }),
       showCompletedUsenet: factory.switch({
         defaultValue: true,
@@ -57,11 +68,14 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       applyFilterToRatio: factory.switch({
         defaultValue: true,
       }),
-      enableRowSorting: factory.switch({
-        defaultValue: false,
-      }),
     }),
     {
+      defaultSort: {
+        shouldHide: (options) => !options.enableRowSorting,
+      },
+      descendingDefaultSort: {
+        shouldHide: (options) => !options.enableRowSorting,
+      },
       showCompletedUsenet: {
         shouldHide: () => false, //Get from presence of usenet client in integration list
       },

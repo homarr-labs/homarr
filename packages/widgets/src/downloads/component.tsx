@@ -49,13 +49,13 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 //TODO:
-// - Data Subscription permission issues                    <- Need help
+// - Rename getData function and following
+// - Update data on integration added <- update useSubscription integrationIds not working?
+// - Make modals sizes relative (Based on whole screen)
 // - table tbody hide under thead and keep transparency     <- Need help
-// - Add integrations to shouldHide options                 <- Potential help needed
-// - default sorting option                                 <- but I don't wannaaaaa....
+// - Add integrations to shouldHide options                 <- Need help
 // - Move columns ratio table to css vars
 // - tests maybe?
-// - Unexpected value xxxxx parsing width/height attribute  <- Need help (Actually impacts all widgets using cq and var sizes...), Not critical
 
 //Ratio table for relative width between columns
 const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
@@ -93,24 +93,9 @@ export default function DownloadClientsWidget({
   //Translations
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
-  const noIntegrationError = useScopedI18n("integration.permission")("use");
   //Item modal state and selection
   const [clickedIndex, setClickedIndex] = useState<number>(0);
   const [opened, { open, close }] = useDisclosure(false);
-
-  if (integrationIds.length === 0)
-    return (
-      <Center h="100%">
-        <Text fz="7.5cqw">{noIntegrationError}</Text>
-      </Center>
-    );
-
-  if (options.columns.length === 0)
-    return (
-      <Center h="100%">
-        <Text fz="7.5cqw">{t("errors.noColumns")}</Text>
-      </Center>
-    );
 
   //Get API mutation functions
   const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation();
@@ -175,7 +160,8 @@ export default function DownloadClientsWidget({
                 },
               };
             }),
-        ),
+        )
+        .sort(({ type: typeA }, { type: typeB }) => typeA.length - typeB.length),
     [currentItems, integrationIds, options],
   );
 
@@ -316,9 +302,9 @@ export default function DownloadClientsWidget({
                   size="calc(var(--ratioWidth)*0.75)"
                 >
                   {isPaused ? (
-                    <IconPlayerPlay size="calc(var(--ratioWidth)*0.5)" />
+                    <IconPlayerPlay style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
                   ) : (
-                    <IconPlayerPause size="calc(var(--ratioWidth)*0.5)" />
+                    <IconPlayerPause style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
                   )}
                 </ActionIcon>
               </Tooltip>
@@ -350,7 +336,7 @@ export default function DownloadClientsWidget({
               </Modal>
               <Tooltip label={t("actions.item.delete.title")}>
                 <ActionIcon color="red" radius={999} onClick={open} size="calc(var(--ratioWidth)*0.75)">
-                  <IconTrash size="calc(var(--ratioWidth)*0.5)" />
+                  <IconTrash style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
                 </ActionIcon>
               </Tooltip>
             </Group>
@@ -373,7 +359,7 @@ export default function DownloadClientsWidget({
           return (
             category !== undefined && (
               <Tooltip label={category}>
-                <IconInfoCircle />
+                <IconInfoCircle style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
               </Tooltip>
             )
           );
@@ -388,13 +374,13 @@ export default function DownloadClientsWidget({
         },
       },
       {
-        ...columnsDefBase({ key: "id", showHeader: false }),
+        ...columnsDefBase({ key: "id", showHeader: false, align: "center" }),
         enableSorting: false,
         Cell: ({ cell }) => {
           const id = cell.getValue<ExtendedDownloadClientItem["id"]>();
           return (
             <Tooltip label={id}>
-              <IconCirclesRelation />
+              <IconCirclesRelation style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
             </Tooltip>
           );
         },
@@ -493,7 +479,7 @@ export default function DownloadClientsWidget({
         Cell: ({ cell }) => {
           const time = cell.getValue<ExtendedDownloadClientItem["time"]>();
           return time === 0 ? (
-            <IconInfinity size="calc(var(--ratioWidth)*2/3)" />
+            <IconInfinity style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
           ) : (
             <Text>{dayjs().add(time).fromNow()}</Text>
           );
@@ -553,6 +539,10 @@ export default function DownloadClientsWidget({
       setOptions({ newOptions: { columns: columnOrder } });
     },
     initialState: {
+      sorting:
+        options.defaultSort != undefined
+          ? [{ id: options.defaultSort, desc: options.descendingDefaultSort }]
+          : undefined,
       columnVisibility: {
         actions: false,
         added: false,
@@ -591,6 +581,21 @@ export default function DownloadClientsWidget({
       { up: 0, down: 0 },
     );
 
+  if (integrationIds.length === 0)
+    return (
+      <Center h="100%">
+        <Text fz="7.5cqw">{tCommon("errors.noIntegration")}</Text>
+      </Center>
+    );
+
+  if (options.columns.length === 0)
+    return (
+      <Center h="100%">
+        <Text fz="7.5cqw">{t("errors.noColumns")}</Text>
+      </Center>
+    );
+  //InfoModal and ClientControls hook might trigger here.
+
   //The actual widget
   return (
     <Stack gap={0} h="100%" display="flex" style={baseStyle}>
@@ -621,42 +626,50 @@ interface ItemInfoModalProps {
 }
 
 const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalProps) => {
-  const item = useMemo<ExtendedDownloadClientItem | undefined>(() => items[currentIndex], [items, currentIndex, opened]);
+  const item = useMemo<ExtendedDownloadClientItem | undefined>(
+    () => items[currentIndex],
+    [items, currentIndex, opened],
+  );
   const t = useScopedI18n("widget.downloads.states");
   return (
     <Modal opened={opened} onClose={onClose} centered title={item?.id ?? "ERROR"} size="auto">
-        {item === undefined ? <Center>{"No item found"}</Center> :
-      <Stack align="center">
-        <Title>{item.name}</Title>
-        <Group>
-          <Avatar src={getIconUrl(item.integration.kind)} />
-          <Text>{`${item.integration.name} (${item.integration.kind})`}</Text>
-        </Group>
-        <NormalizedLine itemKey="index" values={item.index} />
-        <NormalizedLine itemKey="type" values={item.type} />
-        <NormalizedLine itemKey="state" values={t(item.state)} />
-        <NormalizedLine
-          itemKey="upSpeed"
-          values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed)?.toString().concat("/s")}
-        />
-        <NormalizedLine
-          itemKey="downSpeed"
-          values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed)?.toString().concat("/s")}
-        />
-        <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
-        <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
-        <NormalizedLine itemKey="size" values={humanFileSize(item.size)} />
-        <NormalizedLine
-          itemKey="progress"
-          values={new Intl.NumberFormat("en", { style: "percent", notation: "compact", unitDisplay: "narrow" }).format(
-            item.progress,
-          )}
-        />
-        <NormalizedLine itemKey="ratio" values={item.ratio} />
-        <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
-        <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
-        <NormalizedLine itemKey="category" values={item.category} />
-      </Stack>}
+      {item === undefined ? (
+        <Center>{"No item found"}</Center>
+      ) : (
+        <Stack align="center">
+          <Title>{item.name}</Title>
+          <Group>
+            <Avatar src={getIconUrl(item.integration.kind)} />
+            <Text>{`${item.integration.name} (${item.integration.kind})`}</Text>
+          </Group>
+          <NormalizedLine itemKey="index" values={item.index} />
+          <NormalizedLine itemKey="type" values={item.type} />
+          <NormalizedLine itemKey="state" values={t(item.state)} />
+          <NormalizedLine
+            itemKey="upSpeed"
+            values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed)?.toString().concat("/s")}
+          />
+          <NormalizedLine
+            itemKey="downSpeed"
+            values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed)?.toString().concat("/s")}
+          />
+          <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
+          <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
+          <NormalizedLine itemKey="size" values={humanFileSize(item.size)} />
+          <NormalizedLine
+            itemKey="progress"
+            values={new Intl.NumberFormat("en", {
+              style: "percent",
+              notation: "compact",
+              unitDisplay: "narrow",
+            }).format(item.progress)}
+          />
+          <NormalizedLine itemKey="ratio" values={item.ratio} />
+          <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
+          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
+          <NormalizedLine itemKey="category" values={item.category} />
+        </Stack>
+      )}
     </Modal>
   );
 };
@@ -708,7 +721,9 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   clients.forEach((client) =>
     client.paused ? pausedIntegrations.push(client.integration.id) : activeIntegrations.push(client.integration.id),
   );
-  const totalSpeed = humanFileSize(clients.reduce((count, { rates: { down } }) => count + down, 0))?.toString().concat("/s");
+  const totalSpeed = humanFileSize(clients.reduce((count, { rates: { down } }) => count + down, 0))
+    ?.toString()
+    .concat("/s");
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
   const [opened, { open, close }] = useDisclosure(false);
@@ -728,7 +743,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
           variant="light"
           onClick={() => mutateResumeQueue({ integrationIds: pausedIntegrations })}
         >
-          <IconPlayerPlay size="calc(var(--ratioWidth)*0.75)" />
+          <IconPlayerPlay style={{ height: "calc(var(--ratioWidth)*0.75)", width: "calc(var(--ratioWidth)*0.75)" }} />
         </ActionIcon>
       </Tooltip>
       <Modal opened={opened} onClose={close} title={t("clients.modalTitle")} centered size="auto">
@@ -807,7 +822,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
           variant="light"
           onClick={() => mutatePauseQueue({ integrationIds: activeIntegrations })}
         >
-          <IconPlayerPause size="calc(var(--ratioWidth)*0.75)" />
+          <IconPlayerPause style={{ height: "calc(var(--ratioWidth)*0.75)", width: "calc(var(--ratioWidth)*0.75)" }} />
         </ActionIcon>
       </Tooltip>
     </Group>
