@@ -1,9 +1,9 @@
 "use client";
 
-import type { ChangeEvent } from "react";
 import { useCallback } from "react";
 import {
   ActionIcon,
+  Alert,
   Anchor,
   Button,
   Fieldset,
@@ -33,23 +33,18 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
   const tLocation = useScopedI18n("widget.common.location");
   const form = useFormContext();
   const { openModal } = useModalAction(LocationSearchModal);
-  const value = form.values.options[property] as OptionLocation;
+  const inputProps = form.getInputProps(`options.${property}`);
+  const value = inputProps.value as OptionLocation;
   const selectionEnabled = value.name.length > 1;
 
-  const handleChange = form.getInputProps(`options.${property}`).onChange as LocationOnChange;
+  const handleChange = inputProps.onChange as LocationOnChange;
   const unknownLocation = tLocation("unknownLocation");
-
-  const onQueryChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    handleChange({
-      name: event.currentTarget.value,
-      longitude: "",
-      latitude: "",
-    });
-  }, []);
 
   const onLocationSelect = useCallback(
     (location: OptionLocation) => {
       handleChange(location);
+      form.clearFieldError(`options.${property}.latitude`);
+      form.clearFieldError(`options.${property}.longitude`);
     },
     [handleChange],
   );
@@ -63,35 +58,21 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
     });
   }, [selectionEnabled, value.name, onLocationSelect, openModal]);
 
-  const onLatitudeChange = useCallback(
-    (inputValue: number | string) => {
-      if (typeof inputValue !== "number") return;
-      handleChange({
-        ...value,
-        name: unknownLocation,
-        latitude: inputValue,
-      });
-    },
-    [value],
-  );
+  form.watch(`options.${property}.latitude`, ({ value }) => {
+    if (typeof value !== "number") return;
+    form.setFieldValue(`options.${property}.name`, unknownLocation);
+  });
 
-  const onLongitudeChange = useCallback(
-    (inputValue: number | string) => {
-      if (typeof inputValue !== "number") return;
-      handleChange({
-        ...value,
-        name: unknownLocation,
-        longitude: inputValue,
-      });
-    },
-    [value],
-  );
+  form.watch(`options.${property}.longitude`, ({ value }) => {
+    if (typeof value !== "number") return;
+    form.setFieldValue(`options.${property}.name`, unknownLocation);
+  });
 
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="xs">
         <Group wrap="nowrap" align="end">
-          <TextInput w="100%" label={tLocation("query")} value={value.name} onChange={onQueryChange} />
+          <TextInput w="100%" label={tLocation("query")} {...form.getInputProps(`options.${property}.name`)} />
           <Tooltip hidden={selectionEnabled} label={tLocation("disabledTooltip")}>
             <div>
               <Button
@@ -108,18 +89,16 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
 
         <Group grow>
           <NumberInput
-            value={value.latitude}
-            onChange={onLatitudeChange}
             decimalScale={5}
             label={tLocation("latitude")}
             hideControls
+            {...form.getInputProps(`options.${property}.latitude`)}
           />
           <NumberInput
-            value={value.longitude}
-            onChange={onLongitudeChange}
             decimalScale={5}
             label={tLocation("longitude")}
             hideControls
+            {...form.getInputProps(`options.${property}.longitude`)}
           />
         </Group>
       </Stack>
@@ -147,7 +126,11 @@ const LocationSearchModal = createModal<LocationSearchInnerProps>(({ actions, in
   });
 
   if (error) {
-    throw error;
+    return (
+      <Alert title={tCommon("error")} color="red">
+        {error.message}
+      </Alert>
+    );
   }
 
   return (
