@@ -1,10 +1,13 @@
 "use server";
 
-import {api} from "@homarr/api/server";
+import { api } from "@homarr/api/server";
 
-import type {WidgetProps} from "../../definition";
+import type { WidgetProps } from "../../definition";
 
-export default async function getServerDataAsync({integrationIds, itemId}: WidgetProps<"mediaRequests-requestStats">) {
+export default async function getServerDataAsync({
+  integrationIds,
+  itemId,
+}: WidgetProps<"mediaRequests-requestStats">) {
   if (integrationIds.length === 0 || !itemId) {
     return {
       initialData: [],
@@ -13,12 +16,10 @@ export default async function getServerDataAsync({integrationIds, itemId}: Widge
 
   const stats = await api.widget.mediaRequests.getStats({
     integrationIds,
-    itemId
+    itemId,
   });
 
   return {
-    initialData: stats
-      .filter(group => group != null)
-      .flatMap(group => group.data),
+    initialData: stats.filter((group) => group != null).flatMap((group) => group.data),
   };
 }

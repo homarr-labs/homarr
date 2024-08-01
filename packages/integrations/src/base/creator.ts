@@ -2,11 +2,11 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
+import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import type { IntegrationInput } from "./integration";
-import { OverseerrIntegration } from "../overseerr/overseerr-integration";
-import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 
 export const integrationCreatorByKind = (kind: IntegrationKind, integration: IntegrationInput) => {
   switch (kind) {

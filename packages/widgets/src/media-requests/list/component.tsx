@@ -1,6 +1,7 @@
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import {
@@ -9,7 +10,6 @@ import {
   MediaRequestStatus,
 } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
-import {clientApi} from "@homarr/api/client";
 
 export default function MediaServerWidget({
   isEditMode,
@@ -110,7 +110,7 @@ export default function MediaServerWidget({
                 <Group className="mediaRequests-list-item-request-user" gap="2cqmin" wrap="nowrap">
                   <Avatar
                     className="mediaRequests-list-item-request-user-avatar"
-                    src={mediaRequest.requestedBy?.profilePictureUrl}
+                    src={mediaRequest.requestedBy?.avatar}
                     size="6cqmin"
                   />
                   <Anchor
@@ -122,7 +122,7 @@ export default function MediaServerWidget({
                     lineClamp={1}
                     style={{ wordBreak: "break-all" }}
                   >
-                    {(mediaRequest.requestedBy?.username ?? "") || "unknown"}
+                    {(mediaRequest.requestedBy?.displayName ?? "") || "unknown"}
                   </Anchor>
                 </Group>
                 {mediaRequest.status === MediaRequestStatus.PendingApproval && (
@@ -134,7 +134,11 @@ export default function MediaServerWidget({
                         color="green"
                         size="5cqmin"
                         onClick={() => {
-                          /*Place approving function here*/
+                          mutateRequestAnswer({
+                            integrationId: mediaRequest.integrationId,
+                            requestId: mediaRequest.id,
+                            answer: "approve",
+                          });
                         }}
                       >
                         <IconThumbUp size="4cqmin" />
@@ -147,7 +151,11 @@ export default function MediaServerWidget({
                         color="red"
                         size="5cqmin"
                         onClick={() => {
-                          /*Place declining function here*/
+                          mutateRequestAnswer({
+                            integrationId: mediaRequest.integrationId,
+                            requestId: mediaRequest.id,
+                            answer: "decline",
+                          });
                         }}
                       >
                         <IconThumbDown size="4cqmin" />

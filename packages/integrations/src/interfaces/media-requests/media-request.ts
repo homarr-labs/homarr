@@ -1,7 +1,7 @@
 export interface MediaRequest {
   id: number;
   name: string;
-  type: 'movie' | 'tv';
+  type: "movie" | "tv";
   backdropImageUrl: string;
   posterImagePath: string;
   href: string;
@@ -12,11 +12,39 @@ export interface MediaRequest {
   requestedBy?: RequestUser;
 }
 
+export interface MediaRequestList {
+  integration: {
+    id: string;
+  };
+  medias: MediaRequest[];
+}
+
+export interface RequestStats {
+  total: number;
+  movie: number;
+  tv: number;
+  pending: number;
+  approved: number;
+  declined: number;
+  processing: number;
+  available: number;
+}
+
 export interface RequestUser {
   id: number;
-  username: string;
-  profilePictureUrl: string;
+  displayName: string;
+  avatar: string;
+  requestCount: number;
   link: string;
+}
+
+export interface MediaRequestStats {
+  integration: {
+    kind: string;
+    name: string;
+  };
+  stats: RequestStats;
+  users: RequestUser[];
 }
 
 export enum MediaRequestStatus {

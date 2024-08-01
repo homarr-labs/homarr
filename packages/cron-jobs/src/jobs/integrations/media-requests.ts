@@ -1,13 +1,13 @@
-import {createCronJob} from "../../lib";
-import {EVERY_5_SECONDS} from "@homarr/cron-jobs-core/expressions";
-import {db, eq, or} from "@homarr/db";
-import {items} from "@homarr/db/schema/sqlite";
-import type {MediaRequest, MediaRequestStats} from "@homarr/integrations";
-import { MediaRequestStatus} from "@homarr/integrations";
-import {JellyseerrIntegration, OverseerrIntegration} from "@homarr/integrations";
-import {decryptSecret} from "@homarr/common";
-import {createItemAndIntegrationChannel} from "@homarr/redis";
-import {logger} from "@homarr/log";
+import { decryptSecret } from "@homarr/common";
+import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
+import { db, eq, or } from "@homarr/db";
+import { items } from "@homarr/db/schema/sqlite";
+import type { MediaRequestList, MediaRequestStats } from "@homarr/integrations";
+import { JellyseerrIntegration, OverseerrIntegration } from "@homarr/integrations";
+import { logger } from "@homarr/log";
+import { createItemAndIntegrationChannel } from "@homarr/redis";
+
+import { createCronJob } from "../../lib";
 
 export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
@@ -31,16 +31,16 @@ export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).
   });
 
   for (const itemForIntegration of itemsForIntegration) {
-    for (const integration of itemForIntegration.integrations) {
+    for (const { integration } of itemForIntegration.integrations) {
       const integrationWithSecrets = {
-        ...integration.integration,
-        decryptedSecrets: integration.integration.secrets.map((secret) => ({
+        ...integration,
+        decryptedSecrets: integration.secrets.map((secret) => ({
           ...secret,
           value: decryptSecret(secret.value),
         })),
       };
       let requestsIntegration: OverseerrIntegration;
-      switch (integration.integration.kind) {
+      switch (integration.kind) {
         case "jellyseerr":
           requestsIntegration = new JellyseerrIntegration(integrationWithSecrets);
           break;
@@ -48,42 +48,30 @@ export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).
           requestsIntegration = new OverseerrIntegration(integrationWithSecrets);
           break;
         default:
-          logger.warn(`Unable to process media requests kind '${integration.integration.kind}'. Skipping this integration`);
+          logger.warn(`Unable to process media requests kind '${integration.kind}'. Skipping this integration`);
           continue;
       }
 
       const mediaRequests = await requestsIntegration.getRequestsAsync();
-      const requestListChannel = createItemAndIntegrationChannel<MediaRequest[]>("mediaRequests-requestList", integration.integrationId);
-      await requestListChannel.publishAndUpdateLastStateAsync(mediaRequests);
+      const requestsStats = await requestsIntegration.getStatsAsync();
+      const requestsUsers = await requestsIntegration.getUsersAsync();
+      const requestListChannel = createItemAndIntegrationChannel<MediaRequestList>(
+        "mediaRequests-requestList",
+        integration.id,
+      );
+      await requestListChannel.publishAndUpdateLastStateAsync({
+        integration: { id: integration.id },
+        medias: mediaRequests,
+      });
 
-      const requestStatsChannel = createItemAndIntegrationChannel<MediaRequestStats>("mediaRequests-requestStats", integration.integrationId);
+      const requestStatsChannel = createItemAndIntegrationChannel<MediaRequestStats>(
+        "mediaRequests-requestStats",
+        integration.id,
+      );
       await requestStatsChannel.publishAndUpdateLastStateAsync({
-        values: [
-          {
-            name: "approved",
-            value: mediaRequests.filter(request => request.status === MediaRequestStatus.Approved).length,
-          },
-          {
-            name: "pending",
-            value: mediaRequests.filter(request => request.status === MediaRequestStatus.PendingApproval).length,
-          },
-          {
-            name: "declined",
-            value: mediaRequests.filter(request => request.status === MediaRequestStatus.Declined).length,
-          },
-          {
-            name: "shows",
-            value: mediaRequests.filter(request => request.type === "tv").length,
-          },
-          {
-            name: "movies",
-            value: mediaRequests.filter(request => request.type === "movie").length,
-          },
-          {
-            name: "total",
-            value: mediaRequests.length,
-          },
-        ]
+        integration: { kind: integration.kind, name: integration.name },
+        stats: requestsStats,
+        users: requestsUsers,
       });
     }
   }

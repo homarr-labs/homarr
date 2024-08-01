@@ -1,91 +1,87 @@
-import {ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
-import {useElementSize} from "@mantine/hooks";
+import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 import {
+  Icon,
   IconDeviceTv,
   IconExternalLink,
   IconHourglass,
+  IconLoaderQuarter,
   IconMovie,
+  IconPlayerPlay,
   IconReceipt,
   IconThumbDown,
   IconThumbUp,
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
-import {useScopedI18n} from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
-import type {WidgetComponentProps} from "../../definition";
+import type { RequestStats, RequestUser } from "../../../../integrations/src/interfaces/media-requests/media-request";
+import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
-import type {RequestUser} from "../../../../integrations/src/interfaces/media-requests/media-request";
-import {MediaRequestStats} from "@homarr/integrations";
 
 export default function MediaServerWidget({
-                                            isEditMode,
-                                            serverData,
-                                          }: WidgetComponentProps<"mediaRequests-requestStats">) {
+  isEditMode,
+  serverData,
+}: WidgetComponentProps<"mediaRequests-requestStats">) {
   if (!serverData?.initialData) return null;
 
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const tCommon = useScopedI18n("common");
 
-  const {width, height, ref} = useElementSize();
+  const { width, height, ref } = useElementSize();
 
-  const flatMediaRequestStats = serverData?.initialData.reduce((a, b) => ({
-    ...b,
-    values: b.values.map((value) => ({
-      ...value,
-      value: value.value + a.values.find((aValue) => aValue.name === value.name).value
-    }))
-  } as MediaRequestStats));
+  const stats = serverData.initialData.flatMap(({ stats }) => stats);
+  const users = serverData.initialData
+    .flatMap(({ integration, users }) =>
+      users.flatMap((user) => ({ ...user, appKind: integration.kind, appName: integration.name })),
+    )
+    .sort(({ requestCount: a }, { requestCount: b }) => b - a)
+    .slice(0, Math.max(Math.trunc((height / width) * 5), 1));
 
+  //Add processing and available
   const data = [
     {
-      name: "approved", //Extrapolability between "approved","pending","declined" and "total", needs 3/4
+      name: "approved",
       icon: IconThumbUp,
-      number: 123,
+      number: stats.reduce((count, { approved }) => count + approved, 0),
     },
     {
-      name: "pending", //Extrapolability between "approved","pending","declined" and "total", needs 3/4
+      name: "pending",
       icon: IconHourglass,
-      number: 4,
+      number: stats.reduce((count, { pending }) => count + pending, 0),
     },
     {
-      name: "declined", //Extrapolability between "approved","pending","declined" and "total", needs 3/4
+      name: "processing",
+      icon: IconLoaderQuarter,
+      number: stats.reduce((count, { processing }) => count + processing, 0),
+    },
+    {
+      name: "declined",
       icon: IconThumbDown,
-      number: 5,
+      number: stats.reduce((count, { declined }) => count + declined, 0),
     },
     {
-      name: "shows", //Extrapolability if movies present
+      name: "available",
+      icon: IconPlayerPlay,
+      number: stats.reduce((count, { available }) => count + available, 0),
+    },
+    {
+      name: "tv",
       icon: IconDeviceTv,
-      number: 67,
+      number: stats.reduce((count, { tv }) => count + tv, 0),
     },
     {
-      name: "movies", //Extrapolability if shows present
+      name: "movie",
       icon: IconMovie,
-      number: 56,
+      number: stats.reduce((count, { movie }) => count + movie, 0),
     },
     {
-      name: "total", //Extrapolability between "approved","pending","declined" and "total", needs 3/4
+      name: "total",
       icon: IconReceipt,
-      number: 132,
+      number: stats.reduce((count, { total }) => count + total, 0),
     },
-  ];
-
-  //Replace all this here with user list from serverData
-  const usersData = Array.from({length: 5}).fill({
-    id: 1,
-    profilePictureUrl: "",
-    username: "tester",
-    link: "",
-    app: "overseerr",
-    userRequestCount: "1000",
-  }) as ({
-    app: string;
-    userRequestCount: number; //<-- I'd suggest adding both to "RequestUser" as optional fields
-  } & RequestUser)[];
-
-  const users = usersData //Insert "serverData.users" here
-    .sort((userA, userB) => (userA.userRequestCount > userB.userRequestCount ? -1 : 1))
-    .slice(0, Math.max(Math.trunc((height / width) * 5), 1));
+  ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
   return (
     <Stack
@@ -95,9 +91,8 @@ export default function MediaServerWidget({
       gap="2cqmin"
       p="2cqmin"
       align="center"
-      style={{pointerEvents: isEditMode ? "none" : undefined}}
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      <span>{JSON.stringify(flatMediaRequestStats)}</span>
       <Text className="mediaRequests-stats-stats-title" size="6.5cqmin">
         {t("titles.stats.main")}
       </Text>
@@ -110,11 +105,11 @@ export default function MediaServerWidget({
               `mediaRequests-stats-stat-${stat.name}`,
             )}
             key={stat.name}
-            span={4}
+            span={3}
           >
             <Tooltip label={t(`titles.stats.${stat.name}`)}>
               <Stack className="mediaRequests-stats-stat-stack" align="center" gap="2cqmin" p="2cqmin">
-                <stat.icon className="mediaRequests-stats-stat-icon" size="7.5cqmin"/>
+                <stat.icon className="mediaRequests-stats-stat-icon" size="7.5cqmin" />
                 <Text className="mediaRequests-stats-stat-value" size="5cqmin">
                   {stat.number}
                 </Text>
@@ -133,7 +128,7 @@ export default function MediaServerWidget({
         ref={ref}
         display="flex"
         gap="2cqmin"
-        style={{overflow: "hidden"}}
+        style={{ overflow: "hidden" }}
       >
         {users.map((user) => (
           <Card
@@ -149,24 +144,24 @@ export default function MediaServerWidget({
             radius="2.5cqmin"
           >
             <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="2cqmin" display="flex">
-              <Tooltip label={user.app}>
+              <Tooltip label={user.appName}>
                 <Avatar
                   className="mediaRequests-stats-users-user-avatar"
                   size="12.5cqmin"
-                  src={user.profilePictureUrl}
-                  bd={`0.5cqmin solid ${user.app === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                  src={user.avatar}
+                  bd={`0.5cqmin solid ${user.appKind === "overseerr" ? "#ECB000" : "#6677CC"}`}
                 />
               </Tooltip>
               <Stack className="mediaRequests-stats-users-user-infos" gap="2cqmin">
                 <Text className="mediaRequests-stats-users-user-userName" size="6cqmin">
-                  {user.username}
+                  {user.displayName}
                 </Text>
                 <Text className="mediaRequests-stats-users-user-request-count" size="4cqmin">
-                  {tCommon("rtl", {value: t("titles.users.requests"), symbol: tCommon("symbols.colon")}) +
-                    user.userRequestCount}
+                  {tCommon("rtl", { value: t("titles.users.requests"), symbol: tCommon("symbols.colon") }) +
+                    user.requestCount}
                 </Text>
               </Stack>
-              <Space flex={1}/>
+              <Space flex={1} />
               <ActionIcon
                 className="mediaRequests-stats-users-user-link-button"
                 variant="light"
@@ -175,7 +170,7 @@ export default function MediaServerWidget({
                 component="a"
                 href={user.link}
               >
-                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size="7.5cqmin"/>
+                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size="7.5cqmin" />
               </ActionIcon>
             </Group>
           </Card>

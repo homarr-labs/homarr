@@ -1,27 +1,39 @@
-import { createTRPCRouter, publicProcedure } from "../../trpc";
-import {createManyIntegrationOfOneItemMiddleware, createOneIntegrationMiddleware} from "../../middlewares/integration";
-import { createItemAndIntegrationChannel } from "@homarr/redis";
-import type { MediaRequest, MediaRequestStats} from "@homarr/integrations";
-import {JellyseerrIntegration, OverseerrIntegration} from "@homarr/integrations";
-import { z } from "@homarr/validation";
 import { TRPCError } from "@trpc/server";
+
+import type { MediaRequestList, MediaRequestStats } from "@homarr/integrations";
+import { JellyseerrIntegration, OverseerrIntegration } from "@homarr/integrations";
+import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { z } from "@homarr/validation";
+
+import {
+  createManyIntegrationOfOneItemMiddleware,
+  createOneIntegrationMiddleware,
+} from "../../middlewares/integration";
+import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const mediaRequestsRouter = createTRPCRouter({
   getLatestRequests: publicProcedure
     .unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "overseerr", "jellyseerr"))
     .query(async ({ input }) => {
-      return await Promise.all(input.integrationIds.map(async (integrationId) => {
-        const channel = createItemAndIntegrationChannel<MediaRequest[]>("mediaRequests-requestList", integrationId);
-        return await channel.getAsync();
-      }));
+      return await Promise.all(
+        input.integrationIds.map(async (integrationId) => {
+          const channel = createItemAndIntegrationChannel<MediaRequestList>("mediaRequests-requestList", integrationId);
+          return await channel.getAsync();
+        }),
+      );
     }),
   getStats: publicProcedure
     .unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "overseerr", "jellyseerr"))
     .query(async ({ input }) => {
-      return await Promise.all(input.integrationIds.map(async (integrationId) => {
-        const channel = createItemAndIntegrationChannel<MediaRequestStats[]>("mediaRequests-requestStats", integrationId);
-        return await channel.getAsync();
-      }));
+      return await Promise.all(
+        input.integrationIds.map(async (integrationId) => {
+          const channel = createItemAndIntegrationChannel<MediaRequestStats>(
+            "mediaRequests-requestStats",
+            integrationId,
+          );
+          return await channel.getAsync();
+        }),
+      );
     }),
   answerRequest: publicProcedure
     .unstable_concat(createOneIntegrationMiddleware("query", "overseerr", "jellyseerr"))
@@ -38,7 +50,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           break;
         default:
           throw new TRPCError({
-            code: "BAD_REQUEST"
+            code: "BAD_REQUEST",
           });
       }
 
@@ -47,5 +59,5 @@ export const mediaRequestsRouter = createTRPCRouter({
         return;
       }
       await integration.declineRequestAsync(input.requestId);
-    })
+    }),
 });

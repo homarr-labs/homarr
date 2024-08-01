@@ -12,6 +12,8 @@ import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as mediaRequestsList from "./media-requests/list";
+import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
 import * as rssFeed from "./rssFeed";
@@ -19,8 +21,6 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as mediaRequestsList from "./media-requests/list";
-import * as mediaRequestsStats from "./media-requests/stats";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
