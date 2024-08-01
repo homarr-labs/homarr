@@ -507,6 +507,9 @@ export default {
       colon: ": ",
     },
     error: "Error",
+    errors: {
+      noData: "No data to show",
+    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -617,9 +620,6 @@ export default {
           boardAlreadyExists: "A board with this name already exists",
         },
       },
-    },
-    error: {
-      noData: "No data to show",
     },
     mantineReactTable: MRT_Localization_EN,
   },

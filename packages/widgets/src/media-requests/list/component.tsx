@@ -33,7 +33,7 @@ export default function MediaServerWidget({
   const tCommon = useScopedI18n("common");
   const integrationError = useScopedI18n("integration.permission")("use");
 
-  if (!serverData?.initialData) return <Center h="100%">{tCommon("error.noData")}</Center>;
+  if (!serverData?.initialData) return <Center h="100%">{tCommon("errors.noData")}</Center>;
 
   if (integrationIds.length === 0) return <Center h="100%">{integrationError}</Center>;
 
