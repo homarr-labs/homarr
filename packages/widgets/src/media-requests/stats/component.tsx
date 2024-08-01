@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
+import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { RequestStats } from "../../../../integrations/src/interfaces/media-requests/media-request";
@@ -25,27 +26,57 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   serverData,
+  itemId,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const tCommon = useScopedI18n("common");
+  const isQueryEnabled = Boolean(itemId);
+  const { data: requestStats, isError: _isError } = clientApi.widget.mediaRequests.getStats.useQuery(
+    {
+      integrationIds,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      itemId: itemId!,
+    },
+    {
+      initialData: !serverData ? undefined : serverData.initialData,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      enabled: integrationIds.length > 0 && isQueryEnabled,
+    },
+  );
 
   const { width, height, ref } = useElementSize();
 
-  const stats = useMemo(() => serverData?.initialData.flatMap(({ stats }) => stats), [serverData, integrationIds]);
+  const baseData = useMemo(
+    () => requestStats?.filter((group) => group != null).flatMap((group) => group.data) ?? [],
+    [requestStats],
+  );
+
+  const stats = useMemo(() => baseData.flatMap(({ stats }) => stats), [baseData]);
   const users = useMemo(
     () =>
-      serverData?.initialData
+      baseData
         .flatMap(({ integration, users }) =>
           users.flatMap((user) => ({ ...user, appKind: integration.kind, appName: integration.name })),
         )
-        .sort(({ requestCount: countA }, { requestCount: countB }) => countB - countA)
-        .slice(0, Math.max(Math.trunc((height / width) * 5), 1)),
-    [serverData, integrationIds, width, height],
+        .sort(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
+    [baseData],
   );
 
-  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
+  if (integrationIds.length === 0)
+    return (
+      <Center ref={ref} h="100%">
+        {tCommon("errors.noIntegration")}
+      </Center>
+    );
 
-  if (!users || users.length === 0 || !stats || stats.length === 0) return <Center h="100%">{tCommon("errors.noData")}</Center>;
+  if (users.length === 0 || stats.length === 0)
+    return (
+      <Center ref={ref} h="100%">
+        {tCommon("errors.noData")}
+      </Center>
+    );
 
   //Add processing and available
   const data = [
@@ -138,7 +169,7 @@ export default function MediaServerWidget({
         gap="2cqmin"
         style={{ overflow: "hidden" }}
       >
-        {users.map((user) => (
+        {users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
           <Card
             className={combineClasses(
               "mediaRequests-stats-users-user-wrapper",

@@ -10,7 +10,7 @@ export default async function getServerDataAsync({
 }: WidgetProps<"mediaRequests-requestStats">) {
   if (integrationIds.length === 0 || !itemId) {
     return {
-      initialData: [],
+      initialData: undefined,
     };
   }
 
@@ -20,6 +20,6 @@ export default async function getServerDataAsync({
   });
 
   return {
-    initialData: stats.filter((group) => group != null).flatMap((group) => group.data),
+    initialData: stats.filter((group) => group != null),
   };
 }

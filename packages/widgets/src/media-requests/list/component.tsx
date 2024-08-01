@@ -16,6 +16,7 @@ import {
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import {
@@ -23,30 +24,25 @@ import {
   MediaRequestStatus,
 } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
-import type { ScopedTranslationFunction } from "@homarr/translation";
 
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   options,
   serverData,
-  itemId
+  itemId,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const tCommon = useScopedI18n("common");
   const isQueryEnabled = Boolean(itemId);
-  const {
-    data: mediaRequests,
-    isError: _isError,
-  } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
+  const { data: mediaRequests, isError: _isError } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
       integrationIds,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       itemId: itemId!,
     },
     {
-      initialData:
-        !serverData ? [] : serverData.initialData,
+      initialData: !serverData ? undefined : serverData.initialData,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -57,7 +53,7 @@ export default function MediaServerWidget({
   const sortedMediaRequests = useMemo(
     () =>
       mediaRequests
-        .filter((group) => group != null)
+        ?.filter((group) => group != null)
         .flatMap((group) => group.data)
         .flatMap(({ medias, integration }) => medias.map((media) => ({ ...media, integrationId: integration.id })))
         .sort(({ status: statusA }, { status: statusB }) => {
@@ -68,7 +64,7 @@ export default function MediaServerWidget({
             return 1;
           }
           return 0;
-        }),
+        }) ?? [],
     [mediaRequests, integrationIds],
   );
 
@@ -218,7 +214,10 @@ export default function MediaServerWidget({
   );
 }
 
-function GetAvailabilityProperties(mediaRequestAvailability: MediaAvailability, t: ScopedTranslationFunction<"widget.mediaRequests-requestList">) {
+function GetAvailabilityProperties(
+  mediaRequestAvailability: MediaAvailability,
+  t: ScopedTranslationFunction<"widget.mediaRequests-requestList">,
+) {
   switch (mediaRequestAvailability) {
     case MediaAvailability.Available:
       return { color: "green", label: t("availability.available") };

@@ -7,7 +7,7 @@ import type { WidgetProps } from "../../definition";
 export default async function getServerDataAsync({ integrationIds, itemId }: WidgetProps<"mediaRequests-requestList">) {
   if (integrationIds.length === 0 || !itemId) {
     return {
-      initialData: [],
+      initialData: undefined,
     };
   }
 
