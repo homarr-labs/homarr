@@ -617,6 +617,9 @@ export default {
         },
       },
     },
+    error: {
+      noData: "No data to show",
+    },
     mantineReactTable: MRT_Localization_EN,
   },
   section: {

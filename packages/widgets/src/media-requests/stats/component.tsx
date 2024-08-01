@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Card, Center, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import {
   Icon,
@@ -16,18 +16,22 @@ import combineClasses from "clsx";
 
 import { useScopedI18n } from "@homarr/translation/client";
 
-import type { RequestStats, RequestUser } from "../../../../integrations/src/interfaces/media-requests/media-request";
+import type { RequestStats } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
 
 export default function MediaServerWidget({
+  integrationIds,
   isEditMode,
   serverData,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
-  if (!serverData?.initialData) return null;
-
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const tCommon = useScopedI18n("common");
+  const integrationError = useScopedI18n("integration.permission")("use");
+
+  if (!serverData?.initialData) return <Center h="100%">{tCommon("error.noData")}</Center>;
+
+  if (integrationIds.length === 0) return <Center h="100%">{integrationError}</Center>;
 
   const { width, height, ref } = useElementSize();
 

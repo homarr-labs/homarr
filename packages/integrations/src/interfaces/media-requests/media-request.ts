@@ -6,7 +6,7 @@ export interface MediaRequest {
   posterImagePath: string;
   href: string;
   createdAt: Date;
-  airDate: Date;
+  airDate?: Date;
   status: MediaRequestStatus;
   availability: MediaAvailability;
   requestedBy?: RequestUser;

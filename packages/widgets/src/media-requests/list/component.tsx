@@ -1,4 +1,17 @@
-import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Anchor,
+  Avatar,
+  Badge,
+  Card,
+  Center,
+  Group,
+  Image,
+  ScrollArea,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -6,29 +19,33 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import {
   MediaAvailability,
-  MediaRequest,
   MediaRequestStatus,
 } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MediaServerWidget({
+  integrationIds,
   isEditMode,
   options,
   serverData,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  if (!serverData?.initialData) return null;
+  const t = useScopedI18n("widget.mediaRequests-requestList");
+  const tCommon = useScopedI18n("common");
+  const integrationError = useScopedI18n("integration.permission")("use");
 
-  const sortedMediaRequests = serverData.initialData.sort((a: MediaRequest, b: MediaRequest) => {
-    if (a.status === MediaRequestStatus.PendingApproval) {
+  if (!serverData?.initialData) return <Center h="100%">{tCommon("error.noData")}</Center>;
+
+  if (integrationIds.length === 0) return <Center h="100%">{integrationError}</Center>;
+
+  const sortedMediaRequests = serverData.initialData.sort(({ status: statusA }, { status: statusB }) => {
+    if (statusA === MediaRequestStatus.PendingApproval) {
       return -1;
     }
-    if (b.status === MediaRequestStatus.PendingApproval) {
+    if (statusB === MediaRequestStatus.PendingApproval) {
       return 1;
     }
     return 0;
   });
-
-  const t = useScopedI18n("widget.mediaRequests-requestList");
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 
