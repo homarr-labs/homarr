@@ -2,7 +2,7 @@ import type { MutableRefObject, RefObject } from "react";
 import { createRef, useCallback, useEffect, useRef } from "react";
 import { useElementSize } from "@mantine/hooks";
 
-import type { GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
+import type { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
 import type { Section } from "~/app/[locale]/boards/_types";
 import { useEditMode, useMarkSectionAsReady, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
@@ -20,6 +20,24 @@ interface UseGristackReturnType {
   refs: UseGridstackRefs;
 }
 
+const handleResizeChange = (
+  wrapper: HTMLDivElement,
+  gridstack: GridStack,
+  width: number,
+  height: number,
+  isDynamic: boolean,
+) => {
+  wrapper.style.setProperty("--gridstack-column-count", width.toString());
+  wrapper.style.setProperty("--gridstack-row-count", height.toString());
+
+  let cellHeight = wrapper.clientWidth / width;
+  if (isDynamic) {
+    cellHeight = wrapper.clientHeight / height;
+  }
+
+  gridstack.cellHeight(cellHeight);
+};
+
 export const useGridstack = (section: Omit<Section, "items">, itemIds: string[]): UseGristackReturnType => {
   const [isEditMode] = useEditMode();
   const markAsReady = useMarkSectionAsReady();
@@ -27,7 +45,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   const { moveAndResizeInnerSection, moveInnerSectionToSection } = useSectionActions();
 
   // define reference for wrapper - is used to calculate the width of the wrapper
-  const { ref: wrapperRef, width } = useElementSize<HTMLDivElement>();
+  const { ref: wrapperRef, width, height } = useElementSize<HTMLDivElement>();
   // references to the diffrent items contained in the gridstack
   const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement>>>({});
   // reference of the gridstack object for modifications after initialization
@@ -45,6 +63,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     gridRef,
     wrapperRef,
     width,
+    height,
     isDynamic: section.kind === "dynamic",
   });
 
@@ -152,6 +171,18 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     // Add listener for moving items around in a wrapper
     currentGrid?.on("change", (_, nodes) => {
       nodes.forEach(onChange);
+
+      // For all dynamic section items that changed we want to update the inner gridstack
+      nodes
+        .filter((node) => node.el?.getAttribute("data-type") === "section")
+        .forEach((node) => {
+          const dynamicInnerGrid = node.el?.querySelector<GridHTMLElement>('.grid-stack[data-kind="dynamic"]');
+
+          if (!dynamicInnerGrid?.gridstack) return;
+
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          handleResizeChange(dynamicInnerGrid as HTMLDivElement, dynamicInnerGrid.gridstack, node.w!, node.h!, true);
+        });
     });
 
     // Add listener for moving items in config from one wrapper to another
@@ -205,6 +236,7 @@ interface UseCssVariableConfiguration {
   gridRef: UseGridstackRefs["gridstack"];
   wrapperRef: UseGridstackRefs["wrapper"];
   width: number;
+  height: number;
   columnCount: number;
   isDynamic: boolean;
 }
@@ -216,16 +248,30 @@ interface UseCssVariableConfiguration {
  * @param gridRef reference to the gridstack object
  * @param wrapperRef reference to the wrapper of the gridstack
  * @param width width of the section
+ * @param height height of the section
  * @param columnCount column count of the gridstack
  */
 const useCssVariableConfiguration = ({
   gridRef,
   wrapperRef,
   width,
+  height,
   columnCount,
   isDynamic,
 }: UseCssVariableConfiguration) => {
   const onResize = useCallback(() => {
+    if (!wrapperRef.current) return;
+    if (!gridRef.current) return;
+    handleResizeChange(
+      wrapperRef.current,
+      gridRef.current,
+      gridRef.current.getColumn(),
+      gridRef.current.getRow(),
+      isDynamic,
+    );
+  }, [wrapperRef, gridRef, isDynamic]);
+
+  useCallback(() => {
     if (!wrapperRef.current) return;
     if (!gridRef.current) return;
 
@@ -238,7 +284,7 @@ const useCssVariableConfiguration = ({
     }
 
     gridRef.current.cellHeight(cellHeight);
-  }, [columnCount, wrapperRef, gridRef, isDynamic]);
+  }, [wrapperRef, gridRef, isDynamic]);
 
   // Define widget-width by calculating the width of one column with mainRef width and column count
   useEffect(() => {
@@ -257,7 +303,7 @@ const useCssVariableConfiguration = ({
   // Handle resize of inner sections when there size changes
   useEffect(() => {
     onResize();
-  }, [width, onResize]);
+  }, [width, height, onResize]);
 
   // Define column count by using the sectionColumnCount
   useEffect(() => {

@@ -21,7 +21,7 @@
 // Define min size for gridstack items
 .grid-stack > .grid-stack-item {
   min-width: calc(100% / var(--gridstack-column-count));
-  min-height: calc(1px * var(--gridstack-widget-width));
+  min-height: calc(100% / var(--gridstack-row-count));
 }
 
 // Styling for grid-stack main area
