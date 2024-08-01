@@ -36,13 +36,6 @@
       "when": 1720036615408,
       "tag": "0004_peaceful_red_ghost",
       "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1720452149899,
-      "tag": "0005_silly_zombie",
-      "breakpoints": true
     }
   ]
 }
