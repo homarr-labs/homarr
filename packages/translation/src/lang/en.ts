@@ -617,6 +617,9 @@ export default {
         },
       },
     },
+    error: {
+      noData: "No data to show",
+    },
     mantineReactTable: MRT_Localization_EN,
   },
   section: {
@@ -1038,7 +1041,7 @@ export default {
       description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
       option: {
         linksTargetNewTab: {
-          label: "Open links in new tab"
+          label: "Open links in new tab",
         },
       },
       pending: {
@@ -1064,9 +1067,11 @@ export default {
           main: "Media Stats",
           approved: "Already approved",
           pending: "Pending approvals",
+          processing: "Being processed",
           declined: "Already declined",
-          shows: "TV requests",
-          movies: "Movie requests",
+          available: "Already Available",
+          tv: "TV requests",
+          movie: "Movie requests",
           total: "Total",
         },
         users: {
@@ -1552,7 +1557,7 @@ export default {
               label: "Media Organizers",
             },
             mediaRequests: {
-              label: "Media Requests"
+              label: "Media Requests",
             },
             rssFeeds: {
               label: "RSS feeds",

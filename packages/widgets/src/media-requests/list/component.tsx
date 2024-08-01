@@ -1,34 +1,51 @@
-import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Anchor,
+  Avatar,
+  Badge,
+  Card,
+  Center,
+  Group,
+  Image,
+  ScrollArea,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import {
   MediaAvailability,
-  MediaRequest,
   MediaRequestStatus,
 } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
-import {clientApi} from "@homarr/api/client";
 
 export default function MediaServerWidget({
+  integrationIds,
   isEditMode,
   options,
   serverData,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
-  if (!serverData?.initialData) return null;
+  const t = useScopedI18n("widget.mediaRequests-requestList");
+  const tCommon = useScopedI18n("common");
+  const integrationError = useScopedI18n("integration.permission")("use");
 
-  const sortedMediaRequests = serverData.initialData.sort((a: MediaRequest, b: MediaRequest) => {
-    if (a.status === MediaRequestStatus.PendingApproval) {
+  if (!serverData?.initialData) return <Center h="100%">{tCommon("error.noData")}</Center>;
+
+  if (integrationIds.length === 0) return <Center h="100%">{integrationError}</Center>;
+
+  const sortedMediaRequests = serverData.initialData.sort(({ status: statusA }, { status: statusB }) => {
+    if (statusA === MediaRequestStatus.PendingApproval) {
       return -1;
     }
-    if (b.status === MediaRequestStatus.PendingApproval) {
+    if (statusB === MediaRequestStatus.PendingApproval) {
       return 1;
     }
     return 0;
   });
-
-  const t = useScopedI18n("widget.mediaRequests-requestList");
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 
@@ -110,7 +127,7 @@ export default function MediaServerWidget({
                 <Group className="mediaRequests-list-item-request-user" gap="2cqmin" wrap="nowrap">
                   <Avatar
                     className="mediaRequests-list-item-request-user-avatar"
-                    src={mediaRequest.requestedBy?.profilePictureUrl}
+                    src={mediaRequest.requestedBy?.avatar}
                     size="6cqmin"
                   />
                   <Anchor
@@ -122,7 +139,7 @@ export default function MediaServerWidget({
                     lineClamp={1}
                     style={{ wordBreak: "break-all" }}
                   >
-                    {(mediaRequest.requestedBy?.username ?? "") || "unknown"}
+                    {(mediaRequest.requestedBy?.displayName ?? "") || "unknown"}
                   </Anchor>
                 </Group>
                 {mediaRequest.status === MediaRequestStatus.PendingApproval && (
@@ -134,7 +151,11 @@ export default function MediaServerWidget({
                         color="green"
                         size="5cqmin"
                         onClick={() => {
-                          /*Place approving function here*/
+                          mutateRequestAnswer({
+                            integrationId: mediaRequest.integrationId,
+                            requestId: mediaRequest.id,
+                            answer: "approve",
+                          });
                         }}
                       >
                         <IconThumbUp size="4cqmin" />
@@ -147,7 +168,11 @@ export default function MediaServerWidget({
                         color="red"
                         size="5cqmin"
                         onClick={() => {
-                          /*Place declining function here*/
+                          mutateRequestAnswer({
+                            integrationId: mediaRequest.integrationId,
+                            requestId: mediaRequest.id,
+                            answer: "decline",
+                          });
                         }}
                       >
                         <IconThumbDown size="4cqmin" />

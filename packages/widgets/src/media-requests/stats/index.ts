@@ -1,4 +1,5 @@
 import { IconChartBar } from "@tabler/icons-react";
+
 import { createWidgetDefinition } from "../../definition";
 
 export const { componentLoader, definition, serverDataLoader } = createWidgetDefinition("mediaRequests-requestStats", {

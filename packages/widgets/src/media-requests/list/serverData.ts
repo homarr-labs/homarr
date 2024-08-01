@@ -13,10 +13,14 @@ export default async function getServerDataAsync({ integrationIds, itemId }: Wid
 
   const requests = await api.widget.mediaRequests.getLatestRequests({
     integrationIds,
-    itemId
+    itemId,
   });
 
   return {
-    initialData: requests.filter(group => group != null).flatMap(group => group.data),
+    initialData: requests
+      .filter((group) => group != null)
+      .flatMap((group) =>
+        group.data.medias.flatMap((media) => ({ ...media, integrationId: group.data.integration.id })),
+      ),
   };
 }
