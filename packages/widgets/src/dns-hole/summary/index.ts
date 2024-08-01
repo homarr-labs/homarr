@@ -17,7 +17,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       defaultValue: "grid",
     }),
   })),
-  supportedIntegrations: ["piHole"],
+  supportedIntegrations: ["piHole", "adGuardHome"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

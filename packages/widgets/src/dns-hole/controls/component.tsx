@@ -29,9 +29,10 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   }
 
   const PiHoleIntegrationDef = integrationDefs.piHole;
+  const AdGuardHomeIntegrationDef = integrationDefs.adGuardHome;
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
-      integrationId,
+      integrationIds,
     },
     {
       refetchOnMount: false,
@@ -40,7 +41,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   );
 
   const t = useI18n();
-  const [status, setStatus] = useState<string>(data.status);
+  const [status, setStatus] = useState<string>(data[0]?.summary.status);
   const [opened, { close, open }] = useDisclosure(false);
 
   const { mutate: enableDnsControl } = clientApi.widget.dnsHole.enable.useMutation({

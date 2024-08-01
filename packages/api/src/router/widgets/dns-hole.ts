@@ -6,41 +6,88 @@ import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
 import { controlsInputSchema } from "../../../../integrations/src/pi-hole/pi-hole-types";
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
-  summary: publicProcedure.unstable_concat(createOneIntegrationMiddleware("query", "piHole")).query(async ({ ctx }) => {
-    const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${ctx.integration.id}`);
+  summary: publicProcedure
+    .unstable_concat(createManyIntegrationMiddleware("query", "piHole", "adGuardHome"))
+    .query(async ({ ctx }) => {
+      const results = await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${integration.id}`);
+          const { data } = await cache.consumeAsync(async () => {
+            let client;
+            switch (integration.kind) {
+              case "piHole":
+                client = new PiHoleIntegration(integration);
+                break;
+              // case 'adGuardHome':
+              //   client = new AdGuardHomeIntegration(integration);
+              //   break;
+              default:
+                throw new TRPCError({
+                  code: "INTERNAL_SERVER_ERROR",
+                  message: `Unsupported integration type: ${integration.kind}`,
+                });
+            }
 
-    const { data } = await cache.consumeAsync(async () => {
-      const client = new PiHoleIntegration(ctx.integration);
+            return await client.getSummaryAsync().catch((err) => {
+              logger.error("dns-hole router - ", err);
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: `Failed to fetch DNS Hole summary for ${integration.name} (${integration.id})`,
+              });
+            });
+          });
 
-      return await client.getSummaryAsync().catch((err) => {
-        logger.error("dns-hole router - ", err);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to fetch DNS Hole summary for ${ctx.integration.name} (${ctx.integration.id})`,
-        });
-      });
-    });
-
-    return {
-      ...data,
-      integrationId: ctx.integration.id,
-    };
-  }),
+          return {
+            integrationId: integration.id,
+            summary: data,
+          };
+        }),
+      );
+      return results;
+    }),
 
   enable: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole", "adGuardHome"))
     .mutation(async ({ ctx }) => {
-      await new PiHoleIntegration(ctx.integration).enableAsync();
+      let client;
+      switch (ctx.integration.kind) {
+        case "piHole":
+          client = new PiHoleIntegration(ctx.integration);
+          break;
+        // case 'adGuardHome':
+        //   client = new AdGuardHomeIntegration(ctx.integration);
+        //   break;
+        default:
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `Unsupported integration type: ${ctx.integration.kind}`,
+          });
+      }
+      await client.enableAsync();
     }),
 
   disable: publicProcedure
     .input(controlsInputSchema)
-    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole", "adGuardHome"))
     .mutation(async ({ ctx, input }) => {
-      await new PiHoleIntegration(ctx.integration).disableAsync(input.duration);
+      let client;
+      switch (ctx.integration.kind) {
+        case "piHole":
+          client = new PiHoleIntegration(ctx.integration);
+          break;
+        // case 'adGuardHome':
+        //   client = new AdGuardHomeIntegration(ctx.integration);
+        //   break;
+        default:
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `Unsupported integration type: ${ctx.integration.kind}`,
+          });
+      }
+      await client.disableAsync(input.duration);
     }),
 });

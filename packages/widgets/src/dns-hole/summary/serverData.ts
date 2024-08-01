@@ -5,16 +5,19 @@ import { api } from "@homarr/api/server";
 import type { WidgetProps } from "../../definition";
 
 export default async function getServerDataAsync({ integrationIds }: WidgetProps<"dnsHoleSummary">) {
-  const integrationId = integrationIds.at(0);
-  if (!integrationId) return { initialData: undefined };
+  if (integrationIds.length === 0) {
+    return {
+      initialData: [],
+    };
+  }
 
   try {
-    const data = await api.widget.dnsHole.summary({
-      integrationId,
+    const currentDns = await api.widget.dnsHole.summary({
+      integrationIds,
     });
 
     return {
-      initialData: data,
+      initialData: currentDns,
     };
   } catch (error) {
     return {
