@@ -15,6 +15,8 @@
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
+    "cli": "pnpm with-env tsx packages/cli/index.ts",
+    "with-env": "dotenv -e .env --",
     "dev": "turbo dev --parallel",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",

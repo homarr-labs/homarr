@@ -591,6 +591,37 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
 
+  packages/cli:
+    dependencies:
+      '@drizzle-team/brocli':
+        specifier: ^0.9.2
+        version: 0.9.2
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../auth
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.5.0
+        version: 9.8.0
+      typescript:
+        specifier: ^5.5.2
+        version: 5.5.4
+
   packages/common:
     dependencies:
       dayjs:
@@ -1607,6 +1638,9 @@ packages:
 
   '@drizzle-team/brocli@0.8.2':
     resolution: {integrity: sha512-zTrFENsqGvOkBOuHDC1pXCkDXNd2UhP4lI3gYGhQ1R1SPeAAfqzPsV1dcpMy4uNU6kB5VpU5NGhvwxVNETR02A==}
+
+  '@drizzle-team/brocli@0.9.2':
+    resolution: {integrity: sha512-yOrIWbgYMTcXuG+4sTn5OX1UtNVmtHqIqlTyp7OpYOQgIIOjLUdiG8GBVmMOwV6qelcojDB/9MHOL0POIRLMug==}
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
@@ -6884,6 +6918,8 @@ snapshots:
       kuler: 2.0.0
 
   '@drizzle-team/brocli@0.8.2': {}
+
+  '@drizzle-team/brocli@0.9.2': {}
 
   '@esbuild-kit/core-utils@3.3.2':
     dependencies:
