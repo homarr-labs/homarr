@@ -1,15 +1,16 @@
-import { Client as NzbGetClient } from "@jc21/nzbget-jsonrpc-api";
 import dayjs from "dayjs";
+import { rpcClient } from "typed-rpc";
 
 import type { DownloadClientData } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { NzbGetClient } from "./nzbget-types";
 
 export class NzbGetIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
     const client = this.getClient();
-    await client.status();
+    await client.version();
   }
 
   public async getClientDataAsync(): Promise<DownloadClientData> {
@@ -26,6 +27,8 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     const items = queue
       .map((file): DownloadClientItem => {
         const state = NzbGetIntegration.getNzbQueueState(file.Status);
+        const time =
+          (file.RemainingSizeLo + file.RemainingSizeHi * Math.pow(2, 32)) / (nzbGetStatus.DownloadRate / 1000);
         return {
           type,
           id: file.NZBID.toString(),
@@ -33,7 +36,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
           name: file.NZBName,
           size: file.FileSizeLo + file.FileSizeHi * Math.pow(2, 32),
           downSpeed: file.ActiveDownloads > 0 ? nzbGetStatus.DownloadRate : 0,
-          time: (file.RemainingSizeLo + file.RemainingSizeHi * Math.pow(2, 32)) / (nzbGetStatus.DownloadRate / 1000),
+          time: Number.isFinite(time) ? time : 0,
           added: dayjs().valueOf() - file.DownloadTimeSec * 1000,
           state,
           progress: file.DownloadedSizeMB / file.FileSizeMB,
@@ -79,7 +82,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
   public async deleteItemAsync({ id, progress }: DownloadClientItem, fromDisk: boolean): Promise<void> {
     const client = this.getClient();
     if (fromDisk) {
-      const filesIds = (await client.listfiles(Number(id))).map((value) => value.ID);
+      const filesIds = (await client.listfiles(0, 0, Number(id))).map((value) => value.ID);
       await this.getClient().editqueue("FileDelete", "", filesIds);
     }
     if (progress !== 1) {
@@ -91,11 +94,9 @@ export class NzbGetIntegration extends DownloadClientIntegration {
 
   private getClient() {
     const url = new URL(this.integration.url);
-    url.username = this.getSecretValue("username");
-    url.password = this.getSecretValue("password");
-    //url.pathname += `${this.getSecretValue("username")}:${this.getSecretValue("password")}`;
+    url.pathname += `${this.getSecretValue("username")}:${this.getSecretValue("password")}`;
     url.pathname += url.pathname.endsWith("/") ? "jsonrpc" : "/jsonrpc";
-    return new NzbGetClient(url);
+    return rpcClient<NzbGetClient>(url.toString());
   }
 
   private static getNzbQueueState(status: string): DownloadClientItem["state"] {

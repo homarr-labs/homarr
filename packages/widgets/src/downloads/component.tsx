@@ -49,7 +49,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 //TODO:
-// - NzbGet API not working I think
 // - Data Subscription permission issues                    <- Need help
 // - table tbody hide under thead and keep transparency     <- Need help
 // - Add integrations to shouldHide options                 <- Potential help needed
@@ -655,7 +654,7 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
         />
         <NormalizedLine itemKey="ratio" values={item.ratio} />
         <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
-        <NormalizedLine itemKey="time" values={dayjs().add(item.time).format()} />
+        <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
         <NormalizedLine itemKey="category" values={item.category} />
       </Stack>}
     </Modal>
