@@ -66,7 +66,7 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
 
 const InfoDisplay = ({ date }: { date: string }) => (
   <Group gap="2.5cqmin">
-    <IconClock size="2.5cqmin" />
+    <IconClock style={{ height: "3cqmin", width: "3cqmin" }} />
     <Text size="2.5cqmin" c="dimmed" pt="1cqmin">
       {date}
     </Text>

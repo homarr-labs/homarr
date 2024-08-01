@@ -82,7 +82,7 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="5cqmin">
         {options.showCity && (
           <>
-            <IconMapPin size="20cqmin" />
+            <IconMapPin style={{ height: "20cqmin", width: "20cqmin" }} />
             <Text size="15cqmin" style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>

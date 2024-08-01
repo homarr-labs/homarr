@@ -29,7 +29,7 @@ interface WeatherIconProps {
 export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
   const { icon: Icon } = weatherDefinitions.find((definition) => definition.codes.includes(code)) ?? unknownWeather;
 
-  return <Icon style={{ float: "left" }} size={size} />;
+  return <Icon style={{ float: "left", height: size, width: size }} />;
 };
 
 interface WeatherDescriptionProps {

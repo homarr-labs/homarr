@@ -111,7 +111,7 @@ const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
         direction={isLong ? "row" : "column"}
         style={{ containerType: "size" }}
       >
-        <item.icon className="summary-card-icon" size="50cqmin" style={{ margin: "2cqmin" }} />
+        <item.icon className="summary-card-icon" style={{ margin: "2cqmin", height: "50cqmin", width: "50cqmin" }} />
         <Flex
           className="summary-card-texts"
           justify="center"
