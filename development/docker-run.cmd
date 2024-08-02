@@ -1,1 +1,1 @@
-docker run -p 3000:3000 -p 3001:3001 -e AUTH_SECRET='secrets' homarr:latest
+docker run -p 7575:7575 -e AUTH_SECRET='secrets' homarr:latest

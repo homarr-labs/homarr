@@ -12,6 +12,7 @@ RUN turbo prune @homarr/nextjs --docker --out-dir ./next-out
 RUN turbo prune @homarr/tasks --docker --out-dir ./tasks-out
 RUN turbo prune @homarr/websocket --docker --out-dir ./websocket-out
 RUN turbo prune @homarr/db --docker --out-dir ./migration-out
+RUN turbo prune @homarr/proxy --docker --out-dir ./proxy-out
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -30,6 +31,10 @@ COPY --from=builder /app/websocket-out/json/ .
 COPY --from=builder /app/websocket-out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN corepack enable pnpm && pnpm install
 
+COPY --from=builder /app/proxy-out/json/ .
+COPY --from=builder /app/proxy-out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN corepack enable pnpm && pnpm install
+
 COPY --from=builder /app/migration-out/json/ .
 COPY --from=builder /app/migration-out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN corepack enable pnpm && pnpm install
@@ -45,6 +50,7 @@ COPY --from=builder /app/tasks-out/full/ .
 COPY --from=builder /app/websocket-out/full/ .
 COPY --from=builder /app/next-out/full/ .
 COPY --from=builder /app/migration-out/full/ .
+COPY --from=builder /app/proxy-out/full/ .
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
@@ -61,6 +67,8 @@ RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
 VOLUME /appdata
 
+RUN echo $(grep $(hostname) /etc/hosts | cut -f1) docker.internal >> /etc/hosts
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -71,6 +79,7 @@ COPY --from=installer /app/apps/nextjs/next.config.mjs .
 COPY --from=installer /app/apps/nextjs/package.json .
 
 COPY --from=installer --chown=nextjs:nodejs /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
+COPY --from=installer --chown=nextjs:nodejs /app/apps/proxy/proxy.cjs ./apps/proxy/proxy.cjs
 COPY --from=installer --chown=nextjs:nodejs /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
 COPY --from=installer --chown=nextjs:nodejs /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
@@ -90,3 +99,4 @@ ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
 
 CMD ["sh", "run.sh"]
+

@@ -4,6 +4,9 @@ node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
 # Start Redis
 redis-server /app/redis.conf &
 
+# Run the proxy
+node apps/proxy/proxy.cjs &
+
 # Run the tasks backend
 node apps/tasks/tasks.cjs &
 

@@ -12,7 +12,7 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
 const wsClient = createWSClient({
-  url: "ws://localhost:3001",
+  url: "ws://localhost:7575/ws",
 });
 
 export function TRPCReactProvider(props: PropsWithChildren) {
@@ -73,5 +73,5 @@ export function TRPCReactProvider(props: PropsWithChildren) {
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return `http://localhost:${process.env.PORT ?? 7575}`;
 }
