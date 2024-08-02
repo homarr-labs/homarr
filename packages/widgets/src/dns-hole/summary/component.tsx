@@ -1,7 +1,7 @@
 "use client";
 
 import type { BoxProps } from "@mantine/core";
-import { Box, Card, Center, Flex, Text } from "@mantine/core";
+import { Box, Card, Flex, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
@@ -93,35 +93,46 @@ const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
   return (
     <Card
       ref={ref}
-      m={6}
-      p={3}
+      className="summary-card"
+      m="2.5cqmin"
+      p="2.5cqmin"
       bg={usePiHoleColors ? item.color : "rgba(96, 96, 96, 0.1)"}
       style={{
         flex: 1,
       }}
       withBorder
     >
-      <Center h="100%" w="100%">
-        <Flex h="100%" w="100%" align="center" justify="space-evenly" direction={isLong ? "row" : "column"}>
-          <item.icon size={30} style={{ margin: "0 10" }} />
-          <Flex
-            justify="center"
-            direction="column"
-            style={{
-              flex: isLong ? 1 : undefined,
-            }}
-          >
-            <Text ta="center" lh={1.2} size="md" fw="bold">
-              {item.value(data, t)}
+      <Flex
+        className="summary-card-elements"
+        h="100%"
+        w="100%"
+        align="center"
+        justify="space-evenly"
+        direction={isLong ? "row" : "column"}
+        style={{ containerType: "size" }}
+      >
+        <item.icon className="summary-card-icon" size="50cqmin" style={{ margin: "2cqmin" }} />
+        <Flex
+          className="summary-card-texts"
+          justify="center"
+          direction="column"
+          style={{
+            flex: isLong ? 1 : undefined,
+          }}
+          w="100%"
+          h="100%"
+          gap="1cqmin"
+        >
+          <Text className="summary-card-value" ta="center" size="25cqmin" fw="bold">
+            {item.value(data, t)}
+          </Text>
+          {item.label && (
+            <Text className="summary-card-label" ta="center" size="17.5cqmin">
+              {translateIfNecessary(t, item.label)}
             </Text>
-            {item.label && (
-              <Text ta="center" lh={1.2} size="0.75rem">
-                {translateIfNecessary(t, item.label)}
-              </Text>
-            )}
-          </Flex>
+          )}
         </Flex>
-      </Center>
+      </Flex>
     </Card>
   );
 };

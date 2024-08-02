@@ -90,7 +90,6 @@ export const useItemActions = () => {
   const updateItemOptions = useCallback(
     ({ itemId, newOptions }: UpdateItemOptions) => {
       updateBoard((previous) => {
-        if (!previous) return previous;
         return {
           ...previous,
           sections: previous.sections.map((section) => {
@@ -117,7 +116,6 @@ export const useItemActions = () => {
   const updateItemAdvancedOptions = useCallback(
     ({ itemId, newAdvancedOptions }: UpdateItemAdvancedOptions) => {
       updateBoard((previous) => {
-        if (!previous) return previous;
         return {
           ...previous,
           sections: previous.sections.map((section) => {
@@ -144,7 +142,6 @@ export const useItemActions = () => {
   const updateItemIntegrations = useCallback(
     ({ itemId, newIntegrations }: UpdateItemIntegrations) => {
       updateBoard((previous) => {
-        if (!previous) return previous;
         return {
           ...previous,
           sections: previous.sections.map((section) => {

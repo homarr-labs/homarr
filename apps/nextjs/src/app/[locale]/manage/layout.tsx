@@ -14,6 +14,7 @@ import {
   IconMailForward,
   IconPlug,
   IconQuestionMark,
+  IconReport,
   IconSettings,
   IconTool,
   IconUser,
@@ -21,6 +22,7 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
@@ -64,6 +66,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.users.items.invites"),
           icon: IconMailForward,
           href: "/manage/users/invites",
+          hidden: !isProviderEnabled("credentials"),
         },
         {
           label: t("items.users.items.groups"),
@@ -85,6 +88,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.logs"),
           icon: IconLogs,
           href: "/manage/tools/logs",
+        },
+        {
+          label: t("items.tools.items.tasks"),
+          icon: IconReport,
+          href: "/manage/tools/tasks",
         },
       ],
     },

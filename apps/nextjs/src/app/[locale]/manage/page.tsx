@@ -3,8 +3,10 @@ import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
 import { HeroBanner } from "./_components/hero-banner";
 
@@ -13,6 +15,7 @@ interface LinkProps {
   subtitle: string;
   count: number;
   href: string;
+  hidden?: boolean;
 }
 
 export async function generateMetadata() {
@@ -36,13 +39,14 @@ export default async function ManagementPage() {
     },
     {
       count: statistics.countUsers,
-      href: "/manage/boards",
+      href: "/manage/users",
       subtitle: t("statisticLabel.authentication"),
       title: t("statistic.createUser"),
     },
     {
+      hidden: !isProviderEnabled("credentials"),
       count: statistics.countInvites,
-      href: "/manage/boards",
+      href: "/manage/users/invites",
       subtitle: t("statisticLabel.authentication"),
       title: t("statistic.createInvite"),
     },
@@ -67,27 +71,31 @@ export default async function ManagementPage() {
   ];
   return (
     <>
+      <DynamicBreadcrumb />
       <HeroBanner />
       <Space h="md" />
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
-        {links.map((link, index) => (
-          <Card component={Link} href={link.href} key={`link-${index}`} withBorder>
-            <Group justify="space-between">
-              <Group>
-                <Text size="2.4rem" fw="bolder">
-                  {link.count}
-                </Text>
-                <Stack gap={0}>
-                  <Text c="red" size="xs">
-                    {link.subtitle}
-                  </Text>
-                  <Text fw="bold">{link.title}</Text>
-                </Stack>
-              </Group>
-              <IconArrowRight />
-            </Group>
-          </Card>
-        ))}
+        {links.map(
+          (link) =>
+            !link.hidden && (
+              <Card component={Link} href={link.href} key={link.href} withBorder>
+                <Group justify="space-between" wrap="nowrap">
+                  <Group wrap="nowrap">
+                    <Text size="2.4rem" fw="bolder">
+                      {link.count}
+                    </Text>
+                    <Stack gap={0}>
+                      <Text c="red" size="xs">
+                        {link.subtitle}
+                      </Text>
+                      <Text fw="bold">{link.title}</Text>
+                    </Stack>
+                  </Group>
+                  <IconArrowRight />
+                </Group>
+              </Card>
+            ),
+        )}
       </SimpleGrid>
     </>
   );

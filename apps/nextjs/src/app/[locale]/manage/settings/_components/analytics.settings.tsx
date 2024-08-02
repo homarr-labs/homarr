@@ -109,7 +109,9 @@ const SwitchSetting = ({
       <UnstyledButton style={{ flexGrow: 1 }} onClick={handleClick}>
         <Stack gap={0}>
           <Text fw="bold">{title}</Text>
-          <Text c="gray.5">{text}</Text>
+          <Text c="gray.5" fz={{ base: "xs", md: "sm" }}>
+            {text}
+          </Text>
         </Stack>
       </UnstyledButton>
       <Switch disabled={disabled} onClick={handleClick} checked={form.values[formKey] && !disabled} />

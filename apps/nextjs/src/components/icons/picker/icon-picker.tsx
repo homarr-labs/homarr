@@ -67,6 +67,8 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
             combobox.openDropdown();
             combobox.updateSelectedOptionIndex();
             setSearch(event.currentTarget.value);
+            setValue(event.currentTarget.value);
+            onChange(event.currentTarget.value);
           }}
           onClick={() => combobox.openDropdown()}
           onFocus={(event) => {
@@ -81,7 +83,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           rightSectionPointerEvents="none"
           withAsterisk
           error={error}
-          label="Icon URL"
+          label={t("iconPicker.label")}
         />
       </Combobox.Target>
 

@@ -1,17 +1,18 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Avatar, Card, PasswordInput, Stack, Stepper, Text, TextInput, Title } from "@mantine/core";
+import { Card, PasswordInput, Stack, Stepper, Text, TextInput, Title } from "@mantine/core";
 import { IconUserCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import { UserAvatar } from "@homarr/ui";
 import { validation, z } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
-import { StepperNavigationComponent } from "./stepper-navigation.component";
+import { StepperNavigationComponent } from "./stepper-navigation";
 
 export const UserCreateStepperComponent = () => {
   const t = useScopedI18n("management.page.user.create");
@@ -71,7 +72,8 @@ export const UserCreateStepperComponent = () => {
 
   const allForms = useMemo(() => [generalForm, securityForm], [generalForm, securityForm]);
 
-  const isCurrentFormValid = allForms[active] ? (allForms[active]!.isValid satisfies () => boolean) : () => true;
+  const activeForm = allForms[active];
+  const isCurrentFormValid = activeForm ? activeForm.isValid : () => true;
   const canNavigateToNextStep = isCurrentFormValid();
 
   const controlledGoToNextStep = useCallback(async () => {
@@ -149,7 +151,7 @@ export const UserCreateStepperComponent = () => {
         <Stepper.Step label={t("step.review.label")} allowStepSelect={false} allowStepClick={false}>
           <Card p="xl">
             <Stack maw={300} align="center" mx="auto">
-              <Avatar size="xl">{generalForm.values.username}</Avatar>
+              <UserAvatar size="xl" user={{ name: generalForm.values.username, image: null }} />
               <Text tt="uppercase" fw="bolder" size="xl">
                 {generalForm.values.username}
               </Text>

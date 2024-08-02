@@ -12,15 +12,10 @@ interface UserAvatarProps {
 }
 
 export const UserAvatar = ({ user, size }: UserAvatarProps) => {
-  const commonProps = {
-    size,
-    color: "primaryColor",
-  } satisfies Partial<AvatarProps>;
-
-  if (!user?.name) return <Avatar {...commonProps} />;
+  if (!user?.name) return <Avatar size={size} />;
   if (user.image) {
-    return <Avatar {...commonProps} src={user.image} alt={user.name} />;
+    return <Avatar src={user.image} alt={user.name} size={size} />;
   }
 
-  return <Avatar {...commonProps}>{user.name.substring(0, 2).toUpperCase()}</Avatar>;
+  return <Avatar name={user.name} color="initials" size={size}></Avatar>;
 };

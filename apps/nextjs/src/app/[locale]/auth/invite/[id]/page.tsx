@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Card, Center, Stack, Text, Title } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { and, db, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema/sqlite";
 import { getScopedI18n } from "@homarr/translation/server";
@@ -19,6 +20,8 @@ interface InviteUsagePageProps {
 }
 
 export default async function InviteUsagePage({ params, searchParams }: InviteUsagePageProps) {
+  if (!isProviderEnabled("credentials")) notFound();
+
   const session = await auth();
   if (session) notFound();
 

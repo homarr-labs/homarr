@@ -1,4 +1,4 @@
-name: Code quality analysis
+name: "[Quality] Code Analysis"
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
   merge_group:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 # You can leverage Vercel Remote Caching with Turbo to speed up your builds
@@ -72,3 +72,15 @@ jobs:
         # Only works if you set `reportOnFailure: true` in your vite config as specified above
         if: always() 
         uses:  davelosert/vitest-coverage-report-action@v2
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Copy env
+        shell: bash
+        run: cp .env.example .env
+      - name: Build
+        run: pnpm build

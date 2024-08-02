@@ -62,7 +62,7 @@ export const modalReducer = (state: ModalsState, action: OpenAction | CloseActio
       const remainingModals = state.modals.filter((modal) => modal.id !== action.modalId);
 
       return {
-        current: remainingModals[remainingModals.length - 1] || state.current,
+        current: remainingModals[remainingModals.length - 1] ?? state.current,
         modals: remainingModals,
       };
     }

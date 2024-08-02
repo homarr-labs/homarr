@@ -1,5 +1,4 @@
 .bannerContainer {
-  padding: 3rem;
   border-radius: 8px;
   overflow: hidden;
   background: linear-gradient(
@@ -20,7 +19,7 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-50%);
+    transform: translateY(-50.8%);
   }
 }
 

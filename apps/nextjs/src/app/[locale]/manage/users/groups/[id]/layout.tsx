@@ -1,11 +1,12 @@
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
-import { Button, Container, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
+import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
 import { IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
+import { ManageContainer } from "~/components/manage/manage-container";
 import { NavigationLink } from "./_navigation";
 
 interface LayoutProps {
@@ -18,7 +19,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
   const group = await api.group.getById({ id: params.id });
 
   return (
-    <Container size="xl">
+    <ManageContainer size="xl">
       <Grid>
         <GridCol span={12}>
           <Group justify="space-between" align="center">
@@ -54,6 +55,6 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
         </GridCol>
         <GridCol span={{ xs: 12, md: 8, lg: 9, xl: 10 }}>{children}</GridCol>
       </Grid>
-    </Container>
+    </ManageContainer>
   );
 }

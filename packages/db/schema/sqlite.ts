@@ -12,8 +12,10 @@ import type {
   BoardPermission,
   GroupPermissionKey,
   IntegrationKind,
+  IntegrationPermission,
   IntegrationSecretKind,
   SectionKind,
+  SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
 
@@ -25,6 +27,7 @@ export const users = sqliteTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  provider: text("provider").$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
@@ -144,7 +147,9 @@ export const integrationSecrets = sqliteTable(
   {
     kind: text("kind").$type<IntegrationSecretKind>().notNull(),
     value: text("value").$type<`${string}.${string}`>().notNull(),
-    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .$onUpdateFn(() => new Date())
+      .notNull(),
     integrationId: text("integration_id")
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
@@ -155,6 +160,42 @@ export const integrationSecrets = sqliteTable(
     }),
     kindIdx: index("integration_secret__kind_idx").on(integrationSecret.kind),
     updatedAtIdx: index("integration_secret__updated_at_idx").on(integrationSecret.updatedAt),
+  }),
+);
+
+export const integrationUserPermissions = sqliteTable(
+  "integrationUserPermission",
+  {
+    integrationId: text("integration_id")
+      .notNull()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    permission: text("permission").$type<IntegrationPermission>().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.integrationId, table.userId, table.permission],
+    }),
+  }),
+);
+
+export const integrationGroupPermissions = sqliteTable(
+  "integrationGroupPermissions",
+  {
+    integrationId: text("integration_id")
+      .notNull()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+    groupId: text("group_id")
+      .notNull()
+      .references(() => groups.id, { onDelete: "cascade" }),
+    permission: text("permission").$type<IntegrationPermission>().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.integrationId, table.groupId, table.permission],
+    }),
   }),
 );
 
@@ -388,6 +429,30 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
 export const integrationRelations = relations(integrations, ({ many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
+  userPermissions: many(integrationUserPermissions),
+  groupPermissions: many(integrationGroupPermissions),
+}));
+
+export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({
+  user: one(users, {
+    fields: [integrationUserPermissions.userId],
+    references: [users.id],
+  }),
+  integration: one(integrations, {
+    fields: [integrationUserPermissions.integrationId],
+    references: [integrations.id],
+  }),
+}));
+
+export const integrationGroupPermissionRelations = relations(integrationGroupPermissions, ({ one }) => ({
+  group: one(groups, {
+    fields: [integrationGroupPermissions.groupId],
+    references: [groups.id],
+  }),
+  integration: one(integrations, {
+    fields: [integrationGroupPermissions.integrationId],
+    references: [integrations.id],
+  }),
 }));
 
 export const integrationSecretRelations = relations(integrationSecrets, ({ one }) => ({

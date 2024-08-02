@@ -59,9 +59,13 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
       // Updates the react-query state
       moveAndResizeItem({
         itemId,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         xOffset: changedNode.x!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         yOffset: changedNode.y!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         width: changedNode.w!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         height: changedNode.h!,
       });
     },
@@ -76,9 +80,13 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
       moveItemToSection({
         itemId,
         sectionId: section.id,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         xOffset: addedNode.x!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         yOffset: addedNode.y!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         width: addedNode.w!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         height: addedNode.h!,
       });
     },
@@ -121,7 +129,6 @@ export const useGridstack = ({ section, mainRef }: UseGridstackProps): UseGrista
     }
 
     // Only run this effect when the section items change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length, section.items.length, board.columnCount]);
 
   return {

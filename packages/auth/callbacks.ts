@@ -14,12 +14,15 @@ export const getCurrentUserPermissionsAsync = async (db: Database, userId: strin
     where: eq(groupMembers.userId, userId),
   });
   const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
+
+  if (groupIds.length === 0) return [];
+
   const dbGroupPermissions = await db
     .selectDistinct({
       permission: groupPermissions.permission,
     })
     .from(groupPermissions)
-    .where(groupIds.length > 0 ? inArray(groupPermissions.groupId, groupIds) : undefined);
+    .where(inArray(groupPermissions.groupId, groupIds));
   const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
 
   return getPermissionsWithChildren(permissionKeys);
@@ -44,10 +47,8 @@ export const createSignInCallback =
   async ({ user }) => {
     if (!isCredentialsRequest) return true;
 
-    if (!user) return true;
-
     // https://github.com/nextauthjs/next-auth/issues/6106
-    if (!adapter?.createSession) {
+    if (!adapter.createSession) {
       return false;
     }
 
@@ -56,6 +57,7 @@ export const createSignInCallback =
 
     await adapter.createSession({
       sessionToken,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       userId: user.id!,
       expires: sessionExpiry,
     });

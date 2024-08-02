@@ -37,7 +37,7 @@ export const initializeGridstack = ({ section, refs, sectionColumnCount }: Initi
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
   );
   const grid = newGrid.current;
-  if (!grid) return false;
+
   // Must be used to update the column count after the initialization
   grid.column(sectionColumnCount, "none");
 
@@ -45,7 +45,9 @@ export const initializeGridstack = ({ section, refs, sectionColumnCount }: Initi
   grid.removeAll(false);
   section.items.forEach(({ id }) => {
     const ref = refs.items.current[id]?.current;
-    ref && grid.makeWidget(ref);
+    if (!ref) return;
+
+    grid.makeWidget(ref);
   });
   grid.batchUpdate(false);
   return true;

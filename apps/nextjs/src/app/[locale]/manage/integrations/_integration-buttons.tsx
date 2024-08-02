@@ -56,7 +56,7 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
           },
         });
       }}
-      aria-label="Delete integration"
+      aria-label={t("title")}
     >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>

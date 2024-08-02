@@ -10,6 +10,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import type { Session } from "@homarr/auth";
+import { FlattenError } from "@homarr/common";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { logger } from "@homarr/log";
@@ -52,6 +53,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     data: {
       ...shape.data,
       zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+      error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
     },
   }),
 });
@@ -122,7 +124,7 @@ export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 export const permissionRequiredProcedure = {
   requiresPermission: (permission: GroupPermissionKey) => {
     return protectedProcedure.use(({ ctx, input, next }) => {
-      if (!ctx.session?.user.permissions.includes(permission)) {
+      if (!ctx.session.user.permissions.includes(permission)) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Permission denied",

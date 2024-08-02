@@ -16,7 +16,7 @@ import type { BoardPermission } from "@homarr/definitions";
 export const throwIfActionForbiddenAsync = async (
   ctx: { db: Database; session: Session | null },
   boardWhere: SQL<unknown>,
-  permission: "full-access" | BoardPermission,
+  permission: BoardPermission,
 ) => {
   const { db, session } = ctx;
   const groupsOfCurrentUser = await db.query.groupMembers.findMany({
@@ -49,11 +49,11 @@ export const throwIfActionForbiddenAsync = async (
     return; // As full access is required and user has full access, allow
   }
 
-  if (["board-change", "board-view"].includes(permission) && hasChangeAccess) {
+  if (["modify", "view"].includes(permission) && hasChangeAccess) {
     return; // As change access is required and user has change access, allow
   }
 
-  if (permission === "board-view" && hasViewAccess) {
+  if (permission === "view" && hasViewAccess) {
     return; // As view access is required and user has view access, allow
   }
 

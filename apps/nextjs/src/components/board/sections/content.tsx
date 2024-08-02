@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unknown-property */
-// Ignored because of gridstack attributes
-
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Card, Menu } from "@mantine/core";
@@ -65,14 +62,13 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
       gs-h={item.height}
       gs-min-w={1}
       gs-min-h={1}
-      gs-max-w={4}
-      gs-max-h={4}
       ref={refs.items.current[item.id] as RefObject<HTMLDivElement>}
     >
       <Card
         ref={ref}
         className={combineClasses(
           classes.itemCard,
+          `${item.kind}-wrapper`,
           "grid-stack-item-content",
           item.advancedOptions.customCssClasses.join(" "),
         )}
@@ -80,6 +76,7 @@ const BoardItem = ({ refs, item, opacity }: ItemProps) => {
         styles={{
           root: {
             "--opacity": opacity / 100,
+            containerType: "size",
           },
         }}
         p={0}
@@ -122,6 +119,7 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
           <Comp
             options={options as never}
             integrationIds={item.integrationIds}
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             serverData={serverData?.data as never}
             isEditMode={isEditMode}
             boardId={board.id}
@@ -208,8 +206,8 @@ const ItemMenu = ({
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
-        <ActionIcon variant="transparent" pos="absolute" top={offset} right={offset} style={{ zIndex: 1 }}>
-          <IconDotsVertical />
+        <ActionIcon variant="default" radius={"xl"} pos="absolute" top={offset} right={offset} style={{ zIndex: 10 }}>
+          <IconDotsVertical size={"1rem"} />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>

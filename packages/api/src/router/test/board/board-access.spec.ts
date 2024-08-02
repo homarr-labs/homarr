@@ -18,14 +18,11 @@ const expectActToBeAsync = async (act: () => Promise<void>, success: boolean) =>
   await expect(act()).resolves.toBeUndefined();
 };
 
-// TODO: most of this test can be used for constructBoardPermissions
-// TODO: the tests for the board-access can be reduced to about 4 tests (as the unit has shrunk)
-
 describe("throwIfActionForbiddenAsync should check access to board and return boolean", () => {
   test.each([
-    ["full-access" as const, true],
-    ["board-change" as const, true],
-    ["board-view" as const, true],
+    ["full" as const, true],
+    ["modify" as const, true],
+    ["view" as const, true],
   ])("with permission %s should return %s when hasFullAccess is true", async (permission, expectedResult) => {
     // Arrange
     const db = createDb();
@@ -52,9 +49,9 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
   });
 
   test.each([
-    ["full-access" as const, false],
-    ["board-change" as const, true],
-    ["board-view" as const, true],
+    ["full" as const, false],
+    ["modify" as const, true],
+    ["view" as const, true],
   ])("with permission %s should return %s when hasChangeAccess is true", async (permission, expectedResult) => {
     // Arrange
     const db = createDb();
@@ -81,9 +78,9 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
   });
 
   test.each([
-    ["full-access" as const, false],
-    ["board-change" as const, false],
-    ["board-view" as const, true],
+    ["full" as const, false],
+    ["modify" as const, false],
+    ["view" as const, true],
   ])("with permission %s should return %s when hasViewAccess is true", async (permission, expectedResult) => {
     // Arrange
     const db = createDb();
@@ -110,9 +107,9 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
   });
 
   test.each([
-    ["full-access" as const, false],
-    ["board-change" as const, false],
-    ["board-view" as const, false],
+    ["full" as const, false],
+    ["modify" as const, false],
+    ["view" as const, false],
   ])("with permission %s should return %s when hasViewAccess is false", async (permission, expectedResult) => {
     // Arrange
     const db = createDb();
@@ -143,7 +140,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
     const db = createDb();
 
     // Act
-    const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(boards.id, createId()), "full-access");
+    const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(boards.id, createId()), "full");
 
     // Assert
     await expect(act()).rejects.toThrow("Board not found");

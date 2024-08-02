@@ -1,17 +1,5 @@
 import Link from "next/link";
-import {
-  Anchor,
-  Container,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTh,
-  TableThead,
-  TableTr,
-  Title,
-} from "@mantine/core";
+import { Anchor, Group, Stack, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Title } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -19,6 +7,8 @@ import { getI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination, UserAvatarGroup } from "@homarr/ui";
 import { z } from "@homarr/validation";
 
+import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AddGroup } from "./_add-group";
 
 const searchParamsSchema = z.object({
@@ -41,7 +31,8 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
   const { items: groups, totalCount } = await api.group.getPaginated(searchParams);
 
   return (
-    <Container size="xl">
+    <ManageContainer size="xl">
+      <DynamicBreadcrumb />
       <Stack>
         <Title>{t("group.title")}</Title>
         <Group justify="space-between">
@@ -72,7 +63,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
           <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
         </Group>
       </Stack>
-    </Container>
+    </ManageContainer>
   );
 }
 

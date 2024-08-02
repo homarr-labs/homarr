@@ -20,11 +20,11 @@ export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   }
 
   return {
-    bg: `url(${board?.backgroundImageUrl})`,
+    bg: `url(${board.backgroundImageUrl})`,
     bgp: "center center",
-    bgsz: board?.backgroundImageSize ?? "cover",
-    bgr: board?.backgroundImageRepeat ?? "no-repeat",
-    bga: board?.backgroundImageAttachment ?? "fixed",
+    bgsz: board.backgroundImageSize,
+    bgr: board.backgroundImageRepeat,
+    bga: board.backgroundImageAttachment,
   };
 };
 
@@ -43,13 +43,14 @@ export const BoardBackgroundVideo = () => {
       autoPlay
       muted
       loop
+      playsInline
       style={{
         position: "fixed",
         width: "100vw",
         height: "100vh",
         top: 0,
         left: 0,
-        objectFit: board.backgroundImageSize ?? "cover",
+        objectFit: board.backgroundImageSize,
       }}
     >
       <source src={board.backgroundImageUrl} type={`video/${videoFormat}`} />

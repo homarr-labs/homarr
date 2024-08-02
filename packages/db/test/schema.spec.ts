@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { Column, InferSelectModel } from "drizzle-orm";
 import type { ForeignKey as MysqlForeignKey, MySqlTableWithColumns } from "drizzle-orm/mysql-core";
 import type { ForeignKey as SqliteForeignKey, SQLiteTableWithColumns } from "drizzle-orm/sqlite-core";
