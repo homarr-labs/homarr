@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import {
   ActionIcon,
+  Alert,
   Anchor,
   Button,
   Fieldset,
@@ -125,7 +126,11 @@ const LocationSearchModal = createModal<LocationSearchInnerProps>(({ actions, in
   });
 
   if (error) {
-    throw error;
+    return (
+      <Alert title={tCommon("error")} color="red">
+        {error.message}
+      </Alert>
+    );
   }
 
   return (

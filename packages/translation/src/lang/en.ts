@@ -506,6 +506,7 @@ export default {
     symbols: {
       colon: ": ",
     },
+    error: "Error",
     action: {
       add: "Add",
       apply: "Apply",
