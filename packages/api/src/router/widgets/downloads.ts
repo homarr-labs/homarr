@@ -3,7 +3,6 @@ import { observable } from "@trpc/server/observable";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import type {
-  DownloadClientData,
   DownloadClientIntegration,
   IntegrationInput,
   SanitizedIntegration,
@@ -15,34 +14,35 @@ import { z } from "@homarr/validation";
 import type { DownloadClientItem } from "../../../../integrations/src/interfaces/downloads/download-client-items";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+import type { DownloadClientJobsAndStatus } from "../../../../integrations/src/interfaces/downloads/download-client-data";
 
 export const downloadsRouter = createTRPCRouter({
-  getData: publicProcedure
+  getJobsAndStatuses: publicProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("query", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
-          const channel = createItemAndIntegrationChannel<DownloadClientData>("downloads", integration.id);
+          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
           const data = await channel.getAsync();
           return {
             integration: integration as SanitizedIntegration,
-            data: data?.data ?? ({} as DownloadClientData),
+            data: data?.data ?? ({} as DownloadClientJobsAndStatus),
           };
         }),
       );
     }),
-  subscribeToData: publicProcedure
+  subscribeToJobsAndStatuses: publicProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("query", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
     .subscription(({ ctx }) => {
-      return observable<{ integration: SanitizedIntegration; data: DownloadClientData }>((emit) => {
+      return observable<{ integration: SanitizedIntegration; data: DownloadClientJobsAndStatus }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const channel = createItemAndIntegrationChannel<DownloadClientData>("downloads", integration.id);
+          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
           const unsubscribe = channel.subscribe((sessions) => {
             emit.next({
               integration: integration as SanitizedIntegration,

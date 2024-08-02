@@ -14,7 +14,7 @@ export { TransmissionIntegration } from "./download-client/transmission/transmis
 export type { SanitizedIntegration } from "./base/integration";
 export type { IntegrationInput } from "./base/integration";
 export type { StreamSession } from "./interfaces/media-server/session";
-export type { DownloadClientData } from "./interfaces/downloads/download-client-data";
+export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
 

@@ -7,19 +7,15 @@ import type { WidgetProps } from "../definition";
 export default async function getServerDataAsync({ integrationIds }: WidgetProps<"downloads">) {
   if (integrationIds.length === 0) {
     return {
-      initialData: {
-        data: [],
-      },
+      initialData: undefined,
     };
   }
 
-  const data = await api.widget.downloads.getData({
+  const jobsAndStatus = await api.widget.downloads.getJobsAndStatuses({
     integrationIds,
   });
 
   return {
-    initialData: {
-      data,
-    },
+    initialData: jobsAndStatus,
   };
 }

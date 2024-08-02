@@ -39,7 +39,7 @@ import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type {
-  DownloadClientData,
+  DownloadClientJobsAndStatus,
   ExtendedClientStatus,
   ExtendedDownloadClientItem,
   SanitizedIntegration,
@@ -49,10 +49,12 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 //TODO:
-// - Rename getData function and following
-// - Update data on integration added <- update useSubscription integrationIds not working?
+// - useSubscription only returns data for original IDs, even after updating the list in options.
+//   You can see the call in the console shows the sub is updated with the new amount of ID's, but it doesn't return the data for the new one.
+//   As if the channels are not being created.
+//   Saving the board does make it work though, so no reload necessary at least to see data.
+//
 // - Make modals sizes relative (Based on whole screen)
-// - table tbody hide under thead and keep transparency     <- Need help
 // - Add integrations to shouldHide options                 <- Need help
 // - Move columns ratio table to css vars
 // - tests maybe?
@@ -87,8 +89,8 @@ export default function DownloadClientsWidget({
 }: WidgetComponentProps<"downloads">) {
   const [currentItems, currentItemsHandlers] = useListState<{
     integration: SanitizedIntegration;
-    data: DownloadClientData;
-  }>(serverData?.initialData.data ?? []);
+    data: DownloadClientJobsAndStatus;
+  }>(serverData?.initialData ?? []);
 
   //Translations
   const t = useScopedI18n("widget.downloads");
@@ -103,21 +105,18 @@ export default function DownloadClientsWidget({
   const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation();
 
   //Subrscribe to dynamic data changes
-  clientApi.widget.downloads.subscribeToData.useSubscription(
+  clientApi.widget.downloads.subscribeToJobsAndStatuses.useSubscription(
     {
       integrationIds,
     },
     {
       onData: (data) => {
-        currentItemsHandlers.applyWhere(
-          (pair) => pair.integration.id === data.integration.id,
-          (pair) => {
-            return {
-              ...pair,
-              data: data.data,
-            };
-          },
-        );
+        const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
+        if (updateIndex >= 0) {
+          currentItemsHandlers.setItem(updateIndex, data);
+        } else if (integrationIds.includes(data.integration.id)) {
+          currentItemsHandlers.append(data);
+        }
       },
     },
   );
@@ -266,7 +265,6 @@ export default function DownloadClientsWidget({
       transition: "unset",
       "--keyWidth": columnsRatios[key],
       "--width": "calc((var(--keyWidth)/var(--totalWidth) * 100cqw))",
-      align: "center",
     };
     return {
       id: key,
@@ -275,8 +273,8 @@ export default function DownloadClientsWidget({
       size: columnsRatios[key],
       mantineTableBodyCellProps: { style, align },
       mantineTableHeadCellProps: {
-        style: { ...style, "--mrt-base-background-color": "var(--background-color)" },
-        align,
+        style,
+        align: isEditMode ? "center" : align,
       },
       Header: () => (showHeader && !isEditMode ? <Text fw={700}>{t(`items.${key}.columnTitle`)}</Text> : ""),
     };
@@ -302,9 +300,13 @@ export default function DownloadClientsWidget({
                   size="calc(var(--ratioWidth)*0.75)"
                 >
                   {isPaused ? (
-                    <IconPlayerPlay style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
+                    <IconPlayerPlay
+                      style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }}
+                    />
                   ) : (
-                    <IconPlayerPause style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
+                    <IconPlayerPause
+                      style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }}
+                    />
                   )}
                 </ActionIcon>
               </Tooltip>
@@ -359,7 +361,9 @@ export default function DownloadClientsWidget({
           return (
             category !== undefined && (
               <Tooltip label={category}>
-                <IconInfoCircle style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
+                <IconInfoCircle
+                  style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }}
+                />
               </Tooltip>
             )
           );
@@ -380,7 +384,9 @@ export default function DownloadClientsWidget({
           const id = cell.getValue<ExtendedDownloadClientItem["id"]>();
           return (
             <Tooltip label={id}>
-              <IconCirclesRelation style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
+              <IconCirclesRelation
+                style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }}
+              />
             </Tooltip>
           );
         },
@@ -540,7 +546,7 @@ export default function DownloadClientsWidget({
     },
     initialState: {
       sorting:
-        options.defaultSort != undefined
+        options.defaultSort !== undefined
           ? [{ id: options.defaultSort, desc: options.descendingDefaultSort }]
           : undefined,
       columnVisibility: {
@@ -594,7 +600,6 @@ export default function DownloadClientsWidget({
         <Text fz="7.5cqw">{t("errors.noColumns")}</Text>
       </Center>
     );
-  //InfoModal and ClientControls hook might trigger here.
 
   //The actual widget
   return (
@@ -603,7 +608,10 @@ export default function DownloadClientsWidget({
       <Group
         p="calc(var(--ratioWidth)*0.2)"
         justify={integrationTypes.includes("torrent") ? "space-between" : "end"}
-        style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}
+        style={{
+          flexDirection: isLangRtl ? "row-reverse" : "row",
+          borderTop: "0.0625rem solid var(--border-color)",
+        }}
       >
         {integrationTypes.includes("torrent") && (
           <Group style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}>
@@ -755,28 +763,30 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                 <Paper withBorder radius={999}>
                   <Group gap={5} pl={10} pr={15} fz={16} w={275} justify="space-between">
                     <Avatar radius={0} src={getIconUrl(client.integration.kind)} />
-                    <Stack gap={0} pt={5} h={60} justify="center" flex={1}>
-                      {client.rates.up !== undefined ? (
-                        <Group display="flex" justify="center" c="green" w="100%" gap={5}>
+                    <Tooltip disabled={client.ratio === undefined} label={client.ratio?.toFixed(2)}>
+                      <Stack gap={0} pt={5} h={60} justify="center" flex={1}>
+                        {client.rates.up !== undefined ? (
+                          <Group display="flex" justify="center" c="green" w="100%" gap={5}>
+                            <Text flex={1} ta="right">
+                              {`↑ ${humanFileSize(client.rates.up)}/s`}
+                            </Text>
+                            <Text>{"-"}</Text>
+                            <Text flex={1} ta="left">
+                              {humanFileSize(client.totalUp ?? 0)}
+                            </Text>
+                          </Group>
+                        ) : undefined}
+                        <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
                           <Text flex={1} ta="right">
-                            {`↑ ${humanFileSize(client.rates.up)}/s`}
+                            {`↓ ${humanFileSize(client.rates.down)}/s`}
                           </Text>
                           <Text>{"-"}</Text>
                           <Text flex={1} ta="left">
-                            {humanFileSize(client.totalUp ?? 0)}
+                            {humanFileSize(Math.floor(client.totalDown ?? 0))}
                           </Text>
                         </Group>
-                      ) : undefined}
-                      <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
-                        <Text flex={1} ta="right">
-                          {`↓ ${humanFileSize(client.rates.down)}/s`}
-                        </Text>
-                        <Text>{"-"}</Text>
-                        <Text flex={1} ta="left">
-                          {humanFileSize(Math.floor(client.totalDown ?? 0))}
-                        </Text>
-                      </Group>
-                    </Stack>
+                      </Stack>
+                    </Tooltip>
                   </Group>
                 </Paper>
                 <Text lineClamp={1} fz={22}>

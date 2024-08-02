@@ -2,7 +2,7 @@ import { decryptSecret } from "@homarr/common";
 import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
-import type { DownloadClientData, DownloadClientIntegration, IntegrationInput } from "@homarr/integrations";
+import type { DownloadClientJobsAndStatus, DownloadClientIntegration, IntegrationInput } from "@homarr/integrations";
 import { integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
@@ -40,8 +40,8 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
         })),
       };
       const integrationInstance = getIntegrationInstance(integration.integration.kind, integrationWithDecryptedSecrets);
-      const data = await integrationInstance.getClientDataAsync();
-      const channel = createItemAndIntegrationChannel<DownloadClientData>("downloads", integration.integrationId);
+      const data = await integrationInstance.getClientJobsAndStatusAsync();
+      const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.integrationId);
       await channel.publishAndUpdateLastStateAsync(data);
     }
   }

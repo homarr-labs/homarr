@@ -25,7 +25,7 @@ const columnsList = [
   "type",
   "upSpeed"
 ] as const satisfies (keyof ExtendedDownloadClientItem)[]
-const columnsSort = columnsList.filter((v) => !["actions","id","state"].includes(v));
+const columnsSort = columnsList.filter((column) => !["actions","id","state"].includes(column));
 
 export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,

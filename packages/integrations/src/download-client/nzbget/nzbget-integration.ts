@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import { rpcClient } from "typed-rpc";
 
-import type { DownloadClientData } from "../../interfaces/downloads/download-client-data";
+import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
-import { NzbGetClient } from "./nzbget-types";
+import type { NzbGetClient } from "./nzbget-types";
 
 export class NzbGetIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
@@ -13,7 +13,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     await client.version();
   }
 
-  public async getClientDataAsync(): Promise<DownloadClientData> {
+  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const nzbGetClient = this.getClient();
     const queue = await nzbGetClient.listgroups();

@@ -1,10 +1,10 @@
 import { Integration } from "../../base/integration";
-import type { DownloadClientData } from "./download-client-data";
+import type { DownloadClientJobsAndStatus } from "./download-client-data";
 import type { DownloadClientItem } from "./download-client-items";
 
 export abstract class DownloadClientIntegration extends Integration {
   /** Get download client's status and list of all of it's items */
-  public abstract getClientDataAsync(): Promise<DownloadClientData>;
+  public abstract getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus>;
   /** Pauses the client or all of it's items */
   public abstract pauseQueueAsync(): Promise<void>;
   /** Pause a single item using it's ID */

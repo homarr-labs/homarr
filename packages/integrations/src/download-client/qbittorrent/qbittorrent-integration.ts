@@ -1,7 +1,7 @@
 import { QBittorrent } from "@ctrl/qbittorrent";
 import dayjs from "dayjs";
 
-import type { DownloadClientData } from "../../interfaces/downloads/download-client-data";
+import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
@@ -12,7 +12,7 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
     await client.login();
   }
 
-  public async getClientDataAsync(): Promise<DownloadClientData> {
+  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = this.getClient();
     const torrents = await client.listTorrents();

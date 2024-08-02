@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
-import type { DownloadClientData } from "../../interfaces/downloads/download-client-data";
+import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
@@ -15,7 +15,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     await this.sabNzbApiCallAsync("translate", new URLSearchParams({ value: "ping" }));
   }
 
-  public async getClientDataAsync(): Promise<DownloadClientData> {
+  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const { queue } = await queueSchema.parseAsync(await this.sabNzbApiCallAsync("queue"));
     const { history } = await historySchema.parseAsync(await this.sabNzbApiCallAsync("history"));
