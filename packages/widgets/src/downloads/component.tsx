@@ -20,6 +20,7 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import {
@@ -51,7 +52,7 @@ import type { WidgetComponentProps } from "../definition";
 //TODO:
 // - Rename getData function and following
 // - Update data on integration added <- update useSubscription integrationIds not working?
-// - Make modals sizes relative (Based on whole screen)
+// - Make modals sizes relative (Based on whole screen)     I would just make the modal it's normal size (from meier)
 // - table tbody hide under thead and keep transparency     <- Need help
 // - Add integrations to shouldHide options                 <- Need help
 // - Move columns ratio table to css vars
@@ -302,9 +303,13 @@ export default function DownloadClientsWidget({
                   size="calc(var(--ratioWidth)*0.75)"
                 >
                   {isPaused ? (
-                    <IconPlayerPlay style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
+                    <IconPlayerPlay
+                      style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }}
+                    />
                   ) : (
-                    <IconPlayerPause style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
+                    <IconPlayerPause
+                      style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }}
+                    />
                   )}
                 </ActionIcon>
               </Tooltip>
@@ -359,7 +364,9 @@ export default function DownloadClientsWidget({
           return (
             category !== undefined && (
               <Tooltip label={category}>
-                <IconInfoCircle style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
+                <IconInfoCircle
+                  style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }}
+                />
               </Tooltip>
             )
           );
@@ -380,7 +387,9 @@ export default function DownloadClientsWidget({
           const id = cell.getValue<ExtendedDownloadClientItem["id"]>();
           return (
             <Tooltip label={id}>
-              <IconCirclesRelation style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
+              <IconCirclesRelation
+                style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }}
+              />
             </Tooltip>
           );
         },
@@ -504,6 +513,7 @@ export default function DownloadClientsWidget({
     [clickedIndex, isEditMode, data, integrationIds, options],
   );
 
+  const { colorScheme } = useMantineColorScheme();
   //Table build and config
   const table = useMantineReactTable({
     columns,
@@ -526,6 +536,17 @@ export default function DownloadClientsWidget({
         "--sortButtonSize": "calc(var(--ratioWidth)*0.6)",
         "--dragButtonSize": "calc(var(--ratioWidth)*0.6)",
       },
+    },
+    mantineTableHeadCellProps() {
+      return {
+        styles: () => ({
+          th: {
+            backgroundColor:
+              colorScheme === "dark" ? "rgba(0,0,0, var(--opacity))" : "rgba(255,255,255, var(--opacity))",
+            color: colorScheme === "dark" ? "white" : "black",
+          },
+        }),
+      };
     },
     mantineTableBodyProps: { style: editStyle },
     mantineTableBodyCellProps: ({ cell, row }) => ({
