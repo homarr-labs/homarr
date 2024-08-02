@@ -17,6 +17,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },

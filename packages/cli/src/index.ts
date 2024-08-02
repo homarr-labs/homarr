@@ -45,7 +45,7 @@ const resetPassword = command({
 
 const commands = [resetPassword];
 
-await run(commands, {
+void run(commands, {
   cliName: "homarr-cli",
   version: "1.0.0",
 });
