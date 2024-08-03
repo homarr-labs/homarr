@@ -39,6 +39,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const onSuccess = useCallback(
     async (response: Awaited<ReturnType<typeof signIn>>) => {
       if (response && (!response.ok || response.error)) {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw response.error;
       }
 

@@ -19,7 +19,7 @@ export default async function getServerDataAsync({ options }: WidgetProps<"app">
     }
 
     return { app, pingResult };
-  } catch (error) {
+  } catch {
     return { app: null, pingResult: null };
   }
 }

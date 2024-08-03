@@ -20,6 +20,7 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import {
@@ -49,12 +50,19 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 //TODO:
+<<<<<<< HEAD
 // - useSubscription only returns data for original IDs, even after updating the list in options.
 //   You can see the call in the console shows the sub is updated with the new amount of ID's, but it doesn't return the data for the new one.
 //   As if the channels are not being created.
 //   Saving the board does make it work though, so no reload necessary at least to see data.
 //
 // - Make modals sizes relative (Based on whole screen)
+=======
+// - Rename getData function and following
+// - Update data on integration added <- update useSubscription integrationIds not working?
+// - Make modals sizes relative (Based on whole screen)     I would just make the modal it's normal size (from meier)
+// - table tbody hide under thead and keep transparency     <- Need help
+>>>>>>> f845d083620fd8e21fc4d222dfe5e86b5ae36588
 // - Add integrations to shouldHide options                 <- Need help
 // - Move columns ratio table to css vars
 // - tests maybe?
@@ -510,6 +518,7 @@ export default function DownloadClientsWidget({
     [clickedIndex, isEditMode, data, integrationIds, options],
   );
 
+  const { colorScheme } = useMantineColorScheme();
   //Table build and config
   const table = useMantineReactTable({
     columns,
@@ -532,6 +541,17 @@ export default function DownloadClientsWidget({
         "--sortButtonSize": "calc(var(--ratioWidth)*0.6)",
         "--dragButtonSize": "calc(var(--ratioWidth)*0.6)",
       },
+    },
+    mantineTableHeadCellProps() {
+      return {
+        styles: () => ({
+          th: {
+            backgroundColor:
+              colorScheme === "dark" ? "rgba(0,0,0, var(--opacity))" : "rgba(255,255,255, var(--opacity))",
+            color: colorScheme === "dark" ? "white" : "black",
+          },
+        }),
+      };
     },
     mantineTableBodyProps: { style: editStyle },
     mantineTableBodyCellProps: ({ cell, row }) => ({
