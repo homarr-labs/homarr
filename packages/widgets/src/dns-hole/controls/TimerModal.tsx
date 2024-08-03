@@ -8,11 +8,11 @@ import { useI18n } from "@homarr/translation/client";
 interface TimerModalProps {
   opened: boolean;
   close: () => void;
-  integrationId: string;
-  disableDnsControl: (data: { duration: number; integrationId: string }) => void;
+  integrationIds: string[];
+  disableDns: (data: { duration: number; integrationId: string }) => void;
 }
 
-const TimerModal = ({ opened, close, integrationId, disableDnsControl }: TimerModalProps) => {
+const TimerModal = ({ opened, close, integrationIds, disableDns }: TimerModalProps) => {
   const t = useI18n();
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -21,7 +21,9 @@ const TimerModal = ({ opened, close, integrationId, disableDnsControl }: TimerMo
 
   const handleSetTimer = () => {
     const duration = hours * 3600 + minutes * 60;
-    disableDnsControl({ duration, integrationId });
+    integrationIds.forEach((integrationId) => {
+      disableDns({ duration, integrationId });
+    });
     setHours(0);
     setMinutes(0);
     close();

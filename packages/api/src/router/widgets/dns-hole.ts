@@ -43,6 +43,7 @@ export const dnsHoleRouter = createTRPCRouter({
 
           return {
             integrationId: integration.id,
+            integrationKind: integration.kind,
             summary: data,
           };
         }),
