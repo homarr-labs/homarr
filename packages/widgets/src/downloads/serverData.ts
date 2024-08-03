@@ -11,11 +11,11 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     };
   }
 
-  const jobsAndStatus = await api.widget.downloads.getJobsAndStatuses({
+  const jobsAndStatuses = await api.widget.downloads.getJobsAndStatuses({
     integrationIds,
   });
 
   return {
-    initialData: jobsAndStatus,
+    initialData: jobsAndStatuses,
   };
 }
