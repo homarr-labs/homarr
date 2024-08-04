@@ -557,7 +557,7 @@ export default {
     },
     multiText: {
       placeholder: "Add more values",
-      addLabel: `Add {value}`,
+      addLabel: "Add {value}",
     },
     select: {
       placeholder: "Pick value",

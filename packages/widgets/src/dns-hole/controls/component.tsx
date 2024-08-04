@@ -134,7 +134,7 @@ const ControlsCard = (
   const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
 
   return (
-    <Card key={integrationId} withBorder={true} m="2.5cqmin" p="2.5cqmin" radius="md">
+    <Card key={integrationId} withBorder m="2.5cqmin" p="2.5cqmin" radius="md">
       <Flex>
         <Box m="1.5cqmin" p="1.5cqmin">
           <Image src={integrationDef.iconUrl} width={50} height={50} fit="contain" />
