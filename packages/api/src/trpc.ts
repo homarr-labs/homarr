@@ -15,6 +15,7 @@ import { db } from "@homarr/db";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { ZodError } from "@homarr/validation";
+import type { OpenApiMeta } from 'trpc-swagger';
 
 /**
  * 1. CONTEXT
@@ -46,7 +47,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<typeof createTRPCContext>().meta<OpenApiMeta>().create({
   transformer: superjson,
   errorFormatter: ({ shape, error }) => ({
     ...shape,

@@ -1318,6 +1318,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            api: "API",
             tasks: "Tasks",
           },
         },
