@@ -86,14 +86,14 @@ const stats = [
 
 interface StatItem {
   icon: TablerIcon;
-  value: (x: RouterOutputs["widget"]["dnsHole"]["summary"][0]["summary"][], t: TranslationFunction) => string;
+  value: (x: RouterOutputs["widget"]["dnsHole"]["summary"][number]["summary"][], t: TranslationFunction) => string;
   label: stringOrTranslation;
   color: string;
 }
 
 interface StatCardProps {
   item: StatItem;
-  data: RouterOutputs["widget"]["dnsHole"]["summary"][0]["summary"][];
+  data: RouterOutputs["widget"]["dnsHole"]["summary"][number]["summary"][];
   usePiHoleColors: boolean;
 }
 const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
