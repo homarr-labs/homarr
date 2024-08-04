@@ -3,6 +3,9 @@ import { Stack, Title } from "@mantine/core";
 import { getScopedI18n } from "@homarr/translation/server";
 import dynamic from "next/dynamic";
 
+// workaround for CSS that cannot be processed by next.js, https://github.com/swagger-api/swagger-ui/issues/10045
+import "./swagger-ui.css"
+
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
 
 export async function generateMetadata() {

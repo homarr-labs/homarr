@@ -69,7 +69,11 @@ export const userRouter = createTRPCRouter({
     // Delete invite as it's used
     await ctx.db.delete(invites).where(inviteWhere);
   }),
-  create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
+  create: publicProcedure
+    .meta({ openapi: { method: "POST", path: "/api/users" } })
+    .input(validation.user.create)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
     throwIfCredentialsDisabled();
     await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
@@ -129,16 +133,12 @@ export const userRouter = createTRPCRouter({
       // Delete invite as it's used
       await ctx.db.delete(invites).where(inviteWhere);
     }),
-  create: publicProcedure
-    .meta({ openapi: { method: "POST", path: "/api/users" } })
-    .input(validation.user.create)
-    .mutation(async ({ ctx, input }) => {
-      await createUserAsync(ctx.db, input);
-    }),
   getAll: publicProcedure
+    .input(z.void())
+    .output(z.array(z.object({ id: z.string(), name: z.string().nullable(), email: z.string().nullable(), emailVerified: z.date().nullable(), image: z.string().nullable() })))
     .meta({ openapi: { method: "GET", path: "/api/users" } })
     .query(async ({ ctx }) => {
-      return await ctx.db.query.users.findMany({
+      return ctx.db.query.users.findMany({
         columns: {
           id: true,
           name: true,
