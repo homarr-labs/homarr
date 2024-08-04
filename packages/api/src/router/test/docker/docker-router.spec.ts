@@ -43,6 +43,7 @@ const validInputs: {
   stopAll: { ids: ["1"] },
   restartAll: { ids: ["1"] },
   removeAll: { ids: ["1"] },
+  invalidate: undefined,
 };
 
 describe("All procedures should only be accessible for users with admin permission", () => {
