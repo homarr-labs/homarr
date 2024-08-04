@@ -1619,6 +1619,19 @@ export default {
           },
         },
       },
+      refresh: {
+        label: "Refresh",
+        notification: {
+          success: {
+            title: "Containers refreshed",
+            message: "You are now viewing the most recent data",
+          },
+          error: {
+            title: "Containers not refreshed",
+            message: "Something went wrong while refreshing the containers",
+          },
+        },
+      },
     },
   },
   permission: {

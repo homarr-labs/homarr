@@ -59,6 +59,10 @@ export const dockerRouter = createTRPCRouter({
       timestamp,
     };
   }),
+  invalidate: permissionRequiredProcedure.requiresPermission("admin").mutation(async () => {
+    await dockerCache.invalidateAsync();
+    return;
+  }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ ids: z.array(z.string()) }))
