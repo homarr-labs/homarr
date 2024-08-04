@@ -25,7 +25,7 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
 
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
-      integrationId,
+      integrationIds,
     },
     {
       refetchOnMount: false,
@@ -36,7 +36,7 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)}>
       {stats.map((item, index) => (
-        <StatCard key={index} item={item} usePiHoleColors={options.usePiHoleColors} data={data} />
+        <StatCard key={index} item={item} usePiHoleColors={options.usePiHoleColors} data={data[0]?.summary} />
       ))}
     </Box>
   );

@@ -1,18 +1,18 @@
-import { IconAd, IconServerOff } from "@tabler/icons-react";
+import { IconDeviceGamepad, IconServerOff } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("dnsHoleSummary", {
-  icon: IconAd,
+export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("dnsHoleControls", {
+  icon: IconDeviceGamepad,
   options: optionsBuilder.from((factory) => ({
-    usePiHoleColors: factory.switch({
+    showToggleAllButtons: factory.switch({
       defaultValue: true,
     }),
     layout: factory.select({
       options: (["grid", "row", "column"] as const).map((value) => ({
         value,
-        label: (t) => t(`widget.dnsHoleSummary.option.layout.option.${value}.label`),
+        label: (t) => t(`widget.dnsHoleControls.option.layout.option.${value}.label`),
       })),
       defaultValue: "grid",
     }),
@@ -21,7 +21,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
-      message: (t) => t("widget.dnsHoleSummary.error.internalServerError"),
+      message: (t) => t("widget.dnsHoleControls.error.internalServerError"),
     },
   },
 })

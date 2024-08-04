@@ -19,7 +19,7 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     return {
       initialData: currentDns,
     };
-  } catch {
+  } catch (error) {
     return {
       initialData: undefined,
     };
