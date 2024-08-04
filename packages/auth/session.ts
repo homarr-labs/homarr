@@ -1,6 +1,6 @@
-import { randomUUID } from "crypto";
 import type { Session } from "next-auth";
 
+import { generateSecureRandomToken } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 
 import { getCurrentUserPermissionsAsync } from "./callbacks";
@@ -13,7 +13,7 @@ export const expireDateAfter = (seconds: number) => {
 };
 
 export const generateSessionToken = () => {
-  return randomUUID();
+  return generateSecureRandomToken(48);
 };
 
 export const getSessionFromTokenAsync = async (db: Database, token: string | undefined): Promise<Session | null> => {
