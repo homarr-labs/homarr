@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { BoxProps } from "@mantine/core";
-import { ActionIcon, Badge, Box, Button, Card, Flex, Image, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Badge, Box, Button, Card, Flex, Image, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { integrationDefs } from "@homarr/definitions";
+import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
-import type { WidgetComponentProps, WidgetProps } from "../../definition";
+import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 import TimerModal from "./TimerModal";
 
@@ -71,9 +71,9 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   const allDisabled = status.every((item) => !item.enabled);
 
   return (
-    <Box h="100%" {...boxPropsByLayout(options.layout)}>
+    <Flex h="100%" direction="column" gap={0} p="2.5cqmin">
       {options.showToggleAllButtons && (
-        <Flex gap="xs" m="2.5cqmin" p="2.5cqmin">
+        <Flex gap="2.5cqmin">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
               onClick={() => {
@@ -112,12 +112,14 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
         </Flex>
       )}
 
-      {data.map((integrationData) =>
-        ControlsCard(integrationData.integrationId, integrationData.integrationKind, toggleDns, status, open, t),
-      )}
+      <Stack gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
+        {data.map((integrationData) =>
+          ControlsCard(integrationData.integrationId, integrationData.integrationKind, toggleDns, status, open, t),
+        )}
+      </Stack>
 
       <TimerModal opened={opened} close={close} integrationIds={integrationIds} disableDns={disableDns} />
-    </Box>
+    </Flex>
   );
 }
 
@@ -127,26 +129,24 @@ const ControlsCard = (
   toggleDns: (integrationId: string) => void,
   status: { integrationId: string; enabled: boolean }[],
   open: () => void,
-  t: ReturnType<typeof useI18n>,
+  t: TranslationFunction,
 ) => {
   const integrationStatus = status.find((item) => item.integrationId === integrationId);
   const isEnabled = integrationStatus?.enabled ?? false;
   const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
 
   return (
-    <Card key={integrationId} withBorder m="2.5cqmin" p="2.5cqmin" radius="md">
+    <Card key={integrationId} withBorder p="2.5cqmin" radius="2.5cqmin">
       <Flex>
         <Box m="1.5cqmin" p="1.5cqmin">
-          <Image src={integrationDef.iconUrl} width={50} height={50} fit="contain" />
+          <Image src={integrationDef.iconUrl} width="50cqmin" height="50cqmin" fit="contain" />
         </Box>
         <Flex direction="column" m="1.5cqmin" p="1.5cqmin" gap="1cqmin">
-          <Badge variant="default">{integrationDef.name}</Badge>
+          <Text>{integrationDef.name}</Text>
           <Flex direction="row" gap="2cqmin">
             <UnstyledButton onClick={() => toggleDns(integrationId)}>
               <Badge variant="dot" color={dnsLightStatus(isEnabled)}>
-                {isEnabled
-                  ? t("widget.dnsHoleControls.controls.enabled")
-                  : t("widget.dnsHoleControls.controls.disabled")}
+                {t(`widget.dnsHoleControls.controls.${isEnabled ? "enabled" : "disabled"}`)}
               </Badge>
             </UnstyledButton>
             <ActionIcon disabled={!isEnabled} size={20} radius="xl" top="2.67px" variant="default" onClick={open}>
@@ -157,23 +157,4 @@ const ControlsCard = (
       </Flex>
     </Card>
   );
-};
-
-const boxPropsByLayout = (layout: WidgetProps<"dnsHoleControls">["options"]["layout"]): BoxProps => {
-  if (layout === "grid") {
-    return {
-      display: "grid",
-      style: {
-        gridTemplateColumns: "1fr 1fr",
-        gridTemplateRows: "1fr 1fr",
-      },
-    };
-  }
-
-  return {
-    display: "flex",
-    style: {
-      flexDirection: layout,
-    },
-  };
 };
