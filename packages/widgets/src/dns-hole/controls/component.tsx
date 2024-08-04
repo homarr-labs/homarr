@@ -70,37 +70,6 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   const allEnabled = status.every((item) => item.enabled);
   const allDisabled = status.every((item) => !item.enabled);
 
-  const ControlsCard = (integrationId: string, integrationKind: string) => {
-    const integrationStatus = status.find((item) => item.integrationId === integrationId);
-    const isEnabled = integrationStatus?.enabled ?? false;
-    const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
-
-    return (
-      <Card key={integrationId} withBorder={true} m="2.5cqmin" p="2.5cqmin" radius="md">
-        <Flex>
-          <Box m="1.5cqmin" p="1.5cqmin">
-            <Image src={integrationDef.iconUrl} width={50} height={50} fit="contain" />
-          </Box>
-          <Flex direction="column" m="1.5cqmin" p="1.5cqmin" gap="1cqmin">
-            <Badge variant="default">{integrationDef.name}</Badge>
-            <Flex direction="row" gap="2cqmin">
-              <UnstyledButton onClick={() => toggleDns(integrationId)}>
-                <Badge variant="dot" color={dnsLightStatus(isEnabled)}>
-                  {isEnabled
-                    ? t("widget.dnsHoleControls.controls.enabled")
-                    : t("widget.dnsHoleControls.controls.disabled")}
-                </Badge>
-              </UnstyledButton>
-              <ActionIcon disabled={!isEnabled} size={20} radius="xl" top="2.67px" variant="default" onClick={open}>
-                <IconClockPause size={20} color="red" />
-              </ActionIcon>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Card>
-    );
-  };
-
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)}>
       {options.showToggleAllButtons && (
@@ -143,12 +112,52 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
         </Flex>
       )}
 
-      {data.map((integrationData) => ControlsCard(integrationData.integrationId, integrationData.integrationKind))}
+      {data.map((integrationData) =>
+        ControlsCard(integrationData.integrationId, integrationData.integrationKind, toggleDns, status, open, t),
+      )}
 
       <TimerModal opened={opened} close={close} integrationIds={integrationIds} disableDns={disableDns} />
     </Box>
   );
 }
+
+const ControlsCard = (
+  integrationId: string,
+  integrationKind: string,
+  toggleDns: (integrationId: string) => void,
+  status: { integrationId: string; enabled: boolean }[],
+  open: () => void,
+  t: ReturnType<typeof useI18n>,
+) => {
+  const integrationStatus = status.find((item) => item.integrationId === integrationId);
+  const isEnabled = integrationStatus?.enabled ?? false;
+  const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
+
+  return (
+    <Card key={integrationId} withBorder={true} m="2.5cqmin" p="2.5cqmin" radius="md">
+      <Flex>
+        <Box m="1.5cqmin" p="1.5cqmin">
+          <Image src={integrationDef.iconUrl} width={50} height={50} fit="contain" />
+        </Box>
+        <Flex direction="column" m="1.5cqmin" p="1.5cqmin" gap="1cqmin">
+          <Badge variant="default">{integrationDef.name}</Badge>
+          <Flex direction="row" gap="2cqmin">
+            <UnstyledButton onClick={() => toggleDns(integrationId)}>
+              <Badge variant="dot" color={dnsLightStatus(isEnabled)}>
+                {isEnabled
+                  ? t("widget.dnsHoleControls.controls.enabled")
+                  : t("widget.dnsHoleControls.controls.disabled")}
+              </Badge>
+            </UnstyledButton>
+            <ActionIcon disabled={!isEnabled} size={20} radius="xl" top="2.67px" variant="default" onClick={open}>
+              <IconClockPause size={20} color="red" />
+            </ActionIcon>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Card>
+  );
+};
 
 const boxPropsByLayout = (layout: WidgetProps<"dnsHoleControls">["options"]["layout"]): BoxProps => {
   if (layout === "grid") {
