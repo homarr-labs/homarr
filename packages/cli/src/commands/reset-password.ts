@@ -15,7 +15,7 @@ export const resetPassword = command({
   handler: async (options) => {
     if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
       console.error("Credentials provider is not enabled");
-      process.exit(1);
+      return;
     }
 
     const user = await db.query.users.findFirst({
@@ -24,7 +24,7 @@ export const resetPassword = command({
 
     if (!user?.salt) {
       console.error(`User ${options.username} not found`);
-      process.exit(1);
+      return;
     }
 
     // Generates a new password with 48 characters
