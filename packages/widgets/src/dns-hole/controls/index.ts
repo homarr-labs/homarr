@@ -9,13 +9,6 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     showToggleAllButtons: factory.switch({
       defaultValue: true,
     }),
-    layout: factory.select({
-      options: (["grid", "row", "column"] as const).map((value) => ({
-        value,
-        label: (t) => t(`widget.dnsHoleControls.option.layout.option.${value}.label`),
-      })),
-      defaultValue: "grid",
-    }),
   })),
   supportedIntegrations: ["piHole", "adGuardHome"],
   errors: {
