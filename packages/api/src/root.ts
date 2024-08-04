@@ -1,3 +1,4 @@
+import type { AnyProcedure } from "@trpc/server";
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { cronJobsRouter } from "./router/cron-jobs";
@@ -14,7 +15,7 @@ import { userRouter } from "./router/user";
 import { widgetRouter } from "./router/widgets";
 import { createTRPCRouter } from "./trpc";
 
-export const appRouter = createTRPCRouter({
+const appRouter = createTRPCRouter({
   user: userRouter,
   group: groupRouter,
   invite: inviteRouter,
@@ -30,6 +31,31 @@ export const appRouter = createTRPCRouter({
   serverSettings: serverSettingsRouter,
   cronJobs: cronJobsRouter,
 });
+
+// https://github.com/jlalmes/trpc-openapi/issues/442#issuecomment-2121715312
+const procedures = appRouter._def.procedures;
+Object.keys(procedures).forEach((key) => {
+  const def = (procedures[key as keyof typeof procedures] as unknown as AnyProcedure)?._def;
+  // @ts-expect-error: internal API
+  if (def?.meta?.openapi) {
+    switch (def.type) {
+      case "query":
+        // @ts-expect-error: unstable support for tRPC v11
+        def.query = true;
+        break;
+      case "mutation":
+        // @ts-expect-error: unstable support for tRPC v11
+        def.mutation = true;
+        break;
+      case "subscription":
+        // @ts-expect-error: unstable support for tRPC v11
+        def.subscription = true;
+        break;
+    }
+  }
+});
+
+export { appRouter };
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
