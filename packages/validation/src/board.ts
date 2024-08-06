@@ -61,7 +61,7 @@ const saveSchema = z.object({
   sections: z.array(createSectionSchema(commonItemSchema)),
 });
 
-const createSchema = z.object({ name: boardNameSchema });
+const createSchema = z.object({ name: boardNameSchema, columnCount: z.number().min(1).max(24), isPublic: z.boolean() });
 
 const permissionsSchema = z.object({
   id: z.string(),

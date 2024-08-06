@@ -102,6 +102,8 @@ export const boardRouter = createTRPCRouter({
         await transaction.insert(boards).values({
           id: boardId,
           name: input.name,
+          isPublic: input.isPublic,
+          columnCount: input.columnCount,
           creatorId: ctx.session.user.id,
         });
         await transaction.insert(sections).values({

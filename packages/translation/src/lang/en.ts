@@ -1200,6 +1200,10 @@ export default {
       name: {
         label: "Name",
       },
+      isPublic: {
+        label: "Public",
+        description: "Public boards are accessible by everyone, even without an account.",
+      },
     },
     content: {
       metaTitle: "{boardName} board",
