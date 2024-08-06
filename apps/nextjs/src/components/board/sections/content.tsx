@@ -8,6 +8,7 @@ import combineClasses from "clsx";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
+import type { GridStack } from "@homarr/gridstack";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import {
@@ -22,6 +23,7 @@ import { WidgetError } from "@homarr/widgets/errors";
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { useItemActions } from "../items/item-actions";
+import { ItemMoveModal } from "../items/item-move-modal";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 import classes from "./item.module.css";
 
@@ -145,7 +147,9 @@ const ItemMenu = ({
   const tItem = useScopedI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
+  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
+  const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, removeItem } = useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
@@ -215,7 +219,15 @@ const ItemMenu = ({
         <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
           {tItem("action.edit")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>{tItem("action.move")}</Menu.Item>
+        <Menu.Item
+          leftSection={<IconLayoutKanban size={16} />}
+          // TODO: Load from context ones available
+          onClick={() =>
+            openMoveModal({ item, columnCount: board.columnCount, gridStack: null as unknown as GridStack })
+          }
+        >
+          {tItem("action.move")}
+        </Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
