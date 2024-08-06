@@ -636,6 +636,9 @@ importers:
       react:
         specifier: ^18.3.1
         version: 18.3.1
+      tldts:
+        specifier: ^6.1.37
+        version: 6.1.37
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -6173,6 +6176,13 @@ packages:
 
   title-case@2.1.1:
     resolution: {integrity: sha512-EkJoZ2O3zdCz3zJsYCsxyq2OC5hrxR9mfdd5I+w8h/tmFfeOxJ+vvkxsKxdmN0WtS9zLdHEgfgVOiMVgv+Po4Q==}
+
+  tldts-core@6.1.37:
+    resolution: {integrity: sha512-q6M/RBjZcUoF/KRhHFuGrcnaXLaXH8kHKH/e8XaAd9ULGYYhB32kr1ceIXR77a57OxRB/NR471BcYwU7jf4PAg==}
+
+  tldts@6.1.37:
+    resolution: {integrity: sha512-QMvNTwl3b3vyweq158Cf+IeEWe/P1HVDULo5n7qnt70rzkU3Ya2amaWO36lX0C8w6X3l92fftcuHwLIX9QBkZg==}
+    hasBin: true
 
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -11868,6 +11878,12 @@ snapshots:
     dependencies:
       no-case: 2.3.2
       upper-case: 1.1.3
+
+  tldts-core@6.1.37: {}
+
+  tldts@6.1.37:
+    dependencies:
+      tldts-core: 6.1.37
 
   tmp@0.0.33:
     dependencies:
