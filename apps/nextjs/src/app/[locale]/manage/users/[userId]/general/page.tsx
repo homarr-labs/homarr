@@ -58,7 +58,7 @@ export default async function EditUserPage({ params }: Props) {
 
   return (
     <Stack>
-      {isCredentialsUser && (
+      {!isCredentialsUser && (
         <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
           {t("management.page.user.fieldsDisabledExternalProvider")}
         </Alert>
