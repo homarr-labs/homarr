@@ -7,6 +7,7 @@ import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { createCronJobGroup } from "./lib";
+import {hardwareUsageJob} from "./jobs/integrations/hardware-usage";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,
@@ -16,6 +17,7 @@ export const jobGroup = createCronJobGroup({
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
   rssFeeds: rssFeedsJob,
+  hardwareUsage: hardwareUsageJob
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];

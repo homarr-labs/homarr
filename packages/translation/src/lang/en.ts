@@ -1550,6 +1550,9 @@ export default {
             rssFeeds: {
               label: "RSS feeds",
             },
+            hardwareUsage: {
+              label: "Hardware Usage"
+            }
           },
         },
       },

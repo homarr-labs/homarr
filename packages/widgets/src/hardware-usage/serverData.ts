@@ -7,12 +7,16 @@ import type { WidgetProps } from "../definition";
 export default async function getServerDataAsync({ integrationIds }: WidgetProps<"hardwareUsage">) {
   if (integrationIds.length === 0) {
     return {
-      initialData: [],
+      initialData: {
+        cpuHistory: {
+          cpuLoad: []
+        }
+      },
     };
   }
 
   const cpuHistory = await api.widget.hardwareUsage.getCpuHistory({
-    integrationIds,
+    integrationId: integrationIds[0],
   });
 
   return {
