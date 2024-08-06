@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
 
-export default function WeatherWidget({ options }: WidgetComponentProps<"weather">) {
+export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
     {
       latitude: options.location.latitude,
@@ -23,7 +23,14 @@ export default function WeatherWidget({ options }: WidgetComponentProps<"weather
   );
 
   return (
-    <Stack align="center" justify="center" gap="0" w="100%" h="100%">
+    <Stack
+      align="center"
+      justify="center"
+      gap="0"
+      w="100%"
+      h="100%"
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+    >
       {options.hasForecast ? (
         <WeeklyForecast weather={weather} options={options} />
       ) : (
@@ -51,15 +58,15 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
             <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
           </HoverCard.Dropdown>
         </HoverCard>
-        <Text fz="20cqmin">{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit)}</Text>
+        <Text fz="17.5cqmin">{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit)}</Text>
       </Group>
       <Space h="1cqmin" />
       <Group className="weather-max-min-temp-group" wrap="nowrap" gap="1cqmin">
         <IconArrowUpRight size="12.5cqmin" />
-        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit)}</Text>
+        <Text fz="10cqmin">{getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit)}</Text>
         <Space w="2.5cqmin" />
         <IconArrowDownRight size="12.5cqmin" />
-        <Text fz="12.5cqmin">{getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit)}</Text>
+        <Text fz="10cqmin">{getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit)}</Text>
       </Group>
       {options.showCity && (
         <>

@@ -126,7 +126,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
       if (offset !== 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}`,
+          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}: ([${input.integrationIds.join(",")}] compared to [${dbIntegrations.join(",")}])`,
         });
       }
 
@@ -198,20 +198,9 @@ export const createManyIntegrationOfOneItemMiddleware = <TKind extends Integrati
 
       await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
 
-      const dbIntegrationWithItem = dbIntegrations.filter((integration) =>
-        integration.items.some((item) => item.itemId === input.itemId),
-      );
-
-      if (dbIntegrationWithItem.length === 0) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Integration for item was not found",
-        });
-      }
-
       return next({
         ctx: {
-          integrations: dbIntegrationWithItem.map(
+          integrations: dbIntegrations.map(
             ({ secrets, kind, groupPermissions: _ignore1, userPermissions: _ignore2, ...rest }) => ({
               ...rest,
               kind: kind as TKind,
