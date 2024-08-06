@@ -1,10 +1,9 @@
 import {useListState} from "@mantine/hooks";
 import type {WidgetComponentProps} from "../definition";
-import {Paper, Stack, Text, OptionalPortal} from "@mantine/core";
+import {Paper, Stack, Text} from "@mantine/core";
 import {clientApi} from "@homarr/api/client";
 import {CpuLoad} from "@homarr/integrations";
 import {ResponsiveLine} from '@nivo/line'
-import {useRef} from "react";
 
 export default function HardwareUsageWidget({serverData, integrationIds}: WidgetComponentProps<"hardwareUsage">) {
   if (!serverData) {
@@ -16,7 +15,6 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
     integrationId: integrationIds[0]
   }, {
     onData: (data) => {
-      console.log('data ' + JSON.stringify(data));
       cpuUsageHandlers.append(data);
       if (cpuUsage.length > 15) {
         cpuUsageHandlers.shift();
@@ -49,7 +47,6 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
         }}
         enableSlices="x"
         sliceTooltip={({slice}) => {
-          console.log(slice);
           return <Paper p={"xs"} withBorder>
             <Text size={"xs"}>{slice.points[0].data.yFormatted}%</Text>
           </Paper>
