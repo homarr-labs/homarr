@@ -662,6 +662,7 @@ export default {
       import: "Import item",
       edit: "Edit item",
       move: "Move item",
+      duplicate: "Duplicate item",
       remove: "Remove item",
     },
     menu: {
