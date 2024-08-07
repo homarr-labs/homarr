@@ -6,11 +6,9 @@ import { filteringStatusSchema, statsResponseSchema, statusResponseSchema } from
 
 export class AdGuardHomeIntegration extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
-    const username = super.getSecretValue("username");
-    const password = super.getSecretValue("password");
     const statsResponse = await fetch(`${this.integration.url}/control/stats`, {
       headers: {
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
     });
 
@@ -22,7 +20,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
 
     const statusResponse = await fetch(`${this.integration.url}/control/status`, {
       headers: {
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
     });
 
@@ -32,38 +30,34 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       );
     }
 
-    const filteringStatusresponse = await fetch(`${this.integration.url}/control/filtering/status`, {
+    const filteringStatusResponse = await fetch(`${this.integration.url}/control/filtering/status`, {
       headers: {
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
     });
 
-    if (!filteringStatusresponse.ok) {
+    if (!filteringStatusResponse.ok) {
       throw new Error(
-        `Failed to fetch filtering status for ${this.integration.name} (${this.integration.id}): ${filteringStatusresponse.statusText}`,
+        `Failed to fetch filtering status for ${this.integration.name} (${this.integration.id}): ${filteringStatusResponse.statusText}`,
       );
     }
 
     const stats = statsResponseSchema.safeParse(await statsResponse.json());
     const status = statusResponseSchema.safeParse(await statusResponse.json());
-    const filteringStatus = filteringStatusSchema.safeParse(await filteringStatusresponse.json());
+    const filteringStatus = filteringStatusSchema.safeParse(await filteringStatusResponse.json());
 
+    let errorMessage = `Failed to parse summary for ${this.integration.name} (${this.integration.id}):`;
     if (!stats.success) {
-      throw new Error(
-        `Failed to parse summary for ${this.integration.name} (${this.integration.id}), most likely your username or password is wrong: ${stats.error.message}`,
-      );
+      errorMessage += `\n- Stats parsing error: ${stats.error.message}`;
     }
-
     if (!status.success) {
-      throw new Error(
-        `Failed to parse summary for ${this.integration.name} (${this.integration.id}), most likely your username or password is wrong: ${status.error.message}`,
-      );
+      errorMessage += `\n- Status parsing error: ${status.error.message}`;
     }
-
     if (!filteringStatus.success) {
-      throw new Error(
-        `Failed to parse summary for ${this.integration.name} (${this.integration.id}), most likely your username or password is wrong: ${filteringStatus.error.message}`,
-      );
+      errorMessage += `\n- Filtering status parsing error: ${filteringStatus.error.message}`;
+    }
+    if (!stats.success || !status.success || !filteringStatus.success) {
+      throw new Error(errorMessage);
     }
 
     const blockedQueriesToday =
@@ -88,14 +82,11 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
   }
 
   public async testConnectionAsync(): Promise<void> {
-    const username = super.getSecretValue("username");
-    const password = super.getSecretValue("password");
-
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
         return await fetch(`${this.integration.url}/control/status`, {
           headers: {
-            Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+            Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
           },
         });
       },
@@ -113,13 +104,11 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
   }
 
   public async enableAsync(): Promise<void> {
-    const username = super.getSecretValue("username");
-    const password = super.getSecretValue("password");
     const response = await fetch(`${this.integration.url}/control/protection`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
       body: JSON.stringify({
         enabled: true,
@@ -133,14 +122,11 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
   }
 
   public async disableAsync(duration?: number): Promise<void> {
-    const username = super.getSecretValue("username");
-    const password = super.getSecretValue("password");
-    duration = duration !== undefined ? duration * 1000 : 0;
     const response = await fetch(`${this.integration.url}/control/protection`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
       body: JSON.stringify({
         enabled: false,
@@ -152,5 +138,11 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
         `Failed to disable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
       );
     }
+  }
+
+  private getAuthorizationHeaderValue() {
+    const username = super.getSecretValue("username");
+    const password = super.getSecretValue("password");
+    return Buffer.from(`${username}:${password}`).toString("base64");
   }
 }

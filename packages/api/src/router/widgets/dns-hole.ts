@@ -25,11 +25,6 @@ export const dnsHoleRouter = createTRPCRouter({
               case "adGuardHome":
                 client = new AdGuardHomeIntegration(integration);
                 break;
-              default:
-                throw new TRPCError({
-                  code: "INTERNAL_SERVER_ERROR",
-                  message: `Unsupported integration type: ${integration.kind}`,
-                });
             }
 
             return await client.getSummaryAsync().catch((err) => {
@@ -62,11 +57,6 @@ export const dnsHoleRouter = createTRPCRouter({
         case "adGuardHome":
           client = new AdGuardHomeIntegration(ctx.integration);
           break;
-        default:
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: `Unsupported integration type: ${ctx.integration.kind}`,
-          });
       }
       await client.enableAsync();
     }),
@@ -83,11 +73,6 @@ export const dnsHoleRouter = createTRPCRouter({
         case "adGuardHome":
           client = new AdGuardHomeIntegration(ctx.integration);
           break;
-        default:
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: `Unsupported integration type: ${ctx.integration.kind}`,
-          });
       }
       await client.disableAsync(input.duration);
     }),
