@@ -46,18 +46,20 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     const status = statusResponseSchema.safeParse(await statusResponse.json());
     const filteringStatus = filteringStatusSchema.safeParse(await filteringStatusResponse.json());
 
-    let errorMessage = `Failed to parse summary for ${this.integration.name} (${this.integration.id}):`;
+    const errorMessages: string[] = [];
     if (!stats.success) {
-      errorMessage += `\n- Stats parsing error: ${stats.error.message}`;
+      errorMessages.push(`Stats parsing error: ${stats.error.message}`);
     }
     if (!status.success) {
-      errorMessage += `\n- Status parsing error: ${status.error.message}`;
+      errorMessages.push(`Status parsing error: ${status.error.message}`);
     }
     if (!filteringStatus.success) {
-      errorMessage += `\n- Filtering status parsing error: ${filteringStatus.error.message}`;
+      errorMessages.push(`Filtering status parsing error: ${filteringStatus.error.message}`);
     }
     if (!stats.success || !status.success || !filteringStatus.success) {
-      throw new Error(errorMessage);
+      throw new Error(
+        `Failed to parse summary for ${this.integration.name} (${this.integration.id}):\n${errorMessages.join("\n")}`,
+      );
     }
 
     const blockedQueriesToday =
