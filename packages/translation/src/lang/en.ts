@@ -752,6 +752,9 @@ export default {
         usePiHoleColors: {
           label: "Use Pi-Hole colors",
         },
+        showIntegrationTitle: {
+          label: "Show integration title",
+        },
       },
       error: {
         internalServerError: "Failed to fetch DNS Hole Summary",

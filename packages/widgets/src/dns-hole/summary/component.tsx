@@ -2,12 +2,13 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Box, Card, Flex, Text } from "@mantine/core";
+import { Box, Card, Flex, Image, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { formatNumber } from "@homarr/common";
+import { integrationDefs } from "@homarr/definitions";
 import type { stringOrTranslation, TranslationFunction } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -28,13 +29,23 @@ export default function DnsHoleSummaryWidget({
   }
 
   const data = useMemo(() => (serverData?.initialData ?? []).flatMap((summary) => summary.summary), [serverData]);
+  const integrationKind: "piHole" | "adGuardHome" | undefined = serverData?.initialData[0]?.integrationKind;
+  const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
 
   return (
-    <Box h="100%" {...boxPropsByLayout(options.layout)}>
-      {stats.map((item, index) => (
-        <StatCard key={index} item={item} usePiHoleColors={options.usePiHoleColors} data={data} />
-      ))}
-    </Box>
+    <Flex h="100%" direction="column">
+      {options.showIntegrationTitle && (
+        <Flex m="1.5cqmin" justify="center" gap="2.5cqmin">
+          <Image src={integrationDef.iconUrl} width="25cqmin" height="25cqmin" fit="contain" />
+          <Text>{integrationDef.name}</Text>
+        </Flex>
+      )}
+      <Box h="100%" {...boxPropsByLayout(options.layout)}>
+        {stats.map((item, index) => (
+          <StatCard key={index} item={item} usePiHoleColors={options.usePiHoleColors} data={data} />
+        ))}
+      </Box>
+    </Flex>
   );
 }
 

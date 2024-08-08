@@ -9,6 +9,9 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     usePiHoleColors: factory.switch({
       defaultValue: true,
     }),
+    showIntegrationTitle: factory.switch({
+      defaultValue: true,
+    }),
     layout: factory.select({
       options: (["grid", "row", "column"] as const).map((value) => ({
         value,
