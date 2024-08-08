@@ -8,6 +8,7 @@ on:
 jobs:
   approve-renovate-prs:
     runs-on: ubuntu-latest
+    if: github.actor == 'homarr-renovate[bot]'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
