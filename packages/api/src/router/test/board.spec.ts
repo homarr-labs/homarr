@@ -617,7 +617,8 @@ describe("saveBoard should save full board", () => {
         {
           id: createId(),
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [],
         },
       ],
@@ -653,7 +654,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [
             {
               id: createId(),
@@ -714,7 +716,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          xOffset: 0,
+          yOffset: 0,
           items: [
             {
               id: itemId,
@@ -776,14 +779,16 @@ describe("saveBoard should save full board", () => {
         sections: [
           {
             id: newSectionId,
-            position: 1,
+            xOffset: 0,
+            yOffset: 1,
             items: [],
             ...partialSection,
           },
           {
             id: sectionId,
             kind: "empty",
-            position: 0,
+            xOffset: 0,
+            yOffset: 0,
             items: [],
           },
         ],
@@ -806,7 +811,7 @@ describe("saveBoard should save full board", () => {
       expect(addedSection).toBeDefined();
       expect(addedSection.id).toBe(newSectionId);
       expect(addedSection.kind).toBe(partialSection.kind);
-      expect(addedSection.position).toBe(1);
+      expect(addedSection.yOffset).toBe(1);
       if ("name" in partialSection) {
         expect(addedSection.name).toBe(partialSection.name);
       }
@@ -828,7 +833,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [
             {
               id: newItemId,
@@ -897,7 +903,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          xOffset: 0,
+          yOffset: 0,
           items: [
             {
               id: itemId,
@@ -954,7 +961,8 @@ describe("saveBoard should save full board", () => {
       id: newSectionId,
       kind: "category",
       name: "Before",
-      position: 1,
+      yOffset: 1,
+      xOffset: 0,
       boardId,
     });
 
@@ -964,7 +972,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "category",
-          position: 1,
+          yOffset: 1,
+          xOffset: 0,
           name: "Test",
           items: [],
         },
@@ -972,7 +981,8 @@ describe("saveBoard should save full board", () => {
           id: newSectionId,
           kind: "category",
           name: "After",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [],
         },
       ],
@@ -990,12 +1000,12 @@ describe("saveBoard should save full board", () => {
     const firstSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === sectionId));
     expect(firstSection.id).toBe(sectionId);
     expect(firstSection.kind).toBe("empty");
-    expect(firstSection.position).toBe(1);
+    expect(firstSection.yOffset).toBe(1);
     expect(firstSection.name).toBe(null);
     const secondSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
     expect(secondSection.id).toBe(newSectionId);
     expect(secondSection.kind).toBe("category");
-    expect(secondSection.position).toBe(0);
+    expect(secondSection.yOffset).toBe(0);
     expect(secondSection.name).toBe("After");
   });
   it("should update item when present in input", async () => {
@@ -1011,7 +1021,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [
             {
               id: itemId,
@@ -1266,7 +1277,8 @@ const createFullBoardAsync = async (db: Database, name: string) => {
   await db.insert(sections).values({
     id: sectionId,
     kind: "empty",
-    position: 0,
+    yOffset: 0,
+    xOffset: 0,
     boardId,
   });
 

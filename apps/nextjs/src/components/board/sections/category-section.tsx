@@ -1,20 +1,16 @@
-import type { RefObject } from "react";
 import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { CategoryMenu } from "./category/category-menu";
-import { SectionContent } from "./content";
-import { useGridstack } from "./gridstack/use-gridstack";
+import { GridStack } from "./gridstack/gridstack";
 
 interface Props {
   section: CategorySection;
-  mainRef: RefObject<HTMLDivElement>;
 }
 
-export const BoardCategorySection = ({ section, mainRef }: Props) => {
-  const { refs } = useGridstack({ section, mainRef });
+export const BoardCategorySection = ({ section }: Props) => {
   const [opened, { toggle }] = useDisclosure(false);
 
   return (
@@ -30,9 +26,7 @@ export const BoardCategorySection = ({ section, mainRef }: Props) => {
           <CategoryMenu category={section} />
         </Group>
         <Collapse in={opened} p="sm" pt={0}>
-          <div className="grid-stack grid-stack-category" data-category data-section-id={section.id} ref={refs.wrapper}>
-            <SectionContent items={section.items} refs={refs} />
-          </div>
+          <GridStack section={section} />
         </Collapse>
       </Stack>
     </Card>
