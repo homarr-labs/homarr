@@ -96,7 +96,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
         try {
           const result = (await response.json()) as unknown;
           if (typeof result === "object" && result !== null) return;
-        } catch (error) {
+        } catch {
           throw new IntegrationTestConnectionError("invalidJson");
         }
 
