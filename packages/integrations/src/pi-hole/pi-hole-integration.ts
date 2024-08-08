@@ -23,6 +23,7 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
     }
 
     return {
+      status: result.data.status,
       adsBlockedToday: result.data.ads_blocked_today,
       adsBlockedTodayPercentage: result.data.ads_percentage_today,
       domainsBeingBlocked: result.data.domains_being_blocked,
@@ -48,5 +49,26 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
         throw new IntegrationTestConnectionError("invalidCredentials");
       },
     });
+  }
+
+  public async enableAsync(): Promise<void> {
+    const apiKey = super.getSecretValue("apiKey");
+    const response = await fetch(`${this.integration.url}/admin/api.php?enable&auth=${apiKey}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
+    }
+  }
+
+  public async disableAsync(duration?: number): Promise<void> {
+    const apiKey = super.getSecretValue("apiKey");
+    const url = `${this.integration.url}/admin/api.php?disable${duration ? `=${duration}` : ""}&auth=${apiKey}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
+    }
   }
 }

@@ -30,6 +30,9 @@ vi.mock("@homarr/api/server", () => ({
     },
   },
 }));
+vi.mock("@homarr/common/server", () => ({
+  parseAppHrefWithVariablesServer: () => "http://localhost",
+}));
 
 describe("getServerDataAsync should load app and ping result", () => {
   test("when appId is empty it should return null for app and pingResult", async () => {
