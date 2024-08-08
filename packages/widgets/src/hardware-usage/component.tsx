@@ -2,22 +2,22 @@ import {useListState} from "@mantine/hooks";
 import type {WidgetComponentProps} from "../definition";
 import {Group, Paper, Stack, Text} from "@mantine/core";
 import {clientApi} from "@homarr/api/client";
-import {CpuLoad} from "@homarr/integrations";
+import {CpuLoad, MemoryLoad, NetworkLoad} from "@homarr/integrations";
 import {ResponsiveLine} from '@nivo/line'
 
 export default function HardwareUsageWidget({serverData, integrationIds}: WidgetComponentProps<"hardwareUsage">) {
   if (!serverData) {
     return null;
   }
-  const [cpuUsage, cpuUsageHandlers] = useListState<{ cpuLoad: CpuLoad }>([serverData.initialData.cpuHistory]);
+  const [hardwareUsage, hardwareUsageHandlers] = useListState<{ cpuLoad: CpuLoad, memoryLoad: MemoryLoad, networkLoad: NetworkLoad }>([serverData.initialData.hardwareInformationHistory]);
 
   clientApi.widget.hardwareUsage.subscribeCpu.useSubscription({
     integrationId: integrationIds[0]
   }, {
     onData: (data) => {
-      cpuUsageHandlers.append(data);
-      if (cpuUsage.length > 15) {
-        cpuUsageHandlers.shift();
+      hardwareUsageHandlers.append(data);
+      if (hardwareUsage.length > 15) {
+        hardwareUsageHandlers.shift();
       }
     }
   });
@@ -25,20 +25,20 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
   const data = [{
     id: "cpuLoad",
     color: "red",
-    data: cpuUsage.map((usage, index) => ({
+    data: hardwareUsage.map((usage, index) => ({
       x: `${index}`,
       y: usage.cpuLoad.sumLoad
     }))
   }];
 
-  const hasLast = cpuUsage.length > 0;
+  const hasLast = hardwareUsage.length > 0;
 
   return <Stack p={"md"}>
     <Paper pos={"relative"} radius={"md"} w={"100%"} h={250}>
       <Group pos={"absolute"} gap={"xs"} top={5} left={10}>
         <Text fw={"bold"}>CPU</Text>
         {hasLast && (
-          <Text c={"dimmed"}>{cpuUsage[cpuUsage.length - 1]!.cpuLoad.sumLoad.toFixed(2)}%</Text>
+          <Text c={"dimmed"}>{hardwareUsage[hardwareUsage.length - 1]!.cpuLoad.sumLoad.toFixed(2)}%</Text>
         )}
       </Group>
       <ResponsiveLine
@@ -76,5 +76,7 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
         useMesh={true}
         animate={false}/>
     </Paper>
+
+    {JSON.stringify(hardwareUsage[hardwareUsage.length - 1])}
   </Stack>
 }

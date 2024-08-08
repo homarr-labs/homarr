@@ -8,20 +8,22 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
   if (integrationIds.length === 0) {
     return {
       initialData: {
-        cpuHistory: {
-          cpuLoad: []
+        hardwareInformationHistory: {
+          cpuLoad: [],
+          memoryLoad: [],
+          networkLoad: []
         }
       },
     };
   }
 
-  const cpuHistory = await api.widget.hardwareUsage.getCpuHistory({
+  const hardwareInformationHistory = await api.widget.hardwareUsage.getHardwareInformationHistory({
     integrationId: integrationIds[0],
   });
 
   return {
     initialData: {
-      cpuHistory: cpuHistory
+      hardwareInformationHistory: hardwareInformationHistory
     },
   };
 }
