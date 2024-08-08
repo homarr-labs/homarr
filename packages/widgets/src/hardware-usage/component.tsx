@@ -35,7 +35,7 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
 
   return <Stack p={"md"}>
     <Paper pos={"relative"} radius={"md"} w={"100%"} h={250}>
-      <Group pos={"absolute"} top={5} left={10}>
+      <Group pos={"absolute"} gap={"xs"} top={5} left={10}>
         <Text fw={"bold"}>CPU</Text>
         {hasLast && (
           <Text c={"dimmed"}>{cpuUsage[cpuUsage.length - 1]!.cpuLoad.sumLoad.toFixed(2)}%</Text>
@@ -54,10 +54,14 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
         }}
         enableSlices="x"
         sliceTooltip={({slice}) => {
-          return <Paper p={"xs"} withBorder>
-            <Text size={"xs"}>{slice.points[0].data.yFormatted}%</Text>
+          if (slice.points.length === 0) {
+            return null;
+          }
+          return <Paper p={5} px={8} radius={"lg"} withBorder>
+            <Text c={"dimmed"} size={"xs"}>{slice.points[0]!.data.yFormatted}%</Text>
           </Paper>
-        }}
+        }
+        }
         curve={"monotoneX"}
         yFormat=" >-.2f"
         axisTop={null}
