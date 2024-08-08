@@ -2,6 +2,8 @@ name: "[Dependency Updates] Auto Approve"
 on:
   pull_request:
     types: [opened, synchronize]
+    branches:
+      - "renovate/**"
 
 jobs:
   approve-renovate-prs:
