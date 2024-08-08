@@ -58,9 +58,11 @@ export default async function EditUserPage({ params }: Props) {
 
   return (
     <Stack>
-      <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-        {t("management.page.user.fieldsDisabledExternalProvider")}
-      </Alert>
+      {!isCredentialsUser && (
+        <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+          {t("management.page.user.fieldsDisabledExternalProvider")}
+        </Alert>
+      )}
 
       <Title>{tGeneral("title")}</Title>
       <Group gap="xl">
