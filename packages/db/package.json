@@ -38,7 +38,7 @@
     "drizzle-orm": "^0.33.0",
     "dotenv": "^16.4.5",
     "mysql2": "3.11.0",
-    "drizzle-kit": "^0.23.2"
+    "drizzle-kit": "^0.24.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
