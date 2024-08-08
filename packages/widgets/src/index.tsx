@@ -21,7 +21,6 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as usenetDownloads from "./usenet-downloads";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 

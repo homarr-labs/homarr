@@ -11,8 +11,6 @@ import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import type { IntegrationInput } from "./integration";
-import {SabnzbdIntegration} from "../sabnzbd/sabnzbd-integration";
-import {NzbGetIntegration} from "../nzbget/nzbget-integration";
 
 export const integrationCreatorByKind = (kind: IntegrationKind, integration: IntegrationInput) => {
   switch (kind) {
