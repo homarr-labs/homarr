@@ -8,7 +8,7 @@ import type { DockerContainerState } from "@homarr/definitions";
 import { createCacheChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
-import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 import { DockerSingleton } from "./docker-singleton";
 
 const dockerCache = createCacheChannel<{
@@ -16,7 +16,7 @@ const dockerCache = createCacheChannel<{
 }>("docker-containers", 5 * 60 * 1000);
 
 export const dockerRouter = createTRPCRouter({
-  getContainers: publicProcedure.query(async () => {
+  getContainers: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
     const { timestamp, data } = await dockerCache.consumeAsync(async () => {
       const dockerInstances = DockerSingleton.getInstance();
       const containers = await Promise.all(
@@ -58,6 +58,10 @@ export const dockerRouter = createTRPCRouter({
       containers: sanitizeContainers(data.containers),
       timestamp,
     };
+  }),
+  invalidate: permissionRequiredProcedure.requiresPermission("admin").mutation(async () => {
+    await dockerCache.invalidateAsync();
+    return;
   }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")

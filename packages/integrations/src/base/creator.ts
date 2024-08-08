@@ -1,5 +1,6 @@
 import type { IntegrationKind } from "@homarr/definitions";
 
+import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
@@ -12,6 +13,8 @@ export const integrationCreatorByKind = (kind: IntegrationKind, integration: Int
   switch (kind) {
     case "piHole":
       return new PiHoleIntegration(integration);
+    case "adGuardHome":
+      return new AdGuardHomeIntegration(integration);
     case "homeAssistant":
       return new HomeAssistantIntegration(integration);
     case "jellyfin":
