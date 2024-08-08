@@ -11,7 +11,7 @@ export class DashDotIntegration extends Integration {
       const cpu = await fetch(this.integration.url + (this.integration.url.endsWith("/") ? "load/cpu" : "/load/cpu"));
       const data = (await cpu.json()) as CpuLoadApi[];
       return {
-        sumLoad: data.reduce((acc, current) => acc + current.load, 0),
+        sumLoad: data.reduce((acc, current) => acc + current.load, 0) / data.length,
       };
     }
 }

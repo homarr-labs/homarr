@@ -1,6 +1,6 @@
 import {useListState} from "@mantine/hooks";
 import type {WidgetComponentProps} from "../definition";
-import {Paper, Stack, Text} from "@mantine/core";
+import {Group, Paper, Stack, Text} from "@mantine/core";
 import {clientApi} from "@homarr/api/client";
 import {CpuLoad} from "@homarr/integrations";
 import {ResponsiveLine} from '@nivo/line'
@@ -31,9 +31,16 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
     }))
   }];
 
+  const hasLast = cpuUsage.length > 0;
+
   return <Stack p={"md"}>
     <Paper pos={"relative"} radius={"md"} w={"100%"} h={250}>
-      <Text pos={"absolute"} fw={"bold"} top={5} left={10}>CPU</Text>
+      <Group pos={"absolute"} top={5} left={10}>
+        <Text fw={"bold"}>CPU</Text>
+        {hasLast && (
+          <Text c={"dimmed"}>{cpuUsage[cpuUsage.length - 1]!.cpuLoad.sumLoad.toFixed(2)}%</Text>
+        )}
+      </Group>
       <ResponsiveLine
         data={data}
         margin={{top: 10, right: 10, bottom: 10, left: 10}}
@@ -61,7 +68,7 @@ export default function HardwareUsageWidget({serverData, integrationIds}: Widget
         enableTouchCrosshair={true}
         enableGridX={false}
         enableGridY={false}
-        enableCrosshair={false}
+        enableCrosshair={true}
         useMesh={true}
         animate={false}/>
     </Paper>
