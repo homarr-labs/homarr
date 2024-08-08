@@ -42,8 +42,8 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
       vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.5.4)(vite@5.2.6(@types/node@20.14.14)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
+        specifier: ^5.0.0
+        version: 5.0.0(typescript@5.5.4)(vite@5.2.6(@types/node@20.14.14)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       vitest:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.14.14)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
@@ -6518,8 +6518,8 @@ packages:
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
-  vite-tsconfig-paths@4.3.2:
-    resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
+  vite-tsconfig-paths@5.0.0:
+    resolution: {integrity: sha512-sCdKc6uC7ir102lW8deBiMnS0NGEs0100OJX8WZQmf3Uf7tJ/T3uQnzznq/tZWph7tkG+44JYOsKE7YTZjDn+Q==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -12227,9 +12227,9 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@4.3.2(typescript@5.5.4)(vite@5.2.6(@types/node@20.14.14)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)):
+  vite-tsconfig-paths@5.0.0(typescript@5.5.4)(vite@5.2.6(@types/node@20.14.14)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)):
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.5
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.5.4)
     optionalDependencies:
