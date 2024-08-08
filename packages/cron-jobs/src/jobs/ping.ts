@@ -5,7 +5,14 @@ import { pingChannel, pingUrlChannel } from "@homarr/redis";
 
 import { createCronJob } from "../lib";
 
-export const pingJob = createCronJob("ping", EVERY_MINUTE).withCallback(async () => {
+const resetPreviousUrlsAsync = async () => {
+  await pingUrlChannel.clearAsync();
+  logger.info("Cleared previous ping urls");
+};
+
+export const pingJob = createCronJob("ping", EVERY_MINUTE, {
+  beforeStart: resetPreviousUrlsAsync,
+}).withCallback(async () => {
   const urls = await pingUrlChannel.getAllAsync();
 
   for (const url of new Set(urls)) {

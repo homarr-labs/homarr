@@ -16,6 +16,7 @@ export interface CreateCronJobCreatorOptions<TAllowedNames extends string> {
 
 interface CreateCronJobOptions {
   runOnStart?: boolean;
+  beforeStart?: () => MaybePromise<void>;
 }
 
 const createCallback = <TAllowedNames extends string, TName extends TAllowedNames>(
@@ -62,6 +63,11 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
       cronExpression,
       scheduledTask,
       async onStartAsync() {
+        if (options.beforeStart) {
+          creatorOptions.logger.logDebug(`Running beforeStart for job: ${name}`);
+          await options.beforeStart();
+        }
+
         if (!options.runOnStart) return;
 
         creatorOptions.logger.logDebug(`The cron job '${name}' is running because runOnStart is set to true`);

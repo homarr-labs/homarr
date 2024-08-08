@@ -78,6 +78,12 @@ export const createListChannel = <TItem>(name: string) => {
       await getSetClient.lrem(listChannelName, 0, superjson.stringify(item));
     },
     /**
+     * Clear all items from the channels list
+     */
+    clearAsync: async () => {
+      await getSetClient.del(listChannelName);
+    },
+    /**
      * Add an item to the channels list
      * @param item item to add
      */
