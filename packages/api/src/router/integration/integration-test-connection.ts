@@ -39,6 +39,7 @@ export const testConnectionAsync = async (
 
   const filteredSecrets = secretKinds.map((kind) => {
     const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
+
     // Will never be undefined because of the check before
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (secrets.length === 1) return secrets[0]!;

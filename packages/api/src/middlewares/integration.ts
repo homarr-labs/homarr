@@ -126,7 +126,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
       if (offset !== 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}`,
+          message: `${offset} of the specified integrations [${input.integrationIds.join(",")}] not found or not of kinds ${kinds.join(",")} in db [${dbIntegrations.map(i => i.id).join(",")}]`,
         });
       }
 

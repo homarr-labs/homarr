@@ -105,6 +105,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: [],
   },
+  getDashDot: {
+    name: "Dash.",
+    secretKinds: [[]],
+    category: [],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dashdot.png",
+  }
 } satisfies Record<
   string,
   {

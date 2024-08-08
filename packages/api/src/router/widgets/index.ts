@@ -7,6 +7,7 @@ import { notebookRouter } from "./notebook";
 import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { weatherRouter } from "./weather";
+import {hardwareUsageRouter} from "./hardware-usage";
 
 export const widgetRouter = createTRPCRouter({
   notebook: notebookRouter,
@@ -16,5 +17,6 @@ export const widgetRouter = createTRPCRouter({
   smartHome: smartHomeRouter,
   mediaServer: mediaServerRouter,
   calendar: calendarRouter,
+  hardwareUsage: hardwareUsageRouter,
   rssFeed: rssFeedRouter,
 });
