@@ -1,9 +1,7 @@
 name: "[Deployment] Release"
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - main
   workflow_dispatch:
@@ -13,11 +11,6 @@ on:
         required: false
         default: true
         description: Send notifications
-      push-image:
-        type: boolean
-        required: false
-        default: true
-        description: Push image to remote repository
 
 permissions:
   contents: write
@@ -102,7 +95,7 @@ jobs:
         with:
           platforms: linux/amd64 # we currently do't build for linux/arm64 as it's really slow and we'll move to a self hosted runner for that or use the official github runner, once it's available
           context: .
-          push: ${{ github.event.inputs['push-image'] }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           network: host

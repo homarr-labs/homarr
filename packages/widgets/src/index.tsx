@@ -9,6 +9,7 @@ import * as app from "./app";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
+import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as downloads from "./downloads";
 import * as iframe from "./iframe";
@@ -20,12 +21,15 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as usenetDownloads from "./usenet-downloads";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
+export type { WidgetDefinition } from "./definition";
 export { WidgetEditModal } from "./modals/widget-edit-modal";
 export { useServerDataFor } from "./server/provider";
 export { GlobalItemServerDataRunner } from "./server/runner";
+export type { WidgetComponentProps };
 
 export const widgetImports = {
   clock,
@@ -35,6 +39,7 @@ export const widgetImports = {
   iframe,
   video,
   dnsHoleSummary,
+  dnsHoleControls,
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   mediaServer,
@@ -45,8 +50,6 @@ export const widgetImports = {
 
 export type WidgetImports = typeof widgetImports;
 export type WidgetImportKey = keyof WidgetImports;
-export type { WidgetComponentProps };
-export type { WidgetDefinition } from "./definition";
 
 const loadedComponents = new Map<WidgetKind, ComponentType<WidgetComponentProps<WidgetKind>>>();
 

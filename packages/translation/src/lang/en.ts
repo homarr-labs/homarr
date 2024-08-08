@@ -558,7 +558,7 @@ export default {
     },
     multiText: {
       placeholder: "Add more values",
-      addLabel: `Add {value}`,
+      addLabel: "Add {value}",
     },
     select: {
       placeholder: "Pick value",
@@ -761,6 +761,43 @@ export default {
         adsBlockedTodayPercentage: "Blocked today",
         dnsQueriesToday: "Queries today",
         domainsBeingBlocked: "Domains on blocklist",
+      },
+    },
+    dnsHoleControls: {
+      name: "DNS Hole Controls",
+      description: "Control PiHole or AdGuard from your dashboard",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        showToggleAllButtons: {
+          label: "Show Toggle All Buttons",
+        },
+      },
+      error: {
+        internalServerError: "Failed to control DNS Hole",
+      },
+      controls: {
+        enableAll: "Enable All",
+        disableAll: "Disable All",
+        setTimer: "Set Timer",
+        set: "Set",
+        enabled: "Enabled",
+        disabled: "Disabled",
+        hours: "Hours",
+        minutes: "Minutes",
+        unlimited: "Leave blank to unlimited",
       },
     },
     clock: {
@@ -1711,6 +1748,19 @@ export default {
           error: {
             title: "Containers not removed",
             message: "The containers could not be removed",
+          },
+        },
+      },
+      refresh: {
+        label: "Refresh",
+        notification: {
+          success: {
+            title: "Containers refreshed",
+            message: "You are now viewing the most recent data",
+          },
+          error: {
+            title: "Containers not refreshed",
+            message: "Something went wrong while refreshing the containers",
           },
         },
       },

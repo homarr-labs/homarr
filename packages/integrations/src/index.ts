@@ -1,5 +1,5 @@
 // General integrations
-export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
+export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
 export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
 export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
 export { DownloadClientIntegration } from "./interfaces/downloads/download-client-integration";
@@ -9,6 +9,7 @@ export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
 export { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
 export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
 export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
+export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
 
 // Types
 export type { SanitizedIntegration } from "./base/integration";
@@ -19,5 +20,5 @@ export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
 
 // Helpers
-export { IntegrationTestConnectionError } from "./base/test-connection-error";
 export { integrationCreatorByKind } from "./base/creator";
+export { IntegrationTestConnectionError } from "./base/test-connection-error";

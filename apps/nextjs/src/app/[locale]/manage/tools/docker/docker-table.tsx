@@ -2,7 +2,7 @@
 
 import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
-import { IconPlayerPlay, IconPlayerStop, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
+import { IconPlayerPlay, IconPlayerStop, IconRefresh, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -46,10 +46,12 @@ const createColumns = (
     accessorKey: "image",
     header: t("docker.field.containerImage.label"),
     maxSize: 200,
-    Cell({ renderedCellValue }) {
+    Cell({ renderedCellValue, cell }) {
       return (
         <Box maw={200}>
-          <Text truncate="end">{renderedCellValue}</Text>
+          <Text truncate="end" title={cell.row.original.image}>
+            {renderedCellValue}
+          </Text>
         </Box>
       );
     },
@@ -93,6 +95,35 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     },
 
     initialState: { density: "xs", showGlobalFilter: true },
+    renderTopToolbarCustomActions: () => {
+      const utils = clientApi.useUtils();
+      const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
+        async onSuccess() {
+          await utils.docker.getContainers.invalidate();
+          showSuccessNotification({
+            title: tDocker("action.refresh.notification.success.title"),
+            message: tDocker("action.refresh.notification.success.message"),
+          });
+        },
+        onError() {
+          showErrorNotification({
+            title: tDocker("action.refresh.notification.error.title"),
+            message: tDocker("action.refresh.notification.error.message"),
+          });
+        },
+      });
+
+      return (
+        <Button
+          variant="default"
+          rightSection={<IconRefresh size="1rem" />}
+          onClick={() => mutate()}
+          loading={isPending}
+        >
+          {tDocker("action.refresh.label")}
+        </Button>
+      );
+    },
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
       return (
         <Group gap={"sm"}>
