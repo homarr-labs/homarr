@@ -6,7 +6,7 @@ on:
 jobs:
   approve-renovate-prs:
     runs-on: ubuntu-latest
-    if: github.actor_id == 816230 # Id of renovate bot see https://github.com/organizations/homarr-labs/settings/apps/homarr-renovate
+    if: github.actor_id == 158783068 # Id of renovate bot see https://api.github.com/users/homarr-renovate%5Bbot%5D
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
