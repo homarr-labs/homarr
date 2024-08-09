@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, synchronize]
     branches:
-      - "renovate/**"
+      - "test/**"
 
 jobs:
   approve-renovate-prs:
