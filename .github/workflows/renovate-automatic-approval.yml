@@ -6,6 +6,7 @@ on:
 jobs:
   approve-renovate-prs:
     runs-on: ubuntu-latest
+    if: github.actor_id == 158783068 # Id of renovate bot see https://api.github.com/users/homarr-renovate%5Bbot%5D
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,6 +22,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
-          for pr in $(gh pr list --author homarr-renovate[bot] --json number --jq .[].number); do
-            gh pr review $pr --approve --body "Automatically approved by GitHub Action"
-          done
+          gh pr review ${{github.event.pull_request.number}} --approve --body "Automatically approved by GitHub Action"

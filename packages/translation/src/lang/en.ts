@@ -37,6 +37,9 @@ export default {
       previousPassword: {
         label: "Previous password",
       },
+      homeBoard: {
+        label: "Home board",
+      },
     },
     error: {
       usernameTaken: "Username already taken",
@@ -78,6 +81,16 @@ export default {
           },
           error: {
             message: "Unable to change password",
+          },
+        },
+      },
+      changeHomeBoard: {
+        notification: {
+          success: {
+            message: "Home board changed successfully",
+          },
+          error: {
+            message: "Unable to change home board",
           },
         },
       },
@@ -662,6 +675,7 @@ export default {
       import: "Import item",
       edit: "Edit item",
       move: "Move item",
+      duplicate: "Duplicate item",
       remove: "Remove item",
     },
     menu: {
@@ -1200,6 +1214,10 @@ export default {
       name: {
         label: "Name",
       },
+      isPublic: {
+        label: "Public",
+        description: "Public boards are accessible by everyone, even without an account.",
+      },
     },
     content: {
       metaTitle: "{boardName} board",
@@ -1399,9 +1417,16 @@ export default {
         setting: {
           general: {
             title: "General",
+            item: {
+              language: "Language & Region",
+              board: "Home board",
+            },
           },
           security: {
             title: "Security",
+          },
+          board: {
+            title: "Boards",
           },
         },
         list: {
@@ -1734,6 +1759,7 @@ export default {
         },
         general: "General",
         security: "Security",
+        board: "Boards",
         groups: {
           label: "Groups",
         },
