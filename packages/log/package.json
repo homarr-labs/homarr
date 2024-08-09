@@ -27,7 +27,7 @@
   "dependencies": {
     "ioredis": "5.4.1",
     "superjson": "2.2.1",
-    "winston": "3.13.1"
+    "winston": "3.14.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
