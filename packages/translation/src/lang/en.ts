@@ -37,6 +37,9 @@ export default {
       previousPassword: {
         label: "Previous password",
       },
+      homeBoard: {
+        label: "Home board",
+      },
     },
     error: {
       usernameTaken: "Username already taken",
@@ -78,6 +81,16 @@ export default {
           },
           error: {
             message: "Unable to change password",
+          },
+        },
+      },
+      changeHomeBoard: {
+        notification: {
+          success: {
+            message: "Home board changed successfully",
+          },
+          error: {
+            message: "Unable to change home board",
           },
         },
       },
@@ -1400,9 +1413,16 @@ export default {
         setting: {
           general: {
             title: "General",
+            item: {
+              language: "Language & Region",
+              board: "Home board",
+            },
           },
           security: {
             title: "Security",
+          },
+          board: {
+            title: "Boards",
           },
         },
         list: {
@@ -1732,6 +1752,7 @@ export default {
         },
         general: "General",
         security: "Security",
+        board: "Boards",
         groups: {
           label: "Groups",
         },

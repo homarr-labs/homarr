@@ -156,6 +156,7 @@ export const userRouter = createTRPCRouter({
         emailVerified: true,
         image: true,
         provider: true,
+        homeBoardId: true,
       },
       where: eq(users.id, input.userId),
     });
@@ -266,6 +267,39 @@ export const userRouter = createTRPCRouter({
       })
       .where(eq(users.id, input.userId));
   }),
+  changeHomeBoardId: protectedProcedure
+    .input(validation.user.changeHomeBoard.and(z.object({ userId: z.string() })))
+    .mutation(async ({ input, ctx }) => {
+      const user = ctx.session.user;
+      // Only admins can change other users' passwords
+      if (!user.permissions.includes("admin") && user.id !== input.userId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          homeBoardId: input.homeBoardId,
+        })
+        .where(eq(users.id, input.userId));
+    }),
 });
 
 const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {
