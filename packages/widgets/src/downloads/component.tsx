@@ -29,6 +29,7 @@ import {
   IconInfoCircle,
   IconPlayerPause,
   IconPlayerPlay,
+  IconProps,
   IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -68,6 +69,16 @@ const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
   time: 4,
   type: 2,
   upSpeed: 3,
+};
+
+const actionIconIconStyle: IconProps["style"] = {
+  height: "var(--ai-icon-size)",
+  width: "var(--ai-icon-size)",
+};
+
+const standardIconStyle: IconProps["style"] = {
+  height: "var(--icon-size)",
+  width: "var(--icon-size)",
 };
 
 export default function DownloadClientsWidget({
@@ -228,12 +239,17 @@ export default function DownloadClientsWidget({
     pointerEvents: isEditMode ? "none" : undefined,
   };
 
-  //General style sizing as vars
+  //General style sizing as vars that should apply or be applied to all elements
   const baseStyle: MantineStyleProp = {
-    "--totalWidth": totalWidth,
-    "--ratioWidth": "calc(100cqw / var(--totalWidth))",
-    "--text-fz": "calc(var(--ratioWidth) * 0.45)",
-    "--button-fz": "calc(var(--ratioWidth)* 0.6)",
+    "--total-width": totalWidth,
+    "--ratio-width": "calc(100cqw / var(--total-width))",
+    "--space-size": "calc(var(--ratio-width) * 0.1)", //Standard gap and spacing value
+    "--text-fz": "calc(var(--ratio-width) * 0.45)", //General Font Size
+    "--button-fz": "var(--text-fz)",
+    "--icon-size": "calc(var(--ratio-width) * 2 / 3)", //Normal icon size
+    "--ai-icon-size": "calc(var(--ratio-width) * 0.5)", //Icon inside action icons size
+    "--button-size": "calc(var(--ratio-width) * 0.75)", //Action Icon, button and avatar size
+    "--image-size": "var(--button-size)",
     "--mrt-base-background-color": "transparent",
   };
 
@@ -249,12 +265,12 @@ export default function DownloadClientsWidget({
   }): MRT_ColumnDef<ExtendedDownloadClientItem> => {
     const style: MantineStyleProp = {
       minWidth: 0,
-      width: "var(--width)",
-      height: "var(--ratioWidth)",
-      padding: "calc(var(--ratioWidth) * 0.2)",
+      width: "var(--column-width)",
+      height: "var(--ratio-width)",
+      padding: "var(--space-size)",
       transition: "unset",
-      "--keyWidth": columnsRatios[key],
-      "--width": "calc((var(--keyWidth)/var(--totalWidth) * 100cqw))",
+      "--key-width": columnsRatios[key],
+      "--column-width": "calc((var(--key-width)/var(--total-width) * 100cqw))",
     };
     return {
       id: key,
@@ -281,23 +297,24 @@ export default function DownloadClientsWidget({
           const isPaused = row.original.state === "paused";
           const [opened, { open, close }] = useDisclosure(false);
           return (
-            <Group wrap="nowrap" gap="calc(var(--ratioWidth)*0.1)">
+            <Group wrap="nowrap" gap="var(--space-size)">
               <Tooltip label={t(`actions.item.${isPaused ? "resume" : "pause"}`)}>
                 <ActionIcon
                   variant="light"
                   radius={999}
                   onClick={isPaused ? actions.resume : actions.pause}
-                  size="calc(var(--ratioWidth)*0.75)"
+                  size="var(--button-size)"
                 >
                   {isPaused ? (
-                    <IconPlayerPlay
-                      style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }}
-                    />
+                    <IconPlayerPlay style={actionIconIconStyle} />
                   ) : (
-                    <IconPlayerPause
-                      style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }}
-                    />
+                    <IconPlayerPause style={actionIconIconStyle} />
                   )}
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label={t("actions.item.delete.title")}>
+                <ActionIcon color="red" radius={999} onClick={open} size="var(--button-size)">
+                  <IconTrash style={actionIconIconStyle} />
                 </ActionIcon>
               </Tooltip>
               <Modal opened={opened} onClose={close} title={t("actions.item.delete.modalTitle")} size="auto" centered>
@@ -326,11 +343,6 @@ export default function DownloadClientsWidget({
                   </Button>
                 </Group>
               </Modal>
-              <Tooltip label={t("actions.item.delete.title")}>
-                <ActionIcon color="red" radius={999} onClick={open} size="calc(var(--ratioWidth)*0.75)">
-                  <IconTrash style={{ height: "calc(var(--ratioWidth)*0.5)", width: "calc(var(--ratioWidth)*0.5)" }} />
-                </ActionIcon>
-              </Tooltip>
             </Group>
           );
         },
@@ -351,9 +363,7 @@ export default function DownloadClientsWidget({
           return (
             category !== undefined && (
               <Tooltip label={category}>
-                <IconInfoCircle
-                  style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }}
-                />
+                <IconInfoCircle style={standardIconStyle} />
               </Tooltip>
             )
           );
@@ -374,9 +384,7 @@ export default function DownloadClientsWidget({
           const id = cell.getValue<ExtendedDownloadClientItem["id"]>();
           return (
             <Tooltip label={id}>
-              <IconCirclesRelation
-                style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }}
-              />
+              <IconCirclesRelation style={standardIconStyle} />
             </Tooltip>
           );
         },
@@ -394,7 +402,7 @@ export default function DownloadClientsWidget({
           const integration = cell.getValue<ExtendedDownloadClientItem["integration"]>();
           return (
             <Tooltip label={integration.name}>
-              <Avatar size="calc(var(--ratioWidth)*0.6)" radius={0} src={getIconUrl(integration.kind)} />
+              <Avatar size="var(--image-size)" radius={0} src={getIconUrl(integration.kind)} />
             </Tooltip>
           );
         },
@@ -415,14 +423,14 @@ export default function DownloadClientsWidget({
         Cell: ({ cell, row }) => {
           const progress = cell.getValue<ExtendedDownloadClientItem["progress"]>();
           return (
-            <Stack w="100%" gap={0} align="center" pt="calc(var(--ratioWidth)*0.1)">
-              <Text lh="calc(var(--ratioWidth)*0.35)">
+            <Stack w="100%" gap={0} align="center" pt="var(--space-size)">
+              <Text lh="calc(var(--ratio-width)*0.35)">
                 {new Intl.NumberFormat("en", { style: "percent", notation: "compact", unitDisplay: "narrow" }).format(
                   progress,
                 )}
               </Text>
               <Progress
-                h="calc(var(--ratioWidth)*0.25)"
+                h="calc(var(--ratio-width)*0.25)"
                 w="100%"
                 value={progress * 100}
                 color={row.original.state === "paused" ? "yellow" : progress === 1 ? "green" : "blue"}
@@ -474,11 +482,7 @@ export default function DownloadClientsWidget({
         ...columnsDefBase({ key: "time", showHeader: true, align: "center" }),
         Cell: ({ cell }) => {
           const time = cell.getValue<ExtendedDownloadClientItem["time"]>();
-          return time === 0 ? (
-            <IconInfinity style={{ height: "calc(var(--ratioWidth)*2/3)", width: "calc(var(--ratioWidth)*2/3)" }} />
-          ) : (
-            <Text>{dayjs().add(time).fromNow()}</Text>
-          );
+          return time === 0 ? <IconInfinity style={standardIconStyle} /> : <Text>{dayjs().add(time).fromNow()}</Text>;
         },
       },
       {
@@ -519,8 +523,8 @@ export default function DownloadClientsWidget({
     mantineTableProps: {
       className: "downloads-widget-table",
       style: {
-        "--sortButtonSize": "calc(var(--ratioWidth)*0.6)",
-        "--dragButtonSize": "calc(var(--ratioWidth)*0.6)",
+        "--sortButtonSize": "var(--button-size)",
+        "--dragButtonSize": "var(--button-size)",
       },
     },
     mantineTableBodyProps: { style: editStyle },
@@ -596,7 +600,8 @@ export default function DownloadClientsWidget({
     <Stack gap={0} h="100%" display="flex" style={baseStyle}>
       <MantineReactTable table={table} />
       <Group
-        p="calc(var(--ratioWidth)*0.2)"
+        h="var(--ratio-width)"
+        px="var(--space-size)"
         justify={integrationTypes.includes("torrent") ? "space-between" : "end"}
         style={{
           flexDirection: isLangRtl ? "row-reverse" : "row",
@@ -604,7 +609,7 @@ export default function DownloadClientsWidget({
         }}
       >
         {integrationTypes.includes("torrent") && (
-          <Group style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}>
+          <Group pt="var(--space-size)" style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}>
             <Text>{tCommon("rtl", { value: t("globalRatio"), symbol: tCommon("symbols.colon") })}</Text>
             <Text>{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
@@ -728,21 +733,49 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const t = useScopedI18n("widget.downloads.actions");
   return (
-    <Group gap="calc(var(--ratioWidth)*0.1)" style={style}>
+    <Group gap="var(--space-size)" style={style}>
       <AvatarGroup>
         {clients.map((client) => (
-          <Avatar key={client.integration.id} size="var(--ratioWidth)" src={getIconUrl(client.integration.kind)} />
+          <Avatar
+            key={client.integration.id}
+            src={getIconUrl(client.integration.kind)}
+            size="var(--image-size)"
+            bd={0}
+          />
         ))}
       </AvatarGroup>
       <Tooltip label={t("clients.resume")}>
         <ActionIcon
-          size="var(--ratioWidth)"
+          size="var(--button-size)"
           radius={999}
           disabled={pausedIntegrations.length === 0}
           variant="light"
           onClick={() => mutateResumeQueue({ integrationIds: pausedIntegrations })}
         >
-          <IconPlayerPlay style={{ height: "calc(var(--ratioWidth)*0.75)", width: "calc(var(--ratioWidth)*0.75)" }} />
+          <IconPlayerPlay style={actionIconIconStyle} />
+        </ActionIcon>
+      </Tooltip>
+      <Button
+        variant="default"
+        radius={999}
+        h="var(--button-size)"
+        px="calc(var(--space-size)*2)"
+        pt="var(--space-size)"
+        pb={0}
+        fw="500"
+        onClick={open}
+      >
+        {totalSpeed}
+      </Button>
+      <Tooltip label={t("clients.pause")}>
+        <ActionIcon
+          size="var(--button-size)"
+          radius={999}
+          disabled={activeIntegrations.length === 0}
+          variant="light"
+          onClick={() => mutatePauseQueue({ integrationIds: activeIntegrations })}
+        >
+          <IconPlayerPause style={actionIconIconStyle} />
         </ActionIcon>
       </Tooltip>
       <Modal opened={opened} onClose={close} title={t("clients.modalTitle")} centered size="auto">
@@ -803,29 +836,6 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
           ))}
         </Stack>
       </Modal>
-      <Button
-        variant="default"
-        h="var(--ratioWidth)"
-        radius={999}
-        px="calc(var(--ratioWidth)*0.2)"
-        pt="calc(var(--ratioWidth)*0.1)"
-        pb={0}
-        fw="500"
-        onClick={open}
-      >
-        {totalSpeed}
-      </Button>
-      <Tooltip label={t("clients.pause")}>
-        <ActionIcon
-          size="var(--ratioWidth)"
-          radius={999}
-          disabled={activeIntegrations.length === 0}
-          variant="light"
-          onClick={() => mutatePauseQueue({ integrationIds: activeIntegrations })}
-        >
-          <IconPlayerPause style={{ height: "calc(var(--ratioWidth)*0.75)", width: "calc(var(--ratioWidth)*0.75)" }} />
-        </ActionIcon>
-      </Tooltip>
     </Group>
   );
 };
