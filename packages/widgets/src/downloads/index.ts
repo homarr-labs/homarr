@@ -83,16 +83,26 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
         shouldHide: (options) => !options.enableRowSorting,
       },
       showCompletedUsenet: {
-        shouldHide: () => false, //Get from presence of usenet client in integration list
+        shouldHide: (_, integrationKinds) =>
+          !integrationKinds.some((integrationKind) => ["sabNzbd", "nzbGet"].includes(integrationKind)),
       },
       showCompletedTorrent: {
-        shouldHide: () => false, //Get from presence of torrent client in integration list
+        shouldHide: (_, integrationKinds) =>
+          !integrationKinds.some((integrationKind) =>
+            ["qBittorrent", "deluge", "transmission"].includes(integrationKind),
+          ),
       },
       activeTorrentThreshold: {
-        shouldHide: () => false, //Get from presence of torrent client in integration list
+        shouldHide: (_, integrationKinds) =>
+          !integrationKinds.some((integrationKind) =>
+            ["qBittorrent", "deluge", "transmission"].includes(integrationKind),
+          ),
       },
       applyFilterToRatio: {
-        shouldHide: () => false, //Get from presence of torrent client in integration list
+        shouldHide: (_, integrationKinds) =>
+          !integrationKinds.some((integrationKind) =>
+            ["qBittorrent", "deluge", "transmission"].includes(integrationKind),
+          ),
       },
     },
   ),
