@@ -6,9 +6,8 @@ on:
 jobs:
   approve-renovate-prs:
     runs-on: ubuntu-latest
+    if: github.actor_id == 816230 # Id of renovate bot see https://github.com/organizations/homarr-labs/settings/apps/homarr-renovate
     steps:
-      - name: Echo github payload
-        run: echo '${{ toJson(github) }}' && exit 1
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Obtain token
