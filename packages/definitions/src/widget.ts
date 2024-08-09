@@ -11,6 +11,7 @@ export const widgetKinds = [
   "smartHome-executeAutomation",
   "mediaServer",
   "calendar",
+  "usenet-downloads",
   "rssFeed",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

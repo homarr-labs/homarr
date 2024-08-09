@@ -1552,6 +1552,9 @@ export default {
             mediaOrganizer: {
               label: "Media Organizers",
             },
+            "usenet-downloads": {
+              label: "Usenet downloads"
+            },
             rssFeeds: {
               label: "RSS feeds",
             },
