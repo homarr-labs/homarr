@@ -13,13 +13,13 @@ export const integrationDefs = {
     name: "SABnzbd",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sabnzbd.png",
-    category: ["useNetClient"],
+    category: ["downloadClient"],
   },
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nzbget.png",
-    category: ["useNetClient"],
+    category: ["downloadClient"],
   },
   deluge: {
     name: "Deluge",
@@ -137,5 +137,4 @@ export type IntegrationCategory =
   | "mediaSearch"
   | "mediaRequest"
   | "downloadClient"
-  | "useNetClient"
   | "smartHomeServer";

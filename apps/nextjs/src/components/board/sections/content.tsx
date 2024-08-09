@@ -99,7 +99,10 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
   const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
+  const { updateItemOptions } = useItemActions();
   const newItem = { ...item, options };
+  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
+    updateItemOptions({ itemId: item.id, newOptions });
 
   if (!serverData?.isReady) return null;
 
@@ -124,6 +127,7 @@ const BoardItemContent = ({ item, ...dimensions }: ItemContentProps) => {
             isEditMode={isEditMode}
             boardId={board.id}
             itemId={item.id}
+            setOptions={updateOptions}
             {...dimensions}
           />
         </ErrorBoundary>

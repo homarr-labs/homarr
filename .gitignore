@@ -55,3 +55,6 @@ db.sqlite
 
 apps/tasks/tasks.cjs
 apps/websocket/wssServer.cjs
+
+#personal backgrounds
+apps/nextjs/public/images/background.png

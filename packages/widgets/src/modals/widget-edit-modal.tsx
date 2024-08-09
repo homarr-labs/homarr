@@ -47,9 +47,9 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
       z.object({
         options: z.object(
           objectEntries(widgetImports[innerProps.kind].definition.options).reduce(
-            (acc, [key, value]: [string, { validate?: z.ZodType<unknown> }]) => {
+            (acc, [key, value]: [string, { type: string; validate?: z.ZodType<unknown> }]) => {
               if (value.validate) {
-                acc[key] = value.validate;
+                acc[key] = value.type === "multiText" ? z.array(value.validate).optional() : value.validate;
               }
 
               return acc;
