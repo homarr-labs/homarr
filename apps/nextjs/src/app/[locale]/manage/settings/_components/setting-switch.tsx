@@ -15,7 +15,7 @@ export const SwitchSetting = ({
   disabled,
 }: {
   form: UseFormReturnType<typeof defaultServerSettings.analytics & typeof defaultServerSettings.crawlingAndIndexing>;
-  formKey: keyof typeof defaultServerSettings.analytics & keyof typeof defaultServerSettings.crawlingAndIndexing;
+  formKey: keyof typeof defaultServerSettings.analytics | keyof typeof defaultServerSettings.crawlingAndIndexing;
   ms?: MantineSpacing;
   title: string;
   text: ReactNode;
@@ -25,7 +25,9 @@ export const SwitchSetting = ({
     if (disabled) {
       return;
     }
-    form.setFieldValue(formKey, !form.values[formKey]);
+
+    const invertedValue = !form.values[formKey];
+    form.setFieldValue(formKey, () => invertedValue);
   }, [form, formKey, disabled]);
 
   return (

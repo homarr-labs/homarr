@@ -7,6 +7,8 @@ import { CrawlingAndIndexingSettings } from "~/app/[locale]/manage/settings/_com
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AnalyticsSettings } from "./_components/analytics.settings";
 
+export const dynamic = "force-static";
+
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
   const metaTitle = `${t("metaTitle")} • Homarr`;
