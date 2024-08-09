@@ -37,7 +37,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/hooks": "^7.12.0",
     "@mantine/core": "^7.12.0",
-    "@tabler/icons-react": "^3.11.0",
+    "@tabler/icons-react": "^3.12.0",
     "@tiptap/extension-color": "2.5.9",
     "@tiptap/extension-highlight": "2.5.9",
     "@tiptap/extension-image": "2.5.9",
@@ -65,7 +65,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.0",
     "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"

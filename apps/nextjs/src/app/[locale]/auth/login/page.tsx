@@ -10,7 +10,7 @@ import { LoginForm } from "./_login-form";
 
 interface LoginProps {
   searchParams: {
-    redirectAfterLogin?: string;
+    callbackUrl?: string;
   };
 }
 
@@ -18,7 +18,7 @@ export default async function Login({ searchParams }: LoginProps) {
   const session = await auth();
 
   if (session) {
-    redirect(searchParams.redirectAfterLogin ?? "/");
+    redirect(searchParams.callbackUrl ?? "/");
   }
 
   const t = await getScopedI18n("user.page.login");
@@ -40,7 +40,7 @@ export default async function Login({ searchParams }: LoginProps) {
             providers={env.AUTH_PROVIDERS}
             oidcClientName={env.AUTH_OIDC_CLIENT_NAME}
             isOidcAutoLoginEnabled={env.AUTH_OIDC_AUTO_LOGIN}
-            callbackUrl={searchParams.redirectAfterLogin ?? "/"}
+            callbackUrl={searchParams.callbackUrl ?? "/"}
           />
         </Card>
       </Stack>

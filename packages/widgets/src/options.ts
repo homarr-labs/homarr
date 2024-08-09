@@ -1,5 +1,5 @@
 import { objectEntries } from "@homarr/common";
-import type { WidgetKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ZodType } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
@@ -123,7 +123,7 @@ export type inferOptionsFromDefinition<TOptions extends WidgetOptionsRecord> = {
 };
 
 interface FieldConfiguration<TOptions extends WidgetOptionsRecord> {
-  shouldHide: (options: inferOptionsFromDefinition<TOptions>) => boolean;
+  shouldHide: (options: inferOptionsFromDefinition<TOptions>, integrationKinds: IntegrationKind[]) => boolean;
 }
 
 type ConfigurationInput<TOptions extends WidgetOptionsRecord> = Partial<
