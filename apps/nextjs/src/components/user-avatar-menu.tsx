@@ -23,6 +23,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import "flag-icons/css/flag-icons.min.css";
 
+import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { LanguageCombobox } from "./language/language-combobox";
 
 interface UserAvatarMenuProps {
@@ -40,6 +41,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
   const session = useSession();
   const router = useRouter();
 
+  const { logoutUrl } = useAuthContext();
   const { openModal } = useModalAction(LogoutModal);
 
   const handleSignout = useCallback(async () => {
@@ -48,6 +50,10 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
     });
     openModal({
       onTimeout: () => {
+        if (logoutUrl) {
+          window.location.assign(logoutUrl);
+          return;
+        }
         router.refresh();
       },
     });

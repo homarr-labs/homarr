@@ -62,6 +62,7 @@ const authProviders = skipValidation ? [] : authProvidersSchema.parse(process.en
 
 export const env = createEnv({
   server: {
+    AUTH_LOGOUT_REDIRECT_URL: z.string().url().optional(),
     AUTH_SESSION_EXPIRY_TIME: createDurationSchema("30d"),
     AUTH_SECRET: process.env.NODE_ENV === "production" ? z.string().min(1) : z.string().min(1).optional(),
     AUTH_PROVIDERS: authProvidersSchema,
@@ -94,6 +95,7 @@ export const env = createEnv({
   },
   client: {},
   runtimeEnv: {
+    AUTH_LOGOUT_REDIRECT_URL: process.env.AUTH_LOGOUT_REDIRECT_URL,
     AUTH_SESSION_EXPIRY_TIME: process.env.AUTH_SESSION_EXPIRY_TIME,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_PROVIDERS: process.env.AUTH_PROVIDERS,
