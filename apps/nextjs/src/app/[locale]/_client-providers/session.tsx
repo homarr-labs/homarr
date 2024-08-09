@@ -1,8 +1,7 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import type { PropsWithChildren } from "react";
-import { useEffect } from "react";
 import dayjs from "dayjs";
 
 import type { Session } from "@homarr/auth";
@@ -13,9 +12,9 @@ interface AuthProviderProps extends AuthContextProps {
 }
 
 export const AuthProvider = ({ children, session, logoutUrl }: PropsWithChildren<AuthProviderProps>) => {
-    useLoginRedirectOnSessionExpiry(session);
-    
-    return (
+  useLoginRedirectOnSessionExpiry(session);
+
+  return (
     <SessionProvider session={session}>
       <AuthContext.Provider value={{ logoutUrl }}>{children}</AuthContext.Provider>
     </SessionProvider>
@@ -45,6 +44,3 @@ const useLoginRedirectOnSessionExpiry = (session: Session | null) => {
     return () => clearTimeout(timeout);
   }, [session]);
 };
-
-
-
