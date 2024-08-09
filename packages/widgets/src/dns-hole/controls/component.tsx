@@ -24,6 +24,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   const [status, setStatus] = useState<{ integrationId: string; enabled: boolean }[]>(
     integrationIds.map((id) => ({ integrationId: id, enabled: false })),
   );
+  const [selectedIntegration, setSelectedIntegration] = useState<string[]>([]);
   const [opened, { close, open }] = useDisclosure(false);
 
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
@@ -90,7 +91,17 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
-            <Button onClick={open} disabled={allDisabled} variant="light" color="yellow" fullWidth h="2rem">
+            <Button
+              onClick={() => {
+                setSelectedIntegration(integrationIds);
+                open();
+              }}
+              disabled={allDisabled}
+              variant="light"
+              color="yellow"
+              fullWidth
+              h="2rem"
+            >
               <IconClockPause size={20} />
             </Button>
           </Tooltip>
@@ -114,11 +125,19 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
 
       <Stack gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
         {data.map((integrationData) =>
-          ControlsCard(integrationData.integrationId, integrationData.integrationKind, toggleDns, status, open, t),
+          ControlsCard(
+            integrationData.integrationId,
+            integrationData.integrationKind,
+            toggleDns,
+            status,
+            setSelectedIntegration,
+            open,
+            t,
+          ),
         )}
       </Stack>
 
-      <TimerModal opened={opened} close={close} integrationIds={integrationIds} disableDns={disableDns} />
+      <TimerModal opened={opened} close={close} selectedIntegration={selectedIntegration} disableDns={disableDns} />
     </Flex>
   );
 }
@@ -128,6 +147,7 @@ const ControlsCard = (
   integrationKind: string,
   toggleDns: (integrationId: string) => void,
   status: { integrationId: string; enabled: boolean }[],
+  setSelectedIntegration: (integrationId: string[]) => void,
   open: () => void,
   t: TranslationFunction,
 ) => {
@@ -149,7 +169,17 @@ const ControlsCard = (
                 {t(`widget.dnsHoleControls.controls.${isEnabled ? "enabled" : "disabled"}`)}
               </Badge>
             </UnstyledButton>
-            <ActionIcon disabled={!isEnabled} size={20} radius="xl" top="2.67px" variant="default" onClick={open}>
+            <ActionIcon
+              disabled={!isEnabled}
+              size={20}
+              radius="xl"
+              top="2.67px"
+              variant="default"
+              onClick={() => {
+                setSelectedIntegration([integrationId]);
+                open();
+              }}
+            >
               <IconClockPause size={20} color="red" />
             </ActionIcon>
           </Flex>
