@@ -14,6 +14,7 @@ import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 
 import { Analytics } from "~/components/layout/analytics";
+import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { AuthProvider } from "./_client-providers/session";
@@ -80,6 +81,7 @@ export default function Layout(props: { children: React.ReactNode; params: { loc
       <head>
         <ColorSchemeScript defaultColorScheme={colorScheme} />
         <Analytics />
+        <SearchEngineOptimization />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>
