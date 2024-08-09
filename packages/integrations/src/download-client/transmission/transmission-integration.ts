@@ -19,7 +19,8 @@ export class TransmissionIntegration extends DownloadClientIntegration {
       ({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }),
       { down: 0, up: 0 },
     );
-    const paused = torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
+    const paused =
+      torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, type };
     const items = torrents.map((torrent): DownloadClientItem => {
       const state = TransmissionIntegration.getTorrentState(torrent.status);

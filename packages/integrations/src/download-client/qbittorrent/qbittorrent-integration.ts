@@ -20,7 +20,8 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
       ({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }),
       { down: 0, up: 0 },
     );
-    const paused = torrents.find(({ state }) => QBitTorrentIntegration.getTorrentState(state) !== "paused") === undefined;
+    const paused =
+      torrents.find(({ state }) => QBitTorrentIntegration.getTorrentState(state) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, type };
     const items = torrents.map((torrent): DownloadClientItem => {
       const state = QBitTorrentIntegration.getTorrentState(torrent.state);

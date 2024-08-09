@@ -47,17 +47,7 @@ import type {
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-
-//TODO:
-// - useSubscription only returns data for original IDs, even after updating the list in options.
-//   You can see the call in the console shows the sub is updated with the new amount of ID's, but it doesn't return the data for the new one.
-//   As if the channels are not being created.
-//   Saving the board does make it work though, so no reload necessary at least to see data.
-//
-// - Make modals sizes relative (Based on whole screen)
-// - Add integrations to shouldHide options                 <- Need help
-// - Move columns ratio table to css vars
-// - tests maybe?
+import { NoIntegrationSelectedError } from "../errors";
 
 //Ratio table for relative width between columns
 const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
@@ -104,7 +94,7 @@ export default function DownloadClientsWidget({
   const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation();
   const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation();
 
-  //Subrscribe to dynamic data changes
+  //Subscribe to dynamic data changes
   clientApi.widget.downloads.subscribeToJobsAndStatuses.useSubscription(
     {
       integrationIds,
@@ -202,7 +192,7 @@ export default function DownloadClientsWidget({
   );
 
   //Check existing types between torrents and usenet
-  const integrationTypes: string[] = [];
+  const integrationTypes: ExtendedDownloadClientItem["type"][] = [];
   if (data.some(({ type }) => type === "torrent")) integrationTypes.push("torrent");
   if (data.some(({ type }) => type === "usenet")) integrationTypes.push("usenet");
 
@@ -230,7 +220,7 @@ export default function DownloadClientsWidget({
   //Set a relative width using ratio table
   const totalWidth = options.columns.reduce(
     (count: number, column) => (columnVisibility[column] ? count + columnsRatios[column] : count),
-    0, //<-- out of table spacing value
+    0,
   );
 
   //Default styling behavior for stopping interaction when editing. (Applied everywhere except the table header)
@@ -541,6 +531,7 @@ export default function DownloadClientsWidget({
       },
     }),
     onColumnOrderChange: (order) => {
+      //Order has a tendency to add the disabled column at the end of the the real ordered array
       const columnOrder = (order as typeof options.columns).filter((column) => options.columns.includes(column));
       setOptions({ newOptions: { columns: columnOrder } });
     },
@@ -577,7 +568,9 @@ export default function DownloadClientsWidget({
   });
 
   const isLangRtl = tCommon("rtl", { value: "0", symbol: "1" }).startsWith("1");
-  const globalTrafic = clients
+
+  //Used for Global Torrent Ratio
+  const globalTraffic = clients
     .filter(({ integration: { kind } }) => ["qBittorrent", "deluge", "transmission"].includes(kind))
     .reduce(
       ({ up, down }, { totalUp, totalDown }) => ({
@@ -587,12 +580,9 @@ export default function DownloadClientsWidget({
       { up: 0, down: 0 },
     );
 
-  if (integrationIds.length === 0)
-    return (
-      <Center h="100%">
-        <Text fz="7.5cqw">{tCommon("errors.noIntegration")}</Text>
-      </Center>
-    );
+  if (integrationIds.length === 0) {
+    throw new NoIntegrationSelectedError();
+  }
 
   if (options.columns.length === 0)
     return (
@@ -616,7 +606,7 @@ export default function DownloadClientsWidget({
         {integrationTypes.includes("torrent") && (
           <Group style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}>
             <Text>{tCommon("rtl", { value: t("globalRatio"), symbol: tCommon("symbols.colon") })}</Text>
-            <Text>{(globalTrafic.up / globalTrafic.down).toFixed(2)}</Text>
+            <Text>{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
         )}
         <ClientsControl clients={clients} style={editStyle} />
@@ -639,6 +629,7 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
     [items, currentIndex, opened],
   );
   const t = useScopedI18n("widget.downloads.states");
+  //The use case for "No item found" should be impossible, hence no translation
   return (
     <Modal opened={opened} onClose={onClose} centered title={item?.id ?? "ERROR"} size="auto">
       {item === undefined ? (
@@ -737,7 +728,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const t = useScopedI18n("widget.downloads.actions");
   return (
-    <Group gap="calc(var(--ratioWidth)*0.1)" style={{ ...style }}>
+    <Group gap="calc(var(--ratioWidth)*0.1)" style={style}>
       <AvatarGroup>
         {clients.map((client) => (
           <Avatar key={client.integration.id} size="var(--ratioWidth)" src={getIconUrl(client.integration.kind)} />

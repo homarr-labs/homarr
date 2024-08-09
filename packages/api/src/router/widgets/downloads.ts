@@ -2,19 +2,15 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
 import type { IntegrationKind } from "@homarr/definitions";
-import type {
-  DownloadClientIntegration,
-  IntegrationInput,
-  SanitizedIntegration,
-} from "@homarr/integrations";
+import type { DownloadClientIntegration, IntegrationInput, SanitizedIntegration } from "@homarr/integrations";
 import { integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
+import type { DownloadClientJobsAndStatus } from "../../../../integrations/src/interfaces/downloads/download-client-data";
 import type { DownloadClientItem } from "../../../../integrations/src/interfaces/downloads/download-client-items";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
-import type { DownloadClientJobsAndStatus } from "../../../../integrations/src/interfaces/downloads/download-client-data";
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure

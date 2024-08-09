@@ -8,7 +8,7 @@ export interface DownloadClientStatus {
     down: number;
     up?: number;
   };
-  type: "usenet"|"torrent";
+  type: "usenet" | "torrent";
 }
 
 export interface ExtendedClientStatus extends DownloadClientStatus {

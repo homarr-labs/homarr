@@ -1,10 +1,10 @@
 import { IconDownload } from "@tabler/icons-react";
 
+import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
-import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
 const columnsList = [
   "id",
@@ -23,9 +23,9 @@ const columnsList = [
   "state",
   "time",
   "type",
-  "upSpeed"
-] as const satisfies (keyof ExtendedDownloadClientItem)[]
-const columnsSort = columnsList.filter((column) => !["actions","id","state"].includes(column));
+  "upSpeed",
+] as const satisfies (keyof ExtendedDownloadClientItem)[];
+const columnsSort = columnsList.filter((column) => !["actions", "id", "state"].includes(column));
 
 export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
@@ -33,7 +33,10 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     (factory) => ({
       columns: factory.multiSelect({
         defaultValue: ["integration", "name", "progress", "time", "actions"],
-        options: columnsList.map((value) => ({ value, label: (t) => t(`widget.downloads.items.${value}.columnTitle`) })),
+        options: columnsList.map((value) => ({
+          value,
+          label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
+        })),
         searchable: true,
       }),
       enableRowSorting: factory.switch({
@@ -41,7 +44,10 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       }),
       defaultSort: factory.select({
         defaultValue: "type",
-        options: columnsSort.map((value) => ({ value, label: (t) => t(`widget.downloads.items.${value}.columnTitle`) })),
+        options: columnsSort.map((value) => ({
+          value,
+          label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
+        })),
       }),
       descendingDefaultSort: factory.switch({
         defaultValue: false,
