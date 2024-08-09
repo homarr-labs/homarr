@@ -294,12 +294,14 @@ describe("createBoard should create a new board", () => {
     });
 
     // Act
-    await caller.createBoard({ name: "newBoard" });
+    await caller.createBoard({ name: "newBoard", columnCount: 24, isPublic: true });
 
     // Assert
     const dbBoard = await db.query.boards.findFirst();
     expect(dbBoard).toBeDefined();
     expect(dbBoard?.name).toBe("newBoard");
+    expect(dbBoard?.columnCount).toBe(24);
+    expect(dbBoard?.isPublic).toBe(true);
     expect(dbBoard?.creatorId).toBe(defaultCreatorId);
 
     const dbSection = await db.query.sections.findFirst();
@@ -314,7 +316,7 @@ describe("createBoard should create a new board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const actAsync = async () => await caller.createBoard({ name: "newBoard" });
+    const actAsync = async () => await caller.createBoard({ name: "newBoard", columnCount: 12, isPublic: true });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Permission denied");

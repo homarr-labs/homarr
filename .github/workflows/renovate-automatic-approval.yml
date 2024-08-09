@@ -2,13 +2,11 @@ name: "[Dependency Updates] Auto Approve"
 on:
   pull_request:
     types: [opened, synchronize]
-    branches:
-      - "renovate/**"
 
 jobs:
   approve-renovate-prs:
     runs-on: ubuntu-latest
-    if: github.actor == 'homarr-renovate'
+    if: github.actor_id == 816230 # Id of renovate bot see https://github.com/organizations/homarr-labs/settings/apps/homarr-renovate
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
