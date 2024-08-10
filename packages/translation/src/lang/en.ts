@@ -37,6 +37,9 @@ export default {
       previousPassword: {
         label: "Previous password",
       },
+      homeBoard: {
+        label: "Home board",
+      },
     },
     error: {
       usernameTaken: "Username already taken",
@@ -78,6 +81,16 @@ export default {
           },
           error: {
             message: "Unable to change password",
+          },
+        },
+      },
+      changeHomeBoard: {
+        notification: {
+          success: {
+            message: "Home board changed successfully",
+          },
+          error: {
+            message: "Unable to change home board",
           },
         },
       },
@@ -558,7 +571,7 @@ export default {
     },
     multiText: {
       placeholder: "Add more values",
-      addLabel: `Add {value}`,
+      addLabel: "Add {value}",
     },
     select: {
       placeholder: "Pick value",
@@ -662,6 +675,7 @@ export default {
       import: "Import item",
       edit: "Edit item",
       move: "Move item",
+      duplicate: "Duplicate item",
       remove: "Remove item",
     },
     menu: {
@@ -761,6 +775,43 @@ export default {
         adsBlockedTodayPercentage: "Blocked today",
         dnsQueriesToday: "Queries today",
         domainsBeingBlocked: "Domains on blocklist",
+      },
+    },
+    dnsHoleControls: {
+      name: "DNS Hole Controls",
+      description: "Control PiHole or AdGuard from your dashboard",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        showToggleAllButtons: {
+          label: "Show Toggle All Buttons",
+        },
+      },
+      error: {
+        internalServerError: "Failed to control DNS Hole",
+      },
+      controls: {
+        enableAll: "Enable All",
+        disableAll: "Disable All",
+        setTimer: "Set Timer",
+        set: "Set",
+        enabled: "Enabled",
+        disabled: "Disabled",
+        hours: "Hours",
+        minutes: "Minutes",
+        unlimited: "Leave blank to unlimited",
       },
     },
     clock: {
@@ -1163,6 +1214,10 @@ export default {
       name: {
         label: "Name",
       },
+      isPublic: {
+        label: "Public",
+        description: "Public boards are accessible by everyone, even without an account.",
+      },
     },
     content: {
       metaTitle: "{boardName} board",
@@ -1362,9 +1417,16 @@ export default {
         setting: {
           general: {
             title: "General",
+            item: {
+              language: "Language & Region",
+              board: "Home board",
+            },
           },
           security: {
             title: "Security",
+          },
+          board: {
+            title: "Boards",
           },
         },
         list: {
@@ -1619,6 +1681,19 @@ export default {
           },
         },
       },
+      refresh: {
+        label: "Refresh",
+        notification: {
+          success: {
+            title: "Containers refreshed",
+            message: "You are now viewing the most recent data",
+          },
+          error: {
+            title: "Containers not refreshed",
+            message: "Something went wrong while refreshing the containers",
+          },
+        },
+      },
     },
   },
   permission: {
@@ -1681,6 +1756,7 @@ export default {
         },
         general: "General",
         security: "Security",
+        board: "Boards",
         groups: {
           label: "Groups",
         },

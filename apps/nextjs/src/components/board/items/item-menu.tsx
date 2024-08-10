@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -26,7 +26,8 @@ export const BoardItemMenu = ({
   const { openModal } = useModalAction(WidgetEditModal);
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, removeItem } = useItemActions();
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
+    useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
 
@@ -95,6 +96,9 @@ export const BoardItemMenu = ({
           {tItem("action.edit")}
         </Menu.Item>
         <Menu.Item leftSection={<IconLayoutKanban size={16} />}>{tItem("action.move")}</Menu.Item>
+        <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
+          {tItem("action.duplicate")}
+        </Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>

@@ -45,6 +45,10 @@ interface CreateItem {
   kind: WidgetKind;
 }
 
+interface DuplicateItem {
+  itemId: string;
+}
+
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
 
@@ -79,6 +83,38 @@ export const useItemActions = () => {
             return {
               ...section,
               items: section.items.concat(widget as unknown as Item),
+            };
+          }),
+        };
+      });
+    },
+    [updateBoard],
+  );
+
+  const duplicateItem = useCallback(
+    ({ itemId }: DuplicateItem) => {
+      updateBoard((previous) => {
+        const itemToDuplicate = previous.sections
+          .flatMap((section) => section.items)
+          .find((item) => item.id === itemId);
+
+        if (!itemToDuplicate) return previous;
+
+        const newItem = {
+          ...itemToDuplicate,
+          id: createId(),
+          yOffset: undefined,
+          xOffset: undefined,
+        } satisfies Omit<Item, "yOffset" | "xOffset"> & { yOffset?: number; xOffset?: number };
+
+        return {
+          ...previous,
+          sections: previous.sections.map((section) => {
+            // Return same section if item is not in it
+            if (!section.items.some((item) => item.id === itemId)) return section;
+            return {
+              ...section,
+              items: section.items.concat(newItem as unknown as Item),
             };
           }),
         };
@@ -258,6 +294,7 @@ export const useItemActions = () => {
     updateItemOptions,
     updateItemAdvancedOptions,
     updateItemIntegrations,
+    duplicateItem,
     createItem,
   };
 };

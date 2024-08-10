@@ -30,7 +30,12 @@ describe("expireDateAfter should calculate date after specified seconds", () => 
 describe("generateSessionToken should return a random UUID", () => {
   it("should return a random UUID", () => {
     const result = generateSessionToken();
-    expect(z.string().uuid().safeParse(result).success).toBe(true);
+    expect(
+      z
+        .string()
+        .regex(/^[a-f0-9]+$/)
+        .safeParse(result).success,
+    ).toBe(true);
   });
   it("should return a different token each time", () => {
     const result1 = generateSessionToken();
