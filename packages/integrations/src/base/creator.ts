@@ -5,12 +5,11 @@ import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integra
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
+import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { IntegrationInput } from "./integration";
 
 export const integrationCreatorByKind = (kind: IntegrationKind, integration: IntegrationInput) => {
   switch (kind) {
-    case "piHole":
-      return new PiHoleIntegration(integration);
     case "adGuardHome":
       return new AdGuardHomeIntegration(integration);
     case "homeAssistant":
@@ -19,6 +18,10 @@ export const integrationCreatorByKind = (kind: IntegrationKind, integration: Int
       return new JellyfinIntegration(integration);
     case "sonarr":
       return new SonarrIntegration(integration);
+    case "piHole":
+      return new PiHoleIntegration(integration);
+    case "prowlarr":
+      return new ProwlarrIntegration(integration);
     default:
       throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
   }
