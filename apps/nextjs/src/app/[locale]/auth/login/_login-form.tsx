@@ -159,19 +159,20 @@ interface PasswordForgottenCollapseProps {
 }
 const PasswordForgottenCollapse = ({ username }: PasswordForgottenCollapseProps) => {
   const [visible, { toggle }] = useDisclosure(false);
+  const tForgotPassword = useScopedI18n("user.action.login.forgotPassword");
 
   const commandUsername = username.trim().length >= 1 ? username.trim() : "<username>";
 
   return (
     <>
       <Anchor type="button" component="button" onClick={toggle}>
-        Forgotten your password?
+        {tForgotPassword("label")}
       </Anchor>
 
       <Collapse in={visible}>
         <Card>
           <Stack gap="xs">
-            <Text size="sm">An administrator can use the following command to reset your password:</Text>
+            <Text size="sm">{tForgotPassword("description")}</Text>
 
             <Code>homarr reset-password -u {commandUsername}</Code>
           </Stack>
