@@ -1,30 +1,35 @@
-import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
 interface InnerProps {
   boardNames: string[];
-  onSuccess: ({ name }: { name: string }) => Promise<void>;
+  onSuccess: (props: { name: string; columnCount: number; isPublic: boolean }) => Promise<void>;
 }
 
 export const AddBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const t = useI18n();
   const form = useZodForm(
-    z.object({
-      name: validation.board.byName.shape.name.refine((value) => !innerProps.boardNames.includes(value), {
-        params: createCustomErrorParams("boardAlreadyExists"),
-      }),
+    validation.board.create.refine((value) => !innerProps.boardNames.includes(value.name), {
+      params: createCustomErrorParams("boardAlreadyExists"),
+      path: ["name"],
     }),
     {
       initialValues: {
         name: "",
+        columnCount: 10,
+        isPublic: false,
       },
     },
   );
+
+  const columnCountChecks = validation.board.create.shape.columnCount._def.checks;
+  const minColumnCount = columnCountChecks.find((check) => check.kind === "min")?.value;
+  const maxColumnCount = columnCountChecks.find((check) => check.kind === "max")?.value;
 
   return (
     <form
@@ -35,11 +40,21 @@ export const AddBoardModal = createModal<InnerProps>(({ actions, innerProps }) =
     >
       <Stack>
         <TextInput label={t("board.field.name.label")} data-autofocus {...form.getInputProps("name")} />
+        <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
+          <Slider min={minColumnCount} max={maxColumnCount} step={1} {...form.getInputProps("columnCount")} />
+        </InputWrapper>
+
+        <Switch
+          label={t("board.field.isPublic.label")}
+          description={t("board.field.isPublic.description")}
+          {...form.getInputProps("isPublic")}
+        />
+
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button disabled={!form.isValid()} type="submit" color="teal">
+          <Button type="submit" color="teal">
             {t("common.action.create")}
           </Button>
         </Group>

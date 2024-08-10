@@ -10,6 +10,7 @@ import {
   IconPencil,
   IconPencilOff,
   IconPlus,
+  IconResize,
   IconSettings,
 } from "@tabler/icons-react";
 
@@ -23,6 +24,7 @@ import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
+import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
 import { useEditMode, useRequiredBoard } from "./_context";
 
@@ -52,6 +54,7 @@ const AddMenu = () => {
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { addCategoryToEnd } = useCategoryActions();
+  const { addDynamicSection } = useDynamicSectionActions();
   const t = useI18n();
 
   const handleAddCategory = useCallback(
@@ -98,6 +101,10 @@ const AddMenu = () => {
 
         <Menu.Item leftSection={<IconBoxAlignTop size={20} />} onClick={handleAddCategory}>
           {t("section.category.action.create")}
+        </Menu.Item>
+
+        <Menu.Item leftSection={<IconResize size={20} />} onClick={addDynamicSection}>
+          {t("section.dynamic.action.create")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

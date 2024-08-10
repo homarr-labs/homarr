@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { PiHoleIntegration } from "@homarr/integrations";
+import { AdGuardHomeIntegration, PiHoleIntegration } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
@@ -22,14 +22,9 @@ export const dnsHoleRouter = createTRPCRouter({
               case "piHole":
                 client = new PiHoleIntegration(integration);
                 break;
-              // case 'adGuardHome':
-              //   client = new AdGuardHomeIntegration(integration);
-              //   break;
-              default:
-                throw new TRPCError({
-                  code: "INTERNAL_SERVER_ERROR",
-                  message: `Unsupported integration type: ${integration.kind}`,
-                });
+              case "adGuardHome":
+                client = new AdGuardHomeIntegration(integration);
+                break;
             }
 
             return await client.getSummaryAsync().catch((err) => {
@@ -59,14 +54,9 @@ export const dnsHoleRouter = createTRPCRouter({
         case "piHole":
           client = new PiHoleIntegration(ctx.integration);
           break;
-        // case 'adGuardHome':
-        //   client = new AdGuardHomeIntegration(ctx.integration);
-        //   break;
-        default:
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: `Unsupported integration type: ${ctx.integration.kind}`,
-          });
+        case "adGuardHome":
+          client = new AdGuardHomeIntegration(ctx.integration);
+          break;
       }
       await client.enableAsync();
     }),
@@ -80,14 +70,9 @@ export const dnsHoleRouter = createTRPCRouter({
         case "piHole":
           client = new PiHoleIntegration(ctx.integration);
           break;
-        // case 'adGuardHome':
-        //   client = new AdGuardHomeIntegration(ctx.integration);
-        //   break;
-        default:
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: `Unsupported integration type: ${ctx.integration.kind}`,
-          });
+        case "adGuardHome":
+          client = new AdGuardHomeIntegration(ctx.integration);
+          break;
       }
       await client.disableAsync(input.duration);
     }),

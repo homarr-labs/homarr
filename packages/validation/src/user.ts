@@ -68,6 +68,10 @@ const changePasswordSchema = z
 
 const changePasswordApiSchema = changePasswordSchema.and(z.object({ userId: z.string() }));
 
+const changeHomeBoardSchema = z.object({
+  homeBoardId: z.string().min(1),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   registration: registrationSchema,
@@ -77,5 +81,6 @@ export const userSchemas = {
   password: passwordSchema,
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,
+  changeHomeBoard: changeHomeBoardSchema,
   changePasswordApi: changePasswordApiSchema,
 };

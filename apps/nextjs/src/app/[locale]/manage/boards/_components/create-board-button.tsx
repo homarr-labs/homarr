@@ -30,6 +30,8 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
       onSuccess: async (values) => {
         await mutateAsync({
           name: values.name,
+          columnCount: values.columnCount,
+          isPublic: values.isPublic,
         });
       },
       boardNames,

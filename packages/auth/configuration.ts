@@ -7,12 +7,13 @@ import { db } from "@homarr/db";
 
 import { adapter } from "./adapter";
 import { createSessionCallback, createSignInCallback } from "./callbacks";
+import { env } from "./env.mjs";
 import { createCredentialsConfiguration } from "./providers/credentials/credentials-provider";
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
 import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { createRedirectUri } from "./redirect";
-import { sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
+import { sessionTokenCookieName } from "./session";
 
 export const createConfiguration = (isCredentialsRequest: boolean, headers: ReadonlyHeaders | null) =>
   NextAuth({
@@ -43,7 +44,7 @@ export const createConfiguration = (isCredentialsRequest: boolean, headers: Read
     secret: "secret-is-not-defined-yet", // TODO: This should be added later
     session: {
       strategy: "database",
-      maxAge: sessionMaxAgeInSeconds,
+      maxAge: env.AUTH_SESSION_EXPIRY_TIME,
     },
     pages: {
       signIn: "/auth/login",

@@ -18,7 +18,7 @@
   "dependencies": {
     "@next/eslint-plugin-next": "^14.2.5",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.0.11",
+    "eslint-config-turbo": "^2.0.12",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react": "^7.35.0",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.0",
     "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"

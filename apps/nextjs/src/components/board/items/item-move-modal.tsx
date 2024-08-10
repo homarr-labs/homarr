@@ -4,7 +4,7 @@ import { Button, Grid, Group, NumberInput, Stack } from "@mantine/core";
 import { useZodForm } from "@homarr/form";
 import type { GridStack } from "@homarr/gridstack";
 import { createModal } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { z } from "@homarr/validation";
 
 import type { Item } from "~/app/[locale]/boards/_types";
@@ -18,6 +18,7 @@ interface InnerProps {
 
 export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const tCommon = useScopedI18n("common");
+  const t = useI18n();
   // Keep track of the maximum width based on the x offset
   const maxWidthRef = useRef(innerProps.columnCount - innerProps.item.xOffset);
   const { moveAndResizeItem } = useItemActions();
@@ -49,10 +50,9 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
 
   const handleSubmit = useCallback(
     (values: Omit<InnerProps["item"], "id">) => {
-      // TODO: find a good way to get ref of item (maybe just use gristack.)
       const gridItem = innerProps.gridStack
         .getGridItems()
-        .find(({ gridstackNode }) => gridstackNode?.id === innerProps.item.id);
+        .find((item) => item.getAttribute("data-id") === innerProps.item.id);
       if (!gridItem) return;
       innerProps.gridStack.update(gridItem, {
         h: values.height,
@@ -70,16 +70,21 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       <Stack>
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput label="X offset" min={0} max={innerProps.columnCount - 1} {...form.getInputProps("xOffset")} />
+            <NumberInput
+              label={t("item.moveResize.field.xOffset.label")}
+              min={0}
+              max={innerProps.columnCount - 1}
+              {...form.getInputProps("xOffset")}
+            />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput label="Y offset" min={0} {...form.getInputProps("yOffset")} />
+            <NumberInput label={t("item.moveResize.field.yOffset.label")} min={0} {...form.getInputProps("yOffset")} />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
             <NumberInput
-              label="Width"
+              label={t("item.moveResize.field.width.label")}
               min={1}
               max={innerProps.columnCount - form.values.xOffset}
               {...form.getInputProps("width")}
@@ -87,7 +92,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput label="Height" min={1} {...form.getInputProps("height")} />
+            <NumberInput label={t("item.moveResize.field.height.label")} min={1} {...form.getInputProps("height")} />
           </Grid.Col>
         </Grid>
         <Group justify="end">
@@ -101,8 +106,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   );
 }).withOptions({
   defaultTitle(t) {
-    // TODO: change
-    return t("item.edit.title");
+    return t("item.moveResize.title");
   },
   size: "lg",
 });
