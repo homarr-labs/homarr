@@ -20,6 +20,15 @@ interface UseGristackReturnType {
   refs: UseGridstackRefs;
 }
 
+/**
+ * When the size of a gridstack changes we need to update the css variables
+ * so the gridstack items are displayed correctly
+ * @param wrapper gridstack wrapper
+ * @param gridstack gridstack object
+ * @param width width of the section (column count)
+ * @param height height of the section (row count)
+ * @param isDynamic if the section is dynamic
+ */
 const handleResizeChange = (
   wrapper: HTMLDivElement,
   gridstack: GridStack,
@@ -78,6 +87,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     });
   }
 
+  // Toggle the gridstack to be static or not based on the edit mode
   useEffect(() => {
     gridRef.current?.setStatic(!isEditMode);
   }, [isEditMode]);
@@ -93,6 +103,8 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         // Updates the react-query state
         moveAndResizeItem({
           itemId: id,
+          // We want the following properties to be null by default
+          // so the next free position is used from the gridstack
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           xOffset: changedNode.x!,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -108,6 +120,8 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       if (type === "section") {
         moveAndResizeInnerSection({
           innerSectionId: id,
+          // We want the following properties to be null by default
+          // so the next free position is used from the gridstack
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           xOffset: changedNode.x!,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -120,7 +134,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         return;
       }
 
-      console.error(`Unknown grid-stack-item type to move.  type='${type}' id='${id}'`);
+      console.error(`Unknown grid-stack-item type to move. type='${type}' id='${id}'`);
     },
     [moveAndResizeItem, moveAndResizeInnerSection],
   );
@@ -136,6 +150,8 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         moveItemToSection({
           itemId: id,
           sectionId: section.id,
+          // We want the following properties to be null by default
+          // so the next free position is used from the gridstack
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           xOffset: addedNode.x!,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -152,6 +168,8 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         moveInnerSectionToSection({
           innerSectionId: id,
           sectionId: section.id,
+          // We want the following properties to be null by default
+          // so the next free position is used from the gridstack
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           xOffset: addedNode.x!,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -164,7 +182,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         return;
       }
 
-      console.error(`Unknown grid-stack-item type to add.  type='${type}' id='${id}'`);
+      console.error(`Unknown grid-stack-item type to add. type='${type}' id='${id}'`);
     },
     [moveItemToSection, moveInnerSectionToSection, section.id],
   );
@@ -184,8 +202,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
           if (!dynamicInnerGrid?.gridstack) return;
 
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          handleResizeChange(dynamicInnerGrid as HTMLDivElement, dynamicInnerGrid.gridstack, node.w!, node.h!, true);
+          handleResizeChange(
+            dynamicInnerGrid as HTMLDivElement,
+            dynamicInnerGrid.gridstack,
+            node.w ?? 1,
+            node.h ?? 1,
+            true,
+          );
         });
     });
 
@@ -213,6 +236,8 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       sectionColumnCount: columnCount,
     });
 
+    // If the section is ready mark it as ready
+    // When all sections are ready the board is ready and will get visible
     if (isReady) {
       markAsReady(section.id);
     }
@@ -222,6 +247,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
   const sectionHeight = section.kind === "dynamic" && "height" in section ? (section.height as number) : null;
 
+  // We want the amount of rows in a dynamic section to be the height of the section in the outer gridstack
   useEffect(() => {
     if (!sectionHeight) return;
     gridRef.current?.row(sectionHeight);
