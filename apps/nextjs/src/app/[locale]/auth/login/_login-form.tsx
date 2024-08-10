@@ -3,7 +3,8 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Divider, PasswordInput, Stack, TextInput } from "@mantine/core";
+import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 import { signIn } from "@homarr/auth/client";
 import type { useForm } from "@homarr/form";
@@ -101,9 +102,12 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
                 <PasswordInput label={t("field.password.label")} {...form.getInputProps("password")} />
 
                 {providers.includes("credentials") && (
-                  <SubmitButton isPending={isPending} form={form} credentialType="basic">
-                    {t("action.login.label")}
-                  </SubmitButton>
+                  <Stack gap="sm">
+                    <SubmitButton isPending={isPending} form={form} credentialType="basic">
+                      {t("action.login.label")}
+                    </SubmitButton>
+                    <PasswordForgottenCollapse username={form.values.name} />
+                  </Stack>
                 )}
 
                 {providers.includes("ldap") && (
@@ -147,6 +151,33 @@ const SubmitButton = ({ isPending, form, credentialType, children }: PropsWithCh
     >
       {children}
     </Button>
+  );
+};
+
+interface PasswordForgottenCollapseProps {
+  username: string;
+}
+const PasswordForgottenCollapse = ({ username }: PasswordForgottenCollapseProps) => {
+  const [visible, { toggle }] = useDisclosure(false);
+
+  const commandUsername = username.trim().length >= 1 ? username.trim() : "<username>";
+
+  return (
+    <>
+      <Anchor type="button" component="button" onClick={toggle}>
+        Forgotten your password?
+      </Anchor>
+
+      <Collapse in={visible}>
+        <Card>
+          <Stack gap="xs">
+            <Text size="sm">An administrator can use the following command to reset your password:</Text>
+
+            <Code>homarr reset-password -u {commandUsername}</Code>
+          </Stack>
+        </Card>
+      </Collapse>
+    </>
   );
 };
 
