@@ -2,6 +2,6 @@ export interface Indexer {
   id: number;
   name: string;
   url: string;
-  enable: boolean;
+  enabled: boolean;
   status: boolean;
 }

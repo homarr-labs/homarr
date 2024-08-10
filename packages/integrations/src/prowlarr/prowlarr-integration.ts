@@ -43,8 +43,8 @@ export class ProwlarrIntegration extends Integration {
       id: indexer.id,
       name: indexer.name,
       url: indexer.indexerUrls[0] ?? "",
-      enable: indexer.enable,
-      status: !disabledIndexerIds.has(indexer.id),
+      enabled: indexer.enable,
+      status: disabledIndexerIds.has(indexer.id),
     }));
 
     return indexers;
