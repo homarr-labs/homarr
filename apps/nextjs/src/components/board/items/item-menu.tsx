@@ -9,7 +9,9 @@ import { WidgetEditModal, widgetImports } from "@homarr/widgets";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
+import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
+import { ItemMoveModal } from "./item-move-modal";
 
 export const BoardItemMenu = ({
   offset,
@@ -24,12 +26,14 @@ export const BoardItemMenu = ({
   const tItem = useScopedI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
+  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
+  const { gridstack } = useSectionContext().refs;
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -95,7 +99,15 @@ export const BoardItemMenu = ({
         <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
           {tItem("action.edit")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconLayoutKanban size={16} />}>{tItem("action.move")}</Menu.Item>
+        <Menu.Item
+          leftSection={<IconLayoutKanban size={16} />}
+          onClick={() => {
+            if (!gridstack.current) return;
+            openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
+          }}
+        >
+          {tItem("action.moveResize")}
+        </Menu.Item>{" "}
         <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
           {tItem("action.duplicate")}
         </Menu.Item>
