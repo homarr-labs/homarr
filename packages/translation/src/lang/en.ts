@@ -58,6 +58,10 @@ export default {
             message: "Your login failed",
           },
         },
+        forgotPassword: {
+          label: "Forgotten your password?",
+          description: "An administrator can use the following command to reset your password:",
+        },
       },
       register: {
         label: "Create account",
