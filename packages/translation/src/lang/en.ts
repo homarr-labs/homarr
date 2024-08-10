@@ -634,6 +634,17 @@ export default {
     mantineReactTable: MRT_Localization_EN,
   },
   section: {
+    dynamic: {
+      action: {
+        create: "New dynamic section",
+        remove: "Remove dynamic section",
+      },
+      remove: {
+        title: "Remove dynamic section",
+        message:
+          "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section.",
+      },
+    },
     category: {
       field: {
         name: {

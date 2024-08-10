@@ -22,7 +22,7 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
-    "@homarr/gridstack": "^1.0.0",
+    "@homarr/gridstack": "^1.0.3",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
     "@homarr/modals": "workspace:^0.1.0",
