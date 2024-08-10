@@ -8,6 +8,7 @@ import { WidgetSelectInput } from "./widget-select-input";
 import { WidgetSliderInput } from "./widget-slider-input";
 import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
+import {WidgetOrderedObjectListInput} from "./widget-ordered-object-list-input";
 
 const mapping = {
   text: WidgetTextInput,
@@ -19,6 +20,7 @@ const mapping = {
   slider: WidgetSliderInput,
   switch: WidgetSwitchInput,
   app: WidgetAppInput,
+  orderedObjectList: WidgetOrderedObjectListInput
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {

@@ -779,6 +779,15 @@ export default {
         },
       },
     },
+    bookmarks: {
+      name: "Bookmarks",
+      description: "Displays a static list of strings or links",
+      option: {
+        title: {
+          label: "Title",
+        }
+      }
+    },
     dnsHoleSummary: {
       name: "DNS Hole Summary",
       description: "Displays the summary of your DNS Hole",

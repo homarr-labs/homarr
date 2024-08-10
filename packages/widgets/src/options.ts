@@ -5,6 +5,7 @@ import { z } from "@homarr/validation";
 
 import { widgetImports } from ".";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
+import React from "react";
 
 interface CommonInput<TType> {
   defaultValue?: TType;
@@ -108,6 +109,11 @@ const optionsFactory = {
     type: "app" as const,
     defaultValue: "",
     withDescription: input?.withDescription ?? false,
+  }),
+  orderedObjectList: <TItem>(input?: (Omit<CommonInput<string>, "defaultValue"> & { itemComponent: (item: TItem) => React.ReactNode })) => ({
+    type: "orderedObjectList" as const,
+    defaultValue: [],
+    itemComponent: input?.itemComponent ?? null,
   }),
 };
 
