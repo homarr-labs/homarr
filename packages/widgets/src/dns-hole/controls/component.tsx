@@ -24,7 +24,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   const [status, setStatus] = useState<{ integrationId: string; enabled: boolean }[]>(
     integrationIds.map((id) => ({ integrationId: id, enabled: false })),
   );
-  const [selectedIntegration, setSelectedIntegration] = useState<string[]>([]);
+  const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
   const [opened, { close, open }] = useDisclosure(false);
 
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
@@ -93,7 +93,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
             <Button
               onClick={() => {
-                setSelectedIntegration(integrationIds);
+                setSelectedIntegrationIds(integrationIds);
                 open();
               }}
               disabled={allDisabled}
@@ -130,14 +130,19 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
             integrationData.integrationKind,
             toggleDns,
             status,
-            setSelectedIntegration,
+            setSelectedIntegrationIds,
             open,
             t,
           ),
         )}
       </Stack>
 
-      <TimerModal opened={opened} close={close} selectedIntegration={selectedIntegration} disableDns={disableDns} />
+      <TimerModal
+        opened={opened}
+        close={close}
+        selectedIntegrationIds={selectedIntegrationIds}
+        disableDns={disableDns}
+      />
     </Flex>
   );
 }
