@@ -136,7 +136,7 @@ export const userRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(z.void())
     .output(z.array(z.object({ id: z.string(), name: z.string().nullable(), email: z.string().nullable(), emailVerified: z.date().nullable(), image: z.string().nullable() })))
-    .meta({ openapi: { method: "GET", path: "/api/users" } })
+    .meta({ openapi: { method: "GET", path: "/api/trpc/users" } })
     .query(async ({ ctx }) => {
       return ctx.db.query.users.findMany({
         columns: {

@@ -1,4 +1,5 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { createOpenApiFetchHandler } from "trpc-swagger"
 
 import { appRouter, createTRPCContext } from "@homarr/api";
 import { auth } from "@homarr/auth/next";
@@ -24,7 +25,7 @@ export function OPTIONS() {
 }
 
 const handler = auth(async (req) => {
-  const response = await fetchRequestHandler({
+  const response = await createOpenApiFetchHandler({
     endpoint: "/api/trpc",
     router: appRouter,
     req,
