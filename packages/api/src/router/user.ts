@@ -70,15 +70,15 @@ export const userRouter = createTRPCRouter({
     await ctx.db.delete(invites).where(inviteWhere);
   }),
   create: publicProcedure
-    .meta({ openapi: { method: "POST", path: "/api/users" } })
+    .meta({ openapi: { method: "POST", path: "/users" } })
     .input(validation.user.create)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-    throwIfCredentialsDisabled();
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
+      throwIfCredentialsDisabled();
+      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-    await createUserAsync(ctx.db, input);
-  }),
+      await createUserAsync(ctx.db, input);
+    }),
   setProfileImage: protectedProcedure
     .input(
       z.object({
@@ -135,8 +135,18 @@ export const userRouter = createTRPCRouter({
     }),
   getAll: publicProcedure
     .input(z.void())
-    .output(z.array(z.object({ id: z.string(), name: z.string().nullable(), email: z.string().nullable(), emailVerified: z.date().nullable(), image: z.string().nullable() })))
-    .meta({ openapi: { method: "GET", path: "/api/trpc/users" } })
+    .output(
+      z.array(
+        z.object({
+          id: z.string(),
+          name: z.string().nullable(),
+          email: z.string().nullable(),
+          emailVerified: z.date().nullable(),
+          image: z.string().nullable(),
+        }),
+      ),
+    )
+    .meta({ openapi: { method: "GET", path: "/users" } })
     .query(async ({ ctx }) => {
       return ctx.db.query.users.findMany({
         columns: {

@@ -1,9 +1,6 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { createOpenApiFetchHandler } from "trpc-swagger"
 
 import { appRouter, createTRPCContext } from "@homarr/api";
-import { auth } from "@homarr/auth/next";
-import { logger } from "@homarr/log";
 
 /**
  * Configure basic CORS headers
@@ -24,19 +21,14 @@ export function OPTIONS() {
   return response;
 }
 
-const handler = auth(async (req) => {
-  const response = await createOpenApiFetchHandler({
+const handler = (req: Request) => {
+  // Handle incoming tRPC requests
+  return fetchRequestHandler({
+    req,
     endpoint: "/api/trpc",
     router: appRouter,
-    req,
-    createContext: () => createTRPCContext({ session: req.auth, headers: req.headers }),
-    onError({ error, path, type }) {
-      logger.error(`tRPC Error with ${type} on '${path}': (${error.code}) - ${error.message}`);
-    },
+    createContext: () => createTRPCContext({ session: null, headers: req.headers }),
   });
-
-  setCorsHeaders(response);
-  return response;
-});
+};
 
 export { handler as GET, handler as POST };

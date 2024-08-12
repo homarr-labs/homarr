@@ -41,5 +41,10 @@
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.5"
   },
-  "prettier": "@homarr/prettier-config"
+  "prettier": "@homarr/prettier-config",
+  "pnpm": {
+    "patchedDependencies": {
+      "trpc-swagger@1.2.6": "patches/trpc-swagger@1.2.6.patch"
+    }
+  }
 }

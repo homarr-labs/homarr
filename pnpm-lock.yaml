@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  trpc-swagger@1.2.6:
+    hash: 5ipbtj3ptftd66yb4jodjt25ge
+    path: patches/trpc-swagger@1.2.6.patch
+
 importers:
 
   .:
@@ -506,7 +511,7 @@ importers:
         version: 2.2.1
       trpc-swagger:
         specifier: ^1.2.3
-        version: 1.2.6(@trpc/client@11.0.0-rc.477(@trpc/server@11.0.0-rc.477))(@trpc/server@11.0.0-rc.477)(zod@3.23.8)
+        version: 1.2.6(patch_hash=5ipbtj3ptftd66yb4jodjt25ge)(@trpc/client@11.0.0-rc.477(@trpc/server@11.0.0-rc.477))(@trpc/server@11.0.0-rc.477)(zod@3.23.8)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -12847,7 +12852,7 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-swagger@1.2.6(@trpc/client@11.0.0-rc.477(@trpc/server@11.0.0-rc.477))(@trpc/server@11.0.0-rc.477)(zod@3.23.8):
+  trpc-swagger@1.2.6(patch_hash=5ipbtj3ptftd66yb4jodjt25ge)(@trpc/client@11.0.0-rc.477(@trpc/server@11.0.0-rc.477))(@trpc/server@11.0.0-rc.477)(zod@3.23.8):
     dependencies:
       '@trpc/client': 11.0.0-rc.477(@trpc/server@11.0.0-rc.477)
       '@trpc/server': 11.0.0-rc.477

@@ -1,0 +1,2173 @@
+diff --git a/build/index.js b/build/index.js
+index f35a9c8bdec56b61b7ecb25e9e5ff03ccf7e956c..ad4e395f73e02671f1d099c289067dcee1914b12 100644
+--- a/build/index.js
++++ b/build/index.js
+@@ -1,8 +1,40 @@
+-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _nullishCoalesce(lhs, rhsFn) { if (lhs != null) { return lhs; } else { return rhsFn(); } } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }// packages/adapters/aws-lambda.ts
+-var _server = require('@trpc/server');
+-var _awslambda = require('@trpc/server/adapters/aws-lambda');
+-var _events = require('events');
+-var _nodemockshttp = require('node-mocks-http');
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++function _interopRequireDefault(obj) {
++  return obj && obj.__esModule ? obj : { default: obj };
++}
++function _nullishCoalesce(lhs, rhsFn) {
++  if (lhs != null) {
++    return lhs;
++  } else {
++    return rhsFn();
++  }
++}
++function _optionalChain(ops) {
++  let lastAccessLHS = undefined;
++  let value = ops[0];
++  let i = 1;
++  while (i < ops.length) {
++    const op = ops[i];
++    const fn = ops[i + 1];
++    i += 2;
++    if ((op === "optionalAccess" || op === "optionalCall") && value == null) {
++      return undefined;
++    }
++    if (op === "access" || op === "optionalAccess") {
++      lastAccessLHS = value;
++      value = fn(value);
++    } else if (op === "call" || op === "optionalCall") {
++      value = fn((...args) => value.call(lastAccessLHS, ...args));
++      lastAccessLHS = undefined;
++    }
++  }
++  return value;
++} // packages/adapters/aws-lambda.ts
++var _server = require("@trpc/server");
++var _awslambda = require("@trpc/server/adapters/aws-lambda");
++var _events = require("events");
++var _nodemockshttp = require("node-mocks-http");
+ 
+ // packages/adapters/node-http/errors.ts
+ 
+@@ -21,7 +53,7 @@ var TRPC_ERROR_CODE_HTTP_STATUS = {
+   METHOD_NOT_SUPPORTED: 405,
+   TOO_MANY_REQUESTS: 429,
+   UNPROCESSABLE_CONTENT: 422,
+-  NOT_IMPLEMENTED: 500
++  NOT_IMPLEMENTED: 500,
+ };
+ function getErrorFromUnknown(cause) {
+   if (cause instanceof Error && cause.name === "TRPCError") {
+@@ -36,7 +68,7 @@ function getErrorFromUnknown(cause) {
+   const error = new (0, _server.TRPCError)({
+     message: "Internal server error",
+     code: "INTERNAL_SERVER_ERROR",
+-    cause: errorCause
++    cause: errorCause,
+   });
+   if (stack) {
+     error.stack = stack;
+@@ -46,11 +78,12 @@ function getErrorFromUnknown(cause) {
+ 
+ // packages/adapters/node-http/core.ts
+ 
+-var _lodashclonedeep = require('lodash.clonedeep'); var _lodashclonedeep2 = _interopRequireDefault(_lodashclonedeep);
++var _lodashclonedeep = require("lodash.clonedeep");
++var _lodashclonedeep2 = _interopRequireDefault(_lodashclonedeep);
+ 
+ // packages/generator/paths.ts
+ 
+-var _openapitypes = require('openapi-types');
++var _openapitypes = require("openapi-types");
+ 
+ // packages/utils/method.ts
+ var acceptsRequestBody = (method) => {
+@@ -70,7 +103,7 @@ var getPathRegExp = (path) => {
+ };
+ 
+ // packages/utils/procedure.ts
+-var _zod = require('zod');
++var _zod = require("zod");
+ var mergeInputs = (inputParsers) => {
+   return inputParsers.reduce((acc, inputParser) => {
+     return acc.merge(inputParser);
+@@ -80,21 +113,13 @@ var getInputOutputParsers = (procedure) => {
+   const { inputs, output } = procedure._def;
+   return {
+     inputParser: inputs.length >= 2 ? mergeInputs(inputs) : inputs[0],
+-    outputParser: output
++    outputParser: output,
+   };
+ };
+-var getProcedureType = (procedure) => {
+-  if (procedure._def.query)
+-    return "query";
+-  if (procedure._def.mutation)
+-    return "mutation";
+-  if (procedure._def.subscription)
+-    return "subscription";
+-  throw new Error("Unknown procedure type");
+-};
++var getProcedureType = (procedure) => procedure._def.type;
+ var forEachOpenApiProcedure = (procedureRecord, callback) => {
+   for (const [path, procedure] of Object.entries(procedureRecord)) {
+-    const { openapi } = _nullishCoalesce(procedure._def.meta, () => ( {}));
++    const { openapi } = _nullishCoalesce(procedure._def.meta, () => ({}));
+     if (openapi && openapi.enabled !== false) {
+       const type = getProcedureType(procedure);
+       callback({ path, type, procedure, openapi });
+@@ -104,16 +129,16 @@ var forEachOpenApiProcedure = (procedureRecord, callback) => {
+ 
+ // packages/generator/schema.ts
+ 
+-
+-var _zodtojsonschema = require('zod-to-json-schema'); var _zodtojsonschema2 = _interopRequireDefault(_zodtojsonschema);
++var _zodtojsonschema = require("zod-to-json-schema");
++var _zodtojsonschema2 = _interopRequireDefault(_zodtojsonschema);
+ 
+ // packages/utils/zod.ts
+ 
+ var instanceofZodType = (type) => {
+-  return !!_optionalChain([type, 'optionalAccess', _2 => _2._def, 'optionalAccess', _3 => _3.typeName]);
++  return !!_optionalChain([type, "optionalAccess", (_2) => _2._def, "optionalAccess", (_3) => _3.typeName]);
+ };
+ var instanceofZodTypeKind = (type, zodTypeKind) => {
+-  return _optionalChain([type, 'optionalAccess', _4 => _4._def, 'optionalAccess', _5 => _5.typeName]) === zodTypeKind;
++  return _optionalChain([type, "optionalAccess", (_4) => _4._def, "optionalAccess", (_5) => _5.typeName]) === zodTypeKind;
+ };
+ var instanceofZodTypeOptional = (type) => {
+   return instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodOptional);
+@@ -122,7 +147,11 @@ var instanceofZodTypeObject = (type) => {
+   return instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodObject);
+ };
+ var instanceofZodTypeLikeVoid = (type) => {
+-  return instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodVoid) || instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodUndefined) || instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodNever);
++  return (
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodVoid) ||
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodUndefined) ||
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodNever)
++  );
+ };
+ var unwrapZodType = (type, unwrapPreprocess) => {
+   if (instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodOptional)) {
+@@ -174,7 +203,12 @@ var instanceofZodTypeLikeString = (_type) => {
+ var zodSupportsCoerce = "coerce" in _zod.z;
+ var instanceofZodTypeCoercible = (_type) => {
+   const type = unwrapZodType(_type, false);
+-  return instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodNumber) || instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodBoolean) || instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodBigInt) || instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodDate);
++  return (
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodNumber) ||
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodBoolean) ||
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodBigInt) ||
++    instanceofZodTypeKind(type, _zod.z.ZodFirstPartyTypeKind.ZodDate)
++  );
+ };
+ 
+ // packages/generator/schema.ts
+@@ -185,7 +219,7 @@ var getParameterObjects = (schema, pathParameters, inType, example) => {
+   if (!instanceofZodType(schema)) {
+     throw new (0, _server.TRPCError)({
+       message: "Input parser expects a Zod validator",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const isRequired = !schema.isOptional();
+@@ -196,7 +230,7 @@ var getParameterObjects = (schema, pathParameters, inType, example) => {
+   if (!instanceofZodTypeObject(unwrappedSchema)) {
+     throw new (0, _server.TRPCError)({
+       message: "Input parser must be a ZodObject",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const { shape } = unwrappedSchema;
+@@ -205,63 +239,65 @@ var getParameterObjects = (schema, pathParameters, inType, example) => {
+     if (!shapeKeys.includes(pathParameter)) {
+       throw new (0, _server.TRPCError)({
+         message: `Input parser expects key from path: "${pathParameter}"`,
+-        code: "INTERNAL_SERVER_ERROR"
++        code: "INTERNAL_SERVER_ERROR",
+       });
+     }
+   }
+-  return shapeKeys.filter((shapeKey) => {
+-    const isPathParameter = pathParameters.includes(shapeKey);
+-    if (inType === "path") {
+-      return isPathParameter;
+-    }
+-    if (inType === "query") {
+-      return !isPathParameter;
+-    }
+-    return true;
+-  }).map((shapeKey) => {
+-    let shapeSchema = shape[shapeKey];
+-    const isShapeRequired = !shapeSchema.isOptional();
+-    const isPathParameter = pathParameters.includes(shapeKey);
+-    if (!instanceofZodTypeLikeString(shapeSchema)) {
+-      if (zodSupportsCoerce) {
+-        if (!instanceofZodTypeCoercible(shapeSchema)) {
++  return shapeKeys
++    .filter((shapeKey) => {
++      const isPathParameter = pathParameters.includes(shapeKey);
++      if (inType === "path") {
++        return isPathParameter;
++      }
++      if (inType === "query") {
++        return !isPathParameter;
++      }
++      return true;
++    })
++    .map((shapeKey) => {
++      let shapeSchema = shape[shapeKey];
++      const isShapeRequired = !shapeSchema.isOptional();
++      const isPathParameter = pathParameters.includes(shapeKey);
++      if (!instanceofZodTypeLikeString(shapeSchema)) {
++        if (zodSupportsCoerce) {
++          if (!instanceofZodTypeCoercible(shapeSchema)) {
++            throw new (0, _server.TRPCError)({
++              message: `Input parser key: "${shapeKey}" must be ZodString, ZodNumber, ZodBoolean, ZodBigInt or ZodDate`,
++              code: "INTERNAL_SERVER_ERROR",
++            });
++          }
++        } else {
+           throw new (0, _server.TRPCError)({
+-            message: `Input parser key: "${shapeKey}" must be ZodString, ZodNumber, ZodBoolean, ZodBigInt or ZodDate`,
+-            code: "INTERNAL_SERVER_ERROR"
++            message: `Input parser key: "${shapeKey}" must be ZodString`,
++            code: "INTERNAL_SERVER_ERROR",
+           });
+         }
+-      } else {
+-        throw new (0, _server.TRPCError)({
+-          message: `Input parser key: "${shapeKey}" must be ZodString`,
+-          code: "INTERNAL_SERVER_ERROR"
+-        });
+       }
+-    }
+-    if (instanceofZodTypeOptional(shapeSchema)) {
+-      if (isPathParameter) {
+-        throw new (0, _server.TRPCError)({
+-          message: `Path parameter: "${shapeKey}" must not be optional`,
+-          code: "INTERNAL_SERVER_ERROR"
+-        });
++      if (instanceofZodTypeOptional(shapeSchema)) {
++        if (isPathParameter) {
++          throw new (0, _server.TRPCError)({
++            message: `Path parameter: "${shapeKey}" must not be optional`,
++            code: "INTERNAL_SERVER_ERROR",
++          });
++        }
++        shapeSchema = shapeSchema.unwrap();
+       }
+-      shapeSchema = shapeSchema.unwrap();
+-    }
+-    const { description, ...openApiSchemaObject } = zodSchemaToOpenApiSchemaObject(shapeSchema);
+-    return {
+-      name: shapeKey,
+-      in: isPathParameter ? "path" : "query",
+-      required: isPathParameter || isRequired && isShapeRequired,
+-      schema: openApiSchemaObject,
+-      description,
+-      example: _optionalChain([example, 'optionalAccess', _6 => _6[shapeKey]])
+-    };
+-  });
++      const { description, ...openApiSchemaObject } = zodSchemaToOpenApiSchemaObject(shapeSchema);
++      return {
++        name: shapeKey,
++        in: isPathParameter ? "path" : "query",
++        required: isPathParameter || (isRequired && isShapeRequired),
++        schema: openApiSchemaObject,
++        description,
++        example: _optionalChain([example, "optionalAccess", (_6) => _6[shapeKey]]),
++      };
++    });
+ };
+ var getRequestBodyObject = (schema, pathParameters, contentTypes, example) => {
+   if (!instanceofZodType(schema)) {
+     throw new (0, _server.TRPCError)({
+       message: "Input parser expects a Zod validator",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const isRequired = !schema.isOptional();
+@@ -272,7 +308,7 @@ var getRequestBodyObject = (schema, pathParameters, contentTypes, example) => {
+   if (!instanceofZodTypeObject(unwrappedSchema)) {
+     throw new (0, _server.TRPCError)({
+       message: "Input parser must be a ZodObject",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const mask = {};
+@@ -292,12 +328,12 @@ var getRequestBodyObject = (schema, pathParameters, contentTypes, example) => {
+   for (const contentType of contentTypes) {
+     content[contentType] = {
+       schema: openApiSchemaObject,
+-      example: dedupedExample
++      example: dedupedExample,
+     };
+   }
+   return {
+     required: isRequired,
+-    content
++    content,
+   };
+ };
+ var errorResponseObject = {
+@@ -308,17 +344,17 @@ var errorResponseObject = {
+         _zod.z.object({
+           message: _zod.z.string(),
+           code: _zod.z.string(),
+-          issues: _zod.z.array(_zod.z.object({ message: _zod.z.string() })).optional()
++          issues: _zod.z.array(_zod.z.object({ message: _zod.z.string() })).optional(),
+         })
+-      )
+-    }
+-  }
++      ),
++    },
++  },
+ };
+ var getResponsesObject = (schema, example, headers) => {
+   if (!instanceofZodType(schema)) {
+     throw new (0, _server.TRPCError)({
+       message: "Output parser expects a Zod validator",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const successResponseObject = {
+@@ -327,15 +363,15 @@ var getResponsesObject = (schema, example, headers) => {
+     content: {
+       "application/json": {
+         schema: zodSchemaToOpenApiSchemaObject(schema),
+-        example
+-      }
+-    }
++        example,
++      },
++    },
+   };
+   return {
+     200: successResponseObject,
+     default: {
+-      $ref: "#/components/responses/error"
+-    }
++      $ref: "#/components/responses/error",
++    },
+   };
+ };
+ 
+@@ -349,31 +385,31 @@ var getOpenApiPathsObject = (appRouter, securitySchemeNames) => {
+       if (type === "subscription") {
+         throw new (0, _server.TRPCError)({
+           message: "Subscriptions are not supported by OpenAPI v3",
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const { method, protect, summary, description, tags, headers } = openapi;
+       const path = normalizePath(openapi.path);
+       const pathParameters = getPathParameters(path);
+-      const headerParameters = _optionalChain([headers, 'optionalAccess', _7 => _7.map, 'call', _8 => _8((header) => ({ ...header, in: "header" }))]) || [];
++      const headerParameters = _optionalChain([headers, "optionalAccess", (_7) => _7.map, "call", (_8) => _8((header) => ({ ...header, in: "header" }))]) || [];
+       const httpMethod = _openapitypes.OpenAPIV3.HttpMethods[method];
+       if (!httpMethod) {
+         throw new (0, _server.TRPCError)({
+           message: "Method must be GET, POST, PATCH, PUT or DELETE",
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+-      if (_optionalChain([pathsObject, 'access', _9 => _9[path], 'optionalAccess', _10 => _10[httpMethod]])) {
++      if (_optionalChain([pathsObject, "access", (_9) => _9[path], "optionalAccess", (_10) => _10[httpMethod]])) {
+         throw new (0, _server.TRPCError)({
+           message: `Duplicate procedure defined for route ${method} ${path}`,
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const contentTypes = openapi.contentTypes || ["application/json"];
+       if (contentTypes.length === 0) {
+         throw new (0, _server.TRPCError)({
+           message: "At least one content type must be specified",
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const { inputParser, outputParser } = getInputOutputParsers(procedure);
+@@ -385,37 +421,24 @@ var getOpenApiPathsObject = (appRouter, securitySchemeNames) => {
+           description,
+           tags,
+           security: protect ? securitySchemeNames.map((name) => ({ [name]: [] })) : void 0,
+-          ...acceptsRequestBody(method) ? {
+-            requestBody: getRequestBodyObject(
+-              inputParser,
+-              pathParameters,
+-              contentTypes,
+-              _optionalChain([openapi, 'access', _11 => _11.example, 'optionalAccess', _12 => _12.request])
+-            ),
+-            parameters: [
+-              ...headerParameters,
+-              ...getParameterObjects(
+-                inputParser,
+-                pathParameters,
+-                "path",
+-                _optionalChain([openapi, 'access', _13 => _13.example, 'optionalAccess', _14 => _14.request])
+-              ) || []
+-            ]
+-          } : {
+-            requestBody: void 0,
+-            parameters: [
+-              ...headerParameters,
+-              ...getParameterObjects(
+-                inputParser,
+-                pathParameters,
+-                "all",
+-                _optionalChain([openapi, 'access', _15 => _15.example, 'optionalAccess', _16 => _16.request])
+-              ) || []
+-            ]
+-          },
+-          responses: getResponsesObject(outputParser, _optionalChain([openapi, 'access', _17 => _17.example, 'optionalAccess', _18 => _18.response]), openapi.responseHeaders),
+-          ...openapi.deprecated ? { deprecated: openapi.deprecated } : {}
+-        }
++          ...(acceptsRequestBody(method)
++            ? {
++                requestBody: getRequestBodyObject(inputParser, pathParameters, contentTypes, _optionalChain([openapi, "access", (_11) => _11.example, "optionalAccess", (_12) => _12.request])),
++                parameters: [
++                  ...headerParameters,
++                  ...(getParameterObjects(inputParser, pathParameters, "path", _optionalChain([openapi, "access", (_13) => _13.example, "optionalAccess", (_14) => _14.request])) || []),
++                ],
++              }
++            : {
++                requestBody: void 0,
++                parameters: [
++                  ...headerParameters,
++                  ...(getParameterObjects(inputParser, pathParameters, "all", _optionalChain([openapi, "access", (_15) => _15.example, "optionalAccess", (_16) => _16.request])) || []),
++                ],
++              }),
++          responses: getResponsesObject(outputParser, _optionalChain([openapi, "access", (_17) => _17.example, "optionalAccess", (_18) => _18.response]), openapi.responseHeaders),
++          ...(openapi.deprecated ? { deprecated: openapi.deprecated } : {}),
++        },
+       };
+     } catch (error) {
+       error.message = `[${procedureName}] - ${error.message}`;
+@@ -431,36 +454,37 @@ var generateOpenApiDocument = (appRouter, opts) => {
+   const securitySchemes = opts.securitySchemes || {
+     Authorization: {
+       type: "http",
+-      scheme: "bearer"
+-    }
++      scheme: "bearer",
++    },
+   };
+   return {
+     openapi: openApiVersion,
+     info: {
+       title: opts.title,
+       description: opts.description,
+-      version: opts.version
++      version: opts.version,
+     },
+     servers: [
+       {
+-        url: opts.baseUrl
+-      }
++        url: opts.baseUrl,
++      },
+     ],
+     paths: getOpenApiPathsObject(appRouter, Object.keys(securitySchemes)),
+     components: {
+       securitySchemes,
+       responses: {
+-        error: errorResponseObject
+-      }
++        error: errorResponseObject,
++      },
+     },
+-    tags: _optionalChain([opts, 'access', _19 => _19.tags, 'optionalAccess', _20 => _20.map, 'call', _21 => _21((tag) => ({ name: tag }))]),
+-    externalDocs: opts.docsUrl ? { url: opts.docsUrl } : void 0
++    tags: _optionalChain([opts, "access", (_19) => _19.tags, "optionalAccess", (_20) => _20.map, "call", (_21) => _21((tag) => ({ name: tag }))]),
++    externalDocs: opts.docsUrl ? { url: opts.docsUrl } : void 0,
+   };
+ };
+ 
+ // packages/adapters/node-http/input.ts
+ 
+-var _cobody = require('co-body'); var _cobody2 = _interopRequireDefault(_cobody);
++var _cobody = require("co-body");
++var _cobody2 = _interopRequireDefault(_cobody);
+ var getQuery = (req, url) => {
+   const query = {};
+   if (!req.query) {
+@@ -498,7 +522,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+       const { raw, parsed } = await _cobody2.default.call(void 0, req, {
+         limit: maxBodySize,
+         strict: false,
+-        returnRawBody: true
++        returnRawBody: true,
+       });
+       req.body = raw ? parsed : void 0;
+     } catch (cause) {
+@@ -506,7 +530,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+         throw new (0, _server.TRPCError)({
+           message: "Request body too large",
+           code: "PAYLOAD_TOO_LARGE",
+-          cause
++          cause,
+         });
+       }
+       let errorCause;
+@@ -516,7 +540,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+       throw new (0, _server.TRPCError)({
+         message: "Failed to parse request body",
+         code: "PARSE_ERROR",
+-        cause: errorCause
++        cause: errorCause,
+       });
+     }
+   }
+@@ -526,8 +550,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+ // packages/adapters/node-http/procedures.ts
+ var createProcedureCache = (router) => {
+   const procedureCache = /* @__PURE__ */ new Map();
+-  const { queries, mutations } = router._def;
+-  forEachOpenApiProcedure(queries, ({ path: queryPath, procedure, openapi }) => {
++  forEachOpenApiProcedure(router._def.procedures, ({ path: queryPath, procedure, openapi }) => {
+     const { method } = openapi;
+     if (!procedureCache.has(method)) {
+       procedureCache.set(method, /* @__PURE__ */ new Map());
+@@ -535,22 +558,9 @@ var createProcedureCache = (router) => {
+     const path = normalizePath(openapi.path);
+     const pathRegExp = getPathRegExp(path);
+     procedureCache.get(method).set(pathRegExp, {
+-      type: "query",
++      type: procedure._def.type,
+       path: queryPath,
+-      procedure
+-    });
+-  });
+-  forEachOpenApiProcedure(mutations, ({ path: mutationPath, procedure, openapi }) => {
+-    const { method } = openapi;
+-    if (!procedureCache.has(method)) {
+-      procedureCache.set(method, /* @__PURE__ */ new Map());
+-    }
+-    const path = normalizePath(openapi.path);
+-    const pathRegExp = getPathRegExp(path);
+-    procedureCache.get(method).set(pathRegExp, {
+-      type: "mutation",
+-      path: mutationPath,
+-      procedure
++      procedure,
+     });
+   });
+   return (method, path) => {
+@@ -563,7 +573,7 @@ var createProcedureCache = (router) => {
+       return void 0;
+     }
+     const procedure = procedureMethodCache.get(procedureRegExp);
+-    const pathInput = _nullishCoalesce(_optionalChain([procedureRegExp, 'access', _22 => _22.exec, 'call', _23 => _23(path), 'optionalAccess', _24 => _24.groups]), () => ( {}));
++    const pathInput = _nullishCoalesce(_optionalChain([procedureRegExp, "access", (_22) => _22.exec, "call", (_23) => _23(path), "optionalAccess", (_24) => _24.groups]), () => ({}));
+     return { procedure, pathInput };
+   };
+ };
+@@ -591,7 +601,7 @@ var createOpenApiNodeHttpHandler = (opts) => {
+     const reqUrl = req.url;
+     const url = new URL(reqUrl.startsWith("/") ? `http://127.0.0.1${reqUrl}` : reqUrl);
+     const path = normalizePath(url.pathname);
+-    const { procedure, pathInput } = _nullishCoalesce(getProcedure(method, path), () => ( {}));
++    const { procedure, pathInput } = _nullishCoalesce(getProcedure(method, path), () => ({}));
+     let input;
+     let ctx;
+     let data;
+@@ -606,7 +616,7 @@ var createOpenApiNodeHttpHandler = (opts) => {
+         }
+         throw new (0, _server.TRPCError)({
+           message: "Not found",
+-          code: "NOT_FOUND"
++          code: "NOT_FOUND",
+         });
+       }
+       const useBody = acceptsRequestBody(method);
+@@ -614,8 +624,8 @@ var createOpenApiNodeHttpHandler = (opts) => {
+       const unwrappedSchema = unwrapZodType(schema, true);
+       if (!instanceofZodTypeLikeVoid(unwrappedSchema)) {
+         input = {
+-          ...useBody ? await getBody(req, maxBodySize) : getQuery(req, url),
+-          ...pathInput
++          ...(useBody ? await getBody(req, maxBodySize) : getQuery(req, url)),
++          ...pathInput,
+         };
+       }
+       if (zodSupportsCoerce) {
+@@ -628,53 +638,76 @@ var createOpenApiNodeHttpHandler = (opts) => {
+           });
+         }
+       }
+-      ctx = await _optionalChain([createContext, 'optionalCall', _25 => _25({ req, res })]);
++      ctx = await _optionalChain([createContext, "optionalCall", (_25) => _25({ req, res })]);
+       const caller = router.createCaller(ctx);
+       const segments = procedure.path.split(".");
+       const procedureFn = segments.reduce((acc, curr) => acc[curr], caller);
+       data = await procedureFn(input);
+-      const meta = _optionalChain([responseMeta, 'optionalCall', _26 => _26({
+-        type: procedure.type,
+-        paths: [procedure.path],
+-        ctx,
+-        data: [data],
+-        errors: []
+-      })]);
+-      const statusCode = _nullishCoalesce(_optionalChain([meta, 'optionalAccess', _27 => _27.status]), () => ( 200));
+-      const headers = _nullishCoalesce(_optionalChain([meta, 'optionalAccess', _28 => _28.headers]), () => ( {}));
++      const meta = _optionalChain([
++        responseMeta,
++        "optionalCall",
++        (_26) =>
++          _26({
++            type: procedure.type,
++            paths: [procedure.path],
++            ctx,
++            data: [data],
++            errors: [],
++          }),
++      ]);
++      const statusCode = _nullishCoalesce(_optionalChain([meta, "optionalAccess", (_27) => _27.status]), () => 200);
++      const headers = _nullishCoalesce(_optionalChain([meta, "optionalAccess", (_28) => _28.headers]), () => ({}));
+       const body = data;
+       sendResponse(statusCode, headers, body);
+     } catch (cause) {
+       const error = getErrorFromUnknown(cause);
+-      _optionalChain([onError, 'optionalCall', _29 => _29({
++      _optionalChain([
++        onError,
++        "optionalCall",
++        (_29) =>
++          _29({
++            error,
++            type: _nullishCoalesce(_optionalChain([procedure, "optionalAccess", (_30) => _30.type]), () => "unknown"),
++            path: _optionalChain([procedure, "optionalAccess", (_31) => _31.path]),
++            input,
++            ctx,
++            req,
++          }),
++      ]);
++      const meta = _optionalChain([
++        responseMeta,
++        "optionalCall",
++        (_32) =>
++          _32({
++            type: _nullishCoalesce(_optionalChain([procedure, "optionalAccess", (_33) => _33.type]), () => "unknown"),
++            paths: _optionalChain([procedure, "optionalAccess", (_34) => _34.path]) ? [_optionalChain([procedure, "optionalAccess", (_35) => _35.path])] : void 0,
++            ctx,
++            data: [data],
++            errors: [error],
++          }),
++      ]);
++      const errorShape = router._def.errorFormatter({
+         error,
+-        type: _nullishCoalesce(_optionalChain([procedure, 'optionalAccess', _30 => _30.type]), () => ( "unknown")),
+-        path: _optionalChain([procedure, 'optionalAccess', _31 => _31.path]),
++        type: _nullishCoalesce(_optionalChain([procedure, "optionalAccess", (_36) => _36.type]), () => "unknown"),
++        path: _optionalChain([procedure, "optionalAccess", (_37) => _37.path]),
+         input,
+         ctx,
+-        req
+-      })]);
+-      const meta = _optionalChain([responseMeta, 'optionalCall', _32 => _32({
+-        type: _nullishCoalesce(_optionalChain([procedure, 'optionalAccess', _33 => _33.type]), () => ( "unknown")),
+-        paths: _optionalChain([procedure, 'optionalAccess', _34 => _34.path]) ? [_optionalChain([procedure, 'optionalAccess', _35 => _35.path])] : void 0,
+-        ctx,
+-        data: [data],
+-        errors: [error]
+-      })]);
+-      const errorShape = router.getErrorShape({
+-        error,
+-        type: _nullishCoalesce(_optionalChain([procedure, 'optionalAccess', _36 => _36.type]), () => ( "unknown")),
+-        path: _optionalChain([procedure, 'optionalAccess', _37 => _37.path]),
+-        input,
+-        ctx
+       });
+       const isInputValidationError = error.code === "BAD_REQUEST" && error.cause instanceof Error && error.cause.name === "ZodError";
+-      const statusCode = _nullishCoalesce(_nullishCoalesce(_optionalChain([meta, 'optionalAccess', _38 => _38.status]), () => ( TRPC_ERROR_CODE_HTTP_STATUS[error.code])), () => ( 500));
+-      const headers = _nullishCoalesce(_optionalChain([meta, 'optionalAccess', _39 => _39.headers]), () => ( {}));
++      const statusCode = _nullishCoalesce(
++        _nullishCoalesce(_optionalChain([meta, "optionalAccess", (_38) => _38.status]), () => TRPC_ERROR_CODE_HTTP_STATUS[error.code]),
++        () => 500
++      );
++      const headers = _nullishCoalesce(_optionalChain([meta, "optionalAccess", (_39) => _39.headers]), () => ({}));
+       const body = {
+-        message: isInputValidationError ? "Input validation failed" : _nullishCoalesce(_nullishCoalesce(_optionalChain([errorShape, 'optionalAccess', _40 => _40.message]), () => ( error.message)), () => ( "An error occurred")),
++        message: isInputValidationError
++          ? "Input validation failed"
++          : _nullishCoalesce(
++              _nullishCoalesce(_optionalChain([errorShape, "optionalAccess", (_40) => _40.message]), () => error.message),
++              () => "An error occurred"
++            ),
+         code: error.code,
+-        issues: isInputValidationError ? error.cause.errors : void 0
++        issues: isInputValidationError ? error.cause.errors : void 0,
+       };
+       sendResponse(statusCode, headers, body);
+     }
+@@ -693,7 +726,13 @@ var createMockNodeHTTPRequest = (path, event) => {
+   const url = event.requestContext.domainName ? `https://${event.requestContext.domainName}${path}` : path;
+   const method = _awslambda.getHTTPMethod.call(void 0, event).toUpperCase();
+   let body;
+-  const contentType = event.headers[_nullishCoalesce(Object.keys(event.headers).find((key) => key.toLowerCase() === "content-type"), () => ( ""))];
++  const contentType =
++    event.headers[
++      _nullishCoalesce(
++        Object.keys(event.headers).find((key) => key.toLowerCase() === "content-type"),
++        () => ""
++      )
++    ];
+   if (contentType === "application/json") {
+     try {
+       if (event.body) {
+@@ -703,7 +742,7 @@ var createMockNodeHTTPRequest = (path, event) => {
+       throw new (0, _server.TRPCError)({
+         message: "Failed to parse request body",
+         code: "PARSE_ERROR",
+-        cause
++        cause,
+       });
+     }
+   }
+@@ -721,7 +760,7 @@ var createMockNodeHTTPRequest = (path, event) => {
+       throw new (0, _server.TRPCError)({
+         message: "Failed to parse request body",
+         code: "PARSE_ERROR",
+-        cause
++        cause,
+       });
+     }
+   }
+@@ -730,7 +769,7 @@ var createMockNodeHTTPRequest = (path, event) => {
+     method,
+     query: event.queryStringParameters || void 0,
+     headers: event.headers,
+-    body
++    body,
+   });
+ };
+ var createMockNodeHTTPResponse = () => {
+@@ -743,10 +782,10 @@ var createOpenApiAwsLambdaHandler = (opts) => {
+       if (!_awslambda.isPayloadV1.call(void 0, event) && !_awslambda.isPayloadV2.call(void 0, event)) {
+         throw new (0, _server.TRPCError)({
+           message: _awslambda.UNKNOWN_PAYLOAD_FORMAT_VERSION_ERROR_MESSAGE,
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+-      const createContext = async () => _optionalChain([opts, 'access', _41 => _41.createContext, 'optionalCall', _42 => _42({ event, context })]);
++      const createContext = async () => _optionalChain([opts, "access", (_41) => _41.createContext, "optionalCall", (_42) => _42({ event, context })]);
+       const openApiHttpHandler = createOpenApiNodeHttpHandler({ ...opts, createContext });
+       path = createMockNodeHTTPPath(event);
+       const req = createMockNodeHTTPRequest(path, event);
+@@ -755,42 +794,62 @@ var createOpenApiAwsLambdaHandler = (opts) => {
+       return {
+         statusCode: res.statusCode,
+         headers: _awslambda.transformHeaders.call(void 0, res._getHeaders() || {}),
+-        body: res._getData()
++        body: res._getData(),
+       };
+     } catch (cause) {
+       const error = getErrorFromUnknown(cause);
+-      _optionalChain([opts, 'access', _43 => _43.onError, 'optionalCall', _44 => _44({
++      _optionalChain([
++        opts,
++        "access",
++        (_43) => _43.onError,
++        "optionalCall",
++        (_44) =>
++          _44({
++            error,
++            type: "unknown",
++            path,
++            input: void 0,
++            ctx: void 0,
++            req: event,
++          }),
++      ]);
++      const meta = _optionalChain([
++        opts,
++        "access",
++        (_45) => _45.responseMeta,
++        "optionalCall",
++        (_46) =>
++          _46({
++            type: "unknown",
++            paths: [path],
++            ctx: void 0,
++            data: [void 0],
++            errors: [error],
++          }),
++      ]);
++      const errorShape = opts.router._def.errorFormatter({
+         error,
+         type: "unknown",
+         path,
+         input: void 0,
+         ctx: void 0,
+-        req: event
+-      })]);
+-      const meta = _optionalChain([opts, 'access', _45 => _45.responseMeta, 'optionalCall', _46 => _46({
+-        type: "unknown",
+-        paths: [path],
+-        ctx: void 0,
+-        data: [void 0],
+-        errors: [error]
+-      })]);
+-      const errorShape = opts.router.getErrorShape({
+-        error,
+-        type: "unknown",
+-        path,
+-        input: void 0,
+-        ctx: void 0
+       });
+-      const statusCode = _nullishCoalesce(_nullishCoalesce(_optionalChain([meta, 'optionalAccess', _47 => _47.status]), () => ( TRPC_ERROR_CODE_HTTP_STATUS[error.code])), () => ( 500));
+-      const headers = { "content-type": "application/json", ..._nullishCoalesce(_optionalChain([meta, 'optionalAccess', _48 => _48.headers]), () => ( {})) };
++      const statusCode = _nullishCoalesce(
++        _nullishCoalesce(_optionalChain([meta, "optionalAccess", (_47) => _47.status]), () => TRPC_ERROR_CODE_HTTP_STATUS[error.code]),
++        () => 500
++      );
++      const headers = { "content-type": "application/json", ..._nullishCoalesce(_optionalChain([meta, "optionalAccess", (_48) => _48.headers]), () => ({})) };
+       const body = {
+-        message: _nullishCoalesce(_nullishCoalesce(_optionalChain([errorShape, 'optionalAccess', _49 => _49.message]), () => ( error.message)), () => ( "An error occurred")),
+-        code: error.code
++        message: _nullishCoalesce(
++          _nullishCoalesce(_optionalChain([errorShape, "optionalAccess", (_49) => _49.message]), () => error.message),
++          () => "An error occurred"
++        ),
++        code: error.code,
+       };
+       return {
+         statusCode,
+         headers,
+-        body: JSON.stringify(body)
++        body: JSON.stringify(body),
+       };
+     }
+   };
+@@ -806,7 +865,7 @@ var createOpenApiExpressMiddleware = (opts) => {
+ 
+ // packages/adapters/fastify.ts
+ function fastifyTRPCOpenApiPlugin(fastify, opts, done) {
+-  let prefix = _nullishCoalesce(opts.basePath, () => ( ""));
++  let prefix = _nullishCoalesce(opts.basePath, () => "");
+   if (prefix.endsWith("/")) {
+     prefix = prefix.slice(0, -1);
+   }
+@@ -824,7 +883,7 @@ function fastifyTRPCOpenApiPlugin(fastify, opts, done) {
+           }
+           return reply.header(key, value);
+         },
+-        end: (body) => reply.send(body)
++        end: (body) => reply.send(body),
+         // eslint-disable-line @typescript-eslint/no-explicit-any
+       })
+     );
+@@ -844,27 +903,55 @@ var getUrlEncodedBody = async (req) => {
+ };
+ var getRequestBody = async (req) => {
+   try {
+-    if (_optionalChain([req, 'access', _50 => _50.headers, 'access', _51 => _51.get, 'call', _52 => _52("content-type"), 'optionalAccess', _53 => _53.includes, 'call', _54 => _54("application/json")])) {
++    if (
++      _optionalChain([
++        req,
++        "access",
++        (_50) => _50.headers,
++        "access",
++        (_51) => _51.get,
++        "call",
++        (_52) => _52("content-type"),
++        "optionalAccess",
++        (_53) => _53.includes,
++        "call",
++        (_54) => _54("application/json"),
++      ])
++    ) {
+       return {
+         isValid: true,
+         // use JSON.parse instead of req.json() because req.json() does not throw on invalid JSON
+-        data: JSON.parse(await req.text())
++        data: JSON.parse(await req.text()),
+       };
+     }
+-    if (_optionalChain([req, 'access', _55 => _55.headers, 'access', _56 => _56.get, 'call', _57 => _57("content-type"), 'optionalAccess', _58 => _58.includes, 'call', _59 => _59("application/x-www-form-urlencoded")])) {
++    if (
++      _optionalChain([
++        req,
++        "access",
++        (_55) => _55.headers,
++        "access",
++        (_56) => _56.get,
++        "call",
++        (_57) => _57("content-type"),
++        "optionalAccess",
++        (_58) => _58.includes,
++        "call",
++        (_59) => _59("application/x-www-form-urlencoded"),
++      ])
++    ) {
+       return {
+         isValid: true,
+-        data: await getUrlEncodedBody(req)
++        data: await getUrlEncodedBody(req),
+       };
+     }
+     return {
+       isValid: true,
+-      data: req.body
++      data: req.body,
+     };
+   } catch (err) {
+     return {
+       isValid: false,
+-      cause: err
++      cause: err,
+     };
+   }
+ };
+@@ -879,7 +966,7 @@ var createRequestProxy = async (req, url) => {
+         return new Proxy(target.headers, {
+           get: (trg, item) => {
+             return trg.get(item.toString());
+-          }
++          },
+         });
+       }
+       if (prop === "body") {
+@@ -887,13 +974,13 @@ var createRequestProxy = async (req, url) => {
+           throw new (0, _server.TRPCError)({
+             code: "PARSE_ERROR",
+             message: "Failed to parse request body",
+-            cause: body.cause
++            cause: body.cause,
+           });
+         }
+         return body.data;
+       }
+       return target[prop];
+-    }
++    },
+   });
+ };
+ var createOpenApiFetchHandler = async (opts) => {
+@@ -910,38 +997,35 @@ var createOpenApiFetchHandler = async (opts) => {
+     router: opts.router,
+     createContext,
+     onError: opts.onError,
+-    responseMeta: opts.responseMeta
++    responseMeta: opts.responseMeta,
+   });
+   return new Promise((resolve) => {
+     let statusCode;
+-    return openApiHttpHandler(
+-      req,
+-      {
+-        setHeader: (key, value) => {
+-          if (typeof value === "string") {
+-            resHeaders.set(key, value);
+-          } else {
+-            for (const v of value) {
+-              resHeaders.append(key, v);
+-            }
++    return openApiHttpHandler(req, {
++      setHeader: (key, value) => {
++        if (typeof value === "string") {
++          resHeaders.set(key, value);
++        } else {
++          for (const v of value) {
++            resHeaders.append(key, v);
+           }
+-        },
+-        get statusCode() {
+-          return statusCode;
+-        },
+-        set statusCode(code) {
+-          statusCode = code;
+-        },
+-        end: (body) => {
+-          resolve(
+-            new Response(body, {
+-              headers: resHeaders,
+-              status: statusCode
+-            })
+-          );
+         }
+-      }
+-    );
++      },
++      get statusCode() {
++        return statusCode;
++      },
++      set statusCode(code) {
++        statusCode = code;
++      },
++      end: (body) => {
++        resolve(
++          new Response(body, {
++            headers: resHeaders,
++            status: statusCode,
++          })
++        );
++      },
++    });
+   });
+ };
+ 
+@@ -959,21 +1043,28 @@ var createOpenApiNextHandler = (opts) => {
+     if (pathname === null) {
+       const error = new (0, _server.TRPCError)({
+         message: 'Query "trpc" not found - is the `trpc-swagger` file named `[...trpc].ts`?',
+-        code: "INTERNAL_SERVER_ERROR"
++        code: "INTERNAL_SERVER_ERROR",
+       });
+-      _optionalChain([opts, 'access', _60 => _60.onError, 'optionalCall', _61 => _61({
+-        error,
+-        type: "unknown",
+-        path: void 0,
+-        input: void 0,
+-        ctx: void 0,
+-        req
+-      })]);
++      _optionalChain([
++        opts,
++        "access",
++        (_60) => _60.onError,
++        "optionalCall",
++        (_61) =>
++          _61({
++            error,
++            type: "unknown",
++            path: void 0,
++            input: void 0,
++            ctx: void 0,
++            req,
++          }),
++      ]);
+       res.statusCode = 500;
+       res.setHeader("Content-Type", "application/json");
+       const body = {
+         message: error.message,
+-        code: error.code
++        code: error.code,
+       };
+       res.end(JSON.stringify(body));
+       return;
+@@ -985,7 +1076,6 @@ var createOpenApiNextHandler = (opts) => {
+ 
+ // packages/adapters/nuxt.ts
+ 
+-
+ // node_modules/ufo/dist/index.mjs
+ var r = String.fromCharCode;
+ var PLUS_RE = /\+/g;
+@@ -1044,9 +1134,7 @@ function getQuery2(input) {
+ }
+ var protocolRelative = Symbol.for("ufo:protocolRelative");
+ function parseURL(input = "", defaultProto) {
+-  const _specialProtoMatch = input.match(
+-    /^[\s\0]*(blob:|data:|javascript:|vbscript:)(.*)/i
+-  );
++  const _specialProtoMatch = input.match(/^[\s\0]*(blob:|data:|javascript:|vbscript:)(.*)/i);
+   if (_specialProtoMatch) {
+     const [, _proto, _pathname = ""] = _specialProtoMatch;
+     return {
+@@ -1056,7 +1144,7 @@ function parseURL(input = "", defaultProto) {
+       auth: "",
+       host: "",
+       search: "",
+-      hash: ""
++      hash: "",
+     };
+   }
+   if (!hasProtocol(input, { acceptRelative: true })) {
+@@ -1064,9 +1152,7 @@ function parseURL(input = "", defaultProto) {
+   }
+   const [, protocol = "", auth, hostAndPath = ""] = input.replace(/\\/g, "/").match(/^[\s\0]*([\w+.-]{2,}:)?\/\/([^/@]+@)?(.*)/) || [];
+   const [, host = "", path = ""] = hostAndPath.match(/([^#/?]*)(.*)?/) || [];
+-  const { pathname, search, hash } = parsePath(
+-    path.replace(/\/(?=[A-Za-z]:)/, "")
+-  );
++  const { pathname, search, hash } = parsePath(path.replace(/\/(?=[A-Za-z]:)/, ""));
+   return {
+     protocol: protocol.toLowerCase(),
+     auth: auth ? auth.slice(0, Math.max(0, auth.length - 1)) : "",
+@@ -1074,7 +1160,7 @@ function parseURL(input = "", defaultProto) {
+     pathname,
+     search,
+     hash,
+-    [protocolRelative]: !protocol
++    [protocolRelative]: !protocol,
+   };
+ }
+ function parsePath(input = "") {
+@@ -1082,7 +1168,7 @@ function parsePath(input = "") {
+   return {
+     pathname,
+     search,
+-    hash
++    hash,
+   };
+ }
+ 
+@@ -1122,12 +1208,7 @@ function _defu(baseObject, defaults, namespace = ".", merger) {
+     if (Array.isArray(value) && Array.isArray(object[key])) {
+       object[key] = [...value, ...object[key]];
+     } else if (isPlainObject(value) && isPlainObject(object[key])) {
+-      object[key] = _defu(
+-        value,
+-        object[key],
+-        (namespace ? `${namespace}.` : "") + key.toString(),
+-        merger
+-      );
++      object[key] = _defu(value, object[key], (namespace ? `${namespace}.` : "") + key.toString(), merger);
+     } else {
+       object[key] = value;
+     }
+@@ -1135,10 +1216,9 @@ function _defu(baseObject, defaults, namespace = ".", merger) {
+   return object;
+ }
+ function createDefu(merger) {
+-  return (...arguments_) => (
++  return (...arguments_) =>
+     // eslint-disable-next-line unicorn/no-array-reduce
+-    arguments_.reduce((p, c) => _defu(p, c, "", merger), {})
+-  );
++    arguments_.reduce((p, c) => _defu(p, c, "", merger), {});
+ }
+ var defu = createDefu();
+ var defuFn = createDefu((object, key, currentValue) => {
+@@ -1156,7 +1236,7 @@ var defuArrayFn = createDefu((object, key, currentValue) => {
+ 
+ // node_modules/h3/dist/index.mjs
+ var __defProp$2 = Object.defineProperty;
+-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
++var __defNormalProp$2 = (obj, key, value) => (key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : (obj[key] = value));
+ var __publicField$2 = (obj, key, value) => {
+   __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
+   return value;
+@@ -1177,7 +1257,7 @@ var H3Error = class extends Error {
+   toJSON() {
+     const obj = {
+       message: this.message,
+-      statusCode: sanitizeStatusCode(this.statusCode, 500)
++      statusCode: sanitizeStatusCode(this.statusCode, 500),
+     };
+     if (this.statusMessage) {
+       obj.statusMessage = sanitizeStatusMessage(this.statusMessage);
+@@ -1218,7 +1298,7 @@ function defineEventHandler(handler) {
+   }
+   const _hooks = {
+     onRequest: _normalizeArray(handler.onRequest),
+-    onBeforeResponse: _normalizeArray(handler.onBeforeResponse)
++    onBeforeResponse: _normalizeArray(handler.onBeforeResponse),
+   };
+   const _handler = (event) => {
+     return _callHandler(event, handler.handler, _hooks);
+@@ -1229,7 +1309,7 @@ function defineEventHandler(handler) {
+   return _handler;
+ }
+ function _normalizeArray(input) {
+-  return input ? Array.isArray(input) ? input : [input] : void 0;
++  return input ? (Array.isArray(input) ? input : [input]) : void 0;
+ }
+ async function _callHandler(event, handler, hooks) {
+   if (hooks.onRequest) {
+@@ -1258,7 +1338,7 @@ var createOpenApiNuxtHandler = (opts) => {
+   return defineEventHandler(async (event) => {
+     let pathname = null;
+     const { params } = event.context;
+-    if (params && _optionalChain([params, 'optionalAccess', _62 => _62.trpc])) {
++    if (params && _optionalChain([params, "optionalAccess", (_62) => _62.trpc])) {
+       if (!params.trpc.includes("/")) {
+         pathname = params.trpc;
+       } else {
+@@ -1268,21 +1348,28 @@ var createOpenApiNuxtHandler = (opts) => {
+     if (pathname === null) {
+       const error = new (0, _server.TRPCError)({
+         message: 'Query "trpc" not found - is the `trpc-swagger` file named `[...trpc].ts`?',
+-        code: "INTERNAL_SERVER_ERROR"
++        code: "INTERNAL_SERVER_ERROR",
+       });
+-      _optionalChain([opts, 'access', _63 => _63.onError, 'optionalCall', _64 => _64({
+-        error,
+-        type: "unknown",
+-        path: void 0,
+-        input: void 0,
+-        ctx: void 0,
+-        req: event.node.req
+-      })]);
++      _optionalChain([
++        opts,
++        "access",
++        (_63) => _63.onError,
++        "optionalCall",
++        (_64) =>
++          _64({
++            error,
++            type: "unknown",
++            path: void 0,
++            input: void 0,
++            ctx: void 0,
++            req: event.node.req,
++          }),
++      ]);
+       event.node.res.statusCode = 500;
+       event.node.res.setHeader("Content-Type", "application/json");
+       const body = {
+         message: error.message,
+-        code: error.code
++        code: error.code,
+       };
+       event.node.res.end(JSON.stringify(body));
+       return;
+@@ -1301,14 +1388,13 @@ var createOpenApiHttpHandler = (opts) => {
+   };
+ };
+ 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-exports.createOpenApiAwsLambdaHandler = createOpenApiAwsLambdaHandler; exports.createOpenApiExpressMiddleware = createOpenApiExpressMiddleware; exports.createOpenApiFetchHandler = createOpenApiFetchHandler; exports.createOpenApiHttpHandler = createOpenApiHttpHandler; exports.createOpenApiNextHandler = createOpenApiNextHandler; exports.createOpenApiNuxtHandler = createOpenApiNuxtHandler; exports.fastifyTRPCOpenApiPlugin = fastifyTRPCOpenApiPlugin; exports.generateOpenApiDocument = generateOpenApiDocument; exports.openApiVersion = openApiVersion;
++exports.createOpenApiAwsLambdaHandler = createOpenApiAwsLambdaHandler;
++exports.createOpenApiExpressMiddleware = createOpenApiExpressMiddleware;
++exports.createOpenApiFetchHandler = createOpenApiFetchHandler;
++exports.createOpenApiHttpHandler = createOpenApiHttpHandler;
++exports.createOpenApiNextHandler = createOpenApiNextHandler;
++exports.createOpenApiNuxtHandler = createOpenApiNuxtHandler;
++exports.fastifyTRPCOpenApiPlugin = fastifyTRPCOpenApiPlugin;
++exports.generateOpenApiDocument = generateOpenApiDocument;
++exports.openApiVersion = openApiVersion;
+ //# sourceMappingURL=index.js.map
+diff --git a/build/index.mjs b/build/index.mjs
+index a23c6fb2fb648818fb0ece6addb62fd69511986e..1bcbdf2f8b19d0c73359fa500ca796deaae96906 100644
+--- a/build/index.mjs
++++ b/build/index.mjs
+@@ -1,6 +1,5 @@
+ // packages/adapters/aws-lambda.ts
+ import { TRPCError as TRPCError6 } from "@trpc/server";
+-import { UNKNOWN_PAYLOAD_FORMAT_VERSION_ERROR_MESSAGE, getHTTPMethod, getPath, isPayloadV1, isPayloadV2, transformHeaders } from "@trpc/server/adapters/aws-lambda";
+ import { EventEmitter } from "events";
+ import { createRequest, createResponse } from "node-mocks-http";
+ 
+@@ -21,7 +20,7 @@ var TRPC_ERROR_CODE_HTTP_STATUS = {
+   METHOD_NOT_SUPPORTED: 405,
+   TOO_MANY_REQUESTS: 429,
+   UNPROCESSABLE_CONTENT: 422,
+-  NOT_IMPLEMENTED: 500
++  NOT_IMPLEMENTED: 500,
+ };
+ function getErrorFromUnknown(cause) {
+   if (cause instanceof Error && cause.name === "TRPCError") {
+@@ -36,7 +35,7 @@ function getErrorFromUnknown(cause) {
+   const error = new TRPCError({
+     message: "Internal server error",
+     code: "INTERNAL_SERVER_ERROR",
+-    cause: errorCause
++    cause: errorCause,
+   });
+   if (stack) {
+     error.stack = stack;
+@@ -80,18 +79,10 @@ var getInputOutputParsers = (procedure) => {
+   const { inputs, output } = procedure._def;
+   return {
+     inputParser: inputs.length >= 2 ? mergeInputs(inputs) : inputs[0],
+-    outputParser: output
++    outputParser: output,
+   };
+ };
+-var getProcedureType = (procedure) => {
+-  if (procedure._def.query)
+-    return "query";
+-  if (procedure._def.mutation)
+-    return "mutation";
+-  if (procedure._def.subscription)
+-    return "subscription";
+-  throw new Error("Unknown procedure type");
+-};
++var getProcedureType = (procedure) => procedure._def.type;
+ var forEachOpenApiProcedure = (procedureRecord, callback) => {
+   for (const [path, procedure] of Object.entries(procedureRecord)) {
+     const { openapi } = procedure._def.meta ?? {};
+@@ -122,7 +113,11 @@ var instanceofZodTypeObject = (type) => {
+   return instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodObject);
+ };
+ var instanceofZodTypeLikeVoid = (type) => {
+-  return instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodVoid) || instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodUndefined) || instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodNever);
++  return (
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodVoid) ||
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodUndefined) ||
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodNever)
++  );
+ };
+ var unwrapZodType = (type, unwrapPreprocess) => {
+   if (instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodOptional)) {
+@@ -174,7 +169,12 @@ var instanceofZodTypeLikeString = (_type) => {
+ var zodSupportsCoerce = "coerce" in z2;
+ var instanceofZodTypeCoercible = (_type) => {
+   const type = unwrapZodType(_type, false);
+-  return instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodNumber) || instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodBoolean) || instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodBigInt) || instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodDate);
++  return (
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodNumber) ||
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodBoolean) ||
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodBigInt) ||
++    instanceofZodTypeKind(type, z2.ZodFirstPartyTypeKind.ZodDate)
++  );
+ };
+ 
+ // packages/generator/schema.ts
+@@ -185,7 +185,7 @@ var getParameterObjects = (schema, pathParameters, inType, example) => {
+   if (!instanceofZodType(schema)) {
+     throw new TRPCError2({
+       message: "Input parser expects a Zod validator",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const isRequired = !schema.isOptional();
+@@ -196,7 +196,7 @@ var getParameterObjects = (schema, pathParameters, inType, example) => {
+   if (!instanceofZodTypeObject(unwrappedSchema)) {
+     throw new TRPCError2({
+       message: "Input parser must be a ZodObject",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const { shape } = unwrappedSchema;
+@@ -205,63 +205,65 @@ var getParameterObjects = (schema, pathParameters, inType, example) => {
+     if (!shapeKeys.includes(pathParameter)) {
+       throw new TRPCError2({
+         message: `Input parser expects key from path: "${pathParameter}"`,
+-        code: "INTERNAL_SERVER_ERROR"
++        code: "INTERNAL_SERVER_ERROR",
+       });
+     }
+   }
+-  return shapeKeys.filter((shapeKey) => {
+-    const isPathParameter = pathParameters.includes(shapeKey);
+-    if (inType === "path") {
+-      return isPathParameter;
+-    }
+-    if (inType === "query") {
+-      return !isPathParameter;
+-    }
+-    return true;
+-  }).map((shapeKey) => {
+-    let shapeSchema = shape[shapeKey];
+-    const isShapeRequired = !shapeSchema.isOptional();
+-    const isPathParameter = pathParameters.includes(shapeKey);
+-    if (!instanceofZodTypeLikeString(shapeSchema)) {
+-      if (zodSupportsCoerce) {
+-        if (!instanceofZodTypeCoercible(shapeSchema)) {
++  return shapeKeys
++    .filter((shapeKey) => {
++      const isPathParameter = pathParameters.includes(shapeKey);
++      if (inType === "path") {
++        return isPathParameter;
++      }
++      if (inType === "query") {
++        return !isPathParameter;
++      }
++      return true;
++    })
++    .map((shapeKey) => {
++      let shapeSchema = shape[shapeKey];
++      const isShapeRequired = !shapeSchema.isOptional();
++      const isPathParameter = pathParameters.includes(shapeKey);
++      if (!instanceofZodTypeLikeString(shapeSchema)) {
++        if (zodSupportsCoerce) {
++          if (!instanceofZodTypeCoercible(shapeSchema)) {
++            throw new TRPCError2({
++              message: `Input parser key: "${shapeKey}" must be ZodString, ZodNumber, ZodBoolean, ZodBigInt or ZodDate`,
++              code: "INTERNAL_SERVER_ERROR",
++            });
++          }
++        } else {
+           throw new TRPCError2({
+-            message: `Input parser key: "${shapeKey}" must be ZodString, ZodNumber, ZodBoolean, ZodBigInt or ZodDate`,
+-            code: "INTERNAL_SERVER_ERROR"
++            message: `Input parser key: "${shapeKey}" must be ZodString`,
++            code: "INTERNAL_SERVER_ERROR",
+           });
+         }
+-      } else {
+-        throw new TRPCError2({
+-          message: `Input parser key: "${shapeKey}" must be ZodString`,
+-          code: "INTERNAL_SERVER_ERROR"
+-        });
+       }
+-    }
+-    if (instanceofZodTypeOptional(shapeSchema)) {
+-      if (isPathParameter) {
+-        throw new TRPCError2({
+-          message: `Path parameter: "${shapeKey}" must not be optional`,
+-          code: "INTERNAL_SERVER_ERROR"
+-        });
++      if (instanceofZodTypeOptional(shapeSchema)) {
++        if (isPathParameter) {
++          throw new TRPCError2({
++            message: `Path parameter: "${shapeKey}" must not be optional`,
++            code: "INTERNAL_SERVER_ERROR",
++          });
++        }
++        shapeSchema = shapeSchema.unwrap();
+       }
+-      shapeSchema = shapeSchema.unwrap();
+-    }
+-    const { description, ...openApiSchemaObject } = zodSchemaToOpenApiSchemaObject(shapeSchema);
+-    return {
+-      name: shapeKey,
+-      in: isPathParameter ? "path" : "query",
+-      required: isPathParameter || isRequired && isShapeRequired,
+-      schema: openApiSchemaObject,
+-      description,
+-      example: example?.[shapeKey]
+-    };
+-  });
++      const { description, ...openApiSchemaObject } = zodSchemaToOpenApiSchemaObject(shapeSchema);
++      return {
++        name: shapeKey,
++        in: isPathParameter ? "path" : "query",
++        required: isPathParameter || (isRequired && isShapeRequired),
++        schema: openApiSchemaObject,
++        description,
++        example: example?.[shapeKey],
++      };
++    });
+ };
+ var getRequestBodyObject = (schema, pathParameters, contentTypes, example) => {
+   if (!instanceofZodType(schema)) {
+     throw new TRPCError2({
+       message: "Input parser expects a Zod validator",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const isRequired = !schema.isOptional();
+@@ -272,7 +274,7 @@ var getRequestBodyObject = (schema, pathParameters, contentTypes, example) => {
+   if (!instanceofZodTypeObject(unwrappedSchema)) {
+     throw new TRPCError2({
+       message: "Input parser must be a ZodObject",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const mask = {};
+@@ -292,12 +294,12 @@ var getRequestBodyObject = (schema, pathParameters, contentTypes, example) => {
+   for (const contentType of contentTypes) {
+     content[contentType] = {
+       schema: openApiSchemaObject,
+-      example: dedupedExample
++      example: dedupedExample,
+     };
+   }
+   return {
+     required: isRequired,
+-    content
++    content,
+   };
+ };
+ var errorResponseObject = {
+@@ -308,17 +310,17 @@ var errorResponseObject = {
+         z3.object({
+           message: z3.string(),
+           code: z3.string(),
+-          issues: z3.array(z3.object({ message: z3.string() })).optional()
++          issues: z3.array(z3.object({ message: z3.string() })).optional(),
+         })
+-      )
+-    }
+-  }
++      ),
++    },
++  },
+ };
+ var getResponsesObject = (schema, example, headers) => {
+   if (!instanceofZodType(schema)) {
+     throw new TRPCError2({
+       message: "Output parser expects a Zod validator",
+-      code: "INTERNAL_SERVER_ERROR"
++      code: "INTERNAL_SERVER_ERROR",
+     });
+   }
+   const successResponseObject = {
+@@ -327,15 +329,15 @@ var getResponsesObject = (schema, example, headers) => {
+     content: {
+       "application/json": {
+         schema: zodSchemaToOpenApiSchemaObject(schema),
+-        example
+-      }
+-    }
++        example,
++      },
++    },
+   };
+   return {
+     200: successResponseObject,
+     default: {
+-      $ref: "#/components/responses/error"
+-    }
++      $ref: "#/components/responses/error",
++    },
+   };
+ };
+ 
+@@ -349,7 +351,7 @@ var getOpenApiPathsObject = (appRouter, securitySchemeNames) => {
+       if (type === "subscription") {
+         throw new TRPCError3({
+           message: "Subscriptions are not supported by OpenAPI v3",
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const { method, protect, summary, description, tags, headers } = openapi;
+@@ -360,20 +362,20 @@ var getOpenApiPathsObject = (appRouter, securitySchemeNames) => {
+       if (!httpMethod) {
+         throw new TRPCError3({
+           message: "Method must be GET, POST, PATCH, PUT or DELETE",
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       if (pathsObject[path]?.[httpMethod]) {
+         throw new TRPCError3({
+           message: `Duplicate procedure defined for route ${method} ${path}`,
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const contentTypes = openapi.contentTypes || ["application/json"];
+       if (contentTypes.length === 0) {
+         throw new TRPCError3({
+           message: "At least one content type must be specified",
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const { inputParser, outputParser } = getInputOutputParsers(procedure);
+@@ -385,37 +387,18 @@ var getOpenApiPathsObject = (appRouter, securitySchemeNames) => {
+           description,
+           tags,
+           security: protect ? securitySchemeNames.map((name) => ({ [name]: [] })) : void 0,
+-          ...acceptsRequestBody(method) ? {
+-            requestBody: getRequestBodyObject(
+-              inputParser,
+-              pathParameters,
+-              contentTypes,
+-              openapi.example?.request
+-            ),
+-            parameters: [
+-              ...headerParameters,
+-              ...getParameterObjects(
+-                inputParser,
+-                pathParameters,
+-                "path",
+-                openapi.example?.request
+-              ) || []
+-            ]
+-          } : {
+-            requestBody: void 0,
+-            parameters: [
+-              ...headerParameters,
+-              ...getParameterObjects(
+-                inputParser,
+-                pathParameters,
+-                "all",
+-                openapi.example?.request
+-              ) || []
+-            ]
+-          },
++          ...(acceptsRequestBody(method)
++            ? {
++                requestBody: getRequestBodyObject(inputParser, pathParameters, contentTypes, openapi.example?.request),
++                parameters: [...headerParameters, ...(getParameterObjects(inputParser, pathParameters, "path", openapi.example?.request) || [])],
++              }
++            : {
++                requestBody: void 0,
++                parameters: [...headerParameters, ...(getParameterObjects(inputParser, pathParameters, "all", openapi.example?.request) || [])],
++              }),
+           responses: getResponsesObject(outputParser, openapi.example?.response, openapi.responseHeaders),
+-          ...openapi.deprecated ? { deprecated: openapi.deprecated } : {}
+-        }
++          ...(openapi.deprecated ? { deprecated: openapi.deprecated } : {}),
++        },
+       };
+     } catch (error) {
+       error.message = `[${procedureName}] - ${error.message}`;
+@@ -431,30 +414,30 @@ var generateOpenApiDocument = (appRouter, opts) => {
+   const securitySchemes = opts.securitySchemes || {
+     Authorization: {
+       type: "http",
+-      scheme: "bearer"
+-    }
++      scheme: "bearer",
++    },
+   };
+   return {
+     openapi: openApiVersion,
+     info: {
+       title: opts.title,
+       description: opts.description,
+-      version: opts.version
++      version: opts.version,
+     },
+     servers: [
+       {
+-        url: opts.baseUrl
+-      }
++        url: opts.baseUrl,
++      },
+     ],
+     paths: getOpenApiPathsObject(appRouter, Object.keys(securitySchemes)),
+     components: {
+       securitySchemes,
+       responses: {
+-        error: errorResponseObject
+-      }
++        error: errorResponseObject,
++      },
+     },
+     tags: opts.tags?.map((tag) => ({ name: tag })),
+-    externalDocs: opts.docsUrl ? { url: opts.docsUrl } : void 0
++    externalDocs: opts.docsUrl ? { url: opts.docsUrl } : void 0,
+   };
+ };
+ 
+@@ -498,7 +481,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+       const { raw, parsed } = await parse(req, {
+         limit: maxBodySize,
+         strict: false,
+-        returnRawBody: true
++        returnRawBody: true,
+       });
+       req.body = raw ? parsed : void 0;
+     } catch (cause) {
+@@ -506,7 +489,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+         throw new TRPCError4({
+           message: "Request body too large",
+           code: "PAYLOAD_TOO_LARGE",
+-          cause
++          cause,
+         });
+       }
+       let errorCause;
+@@ -516,7 +499,7 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+       throw new TRPCError4({
+         message: "Failed to parse request body",
+         code: "PARSE_ERROR",
+-        cause: errorCause
++        cause: errorCause,
+       });
+     }
+   }
+@@ -526,40 +509,31 @@ var getBody = async (req, maxBodySize = BODY_100_KB) => {
+ // packages/adapters/node-http/procedures.ts
+ var createProcedureCache = (router) => {
+   const procedureCache = /* @__PURE__ */ new Map();
+-  const { queries, mutations } = router._def;
+-  forEachOpenApiProcedure(queries, ({ path: queryPath, procedure, openapi }) => {
++  forEachOpenApiProcedure(router._def.procedures, ({ path: queryPath, procedure, openapi }) => {
+     const { method } = openapi;
+     if (!procedureCache.has(method)) {
+       procedureCache.set(method, /* @__PURE__ */ new Map());
+     }
+     const path = normalizePath(openapi.path);
+     const pathRegExp = getPathRegExp(path);
++
+     procedureCache.get(method).set(pathRegExp, {
+-      type: "query",
++      type: procedure._def.type,
+       path: queryPath,
+-      procedure
+-    });
+-  });
+-  forEachOpenApiProcedure(mutations, ({ path: mutationPath, procedure, openapi }) => {
+-    const { method } = openapi;
+-    if (!procedureCache.has(method)) {
+-      procedureCache.set(method, /* @__PURE__ */ new Map());
+-    }
+-    const path = normalizePath(openapi.path);
+-    const pathRegExp = getPathRegExp(path);
+-    procedureCache.get(method).set(pathRegExp, {
+-      type: "mutation",
+-      path: mutationPath,
+-      procedure
++      procedure,
+     });
++
++    console.log("pathRegExp", path, procedure, pathRegExp, method, procedureCache.get(method).keys(), procedureCache.get(method).get(pathRegExp));
+   });
+   return (method, path) => {
+     const procedureMethodCache = procedureCache.get(method);
+     if (!procedureMethodCache) {
++      console.log("no procedureMethodCache", procedureCache.keys(), method);
+       return void 0;
+     }
+     const procedureRegExp = Array.from(procedureMethodCache.keys()).find((re) => re.test(path));
+     if (!procedureRegExp) {
++      console.log("no procedureRegExp", procedureMethodCache.keys(), path);
+       return void 0;
+     }
+     const procedure = procedureMethodCache.get(procedureRegExp);
+@@ -591,6 +565,7 @@ var createOpenApiNodeHttpHandler = (opts) => {
+     const reqUrl = req.url;
+     const url = new URL(reqUrl.startsWith("/") ? `http://127.0.0.1${reqUrl}` : reqUrl);
+     const path = normalizePath(url.pathname);
++    console.log("path is ", path);
+     const { procedure, pathInput } = getProcedure(method, path) ?? {};
+     let input;
+     let ctx;
+@@ -606,7 +581,7 @@ var createOpenApiNodeHttpHandler = (opts) => {
+         }
+         throw new TRPCError5({
+           message: "Not found",
+-          code: "NOT_FOUND"
++          code: "NOT_FOUND",
+         });
+       }
+       const useBody = acceptsRequestBody(method);
+@@ -614,8 +589,8 @@ var createOpenApiNodeHttpHandler = (opts) => {
+       const unwrappedSchema = unwrapZodType(schema, true);
+       if (!instanceofZodTypeLikeVoid(unwrappedSchema)) {
+         input = {
+-          ...useBody ? await getBody(req, maxBodySize) : getQuery(req, url),
+-          ...pathInput
++          ...(useBody ? await getBody(req, maxBodySize) : getQuery(req, url)),
++          ...pathInput,
+         };
+       }
+       if (zodSupportsCoerce) {
+@@ -638,7 +613,7 @@ var createOpenApiNodeHttpHandler = (opts) => {
+         paths: [procedure.path],
+         ctx,
+         data: [data],
+-        errors: []
++        errors: [],
+       });
+       const statusCode = meta?.status ?? 200;
+       const headers = meta?.headers ?? {};
+@@ -652,21 +627,21 @@ var createOpenApiNodeHttpHandler = (opts) => {
+         path: procedure?.path,
+         input,
+         ctx,
+-        req
++        req,
+       });
+       const meta = responseMeta?.({
+         type: procedure?.type ?? "unknown",
+         paths: procedure?.path ? [procedure?.path] : void 0,
+         ctx,
+         data: [data],
+-        errors: [error]
++        errors: [error],
+       });
+-      const errorShape = router.getErrorShape({
++      const errorShape = router._def.errorFormatter({
+         error,
+         type: procedure?.type ?? "unknown",
+         path: procedure?.path,
+         input,
+-        ctx
++        ctx,
+       });
+       const isInputValidationError = error.code === "BAD_REQUEST" && error.cause instanceof Error && error.cause.name === "ZodError";
+       const statusCode = meta?.status ?? TRPC_ERROR_CODE_HTTP_STATUS[error.code] ?? 500;
+@@ -674,7 +649,7 @@ var createOpenApiNodeHttpHandler = (opts) => {
+       const body = {
+         message: isInputValidationError ? "Input validation failed" : errorShape?.message ?? error.message ?? "An error occurred",
+         code: error.code,
+-        issues: isInputValidationError ? error.cause.errors : void 0
++        issues: isInputValidationError ? error.cause.errors : void 0,
+       };
+       sendResponse(statusCode, headers, body);
+     }
+@@ -703,7 +678,7 @@ var createMockNodeHTTPRequest = (path, event) => {
+       throw new TRPCError6({
+         message: "Failed to parse request body",
+         code: "PARSE_ERROR",
+-        cause
++        cause,
+       });
+     }
+   }
+@@ -721,7 +696,7 @@ var createMockNodeHTTPRequest = (path, event) => {
+       throw new TRPCError6({
+         message: "Failed to parse request body",
+         code: "PARSE_ERROR",
+-        cause
++        cause,
+       });
+     }
+   }
+@@ -730,7 +705,7 @@ var createMockNodeHTTPRequest = (path, event) => {
+     method,
+     query: event.queryStringParameters || void 0,
+     headers: event.headers,
+-    body
++    body,
+   });
+ };
+ var createMockNodeHTTPResponse = () => {
+@@ -743,7 +718,7 @@ var createOpenApiAwsLambdaHandler = (opts) => {
+       if (!isPayloadV1(event) && !isPayloadV2(event)) {
+         throw new TRPCError6({
+           message: UNKNOWN_PAYLOAD_FORMAT_VERSION_ERROR_MESSAGE,
+-          code: "INTERNAL_SERVER_ERROR"
++          code: "INTERNAL_SERVER_ERROR",
+         });
+       }
+       const createContext = async () => opts.createContext?.({ event, context });
+@@ -755,7 +730,7 @@ var createOpenApiAwsLambdaHandler = (opts) => {
+       return {
+         statusCode: res.statusCode,
+         headers: transformHeaders(res._getHeaders() || {}),
+-        body: res._getData()
++        body: res._getData(),
+       };
+     } catch (cause) {
+       const error = getErrorFromUnknown(cause);
+@@ -765,32 +740,32 @@ var createOpenApiAwsLambdaHandler = (opts) => {
+         path,
+         input: void 0,
+         ctx: void 0,
+-        req: event
++        req: event,
+       });
+       const meta = opts.responseMeta?.({
+         type: "unknown",
+         paths: [path],
+         ctx: void 0,
+         data: [void 0],
+-        errors: [error]
++        errors: [error],
+       });
+-      const errorShape = opts.router.getErrorShape({
++      const errorShape = opts.router._def.errorFormatter({
+         error,
+         type: "unknown",
+         path,
+         input: void 0,
+-        ctx: void 0
++        ctx: void 0,
+       });
+       const statusCode = meta?.status ?? TRPC_ERROR_CODE_HTTP_STATUS[error.code] ?? 500;
+-      const headers = { "content-type": "application/json", ...meta?.headers ?? {} };
++      const headers = { "content-type": "application/json", ...(meta?.headers ?? {}) };
+       const body = {
+         message: errorShape?.message ?? error.message ?? "An error occurred",
+-        code: error.code
++        code: error.code,
+       };
+       return {
+         statusCode,
+         headers,
+-        body: JSON.stringify(body)
++        body: JSON.stringify(body),
+       };
+     }
+   };
+@@ -824,7 +799,7 @@ function fastifyTRPCOpenApiPlugin(fastify, opts, done) {
+           }
+           return reply.header(key, value);
+         },
+-        end: (body) => reply.send(body)
++        end: (body) => reply.send(body),
+         // eslint-disable-line @typescript-eslint/no-explicit-any
+       })
+     );
+@@ -848,23 +823,23 @@ var getRequestBody = async (req) => {
+       return {
+         isValid: true,
+         // use JSON.parse instead of req.json() because req.json() does not throw on invalid JSON
+-        data: JSON.parse(await req.text())
++        data: JSON.parse(await req.text()),
+       };
+     }
+     if (req.headers.get("content-type")?.includes("application/x-www-form-urlencoded")) {
+       return {
+         isValid: true,
+-        data: await getUrlEncodedBody(req)
++        data: await getUrlEncodedBody(req),
+       };
+     }
+     return {
+       isValid: true,
+-      data: req.body
++      data: req.body,
+     };
+   } catch (err) {
+     return {
+       isValid: false,
+-      cause: err
++      cause: err,
+     };
+   }
+ };
+@@ -879,7 +854,7 @@ var createRequestProxy = async (req, url) => {
+         return new Proxy(target.headers, {
+           get: (trg, item) => {
+             return trg.get(item.toString());
+-          }
++          },
+         });
+       }
+       if (prop === "body") {
+@@ -887,13 +862,13 @@ var createRequestProxy = async (req, url) => {
+           throw new TRPCError7({
+             code: "PARSE_ERROR",
+             message: "Failed to parse request body",
+-            cause: body.cause
++            cause: body.cause,
+           });
+         }
+         return body.data;
+       }
+       return target[prop];
+-    }
++    },
+   });
+ };
+ var createOpenApiFetchHandler = async (opts) => {
+@@ -910,38 +885,35 @@ var createOpenApiFetchHandler = async (opts) => {
+     router: opts.router,
+     createContext,
+     onError: opts.onError,
+-    responseMeta: opts.responseMeta
++    responseMeta: opts.responseMeta,
+   });
+   return new Promise((resolve) => {
+     let statusCode;
+-    return openApiHttpHandler(
+-      req,
+-      {
+-        setHeader: (key, value) => {
+-          if (typeof value === "string") {
+-            resHeaders.set(key, value);
+-          } else {
+-            for (const v of value) {
+-              resHeaders.append(key, v);
+-            }
++    return openApiHttpHandler(req, {
++      setHeader: (key, value) => {
++        if (typeof value === "string") {
++          resHeaders.set(key, value);
++        } else {
++          for (const v of value) {
++            resHeaders.append(key, v);
+           }
+-        },
+-        get statusCode() {
+-          return statusCode;
+-        },
+-        set statusCode(code) {
+-          statusCode = code;
+-        },
+-        end: (body) => {
+-          resolve(
+-            new Response(body, {
+-              headers: resHeaders,
+-              status: statusCode
+-            })
+-          );
+         }
+-      }
+-    );
++      },
++      get statusCode() {
++        return statusCode;
++      },
++      set statusCode(code) {
++        statusCode = code;
++      },
++      end: (body) => {
++        resolve(
++          new Response(body, {
++            headers: resHeaders,
++            status: statusCode,
++          })
++        );
++      },
++    });
+   });
+ };
+ 
+@@ -959,7 +931,7 @@ var createOpenApiNextHandler = (opts) => {
+     if (pathname === null) {
+       const error = new TRPCError8({
+         message: 'Query "trpc" not found - is the `trpc-swagger` file named `[...trpc].ts`?',
+-        code: "INTERNAL_SERVER_ERROR"
++        code: "INTERNAL_SERVER_ERROR",
+       });
+       opts.onError?.({
+         error,
+@@ -967,13 +939,13 @@ var createOpenApiNextHandler = (opts) => {
+         path: void 0,
+         input: void 0,
+         ctx: void 0,
+-        req
++        req,
+       });
+       res.statusCode = 500;
+       res.setHeader("Content-Type", "application/json");
+       const body = {
+         message: error.message,
+-        code: error.code
++        code: error.code,
+       };
+       res.end(JSON.stringify(body));
+       return;
+@@ -1044,9 +1016,7 @@ function getQuery2(input) {
+ }
+ var protocolRelative = Symbol.for("ufo:protocolRelative");
+ function parseURL(input = "", defaultProto) {
+-  const _specialProtoMatch = input.match(
+-    /^[\s\0]*(blob:|data:|javascript:|vbscript:)(.*)/i
+-  );
++  const _specialProtoMatch = input.match(/^[\s\0]*(blob:|data:|javascript:|vbscript:)(.*)/i);
+   if (_specialProtoMatch) {
+     const [, _proto, _pathname = ""] = _specialProtoMatch;
+     return {
+@@ -1056,7 +1026,7 @@ function parseURL(input = "", defaultProto) {
+       auth: "",
+       host: "",
+       search: "",
+-      hash: ""
++      hash: "",
+     };
+   }
+   if (!hasProtocol(input, { acceptRelative: true })) {
+@@ -1064,9 +1034,7 @@ function parseURL(input = "", defaultProto) {
+   }
+   const [, protocol = "", auth, hostAndPath = ""] = input.replace(/\\/g, "/").match(/^[\s\0]*([\w+.-]{2,}:)?\/\/([^/@]+@)?(.*)/) || [];
+   const [, host = "", path = ""] = hostAndPath.match(/([^#/?]*)(.*)?/) || [];
+-  const { pathname, search, hash } = parsePath(
+-    path.replace(/\/(?=[A-Za-z]:)/, "")
+-  );
++  const { pathname, search, hash } = parsePath(path.replace(/\/(?=[A-Za-z]:)/, ""));
+   return {
+     protocol: protocol.toLowerCase(),
+     auth: auth ? auth.slice(0, Math.max(0, auth.length - 1)) : "",
+@@ -1074,7 +1042,7 @@ function parseURL(input = "", defaultProto) {
+     pathname,
+     search,
+     hash,
+-    [protocolRelative]: !protocol
++    [protocolRelative]: !protocol,
+   };
+ }
+ function parsePath(input = "") {
+@@ -1082,7 +1050,7 @@ function parsePath(input = "") {
+   return {
+     pathname,
+     search,
+-    hash
++    hash,
+   };
+ }
+ 
+@@ -1122,12 +1090,7 @@ function _defu(baseObject, defaults, namespace = ".", merger) {
+     if (Array.isArray(value) && Array.isArray(object[key])) {
+       object[key] = [...value, ...object[key]];
+     } else if (isPlainObject(value) && isPlainObject(object[key])) {
+-      object[key] = _defu(
+-        value,
+-        object[key],
+-        (namespace ? `${namespace}.` : "") + key.toString(),
+-        merger
+-      );
++      object[key] = _defu(value, object[key], (namespace ? `${namespace}.` : "") + key.toString(), merger);
+     } else {
+       object[key] = value;
+     }
+@@ -1135,10 +1098,9 @@ function _defu(baseObject, defaults, namespace = ".", merger) {
+   return object;
+ }
+ function createDefu(merger) {
+-  return (...arguments_) => (
++  return (...arguments_) =>
+     // eslint-disable-next-line unicorn/no-array-reduce
+-    arguments_.reduce((p, c) => _defu(p, c, "", merger), {})
+-  );
++    arguments_.reduce((p, c) => _defu(p, c, "", merger), {});
+ }
+ var defu = createDefu();
+ var defuFn = createDefu((object, key, currentValue) => {
+@@ -1156,7 +1118,7 @@ var defuArrayFn = createDefu((object, key, currentValue) => {
+ 
+ // node_modules/h3/dist/index.mjs
+ var __defProp$2 = Object.defineProperty;
+-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
++var __defNormalProp$2 = (obj, key, value) => (key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : (obj[key] = value));
+ var __publicField$2 = (obj, key, value) => {
+   __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
+   return value;
+@@ -1177,7 +1139,7 @@ var H3Error = class extends Error {
+   toJSON() {
+     const obj = {
+       message: this.message,
+-      statusCode: sanitizeStatusCode(this.statusCode, 500)
++      statusCode: sanitizeStatusCode(this.statusCode, 500),
+     };
+     if (this.statusMessage) {
+       obj.statusMessage = sanitizeStatusMessage(this.statusMessage);
+@@ -1218,7 +1180,7 @@ function defineEventHandler(handler) {
+   }
+   const _hooks = {
+     onRequest: _normalizeArray(handler.onRequest),
+-    onBeforeResponse: _normalizeArray(handler.onBeforeResponse)
++    onBeforeResponse: _normalizeArray(handler.onBeforeResponse),
+   };
+   const _handler = (event) => {
+     return _callHandler(event, handler.handler, _hooks);
+@@ -1229,7 +1191,7 @@ function defineEventHandler(handler) {
+   return _handler;
+ }
+ function _normalizeArray(input) {
+-  return input ? Array.isArray(input) ? input : [input] : void 0;
++  return input ? (Array.isArray(input) ? input : [input]) : void 0;
+ }
+ async function _callHandler(event, handler, hooks) {
+   if (hooks.onRequest) {
+@@ -1268,7 +1230,7 @@ var createOpenApiNuxtHandler = (opts) => {
+     if (pathname === null) {
+       const error = new TRPCError9({
+         message: 'Query "trpc" not found - is the `trpc-swagger` file named `[...trpc].ts`?',
+-        code: "INTERNAL_SERVER_ERROR"
++        code: "INTERNAL_SERVER_ERROR",
+       });
+       opts.onError?.({
+         error,
+@@ -1276,13 +1238,13 @@ var createOpenApiNuxtHandler = (opts) => {
+         path: void 0,
+         input: void 0,
+         ctx: void 0,
+-        req: event.node.req
++        req: event.node.req,
+       });
+       event.node.res.statusCode = 500;
+       event.node.res.setHeader("Content-Type", "application/json");
+       const body = {
+         message: error.message,
+-        code: error.code
++        code: error.code,
+       };
+       event.node.res.end(JSON.stringify(body));
+       return;
+@@ -1309,6 +1271,6 @@ export {
+   createOpenApiNuxtHandler,
+   fastifyTRPCOpenApiPlugin,
+   generateOpenApiDocument,
+-  openApiVersion
++  openApiVersion,
+ };
+ //# sourceMappingURL=index.mjs.map
