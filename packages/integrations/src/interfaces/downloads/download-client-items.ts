@@ -1,4 +1,10 @@
+import { z } from "@homarr/validation";
+
 import type { SanitizedIntegration } from "../../base/integration";
+
+const usenetQueueState = ["downloading", "queued", "paused"] as const;
+const usenetHistoryState = ["completed", "failed", "processing"] as const;
+const torrentState = ["leeching", "stalled", "paused", "seeding"] as const;
 
 /**
  * DownloadClientItem
@@ -7,47 +13,45 @@ import type { SanitizedIntegration } from "../../base/integration";
  * Torrents alike, using common properties and few extra optionals
  * from each.
  */
-export interface DownloadClientItem {
+export const downloadClientItemSchema = z.object({
   /** Unique Identifier provided by client */
-  id: string;
+  id: z.string(),
   /** Position in queue */
-  index: number;
+  index: z.number(),
   /** Filename */
-  name: string;
+  name: z.string(),
   /** Torrent/Usenet identifier */
-  type: "torrent" | "usenet";
+  type: z.enum(["torrent", "usenet"]),
   /** Item size in Bytes */
-  size: number;
+  size: z.number(),
   /** Total uploaded in Bytes, only required for Torrent items */
-  sent?: number;
+  sent: z.number().optional(),
   /** Download speed in Bytes/s, only required if not complete
    *  (Says 0 only if it should be downloading but isn't) */
-  downSpeed?: number;
+  downSpeed: z.number().optional(),
   /** Upload speed in Bytes/s, only required for Torrent items */
-  upSpeed?: number;
+  upSpeed: z.number().optional(),
   /** Positive = eta (until completion, 0 meaning infinite), Negative = time since completion, in milliseconds*/
-  time: number;
+  time: z.number(),
   /** Unix timestamp in milliseconds when the item was added to the client */
-  added?: number;
+  added: z.number().optional(),
   /** Status message, mostly as information to display and not for logic */
-  state: UsenetQueueState | UsenetHistoryState | TorrentState;
+  state: z.enum(["unknown", ...usenetQueueState, ...usenetHistoryState, ...torrentState]),
   /** Progress expressed between 0 and 1, can infer completion from progress === 1 */
-  progress: number;
+  progress: z.number().min(0).max(1),
   /** Category given to the item */
-  category?: string | string[];
-}
+  category: z.string().or(z.array(z.string())).optional(),
+});
 
-export interface ExtendedDownloadClientItem extends DownloadClientItem {
+export type DownloadClientItem = z.infer<typeof downloadClientItemSchema>;
+
+export type ExtendedDownloadClientItem = {
   integration: SanitizedIntegration;
   received: number;
   ratio?: number;
-  actions: {
+  actions?: {
     resume: () => void;
     pause: () => void;
     delete: ({ fromDisk }: { fromDisk: boolean }) => void;
   };
-}
-
-type UsenetQueueState = "downloading" | "queued" | "paused";
-type UsenetHistoryState = "completed" | "failed" | "processing";
-type TorrentState = "leeching" | "stalled" | "unknown" | "paused" | "seeding";
+} & DownloadClientItem;

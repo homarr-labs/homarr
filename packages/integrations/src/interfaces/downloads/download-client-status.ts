@@ -10,12 +10,13 @@ export interface DownloadClientStatus {
   };
   type: "usenet" | "torrent";
 }
-
-export interface ExtendedClientStatus extends DownloadClientStatus {
+export interface ExtendedClientStatus {
   integration: SanitizedIntegration;
-  /** To derive from current items */
-  totalDown?: number;
-  /** To derive from current items */
-  totalUp?: number;
-  ratio?: number;
+  status?: {
+    /** To derive from current items */
+    totalDown?: number;
+    /** To derive from current items */
+    totalUp?: number;
+    ratio?: number;
+  } & DownloadClientStatus;
 }

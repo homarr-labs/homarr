@@ -12197,6 +12197,8 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   typed-rpc@5.1.0: {}
+
+  typescript-eslint@8.1.0(eslint@9.9.0)(typescript@5.5.4):
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.0.1(@typescript-eslint/parser@8.0.1(eslint@9.9.0)(typescript@5.5.4))(eslint@9.9.0)(typescript@5.5.4)
       '@typescript-eslint/parser': 8.0.1(eslint@9.9.0)(typescript@5.5.4)

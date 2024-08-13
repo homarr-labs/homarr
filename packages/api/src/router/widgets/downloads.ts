@@ -1,16 +1,18 @@
-import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
-import type { IntegrationKind } from "@homarr/definitions";
-import type { DownloadClientIntegration, IntegrationInput, SanitizedIntegration } from "@homarr/integrations";
-import { integrationCreatorByKind } from "@homarr/integrations";
+import type { DownloadClientJobsAndStatus, SanitizedIntegration } from "@homarr/integrations";
+import { DownloadClientIntegration, downloadClientItemSchema, integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
-import type { DownloadClientJobsAndStatus } from "../../../../integrations/src/interfaces/downloads/download-client-data";
-import type { DownloadClientItem } from "../../../../integrations/src/interfaces/downloads/download-client-items";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+
+const _integrations = [
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  DownloadClientIntegration.DownloadClientKinds[0]!,
+  ...DownloadClientIntegration.DownloadClientKinds.slice(1),
+];
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
@@ -21,10 +23,10 @@ export const downloadsRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
           const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const data = await channel.getAsync();
+          const data = (await channel.getAsync())?.data ?? null;
           return {
             integration: integration as SanitizedIntegration,
-            data: data?.data ?? ({} as DownloadClientJobsAndStatus),
+            data,
           };
         }),
       );
@@ -39,12 +41,12 @@ export const downloadsRouter = createTRPCRouter({
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
           const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const unsubscribe = channel.subscribe((sessions) => {
+          const unsubscribe = channel.subscribe((data) =>
             emit.next({
-              integration: integration as SanitizedIntegration,
-              data: sessions,
-            });
-          });
+              integration,
+              data,
+            }),
+          );
           unsubscribes.push(unsubscribe);
         }
         return () => {
@@ -54,82 +56,67 @@ export const downloadsRouter = createTRPCRouter({
         };
       });
     }),
-  pause: publicProcedure
+  pause: protectedProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = getIntegrationInstance(integration.kind, integration);
+          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
           await integrationInstance.pauseQueueAsync();
         }),
       );
     }),
-  pauseItem: publicProcedure
+  pauseItem: protectedProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
-    .input(z.object({ item: z.any() satisfies z.ZodType<DownloadClientItem> }))
+    .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = getIntegrationInstance(integration.kind, integration);
-          await integrationInstance.pauseItemAsync(input.item as DownloadClientItem);
+          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          await integrationInstance.pauseItemAsync(input.item);
         }),
       );
     }),
-  resume: publicProcedure
+  resume: protectedProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = getIntegrationInstance(integration.kind, integration);
+          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
           await integrationInstance.resumeQueueAsync();
         }),
       );
     }),
-  resumeItem: publicProcedure
+  resumeItem: protectedProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
-    .input(z.object({ item: z.any() satisfies z.ZodType<DownloadClientItem> }))
+    .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = getIntegrationInstance(integration.kind, integration);
-          await integrationInstance.resumeItemAsync(input.item as DownloadClientItem);
+          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          await integrationInstance.resumeItemAsync(input.item);
         }),
       );
     }),
-  deleteItem: publicProcedure
+  deleteItem: protectedProcedure
     .unstable_concat(
       createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
     )
-    .input(z.object({ item: z.any() satisfies z.ZodType<DownloadClientItem>, fromDisk: z.boolean() }))
+    .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = getIntegrationInstance(integration.kind, integration);
-          await integrationInstance.deleteItemAsync(input.item as DownloadClientItem, input.fromDisk);
+          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
       );
     }),
 });
-
-function getIntegrationInstance(kind: IntegrationKind, integration: IntegrationInput): DownloadClientIntegration {
-  switch (kind) {
-    case "sabNzbd":
-    case "nzbGet":
-    case "qBittorrent":
-    case "deluge":
-    case "transmission":
-      return integrationCreatorByKind(kind, integration) as DownloadClientIntegration;
-    default:
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-      });
-  }
-}

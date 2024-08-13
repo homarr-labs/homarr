@@ -19,6 +19,9 @@ export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/downloa
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
 
+// Schemas
+export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
+
 // Helpers
 export { integrationCreatorByKind } from "./base/creator";
 export { IntegrationTestConnectionError } from "./base/test-connection-error";

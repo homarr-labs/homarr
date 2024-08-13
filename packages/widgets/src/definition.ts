@@ -93,7 +93,11 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
 } & {
   boardId: string | undefined; // undefined when in preview mode
   isEditMode: boolean;
-  setOptions: ({ newOptions }: { newOptions: Record<string, unknown> }) => void;
+  setOptions: ({
+    newOptions,
+  }: {
+    newOptions: Partial<inferOptionsFromDefinition<WidgetOptionsRecordOf<TKind>>>;
+  }) => void;
   width: number;
   height: number;
 };

@@ -1,5 +1,6 @@
 import { IconDownload } from "@tabler/icons-react";
 
+import { DownloadClientIntegration } from "@homarr/integrations";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 import { z } from "@homarr/validation";
 
@@ -84,29 +85,23 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       },
       showCompletedUsenet: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) => ["sabNzbd", "nzbGet"].includes(integrationKind)),
+          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.UsenetClientKinds),
       },
       showCompletedTorrent: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) =>
-            ["qBittorrent", "deluge", "transmission"].includes(integrationKind),
-          ),
+          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.TorrentClientKinds),
       },
       activeTorrentThreshold: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) =>
-            ["qBittorrent", "deluge", "transmission"].includes(integrationKind),
-          ),
+          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.TorrentClientKinds),
       },
       applyFilterToRatio: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) =>
-            ["qBittorrent", "deluge", "transmission"].includes(integrationKind),
-          ),
+          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.TorrentClientKinds),
       },
     },
   ),
-  supportedIntegrations: ["sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"],
+  supportedIntegrations: [...DownloadClientIntegration.DownloadClientKinds],
 })
   .withServerData(() => import("./serverData"))
   .withDynamicImport(() => import("./component"));

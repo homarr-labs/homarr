@@ -26,7 +26,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     };
     const items = queue.slots
       .map((slot): DownloadClientItem => {
-        const state = SabnzbdIntegration.getNzbQueueState(slot.status);
+        const state = SabnzbdIntegration.getUsenetQueueState(slot.status);
         const times = slot.timeleft.split(":").reverse();
         const time = dayjs
           .duration({
@@ -52,7 +52,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       })
       .concat(
         history.slots.map((slot, index): DownloadClientItem => {
-          const state = SabnzbdIntegration.getNzbHistoryState(slot.status);
+          const state = SabnzbdIntegration.getUsenetHistoryState(slot.status);
           return {
             type,
             id: slot.nzo_id,
@@ -125,7 +125,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       });
   }
 
-  private static getNzbQueueState(status: string): DownloadClientItem["state"] {
+  private static getUsenetQueueState(status: string): DownloadClientItem["state"] {
     switch (status) {
       case "Queued":
         return "queued";
@@ -136,7 +136,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     }
   }
 
-  private static getNzbHistoryState(status: string): DownloadClientItem["state"] {
+  private static getUsenetHistoryState(status: string): DownloadClientItem["state"] {
     switch (status) {
       case "Completed":
         return "completed";

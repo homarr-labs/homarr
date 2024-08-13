@@ -61,7 +61,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
     const store = (await client.listTorrents()).result.torrents;
     await Promise.all(
       Object.entries(store).map(async ([id]) => {
-        await this.getClient().pauseTorrent(id);
+        await client.pauseTorrent(id);
       }),
     );
   }
@@ -75,7 +75,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
     const store = (await client.listTorrents()).result.torrents;
     await Promise.all(
       Object.entries(store).map(async ([id]) => {
-        await this.getClient().resumeTorrent(id);
+        await client.resumeTorrent(id);
       }),
     );
   }

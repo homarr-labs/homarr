@@ -7,9 +7,6 @@ const ranges = [
   { divider: 1e3, suffix: "k" },
 ];
 
-//64bit limit for Number stops at EiB
-const siRanges = ["B", "kiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
-
 export const formatNumber = (value: number, decimalPlaces: number) => {
   for (const range of ranges) {
     if (value < range.divider) continue;
@@ -28,6 +25,8 @@ export const randomInt = (min: number, max: number) => {
  *  Does not accept floats, size in bytes are should be integer.
  */
 export const humanFileSize = (size: number) => {
+  //64bit limit for Number stops at EiB
+  const siRanges = ["B", "kiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
   if (!Number.isInteger(size)) return NaN;
   let count = 0;
   while (count < siRanges.length) {

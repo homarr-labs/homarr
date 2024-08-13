@@ -10,31 +10,28 @@ import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integra
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
-import type { IntegrationInput } from "./integration";
+import type { Integration, IntegrationInput } from "./integration";
 
-export const integrationCreatorByKind = (kind: IntegrationKind, integration: IntegrationInput) => {
-  switch (kind) {
-    case "piHole":
-      return new PiHoleIntegration(integration);
-    case "adGuardHome":
-      return new AdGuardHomeIntegration(integration);
-    case "homeAssistant":
-      return new HomeAssistantIntegration(integration);
-    case "jellyfin":
-      return new JellyfinIntegration(integration);
-    case "sonarr":
-      return new SonarrIntegration(integration);
-    case "sabNzbd":
-      return new SabnzbdIntegration(integration);
-    case "nzbGet":
-      return new NzbGetIntegration(integration);
-    case "qBittorrent":
-      return new QBitTorrentIntegration(integration);
-    case "deluge":
-      return new DelugeIntegration(integration);
-    case "transmission":
-      return new TransmissionIntegration(integration);
-    default:
-      throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
+export const integrationCreatorByKind = <TKind extends keyof typeof integrationCreators>(
+  kind: TKind,
+  integration: IntegrationInput,
+) => {
+  if (!(kind in integrationCreators)) {
+    throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
   }
+
+  return new integrationCreators[kind](integration) as InstanceType<(typeof integrationCreators)[TKind]>;
 };
+
+const integrationCreators = {
+  piHole: PiHoleIntegration,
+  adGuardHome: AdGuardHomeIntegration,
+  homeAssistant: HomeAssistantIntegration,
+  jellyfin: JellyfinIntegration,
+  sonarr: SonarrIntegration,
+  sabNzbd: SabnzbdIntegration,
+  nzbGet: NzbGetIntegration,
+  qBittorrent: QBitTorrentIntegration,
+  deluge: DelugeIntegration,
+  transmission: TransmissionIntegration,
+} satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;

@@ -31,6 +31,7 @@ import {
   IconPlayerPlay,
   IconProps,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
@@ -39,11 +40,12 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
-import type {
-  DownloadClientJobsAndStatus,
-  ExtendedClientStatus,
-  ExtendedDownloadClientItem,
-  SanitizedIntegration,
+import {
+  DownloadClientIntegration,
+  type DownloadClientJobsAndStatus,
+  type ExtendedClientStatus,
+  type ExtendedDownloadClientItem,
+  type SanitizedIntegration,
 } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -90,7 +92,7 @@ export default function DownloadClientsWidget({
 }: WidgetComponentProps<"downloads">) {
   const [currentItems, currentItemsHandlers] = useListState<{
     integration: SanitizedIntegration;
-    data: DownloadClientJobsAndStatus;
+    data: DownloadClientJobsAndStatus | null;
   }>(serverData?.initialData ?? []);
 
   //Translations
@@ -126,8 +128,13 @@ export default function DownloadClientsWidget({
   const data = useMemo<ExtendedDownloadClientItem[]>(
     () =>
       currentItems
+        //Insure it is only using selected integrations
         .filter(({ integration }) => integrationIds.includes(integration.id))
+        //Removing any integration with no data associated
+        .filter((pair): pair is { integration: SanitizedIntegration; data: DownloadClientJobsAndStatus } => !!pair.data)
+        //Construct normalized items list
         .flatMap((pair) =>
+          //Apply user white/black list
           pair.data.items
             .filter(
               ({ category }) =>
@@ -136,6 +143,7 @@ export default function DownloadClientsWidget({
                   (Array.isArray(category) ? category : [category]).includes(filter),
                 ),
             )
+            //Filter completed items following widget option
             .filter(
               ({ type, progress, upSpeed }) =>
                 (type === "torrent" &&
@@ -145,6 +153,7 @@ export default function DownloadClientsWidget({
                     progress !== 1)) ||
                 (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)),
             )
+            //Add extrapolated data and actions if user is allowed interaction
             .map((item): ExtendedDownloadClientItem => {
               const received = Math.floor(item.size * item.progress);
               return {
@@ -154,6 +163,7 @@ export default function DownloadClientsWidget({
                 received,
                 ratio: item.sent !== undefined ? item.sent / received : undefined,
                 actions: {
+                  //Only add if permission to use mutations
                   resume: () => mutateResumeItem({ integrationIds: [pair.integration.id], item }),
                   pause: () => mutatePauseItem({ integrationIds: [pair.integration.id], item }),
                   delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds: [pair.integration.id], item, fromDisk }),
@@ -161,6 +171,7 @@ export default function DownloadClientsWidget({
               };
             }),
         )
+        //flatmap already sorts by integration by nature, add sorting by integration type (usenet | torrent)
         .sort(({ type: typeA }, { type: typeB }) => typeA.length - typeB.length),
     [currentItems, integrationIds, options],
   );
@@ -170,14 +181,16 @@ export default function DownloadClientsWidget({
     () =>
       currentItems
         .filter(({ integration }) => integrationIds.includes(integration.id))
-        .flatMap((pair): ExtendedClientStatus => {
-          const isTorrent = ["qBittorrent", "deluge", "transmission"].includes(pair.integration.kind);
+        .flatMap(({ integration, data }): ExtendedClientStatus => {
+          const isTorrent = integration.kind in DownloadClientIntegration.TorrentClientKinds;
+
+          if (!data) return { integration };
           /** Derived from current items */
-          const { totalUp, totalDown } = pair.data.items
+          const { totalUp, totalDown } = data.items
             .filter(
               ({ category }) =>
                 !options.applyFilterToRatio ||
-                pair.data.status.type !== "torrent" ||
+                data.status.type !== "torrent" ||
                 options.filterIsWhitelist ===
                   options.categoryFilter.some((filter) =>
                     (Array.isArray(category) ? category : [category]).includes(filter),
@@ -189,16 +202,21 @@ export default function DownloadClientsWidget({
                 totalDown: totalDown + size * progress,
               }),
               { totalDown: 0, totalUp: isTorrent ? 0 : undefined },
-            );
+            ) ?? { totalDown: 0, totalUp: isTorrent ? 0 : undefined };
           return {
-            integration: pair.integration,
-            totalUp,
-            totalDown,
-            ratio: totalUp === undefined ? undefined : totalUp / totalDown,
-            ...pair.data.status,
+            integration: integration,
+            status: {
+              totalUp,
+              totalDown,
+              ratio: totalUp === undefined ? undefined : totalUp / totalDown,
+              ...data.status,
+            },
           };
         })
-        .sort(({ type: typeA }, { type: typeB }) => typeA.length - typeB.length),
+        .sort(
+          ({ status: statusA }, { status: statusB }) =>
+            (statusA?.type.length ?? Infinity) - (statusB?.type.length ?? Infinity),
+        ),
     [currentItems, integrationIds, options],
   );
 
@@ -294,18 +312,21 @@ export default function DownloadClientsWidget({
         enableSorting: false,
         Cell: ({ cell, row }) => {
           const actions = cell.getValue<ExtendedDownloadClientItem["actions"]>();
-          const isPaused = row.original.state === "paused";
+          const pausedAction = row.original.state === "paused" ? "resume" : "pause";
           const [opened, { open, close }] = useDisclosure(false);
+
+          if (!actions) return <IconX color="red" style={actionIconIconStyle} />;
+
           return (
             <Group wrap="nowrap" gap="var(--space-size)">
-              <Tooltip label={t(`actions.item.${isPaused ? "resume" : "pause"}`)}>
+              <Tooltip label={t(`actions.item.${pausedAction}`)}>
                 <ActionIcon
                   variant="light"
                   radius={999}
-                  onClick={isPaused ? actions.resume : actions.pause}
+                  onClick={actions[pausedAction] /*isPaused ? actions.resume : actions.pause*/}
                   size="var(--button-size)"
                 >
-                  {isPaused ? (
+                  {pausedAction === "resume" ? (
                     <IconPlayerPlay style={actionIconIconStyle} />
                   ) : (
                     <IconPlayerPause style={actionIconIconStyle} />
@@ -323,7 +344,7 @@ export default function DownloadClientsWidget({
                     color="red"
                     onClick={() => {
                       close();
-                      actions.delete({ fromDisk: false });
+                      actions?.delete({ fromDisk: false });
                     }}
                   >
                     {t("actions.item.delete.entry")}
@@ -575,11 +596,11 @@ export default function DownloadClientsWidget({
 
   //Used for Global Torrent Ratio
   const globalTraffic = clients
-    .filter(({ integration: { kind } }) => ["qBittorrent", "deluge", "transmission"].includes(kind))
+    .filter(({ integration: { kind } }) => kind in DownloadClientIntegration.TorrentClientKinds)
     .reduce(
-      ({ up, down }, { totalUp, totalDown }) => ({
-        up: up + (totalUp ?? 0),
-        down: down + (totalDown ?? 0),
+      ({ up, down }, { status }) => ({
+        up: up + (status?.totalUp ?? 0),
+        down: down + (status?.totalDown ?? 0),
       }),
       { up: 0, down: 0 },
     );
@@ -723,9 +744,11 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const pausedIntegrations: string[] = [];
   const activeIntegrations: string[] = [];
   clients.forEach((client) =>
-    client.paused ? pausedIntegrations.push(client.integration.id) : activeIntegrations.push(client.integration.id),
+    client.status?.paused
+      ? pausedIntegrations.push(client.integration.id)
+      : activeIntegrations.push(client.integration.id),
   );
-  const totalSpeed = humanFileSize(clients.reduce((count, { rates: { down } }) => count + down, 0))
+  const totalSpeed = humanFileSize(clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0))
     ?.toString()
     .concat("/s");
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
@@ -740,7 +763,9 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
             key={client.integration.id}
             src={getIconUrl(client.integration.kind)}
             size="var(--image-size)"
-            bd={0}
+            bd={!!client.status ? 0 : undefined}
+            variant="outline"
+            color="red"
           />
         ))}
       </AvatarGroup>
@@ -787,50 +812,60 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                 <Paper withBorder radius={999}>
                   <Group gap={5} pl={10} pr={15} fz={16} w={275} justify="space-between">
                     <Avatar radius={0} src={getIconUrl(client.integration.kind)} />
-                    <Tooltip disabled={client.ratio === undefined} label={client.ratio?.toFixed(2)}>
-                      <Stack gap={0} pt={5} h={60} justify="center" flex={1}>
-                        {client.rates.up !== undefined ? (
-                          <Group display="flex" justify="center" c="green" w="100%" gap={5}>
+                    {client.status ? (
+                      <Tooltip disabled={client.status.ratio === undefined} label={client.status.ratio?.toFixed(2)}>
+                        <Stack gap={0} pt={5} h={60} justify="center" flex={1}>
+                          {client.status.rates.up !== undefined ? (
+                            <Group display="flex" justify="center" c="green" w="100%" gap={5}>
+                              <Text flex={1} ta="right">
+                                {`↑ ${humanFileSize(client.status.rates.up)}/s`}
+                              </Text>
+                              <Text>{"-"}</Text>
+                              <Text flex={1} ta="left">
+                                {humanFileSize(client.status.totalUp ?? 0)}
+                              </Text>
+                            </Group>
+                          ) : undefined}
+                          <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
                             <Text flex={1} ta="right">
-                              {`↑ ${humanFileSize(client.rates.up)}/s`}
+                              {`↓ ${humanFileSize(client.status.rates.down)}/s`}
                             </Text>
                             <Text>{"-"}</Text>
                             <Text flex={1} ta="left">
-                              {humanFileSize(client.totalUp ?? 0)}
+                              {humanFileSize(Math.floor(client.status.totalDown ?? 0))}
                             </Text>
                           </Group>
-                        ) : undefined}
-                        <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
-                          <Text flex={1} ta="right">
-                            {`↓ ${humanFileSize(client.rates.down)}/s`}
-                          </Text>
-                          <Text>{"-"}</Text>
-                          <Text flex={1} ta="left">
-                            {humanFileSize(Math.floor(client.totalDown ?? 0))}
-                          </Text>
-                        </Group>
-                      </Stack>
-                    </Tooltip>
+                        </Stack>
+                      </Tooltip>
+                    ) : (
+                      <Text c="red">Error can't load data from integration</Text>
+                    )}
                   </Group>
                 </Paper>
                 <Text lineClamp={1} fz={22}>
                   {client.integration.name}
                 </Text>
                 <Space flex={1} />
-                <Tooltip label={t(`client.${client.paused ? "resume" : "pause"}`)}>
-                  <ActionIcon
-                    radius={999}
-                    variant="light"
-                    size="lg"
-                    onClick={() => {
-                      (client.paused ? mutateResumeQueue : mutatePauseQueue)({
-                        integrationIds: [client.integration.id],
-                      });
-                    }}
-                  >
-                    {client.paused ? <IconPlayerPlay /> : <IconPlayerPause />}
+                {client.status ? (
+                  <Tooltip label={t(`client.${client.status.paused ? "resume" : "pause"}`)}>
+                    <ActionIcon
+                      radius={999}
+                      variant="light"
+                      size="lg"
+                      onClick={() => {
+                        (client.status?.paused ? mutateResumeQueue : mutatePauseQueue)({
+                          integrationIds: [client.integration.id],
+                        });
+                      }}
+                    >
+                      {client.status.paused ? <IconPlayerPlay /> : <IconPlayerPause />}
+                    </ActionIcon>
+                  </Tooltip>
+                ) : (
+                  <ActionIcon radius={999} variant="light" size="lg" disabled>
+                    <IconX />
                   </ActionIcon>
-                </Tooltip>
+                )}
               </Group>
             </Stack>
           ))}
