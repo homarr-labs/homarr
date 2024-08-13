@@ -22,7 +22,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@drizzle-team/brocli": "^0.10.0",
+    "@drizzle-team/brocli": "^0.10.1",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",

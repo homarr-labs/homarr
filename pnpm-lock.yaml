@@ -594,8 +594,8 @@ importers:
   packages/cli:
     dependencies:
       '@drizzle-team/brocli':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.10.1
+        version: 0.10.1
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
@@ -1642,8 +1642,8 @@ packages:
   '@dabh/diagnostics@2.0.3':
     resolution: {integrity: sha512-hrlQOIi7hAfzsMqlGSFyVucrx38O+j6wiGOf//H2ecvIEqYN4ADBSS2iLMh5UFyDunCNniUIPk/q3riFv45xRA==}
 
-  '@drizzle-team/brocli@0.10.0':
-    resolution: {integrity: sha512-razqxuTZizzm14gtockWvc3L0m320QuuzTgeNmX3e32dE5JWQ5jhb5tjnFpdkHFQGoYSDXrhEQgRPZ74kB+8cw==}
+  '@drizzle-team/brocli@0.10.1':
+    resolution: {integrity: sha512-AHy0vjc+n/4w/8Mif+w86qpppHuF3AyXbcWW+R/W7GNA3F5/p2nuhlkCJaTXSLZheB4l1rtHzOfr9A7NwoR/Zg==}
 
   '@drizzle-team/brocli@0.8.2':
     resolution: {integrity: sha512-zTrFENsqGvOkBOuHDC1pXCkDXNd2UhP4lI3gYGhQ1R1SPeAAfqzPsV1dcpMy4uNU6kB5VpU5NGhvwxVNETR02A==}
@@ -6881,7 +6881,7 @@ snapshots:
       enabled: 2.0.0
       kuler: 2.0.0
 
-  '@drizzle-team/brocli@0.10.0': {}
+  '@drizzle-team/brocli@0.10.1': {}
 
   '@drizzle-team/brocli@0.8.2': {}
 
