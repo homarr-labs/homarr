@@ -1,65 +1,62 @@
 import { observable } from "@trpc/server/observable";
 
 import type { DownloadClientJobsAndStatus, SanitizedIntegration } from "@homarr/integrations";
-import { DownloadClientIntegration, downloadClientItemSchema, integrationCreatorByKind } from "@homarr/integrations";
+import { downloadClientItemSchema, integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
+import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
-const _integrations = [
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  DownloadClientIntegration.DownloadClientKinds[0]!,
-  ...DownloadClientIntegration.DownloadClientKinds.slice(1),
-];
+//Find a way to replace manual list of integration with getIntegrationKindsByCategory("downloadClient")
+const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
+  createManyIntegrationMiddleware(action, "sabNzbd", "nzbGet", "deluge", "transmission", "qBittorrent");
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("query", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
           const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const data = (await channel.getAsync())?.data ?? null;
+          const { data, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date() };
           return {
             integration: integration as SanitizedIntegration,
+            timestamp,
             data,
           };
         }),
       );
     }),
   subscribeToJobsAndStatuses: publicProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("query", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
-      return observable<{ integration: SanitizedIntegration; data: DownloadClientJobsAndStatus }>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        for (const integrationWithSecrets of ctx.integrations) {
-          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const unsubscribe = channel.subscribe((data) =>
-            emit.next({
-              integration,
-              data,
-            }),
-          );
-          unsubscribes.push(unsubscribe);
-        }
-        return () => {
-          unsubscribes.forEach((unsubscribe) => {
-            unsubscribe();
-          });
-        };
-      });
+      return observable<{ integration: SanitizedIntegration; timestamp: Date; data: DownloadClientJobsAndStatus }>(
+        (emit) => {
+          const unsubscribes: (() => void)[] = [];
+          for (const integrationWithSecrets of ctx.integrations) {
+            const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+            const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
+            const unsubscribe = channel.subscribe((data) => {
+              emit.next({
+                integration,
+                timestamp: new Date(),
+                data,
+              });
+            });
+            unsubscribes.push(unsubscribe);
+          }
+          return () => {
+            unsubscribes.forEach((unsubscribe) => {
+              unsubscribe();
+            });
+          };
+        },
+      );
     }),
   pause: protectedProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -69,9 +66,7 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   pauseItem: protectedProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
@@ -82,9 +77,7 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   resume: protectedProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -94,9 +87,7 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   resumeItem: protectedProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
@@ -107,9 +98,7 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   deleteItem: protectedProcedure
-    .unstable_concat(
-      createManyIntegrationMiddleware("interact", "sabNzbd", "nzbGet", "qBittorrent", "deluge", "transmission"),
-    )
+    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(

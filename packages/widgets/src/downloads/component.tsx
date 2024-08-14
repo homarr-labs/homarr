@@ -21,7 +21,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useListState } from "@mantine/hooks";
+import { useDisclosure, useListState, useTimeout } from "@mantine/hooks";
 import {
   IconAlertTriangle,
   IconCirclesRelation,
@@ -39,13 +39,12 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
-import { getIconUrl } from "@homarr/definitions";
-import {
-  DownloadClientIntegration,
-  type DownloadClientJobsAndStatus,
-  type ExtendedClientStatus,
-  type ExtendedDownloadClientItem,
-  type SanitizedIntegration,
+import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
+import type {
+  DownloadClientJobsAndStatus,
+  ExtendedClientStatus,
+  ExtendedDownloadClientItem,
+  SanitizedIntegration,
 } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -83,6 +82,8 @@ const standardIconStyle: IconProps["style"] = {
   width: "var(--icon-size)",
 };
 
+const invalidateTime = 30000;
+
 export default function DownloadClientsWidget({
   isEditMode,
   integrationIds,
@@ -92,8 +93,26 @@ export default function DownloadClientsWidget({
 }: WidgetComponentProps<"downloads">) {
   const [currentItems, currentItemsHandlers] = useListState<{
     integration: SanitizedIntegration;
+    timestamp: Date;
     data: DownloadClientJobsAndStatus | null;
-  }>(serverData?.initialData ?? []);
+    //Automatically invalidate data older than 30 seconds
+  }>(
+    serverData?.initialData?.map((item) =>
+      dayjs().diff(item.timestamp) < invalidateTime ? item : { ...item, timestamp: new Date(), data: null },
+    ) ?? [],
+  );
+
+  //Invalidate all data after no update for 30 seconds
+  const invalidationTimer = useTimeout(
+    () => {
+      currentItemsHandlers.applyWhere(
+        () => true,
+        (item) => ({ ...item, timestamp: new Date(), data: null }),
+      );
+    },
+    invalidateTime,
+    { autoInvoke: true },
+  );
 
   //Translations
   const t = useScopedI18n("widget.downloads");
@@ -114,12 +133,26 @@ export default function DownloadClientsWidget({
     },
     {
       onData: (data) => {
+        //Use cyclical update to invalidate data older than 30 seconds from unresponsive integrations
+        const invalidIndexes = currentItems
+          .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime)
+          .map(({ integration }) => integration.id);
+        currentItemsHandlers.applyWhere(
+          ({ integration }) => invalidIndexes.includes(integration.id),
+          (item) => ({ ...item, timestamp: new Date(), data: null }),
+        );
+        //Find id to update
         const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
         if (updateIndex >= 0) {
+          //Update found index
           currentItemsHandlers.setItem(updateIndex, data);
         } else if (integrationIds.includes(data.integration.id)) {
+          //Append index not found (new integration)
           currentItemsHandlers.append(data);
         }
+        //Reset no update countdown
+        invalidationTimer.clear();
+        invalidationTimer.start();
       },
     },
   );
@@ -131,7 +164,10 @@ export default function DownloadClientsWidget({
         //Insure it is only using selected integrations
         .filter(({ integration }) => integrationIds.includes(integration.id))
         //Removing any integration with no data associated
-        .filter((pair): pair is { integration: SanitizedIntegration; data: DownloadClientJobsAndStatus } => !!pair.data)
+        .filter(
+          (pair): pair is { integration: SanitizedIntegration; timestamp: Date; data: DownloadClientJobsAndStatus } =>
+            pair.data != null,
+        )
         //Construct normalized items list
         .flatMap((pair) =>
           //Apply user white/black list
@@ -182,9 +218,8 @@ export default function DownloadClientsWidget({
       currentItems
         .filter(({ integration }) => integrationIds.includes(integration.id))
         .flatMap(({ integration, data }): ExtendedClientStatus => {
-          const isTorrent = integration.kind in DownloadClientIntegration.TorrentClientKinds;
-
           if (!data) return { integration };
+          const isTorrent = getIntegrationKindsByCategory("torrent").some((kind) => kind === integration.kind);
           /** Derived from current items */
           const { totalUp, totalDown } = data.items
             .filter(
@@ -204,7 +239,7 @@ export default function DownloadClientsWidget({
               { totalDown: 0, totalUp: isTorrent ? 0 : undefined },
             ) ?? { totalDown: 0, totalUp: isTorrent ? 0 : undefined };
           return {
-            integration: integration,
+            integration,
             status: {
               totalUp,
               totalDown,
@@ -315,17 +350,10 @@ export default function DownloadClientsWidget({
           const pausedAction = row.original.state === "paused" ? "resume" : "pause";
           const [opened, { open, close }] = useDisclosure(false);
 
-          if (!actions) return <IconX color="red" style={actionIconIconStyle} />;
-
-          return (
+          return actions ? (
             <Group wrap="nowrap" gap="var(--space-size)">
               <Tooltip label={t(`actions.item.${pausedAction}`)}>
-                <ActionIcon
-                  variant="light"
-                  radius={999}
-                  onClick={actions[pausedAction] /*isPaused ? actions.resume : actions.pause*/}
-                  size="var(--button-size)"
-                >
+                <ActionIcon variant="light" radius={999} onClick={actions[pausedAction]} size="var(--button-size)">
                   {pausedAction === "resume" ? (
                     <IconPlayerPlay style={actionIconIconStyle} />
                   ) : (
@@ -365,6 +393,8 @@ export default function DownloadClientsWidget({
                 </Group>
               </Modal>
             </Group>
+          ) : (
+            <IconX color="red" style={actionIconIconStyle} />
           );
         },
       },
@@ -596,7 +626,9 @@ export default function DownloadClientsWidget({
 
   //Used for Global Torrent Ratio
   const globalTraffic = clients
-    .filter(({ integration: { kind } }) => kind in DownloadClientIntegration.TorrentClientKinds)
+    .filter(({ integration: { kind } }) =>
+      getIntegrationKindsByCategory("torrent").some((integrationKind) => integrationKind === kind),
+    )
     .reduce(
       ({ up, down }, { status }) => ({
         up: up + (status?.totalUp ?? 0),
@@ -754,22 +786,20 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
   const [opened, { open, close }] = useDisclosure(false);
-  const t = useScopedI18n("widget.downloads.actions");
+  const t = useScopedI18n("widget.downloads");
   return (
     <Group gap="var(--space-size)" style={style}>
-      <AvatarGroup>
+      <AvatarGroup spacing="calc(var(--space-size)*2)">
         {clients.map((client) => (
           <Avatar
             key={client.integration.id}
             src={getIconUrl(client.integration.kind)}
             size="var(--image-size)"
-            bd={!!client.status ? 0 : undefined}
-            variant="outline"
-            color="red"
+            bd={client.status ? 0 : "calc(var(--space-size)*0.5) solid var(--mantine-color-red-filled)"}
           />
         ))}
       </AvatarGroup>
-      <Tooltip label={t("clients.resume")}>
+      <Tooltip label={t("actions.clients.resume")}>
         <ActionIcon
           size="var(--button-size)"
           radius={999}
@@ -792,7 +822,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
       >
         {totalSpeed}
       </Button>
-      <Tooltip label={t("clients.pause")}>
+      <Tooltip label={t("actions.clients.pause")}>
         <ActionIcon
           size="var(--button-size)"
           radius={999}
@@ -803,14 +833,14 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
           <IconPlayerPause style={actionIconIconStyle} />
         </ActionIcon>
       </Tooltip>
-      <Modal opened={opened} onClose={close} title={t("clients.modalTitle")} centered size="auto">
+      <Modal opened={opened} onClose={close} title={t("actions.clients.modalTitle")} centered size="auto">
         <Stack gap="10px">
           {clients.map((client) => (
             <Stack key={client.integration.id} gap="10px">
               <Divider />
               <Group wrap="nowrap" w="100%">
                 <Paper withBorder radius={999}>
-                  <Group gap={5} pl={10} pr={15} fz={16} w={275} justify="space-between">
+                  <Group gap={5} pl={10} pr={15} fz={16} w={275} justify="space-between" wrap="nowrap">
                     <Avatar radius={0} src={getIconUrl(client.integration.kind)} />
                     {client.status ? (
                       <Tooltip disabled={client.status.ratio === undefined} label={client.status.ratio?.toFixed(2)}>
@@ -838,7 +868,9 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                         </Stack>
                       </Tooltip>
                     ) : (
-                      <Text c="red">Error can't load data from integration</Text>
+                      <Text c="red" ta="center">
+                        {t("errors.noCommunications")}
+                      </Text>
                     )}
                   </Group>
                 </Paper>
@@ -847,7 +879,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                 </Text>
                 <Space flex={1} />
                 {client.status ? (
-                  <Tooltip label={t(`client.${client.status.paused ? "resume" : "pause"}`)}>
+                  <Tooltip label={t(`actions.client.${client.status.paused ? "resume" : "pause"}`)}>
                     <ActionIcon
                       radius={999}
                       variant="light"

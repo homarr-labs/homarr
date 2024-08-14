@@ -2,10 +2,11 @@ import { decryptSecret } from "@homarr/common";
 import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
-import type { DownloadClientIntegration, DownloadClientJobsAndStatus } from "@homarr/integrations";
+import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
+import { getIntegrationKindsByCategory } from "../../../../definitions/src";
 import { createCronJob } from "../../lib";
 
 export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCallback(async () => {
@@ -29,6 +30,10 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
     },
   });
 
+  //Surely there's a prettier way to do this
+  const _integrationKinds = getIntegrationKindsByCategory("downloadClient");
+  type IntegrationKinds = (typeof _integrationKinds)[number];
+
   for (const itemForIntegration of itemsForIntegration) {
     for (const { integration, integrationId } of itemForIntegration.integrations) {
       const integrationWithDecryptedSecrets = {
@@ -39,12 +44,16 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
         })),
       };
       const integrationInstance = integrationCreatorByKind(
-        integration.kind as typeof DownloadClientIntegration.DownloadClientKinds[number],
+        integration.kind as IntegrationKinds,
         integrationWithDecryptedSecrets,
       );
-      const data = await integrationInstance.getClientJobsAndStatusAsync();
-      const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integrationId);
-      await channel.publishAndUpdateLastStateAsync(data);
+      await integrationInstance
+        .getClientJobsAndStatusAsync()
+        .then(async (data) => {
+          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integrationId);
+          await channel.publishAndUpdateLastStateAsync(data);
+        })
+        .catch((error) => console.error(`Could not retrieve data for ${integration.name}: "${error}"`));
     }
   }
 });

@@ -1122,6 +1122,7 @@ export default {
       },
       errors: {
         noColumns: "Select Columns in Items",
+        noCommunications: "Can't load data from integration",
       },
       items: {
         actions: { columnTitle: "Controls" },

@@ -4,6 +4,8 @@ import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { integrationCreatorByKind, IntegrationTestConnectionError } from "@homarr/integrations";
 
+import { integrationCreators } from "../../../../integrations/src/base/creator";
+
 type FormIntegration = Integration & {
   secrets: {
     kind: IntegrationSecretKind;
@@ -48,7 +50,13 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  const integrationInstance = integrationCreatorByKind(integration.kind, {
+  //Does integration kind have access to integration creator
+  if (!(integration.kind in integrationCreators))
+    await Promise.reject(
+      new Error(`Unknown integration kind ${integration.kind}. Did you forget to add it to the integration creator?`),
+    );
+
+  const integrationInstance = integrationCreatorByKind(integration.kind as keyof typeof integrationCreators, {
     id: integration.id,
     name: integration.name,
     url: integration.url,

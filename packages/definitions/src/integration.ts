@@ -13,31 +13,31 @@ export const integrationDefs = {
     name: "SABnzbd",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sabnzbd.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "usenet"],
   },
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nzbget.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "usenet"],
   },
   deluge: {
     name: "Deluge",
     secretKinds: [["password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/deluge.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "torrent"],
   },
   transmission: {
     name: "Transmission",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/transmission.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "torrent"],
   },
   qBittorrent: {
     name: "qBittorrent",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/qbittorrent.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "torrent"],
   },
   sonarr: {
     name: "Sonarr",
@@ -128,6 +128,19 @@ export const getAllSecretKindOptions = (
 
 export const integrationKinds = objectKeys(integrationDefs);
 
+type CategoryFilterType<Condition> = {
+  [Key in keyof typeof integrationDefs]: Condition extends (typeof integrationDefs)[Key]["category"][number]
+    ? Key
+    : never;
+};
+
+export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
+  const keys = objectKeys(integrationDefs).filter((integration) =>
+    integrationDefs[integration].category.some((defCategory) => defCategory === category),
+  );
+  return keys as CategoryFilterType<typeof category>[keyof typeof integrationDefs][];
+};
+
 export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];
 export type IntegrationKind = (typeof integrationKinds)[number];
 export type IntegrationCategory =
@@ -137,4 +150,6 @@ export type IntegrationCategory =
   | "mediaSearch"
   | "mediaRequest"
   | "downloadClient"
+  | "usenet"
+  | "torrent"
   | "smartHomeServer";

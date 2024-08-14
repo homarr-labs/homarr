@@ -1,6 +1,6 @@
 import { IconDownload } from "@tabler/icons-react";
 
-import { DownloadClientIntegration } from "@homarr/integrations";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 import { z } from "@homarr/validation";
 
@@ -26,7 +26,10 @@ const columnsList = [
   "type",
   "upSpeed",
 ] as const satisfies (keyof ExtendedDownloadClientItem)[];
-const columnsSort = columnsList.filter((column) => !["actions", "id", "state"].includes(column));
+const sortingExclusion = ["actions", "id", "state"] as const satisfies readonly (typeof columnsList)[number][];
+const columnsSort = columnsList.filter((column) =>
+  sortingExclusion.some((exclusion) => exclusion !== column),
+) as Exclude<typeof columnsList, (typeof sortingExclusion)[number]>;
 
 export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
@@ -85,23 +88,23 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       },
       showCompletedUsenet: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.UsenetClientKinds),
+          !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
       },
       showCompletedTorrent: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.TorrentClientKinds),
+          !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
       },
       activeTorrentThreshold: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.TorrentClientKinds),
+          !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
       },
       applyFilterToRatio: {
         shouldHide: (_, integrationKinds) =>
-          !integrationKinds.some((integrationKind) => integrationKind in DownloadClientIntegration.TorrentClientKinds),
+          !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
       },
     },
   ),
-  supportedIntegrations: [...DownloadClientIntegration.DownloadClientKinds],
+  supportedIntegrations: getIntegrationKindsByCategory("downloadClient"),
 })
   .withServerData(() => import("./serverData"))
   .withDynamicImport(() => import("./component"));

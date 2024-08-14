@@ -12,7 +12,7 @@ import { z } from "@homarr/validation";
 
 import { publicProcedure } from "../trpc";
 
-type IntegrationAction = "query" | "interact";
+export type IntegrationAction = "query" | "interact";
 
 /**
  * Creates a middleware that provides the integration in the context that is of the specified kinds
