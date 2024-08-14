@@ -974,8 +974,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       winston:
-        specifier: 3.14.1
-        version: 3.14.1
+        specifier: 3.14.2
+        version: 3.14.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -6615,8 +6615,8 @@ packages:
     resolution: {integrity: sha512-ajBj65K5I7denzer2IYW6+2bNIVqLGDHqDw3Ow8Ohh+vdW+rv4MZ6eiDvHoKhfJFZ2auyN8byXieDDJ96ViONg==}
     engines: {node: '>= 12.0.0'}
 
-  winston@3.14.1:
-    resolution: {integrity: sha512-CJi4Il/msz8HkdDfXOMu+r5Au/oyEjFiOZzbX2d23hRLY0narGjqfE5lFlrT5hfYJhPtM8b85/GNFsxIML/RVA==}
+  winston@3.14.2:
+    resolution: {integrity: sha512-CO8cdpBB2yqzEf8v895L+GNKYJiEq8eKlHU38af3snQBQ+sdAIUepjMSguOIJC7ICbzm0ZI+Af2If4vIJrtmOg==}
     engines: {node: '>= 12.0.0'}
 
   wordwrap@1.0.0:
@@ -12312,7 +12312,7 @@ snapshots:
       readable-stream: 3.6.2
       triple-beam: 1.4.1
 
-  winston@3.14.1:
+  winston@3.14.2:
     dependencies:
       '@colors/colors': 1.6.0
       '@dabh/diagnostics': 2.0.3
