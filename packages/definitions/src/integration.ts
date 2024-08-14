@@ -134,7 +134,8 @@ type CategoryFilterType<Condition extends IntegrationCategory> = {
     : never;
 };
 
-export type IntegrationKindByCategory<Condition extends IntegrationCategory> = CategoryFilterType<Condition>[keyof typeof integrationDefs];
+export type IntegrationKindByCategory<Condition extends IntegrationCategory> =
+  CategoryFilterType<Condition>[keyof typeof integrationDefs];
 
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
   const keys = objectKeys(integrationDefs).filter((integration) =>

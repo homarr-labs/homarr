@@ -1,5 +1,6 @@
 import { observable } from "@trpc/server/observable";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus, SanitizedIntegration } from "@homarr/integrations";
 import { downloadClientItemSchema, integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
@@ -8,13 +9,14 @@ import { z } from "@homarr/validation";
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
-const integrations = getIntegrationKindsByCategory("downloadClient");
+const integrations = getIntegrationKindsByCategory("downloadClient");                                     // @Meierschlumpf
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  createManyIntegrationMiddleware(action, integrations.shift()!, ...integrations);
-  //createManyIntegrationMiddleware(action, "sabNzbd", "nzbGet", "deluge", "transmission", "qBittorrent"); @Meierschlumpf
+  createManyIntegrationMiddleware(action, "" as (typeof integrations)[number], ...integrations);          // <- lmfao that works
+// createManyIntegrationMiddleware(action, "sabNzbd", "nzbGet", "deluge", "transmission", "qBittorrent"); // <- Normal way
+// createManyIntegrationMiddleware(action, integrations.shift()!, ...integrations);                       // <- Doesn't even work actually
+// createManyIntegrationMiddleware(action, integrations)                                                  // <- What I want
+// createManyIntegrationMiddleware(action, ...integrations)                                               // <- Would also work with me
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure

@@ -137,7 +137,7 @@ export default function DownloadClientsWidget({
         //Use cyclical update to invalidate data older than 30 seconds from unresponsive integrations
         const invalidIndexes = currentItems
           //Don't update already invalid data (new Date (0))
-          .filter(({ timestamp }) => (dayjs().diff(timestamp) > invalidateTime) && timestamp !== new Date(0))
+          .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime && timestamp !== new Date(0))
           .map(({ integration }) => integration.id);
         currentItemsHandlers.applyWhere(
           ({ integration }) => invalidIndexes.includes(integration.id),
@@ -428,7 +428,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const downSpeed = cell.getValue<ExtendedDownloadClientItem["downSpeed"]>();
-          return <Text>{downSpeed !== undefined && humanFileSize(downSpeed)?.toString().concat("/s")}</Text>;
+          return downSpeed && <Text>{humanFileSize(downSpeed, "/s")}</Text>;
         },
       },
       {
@@ -514,7 +514,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const sent = cell.getValue<ExtendedDownloadClientItem["sent"]>();
-          return sent !== undefined && <Text>{humanFileSize(sent)}</Text>;
+          return sent && <Text>{humanFileSize(sent)}</Text>;
         },
       },
       {
@@ -551,7 +551,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const upSpeed = cell.getValue<ExtendedDownloadClientItem["upSpeed"]>();
-          return upSpeed !== undefined && <Text>{humanFileSize(upSpeed)?.toString().concat("/s")}</Text>;
+          return upSpeed && <Text>{humanFileSize(upSpeed, "/s")}</Text>;
         },
       },
     ],
@@ -707,11 +707,11 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           <NormalizedLine itemKey="state" values={t(item.state)} />
           <NormalizedLine
             itemKey="upSpeed"
-            values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed)?.toString().concat("/s")}
+            values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")}
           />
           <NormalizedLine
             itemKey="downSpeed"
-            values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed)?.toString().concat("/s")}
+            values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed, "/s")}
           />
           <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
           <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
@@ -778,14 +778,17 @@ interface ClientsControlProps {
 const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const pausedIntegrations: string[] = [];
   const activeIntegrations: string[] = [];
-  clients.forEach((client) =>
-    client.status?.paused
+  clients.forEach((client) => {
+    //Don't try to interact with unresponsive integrations
+    if (!client.status) return;
+    client.status.paused
       ? pausedIntegrations.push(client.integration.id)
-      : activeIntegrations.push(client.integration.id),
+      : activeIntegrations.push(client.integration.id);
+  });
+  const totalSpeed = humanFileSize(
+    clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0),
+    "/s",
   );
-  const totalSpeed = humanFileSize(clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0))
-    ?.toString()
-    .concat("/s");
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
   const [opened, { open, close }] = useDisclosure(false);
@@ -851,7 +854,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                           {client.status.rates.up !== undefined ? (
                             <Group display="flex" justify="center" c="green" w="100%" gap={5}>
                               <Text flex={1} ta="right">
-                                {`↑ ${humanFileSize(client.status.rates.up)}/s`}
+                                {"↑ " + humanFileSize(client.status.rates.up, "/s")}
                               </Text>
                               <Text>{"-"}</Text>
                               <Text flex={1} ta="left">
@@ -861,7 +864,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                           ) : undefined}
                           <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
                             <Text flex={1} ta="right">
-                              {`↓ ${humanFileSize(client.status.rates.down)}/s`}
+                              {"↓ " + humanFileSize(client.status.rates.down, "/s")}
                             </Text>
                             <Text>{"-"}</Text>
                             <Text flex={1} ta="left">
