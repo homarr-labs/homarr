@@ -16,7 +16,6 @@ export const integrationCreatorByKind = <TKind extends keyof typeof integrationC
   kind: TKind,
   integration: IntegrationInput,
 ) => {
-  // Actually, I think we already can't have a kind that doesn't belong in integrationCreators to begin with
   if (!(kind in integrationCreators)) {
     throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
   }

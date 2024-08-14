@@ -8,10 +8,13 @@ import { z } from "@homarr/validation";
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
-//Find a way to replace manual list of integration with getIntegrationKindsByCategory("downloadClient")
+const integrations = getIntegrationKindsByCategory("downloadClient");
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, "sabNzbd", "nzbGet", "deluge", "transmission", "qBittorrent");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  createManyIntegrationMiddleware(action, integrations.shift()!, ...integrations);
+  //createManyIntegrationMiddleware(action, "sabNzbd", "nzbGet", "deluge", "transmission", "qBittorrent"); @Meierschlumpf
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
@@ -20,9 +23,9 @@ export const downloadsRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
           const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const { data, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date() };
+          const { data, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
           return {
-            integration: integration as SanitizedIntegration,
+            integration,
             timestamp,
             data,
           };

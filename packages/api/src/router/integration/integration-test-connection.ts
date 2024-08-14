@@ -50,12 +50,7 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  //Does integration kind have access to integration creator
-  if (!(integration.kind in integrationCreators))
-    await Promise.reject(
-      new Error(`Unknown integration kind ${integration.kind}. Did you forget to add it to the integration creator?`),
-    );
-
+  //Remove "as" conversion as soon as all integrations kinds have been made.
   const integrationInstance = integrationCreatorByKind(integration.kind as keyof typeof integrationCreators, {
     id: integration.id,
     name: integration.name,

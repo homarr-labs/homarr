@@ -103,7 +103,7 @@ export const integrationDefs = {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
-    category: [],
+    category: ["smartHomeServer"],
   },
 } satisfies Record<
   string,
@@ -128,17 +128,19 @@ export const getAllSecretKindOptions = (
 
 export const integrationKinds = objectKeys(integrationDefs);
 
-type CategoryFilterType<Condition> = {
+type CategoryFilterType<Condition extends IntegrationCategory> = {
   [Key in keyof typeof integrationDefs]: Condition extends (typeof integrationDefs)[Key]["category"][number]
     ? Key
     : never;
 };
 
+export type IntegrationKindByCategory<Condition extends IntegrationCategory> = CategoryFilterType<Condition>[keyof typeof integrationDefs];
+
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
   const keys = objectKeys(integrationDefs).filter((integration) =>
     integrationDefs[integration].category.some((defCategory) => defCategory === category),
   );
-  return keys as CategoryFilterType<typeof category>[keyof typeof integrationDefs][];
+  return keys as IntegrationKindByCategory<TCategory>[];
 };
 
 export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];

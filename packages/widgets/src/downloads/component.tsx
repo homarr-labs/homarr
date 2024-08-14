@@ -95,19 +95,19 @@ export default function DownloadClientsWidget({
     integration: SanitizedIntegration;
     timestamp: Date;
     data: DownloadClientJobsAndStatus | null;
-    //Automatically invalidate data older than 30 seconds
   }>(
+    //Automatically invalidate data older than 30 seconds
     serverData?.initialData?.map((item) =>
-      dayjs().diff(item.timestamp) < invalidateTime ? item : { ...item, timestamp: new Date(), data: null },
+      dayjs().diff(item.timestamp) < invalidateTime ? item : { ...item, timestamp: new Date(0), data: null },
     ) ?? [],
   );
 
-  //Invalidate all data after no update for 30 seconds
+  //Invalidate all data after no update for 30 seconds using timer
   const invalidationTimer = useTimeout(
     () => {
       currentItemsHandlers.applyWhere(
         () => true,
-        (item) => ({ ...item, timestamp: new Date(), data: null }),
+        (item) => ({ ...item, timestamp: new Date(0), data: null }),
       );
     },
     invalidateTime,
@@ -117,6 +117,7 @@ export default function DownloadClientsWidget({
   //Translations
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
+
   //Item modal state and selection
   const [clickedIndex, setClickedIndex] = useState<number>(0);
   const [opened, { open, close }] = useDisclosure(false);
@@ -135,11 +136,13 @@ export default function DownloadClientsWidget({
       onData: (data) => {
         //Use cyclical update to invalidate data older than 30 seconds from unresponsive integrations
         const invalidIndexes = currentItems
-          .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime)
+          //Don't update already invalid data (new Date (0))
+          .filter(({ timestamp }) => (dayjs().diff(timestamp) > invalidateTime) && timestamp !== new Date(0))
           .map(({ integration }) => integration.id);
         currentItemsHandlers.applyWhere(
           ({ integration }) => invalidIndexes.includes(integration.id),
-          (item) => ({ ...item, timestamp: new Date(), data: null }),
+          //Set date to now so it won't update that integration for at least 30 seconds
+          (item) => ({ ...item, timestamp: new Date(0), data: null }),
         );
         //Find id to update
         const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
@@ -150,7 +153,7 @@ export default function DownloadClientsWidget({
           //Append index not found (new integration)
           currentItemsHandlers.append(data);
         }
-        //Reset no update countdown
+        //Reset no update timer
         invalidationTimer.clear();
         invalidationTimer.start();
       },
@@ -207,7 +210,7 @@ export default function DownloadClientsWidget({
               };
             }),
         )
-        //flatmap already sorts by integration by nature, add sorting by integration type (usenet | torrent)
+        //flatMap already sorts by integration by nature, add sorting by integration type (usenet | torrent)
         .sort(({ type: typeA }, { type: typeB }) => typeA.length - typeB.length),
     [currentItems, integrationIds, options],
   );

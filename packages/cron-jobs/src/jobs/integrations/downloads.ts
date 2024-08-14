@@ -6,7 +6,7 @@ import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
-import { getIntegrationKindsByCategory } from "../../../../definitions/src";
+import type { IntegrationKindByCategory } from "../../../../definitions/src";
 import { createCronJob } from "../../lib";
 
 export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCallback(async () => {
@@ -30,10 +30,6 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
     },
   });
 
-  //Surely there's a prettier way to do this
-  const _integrationKinds = getIntegrationKindsByCategory("downloadClient");
-  type IntegrationKinds = (typeof _integrationKinds)[number];
-
   for (const itemForIntegration of itemsForIntegration) {
     for (const { integration, integrationId } of itemForIntegration.integrations) {
       const integrationWithDecryptedSecrets = {
@@ -44,7 +40,7 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
         })),
       };
       const integrationInstance = integrationCreatorByKind(
-        integration.kind as IntegrationKinds,
+        integration.kind as IntegrationKindByCategory<"downloadClient">,
         integrationWithDecryptedSecrets,
       );
       await integrationInstance
