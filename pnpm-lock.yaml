@@ -12,8 +12,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:tooling/prettier
       '@turbo/gen':
-        specifier: ^2.0.12
-        version: 2.0.12(@types/node@20.14.15)(typescript@5.5.4)
+        specifier: ^2.0.13
+        version: 2.0.13(@types/node@20.14.15)(typescript@5.5.4)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
         version: 4.3.1(vite@5.2.6(@types/node@20.14.15)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
@@ -2743,12 +2743,12 @@ packages:
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
 
-  '@turbo/gen@2.0.12':
-    resolution: {integrity: sha512-6+7pV6XypJY91i0j00E2EapR2eRnQw3xdl1CYgRhhp+m4apUPLAVS/Ya7Hq3IT4ow65Pbt7mHns/UQGz22m9cw==}
+  '@turbo/gen@2.0.13':
+    resolution: {integrity: sha512-/r6HhkogDC1gnsRr8dYngWWT9v518tN8XkFWeRBwe+I3HTT13AfDEyPVnR3dnA1sn6e42fXSH9jhHFoQpKrSZQ==}
     hasBin: true
 
-  '@turbo/workspaces@2.0.12':
-    resolution: {integrity: sha512-4AlT+cq+VoUmgcq9bAxUM7U9eJtStpF0LMyz4ch23o0c5XalyofEXA2WbvFTP9xaRvryjksK4h5RDB3Q8m7Bgw==}
+  '@turbo/workspaces@2.0.13':
+    resolution: {integrity: sha512-UfdCwMUc+yt81xdOzf0jW7dNxsiM3irCIisQs7+TEj1ZNO8FfBgJ64IkvI7V9qAfjw94VacmvnABGbhKe8TWvQ==}
     hasBin: true
 
   '@types/asn1@0.2.4':
@@ -7733,9 +7733,9 @@ snapshots:
 
   '@tsconfig/node16@1.0.4': {}
 
-  '@turbo/gen@2.0.12(@types/node@20.14.15)(typescript@5.5.4)':
+  '@turbo/gen@2.0.13(@types/node@20.14.15)(typescript@5.5.4)':
     dependencies:
-      '@turbo/workspaces': 2.0.12
+      '@turbo/workspaces': 2.0.13
       commander: 10.0.1
       fs-extra: 10.1.0
       inquirer: 8.2.6
@@ -7753,7 +7753,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@turbo/workspaces@2.0.12':
+  '@turbo/workspaces@2.0.13':
     dependencies:
       commander: 10.0.1
       execa: 5.1.1
