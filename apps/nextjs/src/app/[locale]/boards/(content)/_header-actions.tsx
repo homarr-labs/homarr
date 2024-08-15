@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { Group, Menu } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
 import {
   IconBox,
   IconBoxAlignTop,
@@ -138,6 +139,8 @@ const EditModeMenu = () => {
     if (isEditMode) return saveBoard(board);
     setEditMode(true);
   }, [board, isEditMode, saveBoard, setEditMode]);
+
+  useHotkeys([["mod+e", toggle]]);
 
   return (
     <HeaderButton onClick={toggle} loading={isPending}>
