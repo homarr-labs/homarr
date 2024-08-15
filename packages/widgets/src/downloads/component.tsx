@@ -137,7 +137,7 @@ export default function DownloadClientsWidget({
         //Use cyclical update to invalidate data older than 30 seconds from unresponsive integrations
         const invalidIndexes = currentItems
           //Don't update already invalid data (new Date (0))
-          .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime && timestamp !== new Date(0))
+          .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime && timestamp > new Date(0))
           .map(({ integration }) => integration.id);
         currentItemsHandlers.applyWhere(
           ({ integration }) => invalidIndexes.includes(integration.id),
@@ -854,7 +854,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                           {client.status.rates.up !== undefined ? (
                             <Group display="flex" justify="center" c="green" w="100%" gap={5}>
                               <Text flex={1} ta="right">
-                                {"↑ " + humanFileSize(client.status.rates.up, "/s")}
+                                {`↑ ${humanFileSize(client.status.rates.up, "/s")}`}
                               </Text>
                               <Text>{"-"}</Text>
                               <Text flex={1} ta="left">
@@ -864,7 +864,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                           ) : undefined}
                           <Group display="flex" justify="center" c="blue" w="100%" gap={5}>
                             <Text flex={1} ta="right">
-                              {"↓ " + humanFileSize(client.status.rates.down, "/s")}
+                              {`↓ ${humanFileSize(client.status.rates.down, "/s")}`}
                             </Text>
                             <Text>{"-"}</Text>
                             <Text flex={1} ta="left">

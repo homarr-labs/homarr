@@ -128,20 +128,19 @@ export const getAllSecretKindOptions = (
 
 export const integrationKinds = objectKeys(integrationDefs);
 
-type CategoryFilterType<Condition extends IntegrationCategory> = {
-  [Key in keyof typeof integrationDefs]: Condition extends (typeof integrationDefs)[Key]["category"][number]
+export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
+  [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number]
     ? Key
     : never;
-};
-
-export type IntegrationKindByCategory<Condition extends IntegrationCategory> =
-  CategoryFilterType<Condition>[keyof typeof integrationDefs];
+}[keyof typeof integrationDefs] extends infer U
+  //Needed to simplify the type when using it
+  ? U
+  : never;
 
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
-  const keys = objectKeys(integrationDefs).filter((integration) =>
+  return integrationKinds.filter((integration) =>
     integrationDefs[integration].category.some((defCategory) => defCategory === category),
-  );
-  return keys as IntegrationKindByCategory<TCategory>[];
+  ) as IntegrationKindByCategory<TCategory>[];
 };
 
 export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];
