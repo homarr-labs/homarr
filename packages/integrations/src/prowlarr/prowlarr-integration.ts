@@ -7,14 +7,22 @@ export class ProwlarrIntegration extends Integration {
   public async getIndexersAsync(): Promise<Indexer[]> {
     const apiKey = super.getSecretValue("apiKey");
 
-    const indexerResponse = await fetch(`${this.integration.url}/api/v1/indexer?apikey=${apiKey}`);
+    const indexerResponse = await fetch(`${this.integration.url}/api/v1/indexer`, {
+      headers: {
+        "X-Api-Key": apiKey,
+      },
+    });
     if (!indexerResponse.ok) {
       throw new Error(
         `Failed to fetch indexers for ${this.integration.name} (${this.integration.id}): ${indexerResponse.statusText}`,
       );
     }
 
-    const statusResponse = await fetch(`${this.integration.url}/api/v1/indexerstatus?apikey=${apiKey}`);
+    const statusResponse = await fetch(`${this.integration.url}/api/v1/indexerstatus`, {
+      headers: {
+        "X-Api-Key": apiKey,
+      },
+    });
     if (!statusResponse.ok) {
       throw new Error(
         `Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`,
@@ -37,14 +45,14 @@ export class ProwlarrIntegration extends Integration {
       );
     }
 
-    const disabledIndexerIds = new Set(statusResult.data.map((status: { id: number }) => status.id));
+    const inactiveIndexerIds = new Set(statusResult.data.map((status: { id: number }) => status.id));
 
     const indexers: Indexer[] = indexersResult.data.map((indexer) => ({
       id: indexer.id,
       name: indexer.name,
       url: indexer.indexerUrls[0] ?? "",
       enabled: indexer.enable,
-      status: disabledIndexerIds.has(indexer.id),
+      status: inactiveIndexerIds.has(indexer.id),
     }));
 
     return indexers;
@@ -52,7 +60,11 @@ export class ProwlarrIntegration extends Integration {
 
   public async testAllAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetch(`${this.integration.url}/api/v1/indexer/testall?apikey=${apiKey}`);
+    const response = await fetch(`${this.integration.url}/api/v1/indexer/testall`, {
+      headers: {
+        "X-Api-Key": apiKey,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(
@@ -66,7 +78,11 @@ export class ProwlarrIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api/v1/indexer?apikey=${apiKey}`);
+        return await fetch(`${this.integration.url}/api/v1/indexer`, {
+          headers: {
+            "X-Api-Key": apiKey,
+          },
+        });
       },
       handleResponseAsync: async (response) => {
         try {
