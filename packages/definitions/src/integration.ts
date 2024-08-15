@@ -1,4 +1,5 @@
 import { objectKeys } from "@homarr/common";
+import type { AtLeastOneOf } from "@homarr/common/types";
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false },
@@ -110,7 +111,7 @@ export const integrationDefs = {
   {
     name: string;
     iconUrl: string;
-    secretKinds: [IntegrationSecretKind[], ...IntegrationSecretKind[][]]; // at least one secret kind set is required
+    secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
     category: IntegrationCategory[];
   }
 >;
@@ -122,9 +123,8 @@ export const getIntegrationName = (integration: IntegrationKind) => integrationD
 export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] =>
   integrationDefs[integration].secretKinds[0];
 
-export const getAllSecretKindOptions = (
-  integration: IntegrationKind,
-): [IntegrationSecretKind[], ...IntegrationSecretKind[][]] => integrationDefs[integration].secretKinds;
+export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
+  integrationDefs[integration].secretKinds;
 
 export const integrationKinds = objectKeys(integrationDefs);
 
@@ -136,8 +136,8 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
     ? Key
     : never;
 }[keyof typeof integrationDefs] extends infer U
-  //Needed to simplify the type when using it
-  ? U
+  ? //Needed to simplify the type when using it
+    U
   : never;
 
 /**
@@ -148,7 +148,7 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
   return integrationKinds.filter((integration) =>
     integrationDefs[integration].category.some((defCategory) => defCategory === category),
-  ) as IntegrationKindByCategory<TCategory>[];
+  ) as AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
 };
 
 export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];

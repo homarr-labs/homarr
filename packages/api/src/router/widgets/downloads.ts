@@ -11,7 +11,7 @@ import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, getIntegrationKindsByCategory("downloadClient"));
+  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("downloadClient"));
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure

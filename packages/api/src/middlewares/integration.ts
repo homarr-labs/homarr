@@ -4,6 +4,7 @@ import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common";
+import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema/sqlite";
@@ -17,7 +18,7 @@ export type IntegrationAction = "query" | "interact";
 /**
  * Creates a middleware that provides the integration in the context that is of the specified kinds
  * @param action query for showing data or interact for mutating data
- * @param kinds kinds of integrations that are supported, as kinds and/or array of kinds
+ * @param kinds kinds of integrations that are supported
  * @returns middleware that can be used with trpc
  * @example publicProcedure.unstable_concat(createOneIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration was not found
@@ -25,9 +26,8 @@ export type IntegrationAction = "query" | "interact";
  */
 export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
-  ...kindsOrArrayOfKinds: [TKind | TKind[], ...(TKind | TKind[])[]] // Ensure at least one kind is provided, and accept an array of kinds as well
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
-  const kinds = kindsOrArrayOfKinds.flat();
   return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
     const integration = await ctx.db.query.integrations.findFirst({
       where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
@@ -88,7 +88,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
  * Creates a middleware that provides the integrations in the context that are of the specified kinds and have the specified item
  * It also ensures that the user has permission to perform the specified action on the integrations
  * @param action query for showing data or interact for mutating data
- * @param kinds kinds of integrations that are supported, as kinds and/or array of kinds
+ * @param kinds kinds of integrations that are supported
  * @returns middleware that can be used with trpc
  * @example publicProcedure.unstable_concat(createManyIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration was not found
@@ -96,9 +96,8 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
  */
 export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
-  ...kindsOrArrayOfKinds: [TKind | TKind[], ...(TKind | TKind[])[]] // Ensure at least one kind is provided, and accept an array of kinds as well
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
-  const kinds = kindsOrArrayOfKinds.flat();
   return publicProcedure
     .input(z.object({ integrationIds: z.array(z.string()).min(1) }))
     .use(async ({ ctx, input, next }) => {
@@ -155,7 +154,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
  * Creates a middleware that provides the integrations and their items in the context that are of the specified kinds and have the specified item
  * It also ensures that the user has permission to perform the specified action on the integrations
  * @param action query for showing data or interact for mutating data
- * @param kinds kinds of integrations that are supported, as kinds and/or array of kinds
+ * @param kinds kinds of integrations that are supported
  * @returns middleware that can be used with trpc
  * @example publicProcedure.unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration for the item was not found
@@ -163,9 +162,8 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
  */
 export const createManyIntegrationOfOneItemMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
-  ...kindsOrArrayOfKinds: [TKind | TKind[], ...(TKind | TKind[])[]] // Ensure at least one kind is provided, and accept an array of kinds as well
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
-  const kinds = kindsOrArrayOfKinds.flat();
   return publicProcedure
     .input(z.object({ integrationIds: z.array(z.string()).min(1), itemId: z.string() }))
     .use(async ({ ctx, input, next }) => {
