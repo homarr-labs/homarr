@@ -4,7 +4,7 @@ import type { NextAuthConfig } from "next-auth";
 
 import type { Database } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
-import { groupMembers, groupPermissions } from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, users } from "@homarr/db/schema/sqlite";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
 import { env } from "./env.mjs";
@@ -31,10 +31,19 @@ export const getCurrentUserPermissionsAsync = async (db: Database, userId: strin
 
 export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session"> => {
   return async ({ session, user }) => {
+    const additionalProperties = await db.query.users.findFirst({
+      where: eq(users.id, user.id),
+      columns: {
+        colorScheme: true,
+        language: true,
+      },
+    });
+
     return {
       ...session,
       user: {
         ...session.user,
+        ...additionalProperties,
         id: user.id,
         name: user.name,
         permissions: await getCurrentUserPermissionsAsync(db, user.id),

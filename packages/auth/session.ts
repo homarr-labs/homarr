@@ -32,6 +32,7 @@ export const getSessionFromTokenAsync = async (db: Database, token: string | und
           name: true,
           email: true,
           image: true,
+          colorScheme: true,
         },
       },
     },

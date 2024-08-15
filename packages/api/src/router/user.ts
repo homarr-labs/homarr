@@ -300,6 +300,14 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
+  changeColorScheme: protectedProcedure.input(validation.user.changeColorScheme).mutation(async ({ input, ctx }) => {
+    await ctx.db
+      .update(users)
+      .set({
+        colorScheme: input.colorScheme,
+      })
+      .where(eq(users.id, ctx.session.user.id));
+  }),
 });
 
 const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {
