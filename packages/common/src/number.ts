@@ -21,8 +21,11 @@ export const randomInt = (min: number, max: number) => {
 };
 
 /**
- *  Number of bytes to si format. (division by 1024)
- *  Does not accept floats, size in bytes are should be integer.
+ *  Number of bytes to si format. (Division by 1024)
+ *  Does not accept floats, size in bytes should be an integer.
+ *  Will return "NaI" and logs a warning if a float is passed.
+ *  Concat as parameters so it is not added if the returned value is "NaI" or "∞".
+ *  Returns "∞" if the size is too large to be represented in the current format.
  */
 export const humanFileSize = (size: number, concat = ""): string => {
   //64bit limit for Number stops at EiB

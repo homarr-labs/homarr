@@ -10,13 +10,8 @@ import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
-const integrations = getIntegrationKindsByCategory("downloadClient");                                     // @Meierschlumpf
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, "" as (typeof integrations)[number], ...integrations);          // <- lmfao that works
-// createManyIntegrationMiddleware(action, "sabNzbd", "nzbGet", "deluge", "transmission", "qBittorrent"); // <- Normal way
-// createManyIntegrationMiddleware(action, integrations.shift()!, ...integrations);                       // <- Doesn't even work actually
-// createManyIntegrationMiddleware(action, integrations)                                                  // <- What I want
-// createManyIntegrationMiddleware(action, ...integrations)                                               // <- Would also work with me
+  createManyIntegrationMiddleware(action, getIntegrationKindsByCategory("downloadClient"));
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure

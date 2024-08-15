@@ -128,6 +128,9 @@ export const getAllSecretKindOptions = (
 
 export const integrationKinds = objectKeys(integrationDefs);
 
+/**
+ * Directly get the types of the list returned by getIntegrationKindsByCategory
+ */
 export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
   [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number]
     ? Key
@@ -137,6 +140,11 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
   ? U
   : never;
 
+/**
+ * Get all integration kinds that share a category, typed only by the kinds belonging to the category
+ * @param category Category to filter by, belonging to IntegrationCategory
+ * @returns Partial list of integration kinds
+ */
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
   return integrationKinds.filter((integration) =>
     integrationDefs[integration].category.some((defCategory) => defCategory === category),
