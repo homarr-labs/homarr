@@ -6,7 +6,6 @@ import {
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
-  IconPackageImport,
   IconPencil,
   IconPencilOff,
   IconPlus,
@@ -95,7 +94,6 @@ const AddMenu = () => {
         <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectItem}>
           {t("item.action.create")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconPackageImport size={20} />}>{t("item.action.import")}</Menu.Item>
 
         <Menu.Divider />
 
