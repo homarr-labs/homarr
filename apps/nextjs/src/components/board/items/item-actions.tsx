@@ -57,7 +57,7 @@ export const useItemActions = () => {
       updateBoard((previous) => {
         const lastSection = previous.sections
           .filter((section): section is EmptySection => section.kind === "empty")
-          .sort((sectionA, sectionB) => sectionB.position - sectionA.position)[0];
+          .sort((sectionA, sectionB) => sectionB.yOffset - sectionA.yOffset)[0];
 
         if (!lastSection) return previous;
 

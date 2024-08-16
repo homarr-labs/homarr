@@ -58,6 +58,10 @@ export default {
             message: "Your login failed",
           },
         },
+        forgotPassword: {
+          label: "Forgotten your password?",
+          description: "An administrator can use the following command to reset your password:",
+        },
       },
       register: {
         label: "Create account",
@@ -634,6 +638,17 @@ export default {
     mantineReactTable: MRT_Localization_EN,
   },
   section: {
+    dynamic: {
+      action: {
+        create: "New dynamic section",
+        remove: "Remove dynamic section",
+      },
+      remove: {
+        title: "Remove dynamic section",
+        message:
+          "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section.",
+      },
+    },
     category: {
       field: {
         name: {
@@ -674,7 +689,7 @@ export default {
       create: "New item",
       import: "Import item",
       edit: "Edit item",
-      move: "Move item",
+      moveResize: "Move / resize item",
       duplicate: "Duplicate item",
       remove: "Remove item",
     },
@@ -687,13 +702,20 @@ export default {
       title: "Choose item to add",
       addToBoard: "Add to board",
     },
-    move: {
+    moveResize: {
+      title: "Move / resize item",
       field: {
         width: {
           label: "Width",
         },
         height: {
           label: "Height",
+        },
+        xOffset: {
+          label: "X offset",
+        },
+        yOffset: {
+          label: "Y offset",
         },
       },
     },
