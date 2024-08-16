@@ -30,6 +30,13 @@ export default {
       },
       password: {
         label: "Password",
+        requirement: {
+          length: "Includes at least 8 characters",
+          lowercase: "Includes lowercase letter",
+          uppercase: "Includes uppercase letter",
+          number: "Includes number",
+          special: "Includes special symbol",
+        },
       },
       passwordConfirm: {
         label: "Confirm password",
@@ -631,6 +638,7 @@ export default {
         },
         custom: {
           passwordsDoNotMatch: "Passwords do not match",
+          passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
         },
       },

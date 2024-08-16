@@ -1,9 +1,35 @@
 import { z } from "zod";
 
+import type { TranslationObject } from "@homarr/translation";
+
 import { createCustomErrorParams } from "./form/i18n";
 
 const usernameSchema = z.string().min(3).max(255);
-const passwordSchema = z.string().min(8).max(255);
+
+const regexCheck = (regex: RegExp) => (value: string) => regex.test(value);
+export const passwordRequirements = [
+  { check: (value) => value.length >= 8, value: "length" },
+  { check: regexCheck(/[a-z]/), value: "lowercase" },
+  { check: regexCheck(/[A-Z]/), value: "uppercase" },
+  { check: regexCheck(/\d/), value: "number" },
+  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!-]/), value: "special" },
+] satisfies {
+  check: (value: string) => boolean;
+  value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
+}[];
+
+const passwordSchema = z
+  .string()
+  .min(8)
+  .max(255)
+  .refine(
+    (value) => {
+      return passwordRequirements.every((requirement) => requirement.check(value));
+    },
+    {
+      params: createCustomErrorParams("passwordRequirements"),
+    },
+  );
 
 const confirmPasswordRefine = [
   (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
