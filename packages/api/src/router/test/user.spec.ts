@@ -39,8 +39,8 @@ describe("initUser should initialize the first user", () => {
     const actAsync = async () =>
       await caller.initUser({
         username: "test",
-        password: "12345678",
-        confirmPassword: "12345678",
+        password: "123ABCdef+/-",
+        confirmPassword: "123ABCdef+/-",
       });
 
     await expect(actAsync()).rejects.toThrow("User already exists");
@@ -55,8 +55,8 @@ describe("initUser should initialize the first user", () => {
 
     await caller.initUser({
       username: "test",
-      password: "12345678",
-      confirmPassword: "12345678",
+      password: "123ABCdef+/-",
+      confirmPassword: "123ABCdef+/-",
     });
 
     const user = await db.query.users.findFirst({
@@ -78,14 +78,20 @@ describe("initUser should initialize the first user", () => {
     const actAsync = async () =>
       await caller.initUser({
         username: "test",
-        password: "12345678",
-        confirmPassword: "12345679",
+        password: "123ABCdef+/-",
+        confirmPassword: "456ABCdef+/-",
       });
 
     await expect(actAsync()).rejects.toThrow("passwordsDoNotMatch");
   });
 
-  it("should not create a user if the password is too short", async () => {
+  it.each([
+    ["aB2%"], // too short
+    ["abc123DEF"], // does not contain special characters
+    ["abcDEFghi+"], // does not contain numbers
+    ["ABC123+/-"], // does not contain lowercase
+    ["abc123+/-"], // does not contain uppercase
+  ])("should throw error that password requirements do not match for '%s' as password", async (password) => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
@@ -95,11 +101,11 @@ describe("initUser should initialize the first user", () => {
     const actAsync = async () =>
       await caller.initUser({
         username: "test",
-        password: "1234567",
-        confirmPassword: "1234567",
+        password,
+        confirmPassword: password,
       });
 
-    await expect(actAsync()).rejects.toThrow("too_small");
+    await expect(actAsync()).rejects.toThrow("passwordRequirements");
   });
 });
 
@@ -133,8 +139,8 @@ describe("register should create a user with valid invitation", () => {
       inviteId,
       token: inviteToken,
       username: "test",
-      password: "12345678",
-      confirmPassword: "12345678",
+      password: "123ABCdef+/-",
+      confirmPassword: "123ABCdef+/-",
     });
 
     // Assert
@@ -189,8 +195,8 @@ describe("register should create a user with valid invitation", () => {
           inviteId,
           token: inviteToken,
           username: "test",
-          password: "12345678",
-          confirmPassword: "12345678",
+          password: "123ABCdef+/-",
+          confirmPassword: "123ABCdef+/-",
           ...partialInput,
         });
 
