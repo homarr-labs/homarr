@@ -1,1 +1,1 @@
-ALTER TABLE `user` ADD `colorScheme` text DEFAULT 'auto' NOT NULL;--> statement-breakpoint
+ALTER TABLE `user` ADD `colorScheme` text DEFAULT 'auto' NOT NULL;
