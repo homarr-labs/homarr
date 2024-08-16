@@ -20,6 +20,7 @@ const createSession = (user: Partial<Session["user"]>): Session => ({
   user: {
     id: "1",
     permissions: [],
+    colorScheme: "light",
     ...user,
   },
   expires: new Date().toISOString(),
