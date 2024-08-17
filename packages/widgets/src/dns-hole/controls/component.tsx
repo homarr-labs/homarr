@@ -124,6 +124,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
       <Stack gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
         {data.map((integrationData) => (
           <ControlsCard
+            key={integrationData.integrationId}
             integrationId={integrationData.integrationId}
             integrationKind={integrationData.integrationKind}
             toggleDns={toggleDns}
