@@ -78,7 +78,7 @@ export class ProwlarrIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api/v1/indexer`, {
+        return await fetch(`${this.integration.url}/api`, {
           headers: {
             "X-Api-Key": apiKey,
           },
