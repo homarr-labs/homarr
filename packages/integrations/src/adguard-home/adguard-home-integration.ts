@@ -123,8 +123,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     }
   }
 
-  public async disableAsync(duration?: number): Promise<void> {
-    duration = duration ? duration * 1000 : 0;
+  public async disableAsync(duration = 0): Promise<void> {
     const response = await fetch(`${this.integration.url}/control/protection`, {
       method: "POST",
       headers: {
@@ -133,7 +132,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       },
       body: JSON.stringify({
         enabled: false,
-        duration: duration,
+        duration: duration * 1000,
       }),
     });
     if (!response.ok) {

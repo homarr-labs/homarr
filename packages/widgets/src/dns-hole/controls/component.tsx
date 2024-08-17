@@ -68,8 +68,10 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
     }
   };
 
-  const allEnabled = status.every((item) => item.enabled);
-  const allDisabled = status.every((item) => !item.enabled);
+  const enabledIntegrations = integrationIds.filter((id) => status.find((item) => item.integrationId === id)?.enabled);
+  const disabledIntegrations = integrationIds.filter(
+    (id) => !status.find((item) => item.integrationId === id)?.enabled,
+  );
 
   return (
     <Flex h="100%" direction="column" gap={0} p="2.5cqmin">
@@ -77,10 +79,8 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
         <Flex gap="2.5cqmin">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
-              onClick={() => {
-                integrationIds.forEach((integrationId) => enableDns({ integrationId }));
-              }}
-              disabled={allEnabled}
+              onClick={() => disabledIntegrations.forEach((integrationId) => enableDns({ integrationId }))}
+              disabled={disabledIntegrations.length === 0}
               variant="light"
               color="green"
               fullWidth
@@ -93,10 +93,10 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
             <Button
               onClick={() => {
-                setSelectedIntegrationIds(integrationIds);
+                setSelectedIntegrationIds(enabledIntegrations);
                 open();
               }}
-              disabled={allDisabled}
+              disabled={enabledIntegrations.length === 0}
               variant="light"
               color="yellow"
               fullWidth
@@ -108,10 +108,8 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
 
           <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
             <Button
-              onClick={() => {
-                integrationIds.forEach((integrationId) => disableDns({ integrationId, duration: 0 }));
-              }}
-              disabled={allDisabled}
+              onClick={() => enabledIntegrations.forEach((integrationId) => disableDns({ integrationId, duration: 0 }))}
+              disabled={enabledIntegrations.length === 0}
               variant="light"
               color="red"
               fullWidth
@@ -152,7 +150,7 @@ const ControlsCard = (
   integrationKind: string,
   toggleDns: (integrationId: string) => void,
   status: { integrationId: string; enabled: boolean }[],
-  setSelectedIntegration: (integrationId: string[]) => void,
+  setSelectedIntegrationIds: (integrationId: string[]) => void,
   open: () => void,
   t: TranslationFunction,
 ) => {
@@ -181,7 +179,7 @@ const ControlsCard = (
               top="2.67px"
               variant="default"
               onClick={() => {
-                setSelectedIntegration([integrationId]);
+                setSelectedIntegrationIds([integrationId]);
                 open();
               }}
             >
