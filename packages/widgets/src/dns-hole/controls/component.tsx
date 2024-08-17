@@ -122,17 +122,17 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
       )}
 
       <Stack gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
-        {data.map((integrationData) =>
-          ControlsCard(
-            integrationData.integrationId,
-            integrationData.integrationKind,
-            toggleDns,
-            status,
-            setSelectedIntegrationIds,
-            open,
-            t,
-          ),
-        )}
+        {data.map((integrationData) => (
+          <ControlsCard
+            integrationId={integrationData.integrationId}
+            integrationKind={integrationData.integrationKind}
+            toggleDns={toggleDns}
+            status={status}
+            setSelectedIntegrationIds={setSelectedIntegrationIds}
+            open={open}
+            t={t}
+          />
+        ))}
       </Stack>
 
       <TimerModal
@@ -145,15 +145,25 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   );
 }
 
-const ControlsCard = (
-  integrationId: string,
-  integrationKind: string,
-  toggleDns: (integrationId: string) => void,
-  status: { integrationId: string; enabled: boolean }[],
-  setSelectedIntegrationIds: (integrationId: string[]) => void,
-  open: () => void,
-  t: TranslationFunction,
-) => {
+interface ControlsCardProps {
+  integrationId: string;
+  integrationKind: string;
+  toggleDns: (integrationId: string) => void;
+  status: { integrationId: string; enabled: boolean }[];
+  setSelectedIntegrationIds: (integrationId: string[]) => void;
+  open: () => void;
+  t: TranslationFunction;
+}
+
+const ControlsCard: React.FC<ControlsCardProps> = ({
+  integrationId,
+  integrationKind,
+  toggleDns,
+  status,
+  setSelectedIntegrationIds,
+  open,
+  t,
+}) => {
   const integrationStatus = status.find((item) => item.integrationId === integrationId);
   const isEnabled = integrationStatus?.enabled ?? false;
   const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
