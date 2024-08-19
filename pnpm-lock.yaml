@@ -16,10 +16,10 @@ importers:
         version: 2.0.14(@types/node@20.16.1)(typescript@5.5.4)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
+        version: 4.3.1(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       '@vitest/coverage-v8':
         specifier: ^2.0.5
-        version: 2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
+        version: 2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       '@vitest/ui':
         specifier: ^2.0.5
         version: 2.0.5(vitest@2.0.5)
@@ -43,10 +43,10 @@ importers:
         version: 5.5.4
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.5.4)(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))
+        version: 5.0.1(typescript@5.5.4)(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       vitest:
         specifier: ^2.0.5
-        version: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+        version: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
 
   apps/nextjs:
     dependencies:
@@ -411,8 +411,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../server-settings
       '@umami/node':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.0
+        version: 0.4.0
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -2958,8 +2958,8 @@ packages:
     resolution: {integrity: sha512-sbgsPMW9yLvS7IhCi8IpuK1oBmtbWUNP+hBdwl/I9nzqVsszGnNGti5r9dUtF5RLivHUFFIdRvLiTsPhzSyJ3Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@umami/node@0.3.0':
-    resolution: {integrity: sha512-+1cZ7o7jVN8oXDYZRqigfLHrWbEv5vtGWjB7blfVH1QUa+DRmWB6GfhMZtE2aSW+P9ACal8ZW7xD2PCAejlNCQ==}
+  '@umami/node@0.4.0':
+    resolution: {integrity: sha512-pyphprbiF7KiDSc+SWZ4/rVM8B5vU27zIiFfEPj2lEqczpI4xAKSp+dM3tlzyRAWJL32fcbCfAaLGhJZQV13Rg==}
 
   '@videojs/http-streaming@3.13.2':
     resolution: {integrity: sha512-eCfQp61w00hg7Y9npmLnsJ6UvDF+SsFYzu7mQJgVXxWpVm9AthYWA3KQEKA7F7Sy6yzlm/Sps8BHs5ItelNZgQ==}
@@ -8038,7 +8038,7 @@ snapshots:
       '@typescript-eslint/types': 8.2.0
       eslint-visitor-keys: 3.4.3
 
-  '@umami/node@0.3.0': {}
+  '@umami/node@0.4.0': {}
 
   '@videojs/http-streaming@3.13.2(video.js@8.17.3)':
     dependencies:
@@ -8069,18 +8069,18 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.3.1(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))':
+  '@vitejs/plugin-react@4.3.1(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))':
     dependencies:
       '@babel/core': 7.24.6
       '@babel/plugin-transform-react-jsx-self': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-transform-react-jsx-source': 7.24.6(@babel/core@7.24.6)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0))':
+  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -8094,7 +8094,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -8133,7 +8133,7 @@ snapshots:
       pathe: 1.1.2
       sirv: 2.0.4
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
 
   '@vitest/utils@2.0.5':
     dependencies:
@@ -12113,13 +12113,13 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@2.0.5(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0):
+  vite-node@2.0.5(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.5
       pathe: 1.1.2
       tinyrainbow: 1.2.0
-      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -12130,18 +12130,18 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@5.0.1(typescript@5.5.4)(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)):
+  vite-tsconfig-paths@5.0.1(typescript@5.5.4)(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)):
     dependencies:
       debug: 4.3.5
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.5.4)
     optionalDependencies:
-      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0):
+  vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -12153,7 +12153,7 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.38)
       terser: 5.31.0
 
-  vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0):
+  vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.5
@@ -12171,8 +12171,8 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
-      vite-node: 2.0.5(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1)(terser@5.31.0)
+      vite: 5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
+      vite-node: 2.0.5(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.16.1
