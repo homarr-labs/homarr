@@ -22,6 +22,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure, useListState, useTimeout } from "@mantine/hooks";
+import type { IconProps } from "@tabler/icons-react";
 import {
   IconAlertTriangle,
   IconCirclesRelation,
@@ -29,7 +30,6 @@ import {
   IconInfoCircle,
   IconPlayerPause,
   IconPlayerPlay,
-  IconProps,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
@@ -240,7 +240,7 @@ export default function DownloadClientsWidget({
                 totalDown: totalDown + size * progress,
               }),
               { totalDown: 0, totalUp: isTorrent ? 0 : undefined },
-            ) ?? { totalDown: 0, totalUp: isTorrent ? 0 : undefined };
+            );
           return {
             integration,
             status: {
@@ -375,7 +375,7 @@ export default function DownloadClientsWidget({
                     color="red"
                     onClick={() => {
                       close();
-                      actions?.delete({ fromDisk: false });
+                      actions.delete({ fromDisk: false });
                     }}
                   >
                     {t("actions.item.delete.entry")}
@@ -585,7 +585,7 @@ export default function DownloadClientsWidget({
     mantineTableBodyCellProps: ({ cell, row }) => ({
       onClick: () => {
         setClickedIndex(row.index);
-        cell.column.id !== "actions" && open();
+        if (cell.column.id !== "actions") open();
       },
     }),
     onColumnOrderChange: (order) => {
@@ -594,10 +594,7 @@ export default function DownloadClientsWidget({
       setOptions({ newOptions: { columns: columnOrder } });
     },
     initialState: {
-      sorting:
-        options.defaultSort !== undefined
-          ? [{ id: options.defaultSort, desc: options.descendingDefaultSort }]
-          : undefined,
+      sorting: [{ id: options.defaultSort, desc: options.descendingDefaultSort }],
       columnVisibility: {
         actions: false,
         added: false,
@@ -741,12 +738,12 @@ const NormalizedLine = ({
   itemKey: Exclude<keyof ExtendedDownloadClientItem, "integration" | "actions" | "name" | "id">;
   values?: number | string | string[];
 }) => {
-  if (typeof values !== "number" && (values === undefined || values.length === 0)) return null;
   const t = useScopedI18n("widget.downloads.items");
   const tCommon = useScopedI18n("common");
   const translatedKey = t(`${itemKey}.detailsTitle`);
   const isLangRtl = tCommon("rtl", { value: "0", symbol: "1" }).startsWith("1"); //Maybe make a common "isLangRtl" somewhere
   const keyString = tCommon("rtl", { value: translatedKey, symbol: tCommon("symbols.colon") });
+  if (typeof values !== "number" && (values === undefined || values.length === 0)) return null;
   return (
     <Group
       w="100%"
@@ -776,15 +773,11 @@ interface ClientsControlProps {
 }
 
 const ClientsControl = ({ clients, style }: ClientsControlProps) => {
-  const pausedIntegrations: string[] = [];
-  const activeIntegrations: string[] = [];
-  clients.forEach((client) => {
-    //Don't try to interact with unresponsive integrations
-    if (!client.status) return;
-    client.status.paused
-      ? pausedIntegrations.push(client.integration.id)
-      : activeIntegrations.push(client.integration.id);
-  });
+  const integrationsStatuses = clients.reduce(
+    (acc, { status, integration }) =>
+      status ? (acc[status.paused ? "paused" : "active"].push(integration.id), acc) : acc,
+    { paused: [] as string[], active: [] as string[] },
+  );
   const totalSpeed = humanFileSize(
     clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0),
     "/s",
@@ -809,9 +802,9 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
         <ActionIcon
           size="var(--button-size)"
           radius={999}
-          disabled={pausedIntegrations.length === 0}
+          disabled={integrationsStatuses.paused.length === 0}
           variant="light"
-          onClick={() => mutateResumeQueue({ integrationIds: pausedIntegrations })}
+          onClick={() => mutateResumeQueue({ integrationIds: integrationsStatuses.paused })}
         >
           <IconPlayerPlay style={actionIconIconStyle} />
         </ActionIcon>
@@ -832,9 +825,9 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
         <ActionIcon
           size="var(--button-size)"
           radius={999}
-          disabled={activeIntegrations.length === 0}
+          disabled={integrationsStatuses.active.length === 0}
           variant="light"
-          onClick={() => mutatePauseQueue({ integrationIds: activeIntegrations })}
+          onClick={() => mutatePauseQueue({ integrationIds: integrationsStatuses.active })}
         >
           <IconPlayerPause style={actionIconIconStyle} />
         </ActionIcon>
