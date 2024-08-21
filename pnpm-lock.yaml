@@ -813,8 +813,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       better-sqlite3:
-        specifier: ^11.1.2
-        version: 11.1.2
+        specifier: ^11.2.0
+        version: 11.2.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -823,7 +823,7 @@ importers:
         version: 0.24.0
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.4)(better-sqlite3@11.1.2)(mysql2@3.11.0)(react@18.3.1)
+        version: 0.33.0(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.4)(better-sqlite3@11.2.0)(mysql2@3.11.0)(react@18.3.1)
       mysql2:
         specifier: 3.11.0
         version: 3.11.0
@@ -3325,8 +3325,8 @@ packages:
     resolution: {integrity: sha512-Wjss+Bc674ZABPr+SCKWTqA4V1pyYFhzDTjNBJy4jdmgOv0oGIGXeKBRJyINwP5tIy+iIZD9SfgZpztduzQ5QA==}
     engines: {node: '>= 18.4'}
 
-  better-sqlite3@11.1.2:
-    resolution: {integrity: sha512-gujtFwavWU4MSPT+h9B+4pkvZdyOUkH54zgLdIrMmmmd4ZqiBIrRNBzNzYVFO417xo882uP5HBu4GjOfaSrIQw==}
+  better-sqlite3@11.2.0:
+    resolution: {integrity: sha512-3Dz8d4CoIf0aa8hLnGRVoLicHEp6Js5LRxXHNmOaUhOM8WLbnNkGdzc2soEwR3YFap49s0k4u5JFNaRbW2BYQw==}
 
   big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
@@ -8549,7 +8549,7 @@ snapshots:
 
   bellajs@11.2.0: {}
 
-  better-sqlite3@11.1.2:
+  better-sqlite3@11.2.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.1
@@ -9059,12 +9059,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.4)(better-sqlite3@11.1.2)(mysql2@3.11.0)(react@18.3.1):
+  drizzle-orm@0.33.0(@prisma/client@5.16.1)(@types/better-sqlite3@7.6.11)(@types/react@18.3.4)(better-sqlite3@11.2.0)(mysql2@3.11.0)(react@18.3.1):
     optionalDependencies:
       '@prisma/client': 5.16.1
       '@types/better-sqlite3': 7.6.11
       '@types/react': 18.3.4
-      better-sqlite3: 11.1.2
+      better-sqlite3: 11.2.0
       mysql2: 3.11.0
       react: 18.3.1
 
