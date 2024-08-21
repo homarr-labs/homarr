@@ -31,7 +31,7 @@ function useColorSchemeManager(): MantineColorSchemeManager {
   const [sessionColorScheme, setSessionColorScheme] = useState<MantineColorScheme | undefined>(
     session?.user.colorScheme,
   );
-  const { mutate } = clientApi.user.changeColorScheme.useMutation({
+  const { mutate: mutateColorScheme } = clientApi.user.changeColorScheme.useMutation({
     onSuccess: (_, variables) => {
       setSessionColorScheme(variables.colorScheme);
     },
@@ -59,7 +59,7 @@ function useColorSchemeManager(): MantineColorSchemeManager {
     set: (value) => {
       try {
         if (session) {
-          mutate({ colorScheme: value });
+          mutateColorScheme({ colorScheme: value });
         }
         window.localStorage.setItem(key, value);
       } catch (error) {
