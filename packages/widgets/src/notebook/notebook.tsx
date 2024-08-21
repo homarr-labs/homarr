@@ -15,7 +15,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { getHotkeyHandler, useDisclosure } from "@mantine/hooks";
 import { Link, RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
 import {
   IconCheck,
@@ -231,6 +231,7 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
         p={0}
         mt={0}
         h="100%"
+        onKeyDown={isEditing ? getHotkeyHandler([["mod+s", handleEditToggle]]) : undefined}
         editor={editor}
         styles={(theme) => ({
           root: {

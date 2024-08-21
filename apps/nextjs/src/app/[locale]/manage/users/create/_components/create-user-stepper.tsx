@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { UserAvatar } from "@homarr/ui";
+import { CustomPasswordInput, UserAvatar } from "@homarr/ui";
 import { validation, z } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
@@ -124,7 +124,8 @@ export const UserCreateStepperComponent = () => {
           <form>
             <Card p="xl">
               <Stack gap="md">
-                <PasswordInput
+                <CustomPasswordInput
+                  withPasswordRequirements
                   label={tUserField("password.label")}
                   variant="filled"
                   withAsterisk

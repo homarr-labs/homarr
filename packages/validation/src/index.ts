@@ -25,3 +25,4 @@ export {
   type BoardItemIntegration,
   type BoardItemAdvancedOptions,
 } from "./shared";
+export { passwordRequirements } from "./user";
