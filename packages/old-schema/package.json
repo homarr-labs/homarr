@@ -1,11 +1,10 @@
 {
-  "name": "@homarr/validation",
+  "name": "@homarr/old-schema",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./form": "./src/form/i18n.ts"
+    ".": "./index.ts"
   },
   "typesVersions": {
     "*": {
@@ -22,16 +21,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/translation": "workspace:^0.1.0",
-    "zod": "^3.23.8",
-    "zod-form-data": "^2.0.2"
+    "@homarr/log": "workspace:^0.1.0",
+    "superjson": "2.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.9.0",
+    "eslint": "^9.8.0",
     "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"

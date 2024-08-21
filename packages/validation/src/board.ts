@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 import {
   backgroundImageAttachments,
@@ -67,6 +68,14 @@ const permissionsSchema = z.object({
   id: z.string(),
 });
 
+const importJsonFileSchema = zfd.formData({
+  file: zfd
+    .file()
+    .refine((file) => file.type === "application/json", { message: "Invalid file type" })
+    .refine((file) => file.size < 1024 * 1024, { message: "File is too large" })
+    .refine((file) => file.size > 0, { message: "File is empty" }),
+});
+
 const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
 
 z.object({
@@ -88,4 +97,5 @@ export const boardSchemas = {
   changeVisibility: changeVisibilitySchema,
   permissions: permissionsSchema,
   savePermissions: savePermissionsSchema,
+  importOldmarrConfig: importJsonFileSchema,
 };
