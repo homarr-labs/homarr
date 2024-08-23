@@ -1,9 +1,9 @@
-import { MantineTheme } from "@mantine/core";
-import { Property } from "csstype";
+import type { MantineTheme } from "@mantine/core";
+import type { Property } from "csstype";
 
-import { OldmarrWidgetKinds as OldmarrWidgetKind } from "./widgets/definitions/common";
+import type { OldmarrWidgetKinds as OldmarrWidgetKind } from "./widgets/definitions/common";
 
-export type OldmarrConfig = {
+export interface OldmarrConfig {
   schemaVersion: number;
   configProperties: {
     name: string;
@@ -13,7 +13,7 @@ export type OldmarrConfig = {
   apps: OldmarrApp[];
   widgets: OldmarrWidget[];
   settings: SettingsType;
-};
+}
 
 interface CategoryType {
   id: string;
@@ -81,17 +81,17 @@ type IntegrationType =
   | "proxmox"
   | "tdarr";
 
-type AppIntegrationType = {
+interface AppIntegrationType {
   type: IntegrationType | null;
   properties: AppIntegrationPropertyType[];
-};
+}
 
-type AppIntegrationPropertyType = {
+interface AppIntegrationPropertyType {
   type: AppIntegrationPropertyAccessabilityType;
   field: IntegrationField;
   value?: string | null;
   isDefined: boolean;
-};
+}
 
 type AppIntegrationPropertyAccessabilityType = "private" | "public";
 
@@ -126,7 +126,7 @@ interface SidebarAreaType {
 }
 
 interface ShapeType {
-  lg?: SizedShapeType;
+  lg: SizedShapeType;
   md?: SizedShapeType;
   sm?: SizedShapeType;
 }
@@ -142,13 +142,13 @@ interface SizedShapeType {
   };
 }
 
-export type OldmarrWidget = {
+export interface OldmarrWidget {
   id: string;
   type: OldmarrWidgetKind;
   properties: Record<string, unknown>;
   area: AreaType;
   shape: ShapeType;
-};
+}
 
 interface SettingsType {
   common: CommonSettingsType;
@@ -193,21 +193,15 @@ interface CustomizationSettingsType {
   logoImageUrl?: string;
   faviconUrl?: string;
   backgroundImageUrl?: string;
-  backgroundImageAttachment?: (typeof BackgroundImageAttachment)[number];
-  backgroundImageSize?: (typeof BackgroundImageSize)[number];
-  backgroundImageRepeat?: (typeof BackgroundImageRepeat)[number];
+  backgroundImageAttachment?: "fixed" | "scroll";
+  backgroundImageSize?: "cover" | "contain";
+  backgroundImageRepeat?: "no-repeat" | "repeat" | "repeat-x" | "repeat-y";
   customCss?: string;
   colors: ColorsCustomizationSettingsType;
   appOpacity?: number;
   gridstack?: GridstackSettingsType;
   accessibility: AccessibilitySettings;
 }
-
-const BackgroundImageAttachment = ["fixed", "scroll"] as const;
-
-const BackgroundImageSize = ["cover", "contain"] as const;
-
-const BackgroundImageRepeat = ["no-repeat", "repeat", "repeat-x", "repeat-y"] as const;
 
 interface AccessibilitySettings {
   disablePingPulse: boolean;

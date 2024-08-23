@@ -1,32 +1,28 @@
-import { expectTypeOf } from "vitest";
-
-import { WidgetKind } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 
 import { objectEntries } from "../../../../common/src";
-import { WidgetComponentProps } from "../../../../widgets/src";
-import { OldmarrBookmarkDefinition } from "./bookmark";
-import { OldmarrCalendarDefinition } from "./calendar";
-import { OldmarrWidgetKinds } from "./common";
-import { OldmarrDashdotDefinition } from "./dashdot";
-import { OldmarrDateDefinition } from "./date";
-import { OldmarrDlspeedDefinition } from "./dlspeed";
-import { OldmarrDnsHoleControlsDefinition } from "./dns-hole-controls";
-import { OldmarrDnsHoleSummaryDefinition } from "./dns-hole-summary";
-import { OldmarrHealthMonitoringDefinition } from "./health-monitoring";
-import { OldmarrIframeDefinition } from "./iframe";
-import { OldmarrIndexerManagerDefinition } from "./indexer-manager";
-import { OldmarrMediaRequestListDefinition } from "./media-requests-list";
-import { OldmarrMediaRequestStatsDefinition } from "./media-requests-stats";
-import { OldmarrMediaServerDefinition } from "./media-server";
-import { OldmarrMediaTranscodingDefinition } from "./media-transcoding";
-import { OldmarrNotebookDefinition } from "./notebook";
-import { OldmarrRssDefinition } from "./rss";
-import { OldmarrSmartHomeEntityStateDefinition } from "./smart-home-entity-state";
-import { OldmarrSmartHomeTriggerAutomationDefinition } from "./smart-home-trigger-automation";
-import { OldmarrTorrentStatusDefinition } from "./torrent-status";
-import { OldmarrUsenetDefinition } from "./usenet";
-import { OldmarrVideoStreamDefinition } from "./video-stream";
-import { OldmarrWeatherDefinition } from "./weather";
+import type { OldmarrBookmarkDefinition } from "./bookmark";
+import type { OldmarrCalendarDefinition } from "./calendar";
+import type { OldmarrDashdotDefinition } from "./dashdot";
+import type { OldmarrDateDefinition } from "./date";
+import type { OldmarrDlspeedDefinition } from "./dlspeed";
+import type { OldmarrDnsHoleControlsDefinition } from "./dns-hole-controls";
+import type { OldmarrDnsHoleSummaryDefinition } from "./dns-hole-summary";
+import type { OldmarrHealthMonitoringDefinition } from "./health-monitoring";
+import type { OldmarrIframeDefinition } from "./iframe";
+import type { OldmarrIndexerManagerDefinition } from "./indexer-manager";
+import type { OldmarrMediaRequestListDefinition } from "./media-requests-list";
+import type { OldmarrMediaRequestStatsDefinition } from "./media-requests-stats";
+import type { OldmarrMediaServerDefinition } from "./media-server";
+import type { OldmarrMediaTranscodingDefinition } from "./media-transcoding";
+import type { OldmarrNotebookDefinition } from "./notebook";
+import type { OldmarrRssDefinition } from "./rss";
+import type { OldmarrSmartHomeEntityStateDefinition } from "./smart-home-entity-state";
+import type { OldmarrSmartHomeTriggerAutomationDefinition } from "./smart-home-trigger-automation";
+import type { OldmarrTorrentStatusDefinition } from "./torrent-status";
+import type { OldmarrUsenetDefinition } from "./usenet";
+import type { OldmarrVideoStreamDefinition } from "./video-stream";
+import type { OldmarrWeatherDefinition } from "./weather";
 
 export type OldmarrWidgetDefinitions =
   | OldmarrWeatherDefinition
@@ -73,5 +69,5 @@ export const widgetKindMapping = {
 
 export type WidgetMapping = typeof widgetKindMapping;
 
-export const mapKind = (kind: OldmarrWidgetDefinitions["id"]): WidgetKind =>
-  objectEntries(widgetKindMapping).find(([_, value]) => value === kind)![0];
+export const mapKind = (kind: OldmarrWidgetDefinitions["id"]): WidgetKind | undefined =>
+  objectEntries(widgetKindMapping).find(([_, value]) => value === kind)?.[0];

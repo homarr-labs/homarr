@@ -1,8 +1,9 @@
 import { objectEntries } from "@homarr/common";
-import { WidgetKind } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 
-import { WidgetComponentProps } from "../../../widgets/src/definition";
-import { OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
+import type { WidgetComponentProps } from "../../../widgets/src/definition";
+import type { OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
 
 // This type enforces, taht for all widget mappings there is a corresponding option mapping,
 // each option of newmarr can be mapped from the value of the oldmarr options
@@ -96,6 +97,7 @@ export const mapOptions = <K extends WidgetKind>(
   kind: K,
   oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[K] }>["options"],
 ) => {
+  logger.info(`Mapping options for widget ${kind}, ${JSON.stringify(oldOptions)}`);
   if (optionMapping[kind] === null) {
     return null;
   }
@@ -104,6 +106,7 @@ export const mapOptions = <K extends WidgetKind>(
   return objectEntries(mapping).reduce(
     (acc, [key, value]) => {
       const newValue = value(oldOptions as never);
+      logger.info(`Mapping option ${key as string} for widget ${kind}, new=${newValue as string}`);
       if (newValue !== undefined) {
         acc[key as string] = newValue;
       }
