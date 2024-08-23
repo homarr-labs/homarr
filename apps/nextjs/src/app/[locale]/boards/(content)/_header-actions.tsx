@@ -2,11 +2,11 @@
 
 import { useCallback } from "react";
 import { Group, Menu } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
 import {
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
-  IconPackageImport,
   IconPencil,
   IconPencilOff,
   IconPlus,
@@ -95,7 +95,6 @@ const AddMenu = () => {
         <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectItem}>
           {t("item.action.create")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconPackageImport size={20} />}>{t("item.action.import")}</Menu.Item>
 
         <Menu.Divider />
 
@@ -138,6 +137,8 @@ const EditModeMenu = () => {
     if (isEditMode) return saveBoard(board);
     setEditMode(true);
   }, [board, isEditMode, saveBoard, setEditMode]);
+
+  useHotkeys([["mod+e", toggle]]);
 
   return (
     <HeaderButton onClick={toggle} loading={isPending}>

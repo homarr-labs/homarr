@@ -7,6 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import { CustomPasswordInput } from "@homarr/ui";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
@@ -64,7 +65,8 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="lg">
           <TextInput label={t("field.username.label")} autoComplete="off" {...form.getInputProps("username")} />
-          <PasswordInput
+          <CustomPasswordInput
+            withPasswordRequirements
             label={t("field.password.label")}
             autoComplete="new-password"
             {...form.getInputProps("password")}

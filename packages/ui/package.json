@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@homarr/log": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@mantine/core": "^7.12.1",
@@ -31,7 +32,7 @@
     "@mantine/hooks": "^7.12.1",
     "@tabler/icons-react": "^3.12.0",
     "mantine-react-table": "2.0.0-beta.6",
-    "next": "^14.2.5",
+    "next": "^14.2.6",
     "react": "^18.3.1"
   },
   "devDependencies": {

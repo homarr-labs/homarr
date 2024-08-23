@@ -5,7 +5,7 @@ import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
-import { useTimeout } from "@mantine/hooks";
+import { useHotkeys, useTimeout } from "@mantine/hooks";
 import {
   IconCheck,
   IconHome,
@@ -33,6 +33,7 @@ interface UserAvatarMenuProps {
 export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  useHotkeys([["mod+J", toggleColorScheme]]);
 
   const ColorSchemeIcon = colorScheme === "dark" ? IconSun : IconMoon;
 
