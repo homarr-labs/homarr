@@ -1,4 +1,4 @@
-FROM node:20.16.0-alpine AS base
+FROM node:20.17.0-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -12,6 +12,7 @@ RUN turbo prune @homarr/nextjs --docker --out-dir ./next-out
 RUN turbo prune @homarr/tasks --docker --out-dir ./tasks-out
 RUN turbo prune @homarr/websocket --docker --out-dir ./websocket-out
 RUN turbo prune @homarr/db --docker --out-dir ./migration-out
+RUN turbo prune @homarr/cli --docker --out-dir ./cli-out
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -34,6 +35,10 @@ COPY --from=builder /app/migration-out/json/ .
 COPY --from=builder /app/migration-out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN corepack enable pnpm && pnpm install
 
+COPY --from=builder /app/cli-out/json/ .
+COPY --from=builder /app/cli-out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN corepack enable pnpm && pnpm install
+
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/next-out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN corepack enable pnpm && pnpm install
@@ -45,6 +50,7 @@ COPY --from=builder /app/tasks-out/full/ .
 COPY --from=builder /app/websocket-out/full/ .
 COPY --from=builder /app/next-out/full/ .
 COPY --from=builder /app/migration-out/full/ .
+COPY --from=builder /app/cli-out/full/ .
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
@@ -55,15 +61,23 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-RUN apk add --no-cache redis
+RUN apk add --no-cache redis bash
 RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
 VOLUME /appdata
 
-# Don't run production as root
+
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# Enable homarr cli
+COPY --from=installer --chown=nextjs:nodejs /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
+RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
+RUN chmod +x /usr/bin/homarr
+
+# Don't run production as root
 RUN chown -R nextjs:nodejs /appdata
 USER nextjs
 

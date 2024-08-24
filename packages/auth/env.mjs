@@ -23,6 +23,29 @@ const authProvidersSchema = z
   )
   .default("credentials");
 
+const createDurationSchema = (defaultValue) =>
+  z
+    .string()
+    .regex(/^\d+[smhd]?$/)
+    .default(defaultValue)
+    .transform((duration) => {
+      const lastChar = duration[duration.length - 1];
+      if (!isNaN(Number(lastChar))) {
+        return Number(defaultValue);
+      }
+
+      const multipliers = {
+        s: 1,
+        m: 60,
+        h: 60 * 60,
+        d: 60 * 60 * 24,
+      };
+      const numberDuration = Number(duration.slice(0, -1));
+      const multiplier = multipliers[lastChar];
+
+      return numberDuration * multiplier;
+    });
+
 const booleanSchema = z
   .string()
   .default("false")
@@ -39,6 +62,8 @@ const authProviders = skipValidation ? [] : authProvidersSchema.parse(process.en
 
 export const env = createEnv({
   server: {
+    AUTH_LOGOUT_REDIRECT_URL: z.string().url().optional(),
+    AUTH_SESSION_EXPIRY_TIME: createDurationSchema("30d"),
     AUTH_SECRET: process.env.NODE_ENV === "production" ? z.string().min(1) : z.string().min(1).optional(),
     AUTH_PROVIDERS: authProvidersSchema,
     ...(authProviders.includes("oidc")
@@ -70,6 +95,8 @@ export const env = createEnv({
   },
   client: {},
   runtimeEnv: {
+    AUTH_LOGOUT_REDIRECT_URL: process.env.AUTH_LOGOUT_REDIRECT_URL,
+    AUTH_SESSION_EXPIRY_TIME: process.env.AUTH_SESSION_EXPIRY_TIME,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_PROVIDERS: process.env.AUTH_PROVIDERS,
     AUTH_LDAP_BASE: process.env.AUTH_LDAP_BASE,

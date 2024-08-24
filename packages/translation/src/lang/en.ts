@@ -30,12 +30,22 @@ export default {
       },
       password: {
         label: "Password",
+        requirement: {
+          length: "Includes at least 8 characters",
+          lowercase: "Includes lowercase letter",
+          uppercase: "Includes uppercase letter",
+          number: "Includes number",
+          special: "Includes special symbol",
+        },
       },
       passwordConfirm: {
         label: "Confirm password",
       },
       previousPassword: {
         label: "Previous password",
+      },
+      homeBoard: {
+        label: "Home board",
       },
     },
     error: {
@@ -54,6 +64,10 @@ export default {
             title: "Login failed",
             message: "Your login failed",
           },
+        },
+        forgotPassword: {
+          label: "Forgotten your password?",
+          description: "An administrator can use the following command to reset your password:",
         },
       },
       register: {
@@ -78,6 +92,16 @@ export default {
           },
           error: {
             message: "Unable to change password",
+          },
+        },
+      },
+      changeHomeBoard: {
+        notification: {
+          success: {
+            message: "Home board changed successfully",
+          },
+          error: {
+            message: "Unable to change home board",
           },
         },
       },
@@ -562,7 +586,7 @@ export default {
     },
     multiText: {
       placeholder: "Add more values",
-      addLabel: `Add {value}`,
+      addLabel: "Add {value}",
     },
     select: {
       placeholder: "Pick value",
@@ -618,6 +642,7 @@ export default {
         },
         custom: {
           passwordsDoNotMatch: "Passwords do not match",
+          passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
         },
       },
@@ -625,6 +650,17 @@ export default {
     mantineReactTable: MRT_Localization_EN,
   },
   section: {
+    dynamic: {
+      action: {
+        create: "New dynamic section",
+        remove: "Remove dynamic section",
+      },
+      remove: {
+        title: "Remove dynamic section",
+        message:
+          "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section.",
+      },
+    },
     category: {
       field: {
         name: {
@@ -665,7 +701,8 @@ export default {
       create: "New item",
       import: "Import item",
       edit: "Edit item",
-      move: "Move item",
+      moveResize: "Move / resize item",
+      duplicate: "Duplicate item",
       remove: "Remove item",
     },
     menu: {
@@ -677,13 +714,20 @@ export default {
       title: "Choose item to add",
       addToBoard: "Add to board",
     },
-    move: {
+    moveResize: {
+      title: "Move / resize item",
       field: {
         width: {
           label: "Width",
         },
         height: {
           label: "Height",
+        },
+        xOffset: {
+          label: "X offset",
+        },
+        yOffset: {
+          label: "Y offset",
         },
       },
     },
@@ -765,6 +809,43 @@ export default {
         adsBlockedTodayPercentage: "Blocked today",
         dnsQueriesToday: "Queries today",
         domainsBeingBlocked: "Domains on blocklist",
+      },
+    },
+    dnsHoleControls: {
+      name: "DNS Hole Controls",
+      description: "Control PiHole or AdGuard from your dashboard",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        showToggleAllButtons: {
+          label: "Show Toggle All Buttons",
+        },
+      },
+      error: {
+        internalServerError: "Failed to control DNS Hole",
+      },
+      controls: {
+        enableAll: "Enable All",
+        disableAll: "Disable All",
+        setTimer: "Set Timer",
+        set: "Set",
+        enabled: "Enabled",
+        disabled: "Disabled",
+        hours: "Hours",
+        minutes: "Minutes",
+        unlimited: "Leave blank to unlimited",
       },
     },
     clock: {
@@ -1211,6 +1292,10 @@ export default {
       name: {
         label: "Name",
       },
+      isPublic: {
+        label: "Public",
+        description: "Public boards are accessible by everyone, even without an account.",
+      },
     },
     content: {
       metaTitle: "{boardName} board",
@@ -1410,9 +1495,16 @@ export default {
         setting: {
           general: {
             title: "General",
+            item: {
+              language: "Language & Region",
+              board: "Home board",
+            },
           },
           security: {
             title: "Security",
+          },
+          board: {
+            title: "Boards",
           },
         },
         list: {
@@ -1670,6 +1762,19 @@ export default {
           },
         },
       },
+      refresh: {
+        label: "Refresh",
+        notification: {
+          success: {
+            title: "Containers refreshed",
+            message: "You are now viewing the most recent data",
+          },
+          error: {
+            title: "Containers not refreshed",
+            message: "Something went wrong while refreshing the containers",
+          },
+        },
+      },
     },
   },
   permission: {
@@ -1732,6 +1837,7 @@ export default {
         },
         general: "General",
         security: "Security",
+        board: "Boards",
         groups: {
           label: "Groups",
         },

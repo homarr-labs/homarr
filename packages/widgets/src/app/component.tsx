@@ -8,6 +8,7 @@ import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
 import { useRegisterSpotlightActions } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -40,7 +41,7 @@ export default function AppWidget({ options, serverData, isEditMode, width }: Wi
 
   const shouldRunPing = Boolean(app?.href) && options.pingEnabled;
   clientApi.widget.app.updatedPing.useSubscription(
-    { url: app?.href ?? "" },
+    { url: parseAppHrefWithVariablesClient(app?.href ?? "") },
     {
       enabled: shouldRunPing,
       onData(data) {
@@ -60,7 +61,7 @@ export default function AppWidget({ options, serverData, isEditMode, width }: Wi
             icon: app.iconUrl,
             group: "app",
             type: "link",
-            href: app.href,
+            href: parseAppHrefWithVariablesClient(app.href),
             openInNewTab: options.openInNewTab,
           },
         ]
@@ -92,7 +93,11 @@ export default function AppWidget({ options, serverData, isEditMode, width }: Wi
   }
 
   return (
-    <AppLink href={app?.href ?? ""} openInNewTab={options.openInNewTab} enabled={Boolean(app?.href) && !isEditMode}>
+    <AppLink
+      href={parseAppHrefWithVariablesClient(app?.href ?? "")}
+      openInNewTab={options.openInNewTab}
+      enabled={Boolean(app?.href) && !isEditMode}
+    >
       <Tooltip.Floating
         label={app?.description}
         position="right-start"

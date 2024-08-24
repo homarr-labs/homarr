@@ -25,10 +25,10 @@ export const PreviewDimensionsModal = createModal<InnerProps>(({ actions, innerP
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <InputWrapper label={t("item.move.field.width.label")}>
+        <InputWrapper label={t("item.moveResize.field.width.label")}>
           <Slider min={64} max={1024} step={64} {...form.getInputProps("width")} />
         </InputWrapper>
-        <InputWrapper label={t("item.move.field.height.label")}>
+        <InputWrapper label={t("item.moveResize.field.height.label")}>
           <Slider min={64} max={1024} step={64} {...form.getInputProps("height")} />
         </InputWrapper>
         <Group justify="end">
