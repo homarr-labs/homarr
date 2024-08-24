@@ -32,4 +32,6 @@ const config = {
 };
 
 // Skip transform is used because of webpack loader, without it for example 'Tooltip.Floating' will not work and show an error
-export default MillionLint.next({ rsc: true, skipTransform: true })(config);
+const withMillionLint = MillionLint.next({ rsc: true, skipTransform: true, telemetry: false });
+
+export default config;
