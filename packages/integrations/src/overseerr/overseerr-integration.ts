@@ -19,6 +19,7 @@ export class OverseerrIntegration extends Integration {
     if (Object.keys(json).includes("id")) {
       return;
     }
+
     throw new Error(`Received response but unable to parse it: ${JSON.stringify(json)}`);
   }
 
@@ -71,7 +72,7 @@ export class OverseerrIntegration extends Integration {
                 displayName: request.requestedBy.displayName,
                 link: `${this.integration.url}/users/${request.requestedBy.id}`,
                 avatar: constructAvatarUrl(this.integration.url, request.requestedBy.avatar),
-              } as RequestUser)
+              } satisfies Omit<RequestUser, "requestCount">)
             : undefined,
         };
       }),
@@ -135,7 +136,7 @@ export class OverseerrIntegration extends Integration {
         backdropPath: series.backdropPath ?? series.posterPath,
         posterPath: series.posterPath ?? series.backdropPath,
         airDate: series.firstAirDate,
-      } as MediaInformation;
+      } satisfies MediaInformation;
     }
 
     const movie = (await response.json()) as MovieInformation;
@@ -144,7 +145,7 @@ export class OverseerrIntegration extends Integration {
       backdropPath: movie.backdropPath ?? movie.posterPath,
       posterPath: movie.posterPath ?? movie.backdropPath,
       airDate: movie.releaseDate,
-    } as MediaInformation;
+    } satisfies MediaInformation;
   }
 }
 

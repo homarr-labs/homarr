@@ -16,13 +16,10 @@ import {
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { MediaAvailability, MediaRequestStatus } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import {
-  MediaAvailability,
-  MediaRequestStatus,
-} from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MediaServerWidget({
@@ -125,7 +122,7 @@ export default function MediaServerWidget({
                     </Text>
                     <Badge
                       className="mediaRequests-list-item-media-status"
-                      color={GetAvailabilityProperties(mediaRequest.availability, t).color}
+                      color={getAvailabilityProperties(mediaRequest.availability, t).color}
                       variant="light"
                       fz="3.5cqmin"
                       lh="4cqmin"
@@ -133,7 +130,7 @@ export default function MediaServerWidget({
                       pt="0.75cqmin"
                       px="2cqmin"
                     >
-                      {GetAvailabilityProperties(mediaRequest.availability, t).label}
+                      {getAvailabilityProperties(mediaRequest.availability, t).label}
                     </Badge>
                   </Group>
                   <Anchor
@@ -214,7 +211,7 @@ export default function MediaServerWidget({
   );
 }
 
-function GetAvailabilityProperties(
+function getAvailabilityProperties(
   mediaRequestAvailability: MediaAvailability,
   t: ScopedTranslationFunction<"widget.mediaRequests-requestList">,
 ) {

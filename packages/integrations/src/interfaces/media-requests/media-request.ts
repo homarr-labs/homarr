@@ -9,7 +9,7 @@ export interface MediaRequest {
   airDate?: Date;
   status: MediaRequestStatus;
   availability: MediaAvailability;
-  requestedBy?: RequestUser;
+  requestedBy?: Omit<RequestUser, "requestCount">;
 }
 
 export interface MediaRequestList {

@@ -1,33 +1,16 @@
 import { decryptSecret } from "@homarr/common";
 import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
-import { db, eq, or } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
+import { db } from "@homarr/db";
+import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 import type { MediaRequestList, MediaRequestStats } from "@homarr/integrations";
-import { JellyseerrIntegration, OverseerrIntegration } from "@homarr/integrations";
-import { logger } from "@homarr/log";
+import { integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 import { createCronJob } from "../../lib";
 
 export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).withCallback(async () => {
-  const itemsForIntegration = await db.query.items.findMany({
-    where: or(eq(items.kind, "mediaRequests-requestList"), eq(items.kind, "mediaRequests-requestStats")),
-    with: {
-      integrations: {
-        with: {
-          integration: {
-            with: {
-              secrets: {
-                columns: {
-                  kind: true,
-                  value: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+  const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {
+    kinds: ["mediaRequests-requestList", "mediaRequests-requestStats"],
   });
 
   for (const itemForIntegration of itemsForIntegration) {
@@ -39,18 +22,8 @@ export const mediaRequestsJob = createCronJob("mediaRequests", EVERY_5_SECONDS).
           value: decryptSecret(secret.value),
         })),
       };
-      let requestsIntegration: OverseerrIntegration;
-      switch (integration.kind) {
-        case "jellyseerr":
-          requestsIntegration = new JellyseerrIntegration(integrationWithSecrets);
-          break;
-        case "overseerr":
-          requestsIntegration = new OverseerrIntegration(integrationWithSecrets);
-          break;
-        default:
-          logger.warn(`Unable to process media requests kind '${integration.kind}'. Skipping this integration`);
-          continue;
-      }
+
+      const requestsIntegration = integrationCreatorByKind(integration.kind, integrationWithSecrets);
 
       const mediaRequests = await requestsIntegration.getRequestsAsync();
       const requestsStats = await requestsIntegration.getStatsAsync();

@@ -68,3 +68,9 @@ export const loadWidgetDynamic = <TKind extends WidgetKind>(kind: TKind) => {
   loadedComponents.set(kind, newlyLoadedComponent as never);
   return newlyLoadedComponent;
 };
+
+export type inferSupportedIntegrations<TKind extends WidgetKind> = (WidgetImports[TKind]["definition"] extends {
+  supportedIntegrations: string[];
+}
+  ? WidgetImports[TKind]["definition"]["supportedIntegrations"]
+  : string[])[number];

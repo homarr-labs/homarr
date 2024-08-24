@@ -1,7 +1,5 @@
-import { TRPCError } from "@trpc/server";
-
 import type { MediaRequestList, MediaRequestStats } from "@homarr/integrations";
-import { JellyseerrIntegration, OverseerrIntegration } from "@homarr/integrations";
+import { integrationCreatorByKind } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
@@ -9,7 +7,7 @@ import {
   createManyIntegrationOfOneItemMiddleware,
   createOneIntegrationMiddleware,
 } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const mediaRequestsRouter = createTRPCRouter({
   getLatestRequests: publicProcedure
@@ -35,24 +33,11 @@ export const mediaRequestsRouter = createTRPCRouter({
         }),
       );
     }),
-  answerRequest: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "overseerr", "jellyseerr"))
+  answerRequest: protectedProcedure
+    .unstable_concat(createOneIntegrationMiddleware("interact", "overseerr", "jellyseerr"))
     .input(z.object({ requestId: z.number(), answer: z.enum(["approve", "decline"]) }))
     .mutation(async ({ ctx, input }) => {
-      let integration: OverseerrIntegration;
-
-      switch (ctx.integration.kind) {
-        case "overseerr":
-          integration = new OverseerrIntegration(ctx.integration);
-          break;
-        case "jellyseerr":
-          integration = new JellyseerrIntegration(ctx.integration);
-          break;
-        default:
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-          });
-      }
+      const integration = integrationCreatorByKind(ctx.integration.kind, ctx.integration);
 
       if (input.answer === "approve") {
         await integration.approveRequestAsync(input.requestId);
