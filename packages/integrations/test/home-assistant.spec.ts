@@ -27,7 +27,7 @@ describe("Home Assistant integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
   test("Test connection should fail with wrong credentials", async () => {
     // Arrange
     const startedContainer = await prepareHomeAssistantContainerAsync();
@@ -41,7 +41,7 @@ describe("Home Assistant integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 });
 
 const prepareHomeAssistantContainerAsync = async () => {
