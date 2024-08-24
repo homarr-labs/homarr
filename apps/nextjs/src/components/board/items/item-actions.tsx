@@ -45,6 +45,10 @@ interface CreateItem {
   kind: WidgetKind;
 }
 
+interface DuplicateItem {
+  itemId: string;
+}
+
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
 
@@ -53,7 +57,7 @@ export const useItemActions = () => {
       updateBoard((previous) => {
         const lastSection = previous.sections
           .filter((section): section is EmptySection => section.kind === "empty")
-          .sort((sectionA, sectionB) => sectionB.position - sectionA.position)[0];
+          .sort((sectionA, sectionB) => sectionB.yOffset - sectionA.yOffset)[0];
 
         if (!lastSection) return previous;
 
@@ -87,10 +91,41 @@ export const useItemActions = () => {
     [updateBoard],
   );
 
+  const duplicateItem = useCallback(
+    ({ itemId }: DuplicateItem) => {
+      updateBoard((previous) => {
+        const itemToDuplicate = previous.sections
+          .flatMap((section) => section.items)
+          .find((item) => item.id === itemId);
+
+        if (!itemToDuplicate) return previous;
+
+        const newItem = {
+          ...itemToDuplicate,
+          id: createId(),
+          yOffset: undefined,
+          xOffset: undefined,
+        } satisfies Omit<Item, "yOffset" | "xOffset"> & { yOffset?: number; xOffset?: number };
+
+        return {
+          ...previous,
+          sections: previous.sections.map((section) => {
+            // Return same section if item is not in it
+            if (!section.items.some((item) => item.id === itemId)) return section;
+            return {
+              ...section,
+              items: section.items.concat(newItem as unknown as Item),
+            };
+          }),
+        };
+      });
+    },
+    [updateBoard],
+  );
+
   const updateItemOptions = useCallback(
     ({ itemId, newOptions }: UpdateItemOptions) => {
       updateBoard((previous) => {
-        if (!previous) return previous;
         return {
           ...previous,
           sections: previous.sections.map((section) => {
@@ -117,7 +152,6 @@ export const useItemActions = () => {
   const updateItemAdvancedOptions = useCallback(
     ({ itemId, newAdvancedOptions }: UpdateItemAdvancedOptions) => {
       updateBoard((previous) => {
-        if (!previous) return previous;
         return {
           ...previous,
           sections: previous.sections.map((section) => {
@@ -144,7 +178,6 @@ export const useItemActions = () => {
   const updateItemIntegrations = useCallback(
     ({ itemId, newIntegrations }: UpdateItemIntegrations) => {
       updateBoard((previous) => {
-        if (!previous) return previous;
         return {
           ...previous,
           sections: previous.sections.map((section) => {
@@ -261,6 +294,7 @@ export const useItemActions = () => {
     updateItemOptions,
     updateItemAdvancedOptions,
     updateItemIntegrations,
+    duplicateItem,
     createItem,
   };
 };

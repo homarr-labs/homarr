@@ -41,9 +41,17 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
 
   const handleCancel = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>) => {
-      typeof cancelProps?.onClick === "function" && cancelProps?.onClick(event);
-      typeof onCancel === "function" && (await onCancel());
-      closeOnCancel && actions.closeModal();
+      if (typeof cancelProps?.onClick === "function") {
+        cancelProps.onClick(event);
+      }
+
+      if (typeof onCancel === "function") {
+        await onCancel();
+      }
+
+      if (closeOnCancel) {
+        actions.closeModal();
+      }
     },
     [cancelProps?.onClick, onCancel, actions.closeModal],
   );
@@ -51,9 +59,18 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
   const handleConfirm = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>) => {
       setLoading(true);
-      typeof confirmProps?.onClick === "function" && confirmProps?.onClick(event);
-      typeof onConfirm === "function" && (await onConfirm());
-      closeOnConfirm && actions.closeModal();
+
+      if (typeof confirmProps?.onClick === "function") {
+        confirmProps.onClick(event);
+      }
+
+      if (typeof onConfirm === "function") {
+        await onConfirm();
+      }
+
+      if (closeOnConfirm) {
+        actions.closeModal();
+      }
       setLoading(false);
     },
     [confirmProps?.onClick, onConfirm, actions.closeModal],
@@ -65,11 +82,11 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
 
       <Group justify="flex-end" {...groupProps}>
         <Button variant="default" {...cancelProps} onClick={handleCancel}>
-          {cancelProps?.children || translateIfNecessary(t, cancelLabel)}
+          {cancelProps?.children ?? translateIfNecessary(t, cancelLabel)}
         </Button>
 
         <Button {...confirmProps} onClick={handleConfirm} color="red.9" loading={loading}>
-          {confirmProps?.children || translateIfNecessary(t, confirmLabel)}
+          {confirmProps?.children ?? translateIfNecessary(t, confirmLabel)}
         </Button>
       </Group>
     </>

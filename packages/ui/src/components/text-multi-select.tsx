@@ -72,6 +72,7 @@ export const TextMultiSelect = ({ label, value = [], onChange, onBlur, onFocus, 
                 onKeyDown={(event) => {
                   if (event.key === "Backspace" && search.length === 0) {
                     event.preventDefault();
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     handleValueRemove(value.at(-1)!);
                   }
                 }}

@@ -42,7 +42,7 @@ export const groupRouter = createTRPCRouter({
         ...group,
         members: group.members.map((member) => member.user),
       })),
-      totalCount: groupCount[0]!.count,
+      totalCount: groupCount[0]?.count ?? 0,
     };
   }),
   getById: protectedProcedure.input(validation.group.byId).query(async ({ input, ctx }) => {
@@ -57,6 +57,7 @@ export const groupRouter = createTRPCRouter({
                 name: true,
                 email: true,
                 image: true,
+                provider: true,
               },
             },
           },

@@ -158,7 +158,7 @@ describe("getAllBoards should return all boards accessable to the current user",
     expect(result.map(({ name }) => name)).toStrictEqual(["public", "private2"]);
   });
 
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "with %s group board permission it should show board",
     async (permission) => {
       // Arrange
@@ -222,7 +222,7 @@ describe("getAllBoards should return all boards accessable to the current user",
     },
   );
 
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "with %s user board permission it should show board",
     async (permission) => {
       // Arrange
@@ -294,12 +294,14 @@ describe("createBoard should create a new board", () => {
     });
 
     // Act
-    await caller.createBoard({ name: "newBoard" });
+    await caller.createBoard({ name: "newBoard", columnCount: 24, isPublic: true });
 
     // Assert
     const dbBoard = await db.query.boards.findFirst();
     expect(dbBoard).toBeDefined();
     expect(dbBoard?.name).toBe("newBoard");
+    expect(dbBoard?.columnCount).toBe(24);
+    expect(dbBoard?.isPublic).toBe(true);
     expect(dbBoard?.creatorId).toBe(defaultCreatorId);
 
     const dbSection = await db.query.sections.findFirst();
@@ -314,7 +316,7 @@ describe("createBoard should create a new board", () => {
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     // Act
-    const actAsync = async () => await caller.createBoard({ name: "newBoard" });
+    const actAsync = async () => await caller.createBoard({ name: "newBoard", columnCount: 12, isPublic: true });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Permission denied");
@@ -347,7 +349,7 @@ describe("rename board should rename board", () => {
     });
     expect(dbBoard).toBeDefined();
     expect(dbBoard?.name).toBe("newName");
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
   });
 
   test("should throw error when similar board name exists", async () => {
@@ -422,7 +424,7 @@ describe("changeBoardVisibility should change board visibility", () => {
       });
       expect(dbBoard).toBeDefined();
       expect(dbBoard?.isPublic).toBe(visibility === "public");
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
     },
   );
 });
@@ -452,7 +454,7 @@ describe("deleteBoard should delete board", () => {
       where: eq(boards.id, boardId),
     });
     expect(dbBoard).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
   });
 
   test("should throw error when board not found", async () => {
@@ -485,7 +487,7 @@ describe("getHomeBoard should return home board", () => {
       name: "home",
       ...fullBoardProps,
     });
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-view");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
   });
 });
 
@@ -506,7 +508,7 @@ describe("getBoardByName should return board by name", () => {
       name,
       ...fullBoardProps,
     });
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-view");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
   });
 
   it("should throw error when not present", async () => {
@@ -583,7 +585,7 @@ describe("savePartialBoardSettings should save general settings", () => {
     expect(dbBoard?.primaryColor).toBe(newPrimaryColor);
     expect(dbBoard?.secondaryColor).toBe(newSecondaryColor);
 
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
 
   it("should throw error when board not found", async () => {
@@ -617,7 +619,8 @@ describe("saveBoard should save full board", () => {
         {
           id: createId(),
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [],
         },
       ],
@@ -638,7 +641,7 @@ describe("saveBoard should save full board", () => {
     expect(definedBoard.sections.length).toBe(1);
     expect(definedBoard.sections[0]?.id).not.toBe(sectionId);
     expect(section).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should remove item when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -653,7 +656,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [
             {
               id: createId(),
@@ -692,7 +696,7 @@ describe("saveBoard should save full board", () => {
     expect(firstSection.items.length).toBe(1);
     expect(firstSection.items[0]?.id).not.toBe(itemId);
     expect(item).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should remove integration reference when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -714,7 +718,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          xOffset: 0,
+          yOffset: 0,
           items: [
             {
               id: itemId,
@@ -759,7 +764,7 @@ describe("saveBoard should save full board", () => {
     expect(firstItem.integrations.length).toBe(1);
     expect(firstItem.integrations[0]?.integrationId).not.toBe(integrationId);
     expect(integration).toBeUndefined();
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it.each([[{ kind: "empty" as const }], [{ kind: "category" as const, name: "My first category" }]])(
     "should add section when present in input",
@@ -776,14 +781,16 @@ describe("saveBoard should save full board", () => {
         sections: [
           {
             id: newSectionId,
-            position: 1,
+            xOffset: 0,
+            yOffset: 1,
             items: [],
             ...partialSection,
           },
           {
             id: sectionId,
             kind: "empty",
-            position: 0,
+            xOffset: 0,
+            yOffset: 0,
             items: [],
           },
         ],
@@ -806,12 +813,12 @@ describe("saveBoard should save full board", () => {
       expect(addedSection).toBeDefined();
       expect(addedSection.id).toBe(newSectionId);
       expect(addedSection.kind).toBe(partialSection.kind);
-      expect(addedSection.position).toBe(1);
+      expect(addedSection.yOffset).toBe(1);
       if ("name" in partialSection) {
         expect(addedSection.name).toBe(partialSection.name);
       }
       expect(section).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
     },
   );
   it("should add item when present in input", async () => {
@@ -828,7 +835,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [
             {
               id: newItemId,
@@ -875,7 +883,7 @@ describe("saveBoard should save full board", () => {
     expect(addedItem.xOffset).toBe(3);
     expect(addedItem.yOffset).toBe(2);
     expect(item).toBeDefined();
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should add integration reference when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -897,7 +905,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          xOffset: 0,
+          yOffset: 0,
           items: [
             {
               id: itemId,
@@ -942,7 +951,7 @@ describe("saveBoard should save full board", () => {
     expect(firstItem.integrations.length).toBe(1);
     expect(firstItem.integrations[0]?.integrationId).toBe(integration.id);
     expect(integrationItem).toBeDefined();
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should update section when present in input", async () => {
     const db = createDb();
@@ -954,7 +963,8 @@ describe("saveBoard should save full board", () => {
       id: newSectionId,
       kind: "category",
       name: "Before",
-      position: 1,
+      yOffset: 1,
+      xOffset: 0,
       boardId,
     });
 
@@ -964,7 +974,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "category",
-          position: 1,
+          yOffset: 1,
+          xOffset: 0,
           name: "Test",
           items: [],
         },
@@ -972,7 +983,8 @@ describe("saveBoard should save full board", () => {
           id: newSectionId,
           kind: "category",
           name: "After",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [],
         },
       ],
@@ -990,12 +1002,12 @@ describe("saveBoard should save full board", () => {
     const firstSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === sectionId));
     expect(firstSection.id).toBe(sectionId);
     expect(firstSection.kind).toBe("empty");
-    expect(firstSection.position).toBe(1);
+    expect(firstSection.yOffset).toBe(1);
     expect(firstSection.name).toBe(null);
     const secondSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
     expect(secondSection.id).toBe(newSectionId);
     expect(secondSection.kind).toBe("category");
-    expect(secondSection.position).toBe(0);
+    expect(secondSection.yOffset).toBe(0);
     expect(secondSection.name).toBe("After");
   });
   it("should update item when present in input", async () => {
@@ -1011,7 +1023,8 @@ describe("saveBoard should save full board", () => {
         {
           id: sectionId,
           kind: "empty",
-          position: 0,
+          yOffset: 0,
+          xOffset: 0,
           items: [
             {
               id: itemId,
@@ -1052,7 +1065,7 @@ describe("saveBoard should save full board", () => {
     expect(firstItem.width).toBe(2);
     expect(firstItem.xOffset).toBe(7);
     expect(firstItem.yOffset).toBe(5);
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "board-change");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should fail when board not found", async () => {
     const db = createDb();
@@ -1091,12 +1104,12 @@ describe("getBoardPermissions should return board permissions", () => {
     await db.insert(boardUserPermissions).values([
       {
         userId: user1,
-        permission: "board-view",
+        permission: "view",
         boardId,
       },
       {
         userId: user2,
-        permission: "board-change",
+        permission: "modify",
         boardId,
       },
     ]);
@@ -1109,7 +1122,7 @@ describe("getBoardPermissions should return board permissions", () => {
 
     await db.insert(boardGroupPermissions).values({
       groupId,
-      permission: "board-view",
+      permission: "view",
       boardId,
     });
 
@@ -1122,26 +1135,26 @@ describe("getBoardPermissions should return board permissions", () => {
     const result = await caller.getBoardPermissions({ id: boardId });
 
     // Assert
-    expect(result.groupPermissions).toEqual([{ group: { id: groupId, name: "group1" }, permission: "board-view" }]);
-    expect(result.userPermissions).toEqual(
+    expect(result.groups).toEqual([{ group: { id: groupId, name: "group1" }, permission: "view" }]);
+    expect(result.users).toEqual(
       expect.arrayContaining([
         {
           user: { id: user1, name: null, image: null },
-          permission: "board-view",
+          permission: "view",
         },
         {
           user: { id: user2, name: null, image: null },
-          permission: "board-change",
+          permission: "modify",
         },
       ]),
     );
     expect(result.inherited).toEqual([{ group: { id: groupId, name: "group1" }, permission: "admin" }]);
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
   });
 });
 
 describe("saveUserBoardPermissions should save user board permissions", () => {
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "should save user board permissions",
     async (permission) => {
       // Arrange
@@ -1163,10 +1176,10 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
 
       // Act
       await caller.saveUserBoardPermissions({
-        id: boardId,
+        entityId: boardId,
         permissions: [
           {
-            itemId: user1,
+            principalId: user1,
             permission,
           },
         ],
@@ -1177,13 +1190,13 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
         where: eq(boardUserPermissions.userId, user1),
       });
       expect(dbUserPermission).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
     },
   );
 });
 
 describe("saveGroupBoardPermissions should save group board permissions", () => {
-  test.each([["board-view"], ["board-change"]] satisfies [BoardPermission][])(
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
     "should save group board permissions",
     async (permission) => {
       // Arrange
@@ -1210,10 +1223,10 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
 
       // Act
       await caller.saveGroupBoardPermissions({
-        id: boardId,
+        entityId: boardId,
         permissions: [
           {
-            itemId: groupId,
+            principalId: groupId,
             permission,
           },
         ],
@@ -1224,7 +1237,7 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
         where: eq(boardGroupPermissions.groupId, groupId),
       });
       expect(dbGroupPermission).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full-access");
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
     },
   );
 });
@@ -1266,7 +1279,8 @@ const createFullBoardAsync = async (db: Database, name: string) => {
   await db.insert(sections).values({
     id: sectionId,
     kind: "empty",
-    position: 0,
+    yOffset: 0,
+    xOffset: 0,
     boardId,
   });
 

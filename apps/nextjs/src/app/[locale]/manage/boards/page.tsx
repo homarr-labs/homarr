@@ -10,6 +10,7 @@ import {
   Group,
   Menu,
   MenuTarget,
+  Stack,
   Text,
   Title,
   Tooltip,
@@ -22,6 +23,8 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
+import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
@@ -31,20 +34,23 @@ export default async function ManageBoardsPage() {
   const boards = await api.board.getAllBoards();
 
   return (
-    <>
-      <Group justify="space-between">
-        <Title mb="md">{t("title")}</Title>
-        <CreateBoardButton boardNames={boards.map((board) => board.name)} />
-      </Group>
+    <ManageContainer>
+      <DynamicBreadcrumb />
+      <Stack>
+        <Group justify="space-between">
+          <Title mb="md">{t("title")}</Title>
+          <CreateBoardButton boardNames={boards.map((board) => board.name)} />
+        </Group>
 
-      <Grid>
-        {boards.map((board) => (
-          <GridCol span={{ base: 12, md: 6, xl: 4 }} key={board.id}>
-            <BoardCard board={board} />
-          </GridCol>
-        ))}
-      </Grid>
-    </>
+        <Grid mb={{ base: "xl", md: 0 }}>
+          {boards.map((board) => (
+            <GridCol span={{ base: 12, md: 6 }} key={board.id}>
+              <BoardCard board={board} />
+            </GridCol>
+          ))}
+        </Grid>
+      </Stack>
+    </ManageContainer>
   );
 }
 
@@ -83,7 +89,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
             {board.creator && (
               <Group gap="xs">
                 <UserAvatar user={board.creator} size="sm" />
-                <Text>{board.creator?.name}</Text>
+                <Text>{board.creator.name}</Text>
               </Group>
             )}
           </Group>

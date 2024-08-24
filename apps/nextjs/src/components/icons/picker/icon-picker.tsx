@@ -16,6 +16,7 @@ interface IconPickerProps {
 export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: IconPickerProps) => {
   const [value, setValue] = useState<string>(initialValue ?? "");
   const [search, setSearch] = useState(initialValue ?? "");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue ?? null);
 
   const t = useScopedI18n("common");
 
@@ -52,6 +53,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
     <Combobox
       onOptionSubmit={(value) => {
         setValue(value);
+        setPreviewUrl(value);
         setSearch(value);
         onChange(value);
         combobox.closeDropdown();
@@ -62,11 +64,16 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
       <Combobox.Target>
         <InputBase
           rightSection={<Combobox.Chevron />}
+          // eslint-disable-next-line @next/next/no-img-element
+          leftSection={previewUrl ? <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} /> : null}
           value={search}
           onChange={(event) => {
             combobox.openDropdown();
             combobox.updateSelectedOptionIndex();
             setSearch(event.currentTarget.value);
+            setValue(event.currentTarget.value);
+            setPreviewUrl(null);
+            onChange(event.currentTarget.value);
           }}
           onClick={() => combobox.openDropdown()}
           onFocus={(event) => {
@@ -76,12 +83,13 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           onBlur={(event) => {
             onBlur?.(event);
             combobox.closeDropdown();
+            setPreviewUrl(value);
             setSearch(value || "");
           }}
           rightSectionPointerEvents="none"
           withAsterisk
           error={error}
-          label="Icon URL"
+          label={t("iconPicker.label")}
         />
       </Combobox.Target>
 

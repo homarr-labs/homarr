@@ -1,17 +1,20 @@
 import { TRPCError } from "@trpc/server";
-import { observable } from "@trpc/server/observable";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, schema } from "@homarr/db";
-import { invites, users } from "@homarr/db/schema/sqlite";
-import { exampleChannel } from "@homarr/redis";
+import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
+import type { SupportedAuthProvider } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const userRouter = createTRPCRouter({
   initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
+    throwIfCredentialsDisabled();
+
     const firstUser = await ctx.db.query.users.findFirst({
       columns: {
         id: true,
@@ -25,9 +28,24 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    await createUserAsync(ctx.db, input);
+    const userId = await createUserAsync(ctx.db, input);
+    const groupId = createId();
+    await ctx.db.insert(groups).values({
+      id: groupId,
+      name: "admin",
+      ownerId: userId,
+    });
+    await ctx.db.insert(groupPermissions).values({
+      groupId,
+      permission: "admin",
+    });
+    await ctx.db.insert(groupMembers).values({
+      groupId,
+      userId,
+    });
   }),
   register: publicProcedure.input(validation.user.registrationApi).mutation(async ({ ctx, input }) => {
+    throwIfCredentialsDisabled();
     const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
     const dbInvite = await ctx.db.query.invites.findFirst({
       columns: {
@@ -44,14 +62,7 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    if (!dbInvite || dbInvite.expirationDate < new Date()) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Invalid invite",
-      });
-    }
-
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
     await createUserAsync(ctx.db, input);
 
@@ -59,7 +70,8 @@ export const userRouter = createTRPCRouter({
     await ctx.db.delete(invites).where(inviteWhere);
   }),
   create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.username);
+    throwIfCredentialsDisabled();
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
     await createUserAsync(ctx.db, input);
   }),
@@ -88,6 +100,7 @@ export const userRouter = createTRPCRouter({
         columns: {
           id: true,
           image: true,
+          provider: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -99,6 +112,13 @@ export const userRouter = createTRPCRouter({
         });
       }
 
+      if (user.provider !== "credentials") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Profile image can not be changed for users with external providers",
+        });
+      }
+
       await ctx.db
         .update(users)
         .set({
@@ -107,13 +127,14 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.userId));
     }),
   getAll: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.query.users.findMany({
+    return await ctx.db.query.users.findMany({
       columns: {
         id: true,
         name: true,
         email: true,
         emailVerified: true,
         image: true,
+        provider: true,
       },
     });
   }),
@@ -134,6 +155,8 @@ export const userRouter = createTRPCRouter({
         email: true,
         emailVerified: true,
         image: true,
+        provider: true,
+        homeBoardId: true,
       },
       where: eq(users.id, input.userId),
     });
@@ -149,7 +172,7 @@ export const userRouter = createTRPCRouter({
   }),
   editProfile: publicProcedure.input(validation.user.editProfile).mutation(async ({ input, ctx }) => {
     const user = await ctx.db.query.users.findFirst({
-      columns: { email: true },
+      columns: { email: true, provider: true },
       where: eq(users.id, input.id),
     });
 
@@ -160,7 +183,14 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, input.name, input.id);
+    if (user.provider !== "credentials") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Username and email can not be changed for users with external providers",
+      });
+    }
+
+    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.name, input.id);
 
     const emailDirty = input.email && user.email !== input.email;
     await ctx.db
@@ -185,26 +215,38 @@ export const userRouter = createTRPCRouter({
       });
     }
 
+    const dbUser = await ctx.db.query.users.findFirst({
+      columns: {
+        id: true,
+        password: true,
+        salt: true,
+        provider: true,
+      },
+      where: eq(users.id, input.userId),
+    });
+
+    if (!dbUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    if (dbUser.provider !== "credentials") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Password can not be changed for users with external providers",
+      });
+    }
+
     // Admins can change the password of other users without providing the previous password
     const isPreviousPasswordRequired = ctx.session.user.id === input.userId;
 
+    logger.info(
+      `User ${user.id} is changing password for user ${input.userId}, previous password is required: ${isPreviousPasswordRequired}`,
+    );
+
     if (isPreviousPasswordRequired) {
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-          password: true,
-          salt: true,
-        },
-        where: eq(users.id, input.userId),
-      });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
       const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");
       const isValid = previousPasswordHash === dbUser.password;
 
@@ -225,16 +267,39 @@ export const userRouter = createTRPCRouter({
       })
       .where(eq(users.id, input.userId));
   }),
-  setMessage: publicProcedure.input(z.string()).mutation(async ({ input }) => {
-    await exampleChannel.publishAsync({ message: input });
-  }),
-  test: publicProcedure.subscription(() => {
-    return observable<{ message: string }>((emit) => {
-      exampleChannel.subscribe((message) => {
-        emit.next(message);
+  changeHomeBoardId: protectedProcedure
+    .input(validation.user.changeHomeBoard.and(z.object({ userId: z.string() })))
+    .mutation(async ({ input, ctx }) => {
+      const user = ctx.session.user;
+      // Only admins can change other users' passwords
+      if (!user.permissions.includes("admin") && user.id !== input.userId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.userId),
       });
-    });
-  }),
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          homeBoardId: input.homeBoardId,
+        })
+        .where(eq(users.id, input.userId));
+    }),
 });
 
 const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {
@@ -251,11 +316,17 @@ const createUserAsync = async (db: Database, input: z.infer<typeof validation.us
     password: hashedPassword,
     salt,
   });
+  return userId;
 };
 
-const checkUsernameAlreadyTakenAndThrowAsync = async (db: Database, username: string, ignoreId?: string) => {
+const checkUsernameAlreadyTakenAndThrowAsync = async (
+  db: Database,
+  provider: SupportedAuthProvider,
+  username: string,
+  ignoreId?: string,
+) => {
   const user = await db.query.users.findFirst({
-    where: eq(users.name, username.toLowerCase()),
+    where: and(eq(users.name, username.toLowerCase()), eq(users.provider, provider)),
   });
 
   if (!user) return;

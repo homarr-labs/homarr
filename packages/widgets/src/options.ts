@@ -1,6 +1,7 @@
 import { objectEntries } from "@homarr/common";
-import type { WidgetKind } from "@homarr/definitions";
-import type { z } from "@homarr/validation";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { ZodType } from "@homarr/validation";
+import { z } from "@homarr/validation";
 
 import { widgetImports } from ".";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
@@ -90,11 +91,18 @@ const optionsFactory = {
       longitude: 0,
     },
     withDescription: input?.withDescription ?? false,
+    validate: z.object({
+      name: z.string().min(1),
+      latitude: z.number(),
+      longitude: z.number(),
+    }),
   }),
-  multiText: (input?: CommonInput<string[]>) => ({
+  multiText: (input?: CommonInput<string[]> & { validate?: ZodType }) => ({
     type: "multiText" as const,
     defaultValue: input?.defaultValue ?? [],
     withDescription: input?.withDescription ?? false,
+    values: [] as string[],
+    validate: input?.validate,
   }),
   app: (input?: Omit<CommonInput<string>, "defaultValue">) => ({
     type: "app" as const,
@@ -115,7 +123,7 @@ export type inferOptionsFromDefinition<TOptions extends WidgetOptionsRecord> = {
 };
 
 interface FieldConfiguration<TOptions extends WidgetOptionsRecord> {
-  shouldHide: (options: inferOptionsFromDefinition<TOptions>) => boolean;
+  shouldHide: (options: inferOptionsFromDefinition<TOptions>, integrationKinds: IntegrationKind[]) => boolean;
 }
 
 type ConfigurationInput<TOptions extends WidgetOptionsRecord> = Partial<

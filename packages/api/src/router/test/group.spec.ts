@@ -169,9 +169,9 @@ describe("byId should return group by id including members and permissions", () 
     expect(result.id).toBe(groupId);
     expect(result.members.length).toBe(1);
 
-    const userKeys = Object.keys(result?.members[0] ?? {});
-    expect(userKeys.length).toBe(4);
-    expect(["id", "name", "email", "image"].some((key) => userKeys.includes(key)));
+    const userKeys = Object.keys(result.members[0] ?? {});
+    expect(userKeys.length).toBe(5);
+    expect(["id", "name", "email", "image", "provider"].some((key) => userKeys.includes(key)));
     expect(result.permissions.length).toBe(1);
     expect(result.permissions[0]).toBe("admin");
   });
@@ -364,7 +364,7 @@ describe("savePermissions should save permissions for group", () => {
     // Act
     await caller.savePermissions({
       groupId,
-      permissions: ["integration-use-all", "board-full-access"],
+      permissions: ["integration-use-all", "board-full-all"],
     });
 
     // Assert
@@ -373,7 +373,7 @@ describe("savePermissions should save permissions for group", () => {
     });
 
     expect(permissions.length).toBe(2);
-    expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-access"]);
+    expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-all"]);
   });
 
   test("with non existing group it should throw not found error", async () => {
@@ -390,7 +390,7 @@ describe("savePermissions should save permissions for group", () => {
     const actAsync = async () =>
       await caller.savePermissions({
         groupId: createId(),
-        permissions: ["integration-create", "board-full-access"],
+        permissions: ["integration-create", "board-full-all"],
       });
 
     // Assert

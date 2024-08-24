@@ -14,8 +14,8 @@ coverage
 out/
 next-env.d.ts
 
-# nest.js
-apps/nestjs/dist
+# artifacts
+packages/db/migrations/*/migrate.cjs
 
 # nitro
 .nitro/
@@ -48,7 +48,7 @@ yarn-error.log*
 .turbo
 
 # database
-db.sqlite
+*.sqlite
 
 # logs
 *.log

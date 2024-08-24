@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
-import type { Account, User } from "next-auth";
+import type { Account } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { describe, expect, it, test, vi } from "vitest";
 
@@ -16,6 +17,14 @@ describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
     const db = createDb();
 
+    await db.insert(groups).values({
+      id: "2",
+      name: "test",
+    });
+    await db.insert(groupPermissions).values({
+      groupId: "2",
+      permission: "admin",
+    });
     await db.insert(users).values({
       id: "2",
     });
@@ -24,6 +33,27 @@ describe("getCurrentUserPermissions", () => {
     const result = await getCurrentUserPermissionsAsync(db, userId);
     expect(result).toEqual([]);
   });
+
+  test("should return empty permissions when user has no groups", async () => {
+    const db = createDb();
+    const userId = "1";
+
+    await db.insert(groups).values({
+      id: "2",
+      name: "test",
+    });
+    await db.insert(groupPermissions).values({
+      groupId: "2",
+      permission: "admin",
+    });
+    await db.insert(users).values({
+      id: userId,
+    });
+
+    const result = await getCurrentUserPermissionsAsync(db, userId);
+    expect(result).toEqual([]);
+  });
+
   test("should return permissions for user", async () => {
     const db = createDb();
     const getPermissionsWithChildrenMock = vi
@@ -102,6 +132,13 @@ const createAdapter = () => {
 type SessionExport = typeof import("../session");
 const mockSessionToken = "e9ef3010-6981-4a81-b9d6-8495d09cf3b5";
 const mockSessionExpiry = new Date("2023-07-01");
+vi.mock("../env.mjs", () => {
+  return {
+    env: {
+      AUTH_SESSION_EXPIRY_TIME: 60 * 60 * 24 * 7,
+    },
+  };
+});
 vi.mock("../session", async (importOriginal) => {
   const mod = await importOriginal<SessionExport>();
 
@@ -141,21 +178,11 @@ describe("createSignInCallback", () => {
     expect(result).toBe(true);
   });
 
-  it("should return true if no user", async () => {
-    const isCredentialsRequest = true;
-    const signInCallback = createSignInCallback(createAdapter(), isCredentialsRequest);
-    const result = await signInCallback({
-      user: undefined as unknown as User,
-      account: {} as Account,
-    });
-    expect(result).toBe(true);
-  });
-
   it("should return false if no adapter.createSession", async () => {
     const isCredentialsRequest = true;
     const signInCallback = createSignInCallback(
       // https://github.com/nextauthjs/next-auth/issues/6106
-      undefined as unknown as Adapter,
+      { createSession: undefined } as unknown as Adapter,
       isCredentialsRequest,
     );
     const result = await signInCallback({
@@ -165,7 +192,7 @@ describe("createSignInCallback", () => {
     expect(result).toBe(false);
   });
 
-  it("should call adapter.createSession with correct input", async () => {
+  test("should call adapter.createSession with correct input", async () => {
     const adapter = createAdapter();
     const isCredentialsRequest = true;
     const signInCallback = createSignInCallback(adapter, isCredentialsRequest);

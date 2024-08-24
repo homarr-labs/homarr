@@ -1,5 +1,7 @@
 import "dayjs/locale/en";
 
+import { MRT_Localization_EN } from "mantine-react-table/locales/en/index.cjs";
+
 export default {
   user: {
     title: "Users",
@@ -16,7 +18,7 @@ export default {
       },
       init: {
         title: "New Homarr installation",
-        subtitle: "Please create the initial administator user",
+        subtitle: "Please create the initial administrator user",
       },
     },
     field: {
@@ -28,12 +30,22 @@ export default {
       },
       password: {
         label: "Password",
+        requirement: {
+          length: "Includes at least 8 characters",
+          lowercase: "Includes lowercase letter",
+          uppercase: "Includes uppercase letter",
+          number: "Includes number",
+          special: "Includes special symbol",
+        },
       },
       passwordConfirm: {
         label: "Confirm password",
       },
       previousPassword: {
         label: "Previous password",
+      },
+      homeBoard: {
+        label: "Home board",
       },
     },
     error: {
@@ -42,6 +54,7 @@ export default {
     action: {
       login: {
         label: "Login",
+        labelWith: "Login with {provider}",
         notification: {
           success: {
             title: "Login successful",
@@ -51,6 +64,10 @@ export default {
             title: "Login failed",
             message: "Your login failed",
           },
+        },
+        forgotPassword: {
+          label: "Forgotten your password?",
+          description: "An administrator can use the following command to reset your password:",
         },
       },
       register: {
@@ -75,6 +92,16 @@ export default {
           },
           error: {
             message: "Unable to change password",
+          },
+        },
+      },
+      changeHomeBoard: {
+        notification: {
+          success: {
+            message: "Home board changed successfully",
+          },
+          error: {
+            message: "Unable to change home board",
           },
         },
       },
@@ -165,7 +192,7 @@ export default {
             label: "Modify all boards",
             description: "Allow members to modify all boards (Does not include access control and danger zone)",
           },
-          "full-access": {
+          "full-all": {
             label: "Full board access",
             description:
               "Allow members to view, modify, and delete all boards (Including access control and danger zone)",
@@ -187,12 +214,16 @@ export default {
             label: "Interact with any integration",
             description: "Allow members to interact with any integration",
           },
-          "full-access": {
+          "full-all": {
             label: "Full integration access",
             description: "Allow members to manage, use and interact with any integration",
           },
         },
       },
+    },
+    memberNotice: {
+      mixed: "Some members are from external providers and cannot be managed here",
+      external: "All members are from external providers and cannot be managed here",
     },
     action: {
       create: {
@@ -317,6 +348,17 @@ export default {
         },
       },
     },
+    field: {
+      name: {
+        label: "Name",
+      },
+      description: {
+        label: "Description",
+      },
+      url: {
+        label: "Url",
+      },
+    },
   },
   integration: {
     page: {
@@ -378,7 +420,10 @@ export default {
       create: "New integration",
     },
     testConnection: {
-      action: "Test connection",
+      action: {
+        create: "Test connection and create",
+        edit: "Test connection and save",
+      },
       alertNotice: "The Save button is enabled once a successful connection is established",
       notification: {
         success: {
@@ -389,7 +434,7 @@ export default {
           title: "Invalid URL",
           message: "The URL is invalid",
         },
-        notAllSecretsProvided: {
+        secretNotDefined: {
           title: "Missing credentials",
           message: "Not all credentials were provided",
         },
@@ -401,6 +446,50 @@ export default {
           title: "Connection failed",
           message: "The connection could not be established",
         },
+        badRequest: {
+          title: "Bad request",
+          message: "The request was malformed",
+        },
+        unauthorized: {
+          title: "Unauthorized",
+          message: "Probably wrong credentials",
+        },
+        forbidden: {
+          title: "Forbidden",
+          message: "Probably missing permissions",
+        },
+        notFound: {
+          title: "Not found",
+          message: "Probably wrong url or path",
+        },
+        internalServerError: {
+          title: "Internal server error",
+          message: "The server encountered an error",
+        },
+        serviceUnavailable: {
+          title: "Service unavailable",
+          message: "The server is currently unavailable",
+        },
+        connectionAborted: {
+          title: "Connection aborted",
+          message: "The connection was aborted",
+        },
+        domainNotFound: {
+          title: "Domain not found",
+          message: "The domain could not be found",
+        },
+        connectionRefused: {
+          title: "Connection refused",
+          message: "The connection was refused",
+        },
+        invalidJson: {
+          title: "Invalid JSON",
+          message: "The response was not valid JSON",
+        },
+        wrongPath: {
+          title: "Wrong path",
+          message: "The path is probably not correct",
+        },
       },
     },
     secrets: {
@@ -410,6 +499,10 @@ export default {
       reset: {
         title: "Reset secret",
         message: "Are you sure you want to reset this secret?",
+      },
+      noSecretsRequired: {
+        segmentTitle: "No secrets",
+        text: "No secrets required for this integration",
       },
       kind: {
         username: {
@@ -426,9 +519,22 @@ export default {
         },
       },
     },
+    permission: {
+      use: "Select integrations in items",
+      interact: "Interact with integrations",
+      full: "Full integration access",
+    },
   },
   common: {
     rtl: "{value}{symbol}",
+    symbols: {
+      colon: ": ",
+    },
+    error: "Error",
+    errors: {
+      noData: "No data to show",
+      noIntegration: "No integration selected",
+    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -450,7 +556,12 @@ export default {
       tryAgain: "Try again",
     },
     iconPicker: {
+      label: "Icon URL",
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+    },
+    information: {
+      min: "Min",
+      max: "Max",
     },
     notification: {
       create: {
@@ -475,7 +586,7 @@ export default {
     },
     multiText: {
       placeholder: "Add more values",
-      addLabel: `Add {value}`,
+      addLabel: "Add {value}",
     },
     select: {
       placeholder: "Pick value",
@@ -531,12 +642,25 @@ export default {
         },
         custom: {
           passwordsDoNotMatch: "Passwords do not match",
+          passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
         },
       },
     },
+    mantineReactTable: MRT_Localization_EN,
   },
   section: {
+    dynamic: {
+      action: {
+        create: "New dynamic section",
+        remove: "Remove dynamic section",
+      },
+      remove: {
+        title: "Remove dynamic section",
+        message:
+          "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section.",
+      },
+    },
     category: {
       field: {
         name: {
@@ -577,7 +701,8 @@ export default {
       create: "New item",
       import: "Import item",
       edit: "Edit item",
-      move: "Move item",
+      moveResize: "Move / resize item",
+      duplicate: "Duplicate item",
       remove: "Remove item",
     },
     menu: {
@@ -589,13 +714,20 @@ export default {
       title: "Choose item to add",
       addToBoard: "Add to board",
     },
-    move: {
+    moveResize: {
+      title: "Move / resize item",
       field: {
         width: {
           label: "Width",
         },
         height: {
           label: "Height",
+        },
+        xOffset: {
+          label: "X offset",
+        },
+        yOffset: {
+          label: "Y offset",
         },
       },
     },
@@ -630,8 +762,14 @@ export default {
         openInNewTab: {
           label: "Open in new tab",
         },
+        showTitle: {
+          label: "Show app name",
+        },
         showDescriptionTooltip: {
           label: "Show description tooltip",
+        },
+        pingEnabled: {
+          label: "Enable simple ping",
         },
       },
       error: {
@@ -667,10 +805,47 @@ export default {
         internalServerError: "Failed to fetch DNS Hole Summary",
       },
       data: {
-        adsBlockedToday: "blocked today",
-        adsBlockedTodayPercentage: "blocked today",
+        adsBlockedToday: "Blocked today",
+        adsBlockedTodayPercentage: "Blocked today",
         dnsQueriesToday: "Queries today",
         domainsBeingBlocked: "Domains on blocklist",
+      },
+    },
+    dnsHoleControls: {
+      name: "DNS Hole Controls",
+      description: "Control PiHole or AdGuard from your dashboard",
+      option: {
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        showToggleAllButtons: {
+          label: "Show Toggle All Buttons",
+        },
+      },
+      error: {
+        internalServerError: "Failed to control DNS Hole",
+      },
+      controls: {
+        enableAll: "Enable All",
+        disableAll: "Disable All",
+        setTimer: "Set Timer",
+        set: "Set",
+        enabled: "Enabled",
+        disabled: "Disabled",
+        hours: "Hours",
+        minutes: "Minutes",
+        unlimited: "Leave blank to unlimited",
       },
     },
     clock: {
@@ -805,6 +980,48 @@ export default {
         noBrowerSupport: "Your Browser does not support iframes. Please update your browser.",
       },
     },
+    "smartHome-entityState": {
+      name: "Entity State",
+      description: "Display the state of an entity and toggle it optionally",
+      option: {
+        entityId: {
+          label: "Entity ID",
+        },
+        displayName: {
+          label: "Display-name",
+        },
+        entityUnit: {
+          label: "Entity Unit",
+        },
+        clickable: {
+          label: "Clickable",
+        },
+      },
+    },
+    "smartHome-executeAutomation": {
+      name: "Execute Automation",
+      description: "Trigger an automation with one click",
+      option: {
+        displayName: {
+          label: "Display name",
+        },
+        automationId: {
+          label: "Automation ID",
+        },
+      },
+    },
+    calendar: {
+      name: "Calendar",
+      description: "Display events from your integrations in a calendar view within a certain relative time period",
+      option: {
+        filterPastMonths: {
+          label: "Start from",
+        },
+        filterFutureMonths: {
+          label: "End at",
+        },
+      },
+    },
     weather: {
       name: "Weather",
       description: "Displays the current weather information of a set location.",
@@ -872,6 +1089,7 @@ export default {
         },
         noIntegration: "No integration selected",
       },
+      option: {},
     },
     video: {
       name: "Video Stream",
@@ -894,6 +1112,70 @@ export default {
       error: {
         noUrl: "No Video URL provided",
         forYoutubeUseIframe: "For YouTube videos use the iframe option",
+      },
+    },
+    mediaServer: {
+      name: "Current media server streams",
+      description: "Show the current streams on your media servers",
+      option: {},
+    },
+    "mediaRequests-requestList": {
+      name: "Media Requests List",
+      description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
+      option: {
+        linksTargetNewTab: {
+          label: "Open links in new tab",
+        },
+      },
+      pending: {
+        approve: "Approve request",
+        approving: "Approving request...",
+        decline: "Decline request",
+      },
+      availability: {
+        unknown: "Unknown",
+        pending: "Pending",
+        processing: "Processing",
+        partiallyAvailable: "Partial",
+        available: "Available",
+      },
+      toBeDetermined: "TBD",
+    },
+    "mediaRequests-requestStats": {
+      name: "Media Requests Stats",
+      description: "Statistics about your media requests",
+      option: {},
+      titles: {
+        stats: {
+          main: "Media Stats",
+          approved: "Already approved",
+          pending: "Pending approvals",
+          processing: "Being processed",
+          declined: "Already declined",
+          available: "Already Available",
+          tv: "TV requests",
+          movie: "Movie requests",
+          total: "Total",
+        },
+        users: {
+          main: "Top Users",
+          requests: "Requests",
+        },
+      },
+    },
+    rssFeed: {
+      name: "RSS feeds",
+      description: "Monitor and display one or more generic RSS, ATOM or JSON feeds",
+      option: {
+        feedUrls: {
+          label: "Feed URLs",
+        },
+        textLinesClamp: {
+          label: "Description line clamp",
+        },
+        maximumAmountPosts: {
+          label: "Amount posts limit",
+        },
       },
     },
   },
@@ -1010,6 +1292,10 @@ export default {
       name: {
         label: "Name",
       },
+      isPublic: {
+        label: "Public",
+        description: "Public boards are accessible by everyone, even without an account.",
+      },
     },
     content: {
       metaTitle: "{boardName} board",
@@ -1036,36 +1322,14 @@ export default {
         access: {
           title: "Access control",
           permission: {
-            userSelect: {
-              title: "Add user permission",
-            },
-            groupSelect: {
-              title: "Add group permission",
-            },
-            tab: {
-              user: "Users",
-              group: "Groups",
-              inherited: "Inherited groups",
-            },
-            field: {
-              user: {
-                label: "User",
-              },
-              group: {
-                label: "Group",
-              },
-              permission: {
-                label: "Permission",
-              },
-            },
             item: {
-              "board-view": {
+              view: {
                 label: "View board",
               },
-              "board-change": {
-                label: "Change board",
+              modify: {
+                label: "Modify board",
               },
-              "board-full": {
+              full: {
                 label: "Full access",
               },
             },
@@ -1150,6 +1414,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            tasks: "Tasks",
           },
         },
         settings: "Settings",
@@ -1225,12 +1490,21 @@ export default {
       },
       user: {
         back: "Back to users",
+        fieldsDisabledExternalProvider:
+          "Certain fields are disabled because they are managed by an external authentication provider.",
         setting: {
           general: {
             title: "General",
+            item: {
+              language: "Language & Region",
+              board: "Home board",
+            },
           },
           security: {
             title: "Security",
+          },
+          board: {
+            title: "Boards",
           },
         },
         list: {
@@ -1270,7 +1544,7 @@ export default {
           },
         },
         invite: {
-          title: "Manager user invites",
+          title: "Manage user invites",
           action: {
             new: {
               title: "New invite",
@@ -1349,6 +1623,42 @@ export default {
           },
         },
       },
+      tool: {
+        tasks: {
+          title: "Tasks",
+          status: {
+            idle: "Idle",
+            running: "Running",
+            error: "Error",
+          },
+          job: {
+            iconsUpdater: {
+              label: "Icons Updater",
+            },
+            analytics: {
+              label: "Analytics",
+            },
+            smartHomeEntityState: {
+              label: "Smart Home Entity State",
+            },
+            ping: {
+              label: "Pings",
+            },
+            mediaServer: {
+              label: "Media Server",
+            },
+            mediaOrganizer: {
+              label: "Media Organizers",
+            },
+            mediaRequests: {
+              label: "Media Requests",
+            },
+            rssFeeds: {
+              label: "RSS feeds",
+            },
+          },
+        },
+      },
       about: {
         version: "Version {version}",
         text: "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
@@ -1400,10 +1710,156 @@ export default {
       },
     },
     action: {
-      start: "Start",
-      stop: "Stop",
-      restart: "Restart",
-      remove: "Remove",
+      start: {
+        label: "Start",
+        notification: {
+          success: {
+            title: "Containers started",
+            message: "The containers were started successfully",
+          },
+          error: {
+            title: "Containers not started",
+            message: "The containers could not be started",
+          },
+        },
+      },
+      stop: {
+        label: "Stop",
+        notification: {
+          success: {
+            title: "Containers stopped",
+            message: "The containers were stopped successfully",
+          },
+          error: {
+            title: "Containers not stopped",
+            message: "The containers could not be stopped",
+          },
+        },
+      },
+      restart: {
+        label: "Restart",
+        notification: {
+          success: {
+            title: "Containers restarted",
+            message: "The containers were restarted successfully",
+          },
+          error: {
+            title: "Containers not restarted",
+            message: "The containers could not be restarted",
+          },
+        },
+      },
+      remove: {
+        label: "Remove",
+        notification: {
+          success: {
+            title: "Containers removed",
+            message: "The containers were removed successfully",
+          },
+          error: {
+            title: "Containers not removed",
+            message: "The containers could not be removed",
+          },
+        },
+      },
+      refresh: {
+        label: "Refresh",
+        notification: {
+          success: {
+            title: "Containers refreshed",
+            message: "You are now viewing the most recent data",
+          },
+          error: {
+            title: "Containers not refreshed",
+            message: "Something went wrong while refreshing the containers",
+          },
+        },
+      },
+    },
+  },
+  permission: {
+    title: "Permissions",
+    userSelect: {
+      title: "Add user permission",
+    },
+    groupSelect: {
+      title: "Add group permission",
+    },
+    tab: {
+      user: "Users",
+      group: "Groups",
+      inherited: "Inherited groups",
+    },
+    field: {
+      user: {
+        label: "User",
+      },
+      group: {
+        label: "Group",
+      },
+      permission: {
+        label: "Permission",
+      },
+    },
+    action: {
+      saveUser: "Save user permission",
+      saveGroup: "Save group permission",
+    },
+  },
+  navigationStructure: {
+    manage: {
+      label: "Manage",
+      boards: {
+        label: "Boards",
+      },
+      integrations: {
+        label: "Integrations",
+        edit: {
+          label: "Edit",
+        },
+        new: {
+          label: "New",
+        },
+      },
+      apps: {
+        label: "Apps",
+        new: {
+          label: "New App",
+        },
+        edit: {
+          label: "Edit App",
+        },
+      },
+      users: {
+        label: "Users",
+        create: {
+          label: "Create",
+        },
+        general: "General",
+        security: "Security",
+        board: "Boards",
+        groups: {
+          label: "Groups",
+        },
+        invites: {
+          label: "Invites",
+        },
+      },
+      tools: {
+        label: "Tools",
+        docker: {
+          label: "Docker",
+        },
+        logs: {
+          label: "Logs",
+        },
+      },
+      settings: {
+        label: "Settings",
+      },
+      about: {
+        label: "About",
+      },
     },
   },
 } as const;

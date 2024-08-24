@@ -15,7 +15,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { getHotkeyHandler, useDisclosure } from "@mantine/hooks";
 import { Link, RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
 import {
   IconCheck,
@@ -231,6 +231,7 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
         p={0}
         mt={0}
         h="100%"
+        onKeyDown={isEditing ? getHotkeyHandler([["mod+s", handleEditToggle]]) : undefined}
         editor={editor}
         styles={(theme) => ({
           root: {
@@ -303,7 +304,9 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
             <RichTextEditor.BulletList title={tControls("bulletList")} />
             <RichTextEditor.OrderedList title={tControls("orderedList")} />
             <TaskListToggle />
-            {(editor?.isActive("taskList") || editor?.isActive("bulletList") || editor?.isActive("orderedList")) && (
+            {(Boolean(editor?.isActive("taskList")) ||
+              Boolean(editor?.isActive("bulletList")) ||
+              Boolean(editor?.isActive("orderedList"))) && (
               <>
                 <ListIndentIncrease />
                 <ListIndentDecrease />
@@ -680,7 +683,7 @@ function ListIndentIncrease() {
   }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
   });
 
   return (
@@ -704,7 +707,7 @@ function ListIndentDecrease() {
   }, [editor, itemType]);
 
   editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor?.isActive("taskItem") ? "taskItem" : "listItem");
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
   });
 
   return (

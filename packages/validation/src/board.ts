@@ -8,6 +8,7 @@ import {
 } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
+import { createSavePermissionsSchema } from "./permissions";
 import { commonItemSchema, createSectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
@@ -60,17 +61,19 @@ const saveSchema = z.object({
   sections: z.array(createSectionSchema(commonItemSchema)),
 });
 
-const createSchema = z.object({ name: boardNameSchema });
+const createSchema = z.object({ name: boardNameSchema, columnCount: z.number().min(1).max(24), isPublic: z.boolean() });
 
 const permissionsSchema = z.object({
   id: z.string(),
 });
 
-const savePermissionsSchema = z.object({
-  id: z.string(),
+const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
+
+z.object({
+  entityId: z.string(),
   permissions: z.array(
     z.object({
-      itemId: z.string(),
+      principalId: z.string(),
       permission: zodEnumFromArray(boardPermissions),
     }),
   ),

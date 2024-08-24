@@ -6,18 +6,20 @@ on:
 jobs:
   approve-renovate-prs:
     runs-on: ubuntu-latest
-
+    if: github.actor_id == 158783068 # Id of renovate bot see https://api.github.com/users/homarr-renovate%5Bbot%5D
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      - name: Obtain token
+        id: obtainToken
+        uses: tibdex/github-app-token@v2
+        with:
+          private_key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          app_id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
-
       - name: Approve Renovate PRs
         env:
-          GITHUB_TOKEN: ${{ secrets.RENOVATE_APPROVE_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
-          for pr in $(gh pr list --author homarr-renovate[bot] --json number --jq .[].number); do
-            gh pr review $pr --approve --body "Automatically approved by GitHub Action"
-          done
+          gh pr review ${{github.event.pull_request.number}} --approve --body "Automatically approved by GitHub Action"

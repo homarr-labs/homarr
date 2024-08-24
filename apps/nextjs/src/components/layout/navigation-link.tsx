@@ -35,19 +35,24 @@ const NavLinkHref = (props: NavigationLinkHref) => {
   );
 };
 
-const NavLinkWithItems = (props: NavigationLinkWithItems) => (
-  <NavLink
-    style={{
-      borderRadius: 5,
-    }}
-    label={props.label}
-    leftSection={props.icon}
-  >
-    {props.items.map((item) => (
-      <NavLinkHref key={item.label} {...item} />
-    ))}
-  </NavLink>
-);
+const NavLinkWithItems = (props: NavigationLinkWithItems) => {
+  const pathname = usePathname();
+  const isActive = props.items.some((item) => item.href === pathname);
+  return (
+    <NavLink
+      style={{
+        borderRadius: 5,
+      }}
+      label={props.label}
+      leftSection={props.icon}
+      defaultOpened={isActive}
+    >
+      {props.items.map((item) => (
+        <NavLinkHref key={item.label} {...item} />
+      ))}
+    </NavLink>
+  );
+};
 
 interface CommonNavigationLinkProps {
   label: string;

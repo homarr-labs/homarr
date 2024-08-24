@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
@@ -19,6 +20,15 @@ const defaultSession = {
 vi.mock("@homarr/auth", async () => {
   const mod = await import("@homarr/auth/security");
   return { ...mod, auth: () => ({}) as Session };
+});
+
+// Mock the env module to return the credentials provider
+vi.mock("@homarr/auth/env.mjs", () => {
+  return {
+    env: {
+      AUTH_PROVIDERS: ["credentials"],
+    },
+  };
 });
 
 describe("all should return all existing invites without sensitive informations", () => {

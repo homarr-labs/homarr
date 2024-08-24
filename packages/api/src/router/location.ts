@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@homarr/common";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
@@ -8,7 +9,7 @@ export const locationRouter = createTRPCRouter({
     .input(validation.location.searchCity.input)
     .output(validation.location.searchCity.output)
     .query(async ({ input }) => {
-      const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${input.query}`);
+      const res = await fetchWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?name=${input.query}`);
       return (await res.json()) as z.infer<typeof validation.location.searchCity.output>;
     }),
 });

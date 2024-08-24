@@ -3,7 +3,7 @@
 import type { ChangeEvent } from "react";
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { Group, Menu, ScrollArea, Stack, Text, TextInput } from "@mantine/core";
+import { Flex, Group, Menu, ScrollArea, Text, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
@@ -25,7 +25,7 @@ export const IntegrationCreateDropdownContent = () => {
   );
 
   return (
-    <Stack>
+    <Flex direction={{ base: "column-reverse", md: "column" }} gap="sm">
       <TextInput
         leftSection={<IconSearch stroke={1.5} size={20} />}
         placeholder={t("integration.page.list.search")}
@@ -47,6 +47,6 @@ export const IntegrationCreateDropdownContent = () => {
       ) : (
         <Menu.Item disabled>{t("common.noResults")}</Menu.Item>
       )}
-    </Stack>
+    </Flex>
   );
 };

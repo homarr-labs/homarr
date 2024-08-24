@@ -1,4 +1,4 @@
-import type { Session } from "@auth/core/types";
+import type { Session } from "next-auth";
 import { describe, expect, test } from "vitest";
 
 import { getPermissionsWithChildren } from "@homarr/definitions";
@@ -33,7 +33,7 @@ describe("constructBoardPermissions", () => {
     expect(result.hasViewAccess).toBe(true);
   });
 
-  test("should return hasFullAccess as true when session permissions include board-full-access", () => {
+  test("should return hasFullAccess as true when session permissions include board-full-all", () => {
     // Arrange
     const board = {
       creator: {
@@ -46,7 +46,7 @@ describe("constructBoardPermissions", () => {
     const session = {
       user: {
         id: "2",
-        permissions: getPermissionsWithChildren(["board-full-access"]),
+        permissions: getPermissionsWithChildren(["board-full-all"]),
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -87,14 +87,14 @@ describe("constructBoardPermissions", () => {
     expect(result.hasViewAccess).toBe(true);
   });
 
-  test('should return hasChangeAccess as true when board user permissions include "board-change"', () => {
+  test('should return hasChangeAccess as true when board user permissions include "modify"', () => {
     // Arrange
     const board = {
       creator: {
         id: "1",
       },
 
-      userPermissions: [{ permission: "board-change" }],
+      userPermissions: [{ permission: "modify" as const }],
       groupPermissions: [],
       isPublic: false,
     };
@@ -115,14 +115,14 @@ describe("constructBoardPermissions", () => {
     expect(result.hasViewAccess).toBe(true);
   });
 
-  test("should return hasChangeAccess as true when board group permissions include board-change", () => {
+  test("should return hasChangeAccess as true when board group permissions include modify", () => {
     // Arrange
     const board = {
       creator: {
         id: "1",
       },
       userPermissions: [],
-      groupPermissions: [{ permission: "board-change" }],
+      groupPermissions: [{ permission: "modify" as const }],
       isPublic: false,
     };
     const session = {
@@ -175,7 +175,7 @@ describe("constructBoardPermissions", () => {
       creator: {
         id: "1",
       },
-      userPermissions: [{ permission: "board-view" }],
+      userPermissions: [{ permission: "view" as const }],
       groupPermissions: [],
       isPublic: false,
     };
@@ -203,7 +203,7 @@ describe("constructBoardPermissions", () => {
         id: "1",
       },
       userPermissions: [],
-      groupPermissions: [{ permission: "board-view" }],
+      groupPermissions: [{ permission: "view" as const }],
       isPublic: false,
     };
     const session = {

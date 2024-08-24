@@ -4,13 +4,26 @@
       "mode": "auto"
     }
   ],
+  "eslint.experimental.useFlatConfig": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "prettier.configPath": "./tooling/prettier/index.mjs",
   "cSpell.words": [
-    "superjson",
+    "cqmin",
     "homarr",
+    "jellyfin",
+    "mantine",
+    "overseerr",
+    "Sonarr",
+    "superjson",
+    "tabler",
     "trpc",
     "Umami"
-  ]
+  ],
+  "i18n-ally.dirStructure": "auto",
+  "i18n-ally.enabledFrameworks": ["next-international"],
+  "i18n-ally.localesPaths": ["./packages/translation/src/lang/"],
+  "i18n-ally.enabledParsers": ["ts"],
+  "i18n-ally.extract.keyMaxLength": 0,
+  "i18n-ally.keystyle": "flat"
 }

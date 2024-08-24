@@ -1,32 +1,79 @@
 import { TRPCError } from "@trpc/server";
 
-import { PiHoleIntegration } from "@homarr/integrations";
+import { AdGuardHomeIntegration, PiHoleIntegration } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { controlsInputSchema } from "../../../../integrations/src/pi-hole/pi-hole-types";
+import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
-  summary: publicProcedure.unstable_concat(createOneIntegrationMiddleware("piHole")).query(async ({ ctx }) => {
-    const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${ctx.integration.id}`);
+  summary: publicProcedure
+    .unstable_concat(createManyIntegrationMiddleware("query", "piHole", "adGuardHome"))
+    .query(async ({ ctx }) => {
+      const results = await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${integration.id}`);
+          const { data } = await cache.consumeAsync(async () => {
+            let client;
+            switch (integration.kind) {
+              case "piHole":
+                client = new PiHoleIntegration(integration);
+                break;
+              case "adGuardHome":
+                client = new AdGuardHomeIntegration(integration);
+                break;
+            }
 
-    const { data } = await cache.consumeAsync(async () => {
-      const client = new PiHoleIntegration(ctx.integration);
+            return await client.getSummaryAsync().catch((err) => {
+              logger.error("dns-hole router - ", err);
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: `Failed to fetch DNS Hole summary for ${integration.name} (${integration.id})`,
+              });
+            });
+          });
 
-      return await client.getSummaryAsync().catch((err) => {
-        logger.error("dns-hole router - ", err);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to fetch DNS Hole summary for ${ctx.integration.name} (${ctx.integration.id})`,
-        });
-      });
-    });
+          return {
+            integrationId: integration.id,
+            integrationKind: integration.kind,
+            summary: data,
+          };
+        }),
+      );
+      return results;
+    }),
 
-    return {
-      ...data,
-      integrationId: ctx.integration.id,
-    };
-  }),
+  enable: publicProcedure
+    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole", "adGuardHome"))
+    .mutation(async ({ ctx }) => {
+      let client;
+      switch (ctx.integration.kind) {
+        case "piHole":
+          client = new PiHoleIntegration(ctx.integration);
+          break;
+        case "adGuardHome":
+          client = new AdGuardHomeIntegration(ctx.integration);
+          break;
+      }
+      await client.enableAsync();
+    }),
+
+  disable: publicProcedure
+    .input(controlsInputSchema)
+    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole", "adGuardHome"))
+    .mutation(async ({ ctx, input }) => {
+      let client;
+      switch (ctx.integration.kind) {
+        case "piHole":
+          client = new PiHoleIntegration(ctx.integration);
+          break;
+        case "adGuardHome":
+          client = new AdGuardHomeIntegration(ctx.integration);
+          break;
+      }
+      await client.disableAsync(input.duration);
+    }),
 });

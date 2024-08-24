@@ -1,18 +1,20 @@
 import { notFound } from "next/navigation";
-import { Box, Group, Stack, Title } from "@mantine/core";
+import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
+import { LanguageCombobox } from "~/components/language/language-combobox";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
+import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
-import { ProfileLanguageChange } from "./_components/_profile-language-change";
 
 interface Props {
   params: {
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: Props) {
   const t = await getScopedI18n("management.page.user.edit");
 
   return {
-    title: createMetaTitle(t("metaTitle", { username: user?.name })),
+    title: createMetaTitle(t("metaTitle", { username: user.name })),
   };
 }
 
@@ -53,8 +55,18 @@ export default async function EditUserPage({ params }: Props) {
     notFound();
   }
 
+  const boards = await api.board.getAllBoards();
+
+  const isCredentialsUser = user.provider === "credentials";
+
   return (
     <Stack>
+      {!isCredentialsUser && (
+        <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+          {t("management.page.user.fieldsDisabledExternalProvider")}
+        </Alert>
+      )}
+
       <Title>{tGeneral("title")}</Title>
       <Group gap="xl">
         <Box flex={1}>
@@ -65,15 +77,31 @@ export default async function EditUserPage({ params }: Props) {
         </Box>
       </Group>
 
-      <ProfileLanguageChange />
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.language")}</Title>
+        <LanguageCombobox />
+      </Stack>
 
-      <DangerZoneRoot>
-        <DangerZoneItem
-          label={t("user.action.delete.label")}
-          description={t("user.action.delete.description")}
-          action={<DeleteUserButton user={user} />}
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.board")}</Title>
+        <ChangeHomeBoardForm
+          user={user}
+          boardsData={boards.map((board) => ({
+            value: board.id,
+            label: board.name,
+          }))}
         />
-      </DangerZoneRoot>
+      </Stack>
+
+      {isCredentialsUser && (
+        <DangerZoneRoot>
+          <DangerZoneItem
+            label={t("user.action.delete.label")}
+            description={t("user.action.delete.description")}
+            action={<DeleteUserButton user={user} />}
+          />
+        </DangerZoneRoot>
+      )}
     </Stack>
   );
 }

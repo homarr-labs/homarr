@@ -5,7 +5,7 @@ import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
-import { useTimeout } from "@mantine/hooks";
+import { useHotkeys, useTimeout } from "@mantine/hooks";
 import {
   IconCheck,
   IconHome,
@@ -23,6 +23,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import "flag-icons/css/flag-icons.min.css";
 
+import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { LanguageCombobox } from "./language/language-combobox";
 
 interface UserAvatarMenuProps {
@@ -32,6 +33,7 @@ interface UserAvatarMenuProps {
 export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  useHotkeys([["mod+J", toggleColorScheme]]);
 
   const ColorSchemeIcon = colorScheme === "dark" ? IconSun : IconMoon;
 
@@ -40,6 +42,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
   const session = useSession();
   const router = useRouter();
 
+  const { logoutUrl } = useAuthContext();
   const { openModal } = useModalAction(LogoutModal);
 
   const handleSignout = useCallback(async () => {
@@ -48,6 +51,10 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
     });
     openModal({
       onTimeout: () => {
+        if (logoutUrl) {
+          window.location.assign(logoutUrl);
+          return;
+        }
         router.refresh();
       },
     });
@@ -72,7 +79,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
           <>
             <Menu.Item
               component={Link}
-              href={`/manage/users/${session.data?.user.id}`}
+              href={`/manage/users/${session.data?.user.id}/general`}
               leftSection={<IconSettings size="1rem" />}
             >
               {t("preferences")}

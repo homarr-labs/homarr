@@ -1,6 +1,7 @@
 import type { WidgetOptionType } from "../options";
 import { WidgetAppInput } from "./widget-app-input";
 import { WidgetLocationInput } from "./widget-location-input";
+import { WidgetMultiTextInput } from "./widget-multi-text-input";
 import { WidgetMultiSelectInput } from "./widget-multiselect-input";
 import { WidgetNumberInput } from "./widget-number-input";
 import { WidgetSelectInput } from "./widget-select-input";
@@ -12,7 +13,7 @@ const mapping = {
   text: WidgetTextInput,
   location: WidgetLocationInput,
   multiSelect: WidgetMultiSelectInput,
-  multiText: () => null,
+  multiText: WidgetMultiTextInput,
   number: WidgetNumberInput,
   select: WidgetSelectInput,
   slider: WidgetSliderInput,

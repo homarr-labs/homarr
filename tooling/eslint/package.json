@@ -3,40 +3,33 @@
   "version": "0.2.0",
   "private": true,
   "license": "MIT",
-  "files": [
-    "./base.js",
-    "./nextjs.js",
-    "./react.js"
-  ],
+  "type": "module",
+  "exports": {
+    "./base": "./base.js",
+    "./nextjs": "./nextjs.js",
+    "./react": "./react.js"
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@next/eslint-plugin-next": "^14.2.3",
-    "@typescript-eslint/eslint-plugin": "^7.11.0",
-    "@typescript-eslint/parser": "^7.11.0",
+    "@next/eslint-plugin-next": "^14.2.6",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^1.13.3",
+    "eslint-config-turbo": "^2.0.14",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-react": "^7.34.2",
-    "eslint-plugin-react-hooks": "^4.6.2"
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "typescript-eslint": "^8.2.0"
   },
   "devDependencies": {
-    "@types/eslint": "^8.56.10",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "./base.js"
-    ]
+    "eslint": "^9.9.1",
+    "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"
 }

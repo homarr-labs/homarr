@@ -6,7 +6,8 @@ import { GridStack } from "@homarr/gridstack";
 import type { Section } from "~/app/[locale]/boards/_types";
 
 interface InitializeGridstackProps {
-  section: Section;
+  section: Omit<Section, "items">;
+  itemIds: string[];
   refs: {
     wrapper: RefObject<HTMLDivElement>;
     items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
@@ -15,20 +16,21 @@ interface InitializeGridstackProps {
   sectionColumnCount: number;
 }
 
-export const initializeGridstack = ({ section, refs, sectionColumnCount }: InitializeGridstackProps) => {
+export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount }: InitializeGridstackProps) => {
   if (!refs.wrapper.current) return false;
   // initialize gridstack
   const newGrid = refs.gridstack;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
-      margin: Math.round(Math.max(Math.min(refs.wrapper.current.offsetWidth / 100, 10), 1)),
+      margin: 10,
       cellHeight: 128,
       float: true,
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
       staticGrid: true,
-      minRow: 1,
+      minRow: section.kind === "dynamic" && "height" in section ? (section.height as number) : 1,
+      maxRow: section.kind === "dynamic" && "height" in section ? (section.height as number) : 0,
       animate: false,
       styleInHead: true,
       disableRemoveNodeOnDrop: true,
@@ -37,15 +39,17 @@ export const initializeGridstack = ({ section, refs, sectionColumnCount }: Initi
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
   );
   const grid = newGrid.current;
-  if (!grid) return false;
+
   // Must be used to update the column count after the initialization
   grid.column(sectionColumnCount, "none");
 
   grid.batchUpdate();
   grid.removeAll(false);
-  section.items.forEach(({ id }) => {
+  itemIds.forEach((id) => {
     const ref = refs.items.current[id]?.current;
-    ref && grid.makeWidget(ref);
+    if (!ref) return;
+
+    grid.makeWidget(ref);
   });
   grid.batchUpdate(false);
   return true;

@@ -138,6 +138,8 @@ export const useModalAction = <TModal extends ModalDefinition>(modal: TModal) =>
 
   return {
     openModal: (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void) => {
+      // void actually is undefined
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       context.openModalInner({ modal, innerProps, options: options ?? {} });
     },
   };

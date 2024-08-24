@@ -1,36 +1,30 @@
 import Link from "next/link";
-import {
-  ActionIcon,
-  ActionIconGroup,
-  Anchor,
-  Avatar,
-  Button,
-  Card,
-  Container,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconApps, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { getI18n } from "@homarr/translation/server";
+import { parseAppHrefWithVariablesServer } from "@homarr/common/server";
+import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
+import { ManageContainer } from "~/components/manage/manage-container";
+import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AppDeleteButton } from "./_app-delete-button";
 
 export default async function AppsPage() {
   const apps = await api.app.all();
+  const t = await getScopedI18n("app");
 
   return (
-    <Container>
+    <ManageContainer>
+      <DynamicBreadcrumb />
       <Stack>
         <Group justify="space-between" align="center">
-          <Title>Apps</Title>
-          <Button component={Link} href="/manage/apps/new">
-            New app
-          </Button>
+          <Title>{t("page.list.title")}</Title>
+          <MobileAffixButton component={Link} href="/manage/apps/new">
+            {t("page.create.title")}
+          </MobileAffixButton>
         </Group>
         {apps.length === 0 && <AppNoResults />}
         {apps.length > 0 && (
@@ -41,7 +35,7 @@ export default async function AppsPage() {
           </Stack>
         )}
       </Stack>
-    </Container>
+    </ManageContainer>
   );
 }
 
@@ -49,10 +43,12 @@ interface AppCardProps {
   app: RouterOutputs["app"]["all"][number];
 }
 
-const AppCard = ({ app }: AppCardProps) => {
+const AppCard = async ({ app }: AppCardProps) => {
+  const t = await getScopedI18n("app");
+
   return (
     <Card>
-      <Group justify="space-between">
+      <Group justify="space-between" wrap="nowrap">
         <Group align="top" justify="start" wrap="nowrap">
           <Avatar
             size="sm"
@@ -65,15 +61,17 @@ const AppCard = ({ app }: AppCardProps) => {
             }}
           />
           <Stack gap={0}>
-            <Text fw={500}>{app.name}</Text>
+            <Text fw={500} lineClamp={1}>
+              {app.name}
+            </Text>
             {app.description && (
-              <Text size="sm" c="gray.6">
+              <Text size="sm" c="gray.6" lineClamp={4}>
                 {app.description}
               </Text>
             )}
             {app.href && (
-              <Anchor href={app.href} size="sm" w="min-content">
-                {app.href}
+              <Anchor href={parseAppHrefWithVariablesServer(app.href)} lineClamp={1} size="sm" w="min-content">
+                {parseAppHrefWithVariablesServer(app.href)}
               </Anchor>
             )}
           </Stack>
@@ -85,7 +83,7 @@ const AppCard = ({ app }: AppCardProps) => {
               href={`/manage/apps/edit/${app.id}`}
               variant="subtle"
               color="gray"
-              aria-label="Edit app"
+              aria-label={t("page.edit.title")}
             >
               <IconPencil size={16} stroke={1.5} />
             </ActionIcon>

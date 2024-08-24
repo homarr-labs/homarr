@@ -15,7 +15,7 @@ export const iconsRouter = createTRPCRouter({
               name: true,
               url: true,
             },
-            where: input.searchText?.length ?? 0 > 0 ? like(icons.name, `%${input.searchText}%`) : undefined,
+            where: (input.searchText?.length ?? 0) > 0 ? like(icons.name, `%${input.searchText}%`) : undefined,
             limit: 5,
           },
         },

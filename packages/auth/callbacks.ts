@@ -7,19 +7,23 @@ import { eq, inArray } from "@homarr/db";
 import { groupMembers, groupPermissions } from "@homarr/db/schema/sqlite";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
-import { expireDateAfter, generateSessionToken, sessionMaxAgeInSeconds, sessionTokenCookieName } from "./session";
+import { env } from "./env.mjs";
+import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
 
 export const getCurrentUserPermissionsAsync = async (db: Database, userId: string) => {
   const dbGroupMembers = await db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, userId),
   });
   const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
+
+  if (groupIds.length === 0) return [];
+
   const dbGroupPermissions = await db
     .selectDistinct({
       permission: groupPermissions.permission,
     })
     .from(groupPermissions)
-    .where(groupIds.length > 0 ? inArray(groupPermissions.groupId, groupIds) : undefined);
+    .where(inArray(groupPermissions.groupId, groupIds));
   const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
 
   return getPermissionsWithChildren(permissionKeys);
@@ -44,25 +48,24 @@ export const createSignInCallback =
   async ({ user }) => {
     if (!isCredentialsRequest) return true;
 
-    if (!user) return true;
-
     // https://github.com/nextauthjs/next-auth/issues/6106
-    if (!adapter?.createSession) {
+    if (!adapter.createSession) {
       return false;
     }
 
     const sessionToken = generateSessionToken();
-    const sessionExpiry = expireDateAfter(sessionMaxAgeInSeconds);
+    const sessionExpires = expireDateAfter(env.AUTH_SESSION_EXPIRY_TIME);
 
     await adapter.createSession({
       sessionToken,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       userId: user.id!,
-      expires: sessionExpiry,
+      expires: sessionExpires,
     });
 
     cookies().set(sessionTokenCookieName, sessionToken, {
       path: "/",
-      expires: sessionExpiry,
+      expires: sessionExpires,
       httpOnly: true,
       sameSite: "lax",
       secure: true,

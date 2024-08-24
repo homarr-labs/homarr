@@ -6,7 +6,8 @@
     ".": "./index.ts",
     "./client": "./client.ts",
     "./schema/sqlite": "./schema/sqlite.ts",
-    "./test": "./test/index.ts"
+    "./test": "./test/index.ts",
+    "./queries": "./queries/index.ts"
   },
   "private": true,
   "main": "./index.ts",
@@ -17,7 +18,7 @@
     "build:sqlite": "esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs",
     "build:mysql": "esbuild migrations/mysql/migrate.ts --bundle --platform=node --outfile=migrations/mysql/migrate.cjs",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "migration:sqlite:generate": "drizzle-kit generate --config ./configs/sqlite.config.ts",
     "migration:sqlite:run": "drizzle-kit migrate --config ./configs/sqlite.config.ts",
@@ -33,26 +34,22 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "better-sqlite3": "^11.0.0",
-    "drizzle-orm": "^0.31.0",
-    "mysql2": "3.10.0",
-    "drizzle-kit": "^0.22.1"
+    "@auth/core": "^0.34.2",
+    "better-sqlite3": "^11.2.1",
+    "drizzle-orm": "^0.33.0",
+    "dotenv": "^16.4.5",
+    "mysql2": "3.11.0",
+    "drizzle-kit": "^0.24.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/better-sqlite3": "7.6.10",
+    "@types/better-sqlite3": "7.6.11",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^8.57.0",
-    "prettier": "^3.3.0",
-    "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@homarr/eslint-config/base"
-    ]
+    "eslint": "^9.9.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"
 }

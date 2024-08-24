@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as dotenv from "dotenv";
 import type { Config } from "drizzle-kit";
 

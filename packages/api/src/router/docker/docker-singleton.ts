@@ -28,7 +28,7 @@ export class DockerSingleton {
         host: `${host}:${ports[i]}`,
         instance: new Docker({
           host,
-          port: parseInt(ports[i] || "", 10),
+          port: parseInt(ports[i] ?? "", 10),
         }),
       });
       return instances;
@@ -41,6 +41,7 @@ export class DockerSingleton {
   }
 
   public static getInstance(): DockerInstance[] {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!DockerSingleton.instances) {
       DockerSingleton.instances = new DockerSingleton().createInstances();
     }

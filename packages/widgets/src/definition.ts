@@ -79,6 +79,7 @@ export interface WidgetDefinition {
 export interface WidgetProps<TKind extends WidgetKind> {
   options: inferOptionsFromDefinition<WidgetOptionsRecordOf<TKind>>;
   integrationIds: string[];
+  itemId: string | undefined; // undefined when in preview mode
 }
 
 type inferServerDataForKind<TKind extends WidgetKind> = WidgetImports[TKind] extends {
@@ -90,7 +91,6 @@ type inferServerDataForKind<TKind extends WidgetKind> = WidgetImports[TKind] ext
 export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> & {
   serverData?: inferServerDataForKind<TKind>;
 } & {
-  itemId: string | undefined; // undefined when in preview mode
   boardId: string | undefined; // undefined when in preview mode
   isEditMode: boolean;
   width: number;

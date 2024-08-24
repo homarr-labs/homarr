@@ -33,6 +33,7 @@ export const generateColors = (hex: string) => {
   return rgbaColors.map((color) => {
     return (
       "#" +
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       color
         .split("(")[1]!
         .replaceAll(" ", "")

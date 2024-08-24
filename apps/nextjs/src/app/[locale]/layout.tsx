@@ -4,9 +4,11 @@ import { Inter } from "next/font/google";
 import "@homarr/ui/styles.css";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
+import "~/styles/scroll-area.scss";
 
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 
+import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
@@ -55,7 +57,7 @@ export default function Layout(props: { children: React.ReactNode; params: { loc
   const StackedProvider = composeWrappers([
     async (innerProps) => {
       const session = await auth();
-      return <AuthProvider session={session} {...innerProps} />;
+      return <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
