@@ -6,7 +6,8 @@
     ".": "./index.ts",
     "./client": "./client.ts",
     "./schema/sqlite": "./schema/sqlite.ts",
-    "./test": "./test/index.ts"
+    "./test": "./test/index.ts",
+    "./queries": "./queries/index.ts"
   },
   "private": true,
   "main": "./index.ts",
