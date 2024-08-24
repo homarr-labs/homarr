@@ -48,6 +48,7 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
+  // @ts-expect-error - For now we expect an error here as not all integerations have been implemented
   const integrationInstance = integrationCreatorByKind(integration.kind, {
     id: integration.id,
     name: integration.name,
