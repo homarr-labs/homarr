@@ -3,8 +3,6 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
-    "lokalise.i18n-ally",
-    "million.million-lint",
-
+    "million.million-lint"
   ]
 }
