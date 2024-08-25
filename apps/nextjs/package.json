@@ -67,7 +67,7 @@
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.77.8",
     "superjson": "2.2.1",
-    "swagger-ui-react": "^5.17.7",
+    "swagger-ui-react": "^5.17.14",
     "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
