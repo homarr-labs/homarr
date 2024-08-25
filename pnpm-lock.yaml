@@ -19,7 +19,7 @@ importers:
         version: 4.3.1(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       '@vitest/coverage-v8':
         specifier: ^2.0.5
-        version: 2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
+        version: 2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       '@vitest/ui':
         specifier: ^2.0.5
         version: 2.0.5(vitest@2.0.5)
@@ -27,8 +27,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       jsdom:
-        specifier: ^24.1.1
-        version: 24.1.1
+        specifier: ^24.1.2
+        version: 24.1.2
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -46,7 +46,7 @@ importers:
         version: 5.0.1(typescript@5.5.4)(vite@5.2.6(@types/node@20.16.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))
       vitest:
         specifier: ^2.0.5
-        version: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
+        version: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
 
   apps/nextjs:
     dependencies:
@@ -4755,8 +4755,8 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jsdom@24.1.1:
-    resolution: {integrity: sha512-5O1wWV99Jhq4DV7rCLIoZ/UIhyQeDR7wHVyZAHAshbrvZsLs+Xzz7gtwnlJTJDjleiTKh54F4dXrX70vJQTyJQ==}
+  jsdom@24.1.2:
+    resolution: {integrity: sha512-Fzeg0F93nMZ/dJncmxsXqL7oU/RBvE33RAvr+8otVU9719wHEyV9bUoIfylWWKiuARRV/6tHLX/0W1pe2IixsA==}
     engines: {node: '>=18'}
     peerDependencies:
       canvas: ^2.11.2
@@ -8075,7 +8075,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))':
+  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -8089,7 +8089,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
+      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -8128,7 +8128,7 @@ snapshots:
       pathe: 1.1.2
       sirv: 2.0.4
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
+      vitest: 2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
 
   '@vitest/utils@2.0.5':
     dependencies:
@@ -10215,7 +10215,7 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jsdom@24.1.1:
+  jsdom@24.1.2:
     dependencies:
       cssstyle: 4.0.1
       data-urls: 5.0.0
@@ -12148,7 +12148,7 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.38)
       terser: 5.31.0
 
-  vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.1)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0):
+  vitest@2.0.5(@types/node@20.16.1)(@vitest/ui@2.0.5)(jsdom@24.1.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.5
@@ -12172,7 +12172,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.16.1
       '@vitest/ui': 2.0.5(vitest@2.0.5)
-      jsdom: 24.1.1
+      jsdom: 24.1.2
     transitivePeerDependencies:
       - less
       - lightningcss
