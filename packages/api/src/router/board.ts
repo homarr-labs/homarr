@@ -454,10 +454,10 @@ export const boardRouter = createTRPCRouter({
       });
     }),
   importOldmarrConfig: protectedProcedure
-    .input(z.string()) // TODO: change to validation.board.importOldmarrConfig
+    .input(validation.board.importOldmarrConfig)
     .mutation(async ({ input, ctx }) => {
-      //const content = await input.file.text();
-      const oldmarr = JSON.parse(input) as OldmarrConfig;
+      const content = await input.file.text();
+      const oldmarr = JSON.parse(content) as OldmarrConfig;
       console.log(typeof oldmarr);
       await importAsync(ctx.db, oldmarr, true);
     }),
