@@ -37,7 +37,7 @@
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
     "superjson": "2.2.1",
-    "trpc-swagger": "^1.2.3",
+    "trpc-swagger": "^1.2.6",
     "next": "^14.2.6",
     "react": "^18.3.1"
   },

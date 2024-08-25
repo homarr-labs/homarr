@@ -507,7 +507,7 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       trpc-swagger:
-        specifier: ^1.2.3
+        specifier: ^1.2.6
         version: 1.2.6(patch_hash=6s72z7zx33c52iesv5sewipn6i)(@trpc/client@11.0.0-rc.485(@trpc/server@11.0.0-rc.485))(@trpc/server@11.0.0-rc.485)(zod@3.23.8)
     devDependencies:
       '@homarr/eslint-config':
