@@ -31,7 +31,7 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
   });
 
   for (const itemForIntegration of itemsForIntegration) {
-    for (const { integration, integrationId } of itemForIntegration.integrations) {
+    for (const { integration } of itemForIntegration.integrations) {
       const integrationWithDecryptedSecrets = {
         ...integration,
         decryptedSecrets: integration.secrets.map((secret) => ({
@@ -46,7 +46,7 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
       await integrationInstance
         .getClientJobsAndStatusAsync()
         .then(async (data) => {
-          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integrationId);
+          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
           await channel.publishAndUpdateLastStateAsync(data);
         })
         .catch((error) => console.error(`Could not retrieve data for ${integration.name}: "${error}"`));

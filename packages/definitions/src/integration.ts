@@ -9,6 +9,13 @@ export const integrationSecretKindObject = {
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
 
+interface integrationDefinition {
+  name: string;
+  iconUrl: string;
+  secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
+  category: AtLeastOneOf<IntegrationCategory>;
+}
+
 export const integrationDefs = {
   sabNzbd: {
     name: "SABnzbd",
@@ -106,15 +113,9 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: ["smartHomeServer"],
   },
-} satisfies Record<
-  string,
-  {
-    name: string;
-    iconUrl: string;
-    secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
-    category: IntegrationCategory[];
-  }
->;
+} as const satisfies Record<string, integrationDefinition>;
+
+export const integrationKinds = objectKeys(integrationDefs);
 
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
@@ -126,7 +127,17 @@ export const getDefaultSecretKinds = (integration: IntegrationKind): Integration
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
   integrationDefs[integration].secretKinds;
 
-export const integrationKinds = objectKeys(integrationDefs);
+
+/**
+ * Get all integration kinds that share a category, typed only by the kinds belonging to the category
+ * @param category Category to filter by, belonging to IntegrationCategory
+ * @returns Partial list of integration kinds
+ */
+export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
+  return objectKeys(integrationDefs).filter((integration) =>
+    integrationDefs[integration].category.some((defCategory) => defCategory === category),
+  ) as AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
+};
 
 /**
  * Directly get the types of the list returned by getIntegrationKindsByCategory
@@ -140,19 +151,8 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
     U
   : never;
 
-/**
- * Get all integration kinds that share a category, typed only by the kinds belonging to the category
- * @param category Category to filter by, belonging to IntegrationCategory
- * @returns Partial list of integration kinds
- */
-export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
-  return integrationKinds.filter((integration) =>
-    integrationDefs[integration].category.some((defCategory) => defCategory === category),
-  ) as AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
-};
-
-export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];
-export type IntegrationKind = (typeof integrationKinds)[number];
+export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
+export type IntegrationKind = keyof typeof integrationDefs;
 export type IntegrationCategory =
   | "dnsHole"
   | "mediaService"
