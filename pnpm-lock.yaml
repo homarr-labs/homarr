@@ -565,8 +565,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       ldapts:
-        specifier: 7.1.0
-        version: 7.1.0
+        specifier: 7.1.1
+        version: 7.1.1
       next:
         specifier: ^14.2.6
         version: 14.2.6(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.8)
@@ -3822,6 +3822,15 @@ packages:
       supports-color:
         optional: true
 
+  debug@4.3.6:
+    resolution: {integrity: sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
   decimal.js@10.4.3:
     resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
 
@@ -5026,8 +5035,8 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@7.1.0:
-    resolution: {integrity: sha512-EGHJC1L9xFd9Qxevkq4hTi4I8KQ9Eh3F8Uzv7m1dviu5D8Ryq2Q4a52ddb49bDOv40UZuc37tuV94YPf+Ub/1g==}
+  ldapts@7.1.1:
+    resolution: {integrity: sha512-6w12QlRVW1OFaAbEUxTAa3UfIsO8ipOx3h6gZCDdYzMK2brBWfwwPWJCKiDpKSb82Tq8epQFELniaLe2zSdlfw==}
     engines: {node: '>=18'}
 
   levn@0.4.1:
@@ -9736,6 +9745,10 @@ snapshots:
     dependencies:
       ms: 2.1.2
 
+  debug@4.3.6:
+    dependencies:
+      ms: 2.1.2
+
   decimal.js@10.4.3: {}
 
   decompress-response@6.0.0:
@@ -11120,13 +11133,14 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@7.1.0:
+  ldapts@7.1.1:
     dependencies:
       '@types/asn1': 0.2.4
       asn1: 0.2.6
-      debug: 4.3.5
+      debug: 4.3.6
       strict-event-emitter-types: 2.0.0
       uuid: 10.0.0
+      whatwg-url: 14.0.0
     transitivePeerDependencies:
       - supports-color
 
