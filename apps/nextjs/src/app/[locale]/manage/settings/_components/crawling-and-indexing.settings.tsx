@@ -4,12 +4,12 @@ import React from "react";
 import { Card, LoadingOverlay, Stack, Text, Title } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { useForm } from "@homarr/form";
 import type { defaultServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { SwitchSetting } from "~/app/[locale]/manage/settings/_components/setting-switch";
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
-import { useForm } from "~/components/access/form";
 
 interface CrawlingAndIndexingSettingsProps {
   initialData: typeof defaultServerSettings.crawlingAndIndexing;
@@ -47,29 +47,15 @@ export const CrawlingAndIndexingSettings = ({ initialData }: CrawlingAndIndexing
         </Text>
         <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         <Stack>
+          <SwitchSetting form={form} formKey="noIndex" title={t("noIndex.title")} text={t("noIndex.text")} />
+          <SwitchSetting form={form} formKey="noFollow" title={t("noFollow.title")} text={t("noFollow.text")} />
           <SwitchSetting
-            settingsKey={"crawlingAndIndexing"}
-            form={form}
-            formKey="noIndex"
-            title={t("noIndex.title")}
-            text={t("noIndex.text")}
-          />
-          <SwitchSetting
-            settingsKey={"crawlingAndIndexing"}
-            form={form}
-            formKey="noFollow"
-            title={t("noFollow.title")}
-            text={t("noFollow.text")}
-          />
-          <SwitchSetting
-            settingsKey={"crawlingAndIndexing"}
             form={form}
             formKey="noTranslate"
             title={t("noTranslate.title")}
             text={t("noTranslate.text")}
           />
           <SwitchSetting
-            settingsKey={"crawlingAndIndexing"}
             form={form}
             formKey="noSiteLinksSearchBox"
             title={t("noSiteLinksSearchBox.title")}

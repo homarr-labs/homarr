@@ -53,15 +53,8 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
       <Card pos="relative" withBorder>
         <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         <Stack>
+          <SwitchSetting form={form} formKey="enableGeneral" title={t("general.title")} text={t("general.text")} />
           <SwitchSetting
-            settingsKey={"analytics"}
-            form={form}
-            formKey="enableGeneral"
-            title={t("general.title")}
-            text={t("general.text")}
-          />
-          <SwitchSetting
-            settingsKey={"analytics"}
             form={form}
             formKey="enableIntegrationData"
             ms="xl"
@@ -70,7 +63,6 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
             disabled={!form.values.enableGeneral}
           />
           <SwitchSetting
-            settingsKey={"analytics"}
             form={form}
             formKey="enableWidgetData"
             ms="xl"
@@ -79,7 +71,6 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
             disabled={!form.values.enableGeneral}
           />
           <SwitchSetting
-            settingsKey={"analytics"}
             form={form}
             formKey="enableUserData"
             ms="xl"

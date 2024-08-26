@@ -4,9 +4,8 @@ import type { MantineSpacing } from "@mantine/core";
 import { Group, Stack, Switch, Text, UnstyledButton } from "@mantine/core";
 
 import type { UseFormReturnType } from "@homarr/form";
-import type { defaultServerSettings } from "@homarr/server-settings";
 
-export const SwitchSetting = ({
+export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
   form,
   ms,
   title,
@@ -14,8 +13,10 @@ export const SwitchSetting = ({
   formKey,
   disabled,
 }: {
-  form: UseFormReturnType<typeof defaultServerSettings.analytics & typeof defaultServerSettings.crawlingAndIndexing>;
-  formKey: keyof typeof defaultServerSettings.analytics | keyof typeof defaultServerSettings.crawlingAndIndexing;
+  form: Omit<UseFormReturnType<TFormValue, () => TFormValue>, "setFieldValue"> & {
+    setFieldValue: (key: keyof TFormValue, value: (previous: boolean) => boolean) => void;
+  };
+  formKey: keyof TFormValue;
   ms?: MantineSpacing;
   title: string;
   text: ReactNode;
@@ -26,8 +27,7 @@ export const SwitchSetting = ({
       return;
     }
 
-    const invertedValue = !form.values[formKey];
-    form.setFieldValue(formKey, () => invertedValue);
+    form.setFieldValue(formKey, (previous) => !previous);
   }, [form, formKey, disabled]);
 
   return (
