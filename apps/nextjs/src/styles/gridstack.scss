@@ -100,7 +100,9 @@
   transition: none;
 }
 
-.gridstack-empty-wrapper {
-  height: 0px;
-  min-height: 0px !important;
+/**
+ * Hide empty wrapper (class is used when no items are inside and not in edit mode)
+ */
+.grid-stack-empty-wrapper {
+  display: none !important;
 }
