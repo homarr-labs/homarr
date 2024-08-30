@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { and, createId, eq, schema } from "@homarr/db";
+import { and, createId, eq, like, schema } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
@@ -164,6 +164,29 @@ export const userRouter = createTRPCRouter({
       },
     });
   }),
+  search: publicProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        limit: z.number().min(1).max(100).default(10),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const dbUsers = await ctx.db.query.users.findMany({
+        columns: {
+          id: true,
+          name: true,
+          image: true,
+        },
+        where: like(users.name, "%" + input.query + "%"),
+        limit: input.limit,
+      });
+      return dbUsers.map((user) => ({
+        id: user.id,
+        name: user.name ?? "",
+        image: user.image,
+      }));
+    }),
   getById: publicProcedure.input(z.object({ userId: z.string() })).query(async ({ input, ctx }) => {
     const user = await ctx.db.query.users.findFirst({
       columns: {

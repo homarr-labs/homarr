@@ -1154,6 +1154,12 @@ importers:
 
   packages/spotlight:
     dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../api
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
