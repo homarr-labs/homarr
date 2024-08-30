@@ -22,15 +22,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mantine/notifications": "^7.12.1",
+    "@mantine/notifications": "^7.12.2",
     "@homarr/ui": "workspace:^0.1.0",
-    "@tabler/icons-react": "^3.12.0"
+    "@tabler/icons-react": "^3.14.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.9.0",
+    "eslint": "^9.9.1",
     "typescript": "^5.5.4"
   },
   "prettier": "@homarr/prettier-config"

@@ -13,6 +13,8 @@ import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as mediaRequestsList from "./media-requests/list";
+import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
 import * as rssFeed from "./rssFeed";
@@ -42,6 +44,8 @@ export const widgetImports = {
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   mediaServer,
   calendar,
+  "mediaRequests-requestList": mediaRequestsList,
+  "mediaRequests-requestStats": mediaRequestsStats,
   rssFeed,
 } satisfies WidgetImportRecord;
 
@@ -64,3 +68,9 @@ export const loadWidgetDynamic = <TKind extends WidgetKind>(kind: TKind) => {
   loadedComponents.set(kind, newlyLoadedComponent as never);
   return newlyLoadedComponent;
 };
+
+export type inferSupportedIntegrations<TKind extends WidgetKind> = (WidgetImports[TKind]["definition"] extends {
+  supportedIntegrations: string[];
+}
+  ? WidgetImports[TKind]["definition"]["supportedIntegrations"]
+  : string[])[number];

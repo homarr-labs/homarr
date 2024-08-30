@@ -37,7 +37,8 @@
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
     "superjson": "2.2.1",
-    "next": "^14.2.6",
+    "trpc-swagger": "^1.2.6",
+    "next": "^14.2.7",
     "react": "^18.3.1"
   },
   "devDependencies": {
@@ -45,7 +46,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "^3.3.31",
-    "eslint": "^9.9.0",
+    "eslint": "^9.9.1",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4"
   },

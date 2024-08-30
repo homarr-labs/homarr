@@ -1,4 +1,3 @@
-import { appendPath } from "@homarr/common";
 import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
@@ -106,7 +105,7 @@ export class SonarrIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(appendPath(this.integration.url, "/api/ping"), {
+        return await fetch(`${this.integration.url}/api`, {
           headers: { "X-Api-Key": super.getSecretValue("apiKey") },
         });
       },

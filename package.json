@@ -4,7 +4,7 @@
   "engines": {
     "node": ">=20.17.0"
   },
-  "packageManager": "pnpm@9.8.0",
+  "packageManager": "pnpm@9.9.0",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
@@ -30,18 +30,23 @@
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^2.0.14",
+    "@turbo/gen": "^2.1.0",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-v8": "^2.0.5",
     "@vitest/ui": "^2.0.5",
     "cross-env": "^7.0.3",
-    "jsdom": "^24.1.1",
+    "jsdom": "^25.0.0",
     "prettier": "^3.3.3",
-    "testcontainers": "^10.11.0",
-    "turbo": "^2.0.14",
+    "testcontainers": "^10.12.0",
+    "turbo": "^2.1.0",
     "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
   },
-  "prettier": "@homarr/prettier-config"
+  "prettier": "@homarr/prettier-config",
+  "pnpm": {
+    "patchedDependencies": {
+      "trpc-swagger@1.2.6": "patches/trpc-swagger@1.2.6.patch"
+    }
+  }
 }

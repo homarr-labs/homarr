@@ -531,6 +531,10 @@ export default {
       colon: ": ",
     },
     error: "Error",
+    errors: {
+      noData: "No data to show",
+      noIntegration: "No integration selected",
+    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -1115,6 +1119,50 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    "mediaRequests-requestList": {
+      name: "Media Requests List",
+      description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
+      option: {
+        linksTargetNewTab: {
+          label: "Open links in new tab",
+        },
+      },
+      pending: {
+        approve: "Approve request",
+        approving: "Approving request...",
+        decline: "Decline request",
+      },
+      availability: {
+        unknown: "Unknown",
+        pending: "Pending",
+        processing: "Processing",
+        partiallyAvailable: "Partial",
+        available: "Available",
+      },
+      toBeDetermined: "TBD",
+    },
+    "mediaRequests-requestStats": {
+      name: "Media Requests Stats",
+      description: "Statistics about your media requests",
+      option: {},
+      titles: {
+        stats: {
+          main: "Media Stats",
+          approved: "Already approved",
+          pending: "Pending approvals",
+          processing: "Being processed",
+          declined: "Already declined",
+          available: "Already Available",
+          tv: "TV requests",
+          movie: "Movie requests",
+          total: "Total",
+        },
+        users: {
+          main: "Top Users",
+          requests: "Requests",
+        },
+      },
+    },
     rssFeed: {
       name: "RSS feeds",
       description: "Monitor and display one or more generic RSS, ATOM or JSON feeds",
@@ -1366,6 +1414,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            api: "API",
             tasks: "Tasks",
           },
         },
@@ -1601,6 +1650,9 @@ export default {
             },
             mediaOrganizer: {
               label: "Media Organizers",
+            },
+            mediaRequests: {
+              label: "Media Requests",
             },
             rssFeeds: {
               label: "RSS feeds",

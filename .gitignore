@@ -55,3 +55,4 @@ yarn-error.log*
 
 apps/tasks/tasks.cjs
 apps/websocket/wssServer.cjs
+apps/nextjs/.million/
