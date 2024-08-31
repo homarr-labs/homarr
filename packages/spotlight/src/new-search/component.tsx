@@ -13,6 +13,7 @@ import { selectAction, spotlightStore } from "../spotlight-store";
 import type { SearchGroup } from "./group";
 import type { inferSearchInteractionOptions } from "./interaction";
 import { searchModes } from "./modes";
+import { searchEnginesChildrenOptions, searchEnginesSearchGroups } from "./modes/external/search-engines-search-group";
 
 export const NewSpotlight = () => {
   const [query, setQuery] = useState("");
@@ -126,6 +127,19 @@ export const NewSpotlight = () => {
           if (query.length === 0 && mode !== "default" && event.key === "Backspace") {
             setMode("default");
             setChildrenOptions(null);
+          }
+
+          // TODO: Add api to directly interact / maybe even add an option to add a onKeyPress event to modes / groups?
+          if (mode === "external" && event.code === "Space") {
+            const engine =
+              "options" in searchEnginesSearchGroups
+                ? searchEnginesSearchGroups.options.find((option) => option.short === query)
+                : undefined;
+
+            if (engine) {
+              setChildrenOptions(searchEnginesChildrenOptions(engine));
+              setQuery("");
+            }
           }
         }}
       />

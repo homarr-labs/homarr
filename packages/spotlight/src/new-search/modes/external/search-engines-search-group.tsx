@@ -1,4 +1,6 @@
 import { Group, Kbd, Stack, Text } from "@mantine/core";
+import { IconDownload, IconSearch, IconStar } from "@tabler/icons-react";
+import type { TablerIcon } from "@tabler/icons-react";
 
 import { createChildrenOptions } from "../../children";
 import { createGroup } from "../../group";
@@ -7,19 +9,38 @@ import { interaction } from "../../interaction";
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type SearchEngine = {
-  searchEngine: { short: string; image: string; name: string; description: string; urlTemplate: string };
+  short: string;
+  image: string | TablerIcon;
+  name: string;
+  description: string;
+  urlTemplate: string;
 };
 
-const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
+export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
   actions: [
     {
-      component: (option) => (
+      component: ({ name }) => (
         <Group mx="md" my="sm">
-          <Text>Search with {option.searchEngine.name}</Text>
+          <IconSearch stroke={1.5} />
+          <Text>Search with {name}</Text>
         </Group>
       ),
-      interaction: interaction.link(({ searchEngine }, query) => ({
-        href: searchEngine.urlTemplate.replace("%s", query),
+      interaction: interaction.link(({ urlTemplate }, query) => ({
+        href: urlTemplate.replace("%s", query),
+      })),
+    },
+    {
+      component: () => (
+        <Group mx="md" my="sm">
+          <IconStar stroke={1.5} />
+          <Text>Mark as favorite</Text>
+        </Group>
+      ),
+      interaction: interaction.javaScript(({ name }) => ({
+        onSelect: () => {
+          // TODO: I'll need to add support for trpc mutations here
+          console.log(`Marked ${name} as favorite`);
+        },
       })),
     },
   ],
@@ -28,8 +49,12 @@ const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
       <Stack mx="md" my="sm">
         <Text>Select an action for the search engine</Text>
         <Group>
-          <img height={24} width={24} src={options.searchEngine.image} alt={options.searchEngine.name} />
-          <Text>{options.searchEngine.name}</Text>
+          {typeof options.image === "string" ? (
+            <img height={24} width={24} src={options.image} alt={options.name} />
+          ) : (
+            <options.image size={24} />
+          )}
+          <Text>{options.name}</Text>
         </Group>
       </Stack>
     );
@@ -38,41 +63,58 @@ const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
 
 export const searchEnginesSearchGroups = createGroup<SearchEngine>({
   title: "Search engines",
-  component: ({ searchEngine }) => (
+  component: ({ image: Image, name, description, short }) => (
     <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
       <Group wrap="nowrap">
-        <img height={24} width={24} src={searchEngine.image} alt={searchEngine.name} />
+        {typeof Image === "string" ? <img height={24} width={24} src={Image} alt={name} /> : <Image size={24} />}
         <Stack gap={0} justify="center">
-          <Text size="sm">{searchEngine.name}</Text>
+          <Text size="sm">{name}</Text>
           <Text size="xs" c="gray.6">
-            {searchEngine.description}
+            {description}
           </Text>
         </Stack>
       </Group>
 
-      <Kbd size="sm">{searchEngine.short}</Kbd>
+      <Kbd size="sm">{short}</Kbd>
     </Group>
   ),
-  filter: (query, option) => option.searchEngine.short.toLowerCase().startsWith(query.toLowerCase()),
+  filter: (query, { short }) => short.toLowerCase().startsWith(query.toLowerCase()),
   interaction: interaction.children(searchEnginesChildrenOptions),
   options: [
     {
-      searchEngine: {
-        short: "g",
-        name: "Google",
-        image: "https://www.google.com/favicon.ico",
-        description: "Search the web with Google",
-        urlTemplate: "https://www.google.com/search?q=%s",
-      },
+      short: "g",
+      name: "Google",
+      image: "https://www.google.com/favicon.ico",
+      description: "Search the web with Google",
+      urlTemplate: "https://www.google.com/search?q=%s",
     },
     {
-      searchEngine: {
-        short: "ddg",
-        name: "DuckDuckGo",
-        image: "https://duckduckgo.com/favicon.ico",
-        description: "Search the web with DuckDuckGo",
-        urlTemplate: "https://duckduckgo.com/?q=%s",
-      },
+      short: "b",
+      name: "Bing",
+      image: "https://www.bing.com/favicon.ico",
+      description: "Search the web with Bing",
+      urlTemplate: "https://www.bing.com/search?q=%s",
+    },
+    {
+      short: "d",
+      name: "DuckDuckGo",
+      image: "https://duckduckgo.com/favicon.ico",
+      description: "Search the web with DuckDuckGo",
+      urlTemplate: "https://duckduckgo.com/?q=%s",
+    },
+    {
+      short: "t",
+      name: "Torrents",
+      image: IconDownload,
+      description: "Search for torrents on torrentdownloads.pro",
+      urlTemplate: "https://www.torrentdownloads.pro/search/?search=%s",
+    },
+    {
+      short: "y",
+      name: "YouTube",
+      image: "https://www.youtube.com/favicon.ico",
+      description: "Search for videos on YouTube",
+      urlTemplate: "https://www.youtube.com/results?search_query=%s",
     },
   ],
 });
