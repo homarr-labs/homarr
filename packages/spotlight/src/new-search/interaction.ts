@@ -19,6 +19,8 @@ const searchInteractions = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     option: any;
   }>(),
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  createSearchInteraction("disabled").optionsType<{}>(),
 ] as const;
 
 // Union of all search interactions types

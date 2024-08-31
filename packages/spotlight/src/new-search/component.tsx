@@ -53,6 +53,10 @@ export const NewSpotlight = () => {
     return childrenOptions.actions.map((action) => {
       const interaction = action.interaction(childrenOptions.option, query);
 
+      if (interaction.type === "disabled") {
+        return <></>;
+      }
+
       const renderRoot =
         interaction.type === "link"
           ? (props: Record<string, unknown>) => {
@@ -251,6 +255,10 @@ const SpotlightOption = <TOption extends Record<string, unknown>>({
   option,
 }: SpotlightOptionProps<TOption>) => {
   const interaction = group.interaction(option, query);
+
+  if (interaction.type === "disabled") {
+    return <></>;
+  }
 
   const renderRoot =
     interaction.type === "link"
