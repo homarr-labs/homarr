@@ -1,6 +1,7 @@
 import { Text } from "@mantine/core";
 
 import type { SearchMode } from "../../mode";
+import { pagesSearchGroup } from "./pages-search-group";
 
 export const pageMode = {
   name: "page",
@@ -11,5 +12,5 @@ export const pageMode = {
       TODO: Add tip
     </Text>
   ),
-  groups: [],
+  groups: [pagesSearchGroup],
 } satisfies SearchMode;

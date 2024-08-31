@@ -13,7 +13,7 @@ export const groupsSearchGroup = createGroup<{ group: { name: string } }>({
     </Group>
   ),
   interaction: interaction.javaScript(({ group }) => ({ onSelect: () => console.log(group) })),
-  useOptions(query) {
+  useQueryOptions(query) {
     return clientApi.group.search.useQuery(
       { query, limit: 5 },
       {

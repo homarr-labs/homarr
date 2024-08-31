@@ -171,12 +171,21 @@ const GroupActions = <TOption extends Record<string, unknown>>({
   setChildrenOptions,
 }: GroupActionsProps<TOption>) => {
   // This does work as the same amount of hooks is called on every render
-  const useOptions = "options" in group ? () => group.options : group.useOptions;
+  const useOptions =
+    "options" in group ? () => group.options : "useOptions" in group ? group.useOptions : group.useQueryOptions;
   const options = useOptions(query);
   const t = useI18n();
 
   if (Array.isArray(options)) {
-    const filteredOptions = options.filter((option) => ("filter" in group ? group.filter(query, option) : false));
+    const filteredOptions = options
+      .filter((option) => ("filter" in group ? group.filter(query, option) : false))
+      .sort((optionA, optionB) => {
+        if ("sort" in group) {
+          return group.sort?.(query, [optionA, optionB]) ?? 0;
+        }
+
+        return 0;
+      });
 
     if (filteredOptions.length === 0) {
       return <Spotlight.Empty>{t("common.search.nothingFound")}</Spotlight.Empty>;

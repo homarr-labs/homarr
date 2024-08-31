@@ -11,6 +11,14 @@ type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps ext
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SearchGroup<TOption extends Record<string, unknown> = any> =
   | CommonSearchGroup<TOption, { filter: (query: string, option: TOption) => boolean; options: TOption[] }>
-  | CommonSearchGroup<TOption, { useOptions: (query: string) => UseTRPCQueryResult<TOption[], unknown> }>;
+  | CommonSearchGroup<
+      TOption,
+      {
+        filter: (query: string, option: TOption) => boolean;
+        sort?: (query: string, options: [TOption, TOption]) => number;
+        useOptions: () => TOption[];
+      }
+    >
+  | CommonSearchGroup<TOption, { useQueryOptions: (query: string) => UseTRPCQueryResult<TOption[], unknown> }>;
 
 export const createGroup = <TOption extends Record<string, unknown>>(group: SearchGroup<TOption>) => group;

@@ -45,7 +45,7 @@ export const usersSearchGroup = createGroup<User>({
     </Group>
   ),
   interaction: interaction.children(userChildrenOptions),
-  useOptions(query) {
+  useQueryOptions(query) {
     return clientApi.user.search.useQuery(
       { query, limit: 5 },
       {

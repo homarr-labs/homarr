@@ -1157,6 +1157,9 @@ importers:
       '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../api
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../auth
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
