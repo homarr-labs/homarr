@@ -38,8 +38,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       testcontainers:
-        specifier: ^10.12.0
-        version: 10.12.0
+        specifier: ^10.13.0
+        version: 10.13.0
       turbo:
         specifier: ^2.1.1
         version: 2.1.1
@@ -6763,8 +6763,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@10.12.0:
-    resolution: {integrity: sha512-KEtFj7VvfZPZuyugYJe5aYC/frFN2LRHwQVOVbdZf1vYYGDa4VQt6d0/bM3PcgTE1BOAY6cWBD/S41yu4JQ1Kg==}
+  testcontainers@10.13.0:
+    resolution: {integrity: sha512-SDblQvirbJw1ZpenxaAairGtAesw5XMOCHLbRhTTUBJtBkZJGce8Vx/I8lXQxWIM8HRXsg3HILTHGQvYo4x7wQ==}
 
   text-decoder@1.1.0:
     resolution: {integrity: sha512-TmLJNj6UgX8xcUZo4UDStGQtDiTzF7BzWlzn9g7UWrjkpHr5uJTK1ld16wZ3LXb2vb6jH8qU89dW5whuMdXYdw==}
@@ -9220,7 +9220,7 @@ snapshots:
       '@typescript-eslint/types': 8.3.0
       '@typescript-eslint/typescript-estree': 8.3.0(typescript@5.5.4)
       '@typescript-eslint/visitor-keys': 8.3.0
-      debug: 4.3.5
+      debug: 4.3.6
       eslint: 9.9.1
     optionalDependencies:
       typescript: 5.5.4
@@ -10430,7 +10430,7 @@ snapshots:
   engine.io-client@6.5.4:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.5
+      debug: 4.3.6
       engine.io-parser: 5.2.3
       ws: 8.17.1
       xmlhttprequest-ssl: 2.0.0
@@ -11235,7 +11235,7 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.5
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -11542,7 +11542,7 @@ snapshots:
   istanbul-lib-source-maps@5.0.6:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      debug: 4.3.5
+      debug: 4.3.6
       istanbul-lib-coverage: 3.2.2
     transitivePeerDependencies:
       - supports-color
@@ -13085,7 +13085,7 @@ snapshots:
   socket.io-parser@4.2.4:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.5
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -13420,14 +13420,14 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.4
 
-  testcontainers@10.12.0:
+  testcontainers@10.13.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.31
       archiver: 7.0.1
       async-lock: 1.4.1
       byline: 5.0.0
-      debug: 4.3.5
+      debug: 4.3.6
       docker-compose: 0.24.8
       dockerode: 3.3.5
       get-port: 5.1.1
@@ -13870,7 +13870,7 @@ snapshots:
   vite-node@2.0.5(@types/node@20.16.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.5
+      debug: 4.3.6
       pathe: 1.1.2
       tinyrainbow: 1.2.0
       vite: 5.2.11(@types/node@20.16.2)(sass@1.77.8)(sugarss@4.0.1(postcss@8.4.38))(terser@5.31.0)
