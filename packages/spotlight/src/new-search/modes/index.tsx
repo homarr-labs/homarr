@@ -1,4 +1,5 @@
 import { Group, Kbd, Text } from "@mantine/core";
+import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
 
 import { createGroup } from "../group";
 import { interaction } from "../interaction";
@@ -32,6 +33,34 @@ const helpMode = {
       ),
       filter: () => true,
       interaction: interaction.mode(({ name }) => ({ mode: name })),
+    }),
+    createGroup({
+      title: "Help",
+      options: [
+        {
+          label: "Documentation",
+          icon: IconBook2,
+          href: "https://homarr.dev/docs/getting-started/",
+        },
+        {
+          label: "Submit an issue",
+          icon: IconBrandGithub,
+          href: "https://github.com/ajnart/homarr/issues/new/choose",
+        },
+        {
+          label: "Community Discord",
+          icon: IconBrandDiscord,
+          href: "https://discord.com/invite/aCsmEV5RgA",
+        },
+      ],
+      component: (props) => (
+        <Group px="md" py="xs" w="100%" wrap="nowrap" align="center">
+          <props.icon />
+          <Text>{props.label}</Text>
+        </Group>
+      ),
+      filter: () => true,
+      interaction: interaction.link(({ href }) => ({ href })),
     }),
   ],
 } satisfies SearchMode;
