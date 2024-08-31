@@ -10,7 +10,7 @@ import { interaction } from "../../interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-type User = { user: { id: string; name: string; image: string | null } };
+type User = { id: string; name: string; image: string | null };
 
 const userChildrenOptions = createChildrenOptions<User>({
   actions: [
@@ -21,7 +21,7 @@ const userChildrenOptions = createChildrenOptions<User>({
           <Text>Show user details</Text>
         </Group>
       ),
-      interaction: interaction.link(({ user }) => ({ href: `/manage/users/${user.id}/general` })),
+      interaction: interaction.link(({ id }) => ({ href: `/manage/users/${id}/general` })),
     },
   ],
   detailComponent: ({ options }) => (
@@ -29,8 +29,8 @@ const userChildrenOptions = createChildrenOptions<User>({
       <Text>Select an action for the user</Text>
 
       <Group>
-        <UserAvatar user={options.user} size="sm" />
-        <Text>{options.user.name}</Text>
+        <UserAvatar user={options} size="sm" />
+        <Text>{options.name}</Text>
       </Group>
     </Stack>
   ),
@@ -38,7 +38,7 @@ const userChildrenOptions = createChildrenOptions<User>({
 
 export const usersSearchGroup = createGroup<User>({
   title: "Users",
-  component: ({ user }) => (
+  component: (user) => (
     <Group px="md" py="sm">
       <UserAvatar user={user} size="sm" />
       <Text>{user.name}</Text>
@@ -46,15 +46,6 @@ export const usersSearchGroup = createGroup<User>({
   ),
   interaction: interaction.children(userChildrenOptions),
   useQueryOptions(query) {
-    return clientApi.user.search.useQuery(
-      { query, limit: 5 },
-      {
-        select(data) {
-          return data.map((user) => ({
-            user,
-          }));
-        },
-      },
-    );
+    return clientApi.user.search.useQuery({ query, limit: 5 });
   },
 });
