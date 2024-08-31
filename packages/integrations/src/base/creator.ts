@@ -4,6 +4,7 @@ import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
@@ -26,6 +27,7 @@ export const integrationCreators = {
   homeAssistant: HomeAssistantIntegration,
   jellyfin: JellyfinIntegration,
   sonarr: SonarrIntegration,
+  radarr: RadarrIntegration,
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;
