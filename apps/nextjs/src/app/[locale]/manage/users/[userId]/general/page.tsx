@@ -6,14 +6,15 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
+import { LanguageCombobox } from "~/components/language/language-combobox";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
+import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
-import { ProfileLanguageChange } from "./_components/_profile-language-change";
 
 interface Props {
   params: {
@@ -54,6 +55,8 @@ export default async function EditUserPage({ params }: Props) {
     notFound();
   }
 
+  const boards = await api.board.getAllBoards();
+
   const isCredentialsUser = user.provider === "credentials";
 
   return (
@@ -74,7 +77,21 @@ export default async function EditUserPage({ params }: Props) {
         </Box>
       </Group>
 
-      <ProfileLanguageChange />
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.language")}</Title>
+        <LanguageCombobox />
+      </Stack>
+
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.board")}</Title>
+        <ChangeHomeBoardForm
+          user={user}
+          boardsData={boards.map((board) => ({
+            value: board.id,
+            label: board.name,
+          }))}
+        />
+      </Stack>
 
       {isCredentialsUser && (
         <DangerZoneRoot>

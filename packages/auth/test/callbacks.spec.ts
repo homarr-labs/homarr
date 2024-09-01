@@ -132,6 +132,13 @@ const createAdapter = () => {
 type SessionExport = typeof import("../session");
 const mockSessionToken = "e9ef3010-6981-4a81-b9d6-8495d09cf3b5";
 const mockSessionExpiry = new Date("2023-07-01");
+vi.mock("../env.mjs", () => {
+  return {
+    env: {
+      AUTH_SESSION_EXPIRY_TIME: 60 * 60 * 24 * 7,
+    },
+  };
+});
 vi.mock("../session", async (importOriginal) => {
   const mod = await importOriginal<SessionExport>();
 
@@ -185,7 +192,7 @@ describe("createSignInCallback", () => {
     expect(result).toBe(false);
   });
 
-  it("should call adapter.createSession with correct input", async () => {
+  test("should call adapter.createSession with correct input", async () => {
     const adapter = createAdapter();
     const isCredentialsRequest = true;
     const signInCallback = createSignInCallback(adapter, isCredentialsRequest);

@@ -8,6 +8,7 @@ import { useSession } from "@homarr/auth/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { CustomPasswordInput } from "@homarr/ui";
 import { validation } from "@homarr/validation";
 
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
@@ -71,7 +72,12 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
               />
             )}
 
-            <PasswordInput withAsterisk label={t("user.field.password.label")} {...form.getInputProps("password")} />
+            <CustomPasswordInput
+              withPasswordRequirements
+              withAsterisk
+              label={t("user.field.password.label")}
+              {...form.getInputProps("password")}
+            />
 
             <PasswordInput
               withAsterisk
