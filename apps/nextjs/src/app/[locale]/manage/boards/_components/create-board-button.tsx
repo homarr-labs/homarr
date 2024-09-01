@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Affix, Button, Menu } from "@mantine/core";
+import { Affix, Badge, Button, Group, Menu } from "@mantine/core";
 import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -57,7 +57,12 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Item onClick={onImportClick} leftSection={<IconFileImport size="1rem" />}>
-            Import file
+            <Group>
+              Import from old homarr
+              <Badge size="xs" color="green" variant="outline">
+                Beta
+              </Badge>
+            </Group>
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
