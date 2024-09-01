@@ -1,9 +1,8 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrDnsHoleControlsDefinition
-  extends CommonOldmarrWidgetDefinition<
-    "dns-hole-controls",
-    {
-      showToggleAllButtons: boolean;
-    }
-  > {}
+export type OldmarrDnsHoleControlsDefinition = CommonOldmarrWidgetDefinition<
+  "dns-hole-controls",
+  {
+    showToggleAllButtons: boolean;
+  }
+>;

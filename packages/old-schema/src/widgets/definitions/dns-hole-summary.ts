@@ -1,7 +1,6 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrDnsHoleSummaryDefinition
-  extends CommonOldmarrWidgetDefinition<
-    "dns-hole-summary",
-    { usePiHoleColors: boolean; layout: "column" | "row" | "grid" }
-  > {}
+export type OldmarrDnsHoleSummaryDefinition = CommonOldmarrWidgetDefinition<
+  "dns-hole-summary",
+  { usePiHoleColors: boolean; layout: "column" | "row" | "grid" }
+>;

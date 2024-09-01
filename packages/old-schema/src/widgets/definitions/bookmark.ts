@@ -1,19 +1,18 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrBookmarkDefinition
-  extends CommonOldmarrWidgetDefinition<
-    "bookmark",
-    {
+export type OldmarrBookmarkDefinition = CommonOldmarrWidgetDefinition<
+  "bookmark",
+  {
+    name: string;
+    items: {
+      id: string;
       name: string;
-      items: {
-        id: string;
-        name: string;
-        href: string;
-        iconUrl: string;
-        openNewTab: boolean;
-        hideHostname: boolean;
-        hideIcon: boolean;
-      }[];
-      layout: "autoGrid" | "horizontal" | "vertical";
-    }
-  > {}
+      href: string;
+      iconUrl: string;
+      openNewTab: boolean;
+      hideHostname: boolean;
+      hideIcon: boolean;
+    }[];
+    layout: "autoGrid" | "horizontal" | "vertical";
+  }
+>;

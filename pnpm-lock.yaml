@@ -1092,6 +1092,9 @@ importers:
       superjson:
         specifier: 2.2.1
         version: 2.2.1
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1326,6 +1329,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/old-schema':
+        specifier: workspace:^0.1.0
+        version: link:../old-schema
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation

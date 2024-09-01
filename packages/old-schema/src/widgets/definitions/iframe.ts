@@ -1,17 +1,16 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrIframeDefinition
-  extends CommonOldmarrWidgetDefinition<
-    "iframe",
-    {
-      embedUrl: string;
-      allowFullScreen: boolean;
-      allowScrolling: boolean;
-      allowTransparency: boolean;
-      allowPayment: boolean;
-      allowAutoPlay: boolean;
-      allowMicrophone: boolean;
-      allowCamera: boolean;
-      allowGeolocation: boolean;
-    }
-  > {}
+export type OldmarrIframeDefinition = CommonOldmarrWidgetDefinition<
+  "iframe",
+  {
+    embedUrl: string;
+    allowFullScreen: boolean;
+    allowScrolling: boolean;
+    allowTransparency: boolean;
+    allowPayment: boolean;
+    allowAutoPlay: boolean;
+    allowMicrophone: boolean;
+    allowCamera: boolean;
+    allowGeolocation: boolean;
+  }
+>;

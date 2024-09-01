@@ -7,6 +7,7 @@ import {
   backgroundImageSizes,
   boardPermissions,
 } from "@homarr/definitions";
+import { importConfigurationSchema } from "@homarr/old-schema";
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
@@ -74,6 +75,7 @@ const importJsonFileSchema = zfd.formData({
     .refine((file) => file.type === "application/json", { message: "Invalid file type" })
     .refine((file) => file.size < 1024 * 1024, { message: "File is too large" })
     .refine((file) => file.size > 0, { message: "File is empty" }),
+  configuration: zfd.json(importConfigurationSchema),
 });
 
 const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));

@@ -1,229 +1,244 @@
-import type { MantineTheme } from "@mantine/core";
-import type { Property } from "csstype";
+import { z } from "zod";
 
-import type { OldmarrWidgetKinds as OldmarrWidgetKind } from "./widgets/definitions/common";
+import { oldmarrWidgetKinds } from "./widgets/definitions/common";
 
-export interface OldmarrConfig {
-  schemaVersion: number;
-  configProperties: {
-    name: string;
-  };
-  categories: CategoryType[];
-  wrappers: WrapperType[];
-  apps: OldmarrApp[];
-  widgets: OldmarrWidget[];
-  settings: SettingsType;
-}
+const createAreaSchema = <TType extends string, TPropertiesSchema extends z.AnyZodObject>(
+  type: TType,
+  propertiesSchema: TPropertiesSchema,
+) =>
+  z.object({
+    type: z.literal(type),
+    properties: propertiesSchema,
+  });
 
-interface CategoryType {
-  id: string;
-  position: number;
-  name: string;
-}
+const wrapperAreaSchema = createAreaSchema(
+  "wrapper",
+  z.object({
+    id: z.string(),
+  }),
+);
 
-interface WrapperType {
-  id: string;
-  position: number;
-}
+const categoryAreaSchema = createAreaSchema(
+  "category",
+  z.object({
+    id: z.string(),
+  }),
+);
 
-export interface OldmarrApp extends TileBaseType {
-  id: string;
-  name: string;
-  url: string;
-  behaviour: AppBehaviourType;
-  network: AppNetworkType;
-  appearance: AppAppearanceType;
-  integration: AppIntegrationType;
-}
+const sidebarAreaSchema = createAreaSchema(
+  "sidebar",
+  z.object({
+    location: z.union([z.literal("right"), z.literal("left")]),
+  }),
+);
 
-interface AppBehaviourType {
-  externalUrl: string;
-  isOpeningNewTab: boolean;
-  tooltipDescription?: string;
-}
+const areaSchema = z.union([wrapperAreaSchema, categoryAreaSchema, sidebarAreaSchema]);
 
-interface AppNetworkType {
-  enabledStatusChecker: boolean;
-  /**
-   * @deprecated replaced by statusCodes
-   */
-  okStatus?: number[];
-  statusCodes: string[];
-}
+const sizedShapeSchema = z.object({
+  location: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+  size: z.object({
+    width: z.number(),
+    height: z.number(),
+  }),
+});
 
-interface AppAppearanceType {
-  iconUrl: string;
-  appNameStatus: "normal" | "hover" | "hidden";
-  positionAppName: Property.FlexDirection;
-  appNameFontSize: number;
-  lineClampAppName: number;
-}
+const shapeSchema = z.object({
+  lg: sizedShapeSchema,
+  md: sizedShapeSchema.optional(),
+  sm: sizedShapeSchema.optional(),
+});
 
-type IntegrationType =
-  | "readarr"
-  | "radarr"
-  | "sonarr"
-  | "lidarr"
-  | "prowlarr"
-  | "sabnzbd"
-  | "jellyseerr"
-  | "overseerr"
-  | "deluge"
-  | "qBittorrent"
-  | "transmission"
-  | "plex"
-  | "jellyfin"
-  | "nzbGet"
-  | "pihole"
-  | "adGuardHome"
-  | "homeAssistant"
-  | "openmediavault"
-  | "proxmox"
-  | "tdarr";
+const tileBaseSchema = z.object({
+  area: areaSchema,
+  shape: shapeSchema,
+});
 
-interface AppIntegrationType {
-  type: IntegrationType | null;
-  properties: AppIntegrationPropertyType[];
-}
+const appBehaviourSchema = z.object({
+  externalUrl: z.string(),
+  isOpeningNewTab: z.boolean(),
+  tooltipDescription: z.string().optional(),
+});
 
-interface AppIntegrationPropertyType {
-  type: AppIntegrationPropertyAccessabilityType;
-  field: IntegrationField;
-  value?: string | null;
-  isDefined: boolean;
-}
+const appNetworkSchema = z.object({
+  enabledStatusChecker: z.boolean(),
+  okStatus: z.array(z.number()).optional(),
+  statusCodes: z.array(z.string()),
+});
 
-type AppIntegrationPropertyAccessabilityType = "private" | "public";
+const appAppearanceSchema = z.object({
+  iconUrl: z.string(),
+  appNameStatus: z.union([z.literal("normal"), z.literal("hover"), z.literal("hidden")]),
+  positionAppName: z.union([
+    z.literal("row"),
+    z.literal("column"),
+    z.literal("row-reverse"),
+    z.literal("column-reverse"),
+  ]),
+  appNameFontSize: z.number(),
+  lineClampAppName: z.number(),
+});
 
-type IntegrationField = "apiKey" | "password" | "username";
+const integrationSchema = z.enum([
+  "readarr",
+  "radarr",
+  "sonarr",
+  "lidarr",
+  "prowlarr",
+  "sabnzbd",
+  "jellyseerr",
+  "overseerr",
+  "deluge",
+  "qBittorrent",
+  "transmission",
+  "plex",
+  "jellyfin",
+  "nzbGet",
+  "pihole",
+  "adGuardHome",
+  "homeAssistant",
+  "openmediavault",
+  "proxmox",
+  "tdarr",
+]);
 
-interface TileBaseType {
-  area: AreaType;
-  shape: ShapeType;
-}
+const appIntegrationPropertySchema = z.object({
+  type: z.enum(["private", "public"]),
+  field: z.enum(["apiKey", "password", "username"]),
+  value: z.string().nullable().optional(),
+  isDefined: z.boolean(),
+});
 
-type AreaType = WrapperAreaType | CategoryAreaType | SidebarAreaType;
+const appIntegrationSchema = z.object({
+  type: integrationSchema.optional(),
+  properties: z.array(appIntegrationPropertySchema),
+});
 
-interface WrapperAreaType {
-  type: "wrapper";
-  properties: {
-    id: string;
-  };
-}
+export const oldmarrAppSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    url: z.string(),
+    behaviour: appBehaviourSchema,
+    network: appNetworkSchema,
+    appearance: appAppearanceSchema,
+    integration: appIntegrationSchema,
+  })
+  .and(tileBaseSchema);
 
-interface CategoryAreaType {
-  type: "category";
-  properties: {
-    id: string;
-  };
-}
+export const oldmarrWidgetSchema = z
+  .object({
+    id: z.string(),
+    type: z.enum(oldmarrWidgetKinds),
+    properties: z.record(z.unknown()),
+  })
+  .and(tileBaseSchema);
 
-interface SidebarAreaType {
-  type: "sidebar";
-  properties: {
-    location: "right" | "left";
-  };
-}
+const categorySchema = z.object({
+  id: z.string(),
+  position: z.number(),
+  name: z.string(),
+});
 
-interface ShapeType {
-  lg: SizedShapeType;
-  md?: SizedShapeType;
-  sm?: SizedShapeType;
-}
+const wrapperSchema = z.object({
+  id: z.string(),
+  position: z.number(),
+});
 
-interface SizedShapeType {
-  location: {
-    x: number;
-    y: number;
-  };
-  size: {
-    width: number;
-    height: number;
-  };
-}
+const baseSearchEngineSchema = z.object({
+  properties: z.object({
+    openInNewTab: z.boolean(),
+    enabled: z.boolean(),
+  }),
+});
 
-export interface OldmarrWidget {
-  id: string;
-  type: OldmarrWidgetKind;
-  properties: Record<string, unknown>;
-  area: AreaType;
-  shape: ShapeType;
-}
+const commonSearchEngineSchema = z
+  .object({
+    type: z.enum(["google", "duckDuckGo", "bing"]),
+  })
+  .and(baseSearchEngineSchema);
 
-interface SettingsType {
-  common: CommonSettingsType;
-  customization: CustomizationSettingsType;
-  access: BoardAccessSettingsType;
-}
+const customSearchEngineSchema = z
+  .object({
+    type: z.literal("custom"),
+    properties: z.object({
+      template: z.string(),
+    }),
+  })
+  .and(baseSearchEngineSchema);
 
-interface BoardAccessSettingsType {
-  allowGuests: boolean;
-}
+const searchEngineSchema = z.union([commonSearchEngineSchema, customSearchEngineSchema]);
 
-interface CommonSettingsType {
-  searchEngine: SearchEngineCommonSettingsType;
-}
+const commonSettingsSchema = z.object({
+  searchEngine: searchEngineSchema,
+});
 
-type SearchEngineCommonSettingsType = CommonSearchEngineCommonSettingsType | CustomSearchEngineCommonSettingsType;
+const accessSettingsSchema = z.object({
+  allowGuests: z.boolean(),
+});
 
-interface CommonSearchEngineCommonSettingsType extends BaseSearchEngineType {
-  type: "google" | "duckDuckGo" | "bing";
-}
+const accessibilitySettingsSchema = z.object({
+  disablePingPulse: z.boolean(),
+  replacePingDotsWithIcons: z.boolean(),
+});
 
-interface CustomSearchEngineCommonSettingsType extends BaseSearchEngineType {
-  type: "custom";
-  properties: {
-    template: string;
-    openInNewTab: boolean;
-    enabled: boolean;
-  };
-}
+const gridstackSettingsSchema = z.object({
+  columnCountSmall: z.number(),
+  columnCountMedium: z.number(),
+  columnCountLarge: z.number(),
+});
 
-interface BaseSearchEngineType {
-  properties: {
-    openInNewTab: boolean;
-    enabled: boolean;
-  };
-}
+const layoutSettingsSchema = z.object({
+  enabledLeftSidebar: z.boolean(),
+  enabledRightSidebar: z.boolean(),
+  enabledDocker: z.boolean(),
+  enabledPing: z.boolean(),
+  enabledSearchbar: z.boolean(),
+});
 
-interface CustomizationSettingsType {
-  layout: LayoutCustomizationSettingsType;
-  pageTitle?: string;
-  metaTitle?: string;
-  logoImageUrl?: string;
-  faviconUrl?: string;
-  backgroundImageUrl?: string;
-  backgroundImageAttachment?: "fixed" | "scroll";
-  backgroundImageSize?: "cover" | "contain";
-  backgroundImageRepeat?: "no-repeat" | "repeat" | "repeat-x" | "repeat-y";
-  customCss?: string;
-  colors: ColorsCustomizationSettingsType;
-  appOpacity?: number;
-  gridstack?: GridstackSettingsType;
-  accessibility: AccessibilitySettings;
-}
+const colorsSettingsSchema = z.object({
+  primary: z.string().optional(),
+  secondary: z.string().optional(),
+  shade: z.string().optional(),
+});
 
-interface AccessibilitySettings {
-  disablePingPulse: boolean;
-  replacePingDotsWithIcons: boolean;
-}
+const customizationSettingsSchema = z.object({
+  layout: layoutSettingsSchema,
+  pageTitle: z.string().optional(),
+  metaTitle: z.string().optional(),
+  logoImageUrl: z.string().optional(),
+  faviconUrl: z.string().optional(),
+  backgroundImageUrl: z.string().optional(),
+  backgroundImageAttachment: z.enum(["fixed", "scroll"]).optional(),
+  backgroundImageSize: z.enum(["cover", "contain"]).optional(),
+  backgroundImageRepeat: z.enum(["no-repeat", "repeat", "repeat-x", "repeat-y"]).optional(),
+  customCss: z.string().optional(),
+  colors: colorsSettingsSchema,
+  appOpacity: z.number().optional(),
+  gridstack: gridstackSettingsSchema,
+  accessibility: accessibilitySettingsSchema,
+});
 
-interface GridstackSettingsType {
-  columnCountSmall: number; // default: 3
-  columnCountMedium: number; // default: 6
-  columnCountLarge: number; // default: 12
-}
+const settingsSchema = z.object({
+  common: commonSettingsSchema,
+  customization: customizationSettingsSchema,
+  access: accessSettingsSchema,
+});
 
-interface LayoutCustomizationSettingsType {
-  enabledLeftSidebar: boolean;
-  enabledRightSidebar: boolean;
-  enabledDocker: boolean;
-  enabledPing: boolean;
-  enabledSearchbar: boolean;
-}
+export const oldmarrConfigSchema = z.object({
+  schemaVersion: z.number(),
+  configProperties: z.object({
+    name: z.string(),
+  }),
+  categories: z.array(categorySchema),
+  wrappers: z.array(wrapperSchema),
+  apps: z.array(oldmarrAppSchema),
+  widgets: z.array(oldmarrWidgetSchema),
+  settings: settingsSchema,
+});
 
-interface ColorsCustomizationSettingsType {
-  primary?: MantineTheme["primaryColor"];
-  secondary?: MantineTheme["primaryColor"];
-  shade?: MantineTheme["primaryShade"];
-}
+export type OldmarrConfig = z.infer<typeof oldmarrConfigSchema>;
+export type OldmarrApp = z.infer<typeof oldmarrAppSchema>;
+export type OldmarrWidget = z.infer<typeof oldmarrWidgetSchema>;

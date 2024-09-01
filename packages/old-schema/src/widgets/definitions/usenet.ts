@@ -1,3 +1,4 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrUsenetDefinition extends CommonOldmarrWidgetDefinition<"usenet", {}> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type OldmarrUsenetDefinition = CommonOldmarrWidgetDefinition<"usenet", {}>;

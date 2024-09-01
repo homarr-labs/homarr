@@ -1,11 +1,10 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrNotebookDefinition
-  extends CommonOldmarrWidgetDefinition<
-    "notebook",
-    {
-      showToolbar: boolean;
-      allowReadOnlyCheck: boolean;
-      content: string;
-    }
-  > {}
+export type OldmarrNotebookDefinition = CommonOldmarrWidgetDefinition<
+  "notebook",
+  {
+    showToolbar: boolean;
+    allowReadOnlyCheck: boolean;
+    content: string;
+  }
+>;

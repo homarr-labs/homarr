@@ -1,3 +1,4 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrMediaServerDefinition extends CommonOldmarrWidgetDefinition<"media-server", {}> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type OldmarrMediaServerDefinition = CommonOldmarrWidgetDefinition<"media-server", {}>;

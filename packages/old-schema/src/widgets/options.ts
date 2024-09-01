@@ -5,7 +5,7 @@ import { logger } from "@homarr/log";
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import type { OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
 
-// This type enforces, taht for all widget mappings there is a corresponding option mapping,
+// This type enforces, that for all widget mappings there is a corresponding option mapping,
 // each option of newmarr can be mapped from the value of the oldmarr options
 type OptionMapping = {
   [WidgetKey in keyof WidgetMapping]: WidgetMapping[WidgetKey] extends null
@@ -18,6 +18,10 @@ type OptionMapping = {
 };
 
 const optionMapping: OptionMapping = {
+  "mediaRequests-requestList": {
+    linksTargetNewTab: (oldOptions) => oldOptions.openInNewTab,
+  },
+  "mediaRequests-requestStats": {},
   calendar: {
     filterFutureMonths: () => undefined,
     filterPastMonths: () => undefined,

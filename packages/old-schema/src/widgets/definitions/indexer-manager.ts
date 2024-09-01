@@ -1,9 +1,8 @@
-import { CommonOldmarrWidgetDefinition } from "./common";
+import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export interface OldmarrIndexerManagerDefinition
-  extends CommonOldmarrWidgetDefinition<
-    "indexer-manager",
-    {
-      openIndexerSiteInNewTab: boolean;
-    }
-  > {}
+export type OldmarrIndexerManagerDefinition = CommonOldmarrWidgetDefinition<
+  "indexer-manager",
+  {
+    openIndexerSiteInNewTab: boolean;
+  }
+>;
