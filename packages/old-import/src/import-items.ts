@@ -4,17 +4,20 @@ import type { Database } from "@homarr/db";
 import { createId } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
+import type { OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
+import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import type { WidgetComponentProps } from "../../../widgets/src";
-import type { OldmarrApp, OldmarrWidget } from "../config";
-import { mapKind } from "../widgets/definitions";
-import { mapOptions } from "../widgets/options";
+import type { WidgetComponentProps } from "../../widgets/src/definition";
+import { OldHomarrScreenSizeError } from "./import-error";
+import { mapKind } from "./widgets/definitions";
+import { mapOptions } from "./widgets/options";
 
 export const insertItemsAsync = async (
   db: Database,
   widgets: OldmarrWidget[],
   mappedApps: (OldmarrApp & { newId: string })[],
   sectionIdMaps: Map<string, string>,
+  configuration: OldmarrImportConfiguration,
 ) => {
   logger.info(`Importing old homarr items widgets=${widgets.length} apps=${mappedApps.length}`);
 
@@ -38,13 +41,18 @@ export const insertItemsAsync = async (
 
     logger.debug(`Inserting widget id=${widget.id} sectionId=${sectionId}`);
 
+    const screenSizeShape = widget.shape[configuration.screenSize];
+    if (!screenSizeShape) {
+      throw new OldHomarrScreenSizeError("widget", widget.id, configuration.screenSize);
+    }
+
     await db.insert(items).values({
       id: createId(),
       sectionId,
-      height: widget.shape.lg.size.height,
-      width: widget.shape.lg.size.width,
-      xOffset: widget.shape.lg.location.x,
-      yOffset: widget.shape.lg.location.y,
+      height: screenSizeShape.size.height,
+      width: screenSizeShape.size.width,
+      xOffset: screenSizeShape.location.x,
+      yOffset: screenSizeShape.location.y,
       kind,
       options: SuperJSON.stringify(mapOptions(kind, widget.properties)),
     });
@@ -63,13 +71,18 @@ export const insertItemsAsync = async (
 
     logger.debug(`Inserting app name=${app.name} sectionId=${sectionId}`);
 
+    const screenSizeShape = app.shape[configuration.screenSize];
+    if (!screenSizeShape) {
+      throw new OldHomarrScreenSizeError("app", app.id, configuration.screenSize);
+    }
+
     await db.insert(items).values({
       id: createId(),
       sectionId,
-      height: app.shape.lg.size.height,
-      width: app.shape.lg.size.width,
-      xOffset: app.shape.lg.location.x,
-      yOffset: app.shape.lg.location.y,
+      height: screenSizeShape.size.height,
+      width: screenSizeShape.size.width,
+      xOffset: screenSizeShape.location.x,
+      yOffset: screenSizeShape.location.y,
       kind: "app",
       options: SuperJSON.stringify({
         appId: app.newId,

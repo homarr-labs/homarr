@@ -1,7 +1,6 @@
 import { createId } from "@homarr/db";
 import { logger } from "@homarr/log";
-
-import type { OldmarrConfig } from "../config";
+import type { OldmarrConfig } from "@homarr/old-schema";
 
 export const fixSectionIssues = (old: OldmarrConfig) => {
   const wrappers = old.wrappers.sort((wrapperA, wrapperB) => wrapperA.position - wrapperB.position);

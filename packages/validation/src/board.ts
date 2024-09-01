@@ -7,9 +7,9 @@ import {
   backgroundImageSizes,
   boardPermissions,
 } from "@homarr/definitions";
-import { importConfigurationSchema } from "@homarr/old-schema/shared";
 
 import { zodEnumFromArray } from "./enums";
+import { createCustomErrorParams } from "./form/i18n";
 import { createSavePermissionsSchema } from "./permissions";
 import { commonItemSchema, createSectionSchema } from "./shared";
 
@@ -69,13 +69,31 @@ const permissionsSchema = z.object({
   id: z.string(),
 });
 
+export const createOldmarrImportConfigurationSchema = (existingBoardNames: string[]) =>
+  z.object({
+    name: boardNameSchema.refine(
+      (value) => {
+        return existingBoardNames.every((name) => name.toLowerCase().trim() !== value.toLowerCase().trim());
+      },
+      {
+        params: createCustomErrorParams("boardAlreadyExists"),
+      },
+    ),
+    onlyImportApps: z.boolean().default(false),
+    distinctAppsByHref: z.boolean().default(true),
+    screenSize: z.enum(["lg", "md", "sm"]).default("lg"),
+    sidebarBehaviour: z.enum(["remove-items", "last-section"]).default("last-section"),
+  });
+
+export type OldmarrImportConfiguration = z.infer<ReturnType<typeof createOldmarrImportConfigurationSchema>>;
+
 const importJsonFileSchema = zfd.formData({
   file: zfd
     .file()
     .refine((file) => file.type === "application/json", { message: "Invalid file type" })
     .refine((file) => file.size < 1024 * 1024, { message: "File is too large" })
     .refine((file) => file.size > 0, { message: "File is empty" }),
-  configuration: zfd.json(importConfigurationSchema),
+  configuration: zfd.json(createOldmarrImportConfigurationSchema([])),
 });
 
 const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));

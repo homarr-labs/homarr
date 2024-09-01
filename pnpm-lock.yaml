@@ -479,6 +479,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^
         version: link:../log
+      '@homarr/old-import':
+        specifier: workspace:^0.1.0
+        version: link:../old-import
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../old-schema
@@ -1078,7 +1081,7 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
 
-  packages/old-schema:
+  packages/old-import:
     dependencies:
       '@homarr/common':
         specifier: workspace:^0.1.0
@@ -1092,9 +1095,34 @@ importers:
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
+      '@homarr/old-schema':
+        specifier: workspace:^0.1.0
+        version: link:../old-schema
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
       superjson:
         specifier: 2.2.1
         version: 2.2.1
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.8.0
+        version: 9.9.1
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+
+  packages/old-schema:
+    dependencies:
       zod:
         specifier: 3.23.8
         version: 3.23.8

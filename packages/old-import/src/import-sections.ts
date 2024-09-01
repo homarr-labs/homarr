@@ -2,8 +2,7 @@ import { createId } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { sections } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
-
-import type { OldmarrConfig } from "../config";
+import type { OldmarrConfig } from "@homarr/old-schema";
 
 export const insertSectionsAsync = async (
   db: Database,

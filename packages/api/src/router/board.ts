@@ -16,8 +16,8 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
-import { importAsync } from "@homarr/old-schema";
-import { oldmarrConfigSchema } from "@homarr/old-schema/shared";
+import { importAsync } from "@homarr/old-import";
+import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import { createSectionSchema, sharedItemSchema, validation, z } from "@homarr/validation";
 

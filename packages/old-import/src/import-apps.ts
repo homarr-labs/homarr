@@ -2,8 +2,7 @@ import { createId, inArray } from "@homarr/db";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { apps as appsTable } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
-
-import type { OldmarrApp } from "../config";
+import type { OldmarrApp } from "@homarr/old-schema";
 
 export const insertAppsAsync = async (
   db: Database,

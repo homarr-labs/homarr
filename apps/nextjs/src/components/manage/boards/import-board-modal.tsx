@@ -1,21 +1,58 @@
+import { useState } from "react";
 import { Button, Fieldset, FileInput, Grid, Group, Radio, Stack, Switch, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
-import { importConfigurationSchema } from "@homarr/old-schema/shared";
+import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { SelectWithDescription } from "@homarr/ui";
-import { z } from "@homarr/validation";
+import type { OldmarrImportConfiguration } from "@homarr/validation";
+import { createOldmarrImportConfigurationSchema, z } from "@homarr/validation";
+import { createCustomErrorParams } from "@homarr/validation/form";
 
 interface InnerProps {
   boardNames: string[];
 }
 
 export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
+  const [fileValid, setFileValid] = useState(false);
   const form = useZodForm(
     z.object({
-      file: z.custom<File>((value) => {}),
-      configuration: importConfigurationSchema,
+      file: z
+        .instanceof(File)
+        .nullable()
+        .superRefine((value, context) => {
+          if (!value) {
+            return context.addIssue({
+              code: "invalid_type",
+              expected: "object",
+              received: "null",
+            });
+          }
+
+          if (value.type !== "application/json") {
+            return context.addIssue({
+              code: "custom",
+              params: createCustomErrorParams({
+                key: "invalidFileType",
+                params: { expected: "JSON" },
+              }),
+            });
+          }
+
+          if (value.size > 1024 * 1024) {
+            return context.addIssue({
+              code: "custom",
+              params: createCustomErrorParams({
+                key: "fileTooLarge",
+                params: { maxSize: "1 MB" },
+              }),
+            });
+          }
+
+          return null;
+        }),
+      configuration: createOldmarrImportConfigurationSchema(innerProps.boardNames),
     }),
     {
       initialValues: {
@@ -29,45 +66,35 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
           name: "",
         },
       },
+      onValuesChange(values, previous) {
+        void (async () => {
+          if (values.file === previous.file) {
+            return;
+          }
+
+          if (!values.file) {
+            return;
+          }
+
+          const content = await values.file.text();
+          const result = oldmarrConfigSchema.safeParse(JSON.parse(content));
+
+          if (!result.success) {
+            console.error(result.error.errors);
+            setFileValid(false);
+            return;
+          }
+
+          setFileValid(true);
+          form.setFieldValue("configuration.name", result.data.configProperties.name);
+        })();
+      },
     },
   );
 
   const { mutateAsync } = clientApi.board.importOldmarrConfig.useMutation();
-  /*const form = useForm<{ file: File | null; boardName: string }>({
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
-    validate: {
-      // eslint-disable-next-line no-restricted-syntax
-      async file(value, values, path) {
-        if (!value) {
-          return "File is required";
-        }
 
-        if (value.type !== "application/json") {
-          return "File must be a JSON file";
-        }
-
-        try {
-          const content = oldmarrConfigSchema.parse(JSON.parse(await value.text()));
-
-          if (!("configProperties" in content)) {
-            return "Invalid oldmarr config";
-          }
-
-          if (!("name" in content.configProperties)) {
-            return "Invalid oldmarr config";
-          }
-        } catch {
-          return "File must be a valid JSON file";
-        }
-      },
-    },
-  });*/
-
-  const handleSubmitAsync = async (values: {
-    file: File;
-    configuration: z.infer<typeof importConfigurationSchema>;
-  }) => {
+  const handleSubmitAsync = async (values: { file: File; configuration: OldmarrImportConfiguration }) => {
     const formData = new FormData();
     formData.set("file", values.file);
     formData.set("configuration", JSON.stringify(values.configuration));
@@ -80,9 +107,31 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
   };
 
   return (
-    <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
+    <form
+      onSubmit={form.onSubmit((values) => {
+        if (!fileValid) {
+          return;
+        }
+
+        void handleSubmitAsync({
+          // It's checked for null in the superrefine
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          file: values.file!,
+          configuration: values.configuration,
+        });
+      })}
+    >
       <Stack>
-        <FileInput accept="application/json" {...form.getInputProps("file")} type="button" label="Select JSON file" />
+        <FileInput
+          accept="application/json"
+          {...form.getInputProps("file")}
+          error={
+            (form.getInputProps("file").error as string | undefined) ??
+            (!fileValid ? "Invalid configuration file" : undefined)
+          }
+          type="button"
+          label="Select JSON file"
+        />
 
         <Fieldset legend="Apps">
           <Grid>

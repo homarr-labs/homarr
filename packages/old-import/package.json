@@ -1,5 +1,5 @@
 {
-  "name": "@homarr/old-schema",
+  "name": "@homarr/old-import",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -21,7 +21,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "zod": "3.23.8"
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/old-schema": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
+    "superjson": "2.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
