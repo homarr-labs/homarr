@@ -1,7 +1,8 @@
 {
   "name": "@homarr/ui",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.ts",
@@ -15,18 +16,18 @@
       ]
     }
   },
-  "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/log": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^7.12.2",
     "@mantine/dates": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
@@ -42,6 +43,5 @@
     "@types/css-modules": "^1.0.5",
     "eslint": "^9.9.1",
     "typescript": "^5.5.4"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }

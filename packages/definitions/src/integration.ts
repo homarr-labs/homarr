@@ -63,6 +63,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/readarr.png",
     category: ["calendar"],
   },
+  prowlarr: {
+    name: "Prowlarr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/prowlarr.png",
+    category: ["indexerManager"],
+  },
   jellyfin: {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
@@ -103,7 +109,7 @@ export const integrationDefs = {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
-    category: [],
+    category: ["smartHomeServer"],
   },
 } satisfies Record<
   string,
@@ -138,4 +144,5 @@ export type IntegrationCategory =
   | "mediaRequest"
   | "downloadClient"
   | "useNetClient"
-  | "smartHomeServer";
+  | "smartHomeServer"
+  | "indexerManager";

@@ -7,12 +7,13 @@
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
-    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/api": "workspace:^0.1.0",
@@ -40,10 +41,10 @@
     "@mantine/tiptap": "^7.12.2",
     "@million/lint": "1.0.0-rc.84",
     "@t3-oss/env-nextjs": "^0.11.1",
+    "@tabler/icons-react": "^3.14.0",
     "@tanstack/react-query": "^5.53.1",
     "@tanstack/react-query-devtools": "^5.53.1",
     "@tanstack/react-query-next-experimental": "5.53.1",
-    "@tabler/icons-react": "^3.14.0",
     "@trpc/client": "next",
     "@trpc/next": "next",
     "@trpc/react-query": "next",
@@ -86,6 +87,5 @@
     "node-loader": "^2.0.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }
