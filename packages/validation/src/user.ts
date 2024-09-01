@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { colorSchemes } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 
+import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 
 const usernameSchema = z.string().min(3).max(255);
@@ -98,6 +100,10 @@ const changeHomeBoardSchema = z.object({
   homeBoardId: z.string().min(1),
 });
 
+const changeColorSchemeSchema = z.object({
+  colorScheme: zodEnumFromArray(colorSchemes),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   registration: registrationSchema,
@@ -109,4 +115,5 @@ export const userSchemas = {
   changePassword: changePasswordSchema,
   changeHomeBoard: changeHomeBoardSchema,
   changePasswordApi: changePasswordApiSchema,
+  changeColorScheme: changeColorSchemeSchema,
 };
