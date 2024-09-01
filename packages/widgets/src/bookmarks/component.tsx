@@ -1,15 +1,22 @@
 "use client";
 
-import {Code, Stack, Title} from "@mantine/core";
-import type {WidgetComponentProps} from "../definition";
+import { Code, Stack, Title } from "@mantine/core";
 
-export default function BookmarksWidget({options}: WidgetComponentProps<"bookmarks">) {
-  return <Stack>
-    <Title size="h4" px="0.25rem">
-      {options.title}
-    </Title>
-    <Code mx={"md"} block>
-      {JSON.stringify(options)}
-    </Code>
-  </Stack>
+import type { WidgetComponentProps } from "../definition";
+
+export default function BookmarksWidget({ options }: WidgetComponentProps<"bookmarks">) {
+  options.items.forEach((item) => {
+    console.log(item);
+  });
+
+  return (
+    <Stack>
+      <Title size="h4" px="0.25rem">
+        {options.title}
+      </Title>
+      <Code mx={"md"} block>
+        {JSON.stringify(options)}
+      </Code>
+    </Stack>
+  );
 }

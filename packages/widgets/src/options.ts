@@ -1,3 +1,5 @@
+import type React from "react";
+
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ZodType } from "@homarr/validation";
@@ -5,7 +7,6 @@ import { z } from "@homarr/validation";
 
 import { widgetImports } from ".";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
-import React from "react";
 
 interface CommonInput<TType> {
   defaultValue?: TType;
@@ -20,6 +21,10 @@ interface MultiSelectInput<TOptions extends SelectOption[]>
   extends CommonInput<inferSelectOptionValue<TOptions[number]>[]> {
   options: TOptions;
   searchable?: boolean;
+}
+
+interface OrderedObjectListInput<TItem extends Record<string, unknown>> extends CommonInput<TItem[]> {
+  itemComponent: (props: { item: TItem }) => React.ReactNode;
 }
 
 interface SelectInput<TOptions extends readonly SelectOption[]>
@@ -110,15 +115,20 @@ const optionsFactory = {
     defaultValue: "",
     withDescription: input?.withDescription ?? false,
   }),
-  orderedObjectList: <TItem>(input?: (Omit<CommonInput<string>, "defaultValue"> & { itemComponent: (item: TItem) => React.ReactNode })) => ({
+  orderedObjectList: <const TItem extends Record<string, unknown>>(input: OrderedObjectListInput<TItem>) => ({
     type: "orderedObjectList" as const,
-    defaultValue: [],
-    itemComponent: input?.itemComponent ?? null,
+    defaultValue: [] as TItem[],
+    itemComponent: input.itemComponent,
   }),
 };
 
 type WidgetOptionFactory = typeof optionsFactory;
-export type WidgetOptionDefinition = ReturnType<WidgetOptionFactory[keyof WidgetOptionFactory]>;
+
+export type WidgetOptionDefinition =
+  | ReturnType<WidgetOptionFactory[Exclude<keyof WidgetOptionFactory, "orderedObjectList">]>
+  // We allow any here as it's already type guarded with Record<string, unknown> and it still infers the correct type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  | ReturnType<typeof optionsFactory.orderedObjectList<any>>;
 export type WidgetOptionsRecord = Record<string, WidgetOptionDefinition>;
 export type WidgetOptionType = WidgetOptionDefinition["type"];
 export type WidgetOptionOfType<TType extends WidgetOptionType> = Extract<WidgetOptionDefinition, { type: TType }>;
