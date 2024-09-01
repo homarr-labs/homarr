@@ -80,8 +80,16 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     isDynamic: section.kind === "dynamic",
   });
 
+  const itemRefKeys = Object.keys(itemRefs.current);
   // define items in itemRefs for easy access and reference to items
-  if (Object.keys(itemRefs.current).length !== itemIds.length) {
+  if (itemRefKeys.length !== itemIds.length) {
+    // Remove items that are not in the itemIds
+    // Otherwise when an item is removed and then another item is added, this foreach below will not run.
+    itemRefKeys.forEach((id) => {
+      if (!itemIds.includes(id)) {
+        delete itemRefs.current[id];
+      }
+    });
     itemIds.forEach((id) => {
       itemRefs.current[id] = itemRefs.current[id] ?? createRef();
     });
