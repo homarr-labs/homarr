@@ -94,6 +94,9 @@ importers:
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
+      '@homarr/old-schema':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/old-schema
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../../packages/server-settings

@@ -16,7 +16,8 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
-import { importAsync, oldmarrConfigSchema } from "@homarr/old-schema";
+import { importAsync } from "@homarr/old-schema";
+import { oldmarrConfigSchema } from "@homarr/old-schema/shared";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import { createSectionSchema, sharedItemSchema, validation, z } from "@homarr/validation";
 
@@ -457,7 +458,6 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const content = await input.file.text();
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-      console.log(typeof oldmarr);
       await importAsync(ctx.db, oldmarr, input.configuration);
     }),
 });

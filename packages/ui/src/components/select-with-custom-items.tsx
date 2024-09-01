@@ -13,6 +13,7 @@ interface BaseSelectItem {
 export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
   extends Pick<SelectProps, "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder"> {
   data: TSelectItem[];
+  description?: string;
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
 }

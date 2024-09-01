@@ -7,7 +7,7 @@ import {
   backgroundImageSizes,
   boardPermissions,
 } from "@homarr/definitions";
-import { importConfigurationSchema } from "@homarr/old-schema";
+import { importConfigurationSchema } from "@homarr/old-schema/shared";
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
