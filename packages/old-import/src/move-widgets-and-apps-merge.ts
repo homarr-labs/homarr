@@ -4,6 +4,7 @@ import type { OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schem
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import { OldHomarrScreenSizeError } from "./import-error";
+import { mapColumnCount } from "./mappers/map-column-count";
 
 export const moveWidgetsAndAppsIfMerge = (
   old: OldmarrConfig,
@@ -92,26 +93,13 @@ export const moveWidgetsAndAppsIfMerge = (
   return { apps: old.apps, widgets: old.widgets };
 };
 
-const getColumnCount = (old: OldmarrConfig, screenSize: OldmarrImportConfiguration["screenSize"]) => {
-  switch (screenSize) {
-    case "lg":
-      return old.settings.customization.gridstack.columnCountLarge;
-    case "md":
-      return old.settings.customization.gridstack.columnCountMedium;
-    case "sm":
-      return old.settings.customization.gridstack.columnCountSmall;
-    default:
-      return 10;
-  }
-};
-
 const moveWidgetsAndAppsInLeftSidebar = (
   old: OldmarrConfig,
   firstId: string,
   offset: number,
   screenSize: OldmarrImportConfiguration["screenSize"],
 ) => {
-  const columnCount = getColumnCount(old, screenSize);
+  const columnCount = mapColumnCount(old, screenSize);
   let requiredHeight = updateItems({
     // This should work as the reference of the items did not change, only the array reference did
     items: [...old.widgets, ...old.apps],
@@ -187,7 +175,7 @@ const moveWidgetsAndAppsInRightSidebar = (
   offset: number,
   screenSize: OldmarrImportConfiguration["screenSize"],
 ) => {
-  const columnCount = getColumnCount(old, screenSize);
+  const columnCount = mapColumnCount(old, screenSize);
   const xOffsetDelta = Math.max(columnCount - 2, 0);
   const requiredHeight = updateItems({
     // This should work as the reference of the items did not change, only the array reference did

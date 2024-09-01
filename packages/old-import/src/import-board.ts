@@ -6,18 +6,19 @@ import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import { mapColor } from "./mappers/map-colors";
+import { mapColumnCount } from "./mappers/map-column-count";
 
-export const insertBoardAsync = async (db: Database, old: OldmarrConfig, name: OldmarrImportConfiguration["name"]) => {
+export const insertBoardAsync = async (db: Database, old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
   logger.info(`Importing old homarr board configuration=${old.configProperties.name}`);
   const boardId = createId();
   await db.insert(boards).values({
     id: boardId,
-    name: name,
+    name: configuration.name,
     backgroundImageAttachment: old.settings.customization.backgroundImageAttachment,
     backgroundImageUrl: old.settings.customization.backgroundImageUrl,
     backgroundImageRepeat: old.settings.customization.backgroundImageRepeat,
     backgroundImageSize: old.settings.customization.backgroundImageSize,
-    columnCount: old.settings.customization.gridstack.columnCountLarge,
+    columnCount: mapColumnCount(old, configuration.screenSize),
     faviconImageUrl: old.settings.customization.faviconUrl,
     isPublic: old.settings.access.allowGuests,
     logoImageUrl: old.settings.customization.logoImageUrl,
