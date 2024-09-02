@@ -7,7 +7,7 @@ import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const indexerManagerRouter = createTRPCRouter({
-  indexers: publicProcedure
+  getIndexersStatus: publicProcedure
     .unstable_concat(createManyIntegrationMiddleware("query", "prowlarr"))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
@@ -17,9 +17,6 @@ export const indexerManagerRouter = createTRPCRouter({
             case "prowlarr":
               client = new ProwlarrIntegration(integration);
               break;
-            //   case "jackett":
-            //     client = new JackettIntegration(integration);
-            //     break;
           }
 
           const indexers = await client.getIndexersAsync().catch((err) => {
@@ -50,9 +47,6 @@ export const indexerManagerRouter = createTRPCRouter({
             case "prowlarr":
               client = new ProwlarrIntegration(integration);
               break;
-            //   case "jackett":
-            //     client = new JackettIntegration(integration);
-            //     break;
           }
           await client.testAllAsync().catch((err) => {
             logger.error("indexer-manager router - ", err);

@@ -12,7 +12,7 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
   }
 
   try {
-    const currentIndexers = await api.widget.indexerManager.indexers({
+    const currentIndexers = await api.widget.indexerManager.getIndexersStatus({
       integrationIds,
     });
 

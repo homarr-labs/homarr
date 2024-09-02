@@ -1062,10 +1062,10 @@ export default {
     },
     indexerManager: {
       name: "Indexer manager status",
-      description: "Status about your indexers",
+      description: "Status of your indexers",
       option: {
         openIndexerSiteInNewTab: {
-          label: "Open Indexer Site In New Tab",
+          label: "Open indexer site in new tab",
         },
       },
       title: "Indexer manager",
