@@ -4,54 +4,26 @@ import { Button, Fieldset, FileInput, Grid, Group, Radio, Stack, Switch, TextInp
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
+import { useScopedI18n } from "@homarr/translation/client";
 import { SelectWithDescription } from "@homarr/ui";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
-import { createOldmarrImportConfigurationSchema, z } from "@homarr/validation";
-import { createCustomErrorParams } from "@homarr/validation/form";
+import { createOldmarrImportConfigurationSchema, superRefineJsonImportFile, z } from "@homarr/validation";
+
+import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface InnerProps {
   boardNames: string[];
 }
 
 export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const [fileValid, setFileValid] = useState(false);
+  const tOldImport = useScopedI18n("board.action.oldImport");
+  const tCommon = useScopedI18n("common");
+  const [fileValid, setFileValid] = useState(true);
   const form = useZodForm(
     z.object({
-      file: z
-        .instanceof(File)
-        .nullable()
-        .superRefine((value, context) => {
-          if (!value) {
-            return context.addIssue({
-              code: "invalid_type",
-              expected: "object",
-              received: "null",
-            });
-          }
-
-          if (value.type !== "application/json") {
-            return context.addIssue({
-              code: "custom",
-              params: createCustomErrorParams({
-                key: "invalidFileType",
-                params: { expected: "JSON" },
-              }),
-            });
-          }
-
-          if (value.size > 1024 * 1024) {
-            return context.addIssue({
-              code: "custom",
-              params: createCustomErrorParams({
-                key: "fileTooLarge",
-                params: { maxSize: "1 MB" },
-              }),
-            });
-          }
-
-          return null;
-        }),
+      file: z.instanceof(File).nullable().superRefine(superRefineJsonImportFile),
       configuration: createOldmarrImportConfigurationSchema(innerProps.boardNames),
     }),
     {
@@ -67,6 +39,7 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
         },
       },
       onValuesChange(values, previous) {
+        // This is a workarround until async validation is supported by mantine
         void (async () => {
           if (values.file === previous.file) {
             return;
@@ -100,8 +73,19 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
     formData.set("configuration", JSON.stringify(values.configuration));
 
     await mutateAsync(formData, {
-      onSuccess() {
+      async onSuccess() {
         actions.closeModal();
+        await revalidatePathActionAsync("/manage/boards");
+        showSuccessNotification({
+          title: tOldImport("notification.success.title"),
+          message: tOldImport("notification.success.message"),
+        });
+      },
+      onError() {
+        showErrorNotification({
+          title: tOldImport("notification.error.title"),
+          message: tOldImport("notification.error.message"),
+        });
       },
     });
   };
@@ -127,65 +111,69 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
           {...form.getInputProps("file")}
           error={
             (form.getInputProps("file").error as string | undefined) ??
-            (!fileValid ? "Invalid configuration file" : undefined)
+            (!fileValid && form.isDirty("file") ? tOldImport("form.file.invalidError") : undefined)
           }
           type="button"
-          label="Select JSON file"
+          label={tOldImport("form.file.label")}
         />
 
-        <Fieldset legend="Apps">
+        <Fieldset legend={tOldImport("form.apps.label")}>
           <Grid>
             <Grid.Col span={{ base: 12, sm: 6 }}>
               <Switch
-                label="Avoid duplicates"
+                label={tOldImport("form.apps.avoidDuplicates.label")}
+                description={tOldImport("form.apps.avoidDuplicates.description")}
                 {...form.getInputProps("configuration.distinctAppsByHref", { type: "checkbox" })}
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, sm: 6 }}>
               <Switch
-                label="Only import apps"
+                label={tOldImport("form.apps.onlyImportApps.label")}
+                description={tOldImport("form.apps.onlyImportApps.description")}
                 {...form.getInputProps("configuration.onlyImportApps", { type: "checkbox" })}
               />
             </Grid.Col>
           </Grid>
         </Fieldset>
 
-        <TextInput label="Board name" {...form.getInputProps("configuration.name")} />
+        <TextInput label={tOldImport("form.name.label")} {...form.getInputProps("configuration.name")} />
 
-        <Radio.Group label="Screen size" {...form.getInputProps("configuration.screenSize")}>
+        <Radio.Group label={tOldImport("form.screenSize.label")} {...form.getInputProps("configuration.screenSize")}>
           <Group mt="xs">
-            <Radio value="sm" label="Small" />
-            <Radio value="md" label="Medium" />
-            <Radio value="lg" label="Large" />
+            <Radio value="sm" label={tOldImport("form.screenSize.option.sm")} />
+            <Radio value="md" label={tOldImport("form.screenSize.option.md")} />
+            <Radio value="lg" label={tOldImport("form.screenSize.option.lg")} />
           </Group>
         </Radio.Group>
 
         <SelectWithDescription
-          label="Sidebar behaviour"
-          description="Sidebars were removed in 1.0, you can select what should happen with the items inside them."
+          label={tOldImport("form.sidebarBehavior.label")}
+          description={tOldImport("form.sidebarBehavior.description")}
           data={[
             {
               value: "last-section",
-              label: "Last section",
-              description: "Sidebar will be displayed below the last section",
+              label: tOldImport("form.sidebarBehavior.option.lastSection.label"),
+              description: tOldImport("form.sidebarBehavior.option.lastSection.description"),
             },
             {
               value: "remove-items",
-              label: "Remove items",
-              description: "Items contained in the sidebar will be removed",
+              label: tOldImport("form.sidebarBehavior.option.removeItems.label"),
+              description: tOldImport("form.sidebarBehavior.option.removeItems.description"),
             },
           ]}
           {...form.getInputProps("configuration.sidebarBehaviour")}
         />
 
-        <pre>{JSON.stringify(form.values, null, 4)}</pre>
-
-        <Button type="submit">Import</Button>
+        <Group justify="end">
+          <Button variant="subtle" color="gray" onClick={actions.closeModal}>
+            {tCommon("action.cancel")}
+          </Button>
+          <Button type="submit">{tCommon("action.import")}</Button>
+        </Group>
       </Stack>
     </form>
   );
 }).withOptions({
-  // TODO: translate
-  defaultTitle: "Import board",
+  defaultTitle: (t) => t("board.action.oldImport.label"),
   size: "lg",
 });

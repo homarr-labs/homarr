@@ -101,7 +101,7 @@ export const mapOptions = <K extends WidgetKind>(
   kind: K,
   oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[K] }>["options"],
 ) => {
-  logger.info(`Mapping options for widget ${kind}, ${JSON.stringify(oldOptions)}`);
+  logger.debug(`Mapping old homarr options for widget kind=${kind} options=${JSON.stringify(oldOptions)}`);
   if (optionMapping[kind] === null) {
     return null;
   }
@@ -110,7 +110,7 @@ export const mapOptions = <K extends WidgetKind>(
   return objectEntries(mapping).reduce(
     (acc, [key, value]) => {
       const newValue = value(oldOptions as never);
-      logger.info(`Mapping option ${key as string} for widget ${kind}, new=${newValue as string}`);
+      logger.debug(`Mapping old homarr option kind=${kind} key=${key as string} newValue=${newValue as string}`);
       if (newValue !== undefined) {
         acc[key as string] = newValue;
       }

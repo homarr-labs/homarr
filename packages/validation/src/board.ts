@@ -87,12 +87,40 @@ export const createOldmarrImportConfigurationSchema = (existingBoardNames: strin
 
 export type OldmarrImportConfiguration = z.infer<ReturnType<typeof createOldmarrImportConfigurationSchema>>;
 
+export const superRefineJsonImportFile = (value: File | null, context: z.RefinementCtx) => {
+  if (!value) {
+    return context.addIssue({
+      code: "invalid_type",
+      expected: "object",
+      received: "null",
+    });
+  }
+
+  if (value.type !== "application/json") {
+    return context.addIssue({
+      code: "custom",
+      params: createCustomErrorParams({
+        key: "invalidFileType",
+        params: { expected: "JSON" },
+      }),
+    });
+  }
+
+  if (value.size > 1024 * 1024) {
+    return context.addIssue({
+      code: "custom",
+      params: createCustomErrorParams({
+        key: "fileTooLarge",
+        params: { maxSize: "1 MB" },
+      }),
+    });
+  }
+
+  return null;
+};
+
 const importJsonFileSchema = zfd.formData({
-  file: zfd
-    .file()
-    .refine((file) => file.type === "application/json", { message: "Invalid file type" })
-    .refine((file) => file.size < 1024 * 1024, { message: "File is too large" })
-    .refine((file) => file.size > 0, { message: "File is empty" }),
+  file: zfd.file().superRefine(superRefineJsonImportFile),
   configuration: zfd.json(createOldmarrImportConfigurationSchema([])),
 });
 

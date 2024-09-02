@@ -80,8 +80,12 @@ export const moveWidgetsAndAppsIfMerge = (
     offset += requiredHeight;
   }
 
+  logger.warn("Hello 1");
+
   if (configuration.sidebarBehaviour === "last-section") {
+    logger.warn("Hello 2");
     if (old.settings.customization.layout.enabledLeftSidebar) {
+      logger.warn("Hello 3");
       offset = moveWidgetsAndAppsInLeftSidebar(old, firstId, offset, configuration.screenSize);
     }
 

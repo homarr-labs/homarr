@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback } from "react";
-import { Affix, Badge, Button, Group, Menu } from "@mantine/core";
+import { Affix, Button, Group, Menu } from "@mantine/core";
 import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { BetaBadge } from "@homarr/ui";
 
 import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { AddBoardModal } from "~/components/manage/boards/add-board-modal";
@@ -58,10 +59,8 @@ export const CreateBoardButton = ({ boardNames }: CreateBoardButtonProps) => {
         <Menu.Dropdown>
           <Menu.Item onClick={onImportClick} leftSection={<IconFileImport size="1rem" />}>
             <Group>
-              Import from old homarr
-              <Badge size="xs" color="green" variant="outline">
-                Beta
-              </Badge>
+              {t("board.action.oldImport.label")}
+              <BetaBadge size="xs" />
             </Group>
           </Menu.Item>
         </Menu.Dropdown>

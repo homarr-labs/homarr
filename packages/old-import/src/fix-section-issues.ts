@@ -32,14 +32,12 @@ export const fixSectionIssues = (old: OldmarrConfig) => {
     section.position = position;
   }
 
-  // If there are to many empty wrappers we need to merge those after the last category
-  let wrapperIdsToMerge: string[] = [];
-  if (hasToMuchEmptyWrappers) {
-    // Find all wrappers that should be merged into one
-    wrapperIdsToMerge = wrappers.slice(categories.length).map((section) => section.id);
-    // Remove all wrappers after the first at the end
-    wrappers.splice(categories.length + 1);
+  // Find all wrappers that should be merged into one
+  const wrapperIdsToMerge = wrappers.slice(categories.length).map((section) => section.id);
+  // Remove all wrappers after the first at the end
+  wrappers.splice(categories.length + 1);
 
+  if (wrapperIdsToMerge.length >= 2) {
     logger.debug(`Found wrappers to merge count=${wrapperIdsToMerge.length}`);
   }
 
