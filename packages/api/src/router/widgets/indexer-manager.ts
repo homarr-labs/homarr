@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { ProwlarrIntegration } from "@homarr/integrations";
+import { integrationCreatorByKind } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -12,13 +12,7 @@ export const indexerManagerRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          let client;
-          switch (integration.kind) {
-            case "prowlarr":
-              client = new ProwlarrIntegration(integration);
-              break;
-          }
-
+          const client = integrationCreatorByKind(integration.kind, integration);
           const indexers = await client.getIndexersAsync().catch((err) => {
             logger.error("indexer-manager router - ", err);
             throw new TRPCError({
@@ -42,12 +36,7 @@ export const indexerManagerRouter = createTRPCRouter({
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          let client;
-          switch (integration.kind) {
-            case "prowlarr":
-              client = new ProwlarrIntegration(integration);
-              break;
-          }
+          const client = integrationCreatorByKind(integration.kind, integration);
           await client.testAllAsync().catch((err) => {
             logger.error("indexer-manager router - ", err);
             throw new TRPCError({

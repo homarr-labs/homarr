@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Anchor, Button, Card, Flex, Group, ScrollArea, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -20,15 +19,7 @@ export default function IndexerManagerWidget({
   const t = useI18n();
   const data = useMemo(() => (serverData?.initialData ?? []).flatMap((indexers) => indexers.indexers), [serverData]);
 
-  const [loading, { toggle }] = useDisclosure();
-  const { mutate: testAll } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
-    onMutate: () => {
-      toggle();
-    },
-    onSettled: () => {
-      toggle();
-    },
-  });
+  const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation();
 
   return (
     <Flex h="100%" direction="column">
@@ -59,7 +50,7 @@ export default function IndexerManagerWidget({
         radius="md"
         variant="light"
         leftSection={<IconTestPipe size={20} />}
-        loading={loading}
+        loading={isPending}
         loaderProps={{ type: "dots" }}
         onClick={() => {
           testAll({ integrationIds });
