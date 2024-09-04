@@ -1124,7 +1124,7 @@ importers:
   packages/old-schema:
     dependencies:
       zod:
-        specifier: 3.23.8
+        specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
       '@homarr/eslint-config':
