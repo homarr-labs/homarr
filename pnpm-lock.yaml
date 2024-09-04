@@ -1115,7 +1115,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.8.0
+        specifier: ^9.9.1
         version: 9.9.1
       typescript:
         specifier: ^5.5.4
@@ -1137,7 +1137,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.8.0
+        specifier: ^9.9.1
         version: 9.9.1
       typescript:
         specifier: ^5.5.4
