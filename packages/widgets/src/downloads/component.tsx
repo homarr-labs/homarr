@@ -38,6 +38,7 @@ import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { humanFileSize } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type {
@@ -91,6 +92,10 @@ export default function DownloadClientsWidget({
   serverData,
   setOptions,
 }: WidgetComponentProps<"downloads">) {
+  const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
+    integrationIds.includes(id) ? [id] : [],
+  );
+
   const [currentItems, currentItemsHandlers] = useListState<{
     integration: SanitizedIntegration;
     timestamp: Date;
@@ -195,18 +200,21 @@ export default function DownloadClientsWidget({
             //Add extrapolated data and actions if user is allowed interaction
             .map((item): ExtendedDownloadClientItem => {
               const received = Math.floor(item.size * item.progress);
+              const integrationIds = [pair.integration.id];
               return {
                 integration: pair.integration,
                 ...item,
                 category: item.category !== undefined && item.category.length > 0 ? item.category : undefined,
                 received,
                 ratio: item.sent !== undefined ? item.sent / received : undefined,
-                actions: {
-                  //Only add if permission to use mutations
-                  resume: () => mutateResumeItem({ integrationIds: [pair.integration.id], item }),
-                  pause: () => mutatePauseItem({ integrationIds: [pair.integration.id], item }),
-                  delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds: [pair.integration.id], item, fromDisk }),
-                },
+                //Only add if permission to use mutations
+                actions: integrationsWithInteractions.includes(pair.integration.id)
+                  ? {
+                      resume: () => mutateResumeItem({ integrationIds, item }),
+                      pause: () => mutatePauseItem({ integrationIds, item }),
+                      delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds, item, fromDisk }),
+                    }
+                  : undefined,
               };
             }),
         )
@@ -221,7 +229,8 @@ export default function DownloadClientsWidget({
       currentItems
         .filter(({ integration }) => integrationIds.includes(integration.id))
         .flatMap(({ integration, data }): ExtendedClientStatus => {
-          if (!data) return { integration };
+          const interact = integrationsWithInteractions.includes(integration.id);
+          if (!data) return { integration, interact };
           const isTorrent = getIntegrationKindsByCategory("torrent").some((kind) => kind === integration.kind);
           /** Derived from current items */
           const { totalUp, totalDown } = data.items
@@ -243,6 +252,7 @@ export default function DownloadClientsWidget({
             );
           return {
             integration,
+            interact,
             status: {
               totalUp,
               totalDown,
@@ -263,10 +273,10 @@ export default function DownloadClientsWidget({
   if (data.some(({ type }) => type === "torrent")) integrationTypes.push("torrent");
   if (data.some(({ type }) => type === "usenet")) integrationTypes.push("usenet");
 
-  //Set the visibility of columns depending on widget settings and available data.
+  //Set the visibility of columns depending on widget settings and available data/integrations.
   const columnVisibility: MRT_VisibilityState = {
     id: options.columns.includes("id"),
-    actions: options.columns.includes("actions"),
+    actions: options.columns.includes("actions") && integrationsWithInteractions.length > 0,
     added: options.columns.includes("added"),
     category: options.columns.includes("category"),
     downSpeed: options.columns.includes("downSpeed"),
@@ -397,7 +407,9 @@ export default function DownloadClientsWidget({
               </Modal>
             </Group>
           ) : (
-            <IconX color="red" style={actionIconIconStyle} />
+            <ActionIcon radius={999} disabled size="var(--button-size)">
+              <IconX style={actionIconIconStyle} />
+            </ActionIcon>
           );
         },
       },
@@ -477,8 +489,8 @@ export default function DownloadClientsWidget({
         Cell: ({ cell, row }) => {
           const progress = cell.getValue<ExtendedDownloadClientItem["progress"]>();
           return (
-            <Stack w="100%" gap={0} align="center" pt="var(--space-size)">
-              <Text lh="calc(var(--ratio-width)*0.35)">
+            <Stack w="100%" align="center" gap="var(--space-size)">
+              <Text lh="var(--text-fz)">
                 {new Intl.NumberFormat("en", { style: "percent", notation: "compact", unitDisplay: "narrow" }).format(
                   progress,
                 )}
@@ -774,10 +786,11 @@ interface ClientsControlProps {
 
 const ClientsControl = ({ clients, style }: ClientsControlProps) => {
   const integrationsStatuses = clients.reduce(
-    (acc, { status, integration }) =>
-      status ? (acc[status.paused ? "paused" : "active"].push(integration.id), acc) : acc,
+    (acc, { status, integration: { id }, interact }) =>
+      status && interact ? (acc[status.paused ? "paused" : "active"].push(id), acc) : acc,
     { paused: [] as string[], active: [] as string[] },
   );
+  const someInteract = clients.some(({ interact }) => interact);
   const totalSpeed = humanFileSize(
     clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0),
     "/s",
@@ -798,40 +811,42 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
           />
         ))}
       </AvatarGroup>
-      <Tooltip label={t("actions.clients.resume")}>
-        <ActionIcon
-          size="var(--button-size)"
-          radius={999}
-          disabled={integrationsStatuses.paused.length === 0}
-          variant="light"
-          onClick={() => mutateResumeQueue({ integrationIds: integrationsStatuses.paused })}
-        >
-          <IconPlayerPlay style={actionIconIconStyle} />
-        </ActionIcon>
-      </Tooltip>
+      {someInteract && (
+        <Tooltip label={t("actions.clients.resume")}>
+          <ActionIcon
+            size="var(--button-size)"
+            radius={999}
+            disabled={integrationsStatuses.paused.length === 0}
+            variant="light"
+            onClick={() => mutateResumeQueue({ integrationIds: integrationsStatuses.paused })}
+          >
+            <IconPlayerPlay style={actionIconIconStyle} />
+          </ActionIcon>
+        </Tooltip>
+      )}
       <Button
         variant="default"
         radius={999}
         h="var(--button-size)"
         px="calc(var(--space-size)*2)"
-        pt="var(--space-size)"
-        pb={0}
         fw="500"
         onClick={open}
       >
         {totalSpeed}
       </Button>
-      <Tooltip label={t("actions.clients.pause")}>
-        <ActionIcon
-          size="var(--button-size)"
-          radius={999}
-          disabled={integrationsStatuses.active.length === 0}
-          variant="light"
-          onClick={() => mutatePauseQueue({ integrationIds: integrationsStatuses.active })}
-        >
-          <IconPlayerPause style={actionIconIconStyle} />
-        </ActionIcon>
-      </Tooltip>
+      {someInteract && (
+        <Tooltip label={t("actions.clients.pause")}>
+          <ActionIcon
+            size="var(--button-size)"
+            radius={999}
+            disabled={integrationsStatuses.active.length === 0}
+            variant="light"
+            onClick={() => mutatePauseQueue({ integrationIds: integrationsStatuses.active })}
+          >
+            <IconPlayerPause style={actionIconIconStyle} />
+          </ActionIcon>
+        </Tooltip>
+      )}
       <Modal opened={opened} onClose={close} title={t("actions.clients.modalTitle")} centered size="auto">
         <Stack gap="10px">
           {clients.map((client) => (
@@ -877,7 +892,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
                   {client.integration.name}
                 </Text>
                 <Space flex={1} />
-                {client.status ? (
+                {client.status && client.interact ? (
                   <Tooltip label={t(`actions.client.${client.status.paused ? "resume" : "pause"}`)}>
                     <ActionIcon
                       radius={999}

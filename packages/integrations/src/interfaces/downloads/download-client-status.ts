@@ -12,6 +12,7 @@ export interface DownloadClientStatus {
 }
 export interface ExtendedClientStatus {
   integration: SanitizedIntegration;
+  interact: boolean;
   status?: {
     /** To derive from current items */
     totalDown?: number;
