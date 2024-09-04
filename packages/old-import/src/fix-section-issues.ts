@@ -15,7 +15,7 @@ export const fixSectionIssues = (old: OldmarrConfig) => {
 
   for (let position = 0; position < neededSectionCount; position++) {
     const index = Math.floor(position / 2);
-    const isEmpty = position % 2 == 0;
+    const isEmpty = position % 2 === 0;
     const section = isEmpty ? wrappers[index] : categories[index];
     if (!section) {
       // If there are not enough empty sections for categories we need to insert them
