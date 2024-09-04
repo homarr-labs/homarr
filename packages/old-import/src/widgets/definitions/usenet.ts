@@ -1,3 +1,4 @@
 import type { CommonOldmarrWidgetDefinition } from "./common";
 
-export type OldmarrUsenetDefinition = CommonOldmarrWidgetDefinition<"usenet", Record<string, never>>;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type OldmarrUsenetDefinition = CommonOldmarrWidgetDefinition<"usenet", {}>;
