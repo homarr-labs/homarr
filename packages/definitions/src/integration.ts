@@ -115,7 +115,7 @@ export const integrationDefs = {
   },
 } as const satisfies Record<string, integrationDefinition>;
 
-export const integrationKinds = objectKeys(integrationDefs);
+export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
 
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
