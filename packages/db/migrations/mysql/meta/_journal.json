@@ -50,6 +50,13 @@
       "when": 1722517058725,
       "tag": "0006_young_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1723749320706,
+      "tag": "0007_boring_nocturne",
+      "breakpoints": true
     }
   ]
 }

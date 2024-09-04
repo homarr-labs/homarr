@@ -12,6 +12,7 @@ const defaultSession = {
   user: {
     id: defaultOwnerId,
     permissions: [],
+    colorScheme: "light",
   },
   expires: new Date().toISOString(),
 } satisfies Session;

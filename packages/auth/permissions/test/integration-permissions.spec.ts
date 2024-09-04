@@ -16,6 +16,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["integration-full-all"]),
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -39,6 +40,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["integration-interact-all"]),
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -62,6 +64,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -85,6 +88,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -108,6 +112,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["integration-use-all"]),
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -131,6 +136,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -154,6 +160,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -177,6 +184,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -190,40 +198,3 @@ describe("constructIntegrationPermissions", () => {
     expect(result.hasUseAccess).toBe(false);
   });
 });
-/*
-  
-
-  
-  
-  
-  
-  
-
-  test("should return hasViewAccess as true when board is public", () => {
-    // Arrange
-    const board = {
-      creator: {
-        id: "1",
-      },
-      userPermissions: [],
-      groupPermissions: [],
-      isPublic: true,
-    };
-    const session = {
-      user: {
-        id: "2",
-        permissions: [],
-      },
-      expires: new Date().toISOString(),
-    } satisfies Session;
-
-    // Act
-    const result = constructBoardPermissions(board, session);
-
-    // Assert
-    expect(result.hasFullAccess).toBe(false);
-    expect(result.hasChangeAccess).toBe(false);
-    expect(result.hasViewAccess).toBe(true);
-  });
-});
-*/

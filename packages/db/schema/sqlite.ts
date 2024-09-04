@@ -10,6 +10,7 @@ import type {
   BackgroundImageRepeat,
   BackgroundImageSize,
   BoardPermission,
+  ColorScheme,
   GroupPermissionKey,
   IntegrationKind,
   IntegrationPermission,
@@ -31,6 +32,7 @@ export const users = sqliteTable("user", {
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
+  colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
 });
 
 export const accounts = sqliteTable(

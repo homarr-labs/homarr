@@ -7,6 +7,7 @@ import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
+import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const integrationCreatorByKind = <TKind extends keyof typeof integrationCreators>(
@@ -28,4 +29,5 @@ export const integrationCreators = {
   sonarr: SonarrIntegration,
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
+  prowlarr: ProwlarrIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;
