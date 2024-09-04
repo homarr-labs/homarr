@@ -32,7 +32,10 @@ export const queueSchema = z.object({
         sizeleft: z.string(),
         filename: z.string(),
         labels: z.array(z.string().or(z.null())).or(z.null()).optional(),
-        priority: z.string(),
+        priority: z
+          .number()
+          .or(z.string())
+          .transform((priority) => (typeof priority === "number" ? priority : parseInt(priority))),
         cat: z.string(),
         timeleft: z.string(),
         percentage: z.string(),
