@@ -1671,6 +1671,9 @@ export default {
             rssFeeds: {
               label: "RSS feeds",
             },
+            indexerManager: {
+              label: "Indexer Manager",
+            },
           },
         },
       },
