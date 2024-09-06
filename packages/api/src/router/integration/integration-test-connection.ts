@@ -4,6 +4,8 @@ import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { integrationCreatorByKind, IntegrationTestConnectionError } from "@homarr/integrations";
 
+import type { integrationCreators } from "../../../../integrations/src/base/creator";
+
 type FormIntegration = Integration & {
   secrets: {
     kind: IntegrationSecretKind;
@@ -48,7 +50,8 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  const integrationInstance = integrationCreatorByKind(integration.kind, {
+  //Remove "as" conversion as soon as all integrations kinds have been made.
+  const integrationInstance = integrationCreatorByKind(integration.kind as keyof typeof integrationCreators, {
     id: integration.id,
     name: integration.name,
     url: integration.url,

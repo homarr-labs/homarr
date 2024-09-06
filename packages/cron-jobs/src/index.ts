@@ -1,5 +1,6 @@
 import { analyticsJob } from "./jobs/analytics";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
+import { downloadsJob } from "./jobs/integrations/downloads";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { mediaServerJob } from "./jobs/integrations/media-server";
@@ -7,7 +8,6 @@ import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { createCronJobGroup } from "./lib";
-import { usenetDownloadsJob } from "./jobs/integrations/usenet-downloads";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,
@@ -16,7 +16,7 @@ export const jobGroup = createCronJobGroup({
   smartHomeEntityState: smartHomeEntityStateJob,
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
-  usenetDownloads: usenetDownloadsJob,
+  downloads: downloadsJob,
   rssFeeds: rssFeedsJob,
 });
 

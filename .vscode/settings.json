@@ -9,13 +9,21 @@
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "prettier.configPath": "./tooling/prettier/index.mjs",
   "cSpell.words": [
+    "ajnart",
     "cqmin",
+    "gridstack",
     "homarr",
     "jellyfin",
+    "mantine",
+    "manuel-rw",
+    "Meierschlumpf",
+    "Sabnzbd",
+    "SeDemal",
+    "Sonarr",
     "superjson",
+    "tabler",
     "trpc",
-    "Umami",
-    "Sonarr"
+    "Umami"
   ],
   "i18n-ally.dirStructure": "auto",
   "i18n-ally.enabledFrameworks": ["next-international"],
