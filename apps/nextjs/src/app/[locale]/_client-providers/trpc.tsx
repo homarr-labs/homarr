@@ -12,7 +12,7 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
 const wsClient = createWSClient({
-  url: "ws://localhost:3001",
+  url: typeof window === "undefined" ? "ws://localhost:3001" : `ws://${window.location.hostname}:3001`,
 });
 
 export function TRPCReactProvider(props: PropsWithChildren) {

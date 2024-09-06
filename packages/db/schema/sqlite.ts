@@ -10,6 +10,7 @@ import type {
   BackgroundImageRepeat,
   BackgroundImageSize,
   BoardPermission,
+  ColorScheme,
   GroupPermissionKey,
   IntegrationKind,
   IntegrationPermission,
@@ -31,6 +32,7 @@ export const users = sqliteTable("user", {
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
+  colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
 });
 
 export const accounts = sqliteTable(
@@ -272,8 +274,14 @@ export const sections = sqliteTable("section", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text("kind").$type<SectionKind>().notNull(),
-  position: int("position").notNull(),
+  xOffset: int("x_offset").notNull(),
+  yOffset: int("y_offset").notNull(),
+  width: int("width"),
+  height: int("height"),
   name: text("name"),
+  parentSectionId: text("parent_section_id").references((): AnySQLiteColumn => sections.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const items = sqliteTable("item", {

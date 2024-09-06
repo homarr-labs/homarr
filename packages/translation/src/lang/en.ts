@@ -30,6 +30,13 @@ export default {
       },
       password: {
         label: "Password",
+        requirement: {
+          length: "Includes at least 8 characters",
+          lowercase: "Includes lowercase letter",
+          uppercase: "Includes uppercase letter",
+          number: "Includes number",
+          special: "Includes special symbol",
+        },
       },
       passwordConfirm: {
         label: "Confirm password",
@@ -57,6 +64,10 @@ export default {
             title: "Login failed",
             message: "Your login failed",
           },
+        },
+        forgotPassword: {
+          label: "Forgotten your password?",
+          description: "An administrator can use the following command to reset your password:",
         },
       },
       register: {
@@ -520,6 +531,10 @@ export default {
       colon: ": ",
     },
     error: "Error",
+    errors: {
+      noData: "No data to show",
+      noIntegration: "No integration selected",
+    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -627,6 +642,7 @@ export default {
         },
         custom: {
           passwordsDoNotMatch: "Passwords do not match",
+          passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
         },
       },
@@ -634,6 +650,17 @@ export default {
     mantineReactTable: MRT_Localization_EN,
   },
   section: {
+    dynamic: {
+      action: {
+        create: "New dynamic section",
+        remove: "Remove dynamic section",
+      },
+      remove: {
+        title: "Remove dynamic section",
+        message:
+          "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section.",
+      },
+    },
     category: {
       field: {
         name: {
@@ -674,7 +701,7 @@ export default {
       create: "New item",
       import: "Import item",
       edit: "Edit item",
-      move: "Move item",
+      moveResize: "Move / resize item",
       duplicate: "Duplicate item",
       remove: "Remove item",
     },
@@ -687,13 +714,20 @@ export default {
       title: "Choose item to add",
       addToBoard: "Add to board",
     },
-    move: {
+    moveResize: {
+      title: "Move / resize item",
       field: {
         width: {
           label: "Width",
         },
         height: {
           label: "Height",
+        },
+        xOffset: {
+          label: "X offset",
+        },
+        yOffset: {
+          label: "Y offset",
         },
       },
     },
@@ -1178,6 +1212,50 @@ export default {
       },
       globalRatio: "Global Ratio",
     },
+    "mediaRequests-requestList": {
+      name: "Media Requests List",
+      description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
+      option: {
+        linksTargetNewTab: {
+          label: "Open links in new tab",
+        },
+      },
+      pending: {
+        approve: "Approve request",
+        approving: "Approving request...",
+        decline: "Decline request",
+      },
+      availability: {
+        unknown: "Unknown",
+        pending: "Pending",
+        processing: "Processing",
+        partiallyAvailable: "Partial",
+        available: "Available",
+      },
+      toBeDetermined: "TBD",
+    },
+    "mediaRequests-requestStats": {
+      name: "Media Requests Stats",
+      description: "Statistics about your media requests",
+      option: {},
+      titles: {
+        stats: {
+          main: "Media Stats",
+          approved: "Already approved",
+          pending: "Pending approvals",
+          processing: "Being processed",
+          declined: "Already declined",
+          available: "Already Available",
+          tv: "TV requests",
+          movie: "Movie requests",
+          total: "Total",
+        },
+        users: {
+          main: "Top Users",
+          requests: "Requests",
+        },
+      },
+    },
     rssFeed: {
       name: "RSS feeds",
       description: "Monitor and display one or more generic RSS, ATOM or JSON feeds",
@@ -1429,6 +1507,7 @@ export default {
           items: {
             docker: "Docker",
             logs: "Logs",
+            api: "API",
             tasks: "Tasks",
           },
         },
@@ -1636,6 +1715,27 @@ export default {
               text: "Send the amount of users and whether you've activated SSO",
             },
           },
+          crawlingAndIndexing: {
+            title: "Crawling and Indexing",
+            warning:
+              "Enabling or disabling any settings here will severely impact how search engines will index & crawl your page. Any setting is a request and it is up to the crawler to apply these settings. Any modification may take up to multiple days or weeks to apply. Some settings may be search engine specific.",
+            noIndex: {
+              title: "No index",
+              text: "Do not index the website on search engines and don't show it in any search results",
+            },
+            noFollow: {
+              title: "No follow",
+              text: "Do not follow any links while indexing. Disabling this will lead to crawlers attempting to follow all links on Homarr.",
+            },
+            noTranslate: {
+              title: "No translate",
+              text: "When the site language is likely not that the user is likely to want to read, Google will show a translation link in the search results",
+            },
+            noSiteLinksSearchBox: {
+              title: "No site links search box",
+              text: "Google will build a search box with the crawled links along with other direct links. Enabling this will ask Google to disable that box.",
+            },
+          },
         },
       },
       tool: {
@@ -1667,6 +1767,9 @@ export default {
             },
             downloads: {
               label: "Downloads",
+            },
+            mediaRequests: {
+              label: "Media Requests",
             },
             rssFeeds: {
               label: "RSS feeds",

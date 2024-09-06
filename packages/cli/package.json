@@ -1,7 +1,8 @@
 {
   "name": "@homarr/cli",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -13,27 +14,26 @@
       ]
     }
   },
-  "license": "MIT",
   "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint",
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
+    "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@drizzle-team/brocli": "^0.10.0",
-    "@homarr/db": "workspace:^0.1.0",
-    "@homarr/common": "workspace:^0.1.0",
+    "@drizzle-team/brocli": "^0.10.1",
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.9.0",
+    "eslint": "^9.10.0",
     "typescript": "^5.5.4"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }

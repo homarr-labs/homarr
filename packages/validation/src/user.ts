@@ -1,9 +1,37 @@
 import { z } from "zod";
 
+import { colorSchemes } from "@homarr/definitions";
+import type { TranslationObject } from "@homarr/translation";
+
+import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 
 const usernameSchema = z.string().min(3).max(255);
-const passwordSchema = z.string().min(8).max(255);
+
+const regexCheck = (regex: RegExp) => (value: string) => regex.test(value);
+export const passwordRequirements = [
+  { check: (value) => value.length >= 8, value: "length" },
+  { check: regexCheck(/[a-z]/), value: "lowercase" },
+  { check: regexCheck(/[A-Z]/), value: "uppercase" },
+  { check: regexCheck(/\d/), value: "number" },
+  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!-]/), value: "special" },
+] satisfies {
+  check: (value: string) => boolean;
+  value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
+}[];
+
+const passwordSchema = z
+  .string()
+  .min(8)
+  .max(255)
+  .refine(
+    (value) => {
+      return passwordRequirements.every((requirement) => requirement.check(value));
+    },
+    {
+      params: createCustomErrorParams("passwordRequirements"),
+    },
+  );
 
 const confirmPasswordRefine = [
   (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
@@ -72,6 +100,10 @@ const changeHomeBoardSchema = z.object({
   homeBoardId: z.string().min(1),
 });
 
+const changeColorSchemeSchema = z.object({
+  colorScheme: zodEnumFromArray(colorSchemes),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   registration: registrationSchema,
@@ -83,4 +115,5 @@ export const userSchemas = {
   changePassword: changePasswordSchema,
   changeHomeBoard: changeHomeBoardSchema,
   changePasswordApi: changePasswordApiSchema,
+  changeColorScheme: changeColorSchemeSchema,
 };

@@ -3,6 +3,7 @@ import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { downloadsJob } from "./jobs/integrations/downloads";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
+import { mediaRequestsJob } from "./jobs/integrations/media-requests";
 import { mediaServerJob } from "./jobs/integrations/media-server";
 import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
@@ -17,6 +18,7 @@ export const jobGroup = createCronJobGroup({
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
   downloads: downloadsJob,
+  mediaRequests: mediaRequestsJob,
   rssFeeds: rssFeedsJob,
 });
 

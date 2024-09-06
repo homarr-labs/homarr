@@ -2,25 +2,29 @@
   "name": "@homarr/tasks",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "type": "module",
   "exports": {
     ".": "./src/index.ts"
   },
   "main": "./src/main.ts",
   "types": "./src/main.ts",
-  "license": "MIT",
-  "type": "module",
   "scripts": {
-    "dev": "pnpm with-env tsx ./src/main.ts",
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint",
+    "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/cron-job-runner": "workspace:^0.1.0",
+    "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/cron-jobs-core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/icons": "workspace:^0.1.0",
@@ -30,25 +34,21 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@homarr/cron-jobs-core": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
-    "dayjs": "^1.11.12",
-    "@homarr/cron-jobs": "workspace:^0.1.0",
-    "@homarr/cron-job-runner": "workspace:^0.1.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "superjson": "2.2.1",
-    "undici": "6.19.7"
+    "undici": "6.19.8"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^20.14.15",
+    "@types/node": "^20.16.5",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^9.9.0",
+    "eslint": "^9.10.0",
     "prettier": "^3.3.3",
     "tsx": "4.13.3",
     "typescript": "^5.5.4"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }

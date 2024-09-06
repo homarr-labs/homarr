@@ -20,6 +20,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "1",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -47,6 +48,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["board-full-all"]),
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -74,6 +76,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["board-modify-all"]),
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -102,6 +105,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -129,6 +133,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -156,6 +161,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["board-view-all"]),
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -183,6 +189,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -210,6 +217,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -237,6 +245,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;
@@ -264,6 +273,7 @@ describe("constructBoardPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        colorScheme: "light",
       },
       expires: new Date().toISOString(),
     } satisfies Session;

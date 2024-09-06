@@ -50,8 +50,8 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  //Remove "as" conversion as soon as all integrations kinds have been made.
-  const integrationInstance = integrationCreatorByKind(integration.kind as keyof typeof integrationCreators, {
+  // @ts-expect-error - For now we expect an error here as not all integerations have been implemented
+  const integrationInstance = integrationCreatorByKind(integration.kind, {
     id: integration.id,
     name: integration.name,
     url: integration.url,

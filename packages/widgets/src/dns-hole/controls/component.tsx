@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ActionIcon, Badge, Box, Button, Card, Flex, Image, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Badge, Button, Card, Flex, Image, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
 
@@ -24,6 +24,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   const [status, setStatus] = useState<{ integrationId: string; enabled: boolean }[]>(
     integrationIds.map((id) => ({ integrationId: id, enabled: false })),
   );
+  const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
   const [opened, { close, open }] = useDisclosure(false);
 
   const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
@@ -67,19 +68,19 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
     }
   };
 
-  const allEnabled = status.every((item) => item.enabled);
-  const allDisabled = status.every((item) => !item.enabled);
+  const enabledIntegrations = integrationIds.filter((id) => status.find((item) => item.integrationId === id)?.enabled);
+  const disabledIntegrations = integrationIds.filter(
+    (id) => !status.find((item) => item.integrationId === id)?.enabled,
+  );
 
   return (
     <Flex h="100%" direction="column" gap={0} p="2.5cqmin">
       {options.showToggleAllButtons && (
-        <Flex gap="2.5cqmin">
+        <Flex m="2.5cqmin" gap="2.5cqmin">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
-              onClick={() => {
-                integrationIds.forEach((integrationId) => enableDns({ integrationId }));
-              }}
-              disabled={allEnabled}
+              onClick={() => disabledIntegrations.forEach((integrationId) => enableDns({ integrationId }))}
+              disabled={disabledIntegrations.length === 0}
               variant="light"
               color="green"
               fullWidth
@@ -90,17 +91,25 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
-            <Button onClick={open} disabled={allDisabled} variant="light" color="yellow" fullWidth h="2rem">
+            <Button
+              onClick={() => {
+                setSelectedIntegrationIds(enabledIntegrations);
+                open();
+              }}
+              disabled={enabledIntegrations.length === 0}
+              variant="light"
+              color="yellow"
+              fullWidth
+              h="2rem"
+            >
               <IconClockPause size={20} />
             </Button>
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
             <Button
-              onClick={() => {
-                integrationIds.forEach((integrationId) => disableDns({ integrationId, duration: 0 }));
-              }}
-              disabled={allDisabled}
+              onClick={() => enabledIntegrations.forEach((integrationId) => disableDns({ integrationId, duration: 0 }))}
+              disabled={enabledIntegrations.length === 0}
               variant="light"
               color="red"
               fullWidth
@@ -112,36 +121,59 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
         </Flex>
       )}
 
-      <Stack gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
-        {data.map((integrationData) =>
-          ControlsCard(integrationData.integrationId, integrationData.integrationKind, toggleDns, status, open, t),
-        )}
+      <Stack m="2.5cqmin" gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
+        {data.map((integrationData) => (
+          <ControlsCard
+            key={integrationData.integrationId}
+            integrationId={integrationData.integrationId}
+            integrationKind={integrationData.integrationKind}
+            toggleDns={toggleDns}
+            status={status}
+            setSelectedIntegrationIds={setSelectedIntegrationIds}
+            open={open}
+            t={t}
+          />
+        ))}
       </Stack>
 
-      <TimerModal opened={opened} close={close} integrationIds={integrationIds} disableDns={disableDns} />
+      <TimerModal
+        opened={opened}
+        close={close}
+        selectedIntegrationIds={selectedIntegrationIds}
+        disableDns={disableDns}
+      />
     </Flex>
   );
 }
 
-const ControlsCard = (
-  integrationId: string,
-  integrationKind: string,
-  toggleDns: (integrationId: string) => void,
-  status: { integrationId: string; enabled: boolean }[],
-  open: () => void,
-  t: TranslationFunction,
-) => {
+interface ControlsCardProps {
+  integrationId: string;
+  integrationKind: string;
+  toggleDns: (integrationId: string) => void;
+  status: { integrationId: string; enabled: boolean }[];
+  setSelectedIntegrationIds: (integrationId: string[]) => void;
+  open: () => void;
+  t: TranslationFunction;
+}
+
+const ControlsCard: React.FC<ControlsCardProps> = ({
+  integrationId,
+  integrationKind,
+  toggleDns,
+  status,
+  setSelectedIntegrationIds,
+  open,
+  t,
+}) => {
   const integrationStatus = status.find((item) => item.integrationId === integrationId);
   const isEnabled = integrationStatus?.enabled ?? false;
   const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
 
   return (
     <Card key={integrationId} withBorder p="2.5cqmin" radius="2.5cqmin">
-      <Flex>
-        <Box m="1.5cqmin" p="1.5cqmin">
-          <Image src={integrationDef.iconUrl} width="50cqmin" height="50cqmin" fit="contain" />
-        </Box>
-        <Flex direction="column" m="1.5cqmin" p="1.5cqmin" gap="1cqmin">
+      <Flex justify="space-between" align="center" direction="row" m="2.5cqmin">
+        <Image src={integrationDef.iconUrl} width="50cqmin" height="50cqmin" fit="contain" />
+        <Flex direction="column">
           <Text>{integrationDef.name}</Text>
           <Flex direction="row" gap="2cqmin">
             <UnstyledButton onClick={() => toggleDns(integrationId)}>
@@ -149,7 +181,17 @@ const ControlsCard = (
                 {t(`widget.dnsHoleControls.controls.${isEnabled ? "enabled" : "disabled"}`)}
               </Badge>
             </UnstyledButton>
-            <ActionIcon disabled={!isEnabled} size={20} radius="xl" top="2.67px" variant="default" onClick={open}>
+            <ActionIcon
+              disabled={!isEnabled}
+              size={20}
+              radius="xl"
+              top="2.67px"
+              variant="default"
+              onClick={() => {
+                setSelectedIntegrationIds([integrationId]);
+                open();
+              }}
+            >
               <IconClockPause size={20} color="red" />
             </ActionIcon>
           </Flex>

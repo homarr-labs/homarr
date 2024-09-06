@@ -44,7 +44,9 @@ export const ClientBoard = () => {
   const board = useRequiredBoard();
   const isReady = useIsBoardReady();
 
-  const sortedSections = board.sections.sort((sectionA, sectionB) => sectionA.position - sectionB.position);
+  const fullWidthSortedSections = board.sections
+    .filter((section) => section.kind === "empty" || section.kind === "category")
+    .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -58,11 +60,11 @@ export const ClientBoard = () => {
         h={fullHeightWithoutHeaderAndFooter}
       />
       <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
-        {sortedSections.map((section) =>
+        {fullWidthSortedSections.map((section) =>
           section.kind === "empty" ? (
-            <BoardEmptySection key={section.id} section={section} mainRef={ref} />
+            <BoardEmptySection key={section.id} section={section} />
           ) : (
-            <BoardCategorySection key={section.id} section={section} mainRef={ref} />
+            <BoardCategorySection key={section.id} section={section} />
           ),
         )}
       </Stack>

@@ -69,12 +69,16 @@ export const userRouter = createTRPCRouter({
     // Delete invite as it's used
     await ctx.db.delete(invites).where(inviteWhere);
   }),
-  create: publicProcedure.input(validation.user.create).mutation(async ({ ctx, input }) => {
-    throwIfCredentialsDisabled();
-    await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
+  create: publicProcedure
+    .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"] } })
+    .input(validation.user.create)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      throwIfCredentialsDisabled();
+      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-    await createUserAsync(ctx.db, input);
-  }),
+      await createUserAsync(ctx.db, input);
+    }),
   setProfileImage: protectedProcedure
     .input(
       z.object({
@@ -126,20 +130,33 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.users.findMany({
-      columns: {
-        id: true,
-        name: true,
-        email: true,
-        emailVerified: true,
-        image: true,
-        provider: true,
-      },
-    });
-  }),
-  selectable: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.users.findMany({
+  getAll: publicProcedure
+    .input(z.void())
+    .output(
+      z.array(
+        z.object({
+          id: z.string(),
+          name: z.string().nullable(),
+          email: z.string().nullable(),
+          emailVerified: z.date().nullable(),
+          image: z.string().nullable(),
+        }),
+      ),
+    )
+    .meta({ openapi: { method: "GET", path: "/api/users", tags: ["users"] } })
+    .query(({ ctx }) => {
+      return ctx.db.query.users.findMany({
+        columns: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+        },
+      });
+    }),
+  selectable: publicProcedure.query(({ ctx }) => {
+    return ctx.db.query.users.findMany({
       columns: {
         id: true,
         name: true,
@@ -300,6 +317,14 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
+  changeColorScheme: protectedProcedure.input(validation.user.changeColorScheme).mutation(async ({ input, ctx }) => {
+    await ctx.db
+      .update(users)
+      .set({
+        colorScheme: input.colorScheme,
+      })
+      .where(eq(users.id, ctx.session.user.id));
+  }),
 });
 
 const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {

@@ -109,7 +109,8 @@ export const boardRouter = createTRPCRouter({
         await transaction.insert(sections).values({
           id: createId(),
           kind: "empty",
-          position: 0,
+          xOffset: 0,
+          yOffset: 0,
           boardId,
         });
       });
@@ -206,7 +207,11 @@ export const boardRouter = createTRPCRouter({
           addedSections.map((section) => ({
             id: section.id,
             kind: section.kind,
-            position: section.position,
+            yOffset: section.yOffset,
+            xOffset: section.kind === "dynamic" ? section.xOffset : 0,
+            height: "height" in section ? section.height : null,
+            width: "width" in section ? section.width : null,
+            parentSectionId: "parentSectionId" in section ? section.parentSectionId : null,
             name: "name" in section ? section.name : null,
             boardId: dbBoard.id,
           })),
@@ -292,7 +297,11 @@ export const boardRouter = createTRPCRouter({
         await transaction
           .update(sections)
           .set({
-            position: section.position,
+            yOffset: section.yOffset,
+            xOffset: section.xOffset,
+            height: prev?.kind === "dynamic" && "height" in section ? section.height : null,
+            width: prev?.kind === "dynamic" && "width" in section ? section.width : null,
+            parentSectionId: prev?.kind === "dynamic" && "parentSectionId" in section ? section.parentSectionId : null,
             name: prev?.kind === "category" && "name" in section ? section.name : null,
           })
           .where(eq(sections.id, section.id));
@@ -538,6 +547,7 @@ const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kin
 
 const parseSection = (section: unknown) => {
   const result = createSectionSchema(outputItemSchema).safeParse(section);
+
   if (!result.success) {
     throw new Error(result.error.message);
   }

@@ -3,6 +3,7 @@ import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
 import { downloadsRouter } from "./downloads";
+import { mediaRequestsRouter } from "./media-requests";
 import { mediaServerRouter } from "./media-server";
 import { notebookRouter } from "./notebook";
 import { rssFeedRouter } from "./rssFeed";
@@ -18,5 +19,6 @@ export const widgetRouter = createTRPCRouter({
   mediaServer: mediaServerRouter,
   calendar: calendarRouter,
   downloads: downloadsRouter,
+  mediaRequests: mediaRequestsRouter,
   rssFeed: rssFeedRouter,
 });

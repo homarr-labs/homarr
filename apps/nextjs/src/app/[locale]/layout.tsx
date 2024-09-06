@@ -1,12 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
-import "@homarr/ui/styles.css";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
+import "@homarr/ui/styles.css";
 import "~/styles/scroll-area.scss";
-
-import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 
 import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
@@ -14,7 +12,9 @@ import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 
 import { Analytics } from "~/components/layout/analytics";
+import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { JotaiProvider } from "./_client-providers/jotai";
+import { CustomMantineProvider } from "./_client-providers/mantine";
 import { NextInternationalProvider } from "./_client-providers/next-international";
 import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
@@ -51,35 +51,27 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
-  const colorScheme = "dark";
+export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
+  const session = await auth();
+  const colorScheme = session?.user.colorScheme;
 
   const StackedProvider = composeWrappers([
-    async (innerProps) => {
-      const session = await auth();
+    (innerProps) => {
       return <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
     (innerProps) => <NextInternationalProvider {...innerProps} locale={props.params.locale} />,
-    (innerProps) => (
-      <MantineProvider
-        {...innerProps}
-        defaultColorScheme="dark"
-        theme={createTheme({
-          primaryColor: "red",
-          autoContrast: true,
-        })}
-      />
-    ),
+    (innerProps) => <CustomMantineProvider {...innerProps} />,
     (innerProps) => <ModalProvider {...innerProps} />,
   ]);
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
+    <html lang="en" data-mantine-color-scheme={colorScheme} suppressHydrationWarning>
       <head>
-        <ColorSchemeScript defaultColorScheme={colorScheme} />
         <Analytics />
+        <SearchEngineOptimization />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>

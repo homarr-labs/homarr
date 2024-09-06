@@ -7,7 +7,7 @@ import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
 
 interface AddCategory {
   name: string;
-  position: number;
+  yOffset: number;
 }
 
 interface RenameCategory {
@@ -28,8 +28,8 @@ export const useCategoryActions = () => {
   const { updateBoard } = useUpdateBoard();
 
   const addCategory = useCallback(
-    ({ name, position }: AddCategory) => {
-      if (position <= -1) {
+    ({ name, yOffset }: AddCategory) => {
+      if (yOffset <= -1) {
         return;
       }
       updateBoard((previous) => ({
@@ -37,32 +37,32 @@ export const useCategoryActions = () => {
         sections: [
           // Place sections before the new category
           ...previous.sections.filter(
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            (section) => (section.kind === "category" || section.kind === "empty") && section.position < position,
+            (section) => (section.kind === "category" || section.kind === "empty") && section.yOffset < yOffset,
           ),
           {
             id: createId(),
             name,
             kind: "category",
-            position,
+            yOffset,
+            xOffset: 0,
             items: [],
           },
           {
             id: createId(),
             kind: "empty",
-            position: position + 1,
+            yOffset: yOffset + 1,
+            xOffset: 0,
             items: [],
           },
           // Place sections after the new category
           ...previous.sections
             .filter(
               (section): section is CategorySection | EmptySection =>
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                (section.kind === "category" || section.kind === "empty") && section.position >= position,
+                (section.kind === "category" || section.kind === "empty") && section.yOffset >= yOffset,
             )
             .map((section) => ({
               ...section,
-              position: section.position + 2,
+              yOffset: section.yOffset + 2,
             })),
         ],
       }));
@@ -76,14 +76,13 @@ export const useCategoryActions = () => {
         const lastSection = previous.sections
           .filter(
             (section): section is CategorySection | EmptySection =>
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               section.kind === "empty" || section.kind === "category",
           )
-          .sort((sectionA, sectionB) => sectionB.position - sectionA.position)
+          .sort((sectionA, sectionB) => sectionB.yOffset - sectionA.yOffset)
           .at(0);
 
         if (!lastSection) return previous;
-        const lastPosition = lastSection.position;
+        const lastYOffset = lastSection.yOffset;
 
         return {
           ...previous,
@@ -93,13 +92,15 @@ export const useCategoryActions = () => {
               id: createId(),
               name,
               kind: "category",
-              position: lastPosition + 1,
+              yOffset: lastYOffset + 1,
+              xOffset: 0,
               items: [],
             },
             {
               id: createId(),
               kind: "empty",
-              position: lastPosition + 2,
+              yOffset: lastYOffset + 2,
+              xOffset: 0,
               items: [],
             },
           ],
@@ -133,40 +134,39 @@ export const useCategoryActions = () => {
           (section): section is CategorySection => section.kind === "category" && section.id === id,
         );
         if (!currentCategory) return previous;
-        if (currentCategory.position === 1 && direction === "up") return previous;
-        if (currentCategory.position === previous.sections.length - 2 && direction === "down") return previous;
+        if (currentCategory.yOffset === 1 && direction === "up") return previous;
+        if (currentCategory.yOffset === previous.sections.length - 2 && direction === "down") return previous;
 
         return {
           ...previous,
           sections: previous.sections.map((section) => {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (section.kind !== "category" && section.kind !== "empty") return section;
             const offset = direction === "up" ? -2 : 2;
             // Move category and empty section
-            if (section.position === currentCategory.position || section.position - 1 === currentCategory.position) {
+            if (section.yOffset === currentCategory.yOffset || section.yOffset - 1 === currentCategory.yOffset) {
               return {
                 ...section,
-                position: section.position + offset,
+                yOffset: section.yOffset + offset,
               };
             }
 
             if (
               direction === "up" &&
-              (section.position === currentCategory.position - 2 || section.position === currentCategory.position - 1)
+              (section.yOffset === currentCategory.yOffset - 2 || section.yOffset === currentCategory.yOffset - 1)
             ) {
               return {
                 ...section,
-                position: section.position + 2,
+                position: section.yOffset + 2,
               };
             }
 
             if (
               direction === "down" &&
-              (section.position === currentCategory.position + 2 || section.position === currentCategory.position + 3)
+              (section.yOffset === currentCategory.yOffset + 2 || section.yOffset === currentCategory.yOffset + 3)
             ) {
               return {
                 ...section,
-                position: section.position - 2,
+                position: section.yOffset - 2,
               };
             }
 
@@ -188,12 +188,12 @@ export const useCategoryActions = () => {
 
         const aboveWrapper = previous.sections.find(
           (section): section is EmptySection =>
-            section.kind === "empty" && section.position === currentCategory.position - 1,
+            section.kind === "empty" && section.yOffset === currentCategory.yOffset - 1,
         );
 
         const removedWrapper = previous.sections.find(
           (section): section is EmptySection =>
-            section.kind === "empty" && section.position === currentCategory.position + 1,
+            section.kind === "empty" && section.yOffset === currentCategory.yOffset + 1,
         );
 
         if (!aboveWrapper || !removedWrapper) return previous;
@@ -214,19 +214,18 @@ export const useCategoryActions = () => {
         return {
           ...previous,
           sections: [
-            ...previous.sections.filter((section) => section.position < currentCategory.position - 1),
+            ...previous.sections.filter((section) => section.yOffset < currentCategory.yOffset - 1),
             {
               ...aboveWrapper,
               items: [...aboveWrapper.items, ...previousCategoryItems, ...previousBelowWrapperItems],
             },
             ...previous.sections
               .filter(
-                (section): section is CategorySection | EmptySection =>
-                  section.position >= currentCategory.position + 2,
+                (section): section is CategorySection | EmptySection => section.yOffset >= currentCategory.yOffset + 2,
               )
               .map((section) => ({
                 ...section,
-                position: section.position - 2,
+                position: section.yOffset - 2,
               })),
           ],
         };

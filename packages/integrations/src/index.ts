@@ -9,6 +9,8 @@ export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
 export { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
 export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
 export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
+export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
+export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
 
 // Types
@@ -18,6 +20,8 @@ export type { StreamSession } from "./interfaces/media-server/session";
 export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
+export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
+export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";

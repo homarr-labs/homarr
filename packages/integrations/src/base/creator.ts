@@ -8,7 +8,9 @@ import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integrati
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
+import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
@@ -32,6 +34,8 @@ export const integrationCreators = {
   sabNzbd: SabnzbdIntegration,
   nzbGet: NzbGetIntegration,
   qBittorrent: QBitTorrentIntegration,
+  jellyseerr: JellyseerrIntegration,
+  overseerr: OverseerrIntegration,
   deluge: DelugeIntegration,
   transmission: TransmissionIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;

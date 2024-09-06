@@ -48,13 +48,15 @@ yarn-error.log*
 .turbo
 
 # database
-db.sqlite
+*.sqlite
 
 # logs
 *.log
 
 apps/tasks/tasks.cjs
 apps/websocket/wssServer.cjs
+apps/nextjs/.million/
+
 
 #personal backgrounds
 apps/nextjs/public/images/background.png

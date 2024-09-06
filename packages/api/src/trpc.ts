@@ -8,6 +8,7 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import type { OpenApiMeta } from "trpc-swagger";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";
@@ -46,17 +47,20 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter: ({ shape, error }) => ({
-    ...shape,
-    data: {
-      ...shape.data,
-      zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-      error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
-    },
-  }),
-});
+const t = initTRPC
+  .context<typeof createTRPCContext>()
+  .meta<OpenApiMeta>()
+  .create({
+    transformer: superjson,
+    errorFormatter: ({ shape, error }) => ({
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
+      },
+    }),
+  });
 
 /**
  * Create a server-side caller

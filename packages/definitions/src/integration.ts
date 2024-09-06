@@ -71,6 +71,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/readarr.png",
     category: ["calendar"],
   },
+  prowlarr: {
+    name: "Prowlarr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/prowlarr.png",
+    category: ["indexerManager"],
+  },
   jellyfin: {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
@@ -162,4 +168,5 @@ export type IntegrationCategory =
   | "downloadClient"
   | "usenet"
   | "torrent"
-  | "smartHomeServer";
+  | "smartHomeServer"
+  | "indexerManager";

@@ -8,6 +8,7 @@ import type {
   BackgroundImageRepeat,
   BackgroundImageSize,
   BoardPermission,
+  ColorScheme,
   GroupPermissionKey,
   IntegrationKind,
   IntegrationPermission,
@@ -30,6 +31,7 @@ export const users = mysqlTable("user", {
   homeBoardId: varchar("homeBoardId", { length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),
+  colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("auto").notNull(),
 });
 
 export const accounts = mysqlTable(
@@ -269,8 +271,14 @@ export const sections = mysqlTable("section", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text("kind").$type<SectionKind>().notNull(),
-  position: int("position").notNull(),
+  xOffset: int("x_offset").notNull(),
+  yOffset: int("y_offset").notNull(),
+  width: int("width"),
+  height: int("height"),
   name: text("name"),
+  parentSectionId: text("parent_section_id").references((): AnyMySqlColumn => sections.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const items = mysqlTable("item", {
