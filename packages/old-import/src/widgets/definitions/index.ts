@@ -1,6 +1,6 @@
+import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 
-import { objectEntries } from "../../../../common/src";
 import type { OldmarrBookmarkDefinition } from "./bookmark";
 import type { OldmarrCalendarDefinition } from "./calendar";
 import type { OldmarrDashdotDefinition } from "./dashdot";
