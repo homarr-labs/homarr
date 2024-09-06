@@ -5,6 +5,7 @@ import { Code, Stack, Title } from "@mantine/core";
 import type { WidgetComponentProps } from "../definition";
 
 export default function BookmarksWidget({ options }: WidgetComponentProps<"bookmarks">) {
+  console.log('bookmark items: ', options.items);
   options.items.forEach((item) => {
     console.log(item);
   });

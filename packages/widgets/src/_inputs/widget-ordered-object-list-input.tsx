@@ -1,9 +1,10 @@
+import { Button, Card, Stack, Text } from "@mantine/core";
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
+import React from "react";
 
 export const WidgetOrderedObjectListInput = ({
   property,
-  kind,
   options,
 }: CommonWidgetInputProps<"orderedObjectList">) => {
   const form = useFormContext();
@@ -11,12 +12,16 @@ export const WidgetOrderedObjectListInput = ({
   const values = form.values.options[property] as Record<string, unknown>[];
 
   return (
-    <div>
+    <Card>
       {values.map((value, index) => {
         return <options.itemComponent key={index} item={value} />;
       })}
-      {JSON.stringify(options)}
-      <span>AAAA!</span>
-    </div>
+      {values.length === 0 && (
+        <Stack align={"center"} mb={"xl"}>
+          <Text c={"dimmed"}>Not configured any items</Text>
+        </Stack>
+      )}
+      <Button>Add item</Button>
+    </Card>
   );
 };
