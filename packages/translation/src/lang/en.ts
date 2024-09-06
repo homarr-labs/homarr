@@ -1622,6 +1622,27 @@ export default {
               text: "Send the amount of users and whether you've activated SSO",
             },
           },
+          crawlingAndIndexing: {
+            title: "Crawling and Indexing",
+            warning:
+              "Enabling or disabling any settings here will severely impact how search engines will index & crawl your page. Any setting is a request and it is up to the crawler to apply these settings. Any modification may take up to multiple days or weeks to apply. Some settings may be search engine specific.",
+            noIndex: {
+              title: "No index",
+              text: "Do not index the website on search engines and don't show it in any search results",
+            },
+            noFollow: {
+              title: "No follow",
+              text: "Do not follow any links while indexing. Disabling this will lead to crawlers attempting to follow all links on Homarr.",
+            },
+            noTranslate: {
+              title: "No translate",
+              text: "When the site language is likely not that the user is likely to want to read, Google will show a translation link in the search results",
+            },
+            noSiteLinksSearchBox: {
+              title: "No site links search box",
+              text: "Google will build a search box with the crawled links along with other direct links. Enabling this will ask Google to disable that box.",
+            },
+          },
         },
       },
       tool: {
