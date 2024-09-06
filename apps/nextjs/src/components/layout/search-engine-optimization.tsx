@@ -5,15 +5,17 @@ import { serverSettings } from "@homarr/db/schema/sqlite";
 import type { defaultServerSettings } from "@homarr/server-settings";
 
 export const SearchEngineOptimization = async () => {
-  const analyticSetting = await db.query.serverSettings.findFirst({
-    where: eq(serverSettings.settingKey, "analytics"),
+  const crawlingAndIndexingSetting = await db.query.serverSettings.findFirst({
+    where: eq(serverSettings.settingKey, "crawlingAndIndexing"),
   });
 
-  if (!analyticSetting) {
+  if (!crawlingAndIndexingSetting) {
     return null;
   }
 
-  const value = SuperJSON.parse<(typeof defaultServerSettings)["crawlingAndIndexing"]>(analyticSetting.value);
+  const value = SuperJSON.parse<(typeof defaultServerSettings)["crawlingAndIndexing"]>(
+    crawlingAndIndexingSetting.value,
+  );
 
   const robotsAttributes = [...(value.noIndex ? ["noindex"] : []), ...(value.noIndex ? ["nofollow"] : [])];
 
