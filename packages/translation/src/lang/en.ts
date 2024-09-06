@@ -1208,7 +1208,7 @@ export default {
         },
       },
       oldImport: {
-        label: "Import from old homarr",
+        label: "Import from homarr before 1.0.0",
         notification: {
           success: {
             title: "Import successful",

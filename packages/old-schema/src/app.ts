@@ -54,7 +54,7 @@ const appIntegrationPropertySchema = z.object({
   type: z.enum(["private", "public"]),
   field: z.enum(["apiKey", "password", "username"]),
   value: z.string().nullable().optional(),
-  isDefined: z.boolean(),
+  isDefined: z.boolean().optional(),
 });
 
 const appIntegrationSchema = z.object({

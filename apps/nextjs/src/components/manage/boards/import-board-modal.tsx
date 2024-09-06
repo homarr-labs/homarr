@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Fieldset, FileInput, Grid, Group, Radio, Stack, Switch, TextInput } from "@mantine/core";
+import { IconFileUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
@@ -65,7 +66,7 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
     },
   );
 
-  const { mutateAsync } = clientApi.board.importOldmarrConfig.useMutation();
+  const { mutateAsync, isPending } = clientApi.board.importOldmarrConfig.useMutation();
 
   const handleSubmitAsync = async (values: { file: File; configuration: OldmarrImportConfiguration }) => {
     const formData = new FormData();
@@ -107,6 +108,8 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
     >
       <Stack>
         <FileInput
+          rightSection={<IconFileUpload />}
+          withAsterisk
           accept="application/json"
           {...form.getInputProps("file")}
           error={
@@ -136,9 +139,13 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
           </Grid>
         </Fieldset>
 
-        <TextInput label={tOldImport("form.name.label")} {...form.getInputProps("configuration.name")} />
+        <TextInput withAsterisk label={tOldImport("form.name.label")} {...form.getInputProps("configuration.name")} />
 
-        <Radio.Group label={tOldImport("form.screenSize.label")} {...form.getInputProps("configuration.screenSize")}>
+        <Radio.Group
+          withAsterisk
+          label={tOldImport("form.screenSize.label")}
+          {...form.getInputProps("configuration.screenSize")}
+        >
           <Group mt="xs">
             <Radio value="sm" label={tOldImport("form.screenSize.option.sm")} />
             <Radio value="md" label={tOldImport("form.screenSize.option.md")} />
@@ -147,6 +154,7 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
         </Radio.Group>
 
         <SelectWithDescription
+          withAsterisk
           label={tOldImport("form.sidebarBehavior.label")}
           description={tOldImport("form.sidebarBehavior.description")}
           data={[
@@ -168,7 +176,9 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
           <Button variant="subtle" color="gray" onClick={actions.closeModal}>
             {tCommon("action.cancel")}
           </Button>
-          <Button type="submit">{tCommon("action.import")}</Button>
+          <Button type="submit" loading={isPending}>
+            {tCommon("action.import")}
+          </Button>
         </Group>
       </Stack>
     </form>

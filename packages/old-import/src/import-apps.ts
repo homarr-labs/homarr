@@ -26,7 +26,9 @@ export const insertAppsAsync = async (
     newId: distinctAppsByHref
       ? (existingAppsWithHref.find(
           (existingApp) =>
-            existingApp.href === (app.behaviour.externalUrl === "" ? app.url : app.behaviour.externalUrl),
+            existingApp.href === (app.behaviour.externalUrl === "" ? app.url : app.behaviour.externalUrl) &&
+            existingApp.name === app.name &&
+            existingApp.iconUrl === app.appearance.iconUrl,
         )?.id ?? createId())
       : createId(),
     ...app,
