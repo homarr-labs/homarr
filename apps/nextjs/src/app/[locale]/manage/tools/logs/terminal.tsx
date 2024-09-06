@@ -10,7 +10,7 @@ import { clientApi } from "@homarr/api/client";
 
 import classes from "./terminal.module.css";
 
-export default function TerminalComponent() {
+export const TerminalComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   const terminalRef = useRef<Terminal>();
@@ -54,4 +54,4 @@ export default function TerminalComponent() {
     };
   }, []);
   return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
-}
+};
