@@ -36,10 +36,11 @@ export class RadarrIntegration extends Integration {
       },
     });
     const radarrCalendarEvents = await z.array(radarrCalendarEventSchema).parseAsync(await response.json());
+
     return radarrCalendarEvents.map(
       (radarrCalendarEvent): CalendarEvent => ({
         name: radarrCalendarEvent.title,
-        subName: radarrCalendarEvent.title,
+        subName: radarrCalendarEvent.originalTitle,
         description: radarrCalendarEvent.overview,
         thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
         date: radarrCalendarEvent.inCinemas,
@@ -116,17 +117,10 @@ const radarrCalendarEventImageSchema = z.array(
 
 const radarrCalendarEventSchema = z.object({
   title: z.string(),
+  originalTitle: z.string(),
   inCinemas: z.string().transform((value) => new Date(value)),
   overview: z.string().optional(),
   titleSlug: z.string(),
   images: radarrCalendarEventImageSchema,
   imdbId: z.string().optional(),
-  //   physicalRelease: z
-  //     .string()
-  //     .transform((value) => new Date(value))
-  //     .optional(),
-  //   digitalRelease: z
-  //     .string()
-  //     .transform((value) => new Date(value))
-  //     .optional(),
 });

@@ -5,7 +5,7 @@ import { decryptSecret } from "@homarr/common";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
-import { RadarrIntegration, SonarrIntegration } from "@homarr/integrations";
+import { integrationCreatorByKind } from "@homarr/integrations";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
@@ -46,19 +46,12 @@ export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).w
         value: decryptSecret(secret.value),
       }));
 
-      const sonarr = new SonarrIntegration({
+      const integrationInstance = integrationCreatorByKind(integration.integration.kind as "radarr" | "sonarr", {
         ...integration.integration,
         decryptedSecrets,
       });
-      const radarr = new RadarrIntegration({
-        ...integration.integration,
-        decryptedSecrets,
-      });
-      const [sonarrEvents, radarrEvents] = await Promise.all([
-        sonarr.getCalendarEventsAsync(start, end),
-        radarr.getCalendarEventsAsync(start, end),
-      ]);
-      const events = [...sonarrEvents, ...radarrEvents];
+
+      const events = await integrationInstance.getCalendarEventsAsync(start, end);
 
       const cache = createItemAndIntegrationChannel<CalendarEvent[]>("calendar", integration.integrationId);
       await cache.setAsync(events);
