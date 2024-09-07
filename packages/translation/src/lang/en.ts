@@ -1065,6 +1065,20 @@ export default {
         unknown: "Unknown",
       },
     },
+    indexerManager: {
+      name: "Indexer manager status",
+      description: "Status of your indexers",
+      option: {
+        openIndexerSiteInNewTab: {
+          label: "Open indexer site in new tab",
+        },
+      },
+      title: "Indexer manager",
+      testAll: "Test all",
+      error: {
+        internalServerError: "Failed to fetch indexers status",
+      },
+    },
     common: {
       location: {
         query: "City / Postal code",
@@ -1737,6 +1751,9 @@ export default {
             },
             rssFeeds: {
               label: "RSS feeds",
+            },
+            indexerManager: {
+              label: "Indexer Manager",
             },
           },
         },

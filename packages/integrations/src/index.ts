@@ -7,6 +7,7 @@ export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
+export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 
 // Types
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
