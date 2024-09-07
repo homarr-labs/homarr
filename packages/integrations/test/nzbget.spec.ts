@@ -1,3 +1,4 @@
+import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -211,7 +212,10 @@ const nzbGetAddItemAsync = async (
 ) => {
   // Add nzb file in the watch folder
   await container.copyFilesToContainer([
-    { source: __dirname + "/volumes/usenet/test_download_100MB.nzb", target: "/downloads/nzb/test_download_100MB.nzb" },
+    {
+      source: join(__dirname, "/volumes/usenet/test_download_100MB.nzb"),
+      target: "/downloads/nzb/test_download_100MB.nzb",
+    },
   ]);
   // Trigger scanning of the watch folder (Only available way to add an item except "append" which is too complex and unnecessary)
   await fetch(`http://${container.getHost()}:${container.getMappedPort(6789)}/${username}:${password}/jsonrpc`, {

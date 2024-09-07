@@ -1,3 +1,4 @@
+import { join } from "path";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import type { StartedTestContainer } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -179,7 +180,7 @@ const createSabnzbdContainer = () => {
   return new GenericContainer(IMAGE_NAME)
     .withCopyFilesToContainer([
       {
-        source: __dirname + "/volumes/usenet/sabnzbd.ini",
+        source: join(__dirname, "/volumes/usenet/sabnzbd.ini"),
         target: "/config/sabnzbd.ini",
       },
     ])
@@ -210,7 +211,7 @@ const sabNzbdAddItemAsync = async (
   // Add nzb file in the watch folder
   await container.copyFilesToContainer([
     {
-      source: __dirname + "/volumes/usenet/test_download_100MB.nzb",
+      source: join(__dirname, "/volumes/usenet/test_download_100MB.nzb"),
       target: "/nzb/test_download_100MB.nzb",
     },
   ]);
