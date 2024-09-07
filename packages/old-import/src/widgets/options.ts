@@ -88,6 +88,9 @@ const optionMapping: OptionMapping = {
     displayName: (oldOptions) => oldOptions.displayName,
   },
   mediaServer: {},
+  indexerManager: {
+    openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
+  },
   app: null,
 };
 

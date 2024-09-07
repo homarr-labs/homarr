@@ -64,6 +64,7 @@ export const widgetKindMapping = {
   "smartHome-executeAutomation": "smart-home/trigger-automation",
   "mediaRequests-requestList": "media-requests-list",
   "mediaRequests-requestStats": "media-requests-stats",
+  indexerManager: "indexer-manager",
 } satisfies Record<WidgetKind, OldmarrWidgetDefinitions["id"] | null>;
 // Use null for widgets that did not exist in oldmarr
 // TODO: revert assignment so that only old widgets are needed in the object,
