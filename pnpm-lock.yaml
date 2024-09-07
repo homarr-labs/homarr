@@ -1116,7 +1116,7 @@ importers:
         version: link:../../tooling/typescript
       eslint:
         specifier: ^9.9.1
-        version: 9.9.1
+        version: 9.10.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -1138,7 +1138,7 @@ importers:
         version: link:../../tooling/typescript
       eslint:
         specifier: ^9.9.1
-        version: 9.9.1
+        version: 9.10.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
