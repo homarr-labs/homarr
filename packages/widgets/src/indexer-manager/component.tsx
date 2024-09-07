@@ -29,9 +29,11 @@ export default function IndexerManagerWidget({
   clientApi.widget.indexerManager.subscribeIndexersStatus.useSubscription(
     { integrationIds },
     {
-      onData() {
-        setIndexersData((data) => {
-          return [...data];
+      onData(newData) {
+        setIndexersData((prevData) => {
+          return prevData.map((item) =>
+            item.integrationId === newData.integrationId ? { ...item, indexers: newData.indexers } : item,
+          );
         });
       },
     },

@@ -28,18 +28,15 @@ export const indexerManagerJob = createCronJob("indexerManager", EVERY_MINUTE).w
   });
 
   for (const itemForIntegration of itemsForIntegration) {
-    const integration = itemForIntegration.integrations[0]?.integration;
-    if (!integration) {
-      continue;
+    for (const integration of itemForIntegration.integrations) {
+      const prowlarr = new ProwlarrIntegration({
+        ...integration.integration,
+        decryptedSecrets: integration.integration.secrets.map((secret) => ({
+          ...secret,
+          value: decryptSecret(secret.value),
+        })),
+      });
+      await prowlarr.getIndexersAsync();
     }
-
-    const prowlarr = new ProwlarrIntegration({
-      ...integration,
-      decryptedSecrets: integration.secrets.map((secret) => ({
-        ...secret,
-        value: decryptSecret(secret.value),
-      })),
-    });
-    await prowlarr.getIndexersAsync();
   }
 });
