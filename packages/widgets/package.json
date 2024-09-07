@@ -57,7 +57,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "mantine-react-table": "2.0.0-beta.6",
-    "next": "^14.2.7",
+    "next": "^14.2.8",
     "react": "^18.3.1",
     "video.js": "^8.17.3"
   },
@@ -66,7 +66,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "typescript": "^5.5.4"
   }
 }

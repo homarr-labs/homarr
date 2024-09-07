@@ -30,7 +30,7 @@
     "@mantine/spotlight": "^7.12.2",
     "@tabler/icons-react": "^3.14.0",
     "jotai": "^2.9.3",
-    "next": "^14.2.7",
+    "next": "^14.2.8",
     "react": "^18.3.1",
     "use-deep-compare-effect": "^1.8.1"
   },
@@ -38,7 +38,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "typescript": "^5.5.4"
   }
 }

@@ -530,6 +530,7 @@ export default {
     symbols: {
       colon: ": ",
     },
+    beta: "Beta",
     error: "Error",
     errors: {
       noData: "No data to show",
@@ -541,6 +542,7 @@ export default {
       backToOverview: "Back to overview",
       create: "Create",
       edit: "Edit",
+      import: "Import",
       insert: "Insert",
       remove: "Remove",
       save: "Save",
@@ -644,6 +646,9 @@ export default {
           passwordsDoNotMatch: "Passwords do not match",
           passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
+          invalidFileType: "Invalid file type, expected {expected}",
+          fileTooLarge: "File is too large, maximum size is {maxSize}",
+          invalidConfiguration: "Invalid configuration",
         },
       },
     },
@@ -1216,6 +1221,61 @@ export default {
           },
         },
       },
+      oldImport: {
+        label: "Import from homarr before 1.0.0",
+        notification: {
+          success: {
+            title: "Import successful",
+            message: "The board was successfully imported",
+          },
+          error: {
+            title: "Import failed",
+            message: "The board could not be imported, check the logs for further details",
+          },
+        },
+        form: {
+          file: {
+            label: "Select JSON file",
+            invalidError: "Invalid configuration file",
+          },
+          apps: {
+            label: "Apps",
+            avoidDuplicates: {
+              label: "Avoid duplicates",
+              description: "Ignores apps where an app with the same href already exists",
+            },
+            onlyImportApps: {
+              label: "Only import apps",
+              description: "Only adds the apps, the board need to be recreated manually",
+            },
+          },
+          name: {
+            label: "Board name",
+          },
+          screenSize: {
+            label: "Screen size",
+            option: {
+              sm: "Small",
+              md: "Medium",
+              lg: "Large",
+            },
+          },
+          sidebarBehavior: {
+            label: "Sidebar behavior",
+            description: "Sidebars were removed in 1.0, you can select what should happen with the items inside them.",
+            option: {
+              lastSection: {
+                label: "Last section",
+                description: "Sidebar will be displayed below the last section",
+              },
+              removeItems: {
+                label: "Remove items",
+                description: "Items contained in the sidebar will be removed",
+              },
+            },
+          },
+        },
+      },
     },
     field: {
       pageTitle: {
@@ -1634,6 +1694,27 @@ export default {
             usersData: {
               title: "Users data",
               text: "Send the amount of users and whether you've activated SSO",
+            },
+          },
+          crawlingAndIndexing: {
+            title: "Crawling and Indexing",
+            warning:
+              "Enabling or disabling any settings here will severely impact how search engines will index & crawl your page. Any setting is a request and it is up to the crawler to apply these settings. Any modification may take up to multiple days or weeks to apply. Some settings may be search engine specific.",
+            noIndex: {
+              title: "No index",
+              text: "Do not index the website on search engines and don't show it in any search results",
+            },
+            noFollow: {
+              title: "No follow",
+              text: "Do not follow any links while indexing. Disabling this will lead to crawlers attempting to follow all links on Homarr.",
+            },
+            noTranslate: {
+              title: "No translate",
+              text: "When the site language is likely not that the user is likely to want to read, Google will show a translation link in the search results",
+            },
+            noSiteLinksSearchBox: {
+              title: "No site links search box",
+              text: "Google will build a search box with the crawled links along with other direct links. Enabling this will ask Google to disable that box.",
             },
           },
         },

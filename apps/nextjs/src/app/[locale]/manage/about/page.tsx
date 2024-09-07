@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Image from "next/image";
 import {
   Accordion,
@@ -17,16 +18,15 @@ import {
   Title,
 } from "@mantine/core";
 import { IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
-import { setStaticParamsLocale } from "next-international/server";
 
-import { getScopedI18n, getStaticParams } from "@homarr/translation/server";
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
-import contributorsData from "../../../../../../../static-data/contributors.json";
-import translatorsData from "../../../../../../../static-data/translators.json";
+import type githubContributorsJson from "../../../../../../../static-data/contributors.json";
+import type crowdinContributorsJson from "../../../../../../../static-data/translators.json";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
@@ -37,16 +37,26 @@ export async function generateMetadata() {
   };
 }
 
-interface PageProps {
-  params: {
-    locale: string;
-  };
-}
+const getHost = () => {
+  if (process.env.HOSTNAME) {
+    return `${process.env.HOSTNAME}:3000`;
+  }
 
-export default async function AboutPage({ params: { locale } }: PageProps) {
-  setStaticParamsLocale(locale);
+  return headers().get("host");
+};
+
+export default async function AboutPage() {
+  const baseServerUrl = `http://${getHost()}`;
   const t = await getScopedI18n("management.page.about");
   const attributes = await getPackageAttributesAsync();
+  const githubContributors = (await fetch(`${baseServerUrl}/api/about/contributors/github`).then((res) =>
+    res.json(),
+  )) as typeof githubContributorsJson;
+
+  const crowdinContributors = (await fetch(`${baseServerUrl}/api/about/contributors/crowdin`).then((res) =>
+    res.json(),
+  )) as typeof crowdinContributorsJson;
+
   return (
     <div>
       <DynamicBreadcrumb />
@@ -70,14 +80,14 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
               <Text>{t("accordion.contributors.title")}</Text>
               <Text size="sm" c="dimmed">
                 {t("accordion.contributors.subtitle", {
-                  count: contributorsData.length,
+                  count: githubContributors.length,
                 })}
               </Text>
             </Stack>
           </AccordionControl>
           <AccordionPanel>
             <Flex wrap="wrap" gap="xs">
-              {contributorsData.map((contributor) => (
+              {githubContributors.map((contributor) => (
                 <GenericContributorLinkCard
                   key={contributor.login}
                   link={`https://github.com/${contributor.login}`}
@@ -94,14 +104,14 @@ export default async function AboutPage({ params: { locale } }: PageProps) {
               <Text>{t("accordion.translators.title")}</Text>
               <Text size="sm" c="dimmed">
                 {t("accordion.translators.subtitle", {
-                  count: translatorsData.length,
+                  count: crowdinContributors.length,
                 })}
               </Text>
             </Stack>
           </AccordionControl>
           <AccordionPanel>
             <Flex wrap="wrap" gap="xs">
-              {translatorsData.map((translator) => (
+              {crowdinContributors.map((translator) => (
                 <GenericContributorLinkCard
                   key={translator.username}
                   link={`https://crowdin.com/profile/${translator.username}`}
@@ -164,9 +174,3 @@ const GenericContributorLinkCard = ({ name, image, link }: GenericContributorLin
     </AspectRatio>
   );
 };
-
-export function generateStaticParams() {
-  return getStaticParams();
-}
-
-export const dynamic = "force-static";

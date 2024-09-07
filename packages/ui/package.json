@@ -33,7 +33,7 @@
     "@mantine/hooks": "^7.12.2",
     "@tabler/icons-react": "^3.14.0",
     "mantine-react-table": "2.0.0-beta.6",
-    "next": "^14.2.7",
+    "next": "^14.2.8",
     "react": "^18.3.1"
   },
   "devDependencies": {
@@ -41,7 +41,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "typescript": "^5.5.4"
   }
 }
