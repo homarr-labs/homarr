@@ -133,7 +133,6 @@ export const getDefaultSecretKinds = (integration: IntegrationKind): Integration
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
   integrationDefs[integration].secretKinds;
 
-
 /**
  * Get all integration kinds that share a category, typed only by the kinds belonging to the category
  * @param category Category to filter by, belonging to IntegrationCategory

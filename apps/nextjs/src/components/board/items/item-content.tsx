@@ -10,8 +10,8 @@ import { WidgetError } from "@homarr/widgets/errors";
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import classes from "../sections/item.module.css";
-import { BoardItemMenu } from "./item-menu";
 import { useItemActions } from "./item-actions";
+import { BoardItemMenu } from "./item-menu";
 
 interface BoardItemContentProps {
   item: Item;
@@ -57,8 +57,9 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
   const newItem = { ...item, options };
+  const { updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
-    useItemActions().updateItemOptions({ itemId: item.id, newOptions });
+    updateItemOptions({ itemId: item.id, newOptions });
 
   if (!serverData?.isReady) return null;
 

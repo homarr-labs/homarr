@@ -4,8 +4,6 @@ import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { integrationCreatorByKind, IntegrationTestConnectionError } from "@homarr/integrations";
 
-import type { integrationCreators } from "../../../../integrations/src/base/creator";
-
 type FormIntegration = Integration & {
   secrets: {
     kind: IntegrationSecretKind;
