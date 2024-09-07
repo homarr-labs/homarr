@@ -3,6 +3,7 @@ import { Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { CrawlingAndIndexingSettings } from "~/app/[locale]/manage/settings/_components/crawling-and-indexing.settings";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AnalyticsSettings } from "./_components/analytics.settings";
 
@@ -24,6 +25,7 @@ export default async function SettingsPage() {
       <Stack>
         <Title order={1}>{t("title")}</Title>
         <AnalyticsSettings initialData={serverSettings.analytics} />
+        <CrawlingAndIndexingSettings initialData={serverSettings.crawlingAndIndexing} />
       </Stack>
     </>
   );
