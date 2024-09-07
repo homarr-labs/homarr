@@ -1,4 +1,4 @@
-import { decryptSecret } from "@homarr/common";
+import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";

@@ -1,4 +1,4 @@
-import { decryptSecret } from "@homarr/common";
+import { decryptSecret } from "@homarr/common/server";
 import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
 import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
