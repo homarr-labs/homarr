@@ -5,7 +5,15 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { createWSClient, loggerLink, unstable_httpBatchStreamLink, wsLink } from "@trpc/client";
+import {
+  createWSClient,
+  httpLink,
+  isNonJsonSerializable,
+  loggerLink,
+  splitLink,
+  unstable_httpBatchStreamLink,
+  wsLink,
+} from "@trpc/client";
 import superjson from "superjson";
 
 import type { AppRouter } from "@homarr/api";
@@ -34,18 +42,29 @@ export function TRPCReactProvider(props: PropsWithChildren) {
           enabled: (opts) =>
             process.env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
         }),
-        (args) => {
-          return ({ op, next }) => {
-            console.log("op", op.type, op.input, op.path, op.id);
-            if (op.type === "subscription") {
-              const link = wsLink<AppRouter>({
-                client: wsClient,
-                transformer: superjson,
-              });
-              return link(args)({ op, next });
-            }
-
-            return unstable_httpBatchStreamLink({
+        splitLink({
+          condition: ({ type }) => type === "subscription",
+          true: wsLink<AppRouter>({
+            client: wsClient,
+            transformer: superjson,
+          }),
+          false: splitLink({
+            condition: ({ input }) => isNonJsonSerializable(input),
+            true: httpLink({
+              /**
+               * We don't want to transform the data here as we want to use form data
+               */
+              transformer: {
+                serialize(object: unknown) {
+                  return object;
+                },
+                deserialize(data: unknown) {
+                  return data;
+                },
+              },
+              url: `${getBaseUrl()}/api/trpc`,
+            }),
+            false: unstable_httpBatchStreamLink({
               transformer: superjson,
               url: `${getBaseUrl()}/api/trpc`,
               headers() {
@@ -53,9 +72,9 @@ export function TRPCReactProvider(props: PropsWithChildren) {
                 headers.set("x-trpc-source", "nextjs-react");
                 return headers;
               },
-            })(args)({ op, next });
-          };
-        },
+            }),
+          }),
+        }),
       ],
     });
   });

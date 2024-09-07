@@ -1,3 +1,4 @@
+import type { ParamsObject } from "international-types";
 import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod";
 import { ZodIssueCode } from "zod";
 
@@ -114,16 +115,17 @@ const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
   if (issue.code === ZodIssueCode.too_big) {
     return handleTooBigError(issue);
   }
-  if (issue.code === ZodIssueCode.invalid_type && ctx.data === "") {
+  if (issue.code === ZodIssueCode.invalid_type && (ctx.data === "" || issue.received === "null")) {
     return {
       key: "errors.required",
       params: {},
     } as const;
   }
   if (issue.code === ZodIssueCode.custom && issue.params?.i18n) {
-    const { i18n } = issue.params as CustomErrorParams;
+    const { i18n } = issue.params as CustomErrorParams<CustomErrorKey>;
     return {
       key: `errors.custom.${i18n.key}`,
+      params: i18n.params,
     } as const;
   }
 
@@ -132,12 +134,17 @@ const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
   };
 };
 
-export interface CustomErrorParams {
+type CustomErrorKey = keyof TranslationObject["common"]["zod"]["errors"]["custom"];
+
+export interface CustomErrorParams<TKey extends CustomErrorKey> {
   i18n: {
-    key: keyof TranslationObject["common"]["zod"]["errors"]["custom"];
-    params?: Record<string, unknown>;
+    key: TKey;
+    params: ParamsObject<TranslationObject["common"]["zod"]["errors"]["custom"][TKey]>;
   };
 }
 
-export const createCustomErrorParams = (i18n: CustomErrorParams["i18n"] | CustomErrorParams["i18n"]["key"]) =>
-  typeof i18n === "string" ? { i18n: { key: i18n } } : { i18n };
+export const createCustomErrorParams = <TKey extends CustomErrorKey>(
+  i18n: keyof CustomErrorParams<TKey>["i18n"]["params"] extends never
+    ? CustomErrorParams<TKey>["i18n"]["key"]
+    : CustomErrorParams<TKey>["i18n"],
+) => (typeof i18n === "string" ? { i18n: { key: i18n, params: {} } } : { i18n });
