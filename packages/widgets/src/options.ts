@@ -1,4 +1,6 @@
 import type React from "react";
+import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
+import { ActionIconProps } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -23,8 +25,15 @@ interface MultiSelectInput<TOptions extends SelectOption[]>
   searchable?: boolean;
 }
 
-interface OrderedObjectListInput<TItem extends Record<string, unknown>> extends CommonInput<TItem[]> {
-  itemComponent: (props: { item: TItem }) => React.ReactNode;
+interface SortableItemListInput<TItem extends { id: string }> extends CommonInput<UniqueIdentifier[]> {
+  addButton: (props: { addItem: (item: TItem) => void }) => React.ReactNode;
+  itemComponent: (props: {
+    item: TItem;
+    removeItem: () => void;
+    rootAttributes: DraggableAttributes;
+    handle: (props: Partial<Pick<ActionIconProps, "size" | "color" | "variant">>) => React.ReactNode;
+  }) => React.ReactNode;
+  useData?: () => Map<UniqueIdentifier, TItem>;
 }
 
 interface SelectInput<TOptions extends readonly SelectOption[]>
@@ -115,20 +124,22 @@ const optionsFactory = {
     defaultValue: "",
     withDescription: input?.withDescription ?? false,
   }),
-  orderedObjectList: <const TItem extends Record<string, unknown>>(input: OrderedObjectListInput<TItem>) => ({
-    type: "orderedObjectList" as const,
+  sortableItemList: <const TItem extends { id: string }>(input: SortableItemListInput<TItem>) => ({
+    type: "sortableItemList" as const,
     defaultValue: [] as TItem[],
     itemComponent: input.itemComponent,
+    addButton: input.addButton,
+    useData: input.useData,
   }),
 };
 
 type WidgetOptionFactory = typeof optionsFactory;
 
 export type WidgetOptionDefinition =
-  | ReturnType<WidgetOptionFactory[Exclude<keyof WidgetOptionFactory, "orderedObjectList">]>
+  | ReturnType<WidgetOptionFactory[Exclude<keyof WidgetOptionFactory, "sortableItemList">]>
   // We allow any here as it's already type guarded with Record<string, unknown> and it still infers the correct type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  | ReturnType<typeof optionsFactory.orderedObjectList<any>>;
+  | ReturnType<typeof optionsFactory.sortableItemList<any>>;
 export type WidgetOptionsRecord = Record<string, WidgetOptionDefinition>;
 export type WidgetOptionType = WidgetOptionDefinition["type"];
 export type WidgetOptionOfType<TType extends WidgetOptionType> = Extract<WidgetOptionDefinition, { type: TType }>;
