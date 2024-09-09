@@ -2,6 +2,8 @@ import { Text } from "@mantine/core";
 
 import type { SearchMode } from "../../mode";
 import { appsSearchGroup } from "./apps-search-group";
+import { boardsSearchGroup } from "./boards-search-group";
+import { integrationsSearchGroup } from "./integrations-search-group";
 
 export const appIntegrationBoardMode = {
   name: "appIntegrationBoard",
@@ -12,5 +14,5 @@ export const appIntegrationBoardMode = {
       TODO: Add tip
     </Text>
   ),
-  groups: [appsSearchGroup],
+  groups: [appsSearchGroup, integrationsSearchGroup, boardsSearchGroup],
 } satisfies SearchMode;

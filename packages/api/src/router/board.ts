@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import type { Database, SQL } from "@homarr/db";
-import { and, createId, eq, inArray, or } from "@homarr/db";
+import { and, createId, eq, inArray, like, or } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -93,6 +93,20 @@ export const boardRouter = createTRPCRouter({
       isHome: currentUserWhenPresent?.homeBoardId === board.id,
     }));
   }),
+  search: publicProcedure
+    .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
+    .query(({ ctx, input }) => {
+      // TODO: restrict for access
+      return ctx.db.query.boards.findMany({
+        where: like(boards.name, `%${input.query}%`),
+        limit: input.limit,
+        columns: {
+          id: true,
+          name: true,
+          logoImageUrl: true,
+        },
+      });
+    }),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
     .input(validation.board.create)
