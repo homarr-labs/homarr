@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 
 type Data = Record<
   string,
@@ -61,14 +61,15 @@ export const useServerDataFor = (id: string) => {
   return context.data[id];
 };
 
-export const useServerDataInitializer = (id: string, serverData: Record<string, unknown> | undefined) => {
+export const useServerDataInitializer = (id: string, serverData: Promise<Record<string, unknown>> | undefined) => {
   const context = useContext(GlobalItemServerDataContext);
+  const data = serverData ? use(serverData) : undefined;
 
   if (!context) {
     throw new Error("GlobalItemServerDataProvider is required");
   }
 
   useEffect(() => {
-    context.setItemServerData(id, serverData);
+    context.setItemServerData(id, data);
   }, []);
 };

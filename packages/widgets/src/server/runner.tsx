@@ -22,9 +22,7 @@ export const GlobalItemServerDataRunner = ({ board, shouldRun, children }: Props
   return (
     <GlobalItemServerDataProvider initalItemIds={allItems.map(({ id }) => id)}>
       {allItems.map((item) => (
-        <Suspense key={item.id}>
-          <ItemDataLoader item={item} />
-        </Suspense>
+        <ItemDataLoader item={item} />
       ))}
       {children}
     </GlobalItemServerDataProvider>
@@ -37,15 +35,19 @@ interface ItemDataLoaderProps {
 
 const ItemDataLoader = async ({ item }: ItemDataLoaderProps) => {
   const widgetImport = widgetImports[item.kind];
-  if (!("serverDataLoader" in widgetImport)) {
+  if (!("serverDataLoader" in widgetImport) || !widgetImport.serverDataLoader) {
     return <ClientServerDataInitalizer id={item.id} serverData={undefined} />;
   }
   const loader = await widgetImport.serverDataLoader();
   const optionsWithDefault = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
-  const data = await loader.default({
+  const data = loader.default({
     ...item,
     options: optionsWithDefault as never,
     itemId: item.id,
   });
-  return <ClientServerDataInitalizer id={item.id} serverData={data} />;
+  return (
+    <Suspense key={item.id}>
+      <ClientServerDataInitalizer id={item.id} serverData={data} />
+    </Suspense>
+  );
 };

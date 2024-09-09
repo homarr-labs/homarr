@@ -1,4 +1,4 @@
-import { IconApps } from "@tabler/icons-react";
+import { IconApps, IconDeviceDesktopX } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -12,6 +12,10 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     showDescriptionTooltip: factory.switch({ defaultValue: false }),
     pingEnabled: factory.switch({ defaultValue: false }),
   })),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+  errors: {
+    NOT_FOUND: {
+      icon: IconDeviceDesktopX,
+      message: (t) => t("widget.app.error.notFound.label"),
+    },
+  },
+}).withDynamicImport(() => import("./component"));

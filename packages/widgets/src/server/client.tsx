@@ -4,7 +4,7 @@ import { useServerDataInitializer } from "./provider";
 
 interface Props {
   id: string;
-  serverData: Record<string, unknown> | undefined;
+  serverData: Promise<Record<string, unknown>> | undefined;
 }
 
 export const ClientServerDataInitalizer = ({ id, serverData }: Props) => {
