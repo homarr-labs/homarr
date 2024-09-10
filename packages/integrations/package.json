@@ -25,7 +25,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@ctrl/deluge": "^6.1.0",
-    "@ctrl/qbittorrent": "^8.2.0",
+    "@ctrl/qbittorrent": "^9.0.0",
     "@ctrl/transmission": "^6.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",

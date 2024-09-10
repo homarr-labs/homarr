@@ -951,8 +951,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0
       '@ctrl/qbittorrent':
-        specifier: ^8.2.0
-        version: 8.2.0
+        specifier: ^9.0.0
+        version: 9.0.0
       '@ctrl/transmission':
         specifier: ^6.1.0
         version: 6.1.0
@@ -1697,16 +1697,16 @@ packages:
     resolution: {integrity: sha512-wENP7LH4BmCjz+gXVq7Nzz20zMjY/huuG7aDk/yu/LhFdC84e/l8222rCIAo0lwhU451lFcJKLcOmtG6TNrBAQ==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@8.2.0':
-    resolution: {integrity: sha512-7TDvm3sknQxLGFQLTWHjvyLNj6stbfhsvbvNx3tZUpVqlGNXwV7rdyXvJYdcL2voGelAPOjusFqTL4wVjchVFg==}
+  '@ctrl/qbittorrent@9.0.0':
+    resolution: {integrity: sha512-EOJiqwbUdLx0wOHyIBHpx7NVgDuNoo5fYtYghql6vZHGJY2HhaSS8gO9xkVxcHXlZkqXrvk7QL7wfLYNhEtbew==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.0.0':
     resolution: {integrity: sha512-BZAPDv8syFArFTAAeb560JSBNTajFtP3G/5eYiUMsg0upGAQs6NWGiHYbyjvAt8uHCSzxXsiji/Wvq1b7CvXSQ==}
     engines: {node: '>=18'}
 
-  '@ctrl/torrent-file@4.0.0':
-    resolution: {integrity: sha512-FmecYRCzpuPqAQhe/M1hHU81j+HjSzagEJJSQcJfdqc0cHVqNt7emo7YiJP3oOoVjq256vH4+ZimGErwFNvRpQ==}
+  '@ctrl/torrent-file@4.1.0':
+    resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
     engines: {node: '>=18'}
 
   '@ctrl/transmission@6.1.0':
@@ -7778,11 +7778,11 @@ snapshots:
       rfc4648: 1.5.3
       uint8array-extras: 1.4.0
 
-  '@ctrl/qbittorrent@8.2.0':
+  '@ctrl/qbittorrent@9.0.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.0.0
-      '@ctrl/torrent-file': 4.0.0
+      '@ctrl/torrent-file': 4.1.0
       cookie: 0.6.0
       node-fetch-native: 1.6.4
       ofetch: 1.3.4
@@ -7791,9 +7791,8 @@ snapshots:
 
   '@ctrl/shared-torrent@6.0.0': {}
 
-  '@ctrl/torrent-file@4.0.0':
+  '@ctrl/torrent-file@4.1.0':
     dependencies:
-      crypto-hash: 3.0.0
       uint8array-extras: 1.4.0
 
   '@ctrl/transmission@6.1.0':
