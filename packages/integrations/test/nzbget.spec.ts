@@ -222,8 +222,8 @@ const nzbGetAddItemAsync = async (
     method: "POST",
     body: JSON.stringify({ method: "scan" }),
   });
-  // Retries up to 5 times to let NzbGet scan and process the nzb (1 retry should suffice tbh)
-  for (let i = 0; i < 5; i++) {
+  // Retries up to 10000 times to let NzbGet scan and process the nzb (1 retry should suffice tbh but NzbGet is slow)
+  for (let i = 0; i < 10000; i++) {
     const {
       items: [item],
     } = await integration.getClientJobsAndStatusAsync();

@@ -198,7 +198,7 @@ importers:
         version: 14.2.9(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.78.0)
       postcss-preset-mantine:
         specifier: ^1.17.0
-        version: 1.17.0(postcss@8.4.38)
+        version: 1.17.0(postcss@8.4.45)
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -960,8 +960,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0
       '@ctrl/qbittorrent':
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.0.1
+        version: 9.0.1
       '@ctrl/transmission':
         specifier: ^6.1.0
         version: 6.1.0
@@ -1797,8 +1797,8 @@ packages:
     resolution: {integrity: sha512-wENP7LH4BmCjz+gXVq7Nzz20zMjY/huuG7aDk/yu/LhFdC84e/l8222rCIAo0lwhU451lFcJKLcOmtG6TNrBAQ==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@9.0.0':
-    resolution: {integrity: sha512-EOJiqwbUdLx0wOHyIBHpx7NVgDuNoo5fYtYghql6vZHGJY2HhaSS8gO9xkVxcHXlZkqXrvk7QL7wfLYNhEtbew==}
+  '@ctrl/qbittorrent@9.0.1':
+    resolution: {integrity: sha512-MaQhyccZ30C1V8Uxqhc1NvrM/Lgb8x6AunIxjlbhYhw5Zx/l8G2etbjTKle3RIFExURKmzrJx7Odj3EM4AlqDQ==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.0.0':
@@ -7814,13 +7814,11 @@ snapshots:
 
   '@babel/helper-string-parser@7.24.6': {}
 
-  '@babel/helper-string-parser@7.24.8':
-    optional: true
+  '@babel/helper-string-parser@7.24.8': {}
 
   '@babel/helper-validator-identifier@7.24.6': {}
 
-  '@babel/helper-validator-identifier@7.24.7':
-    optional: true
+  '@babel/helper-validator-identifier@7.24.7': {}
 
   '@babel/helper-validator-option@7.24.6': {}
 
@@ -7896,7 +7894,6 @@ snapshots:
       '@babel/helper-string-parser': 7.24.8
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
-    optional: true
 
   '@balena/dockerignore@1.0.2': {}
 
@@ -7936,7 +7933,7 @@ snapshots:
       rfc4648: 1.5.3
       uint8array-extras: 1.4.0
 
-  '@ctrl/qbittorrent@9.0.0':
+  '@ctrl/qbittorrent@9.0.1':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.0.0
@@ -8421,7 +8418,7 @@ snapshots:
       '@antfu/ni': 0.21.12
       '@axiomhq/js': 1.0.0-rc.3
       '@babel/core': 7.24.6
-      '@babel/types': 7.24.6
+      '@babel/types': 7.25.6
       '@clack/prompts': 0.7.0
       cli-high: 0.4.2
       diff: 5.2.0
@@ -12636,38 +12633,38 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-js@4.0.1(postcss@8.4.38):
+  postcss-js@4.0.1(postcss@8.4.45):
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.38
+      postcss: 8.4.45
 
-  postcss-mixins@9.0.4(postcss@8.4.38):
+  postcss-mixins@9.0.4(postcss@8.4.45):
     dependencies:
       fast-glob: 3.3.2
-      postcss: 8.4.38
-      postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-simple-vars: 7.0.1(postcss@8.4.38)
-      sugarss: 4.0.1(postcss@8.4.38)
+      postcss: 8.4.45
+      postcss-js: 4.0.1(postcss@8.4.45)
+      postcss-simple-vars: 7.0.1(postcss@8.4.45)
+      sugarss: 4.0.1(postcss@8.4.45)
 
-  postcss-nested@6.0.1(postcss@8.4.38):
+  postcss-nested@6.0.1(postcss@8.4.45):
     dependencies:
-      postcss: 8.4.38
+      postcss: 8.4.45
       postcss-selector-parser: 6.0.16
 
-  postcss-preset-mantine@1.17.0(postcss@8.4.38):
+  postcss-preset-mantine@1.17.0(postcss@8.4.45):
     dependencies:
-      postcss: 8.4.38
-      postcss-mixins: 9.0.4(postcss@8.4.38)
-      postcss-nested: 6.0.1(postcss@8.4.38)
+      postcss: 8.4.45
+      postcss-mixins: 9.0.4(postcss@8.4.45)
+      postcss-nested: 6.0.1(postcss@8.4.45)
 
   postcss-selector-parser@6.0.16:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-simple-vars@7.0.1(postcss@8.4.38):
+  postcss-simple-vars@7.0.1(postcss@8.4.45):
     dependencies:
-      postcss: 8.4.38
+      postcss: 8.4.45
 
   postcss@8.4.31:
     dependencies:
@@ -12686,7 +12683,6 @@ snapshots:
       nanoid: 3.3.7
       picocolors: 1.1.0
       source-map-js: 1.2.1
-    optional: true
 
   preact-render-to-string@5.2.3(preact@10.11.3):
     dependencies:
@@ -13431,8 +13427,7 @@ snapshots:
 
   source-map-js@1.2.0: {}
 
-  source-map-js@1.2.1:
-    optional: true
+  source-map-js@1.2.1: {}
 
   source-map-support@0.5.21:
     dependencies:
@@ -13583,14 +13578,9 @@ snapshots:
 
   sugar-high@0.6.1: {}
 
-  sugarss@4.0.1(postcss@8.4.38):
-    dependencies:
-      postcss: 8.4.38
-
   sugarss@4.0.1(postcss@8.4.45):
     dependencies:
       postcss: 8.4.45
-    optional: true
 
   superjson@2.2.1:
     dependencies:
