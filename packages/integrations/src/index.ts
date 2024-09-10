@@ -16,7 +16,6 @@ export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 
 // Types
-export type { SanitizedIntegration } from "./base/integration";
 export type { IntegrationInput } from "./base/integration";
 export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
@@ -29,5 +28,5 @@ export type { StreamSession } from "./interfaces/media-server/session";
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
 
 // Helpers
-export { integrationCreatorByKind } from "./base/creator";
+export { integrationCreator, integrationCreatorFromSecrets } from "./base/creator";
 export { IntegrationTestConnectionError } from "./base/test-connection-error";

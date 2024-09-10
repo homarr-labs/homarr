@@ -1,4 +1,7 @@
-import type { IntegrationKind } from "@homarr/definitions";
+import { decryptSecret } from "@homarr/common/server";
+import type { Modify } from "@homarr/common/types";
+import type { Integration as DbIntegration } from "@homarr/db/schema/sqlite";
+import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
@@ -13,17 +16,33 @@ import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration"
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
+import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
-export const integrationCreatorByKind = <TKind extends keyof typeof integrationCreators>(
-  kind: TKind,
-  integration: IntegrationInput,
+export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
+  integration: IntegrationInput & { kind: TKind },
 ) => {
-  if (!(kind in integrationCreators)) {
-    throw new Error(`Unknown integration kind ${kind}. Did you forget to add it to the integration creator?`);
+  if (!(integration.kind in integrationCreators)) {
+    throw new Error(
+      `Unknown integration kind ${integration.kind}. Did you forget to add it to the integration creator?`,
+    );
   }
 
-  return new integrationCreators[kind](integration) as InstanceType<(typeof integrationCreators)[TKind]>;
+  return new integrationCreators[integration.kind](integration) as InstanceType<(typeof integrationCreators)[TKind]>;
+};
+
+export const integrationCreatorFromSecrets = <TKind extends keyof typeof integrationCreators>(
+  integration: Modify<DbIntegration, { kind: TKind }> & {
+    secrets: { kind: IntegrationSecretKind; value: `${string}.${string}` }[];
+  },
+) => {
+  return integrationCreator({
+    ...integration,
+    decryptedSecrets: integration.secrets.map((secret) => ({
+      ...secret,
+      value: decryptSecret(secret.value),
+    })),
+  });
 };
 
 export const integrationCreators = {
@@ -40,4 +59,5 @@ export const integrationCreators = {
   transmission: TransmissionIntegration,
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
+  prowlarr: ProwlarrIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;

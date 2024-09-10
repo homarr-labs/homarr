@@ -52,6 +52,7 @@ export const widgetKindMapping = {
   app: null, // In oldmarr apps were not widgets
   clock: "date",
   calendar: "calendar",
+  downloads: "torrents-status",
   weather: "weather",
   rssFeed: "rss",
   video: "video-stream",

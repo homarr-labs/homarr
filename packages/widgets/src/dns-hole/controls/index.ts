@@ -1,5 +1,7 @@
 import { IconDeviceGamepad, IconServerOff } from "@tabler/icons-react";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
@@ -10,7 +12,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       defaultValue: true,
     }),
   })),
-  supportedIntegrations: ["piHole", "adGuardHome"],
+  supportedIntegrations: getIntegrationKindsByCategory("dnsHole"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

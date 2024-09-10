@@ -1,8 +1,9 @@
 import { observable } from "@trpc/server/observable";
 
+import type { Integration } from "@homarr/db/schema/sqlite";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { DownloadClientJobsAndStatus, SanitizedIntegration } from "@homarr/integrations";
-import { downloadClientItemSchema, integrationCreatorByKind } from "@homarr/integrations";
+import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
+import { downloadClientItemSchema, integrationCreator } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
@@ -32,35 +33,33 @@ export const downloadsRouter = createTRPCRouter({
   subscribeToJobsAndStatuses: publicProcedure
     .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
-      return observable<{ integration: SanitizedIntegration; timestamp: Date; data: DownloadClientJobsAndStatus }>(
-        (emit) => {
-          const unsubscribes: (() => void)[] = [];
-          for (const integrationWithSecrets of ctx.integrations) {
-            const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-            const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-            const unsubscribe = channel.subscribe((data) => {
-              emit.next({
-                integration,
-                timestamp: new Date(),
-                data,
-              });
+      return observable<{ integration: Integration; timestamp: Date; data: DownloadClientJobsAndStatus }>((emit) => {
+        const unsubscribes: (() => void)[] = [];
+        for (const integrationWithSecrets of ctx.integrations) {
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
+          const unsubscribe = channel.subscribe((data) => {
+            emit.next({
+              integration,
+              timestamp: new Date(),
+              data,
             });
-            unsubscribes.push(unsubscribe);
-          }
-          return () => {
-            unsubscribes.forEach((unsubscribe) => {
-              unsubscribe();
-            });
-          };
-        },
-      );
+          });
+          unsubscribes.push(unsubscribe);
+        }
+        return () => {
+          unsubscribes.forEach((unsubscribe) => {
+            unsubscribe();
+          });
+        };
+      });
     }),
   pause: protectedProcedure
     .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          const integrationInstance = integrationCreator(integration);
           await integrationInstance.pauseQueueAsync();
         }),
       );
@@ -71,7 +70,7 @@ export const downloadsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          const integrationInstance = integrationCreator(integration);
           await integrationInstance.pauseItemAsync(input.item);
         }),
       );
@@ -81,7 +80,7 @@ export const downloadsRouter = createTRPCRouter({
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          const integrationInstance = integrationCreator(integration);
           await integrationInstance.resumeQueueAsync();
         }),
       );
@@ -92,7 +91,7 @@ export const downloadsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          const integrationInstance = integrationCreator(integration);
           await integrationInstance.resumeItemAsync(input.item);
         }),
       );
@@ -103,7 +102,7 @@ export const downloadsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const integrationInstance = integrationCreatorByKind(integration.kind, integration);
+          const integrationInstance = integrationCreator(integration);
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
       );

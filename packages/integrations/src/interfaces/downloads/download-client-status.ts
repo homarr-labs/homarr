@@ -1,4 +1,4 @@
-import type { SanitizedIntegration } from "../../base/integration";
+import type { Integration } from "@homarr/db/schema/sqlite";
 
 export interface DownloadClientStatus {
   /** If client is considered paused */
@@ -11,7 +11,7 @@ export interface DownloadClientStatus {
   type: "usenet" | "torrent";
 }
 export interface ExtendedClientStatus {
-  integration: SanitizedIntegration;
+  integration: Integration;
   interact: boolean;
   status?: {
     /** To derive from current items */

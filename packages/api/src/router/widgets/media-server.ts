@@ -1,5 +1,6 @@
 import { observable } from "@trpc/server/observable";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
@@ -8,7 +9,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const mediaServerRouter = createTRPCRouter({
   getCurrentStreams: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "jellyfin", "plex"))
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaService")))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -22,7 +23,7 @@ export const mediaServerRouter = createTRPCRouter({
       );
     }),
   subscribeToCurrentStreams: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "jellyfin", "plex"))
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaService")))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; data: StreamSession[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];

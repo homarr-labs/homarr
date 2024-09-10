@@ -40,12 +40,12 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { humanFileSize } from "@homarr/common";
+import type { Integration } from "@homarr/db/schema/sqlite";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type {
   DownloadClientJobsAndStatus,
   ExtendedClientStatus,
   ExtendedDownloadClientItem,
-  SanitizedIntegration,
 } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -97,7 +97,7 @@ export default function DownloadClientsWidget({
   );
 
   const [currentItems, currentItemsHandlers] = useListState<{
-    integration: SanitizedIntegration;
+    integration: Integration;
     timestamp: Date;
     data: DownloadClientJobsAndStatus | null;
   }>(
@@ -173,7 +173,7 @@ export default function DownloadClientsWidget({
         .filter(({ integration }) => integrationIds.includes(integration.id))
         //Removing any integration with no data associated
         .filter(
-          (pair): pair is { integration: SanitizedIntegration; timestamp: Date; data: DownloadClientJobsAndStatus } =>
+          (pair): pair is { integration: Integration; timestamp: Date; data: DownloadClientJobsAndStatus } =>
             pair.data != null,
         )
         //Construct normalized items list

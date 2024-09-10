@@ -1,6 +1,5 @@
+import type { Integration } from "@homarr/db/schema/sqlite";
 import { z } from "@homarr/validation";
-
-import type { SanitizedIntegration } from "../../base/integration";
 
 const usenetQueueState = ["downloading", "queued", "paused"] as const;
 const usenetHistoryState = ["completed", "failed", "processing"] as const;
@@ -46,7 +45,7 @@ export const downloadClientItemSchema = z.object({
 export type DownloadClientItem = z.infer<typeof downloadClientItemSchema>;
 
 export type ExtendedDownloadClientItem = {
-  integration: SanitizedIntegration;
+  integration: Integration;
   received: number;
   ratio?: number;
   actions?: {

@@ -2,7 +2,7 @@ import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
-import { integrationCreatorByKind, IntegrationTestConnectionError } from "@homarr/integrations";
+import { integrationCreator, IntegrationTestConnectionError } from "@homarr/integrations";
 
 type FormIntegration = Integration & {
   secrets: {
@@ -48,11 +48,9 @@ export const testConnectionAsync = async (
     return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
   });
 
-  // @ts-expect-error - For now we expect an error here as not all integerations have been implemented
-  const integrationInstance = integrationCreatorByKind(integration.kind, {
-    id: integration.id,
-    name: integration.name,
-    url: integration.url,
+  // @ts-expect-error - For now we expect an error here as not all integrations have been implemented
+  const integrationInstance = integrationCreator({
+    ...integration,
     decryptedSecrets: filteredSecrets,
   });
 

@@ -1,6 +1,7 @@
 import { observable } from "@trpc/server/observable";
 
-import { HomeAssistantIntegration } from "@homarr/integrations";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { integrationCreator } from "@homarr/integrations";
 import { homeAssistantEntityState } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
@@ -26,17 +27,17 @@ export const smartHomeRouter = createTRPCRouter({
     });
   }),
   switchEntity: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "homeAssistant"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("smartHomeServer")))
     .input(z.object({ entityId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const client = new HomeAssistantIntegration(ctx.integration);
+    .mutation(async ({ ctx: { integration }, input }) => {
+      const client = integrationCreator(integration);
       return await client.triggerToggleAsync(input.entityId);
     }),
   executeAutomation: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "homeAssistant"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("smartHomeServer")))
     .input(z.object({ automationId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const client = new HomeAssistantIntegration(ctx.integration);
+    .mutation(async ({ ctx: { integration }, input }) => {
+      const client = integrationCreator(integration);
       await client.triggerAutomationAsync(input.automationId);
     }),
 });
