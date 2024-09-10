@@ -37,21 +37,25 @@ export const testConnectionAsync = async (
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
 
-  const filteredSecrets = secretKinds.map((kind) => {
-    const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
-    // Will never be undefined because of the check before
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (secrets.length === 1) return secrets[0]!;
+  const decryptedSecrets = secretKinds
+    .map((kind) => {
+      const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
+      // Will never be undefined because of the check before
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      if (secrets.length === 1) return secrets[0]!;
 
-    // There will always be a matching secret because of the getSecretKindOption function
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
-  });
+      // There will always be a matching secret because of the getSecretKindOption function
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
+    })
+    .map(({ source: _, ...secret }) => secret);
+
+  const { secrets: _, ...baseIntegration } = integration;
 
   // @ts-expect-error - For now we expect an error here as not all integrations have been implemented
   const integrationInstance = integrationCreator({
-    ...integration,
-    decryptedSecrets: filteredSecrets,
+    ...baseIntegration,
+    decryptedSecrets,
   });
 
   await integrationInstance.testConnectionAsync();

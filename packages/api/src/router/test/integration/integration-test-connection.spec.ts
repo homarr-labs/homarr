@@ -42,10 +42,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -88,10 +89,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -134,10 +136,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -184,10 +187,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -234,10 +238,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "username",
