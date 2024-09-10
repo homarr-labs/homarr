@@ -530,6 +530,7 @@ export default {
     symbols: {
       colon: ": ",
     },
+    beta: "Beta",
     error: "Error",
     errors: {
       noData: "No data to show",
@@ -541,6 +542,7 @@ export default {
       backToOverview: "Back to overview",
       create: "Create",
       edit: "Edit",
+      import: "Import",
       insert: "Insert",
       remove: "Remove",
       save: "Save",
@@ -644,6 +646,9 @@ export default {
           passwordsDoNotMatch: "Passwords do not match",
           passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
+          invalidFileType: "Invalid file type, expected {expected}",
+          fileTooLarge: "File is too large, maximum size is {maxSize}",
+          invalidConfiguration: "Invalid configuration",
         },
       },
     },
@@ -1060,6 +1065,20 @@ export default {
         unknown: "Unknown",
       },
     },
+    indexerManager: {
+      name: "Indexer manager status",
+      description: "Status of your indexers",
+      option: {
+        openIndexerSiteInNewTab: {
+          label: "Open indexer site in new tab",
+        },
+      },
+      title: "Indexer manager",
+      testAll: "Test all",
+      error: {
+        internalServerError: "Failed to fetch indexers status",
+      },
+    },
     common: {
       location: {
         query: "City / Postal code",
@@ -1292,6 +1311,61 @@ export default {
           error: {
             title: "Unable to apply changes",
             message: "The board could not be saved",
+          },
+        },
+      },
+      oldImport: {
+        label: "Import from homarr before 1.0.0",
+        notification: {
+          success: {
+            title: "Import successful",
+            message: "The board was successfully imported",
+          },
+          error: {
+            title: "Import failed",
+            message: "The board could not be imported, check the logs for further details",
+          },
+        },
+        form: {
+          file: {
+            label: "Select JSON file",
+            invalidError: "Invalid configuration file",
+          },
+          apps: {
+            label: "Apps",
+            avoidDuplicates: {
+              label: "Avoid duplicates",
+              description: "Ignores apps where an app with the same href already exists",
+            },
+            onlyImportApps: {
+              label: "Only import apps",
+              description: "Only adds the apps, the board need to be recreated manually",
+            },
+          },
+          name: {
+            label: "Board name",
+          },
+          screenSize: {
+            label: "Screen size",
+            option: {
+              sm: "Small",
+              md: "Medium",
+              lg: "Large",
+            },
+          },
+          sidebarBehavior: {
+            label: "Sidebar behavior",
+            description: "Sidebars were removed in 1.0, you can select what should happen with the items inside them.",
+            option: {
+              lastSection: {
+                label: "Last section",
+                description: "Sidebar will be displayed below the last section",
+              },
+              removeItems: {
+                label: "Remove items",
+                description: "Items contained in the sidebar will be removed",
+              },
+            },
           },
         },
       },
@@ -1773,6 +1847,9 @@ export default {
             },
             rssFeeds: {
               label: "RSS feeds",
+            },
+            indexerManager: {
+              label: "Indexer Manager",
             },
           },
         },

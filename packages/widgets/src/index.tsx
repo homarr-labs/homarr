@@ -14,6 +14,7 @@ import * as dnsHoleSummary from "./dns-hole/summary";
 import * as downloads from "./downloads";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as indexerManager from "./indexer-manager";
 import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
@@ -49,6 +50,7 @@ export const widgetImports = {
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
   rssFeed,
+  indexerManager,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

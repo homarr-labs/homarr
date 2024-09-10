@@ -39,7 +39,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
-    "@tabler/icons-react": "^3.14.0",
+    "@tabler/icons-react": "^3.15.0",
     "@tiptap/extension-color": "2.6.6",
     "@tiptap/extension-highlight": "2.6.6",
     "@tiptap/extension-image": "2.6.6",
@@ -58,7 +58,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "mantine-react-table": "2.0.0-beta.6",
-    "next": "^14.2.8",
+    "next": "^14.2.9",
     "react": "^18.3.1",
     "video.js": "^8.17.3"
   },
@@ -68,6 +68,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
     "eslint": "^9.10.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }

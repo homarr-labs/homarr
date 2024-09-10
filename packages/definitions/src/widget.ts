@@ -15,5 +15,6 @@ export const widgetKinds = [
   "mediaRequests-requestList",
   "mediaRequests-requestStats",
   "rssFeed",
+  "indexerManager",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
