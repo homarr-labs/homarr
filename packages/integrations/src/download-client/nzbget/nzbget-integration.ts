@@ -1,24 +1,21 @@
 import dayjs from "dayjs";
-import { rpcClient } from "typed-rpc";
 
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
-import type { NzbGetClient } from "./nzbget-types";
+import type { NzbGetGroup, NzbGetHistory, NzbGetStatus } from "./nzbget-types";
 
 export class NzbGetIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
-    const client = this.getClient();
-    await client.version();
+    await this.nzbGetApiCallAsync("version");
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const nzbGetClient = this.getClient();
-    const queue = await nzbGetClient.listgroups();
-    const history = await nzbGetClient.history();
-    const nzbGetStatus = await nzbGetClient.status();
+    const queue = (await this.nzbGetApiCallAsync("listgroups")) as NzbGetGroup[];
+    const history = (await this.nzbGetApiCallAsync("history")) as NzbGetHistory[];
+    const nzbGetStatus = (await this.nzbGetApiCallAsync("status")) as NzbGetStatus;
     const status: DownloadClientStatus = {
       paused: nzbGetStatus.DownloadPaused,
       rates: { down: nzbGetStatus.DownloadRate },
@@ -64,39 +61,54 @@ export class NzbGetIntegration extends DownloadClientIntegration {
   }
 
   public async pauseQueueAsync() {
-    await this.getClient().pausedownload();
+    await this.nzbGetApiCallAsync("pausedownload");
   }
 
   public async pauseItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().editqueue("GroupPause", "", [Number(id)]);
+    await this.nzbGetApiCallAsync("editqueue", "GroupPause", "", [Number(id)]);
   }
 
   public async resumeQueueAsync() {
-    await this.getClient().resumedownload();
+    await this.nzbGetApiCallAsync("resumedownload");
   }
 
   public async resumeItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().editqueue("GroupResume", "", [Number(id)]);
+    await this.nzbGetApiCallAsync("editqueue", "GroupResume", "", [Number(id)]);
   }
 
   public async deleteItemAsync({ id, progress }: DownloadClientItem, fromDisk: boolean): Promise<void> {
-    const client = this.getClient();
     if (fromDisk) {
-      const filesIds = (await client.listfiles(0, 0, Number(id))).map((value) => value.ID);
-      await this.getClient().editqueue("FileDelete", "", filesIds);
+      const filesIds = ((await this.nzbGetApiCallAsync("listfiles", 0, 0, Number(id))) as { ID: number }[]).map(
+        (file) => file.ID,
+      );
+      await this.nzbGetApiCallAsync("editqueue", "FileDelete", "", filesIds);
     }
-    if (progress !== 1) {
-      await client.editqueue("GroupFinalDelete", "", [Number(id)]);
+    if (progress === 1) {
+      await this.nzbGetApiCallAsync("editqueue", "GroupFinalDelete", "", [Number(id)]);
     } else {
-      await client.editqueue("HistoryFinalDelete", "", [Number(id)]);
+      await this.nzbGetApiCallAsync("editqueue", "HistoryFinalDelete", "", [Number(id)]);
     }
   }
 
-  private getClient() {
+  private async nzbGetApiCallAsync(method: string, ...params: unknown[]): Promise<unknown> {
     const url = new URL(this.integration.url);
     url.pathname += `${this.getSecretValue("username")}:${this.getSecretValue("password")}`;
     url.pathname += url.pathname.endsWith("/") ? "jsonrpc" : "/jsonrpc";
-    return rpcClient<NzbGetClient>(url.toString());
+    const body = JSON.stringify({ method, params });
+    return await fetch(url, { method: "POST", body })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return ((await response.json()) as { result: unknown }).result as Promise<unknown>;
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        } else {
+          throw new Error("Error communicating with SABnzbd");
+        }
+      });
   }
 
   private static getUsenetQueueState(status: string): DownloadClientItem["state"] {

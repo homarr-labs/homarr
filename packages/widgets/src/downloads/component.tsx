@@ -831,6 +831,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
         px="calc(var(--space-size)*2)"
         fw="500"
         onClick={open}
+        styles={{ label: { height: "fit-content", paddingBottom: "calc(var(--space-size)*0.75)" } }}
       >
         {totalSpeed}
       </Button>
