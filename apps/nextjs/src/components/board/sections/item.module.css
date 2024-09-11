@@ -1,10 +1,12 @@
 .itemCard {
   @mixin dark {
-    background-color: rgba(46, 46, 46, var(--opacity));
-    border-color: rgba(66, 66, 66, var(--opacity));
+    --background-color: rgb(from var(--mantine-color-dark-6) r g b / var(--opacity));
+    --border-color: rgb(from var(--mantine-color-dark-4) r g b / var(--opacity));
   }
   @mixin light {
-    background-color: rgba(255, 255, 255, var(--opacity));
-    border-color: rgba(222, 226, 230, var(--opacity));
+    --background-color: rgb(from var(--mantine-color-white) r g b / var(--opacity));
+    --border-color: rgb(from var(--mantine-color-gray-3) r g b / var(--opacity));
   }
+  background-color: var(--background-color);
+  border-color: var(--border-color);
 }
