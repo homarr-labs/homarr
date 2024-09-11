@@ -117,49 +117,6 @@ describe("Nzbget integration", () => {
     await startedContainer.stop();
   }, 20_000); // Timeout of 20 seconds
 
-  /*// Doesn't work because the item, although being considered paused in the UI's controls, still shows as downloading on both UI list and API
-  test("Pause item should work", async () => {
-    // Arrange
-    const startedContainer = await createNzbGetContainer().start();
-    const nzbGetIntegration = createNzbGetIntegration(startedContainer, username, password);
-    const item = await nzbGetAddItemAsync(startedContainer, username, password, nzbGetIntegration);
-
-    // Act
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
-    const actAsync = async () => await nzbGetIntegration.pauseItemAsync(item);
-
-    // Assert
-    await expect(getAsync()).resolves.toMatchObject({ items: [{ ...item, state: "downloading" }] });
-    await expect(actAsync()).resolves.not.toThrow();
-    for (let i = 0; i < 10_000_000_000; i++);  // Huge delay to keep the container alive for small tests within the UI, until near timeout
-    await expect(getAsync()).resolves.toMatchObject({ items: [{ ...item, state: "paused" }] });
-
-    // Cleanup
-    await startedContainer.stop();
-  }, 60_000); // Timeout of 20 seconds, temporarily increased to 60 seconds for testing
-
-  // Doesn't work because the item, although being considered paused in the UI's controls, still shows as downloading on both UI list and API
-  test("Resume item should work", async () => {
-    // Arrange
-    const startedContainer = await createNzbGetContainer().start();
-    const nzbGetIntegration = createNzbGetIntegration(startedContainer, username, password);
-    const item = await nzbGetAddItemAsync(startedContainer, username, password, nzbGetIntegration);
-    await nzbGetIntegration.pauseItemAsync(item);
-
-    // Act
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
-    const actAsync = async () => await nzbGetIntegration.resumeItemAsync(item);
-
-    // Assert
-    await expect(getAsync()).resolves.toMatchObject({ items: [{ ...item, state: "paused" }] });
-    await expect(actAsync()).resolves.not.toThrow();
-    await expect(getAsync()).resolves.toMatchObject({ items: [{ ...item, state: "downloading" }] });
-
-    // Cleanup
-    await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
-  // */
-
   test("Delete item should result in empty items", async () => {
     // Arrange
     const startedContainer = await createNzbGetContainer().start();
