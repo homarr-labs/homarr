@@ -7,7 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-export default function IFrameWidget({ options }: WidgetComponentProps<"iframe">) {
+export default function IFrameWidget({ options, isEditMode }: WidgetComponentProps<"iframe">) {
   const t = useI18n();
   const { embedUrl, ...permissions } = options;
   const allowedPermissions = getAllowedPermissions(permissions);
@@ -16,7 +16,13 @@ export default function IFrameWidget({ options }: WidgetComponentProps<"iframe">
 
   return (
     <Box h="100%" w="100%">
-      <iframe className={classes.iframe} src={embedUrl} title="widget iframe" allow={allowedPermissions.join(" ")}>
+      <iframe
+        style={isEditMode ? { userSelect: "none", pointerEvents: "none" } : undefined}
+        className={classes.iframe}
+        src={embedUrl}
+        title="widget iframe"
+        allow={allowedPermissions.join(" ")}
+      >
         <Text>{t("widget.iframe.error.noBrowerSupport")}</Text>
       </iframe>
     </Box>
