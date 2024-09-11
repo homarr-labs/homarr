@@ -1500,8 +1500,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       video.js:
-        specifier: ^8.17.3
-        version: 8.17.3
+        specifier: ^8.17.4
+        version: 8.17.4
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -3233,8 +3233,8 @@ packages:
   '@umami/node@0.4.0':
     resolution: {integrity: sha512-pyphprbiF7KiDSc+SWZ4/rVM8B5vU27zIiFfEPj2lEqczpI4xAKSp+dM3tlzyRAWJL32fcbCfAaLGhJZQV13Rg==}
 
-  '@videojs/http-streaming@3.13.2':
-    resolution: {integrity: sha512-eCfQp61w00hg7Y9npmLnsJ6UvDF+SsFYzu7mQJgVXxWpVm9AthYWA3KQEKA7F7Sy6yzlm/Sps8BHs5ItelNZgQ==}
+  '@videojs/http-streaming@3.13.3':
+    resolution: {integrity: sha512-L7H+iTeqHeZ5PylzOx+pT3CVyzn4TALWYTJKkIc1pDaV/cTVfNGtG+9/vXPAydD+wR/xH1M9/t2JH8tn/DCT4w==}
     engines: {node: '>=8', npm: '>=5'}
     peerDependencies:
       video.js: ^8.14.0
@@ -4934,9 +4934,6 @@ packages:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
     engines: {node: '>=8'}
 
-  individual@2.0.0:
-    resolution: {integrity: sha512-pWt8hBCqJsUWI/HtcfWod7+N9SgAqyPEaF7JQjwzjn5vGrpg6aQ5qeAFQ7dx//UH4J1O+7xqew+gCeeFt6xN/g==}
-
   inflation@2.1.0:
     resolution: {integrity: sha512-t54PPJHG1Pp7VQvxyVCJ9mBbjG3Hqryges9bXoOO6GExCPa+//i/d5GSuFtpx3ALLd7lgIAur6zrIlBQyJuMlQ==}
     engines: {node: '>= 0.8.0'}
@@ -6438,9 +6435,6 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
-  rust-result@1.0.0:
-    resolution: {integrity: sha512-6cJzSBU+J/RJCF063onnQf0cDUOHs9uZI1oroSGnHOph+CQTIJ5Pp2hK5kEQq1+7yE/EEWfulSNXAQ2jikPthA==}
-
   rxjs@6.6.7:
     resolution: {integrity: sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==}
     engines: {npm: '>=2.0.0'}
@@ -6457,9 +6451,6 @@ packages:
 
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
-
-  safe-json-parse@4.0.0:
-    resolution: {integrity: sha512-RjZPPHugjK0TOzFrLZ8inw44s9bKox99/0AZW9o/BEQVrJfhI+fIHMErnPyRa89/yRXUUr93q+tiN6zhoVV4wQ==}
 
   safe-regex-test@1.0.3:
     resolution: {integrity: sha512-CdASjNJPvRa7roO6Ra/gLYBTzYzzPyyBXxIMdGW3USQLyjWEls2RgW5UBTXaQVp+OrpeCK3bLem8smtmheoRuw==}
@@ -7268,8 +7259,8 @@ packages:
     resolution: {integrity: sha512-OljLrQ9SQdOUqTaQxqL5dEfZWrXExyyWsozYlAWFawPVNuD83igl7uJD2RTkNMbniIYgt8l81eCJGIdQF7avLQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  video.js@8.17.3:
-    resolution: {integrity: sha512-zhhmE0LNxJRA603/48oYzF7GYdT+rQRscvcsouYxFE71aKhalHLBP6S9/XjixnyjcrYgwIx8OQo6eSjcbbAW0Q==}
+  video.js@8.17.4:
+    resolution: {integrity: sha512-AECieAxKMKB/QgYK36ci50phfpWys6bFT6+pGMpSafeFYSoZaQ2Vpl83T9Qqcesv4TO7oNtiycnVeaBnrva2oA==}
 
   videojs-contrib-quality-levels@4.1.0:
     resolution: {integrity: sha512-TfrXJJg1Bv4t6TOCMEVMwF/CoS8iENYsWNKip8zfhB5kTcegiFYezEA0eHAJPU64ZC8NQbxQgOwAsYU8VXbOWA==}
@@ -9378,7 +9369,7 @@ snapshots:
 
   '@umami/node@0.4.0': {}
 
-  '@videojs/http-streaming@3.13.2(video.js@8.17.3)':
+  '@videojs/http-streaming@3.13.3(video.js@8.17.4)':
     dependencies:
       '@babel/runtime': 7.24.5
       '@videojs/vhs-utils': 4.0.0
@@ -9387,7 +9378,7 @@ snapshots:
       m3u8-parser: 7.1.0
       mpd-parser: 1.3.0
       mux.js: 7.0.3
-      video.js: 8.17.3
+      video.js: 8.17.4
 
   '@videojs/vhs-utils@3.0.5':
     dependencies:
@@ -11373,8 +11364,6 @@ snapshots:
 
   indent-string@4.0.0: {}
 
-  individual@2.0.0: {}
-
   inflation@2.1.0: {}
 
   inflight@1.0.6:
@@ -13007,10 +12996,6 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  rust-result@1.0.0:
-    dependencies:
-      individual: 2.0.0
-
   rxjs@6.6.7:
     dependencies:
       tslib: 1.14.1
@@ -13029,10 +13014,6 @@ snapshots:
   safe-buffer@5.1.2: {}
 
   safe-buffer@5.2.1: {}
-
-  safe-json-parse@4.0.0:
-    dependencies:
-      rust-result: 1.0.0
 
   safe-regex-test@1.0.3:
     dependencies:
@@ -13934,10 +13915,10 @@ snapshots:
 
   validate-npm-package-name@5.0.1: {}
 
-  video.js@8.17.3:
+  video.js@8.17.4:
     dependencies:
       '@babel/runtime': 7.24.5
-      '@videojs/http-streaming': 3.13.2(video.js@8.17.3)
+      '@videojs/http-streaming': 3.13.3(video.js@8.17.4)
       '@videojs/vhs-utils': 4.0.0
       '@videojs/xhr': 2.7.0
       aes-decrypter: 4.0.1
@@ -13945,15 +13926,14 @@ snapshots:
       m3u8-parser: 7.1.0
       mpd-parser: 1.3.0
       mux.js: 7.0.3
-      safe-json-parse: 4.0.0
-      videojs-contrib-quality-levels: 4.1.0(video.js@8.17.3)
+      videojs-contrib-quality-levels: 4.1.0(video.js@8.17.4)
       videojs-font: 4.2.0
       videojs-vtt.js: 0.15.5
 
-  videojs-contrib-quality-levels@4.1.0(video.js@8.17.3):
+  videojs-contrib-quality-levels@4.1.0(video.js@8.17.4):
     dependencies:
       global: 4.4.0
-      video.js: 8.17.3
+      video.js: 8.17.4
 
   videojs-font@4.2.0: {}
 
