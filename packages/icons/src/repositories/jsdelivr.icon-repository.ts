@@ -1,3 +1,5 @@
+import { parse } from "path";
+
 import { fetchWithTimeout } from "@homarr/common";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
@@ -23,18 +25,19 @@ export class JsdelivrIconRepository extends IconRepository {
     return {
       success: true,
       icons: listOfFiles.files
-        .filter((file) =>
-          this.allowedImageFileTypes.some((allowedImageFileType) => file.name.includes(allowedImageFileType)),
+        .filter(({ name: path }) =>
+          this.allowedImageFileTypes.some((allowedImageFileType) => path.includes(allowedImageFileType)),
         )
-        .map((file) => {
-          const fileNameWithExtension = this.getFileNameWithoutExtensionFromPath(file.name);
+        .map(({ name: path, size: sizeInBytes, hash: checksum }) => {
+          const file = parse(path);
+          const fileNameWithExtension = file.base;
 
           return {
-            imageUrl: new URL(this.repositoryBlobUrlTemplate.replace("{0}", file.name)),
-            fileNameWithExtension: fileNameWithExtension,
+            imageUrl: new URL(this.repositoryBlobUrlTemplate.replace("{0}", path).replace("{1}", file.name)),
+            fileNameWithExtension,
             local: false,
-            sizeInBytes: file.size,
-            checksum: file.hash,
+            sizeInBytes,
+            checksum,
           };
         }),
       slug: this.slug,
