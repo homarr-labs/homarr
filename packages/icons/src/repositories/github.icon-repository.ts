@@ -29,7 +29,9 @@ export class GitHubIconRepository extends IconRepository {
     return {
       success: true,
       icons: listOfFiles.tree
-        .filter(({ path }) => this.allowedImageFileTypes.some((allowedExtension) => path.includes(allowedExtension)))
+        .filter(({ path }) =>
+          this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType),
+        )
         .map(({ path, size: sizeInBytes, sha: checksum }) => {
           const file = parse(path);
           const fileNameWithExtension = file.base;

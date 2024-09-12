@@ -26,7 +26,7 @@ export class JsdelivrIconRepository extends IconRepository {
       success: true,
       icons: listOfFiles.files
         .filter(({ name: path }) =>
-          this.allowedImageFileTypes.some((allowedImageFileType) => path.includes(allowedImageFileType)),
+          this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType),
         )
         .map(({ name: path, size: sizeInBytes, hash: checksum }) => {
           const file = parse(path);
