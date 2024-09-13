@@ -33,8 +33,8 @@
     "@t3-oss/env-nextjs": "^0.11.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
-    "ldapts": "7.1.1",
-    "next": "^14.2.8",
+    "ldapts": "7.2.0",
+    "next": "^14.2.11",
     "next-auth": "5.0.0-beta.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -45,8 +45,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }

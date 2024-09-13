@@ -13,14 +13,14 @@ export interface IntegrationPermissionsProps {
 
 export const constructIntegrationPermissions = (integration: IntegrationPermissionsProps, session: Session | null) => {
   return {
-    hasFullAccess: session?.user.permissions.includes("integration-full-all"),
+    hasFullAccess: session?.user.permissions.includes("integration-full-all") ?? false,
     hasInteractAccess:
       integration.userPermissions.some(({ permission }) => permission === "interact") ||
       integration.groupPermissions.some(({ permission }) => permission === "interact") ||
-      session?.user.permissions.includes("integration-interact-all"),
+      (session?.user.permissions.includes("integration-interact-all") ?? false),
     hasUseAccess:
       integration.userPermissions.length >= 1 ||
       integration.groupPermissions.length >= 1 ||
-      session?.user.permissions.includes("integration-use-all"),
+      (session?.user.permissions.includes("integration-use-all") ?? false),
   };
 };
