@@ -43,7 +43,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of an image has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          args: "Deployment of an image has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - uses: actions/checkout@v4
       - name: Get Next Version
         id: semver
@@ -65,7 +65,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
       - name: Discord notification
         if: ${{ github.events.inputs.send-notifications || true }}
         env:
