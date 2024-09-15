@@ -4,7 +4,7 @@ import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/dow
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
-import type { NzbGetGroup, NzbGetHistory, NzbGetStatus } from "./nzbget-types";
+import type { NzbGetClient } from "./nzbget-types";
 
 export class NzbGetIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
@@ -13,9 +13,9 @@ export class NzbGetIntegration extends DownloadClientIntegration {
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const queue = (await this.nzbGetApiCallAsync("listgroups")) as NzbGetGroup[];
-    const history = (await this.nzbGetApiCallAsync("history")) as NzbGetHistory[];
-    const nzbGetStatus = (await this.nzbGetApiCallAsync("status")) as NzbGetStatus;
+    const queue = await this.nzbGetApiCallAsync("listgroups");
+    const history = await this.nzbGetApiCallAsync("history");
+    const nzbGetStatus = await this.nzbGetApiCallAsync("status");
     const status: DownloadClientStatus = {
       paused: nzbGetStatus.DownloadPaused,
       rates: { down: nzbGetStatus.DownloadRate },
@@ -78,9 +78,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
 
   public async deleteItemAsync({ id, progress }: DownloadClientItem, fromDisk: boolean): Promise<void> {
     if (fromDisk) {
-      const filesIds = ((await this.nzbGetApiCallAsync("listfiles", 0, 0, Number(id))) as { ID: number }[]).map(
-        (file) => file.ID,
-      );
+      const filesIds = (await this.nzbGetApiCallAsync("listfiles", 0, 0, Number(id))).map((file) => file.ID);
       await this.nzbGetApiCallAsync("editqueue", "FileDelete", "", filesIds);
     }
     if (progress === 1) {
@@ -90,7 +88,10 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     }
   }
 
-  private async nzbGetApiCallAsync(method: string, ...params: unknown[]): Promise<unknown> {
+  private async nzbGetApiCallAsync<CallType extends keyof NzbGetClient>(
+    method: CallType,
+    ...params: Parameters<NzbGetClient[CallType]>
+  ): Promise<ReturnType<NzbGetClient[CallType]>> {
     const url = new URL(this.integration.url);
     url.pathname += `${this.getSecretValue("username")}:${this.getSecretValue("password")}`;
     url.pathname += url.pathname.endsWith("/") ? "jsonrpc" : "/jsonrpc";
@@ -100,13 +101,13 @@ export class NzbGetIntegration extends DownloadClientIntegration {
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        return ((await response.json()) as { result: unknown }).result as Promise<unknown>;
+        return ((await response.json()) as { result: ReturnType<NzbGetClient[CallType]> }).result;
       })
       .catch((error) => {
         if (error instanceof Error) {
           throw new Error(error.message);
         } else {
-          throw new Error("Error communicating with SABnzbd");
+          throw new Error("Error communicating with NzbGet");
         }
       });
   }

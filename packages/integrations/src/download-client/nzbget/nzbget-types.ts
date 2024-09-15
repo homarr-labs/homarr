@@ -1,9 +1,20 @@
-export interface NzbGetStatus {
+export interface NzbGetClient {
+  version: () => string;
+  status: () => NzbGetStatus;
+  listgroups: () => NzbGetGroup[];
+  history: () => NzbGetHistory[];
+  pausedownload: () => void;
+  resumedownload: () => void;
+  editqueue: (Command: string, Param: string, IDs: number[]) => void;
+  listfiles: (IDFrom: number, IDTo: number, NZBID: number) => { ID: number }[];
+}
+
+interface NzbGetStatus {
   DownloadPaused: boolean;
   DownloadRate: number;
 }
 
-export interface NzbGetGroup {
+interface NzbGetGroup {
   Status: string;
   NZBID: number;
   MaxPriority: number;
@@ -19,7 +30,7 @@ export interface NzbGetGroup {
   FileSizeMB: number;
 }
 
-export interface NzbGetHistory {
+interface NzbGetHistory {
   ScriptStatus: string;
   NZBID: number;
   Name: string;
