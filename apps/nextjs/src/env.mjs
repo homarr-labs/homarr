@@ -30,7 +30,7 @@ export const env = createEnv({
           .regex(/\d+/)
           .transform(Number)
           .refine((number) => number >= 1)
-          .default(3306),
+          .default("3306"),
     DB_USER: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_PASSWORD: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_NAME: isUsingDbUrl ? z.string().optional() : z.string(),
