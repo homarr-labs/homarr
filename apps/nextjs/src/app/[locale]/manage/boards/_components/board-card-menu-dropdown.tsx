@@ -7,10 +7,10 @@ import { IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 
 const iconProps = {
