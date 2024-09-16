@@ -963,8 +963,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       '@ctrl/transmission':
-        specifier: ^6.1.0
-        version: 6.1.0
+        specifier: ^7.0.0
+        version: 7.0.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1820,8 +1820,8 @@ packages:
     resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
     engines: {node: '>=18'}
 
-  '@ctrl/transmission@6.1.0':
-    resolution: {integrity: sha512-5LjNdNOFqeWKJ7yym2Iz6+bLpBWetE3gbH5AMhgPfpQdXlyoCvX4Ro/fD5pSDuTu4tnen3Eob2cHBgWmqPU47A==}
+  '@ctrl/transmission@7.0.0':
+    resolution: {integrity: sha512-D5Sei25y2Ji5BJTPOKZCDnuCEtD9Jcz6+D/y+1hY8O8vwFyDvAu30DzWYTDahP5wqj2024vO3B0Xkt/CKUpZHw==}
     engines: {node: '>=18'}
 
   '@dabh/diagnostics@2.0.3':
@@ -7949,7 +7949,7 @@ snapshots:
     dependencies:
       uint8array-extras: 1.4.0
 
-  '@ctrl/transmission@6.1.0':
+  '@ctrl/transmission@7.0.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.0.0
