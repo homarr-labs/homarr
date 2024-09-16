@@ -23,7 +23,14 @@ export const env = createEnv({
     // If the DB_HOST is set, the DB_URL is optional
     DB_URL: isUsingDbHost ? z.string().optional() : z.string(),
     DB_HOST: isUsingDbUrl ? z.string().optional() : z.string(),
-    DB_PORT: isUsingDbUrl ? z.number().optional() : z.number().min(1).default(3306),
+    DB_PORT: isUsingDbUrl
+      ? z.string().regex(/\d+/).transform(Number).optional()
+      : z
+          .string()
+          .regex(/\d+/)
+          .transform(Number)
+          .refine((number) => number >= 1)
+          .default(3306),
     DB_USER: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_PASSWORD: isUsingDbCredentials ? z.string() : z.string().optional(),
     DB_NAME: isUsingDbUrl ? z.string().optional() : z.string(),
