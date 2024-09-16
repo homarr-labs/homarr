@@ -27,6 +27,7 @@
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
     "@homarr/modals": "workspace:^0.1.0",
+    "@homarr/modals-collection": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/old-schema": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
