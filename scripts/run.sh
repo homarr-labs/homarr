@@ -1,6 +1,13 @@
 # Run migrations
 node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
 
+# Start nginx proxy
+# 1. Replace the HOSTNAME in the nginx template file
+# 2. Create the nginx configuration file from the template
+# 3. Start the nginx server
+envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+nginx -g 'daemon off;' &
+
 # Start Redis
 redis-server /app/redis.conf &
 
