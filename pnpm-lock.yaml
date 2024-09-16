@@ -989,9 +989,6 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.10.0
         version: 0.10.0(axios@1.7.7)
-      typed-rpc:
-        specifier: ^5.1.0
-        version: 5.1.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -7299,9 +7296,6 @@ packages:
     resolution: {integrity: sha512-/OxDN6OtAk5KBpGb28T+HZc2M+ADtvRxXrKKbUwtsLgdoxgX13hyy7ek6bFRl5+aBs2yZzB0c4CnQfAtVypW/g==}
     engines: {node: '>= 0.4'}
 
-  typed-rpc@5.1.0:
-    resolution: {integrity: sha512-qPWUQrLye3Z5kQ8GuVLIURIUNPaDrKgBBts5nXVjR87j8+4sva/sw7lmaBfOw+7m/S4F9jplkv9XZl0hUDUHZg==}
-
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
 
@@ -8600,8 +8594,8 @@ snapshots:
     dependencies:
       '@antfu/ni': 0.21.12
       '@axiomhq/js': 1.0.0-rc.3
-      '@babel/core': 7.24.6
-      '@babel/types': 7.24.6
+      '@babel/core': 7.25.2
+      '@babel/types': 7.25.6
       '@clack/prompts': 0.7.0
       cli-high: 0.4.2
       diff: 5.2.0
@@ -14128,8 +14122,6 @@ snapshots:
       has-proto: 1.0.3
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
-
-  typed-rpc@5.1.0: {}
 
   typedarray-to-buffer@3.1.5:
     dependencies:

@@ -125,7 +125,7 @@ describe("Nzbget integration", () => {
 
     // Act
     const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
-    const actAsync = async () => await nzbGetIntegration.deleteItemAsync(item, false);
+    const actAsync = async () => await nzbGetIntegration.deleteItemAsync(item, true);
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
