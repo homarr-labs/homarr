@@ -2,7 +2,7 @@
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { encryptSecret } from "@homarr/common";
+import { encryptSecret } from "@homarr/common/server";
 import { createId } from "@homarr/db";
 import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
@@ -17,6 +17,7 @@ const defaultSessionWithPermissions = (permissions: GroupPermissionKey[] = []) =
     user: {
       id: defaultUserId,
       permissions,
+      colorScheme: "light",
     },
     expires: new Date().toISOString(),
   }) satisfies Session;

@@ -4,11 +4,10 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import "@xterm/xterm/css/xterm.css";
 
-import dynamic from "next/dynamic";
-
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { createMetaTitle } from "~/metadata";
+import { ClientSideTerminalComponent } from "./client";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
@@ -17,10 +16,6 @@ export async function generateMetadata() {
     title: createMetaTitle(t("metaTitle")),
   };
 }
-
-const ClientSideTerminalComponent = dynamic(() => import("./terminal"), {
-  ssr: false,
-});
 
 export default function LogsManagementPage() {
   return (

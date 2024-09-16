@@ -1,8 +1,8 @@
-import { decryptSecret } from "@homarr/common";
+import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
-import { integrationCreatorByKind, IntegrationTestConnectionError } from "@homarr/integrations";
+import { integrationCreator, IntegrationTestConnectionError } from "@homarr/integrations";
 
 type FormIntegration = Integration & {
   secrets: {
@@ -37,23 +37,25 @@ export const testConnectionAsync = async (
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
 
-  const filteredSecrets = secretKinds.map((kind) => {
-    const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
-    // Will never be undefined because of the check before
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (secrets.length === 1) return secrets[0]!;
+  const decryptedSecrets = secretKinds
+    .map((kind) => {
+      const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
+      // Will never be undefined because of the check before
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      if (secrets.length === 1) return secrets[0]!;
 
-    // There will always be a matching secret because of the getSecretKindOption function
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
-  });
+      // There will always be a matching secret because of the getSecretKindOption function
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
+    })
+    .map(({ source: _, ...secret }) => secret);
 
-  // @ts-expect-error - For now we expect an error here as not all integerations have been implemented
-  const integrationInstance = integrationCreatorByKind(integration.kind, {
-    id: integration.id,
-    name: integration.name,
-    url: integration.url,
-    decryptedSecrets: filteredSecrets,
+  const { secrets: _, ...baseIntegration } = integration;
+
+  // @ts-expect-error - For now we expect an error here as not all integrations have been implemented
+  const integrationInstance = integrationCreator({
+    ...baseIntegration,
+    decryptedSecrets,
   });
 
   await integrationInstance.testConnectionAsync();

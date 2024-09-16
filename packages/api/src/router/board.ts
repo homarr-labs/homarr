@@ -16,6 +16,8 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import { importAsync } from "@homarr/old-import";
+import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import { createSectionSchema, sharedItemSchema, validation, z } from "@homarr/validation";
 
@@ -24,6 +26,20 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
 export const boardRouter = createTRPCRouter({
+  exists: permissionRequiredProcedure
+    .requiresPermission("board-create")
+    .input(z.string())
+    .query(async ({ ctx, input: name }) => {
+      try {
+        await noBoardWithSimilarNameAsync(ctx.db, name);
+        return false;
+      } catch (error) {
+        if (error instanceof TRPCError && error.code === "CONFLICT") {
+          return true;
+        }
+        throw error;
+      }
+    }),
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
@@ -464,6 +480,13 @@ export const boardRouter = createTRPCRouter({
           })),
         );
       });
+    }),
+  importOldmarrConfig: protectedProcedure
+    .input(validation.board.importOldmarrConfig)
+    .mutation(async ({ input, ctx }) => {
+      const content = await input.file.text();
+      const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
+      await importAsync(ctx.db, oldmarr, input.configuration);
     }),
 });
 

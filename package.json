@@ -1,22 +1,17 @@
 {
   "name": "homarr",
   "private": true,
-  "engines": {
-    "node": ">=20.17.0"
-  },
-  "packageManager": "pnpm@9.9.0",
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
+    "cli": "pnpm with-env tsx packages/cli/index.ts",
+    "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
+    "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
+    "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
+    "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
     "db:push": "pnpm -F db push:sqlite",
     "db:studio": "pnpm -F db studio",
-    "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
-    "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
-    "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
-    "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
-    "cli": "pnpm with-env tsx packages/cli/index.ts",
-    "with-env": "dotenv -e .env --",
     "dev": "turbo dev --parallel",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
@@ -26,24 +21,29 @@
     "lint:ws": "pnpm dlx sherif@latest",
     "test": "cross-env NODE_ENV=development vitest run --coverage.enabled",
     "test:ui": "cross-env NODE_ENV=development vitest --ui --coverage.enabled",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "with-env": "dotenv -e .env --"
   },
+  "prettier": "@homarr/prettier-config",
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^2.1.0",
+    "@turbo/gen": "^2.1.2",
     "@vitejs/plugin-react": "^4.3.1",
-    "@vitest/coverage-v8": "^2.0.5",
-    "@vitest/ui": "^2.0.5",
+    "@vitest/coverage-v8": "^2.1.1",
+    "@vitest/ui": "^2.1.1",
     "cross-env": "^7.0.3",
     "jsdom": "^25.0.0",
     "prettier": "^3.3.3",
-    "testcontainers": "^10.12.0",
-    "turbo": "^2.1.0",
-    "typescript": "^5.5.4",
+    "testcontainers": "^10.13.1",
+    "turbo": "^2.1.2",
+    "typescript": "^5.6.2",
     "vite-tsconfig-paths": "^5.0.1",
-    "vitest": "^2.0.5"
+    "vitest": "^2.1.1"
   },
-  "prettier": "@homarr/prettier-config",
+  "packageManager": "pnpm@9.10.0",
+  "engines": {
+    "node": ">=20.17.0"
+  },
   "pnpm": {
     "patchedDependencies": {
       "trpc-swagger@1.2.6": "patches/trpc-swagger@1.2.6.patch"

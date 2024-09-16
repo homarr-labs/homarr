@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { decryptSecret, encryptSecret } from "@homarr/common";
+import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 import { and, asc, createId, eq, inArray, like } from "@homarr/db";
 import {

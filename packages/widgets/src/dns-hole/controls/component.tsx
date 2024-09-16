@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ActionIcon, Badge, Box, Button, Card, Flex, Image, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Badge, Button, Card, Flex, Image, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
 
@@ -76,7 +76,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
   return (
     <Flex h="100%" direction="column" gap={0} p="2.5cqmin">
       {options.showToggleAllButtons && (
-        <Flex gap="2.5cqmin">
+        <Flex m="2.5cqmin" gap="2.5cqmin">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
               onClick={() => disabledIntegrations.forEach((integrationId) => enableDns({ integrationId }))}
@@ -121,7 +121,7 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
         </Flex>
       )}
 
-      <Stack gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
+      <Stack m="2.5cqmin" gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
         {data.map((integrationData) => (
           <ControlsCard
             key={integrationData.integrationId}
@@ -171,11 +171,9 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
 
   return (
     <Card key={integrationId} withBorder p="2.5cqmin" radius="2.5cqmin">
-      <Flex>
-        <Box m="1.5cqmin" p="1.5cqmin">
-          <Image src={integrationDef.iconUrl} width="50cqmin" height="50cqmin" fit="contain" />
-        </Box>
-        <Flex direction="column" m="1.5cqmin" p="1.5cqmin" gap="1cqmin">
+      <Flex justify="space-between" align="center" direction="row" m="2.5cqmin">
+        <Image src={integrationDef.iconUrl} width="50cqmin" height="50cqmin" fit="contain" />
+        <Flex direction="column">
           <Text>{integrationDef.name}</Text>
           <Flex direction="row" gap="2cqmin">
             <UnstyledButton onClick={() => toggleDns(integrationId)}>

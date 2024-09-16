@@ -1,4 +1,4 @@
-FROM node:20.17.0-alpine AS base
+FROM --platform=linux/amd64 node:20.17.0-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -61,7 +61,8 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-RUN apk add --no-cache redis bash
+# gettext is required for envsubst
+RUN apk add --no-cache redis nginx bash gettext
 RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
@@ -79,6 +80,11 @@ RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
 RUN chown -R nextjs:nodejs /appdata
+RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
+    mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
+    mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
+    touch /run/nginx/nginx.pid && chown -R nextjs:nodejs /run/nginx/nginx.pid && \
+    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs && chown -R nextjs:nodejs /etc/nginx
 USER nextjs
 
 COPY --from=installer /app/apps/nextjs/next.config.mjs .
@@ -97,6 +103,8 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
+COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
+
 
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'

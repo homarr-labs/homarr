@@ -6,11 +6,10 @@ import { IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-
-import { revalidatePathActionAsync } from "../../../revalidatePathAction";
 
 interface AppDeleteButtonProps {
   app: RouterOutputs["app"]["all"][number];
