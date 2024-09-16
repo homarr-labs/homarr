@@ -13,7 +13,7 @@ import { interaction } from "../../interaction";
 type User = { id: string; name: string; image: string | null };
 
 const userChildrenOptions = createChildrenOptions<User>({
-  actions: [
+  useActions: [
     {
       component: () => (
         <Group mx="md" my="sm">
@@ -44,7 +44,7 @@ export const usersSearchGroup = createGroup<User>({
       <Text>{user.name}</Text>
     </Group>
   ),
-  interaction: interaction.children(userChildrenOptions),
+  useInteraction: interaction.children(userChildrenOptions),
   useQueryOptions(query) {
     return clientApi.user.search.useQuery({ query, limit: 5 });
   },

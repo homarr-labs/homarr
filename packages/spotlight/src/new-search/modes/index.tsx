@@ -32,7 +32,7 @@ const helpMode = {
         </Group>
       ),
       filter: () => true,
-      interaction: interaction.mode(({ name }) => ({ mode: name })),
+      useInteraction: interaction.mode(({ name }) => ({ mode: name })),
     }),
     createGroup({
       title: "Help",
@@ -60,7 +60,7 @@ const helpMode = {
         </Group>
       ),
       filter: () => true,
-      interaction: interaction.link(({ href }) => ({ href })),
+      useInteraction: interaction.link(({ href }) => ({ href })),
     }),
   ],
 } satisfies SearchMode;

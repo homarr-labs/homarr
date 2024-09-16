@@ -12,7 +12,7 @@ import { interaction } from "../../interaction";
 type Board = { id: string; name: string; logoImageUrl: string | null };
 
 const boardChildrenOptions = createChildrenOptions<Board>({
-  actions: [
+  useActions: [
     {
       component: () => (
         <Group mx="md" my="sm">
@@ -76,7 +76,7 @@ export const boardsSearchGroup = createGroup<Board>({
     </Group>
   ),
   // TODO: Add children
-  interaction: interaction.children(boardChildrenOptions),
+  useInteraction: interaction.children(boardChildrenOptions),
   useQueryOptions(query) {
     return clientApi.board.search.useQuery({ query, limit: 5 });
   },

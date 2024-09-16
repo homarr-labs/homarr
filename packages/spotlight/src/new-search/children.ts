@@ -4,12 +4,12 @@ import type { inferSearchInteractionDefinition } from "./interaction";
 
 export interface CreateChildrenOptionsProps<TParentOptions extends Record<string, unknown>> {
   detailComponent: ({ options }: { options: TParentOptions }) => ReactNode;
-  actions: ChildrenAction<TParentOptions>[];
+  useActions: () => ChildrenAction<TParentOptions>[];
 }
 
 interface ChildrenAction<TParentOptions extends Record<string, unknown>> {
   component: (option: TParentOptions) => JSX.Element;
-  interaction: (
+  useInteraction: (
     option: TParentOptions,
     query: string,
   ) => inferSearchInteractionDefinition<"link" | "javaScript" | "disabled">;

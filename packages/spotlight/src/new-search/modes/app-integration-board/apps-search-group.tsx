@@ -12,7 +12,7 @@ import { interaction } from "../../interaction";
 type App = { id: string; name: string; iconUrl: string; href: string | null };
 
 const appChildrenOptions = createChildrenOptions<App>({
-  actions: [
+  useActions: () => [
     {
       component: () => (
         <Group mx="md" my="sm">
@@ -20,7 +20,7 @@ const appChildrenOptions = createChildrenOptions<App>({
           <Text>Open app url</Text>
         </Group>
       ),
-      interaction: (option) => (option.href ? { type: "link", href: option.href } : { type: "disabled" }),
+      useInteraction: (option) => (option.href ? { type: "link", href: option.href } : { type: "disabled" }),
     },
     {
       component: () => (
@@ -29,7 +29,7 @@ const appChildrenOptions = createChildrenOptions<App>({
           <Text>Edit app</Text>
         </Group>
       ),
-      interaction: interaction.link(({ id }) => ({ href: `/manage/apps/edit/${id}` })),
+      useInteraction: interaction.link(({ id }) => ({ href: `/manage/apps/edit/${id}` })),
     },
   ],
   detailComponent: ({ options }) => (
@@ -70,7 +70,7 @@ export const appsSearchGroup = createGroup<App>({
       <Text>{app.name}</Text>
     </Group>
   ),
-  interaction: interaction.children(appChildrenOptions),
+  useInteraction: interaction.children(appChildrenOptions),
   useQueryOptions(query) {
     return clientApi.app.search.useQuery({ query, limit: 5 });
   },

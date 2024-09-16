@@ -17,7 +17,7 @@ type SearchEngine = {
 };
 
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
-  actions: [
+  useActions: [
     {
       component: ({ name }) => (
         <Group mx="md" my="sm">
@@ -79,7 +79,7 @@ export const searchEnginesSearchGroups = createGroup<SearchEngine>({
     </Group>
   ),
   filter: (query, { short }) => short.toLowerCase().startsWith(query.toLowerCase()),
-  interaction: interaction.children(searchEnginesChildrenOptions),
+  useInteraction: interaction.children(searchEnginesChildrenOptions),
   options: [
     {
       short: "g",

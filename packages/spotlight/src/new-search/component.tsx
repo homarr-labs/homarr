@@ -11,7 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import classes from "../component.module.css";
 import { selectAction, spotlightStore } from "../spotlight-store";
 import type { SearchGroup } from "./group";
-import type { inferSearchInteractionOptions } from "./interaction";
+import { SearchInteraction, type inferSearchInteractionOptions } from "./interaction";
 import { searchModes } from "./modes";
 import { searchEnginesChildrenOptions, searchEnginesSearchGroups } from "./modes/external/search-engines-search-group";
 
@@ -21,7 +21,10 @@ export const NewSpotlight = () => {
   const [childrenOptions, setChildrenOptions] = useState<inferSearchInteractionOptions<"children"> | null>(null);
   const t = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
+  // It's a conditional hook, but as it is always called the same amount of times, it's fine
+  const { useActions } = childrenOptions ?? { useActions: () => [] };
 
+  const childrenActions = useActions();
   const activeMode = useMemo(() => searchModes.find((searchMode) => searchMode.name === mode), [mode]);
 
   const actions = useMemo(() => {
@@ -47,34 +50,15 @@ export const NewSpotlight = () => {
     ));
   }, [activeMode, query, setMode, setChildrenOptions, selectAction, spotlightStore]);
 
-  const childrenActions = useMemo(() => {
-    if (!childrenOptions) return null;
+  const childrenActionsItems = useMemo(() => {
+    if (!childrenActions || !childrenOptions) return null;
 
-    return childrenOptions.actions.map((action) => {
-      const interaction = action.interaction(childrenOptions.option, query);
-
-      if (interaction.type === "disabled") {
-        return <></>;
-      }
-
-      const renderRoot =
-        interaction.type === "link"
-          ? (props: Record<string, unknown>) => {
-              return <Link href={interaction.href} {...props} />;
-            }
-          : undefined;
-
-      const onClick = interaction.type === "javaScript" ? interaction.onSelect : undefined;
-
-      return (
-        <Spotlight.Action renderRoot={renderRoot} onClick={onClick} className={classes.spotlightAction}>
-          <action.component {...childrenOptions.option} />
-        </Spotlight.Action>
-      );
-    });
+    return childrenActions.map((action) => (
+      <ChildrenActionOption childrenOptions={childrenOptions} query={query} action={action} />
+    ));
   }, [childrenOptions, query]);
 
-  const displayActions = childrenActions ?? actions;
+  const displayActions = childrenActionsItems ?? actions;
 
   return (
     <Spotlight.Root
@@ -175,6 +159,39 @@ export const NewSpotlight = () => {
   );
 };
 
+interface ChildrenActionOptionProps {
+  childrenOptions: inferSearchInteractionOptions<"children">;
+  query: string;
+  action: ReturnType<inferSearchInteractionOptions<"children">["useActions"]>[number];
+}
+
+const ChildrenActionOption = ({ childrenOptions, query, action }: ChildrenActionOptionProps) => {
+  const interaction = {
+    type: "disabled" as SearchInteraction,
+    href: "",
+    onSelect: () => {},
+  }; //action.useInteraction(childrenOptions.option, query);
+
+  if (interaction.type === "disabled") {
+    return <></>;
+  }
+
+  const renderRoot =
+    interaction.type === "link"
+      ? (props: Record<string, unknown>) => {
+          return <Link href={interaction.href} {...props} />;
+        }
+      : undefined;
+
+  const onClick = interaction.type === "javaScript" ? interaction.onSelect : undefined;
+
+  return (
+    <Spotlight.Action renderRoot={renderRoot} onClick={onClick} className={classes.spotlightAction}>
+      <action.component {...childrenOptions.option} />
+    </Spotlight.Action>
+  );
+};
+
 interface GroupActionsProps<TOption extends Record<string, unknown>> {
   group: SearchGroup<TOption>;
   query: string;
@@ -254,7 +271,7 @@ const SpotlightOption = <TOption extends Record<string, unknown>>({
   setChildrenOptions,
   option,
 }: SpotlightOptionProps<TOption>) => {
-  const interaction = group.interaction(option, query);
+  const interaction = group.useInteraction(option, query);
 
   if (interaction.type === "disabled") {
     return <></>;

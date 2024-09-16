@@ -32,7 +32,7 @@ export const pagesSearchGroup = createGroup<{
       <Text>{name}</Text>
     </Group>
   ),
-  interaction: interaction.link(({ path }) => ({ href: path })),
+  useInteraction: interaction.link(({ path }) => ({ href: path })),
   filter: (query, { name, path }) => {
     const normalizedQuery = query.trim().toLowerCase();
     return name.toLowerCase().includes(normalizedQuery) || path.toLowerCase().includes(normalizedQuery);

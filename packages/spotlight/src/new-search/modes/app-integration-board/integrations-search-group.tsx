@@ -16,7 +16,7 @@ export const integrationsSearchGroup = createGroup<{ id: string; kind: Integrati
       <Text>{integration.name}</Text>
     </Group>
   ),
-  interaction: interaction.link(({ id }) => ({ href: `/manage/integrations/edit/${id}` })),
+  useInteraction: interaction.link(({ id }) => ({ href: `/manage/integrations/edit/${id}` })),
   useQueryOptions(query) {
     return clientApi.integration.search.useQuery({ query, limit: 5 });
   },

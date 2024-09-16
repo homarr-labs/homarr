@@ -5,7 +5,7 @@ import type { inferSearchInteractionDefinition, SearchInteraction } from "./inte
 type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps extends Record<string, unknown>> = {
   title: string;
   component: (option: TOption) => JSX.Element;
-  interaction: (option: TOption, query: string) => inferSearchInteractionDefinition<SearchInteraction>;
+  useInteraction: (option: TOption, query: string) => inferSearchInteractionDefinition<SearchInteraction>;
 } & TOptionProps;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -13,7 +13,7 @@ const searchInteractions = [
   createSearchInteraction("mode").optionsType<{ mode: string }>(),
   createSearchInteraction("children").optionsType<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    actions: CreateChildrenOptionsProps<any>["actions"];
+    useActions: CreateChildrenOptionsProps<any>["useActions"];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     detailComponent: CreateChildrenOptionsProps<any>["detailComponent"];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
