@@ -3,15 +3,16 @@
 import { api } from "@homarr/api/server";
 
 import type { WidgetProps } from "../definition";
+import { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
 
 export default async function getServerDataAsync({ integrationIds }: WidgetProps<"hardwareUsage">) {
   if (integrationIds.length === 0) {
     return {
       initialData: {
         hardwareInformationHistory: {
-          cpuLoad: [],
-          memoryLoad: [],
-          networkLoad: [],
+          cpuLoad: {} as CpuLoad,
+          memoryLoad: {} as MemoryLoad,
+          networkLoad: {} as NetworkLoad,
         },
       },
     };

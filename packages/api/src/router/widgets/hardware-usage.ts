@@ -17,14 +17,15 @@ export const hardwareUsageRouter = createTRPCRouter({
       }>("hardwareUsage", ctx.integration.id);
       const data = await channel.getAsync();
       return {
-        cpuLoad: data?.data.cpuLoad ?? {},
-        memoryLoad: data?.data.memoryLoad ?? {},
-        networkLoad: data?.data.networkLoad ?? {},
+        cpuLoad: data?.data.cpuLoad ?? {} as CpuLoad,
+        memoryLoad: data?.data.memoryLoad ?? {} as MemoryLoad,
+        networkLoad: data?.data.networkLoad ?? {} as NetworkLoad,
       };
     }),
   subscribeCpu: publicProcedure
     .unstable_concat(createOneIntegrationMiddleware("query", "getDashDot"))
     .subscription(({ ctx }) => {
+      console.log('subscribend!!!');
       return observable<{ cpuLoad: CpuLoad; memoryLoad: MemoryLoad; networkLoad: NetworkLoad }>((emit) => {
         const channel = createItemAndIntegrationChannel<{
           cpuLoad: CpuLoad;
