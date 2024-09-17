@@ -40,7 +40,9 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { humanFileSize } from "@homarr/common";
+import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema/sqlite";
+import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type {
   DownloadClientJobsAndStatus,
@@ -97,7 +99,7 @@ export default function DownloadClientsWidget({
   );
 
   const [currentItems, currentItemsHandlers] = useListState<{
-    integration: Integration;
+    integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
     timestamp: Date;
     data: DownloadClientJobsAndStatus | null;
   }>(
@@ -173,8 +175,13 @@ export default function DownloadClientsWidget({
         .filter(({ integration }) => integrationIds.includes(integration.id))
         //Removing any integration with no data associated
         .filter(
-          (pair): pair is { integration: Integration; timestamp: Date; data: DownloadClientJobsAndStatus } =>
-            pair.data != null,
+          (
+            pair,
+          ): pair is {
+            integration: typeof pair.integration;
+            timestamp: typeof pair.timestamp;
+            data: DownloadClientJobsAndStatus;
+          } => pair.data != null,
         )
         //Construct normalized items list
         .flatMap((pair) =>

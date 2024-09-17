@@ -1,6 +1,8 @@
 import { observable } from "@trpc/server/observable";
 
+import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema/sqlite";
+import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { downloadClientItemSchema, integrationCreator } from "@homarr/integrations";
@@ -33,7 +35,11 @@ export const downloadsRouter = createTRPCRouter({
   subscribeToJobsAndStatuses: publicProcedure
     .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
-      return observable<{ integration: Integration; timestamp: Date; data: DownloadClientJobsAndStatus }>((emit) => {
+      return observable<{
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
+        timestamp: Date;
+        data: DownloadClientJobsAndStatus;
+      }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;

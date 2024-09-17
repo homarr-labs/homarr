@@ -5,7 +5,9 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("dnsHoleSummary", {
+export const widgetKind = "dnsHoleSummary";
+
+export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition(widgetKind, {
   icon: IconAd,
   options: optionsBuilder.from((factory) => ({
     usePiHoleColors: factory.switch({

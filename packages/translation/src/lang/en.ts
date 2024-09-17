@@ -848,6 +848,8 @@ export default {
         set: "Set",
         enabled: "Enabled",
         disabled: "Disabled",
+        processing: "Processing",
+        disconnected: "Disconnected",
         hours: "Hours",
         minutes: "Minutes",
         unlimited: "Leave blank to unlimited",
@@ -1850,6 +1852,9 @@ export default {
             },
             indexerManager: {
               label: "Indexer Manager",
+            },
+            dnsHole: {
+              label: "DNS Hole Data",
             },
           },
         },

@@ -5,7 +5,9 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("dnsHoleControls", {
+export const widgetKind = "dnsHoleControls";
+
+export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition(widgetKind, {
   icon: IconDeviceGamepad,
   options: optionsBuilder.from((factory) => ({
     showToggleAllButtons: factory.switch({
