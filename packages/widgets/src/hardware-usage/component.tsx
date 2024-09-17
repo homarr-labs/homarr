@@ -3,14 +3,11 @@ import { useListState } from "@mantine/hooks";
 import { ResponsiveLine } from "@nivo/line";
 
 import { clientApi } from "@homarr/api/client";
-import { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
+import type { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
 
 import type { WidgetComponentProps } from "../definition";
 
 export default function HardwareUsageWidget({ serverData, integrationIds }: WidgetComponentProps<"hardwareUsage">) {
-  if (!serverData) {
-    return null;
-  }
   const [hardwareUsage, hardwareUsageHandlers] = useListState<{
     cpuLoad: CpuLoad;
     memoryLoad: MemoryLoad;
@@ -23,6 +20,7 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
     },
     {
       onData: (data) => {
+        console.log('received new data', data);
         hardwareUsageHandlers.append(data);
         if (hardwareUsage.length > 15) {
           hardwareUsageHandlers.shift();
