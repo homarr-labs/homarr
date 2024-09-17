@@ -1,4 +1,3 @@
-import { decryptSecret } from "@homarr/common";
 import { EVERY_SECOND } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
@@ -7,6 +6,7 @@ import { DashDotIntegration } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 import { createCronJob } from "../../lib";
+import { decryptSecret } from "@homarr/common/server";
 
 export const hardwareUsageJob = createCronJob("hardwareUsage", EVERY_SECOND).withCallback(async () => {
   const itemsForIntegration = await db.query.items.findMany({
