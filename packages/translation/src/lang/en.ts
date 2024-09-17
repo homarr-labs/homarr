@@ -1079,6 +1079,39 @@ export default {
         internalServerError: "Failed to fetch indexers status",
       },
     },
+    healthMonitoring: {
+      name: "System Health Monitoring",
+      description: "Displays information showing the health and status of your system(s).",
+      option: {
+        fahrenheit: {
+          label: "CPU Temp in Fahrenheit",
+        },
+        cpu: {
+          label: "Show CPU Info",
+        },
+        memory: {
+          label: "Show Memory Info",
+        },
+        fileSystem: {
+          label: "Show Filesystem Info",
+        },
+      },
+      popover: {
+        model: "CPU Model",
+        version: "Version",
+        uptime: "Uptime",
+        loadAverage: "Load Average",
+        minute: "minute",
+        minutes: "minutes",
+        total: "Total",
+        used: "Used",
+        available: "Available",
+      },
+      memory: {},
+      error: {
+        internalServerError: "Failed to fetch health status",
+      },
+    },
     common: {
       location: {
         query: "City / Postal code",
