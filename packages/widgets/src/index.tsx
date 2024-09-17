@@ -11,6 +11,7 @@ import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
+import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as indexerManager from "./indexer-manager";
@@ -49,6 +50,7 @@ export const widgetImports = {
   "mediaRequests-requestStats": mediaRequestsStats,
   rssFeed,
   indexerManager,
+  healthMonitoring,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
