@@ -8,7 +8,7 @@ import { describe, test } from "vitest";
 import * as mysqlSchema from "../schema/mysql";
 
 describe("Mysql Migration", () => {
-  test("should run successfully", async () => {
+  test("should add all tables and keys specified in migration files", async () => {
     const mysqlContainer = await new MySqlContainer().start();
 
     const connection = mysql.createConnection({
