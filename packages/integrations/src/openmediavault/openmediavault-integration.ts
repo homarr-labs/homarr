@@ -121,7 +121,7 @@ export class OpenMediaVaultIntegration extends Integration {
     };
   }
 
-  private extractSessionIdFromCookies(headers: Headers): string {
+  static extractSessionIdFromCookies(headers: Headers): string {
     const cookies = headers.get("set-cookie") ?? "";
     const sessionId = cookies
       .split(";")
@@ -134,8 +134,8 @@ export class OpenMediaVaultIntegration extends Integration {
     }
   }
 
-  private extractLoginTokenFromCookies(headers: Headers): string {
-    const cookies = headers.get("set.cookie") ?? "";
+  static extractLoginTokenFromCookies(headers: Headers): string {
+    const cookies = headers.get("set-cookie") ?? "";
     const loginToken = cookies
       .split(";")
       .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"));
