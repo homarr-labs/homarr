@@ -1,3 +1,4 @@
+import path from "path";
 import { MySqlContainer } from "@testcontainers/mysql";
 import { drizzle } from "drizzle-orm/mysql2";
 import { migrate } from "drizzle-orm/mysql2/migrator";
@@ -25,7 +26,7 @@ describe("Mysql Migration", () => {
 
     // Run migrations and check if it works
     await migrate(database, {
-      migrationsFolder: __dirname + "/../migrations/mysql",
+      migrationsFolder: path.join(__dirname, "..", "migrations", "mysql"),
     });
 
     // Check if users table exists
