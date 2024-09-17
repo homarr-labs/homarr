@@ -71,6 +71,7 @@ export interface WidgetDefinition {
       {
         icon: TablerIcon;
         message: stringOrTranslation;
+        hideLogsLink?: boolean;
       }
     >
   >;
