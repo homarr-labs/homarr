@@ -3,6 +3,7 @@ import React from "react";
 import type { MantineSpacing } from "@mantine/core";
 import { Group, Stack, Switch, Text, UnstyledButton } from "@mantine/core";
 
+import type { Modify } from "@homarr/common/types";
 import type { UseFormReturnType } from "@homarr/form";
 
 export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
@@ -13,9 +14,12 @@ export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
   formKey,
   disabled,
 }: {
-  form: Omit<UseFormReturnType<TFormValue, () => TFormValue>, "setFieldValue"> & {
-    setFieldValue: (key: keyof TFormValue, value: (previous: boolean) => boolean) => void;
-  };
+  form: Modify<
+    UseFormReturnType<TFormValue, () => TFormValue>,
+    {
+      setFieldValue: (key: keyof TFormValue, value: (previous: boolean) => boolean) => void;
+    }
+  >;
   formKey: keyof TFormValue;
   ms?: MantineSpacing;
   title: string;

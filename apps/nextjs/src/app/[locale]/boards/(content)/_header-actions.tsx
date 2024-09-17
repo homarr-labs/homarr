@@ -15,11 +15,11 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";

@@ -7,12 +7,11 @@ import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
-
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface UserProfileAvatarForm {
   user: RouterOutputs["user"]["getById"];

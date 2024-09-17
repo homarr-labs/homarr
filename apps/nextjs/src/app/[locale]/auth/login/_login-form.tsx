@@ -7,14 +7,13 @@ import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Te
 import { useDisclosure } from "@mantine/hooks";
 
 import { signIn } from "@homarr/auth/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { useForm } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
-
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface LoginFormProps {
   providers: string[];

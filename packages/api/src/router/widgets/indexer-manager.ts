@@ -1,21 +1,26 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
-import { integrationCreatorByKind } from "@homarr/integrations";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { integrationCreator } from "@homarr/integrations";
 import type { Indexer } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
+import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
+const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
+  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("indexerManager"));
+
 export const indexerManagerRouter = createTRPCRouter({
   getIndexersStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "prowlarr"))
+    .unstable_concat(createIndexerManagerIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const client = integrationCreatorByKind(integration.kind, integration);
+          const client = integrationCreator(integration);
           const indexers = await client.getIndexersAsync().catch((err) => {
             logger.error("indexer-manager router - ", err);
             throw new TRPCError({
@@ -34,7 +39,7 @@ export const indexerManagerRouter = createTRPCRouter({
     }),
 
   subscribeIndexersStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "prowlarr"))
+    .unstable_concat(createIndexerManagerIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; indexers: Indexer[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -57,11 +62,11 @@ export const indexerManagerRouter = createTRPCRouter({
     }),
 
   testAllIndexers: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("interact", "prowlarr"))
+    .unstable_concat(createIndexerManagerIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const client = integrationCreatorByKind(integration.kind, integration);
+          const client = integrationCreator(integration);
           await client.testAllAsync().catch((err) => {
             logger.error("indexer-manager router - ", err);
             throw new TRPCError({

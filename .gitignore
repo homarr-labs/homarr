@@ -56,3 +56,7 @@ yarn-error.log*
 apps/tasks/tasks.cjs
 apps/websocket/wssServer.cjs
 apps/nextjs/.million/
+
+
+#personal backgrounds
+apps/nextjs/public/images/background.png

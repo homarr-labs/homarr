@@ -1138,6 +1138,99 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    downloads: {
+      name: "Download Client",
+      description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
+      option: {
+        columns: {
+          label: "Columns to show",
+        },
+        enableRowSorting: {
+          label: "Enable items sorting",
+        },
+        defaultSort: {
+          label: "Column used for sorting by default",
+        },
+        descendingDefaultSort: {
+          label: "Invert sorting",
+        },
+        showCompletedUsenet: {
+          label: "Show usenet entries marked as completed",
+        },
+        showCompletedTorrent: {
+          label: "Show torrent entries marked as completed",
+        },
+        activeTorrentThreshold: {
+          label: "Hide completed torrent under this threshold (in kiB/s)",
+        },
+        categoryFilter: {
+          label: "Categories/labels to filter",
+        },
+        filterIsWhitelist: {
+          label: "Filter as a whitelist",
+        },
+        applyFilterToRatio: {
+          label: "Use filter to calculate Ratio",
+        },
+      },
+      errors: {
+        noColumns: "Select Columns in Items",
+        noCommunications: "Can't load data from integration",
+      },
+      items: {
+        actions: { columnTitle: "Controls" },
+        added: { columnTitle: "Added", detailsTitle: "Date Added" },
+        category: { columnTitle: "Extras", detailsTitle: "Categories (Or extra information)" },
+        downSpeed: { columnTitle: "Down", detailsTitle: "Download Speed" },
+        index: { columnTitle: "#", detailsTitle: "Current index within client" },
+        id: { columnTitle: "Id" },
+        integration: { columnTitle: "Integration" },
+        name: { columnTitle: "Job name" },
+        progress: { columnTitle: "Progress", detailsTitle: "Download Progress" },
+        ratio: { columnTitle: "Ratio", detailsTitle: "Torrent ratio (received/sent)" },
+        received: { columnTitle: "Total down", detailsTitle: "Total downloaded" },
+        sent: { columnTitle: "Total up", detailsTitle: "Total Uploaded" },
+        size: { columnTitle: "File Size", detailsTitle: "Total Size of selection/files" },
+        state: { columnTitle: "State", detailsTitle: "Job State" },
+        time: { columnTitle: "Finish time", detailsTitle: "Time since/to completion" },
+        type: { columnTitle: "Type", detailsTitle: "Download Client type" },
+        upSpeed: { columnTitle: "Up", detailsTitle: "Upload Speed" },
+      },
+      states: {
+        downloading: "Downloading",
+        queued: "Queued",
+        paused: "Paused",
+        completed: "Completed",
+        failed: "Failed",
+        processing: "Processing",
+        leeching: "Leeching",
+        stalled: "Stalled",
+        unknown: "Unknown",
+        seeding: "Seeding",
+      },
+      actions: {
+        clients: {
+          modalTitle: "Download clients list",
+          pause: "Pause all clients/items",
+          resume: "Resume all clients/items",
+        },
+        client: {
+          pause: "Pause client",
+          resume: "Resume client",
+        },
+        item: {
+          pause: "Pause Item",
+          resume: "Resume Item",
+          delete: {
+            title: "Delete Item",
+            modalTitle: "Are you sure you want to delete this job?",
+            entry: "Delete entry",
+            entryAndFiles: "Delete entry and file(s)",
+          },
+        },
+      },
+      globalRatio: "Global Ratio",
+    },
     "mediaRequests-requestList": {
       name: "Media Requests List",
       description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
@@ -1745,6 +1838,9 @@ export default {
             },
             mediaOrganizer: {
               label: "Media Organizers",
+            },
+            downloads: {
+              label: "Downloads",
             },
             mediaRequests: {
               label: "Media Requests",

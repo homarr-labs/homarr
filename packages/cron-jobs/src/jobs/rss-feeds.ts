@@ -2,6 +2,7 @@ import type { FeedData, FeedEntry } from "@extractus/feed-extractor";
 import { extract } from "@extractus/feed-extractor";
 import SuperJSON from "superjson";
 
+import type { Modify } from "@homarr/common/types";
 import { EVERY_5_MINUTES } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
@@ -125,9 +126,12 @@ interface ExtendedFeedEntry extends FeedEntry {
  * We extend the feed with custom properties.
  * This interface omits the default entries with our custom definition.
  */
-interface ExtendedFeedData extends Omit<FeedData, "entries"> {
-  entries?: ExtendedFeedEntry;
-}
+type ExtendedFeedData = Modify<
+  FeedData,
+  {
+    entries?: ExtendedFeedEntry;
+  }
+>;
 
 export interface RssFeed {
   feedUrl: string;

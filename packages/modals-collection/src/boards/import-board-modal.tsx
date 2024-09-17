@@ -3,6 +3,7 @@ import { Button, Fieldset, FileInput, Grid, Group, Radio, Stack, Switch, TextInp
 import { IconFileUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -10,24 +11,21 @@ import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { useScopedI18n } from "@homarr/translation/client";
 import { SelectWithDescription } from "@homarr/ui";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
-import { createOldmarrImportConfigurationSchema, superRefineJsonImportFile, z } from "@homarr/validation";
+import { oldmarrImportConfigurationSchema, superRefineJsonImportFile, z } from "@homarr/validation";
 
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+import { useBoardNameStatus } from "./add-board-modal";
 
-interface InnerProps {
-  boardNames: string[];
-}
-
-export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
+export const ImportBoardModal = createModal(({ actions }) => {
   const tOldImport = useScopedI18n("board.action.oldImport");
   const tCommon = useScopedI18n("common");
   const [fileValid, setFileValid] = useState(true);
   const form = useZodForm(
     z.object({
       file: z.instanceof(File).nullable().superRefine(superRefineJsonImportFile),
-      configuration: createOldmarrImportConfigurationSchema(innerProps.boardNames),
+      configuration: oldmarrImportConfigurationSchema,
     }),
     {
+      mode: "controlled",
       initialValues: {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         file: null!,
@@ -67,6 +65,7 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
   );
 
   const { mutateAsync, isPending } = clientApi.board.importOldmarrConfig.useMutation();
+  const boardNameStatus = useBoardNameStatus(form.values.configuration.name);
 
   const handleSubmitAsync = async (values: { file: File; configuration: OldmarrImportConfiguration }) => {
     const formData = new FormData();
@@ -94,7 +93,7 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        if (!fileValid) {
+        if (!fileValid || !boardNameStatus.canSubmit) {
           return;
         }
 
@@ -139,7 +138,19 @@ export const ImportBoardModal = createModal<InnerProps>(({ actions, innerProps }
           </Grid>
         </Fieldset>
 
-        <TextInput withAsterisk label={tOldImport("form.name.label")} {...form.getInputProps("configuration.name")} />
+        <TextInput
+          withAsterisk
+          label={tOldImport("form.name.label")}
+          description={
+            boardNameStatus.description ? (
+              <Group c={boardNameStatus.description.color} gap="xs" align="center">
+                {boardNameStatus.description.icon ? <boardNameStatus.description.icon size={16} /> : null}
+                <span>{boardNameStatus.description.label}</span>
+              </Group>
+            ) : null
+          }
+          {...form.getInputProps("configuration.name")}
+        />
 
         <Radio.Group
           withAsterisk

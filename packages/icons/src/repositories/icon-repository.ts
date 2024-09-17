@@ -29,8 +29,4 @@ export abstract class IconRepository {
   }
 
   protected abstract getAllIconsInternalAsync(): Promise<RepositoryIconGroup>;
-
-  protected getFileNameWithoutExtensionFromPath(path: string) {
-    return path.replace(/^.*[\\/]/, "");
-  }
 }

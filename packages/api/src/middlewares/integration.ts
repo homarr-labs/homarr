@@ -3,7 +3,8 @@ import { TRPCError } from "@trpc/server";
 import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
-import { decryptSecret } from "@homarr/common";
+import { decryptSecret } from "@homarr/common/server";
+import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema/sqlite";
@@ -12,7 +13,7 @@ import { z } from "@homarr/validation";
 
 import { publicProcedure } from "../trpc";
 
-type IntegrationAction = "query" | "interact";
+export type IntegrationAction = "query" | "interact";
 
 /**
  * Creates a middleware that provides the integration in the context that is of the specified kinds
@@ -25,7 +26,7 @@ type IntegrationAction = "query" | "interact";
  */
 export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
-  ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
   return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
     const integration = await ctx.db.query.integrations.findFirst({
@@ -95,7 +96,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
  */
 export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
-  ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
   return publicProcedure
     .input(z.object({ integrationIds: z.array(z.string()).min(1) }))
@@ -161,7 +162,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
  */
 export const createManyIntegrationOfOneItemMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
-  ...kinds: [TKind, ...TKind[]] // Ensure at least one kind is provided
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
   return publicProcedure
     .input(z.object({ integrationIds: z.array(z.string()).min(1), itemId: z.string() }))

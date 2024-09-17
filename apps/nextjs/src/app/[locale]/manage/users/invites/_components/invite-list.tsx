@@ -11,10 +11,9 @@ import { MantineReactTable } from "mantine-react-table";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
-
-import { InviteCreateModal } from "./invite-create-modal";
 
 dayjs.extend(relativeTime);
 

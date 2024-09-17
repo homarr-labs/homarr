@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import SuperJSON from "superjson";
 
-import { decryptSecret } from "@homarr/common";
+import type { Modify } from "@homarr/common/types";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
-import { db, eq } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
-import { integrationCreatorByKind } from "@homarr/integrations";
+import { db } from "@homarr/db";
+import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
+import { integrationCreatorFromSecrets } from "@homarr/integrations";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
@@ -14,46 +14,25 @@ import type { WidgetComponentProps } from "../../../../widgets";
 import { createCronJob } from "../../lib";
 
 export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).withCallback(async () => {
-  const itemsForIntegration = await db.query.items.findMany({
-    where: eq(items.kind, "calendar"),
-    with: {
-      integrations: {
-        with: {
-          integration: {
-            with: {
-              secrets: {
-                columns: {
-                  kind: true,
-                  value: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+  const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {
+    kinds: ["calendar"],
   });
 
   for (const itemForIntegration of itemsForIntegration) {
-    for (const integration of itemForIntegration.integrations) {
+    for (const { integration } of itemForIntegration.integrations) {
       const options = SuperJSON.parse<WidgetComponentProps<"calendar">["options"]>(itemForIntegration.options);
 
       const start = dayjs().subtract(Number(options.filterPastMonths), "months").toDate();
       const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();
 
-      const decryptedSecrets = integration.integration.secrets.map((secret) => ({
-        ...secret,
-        value: decryptSecret(secret.value),
-      }));
-
-      const integrationInstance = integrationCreatorByKind(integration.integration.kind as "radarr" | "sonarr", {
-        ...integration.integration,
-        decryptedSecrets,
-      });
+      //Asserting the integration kind until all of them get implemented
+      const integrationInstance = integrationCreatorFromSecrets(
+        integration as Modify<typeof integration, { kind: "sonarr" | "radarr" }>,
+      );
 
       const events = await integrationInstance.getCalendarEventsAsync(start, end);
 
-      const cache = createItemAndIntegrationChannel<CalendarEvent[]>("calendar", integration.integrationId);
+      const cache = createItemAndIntegrationChannel<CalendarEvent[]>("calendar", integration.id);
       await cache.setAsync(events);
     }
   }

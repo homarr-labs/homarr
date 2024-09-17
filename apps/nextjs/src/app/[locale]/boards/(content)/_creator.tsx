@@ -4,6 +4,9 @@ import { TRPCError } from "@trpc/server";
 // Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
 
+import { IntegrationProvider } from "@homarr/auth/client";
+import { auth } from "@homarr/auth/next";
+import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { getI18n } from "@homarr/translation/server";
 
 import { createMetaTitle } from "~/metadata";
@@ -27,8 +30,16 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       getInitialBoardAsync: getInitialBoard,
       isBoardContentPage: true,
     }),
-    page: () => {
-      return <ClientBoard />;
+    // eslint-disable-next-line no-restricted-syntax
+    page: async () => {
+      const session = await auth();
+      const integrations = await getIntegrationsWithPermissionsAsync(session);
+
+      return (
+        <IntegrationProvider integrations={integrations}>
+          <ClientBoard />
+        </IntegrationProvider>
+      );
     },
     generateMetadataAsync: async ({ params }: { params: TParams }): Promise<Metadata> => {
       try {

@@ -7,6 +7,7 @@ import { Alert, Button, Fieldset, Group, SegmentedControl, Stack, Text, TextInpu
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
@@ -18,7 +19,6 @@ import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
-import { revalidatePathActionAsync } from "../../../../revalidatePathAction";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof validation.integration.create>> & {

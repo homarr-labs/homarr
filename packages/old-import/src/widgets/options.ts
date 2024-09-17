@@ -36,6 +36,18 @@ const optionMapping: OptionMapping = {
     timezone: (oldOptions) => oldOptions.timezone,
     useCustomTimezone: () => true,
   },
+  downloads: {
+    activeTorrentThreshold: (oldOptions) => oldOptions.speedLimitOfActiveTorrents,
+    applyFilterToRatio: (oldOptions) => oldOptions.displayRatioWithFilter,
+    categoryFilter: (oldOptions) => oldOptions.labelFilter,
+    filterIsWhitelist: (oldOptions) => oldOptions.labelFilterIsWhitelist,
+    enableRowSorting: (oldOptions) => oldOptions.rowSorting,
+    showCompletedTorrent: (oldOptions) => oldOptions.displayCompletedTorrents,
+    columns: () => ["integration", "name", "progress", "time", "actions"],
+    defaultSort: () => "type",
+    descendingDefaultSort: () => false,
+    showCompletedUsenet: () => true,
+  },
   weather: {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,
     hasForecast: (oldOptions) => oldOptions.displayWeekly,
