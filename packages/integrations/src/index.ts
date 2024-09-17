@@ -5,11 +5,13 @@ export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
 export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
 export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
+export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
 export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 
 // Types
+export type { HealthMonitoring } from "./interfaces/health-monitoring/healt-monitoring";
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
 export type { StreamSession } from "./interfaces/media-server/session";

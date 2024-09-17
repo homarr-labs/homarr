@@ -111,6 +111,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: ["smartHomeServer"],
   },
+  openmediavault: {
+    name: "OpenMediaVault",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openmediavault.png",
+    category: ["healthMonitoring"],
+  },
 } satisfies Record<
   string,
   {
@@ -145,4 +151,5 @@ export type IntegrationCategory =
   | "downloadClient"
   | "useNetClient"
   | "smartHomeServer"
-  | "indexerManager";
+  | "indexerManager"
+  | "healthMonitoring";
