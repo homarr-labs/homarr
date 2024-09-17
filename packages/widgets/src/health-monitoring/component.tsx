@@ -43,7 +43,7 @@ export default function HealthMonitoringWidget({
     throw new NoIntegrationSelectedError();
   }
   const t = useI18n();
-  const [healthData, setHealthData] = useListState<{
+  const [healthData] = useListState<{
     integrationId: string;
     healthInfo: HealthMonitoring;
   }>(serverData?.initialData ?? []);
@@ -190,7 +190,7 @@ export default function HealthMonitoringWidget({
             {options.fileSystem &&
               disksData.map((disk) => {
                 return (
-                  <Card m="2.5cqmin" withBorder>
+                  <Card key={disk.deviceName} m="2.5cqmin" withBorder>
                     <Flex justify="space-between" align="center" m="1.5cqmin">
                       <Group gap="1cqmin">
                         <IconServer size={18} />
