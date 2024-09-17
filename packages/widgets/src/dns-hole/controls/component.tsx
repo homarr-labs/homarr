@@ -238,16 +238,13 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const isEnabled = data.summary?.status ? data.summary.status === "enabled" : undefined;
   const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
   // Use all factors to infer the state of the action buttons
-  const controlEnabled = isInteractPermitted && typeof isEnabled !== "undefined" && isConnected;
-
-  // Get preset icon
-  const { iconUrl } = data.integration.kind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
+  const controlEnabled = isInteractPermitted && isEnabled !== undefined && isConnected;
 
   return (
     <Card key={data.integration.id} withBorder p="2.5cqmin" radius="2.5cqmin">
       <Flex gap="4cqmin" align="center" direction="row">
         <Image
-          src={iconUrl}
+          src={integrationDefs[data.integration.kind].iconUrl}
           w="20cqmin"
           h="20cqmin"
           fit="contain"
@@ -296,7 +293,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             </UnstyledButton>
             <ActionIcon
               display={isInteractPermitted ? undefined : "none"}
-              disabled={!controlEnabled}
+              disabled={!controlEnabled || !isEnabled}
               color="yellow"
               size="fit-content"
               radius="999px 999px 0px 999px"

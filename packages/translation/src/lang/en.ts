@@ -808,6 +808,7 @@ export default {
       },
       error: {
         internalServerError: "Failed to fetch DNS Hole Summary",
+        integrationsDisconnected: "No data available, all integrations disconnected",
       },
       data: {
         adsBlockedToday: "Blocked today",

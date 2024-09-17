@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Box, Card, Flex, Text } from "@mantine/core";
+import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
+import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
+import { integrationDefs } from "@homarr/definitions";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import type { stringOrTranslation, TranslationFunction } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
@@ -24,6 +26,8 @@ export default function DnsHoleSummaryWidget({
   serverData,
 }: WidgetComponentProps<typeof widgetKind>) {
   const [summaries, setSummaries] = useState(serverData?.initialData ?? []);
+
+  const t = useI18n();
 
   clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
     {
@@ -49,7 +53,7 @@ export default function DnsHoleSummaryWidget({
             integration: typeof pair.integration;
             timestamp: typeof pair.timestamp;
             summary: DnsHoleSummary;
-          } => pair.summary !== null,
+          } => pair.summary !== null && Math.abs(dayjs(pair.timestamp).diff()) < 30000,
         )
         .flatMap(({ summary }) => summary),
     [summaries, serverData],
@@ -61,9 +65,24 @@ export default function DnsHoleSummaryWidget({
 
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)} p="2cqmin">
-      {stats.map((item, index) => (
-        <StatCard key={index} item={item} usePiHoleColors={options.usePiHoleColors} data={data} />
-      ))}
+      {data.length > 0 ? (
+        stats.map((item) => (
+          <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
+        ))
+      ) : (
+        <Stack h="100%" w="100%" justify="center" align="center" gap="2.5cqmin" p="2.5cqmin">
+          <AvatarGroup spacing="10cqmin">
+            {summaries.map(({ integration }) => (
+              <Tooltip key={integration.id} label={integration.name}>
+                <Avatar h="35cqmin" w="35cqmin" src={integrationDefs[integration.kind].iconUrl} />
+              </Tooltip>
+            ))}
+          </AvatarGroup>
+          <Text fz="10cqmin" ta="center">
+            {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
+          </Text>
+        </Stack>
+      )}
     </Box>
   );
 }
@@ -125,11 +144,11 @@ interface StatCardProps {
   item: StatItem;
   data: DnsHoleSummary[];
   usePiHoleColors: boolean;
+  t: TranslationFunction;
 }
-const StatCard = ({ item, data, usePiHoleColors }: StatCardProps) => {
+const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const { ref, height, width } = useElementSize();
   const isLong = width > height + 20;
-  const t = useI18n();
 
   return (
     <Card
