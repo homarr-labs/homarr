@@ -841,6 +841,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
+      '@testcontainers/mysql':
+        specifier: ^10.13.1
+        version: 10.13.1
       better-sqlite3:
         specifier: ^11.3.0
         version: 11.3.0
@@ -2985,6 +2988,9 @@ packages:
 
   '@tanstack/virtual-core@3.8.3':
     resolution: {integrity: sha512-vd2A2TnM5lbnWZnHi9B+L2gPtkSeOtJOAw358JqokIH1+v2J7vUAzFVPwB/wrye12RFOurffXu33plm4uQ+JBQ==}
+
+  '@testcontainers/mysql@10.13.1':
+    resolution: {integrity: sha512-G4I59inEQ37yxeMgXyNgLbGf+aUNGoQDdgrfNWpWC/s0z5fiFSROEngcp8ueGA4UgH9Jte8iXo0WrMgmBfwJEQ==}
 
   '@tiptap/core@2.7.1':
     resolution: {integrity: sha512-/sOJ3J2OWxQrho6MWgE9xaRBln5MC4BEuevTYIGia4zrc523lX9s+h/lUeLtCPhI0+J6z9Vz+v3G/uoEqWCL+A==}
@@ -9151,6 +9157,12 @@ snapshots:
   '@tanstack/table-core@8.19.3': {}
 
   '@tanstack/virtual-core@3.8.3': {}
+
+  '@testcontainers/mysql@10.13.1':
+    dependencies:
+      testcontainers: 10.13.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@tiptap/core@2.7.1(@tiptap/pm@2.7.1)':
     dependencies:
