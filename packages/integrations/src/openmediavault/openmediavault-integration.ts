@@ -44,18 +44,29 @@ export class OpenMediaVaultIntegration extends Integration {
     return headers;
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    const response = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
-    });
+  private extractSessionIdFromCookies(headers: Headers): string {
+    const cookies = headers.get("set-cookie") ?? "";
+    const sessionId = cookies
+      .split(";")
+      .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-SESSIONID") || cookie.includes("OPENMEDIAVAULT-SESSIONID"));
 
-    if (!response.ok) {
-      throw new IntegrationTestConnectionError("invalidCredentials");
+    if (sessionId) {
+      return sessionId;
+    } else {
+      throw new Error("Session ID not found in cookies");
     }
-    const result = (await response.json()) as unknown;
-    if (typeof result !== "object" || result === null || !("response" in result)) {
-      throw new IntegrationTestConnectionError("invalidJson");
+  }
+
+  private extractLoginTokenFromCookies(headers: Headers): string {
+    const cookies = headers.get("set-cookie") ?? "";
+    const loginToken = cookies
+      .split(";")
+      .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"));
+
+    if (loginToken) {
+      return loginToken;
+    } else {
+      throw new Error("Login token not found in cookies");
     }
   }
 
@@ -123,29 +134,18 @@ export class OpenMediaVaultIntegration extends Integration {
     };
   }
 
-  private extractSessionIdFromCookies(headers: Headers): string {
-    const cookies = headers.get("set-cookie") ?? "";
-    const sessionId = cookies
-      .split(";")
-      .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-SESSIONID") || cookie.includes("OPENMEDIAVAULT-SESSIONID"));
+  public async testConnectionAsync(): Promise<void> {
+    const response = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
+      username: this.getSecretValue("username"),
+      password: this.getSecretValue("password"),
+    });
 
-    if (sessionId) {
-      return sessionId;
-    } else {
-      throw new Error("Session ID not found in cookies");
+    if (!response.ok) {
+      throw new IntegrationTestConnectionError("invalidCredentials");
     }
-  }
-
-  private extractLoginTokenFromCookies(headers: Headers): string {
-    const cookies = headers.get("set-cookie") ?? "";
-    const loginToken = cookies
-      .split(";")
-      .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"));
-
-    if (loginToken) {
-      return loginToken;
-    } else {
-      throw new Error("Login token not found in cookies");
+    const result = (await response.json()) as unknown;
+    if (typeof result !== "object" || result === null || !("response" in result)) {
+      throw new IntegrationTestConnectionError("invalidJson");
     }
   }
 }

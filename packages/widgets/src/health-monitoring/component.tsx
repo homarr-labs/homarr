@@ -56,7 +56,7 @@ export default function HealthMonitoringWidget({
 
         return (
           <Box>
-            <Card m="2.5cqmin" withBorder>
+            <Card m="2.5cqmin" p="2.5cqmin" withBorder>
               <Flex justify="space-between" align="center" key={integrationId}>
                 <HoverCard>
                   <HoverCard.Target>
@@ -190,7 +190,7 @@ export default function HealthMonitoringWidget({
             {options.fileSystem &&
               disksData.map((disk) => {
                 return (
-                  <Card key={disk.deviceName} m="2.5cqmin" withBorder>
+                  <Card key={disk.deviceName} m="2.5cqmin" p="2.5cqmin" withBorder>
                     <Flex justify="space-between" align="center" m="1.5cqmin">
                       <Group gap="1cqmin">
                         <IconServer size={18} />
