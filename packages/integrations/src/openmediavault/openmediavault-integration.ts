@@ -4,16 +4,13 @@ import type { HealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
 export class OpenMediaVaultIntegration extends Integration {
-  private username = this.getSecretValue("username");
-  private password = this.getSecretValue("password");
   private async makeOpenMediaVaultRPCCallAsync(
     serviceName: string,
     method: string,
     params: Record<string, unknown>,
     headers: Record<string, string> = {},
   ): Promise<Response> {
-    const url = `${this.integration.url}/rpc.php`;
-    return await fetch(url, {
+    return await fetch(`${this.integration.url}/rpc.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,27 +24,12 @@ export class OpenMediaVaultIntegration extends Integration {
     });
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    const response = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
-      username: this.username,
-      password: this.password,
-    });
-
-    if (!response.ok) {
-      throw new IntegrationTestConnectionError("invalidCredentials");
-    }
-    const result = (await response.json()) as unknown;
-    if (!(typeof result === "object" && result !== null && "response" in result)) {
-      throw new IntegrationTestConnectionError("invalidJson");
-    }
-  }
-
-  public async getSystemInfoAsync(): Promise<HealthMonitoring> {
+  private async omvAuthAsync() {
     const authResponse = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
-      username: this.username,
-      password: this.password,
+      username: this.getSecretValue("username"),
+      password: this.getSecretValue("password"),
     });
-    const authResult = (await authResponse.json()) as unknown;
+    const authResult = (await authResponse.json()) as Response;
     const response = (authResult as { response?: { sessionid?: string } }).response;
     let sessionId;
     const headers: Record<string, string> = {};
@@ -59,6 +41,26 @@ export class OpenMediaVaultIntegration extends Integration {
       const loginToken = this.extractLoginTokenFromCookies(authResponse.headers);
       headers.Cookie = `${loginToken};${sessionId}`;
     }
+    return headers;
+  }
+
+  public async testConnectionAsync(): Promise<void> {
+    const response = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
+      username: this.getSecretValue("username"),
+      password: this.getSecretValue("password"),
+    });
+
+    if (!response.ok) {
+      throw new IntegrationTestConnectionError("invalidCredentials");
+    }
+    const result = (await response.json()) as unknown;
+    if (typeof result !== "object" || result === null || !("response" in result)) {
+      throw new IntegrationTestConnectionError("invalidJson");
+    }
+  }
+
+  public async getSystemInfoAsync(): Promise<HealthMonitoring> {
+    const headers = await this.omvAuthAsync();
 
     const systemResponses = await this.makeOpenMediaVaultRPCCallAsync("system", "getInformation", {}, headers);
     const fileSystemResponse = await this.makeOpenMediaVaultRPCCallAsync(
@@ -88,17 +90,17 @@ export class OpenMediaVaultIntegration extends Integration {
       throw new Error("Invalid CPU temperature response");
     }
 
-    const fileSystem = fileSystemResult.data.response.map((fsys) => ({
-      deviceName: fsys.devicename,
-      used: fsys.used,
-      available: fsys.available,
-      percentage: fsys.percentage,
+    const fileSystem = fileSystemResult.data.response.map((fileSystem) => ({
+      deviceName: fileSystem.devicename,
+      used: fileSystem.used,
+      available: fileSystem.available,
+      percentage: fileSystem.percentage,
     }));
 
-    const smart = smartResult.data.response.map((smt) => ({
-      deviceName: smt.devicename,
-      temperature: smt.temperature,
-      overallStatus: smt.overallstatus,
+    const smart = smartResult.data.response.map((smart) => ({
+      deviceName: smart.devicename,
+      temperature: smart.temperature,
+      overallStatus: smart.overallstatus,
     }));
 
     return {
@@ -121,7 +123,7 @@ export class OpenMediaVaultIntegration extends Integration {
     };
   }
 
-  static extractSessionIdFromCookies(headers: Headers): string {
+  private extractSessionIdFromCookies(headers: Headers): string {
     const cookies = headers.get("set-cookie") ?? "";
     const sessionId = cookies
       .split(";")
@@ -134,7 +136,7 @@ export class OpenMediaVaultIntegration extends Integration {
     }
   }
 
-  static extractLoginTokenFromCookies(headers: Headers): string {
+  private extractLoginTokenFromCookies(headers: Headers): string {
     const cookies = headers.get("set-cookie") ?? "";
     const loginToken = cookies
       .split(";")
