@@ -26,6 +26,7 @@ const appChildrenOptions = createChildrenOptions<App>({
           </Group>
         );
       },
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       useInteraction: interaction.link((option) => ({ href: option.href! })),
       hide(option) {
         return !option.href;
