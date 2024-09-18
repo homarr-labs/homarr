@@ -42,6 +42,7 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
       <CpuGraph cpuLoad={hardwareUsage.map(usage => usage.cpuLoad)} hasLast={hasLast}/>
       <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)} maxAvailableBytes={6000000000} hasLast={hasLast} />
       <Code block>{JSON.stringify(hardwareUsage[hardwareUsage.length - 1])}</Code>
+      <Code block>{JSON.stringify(serverData?.initialData.serverInfo)}</Code>
     </Stack>
   );
 }
