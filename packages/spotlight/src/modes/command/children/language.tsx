@@ -4,18 +4,14 @@ import { IconCheck } from "@tabler/icons-react";
 import { localeAttributes, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 
-import { createChildrenOptions } from "../../../children";
-
-/*
-  const currentLocale = useCurrentLocale();
-  const changeLocale = useChangeLocale();
-  */
+import { createChildrenOptions } from "../../../lib/children";
 
 export const languageChildrenOptions = createChildrenOptions<Record<string, unknown>>({
   useActions: () => {
     const currentLocale = useCurrentLocale();
 
     return supportedLanguages.map((localeKey) => ({
+      key: localeKey,
       component() {
         return (
           <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
@@ -32,14 +28,14 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
           </Group>
         );
       },
-      useInteraction(option, query) {
+      useInteraction() {
         const changeLocale = useChangeLocale();
 
         return { type: "javaScript", onSelect: () => changeLocale(localeKey) };
       },
     }));
   },
-  detailComponent: ({ options }) => (
+  detailComponent: () => (
     <Stack mx="md" my="sm">
       <Text>Select your prefered language</Text>
     </Stack>

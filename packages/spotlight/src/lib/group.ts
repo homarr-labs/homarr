@@ -3,6 +3,8 @@ import type { UseTRPCQueryResult } from "@trpc/react-query/shared";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "./interaction";
 
 type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps extends Record<string, unknown>> = {
+  // key path is used to define the path to a unique key in the option object
+  keyPath: keyof TOption;
   title: string;
   component: (option: TOption) => JSX.Element;
   useInteraction: (option: TOption, query: string) => inferSearchInteractionDefinition<SearchInteraction>;

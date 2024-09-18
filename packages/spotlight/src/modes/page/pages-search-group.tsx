@@ -17,14 +17,15 @@ import {
 import { useSession } from "@homarr/auth/client";
 import type { TablerIcon } from "@homarr/ui";
 
-import { createGroup } from "../../group";
-import { interaction } from "../../interaction";
+import { createGroup } from "../../lib/group";
+import { interaction } from "../../lib/interaction";
 
 export const pagesSearchGroup = createGroup<{
   icon: TablerIcon;
   name: string;
   path: string;
 }>({
+  keyPath: "path",
   title: "Pages",
   component: ({ name, icon: Icon }) => (
     <Group px="md" py="sm">

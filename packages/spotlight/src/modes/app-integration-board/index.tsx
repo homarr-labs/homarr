@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 
-import type { SearchMode } from "../../mode";
+import type { SearchMode } from "../../lib/mode";
 import { appsSearchGroup } from "./apps-search-group";
 import { boardsSearchGroup } from "./boards-search-group";
 import { integrationsSearchGroup } from "./integrations-search-group";

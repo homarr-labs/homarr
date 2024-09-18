@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 
-import type { SearchMode } from "../../mode";
+import type { SearchMode } from "../../lib/mode";
 import { searchEnginesSearchGroups } from "./search-engines-search-group";
 
 export const externalMode = {

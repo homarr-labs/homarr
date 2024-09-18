@@ -1,9 +1,9 @@
 import { Group, Kbd, Text } from "@mantine/core";
 import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
 
-import { createGroup } from "../group";
-import { interaction } from "../interaction";
-import type { SearchMode } from "../mode";
+import { createGroup } from "../lib/group";
+import { interaction } from "../lib/interaction";
+import type { SearchMode } from "../lib/mode";
 import { appIntegrationBoardMode } from "./app-integration-board";
 import { commandMode } from "./command";
 import { externalMode } from "./external";
@@ -23,6 +23,7 @@ const helpMode = {
   ),
   groups: [
     createGroup({
+      keyPath: "character",
       title: "Modes",
       options: searchModesWithoutHelp.map(({ character, name, help }) => ({ character, name, help })),
       component: ({ help, character }) => (
@@ -35,6 +36,7 @@ const helpMode = {
       useInteraction: interaction.mode(({ name }) => ({ mode: name })),
     }),
     createGroup({
+      keyPath: "href",
       title: "Help",
       options: [
         {

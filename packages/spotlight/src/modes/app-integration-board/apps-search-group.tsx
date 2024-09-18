@@ -3,9 +3,9 @@ import { IconExternalLink, IconEye } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 
-import { createChildrenOptions } from "../../children";
-import { createGroup } from "../../group";
-import { interaction } from "../../interaction";
+import { createChildrenOptions } from "../../lib/children";
+import { createGroup } from "../../lib/group";
+import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -14,6 +14,7 @@ type App = { id: string; name: string; iconUrl: string; href: string | null };
 const appChildrenOptions = createChildrenOptions<App>({
   useActions: () => [
     {
+      key: "open",
       component: () => (
         <Group mx="md" my="sm">
           <IconExternalLink stroke={1.5} />
@@ -23,6 +24,7 @@ const appChildrenOptions = createChildrenOptions<App>({
       useInteraction: (option) => (option.href ? { type: "link", href: option.href } : { type: "disabled" }),
     },
     {
+      key: "edit",
       component: () => (
         <Group mx="md" my="sm">
           <IconEye stroke={1.5} />
@@ -54,6 +56,7 @@ const appChildrenOptions = createChildrenOptions<App>({
 });
 
 export const appsSearchGroup = createGroup<App>({
+  keyPath: "id",
   title: "Apps",
   component: (app) => (
     <Group px="md" py="sm">

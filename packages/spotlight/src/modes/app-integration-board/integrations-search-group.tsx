@@ -4,10 +4,11 @@ import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { IntegrationAvatar } from "@homarr/ui";
 
-import { createGroup } from "../../group";
-import { interaction } from "../../interaction";
+import { createGroup } from "../../lib/group";
+import { interaction } from "../../lib/interaction";
 
 export const integrationsSearchGroup = createGroup<{ id: string; kind: IntegrationKind; name: string }>({
+  keyPath: "id",
   title: "Integrations",
   component: (integration) => (
     <Group px="md" py="sm">

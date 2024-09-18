@@ -7,12 +7,14 @@ export interface CreateChildrenOptionsProps<TParentOptions extends Record<string
   useActions: () => ChildrenAction<TParentOptions>[];
 }
 
-interface ChildrenAction<TParentOptions extends Record<string, unknown>> {
+export interface ChildrenAction<TParentOptions extends Record<string, unknown>> {
+  key: string;
   component: (option: TParentOptions) => JSX.Element;
   useInteraction: (
     option: TParentOptions,
     query: string,
   ) => inferSearchInteractionDefinition<"link" | "javaScript" | "disabled">;
+  hide?: boolean;
 }
 
 export const createChildrenOptions = <TParentOptions extends Record<string, unknown>>(

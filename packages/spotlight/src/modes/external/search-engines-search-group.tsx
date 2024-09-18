@@ -2,9 +2,9 @@ import { Group, Kbd, Stack, Text } from "@mantine/core";
 import { IconDownload, IconSearch, IconStar } from "@tabler/icons-react";
 import type { TablerIcon } from "@tabler/icons-react";
 
-import { createChildrenOptions } from "../../children";
-import { createGroup } from "../../group";
-import { interaction } from "../../interaction";
+import { createChildrenOptions } from "../../lib/children";
+import { createGroup } from "../../lib/group";
+import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -17,28 +17,29 @@ type SearchEngine = {
 };
 
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
-  useActions: [
+  useActions: () => [
     {
+      key: "search",
       component: ({ name }) => (
         <Group mx="md" my="sm">
           <IconSearch stroke={1.5} />
           <Text>Search with {name}</Text>
         </Group>
       ),
-      interaction: interaction.link(({ urlTemplate }, query) => ({
+      useInteraction: interaction.link(({ urlTemplate }, query) => ({
         href: urlTemplate.replace("%s", query),
       })),
     },
     {
+      key: "favorite",
       component: () => (
         <Group mx="md" my="sm">
           <IconStar stroke={1.5} />
           <Text>Mark as favorite</Text>
         </Group>
       ),
-      interaction: interaction.javaScript(({ name }) => ({
+      useInteraction: interaction.javaScript(({ name }) => ({
         onSelect: () => {
-          // TODO: I'll need to add support for trpc mutations here
           console.log(`Marked ${name} as favorite`);
         },
       })),
@@ -62,6 +63,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
 });
 
 export const searchEnginesSearchGroups = createGroup<SearchEngine>({
+  keyPath: "short",
   title: "Search engines",
   component: ({ image: Image, name, description, short }) => (
     <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
@@ -78,7 +80,7 @@ export const searchEnginesSearchGroups = createGroup<SearchEngine>({
       <Kbd size="sm">{short}</Kbd>
     </Group>
   ),
-  filter: (query, { short }) => short.toLowerCase().startsWith(query.toLowerCase()),
+  filter: (query, { short: id }) => id.toLowerCase().startsWith(query.toLowerCase()),
   useInteraction: interaction.children(searchEnginesChildrenOptions),
   options: [
     {

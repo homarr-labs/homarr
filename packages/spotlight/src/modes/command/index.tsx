@@ -1,16 +1,19 @@
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
 import { IconLanguage, IconMoon, IconSun } from "@tabler/icons-react";
 
-import { useSession } from "@homarr/auth/client";
 import { useI18n } from "@homarr/translation/client";
-import { TablerIcon } from "@homarr/ui";
+import type { TablerIcon } from "@homarr/ui";
 
-import { createGroup } from "../../group";
-import { inferSearchInteractionDefinition, interaction, SearchInteraction } from "../../interaction";
-import type { SearchMode } from "../../mode";
+import { createGroup } from "../../lib/group";
+import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
+import { interaction } from "../../lib/interaction";
+import type { SearchMode } from "../../lib/mode";
 import { languageChildrenOptions } from "./children/language";
 
+// This has to be type so it can be interpreted as Record<string, unknown>.
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> = {
+  key: string;
   icon: TablerIcon;
   name: string;
   useInteraction: (
@@ -30,6 +33,7 @@ export const commandMode = {
   ),
   groups: [
     createGroup<Command>({
+      keyPath: "key",
       title: "Global commands",
       useInteraction: (option, query) => option.useInteraction(option, query),
       component: ({ icon: Icon, name }) => (
@@ -42,12 +46,12 @@ export const commandMode = {
         return option.name.toLowerCase().includes(query.toLowerCase());
       },
       useOptions() {
-        const session = useSession();
         const t = useI18n();
         const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
         const commands: (Command & { hidden?: boolean })[] = [
           {
+            key: "color-scheme",
             icon: colorScheme === "dark" ? IconSun : IconMoon,
             name: t(`common.userAvatar.menu.switchTo${colorScheme === "dark" ? "Light" : "Dark"}Mode`),
             useInteraction: interaction.javaScript(() => ({
@@ -57,6 +61,7 @@ export const commandMode = {
             })),
           },
           {
+            key: "language",
             icon: IconLanguage,
             name: "Change language",
             useInteraction: interaction.children(languageChildrenOptions),

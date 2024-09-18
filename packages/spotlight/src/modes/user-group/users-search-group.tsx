@@ -4,24 +4,25 @@ import { IconEye } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { UserAvatar } from "@homarr/ui";
 
-import { createChildrenOptions } from "../../children";
-import { createGroup } from "../../group";
-import { interaction } from "../../interaction";
+import { createChildrenOptions } from "../../lib/children";
+import { createGroup } from "../../lib/group";
+import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type User = { id: string; name: string; image: string | null };
 
 const userChildrenOptions = createChildrenOptions<User>({
-  useActions: [
+  useActions: () => [
     {
+      key: "details",
       component: () => (
         <Group mx="md" my="sm">
           <IconEye stroke={1.5} />
           <Text>Show user details</Text>
         </Group>
       ),
-      interaction: interaction.link(({ id }) => ({ href: `/manage/users/${id}/general` })),
+      useInteraction: interaction.link(({ id }) => ({ href: `/manage/users/${id}/general` })),
     },
   ],
   detailComponent: ({ options }) => (
@@ -37,6 +38,7 @@ const userChildrenOptions = createChildrenOptions<User>({
 });
 
 export const usersSearchGroup = createGroup<User>({
+  keyPath: "id",
   title: "Users",
   component: (user) => (
     <Group px="md" py="sm">

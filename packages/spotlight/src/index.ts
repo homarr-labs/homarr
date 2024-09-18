@@ -2,8 +2,7 @@
 
 import { spotlightActions } from "./spotlight-store";
 
-export { Spotlight } from "./component";
-export { NewSpotlight } from "./new-search/component";
+export { NewSpotlight } from "./components/spotlight";
 export { useRegisterSpotlightActions } from "./data-store";
 export { openSpotlight };
 
