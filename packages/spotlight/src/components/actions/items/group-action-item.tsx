@@ -31,19 +31,20 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
         }
       : undefined;
 
-  const onClick =
-    interaction.type === "javaScript"
-      ? interaction.onSelect
-      : interaction.type === "mode"
-        ? () => setMode(interaction.mode)
-        : interaction.type === "children"
-          ? () => setChildrenOptions(interaction)
-          : undefined;
+  const handleClickAsync = async () => {
+    if (interaction.type === "javaScript") {
+      await interaction.onSelect();
+    } else if (interaction.type === "mode") {
+      setMode(interaction.mode);
+    } else if (interaction.type === "children") {
+      setChildrenOptions(interaction);
+    }
+  };
 
   return (
     <Spotlight.Action
       renderRoot={renderRoot}
-      onClick={onClick}
+      onClick={handleClickAsync}
       closeSpotlightOnTrigger={interaction.type !== "mode" && interaction.type !== "children"}
       className={classes.spotlightAction}
     >

@@ -34,17 +34,18 @@ export const Spotlight = () => {
       }}
       query={query}
       onQueryChange={(query) => {
-        if (mode === "help" && query.length === 1) {
-          const modeToActivate = searchModes.find((mode) => mode.character === query);
-          if (modeToActivate) {
-            setMode(modeToActivate.modeKey);
-            setQuery("");
-            setTimeout(() => selectAction(0, spotlightStore));
-            return;
-          }
+        if (mode !== "help" || query.length !== 1) {
+          setQuery(query);
         }
 
-        setQuery(query);
+        const modeToActivate = searchModes.find((mode) => mode.character === query);
+        if (!modeToActivate) {
+          return;
+        }
+
+        setMode(modeToActivate.modeKey);
+        setQuery("");
+        setTimeout(() => selectAction(0, spotlightStore));
       }}
       store={spotlightStore}
     >
