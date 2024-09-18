@@ -18,6 +18,7 @@ import superjson from "superjson";
 
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+
 import { env } from "~/env.mjs";
 
 const constructWebsocketUrl = () => {
@@ -30,7 +31,7 @@ const constructWebsocketUrl = () => {
   }
 
   return `ws://${window.location.hostname}:${window.location.port}/websockets`;
-}
+};
 
 import { env } from "~/env.mjs";
 
