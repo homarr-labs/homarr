@@ -2,6 +2,7 @@ import { Integration } from "../base/integration";
 import type { CpuLoad } from "../interfaces/hardware-usage/cpu-load";
 import type { MemoryLoad } from "../interfaces/hardware-usage/memory-load";
 import type { NetworkLoad } from "../interfaces/hardware-usage/network-load";
+import type { ServerInfo } from "../interfaces/hardware-usage/server-info";
 
 export class DashDotIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
@@ -11,7 +12,10 @@ export class DashDotIntegration extends Integration {
 
   public async getInfoAsync(): Promise<ServerInfo> {
     const infoResponse = await fetch(this.appendPathToUrlWithEndingSlash(this.integration.url, "info"));
-    return (await infoResponse.json()) as ServerInfo;
+    const serverInfo = (await infoResponse.json()) as InternalServerInfo;
+    return {
+      maxAvailableMemoryBytes: serverInfo.ram.size
+    };
   }
 
   public async getCurrentCpuLoadAsync(): Promise<CpuLoad> {
@@ -56,7 +60,7 @@ interface NetworkLoadApi {
   down: number;
 }
 
-interface ServerInfo {
+interface InternalServerInfo {
   ram: {
     /**
      * Available memory in bytes
