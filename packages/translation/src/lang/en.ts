@@ -1788,6 +1788,9 @@ export default {
             indexerManager: {
               label: "Indexer Manager",
             },
+            healthMonitoring: {
+              label: "Health Monitoring",
+            },
           },
         },
       },
