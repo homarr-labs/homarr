@@ -6,21 +6,21 @@ import { clientApi } from "@homarr/api/client";
 import type { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
 
 import type { WidgetComponentProps } from "../definition";
+import { NoIntegrationSelectedError } from "../errors";
 
 export default function HardwareUsageWidget({ serverData, integrationIds }: WidgetComponentProps<"hardwareUsage">) {
   const [hardwareUsage, hardwareUsageHandlers] = useListState<{
     cpuLoad: CpuLoad;
     memoryLoad: MemoryLoad;
     networkLoad: NetworkLoad;
-  }>([serverData.initialData.hardwareInformationHistory]);
+  }>(serverData ? [serverData.initialData.hardwareInformationHistory] : []);
 
   clientApi.widget.hardwareUsage.subscribeCpu.useSubscription(
     {
-      integrationId: integrationIds[0],
+      integrationId: integrationIds[0] ?? "",
     },
     {
       onData: (data) => {
-        console.log('received new data', data);
         hardwareUsageHandlers.append(data);
         if (hardwareUsage.length > 15) {
           hardwareUsageHandlers.shift();
@@ -28,6 +28,10 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
       },
     },
   );
+
+  if (integrationIds.length != 1) {
+    throw new NoIntegrationSelectedError();
+  }
 
   const data = [
     {
@@ -47,6 +51,7 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
       <Paper pos={"relative"} radius={"md"} w={"100%"} h={250}>
         <Group pos={"absolute"} gap={"xs"} top={5} left={10}>
           <Text fw={"bold"}>CPU</Text>
+          {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
           {hasLast && <Text c={"dimmed"}>{hardwareUsage[hardwareUsage.length - 1]!.cpuLoad.sumLoad.toFixed(2)}%</Text>}
         </Group>
         <ResponsiveLine
@@ -68,6 +73,7 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
             return (
               <Paper p={5} px={8} radius={"lg"} withBorder>
                 <Text c={"dimmed"} size={"xs"}>
+                  {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
                   {slice.points[0]!.data.yFormatted}%
                 </Text>
               </Paper>
@@ -88,7 +94,6 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
           animate={false}
         />
       </Paper>
-
       {JSON.stringify(hardwareUsage[hardwareUsage.length - 1])}
     </Stack>
   );
