@@ -27,7 +27,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
   const renderRoot =
     interaction.type === "link"
       ? (props: Record<string, unknown>) => {
-          return <Link href={interaction.href} {...props} />;
+          return <Link href={interaction.href} target={interaction.newTab ? "_blank" : undefined} {...props} />;
         }
       : undefined;
 

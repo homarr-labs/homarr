@@ -1,4 +1,4 @@
-import { Group, Kbd, Stack, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 import type { TablerIcon } from "@tabler/icons-react";
 import { IconDownload } from "@tabler/icons-react";
 
@@ -20,7 +20,7 @@ type SearchEngine = {
 export const searchEnginesSearchGroups = createGroup<SearchEngine>({
   keyPath: "short",
   title: (t) => t("search.mode.external.group.searchEngine.title"),
-  component: ({ image: Image, name, description, short }) => (
+  component: ({ image: Image, name, description }) => (
     <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
       <Group wrap="nowrap">
         {typeof Image === "string" ? <img height={24} width={24} src={Image} alt={name} /> : <Image size={24} />}
@@ -31,13 +31,12 @@ export const searchEnginesSearchGroups = createGroup<SearchEngine>({
           </Text>
         </Stack>
       </Group>
-
-      <Kbd size="sm">{short}</Kbd>
     </Group>
   ),
-  filter: (query, { short: id }) => id.toLowerCase().startsWith(query.toLowerCase()),
+  filter: () => true,
   useInteraction: interaction.link(({ urlTemplate }, query) => ({
     href: urlTemplate.replace("%s", query),
+    newTab: true,
   })),
   useOptions() {
     const tOption = useScopedI18n("search.mode.external.group.searchEngine.option");

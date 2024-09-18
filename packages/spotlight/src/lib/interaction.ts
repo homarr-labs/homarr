@@ -9,7 +9,7 @@ const createSearchInteraction = <TType extends string>(type: TType) => ({
 
 // This is used to define search interactions with their options
 const searchInteractions = [
-  createSearchInteraction("link").optionsType<{ href: string }>(),
+  createSearchInteraction("link").optionsType<{ href: string; newTab?: boolean }>(),
   createSearchInteraction("javaScript").optionsType<{ onSelect: () => MaybePromise<void> }>(),
   createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"] }>(),
   createSearchInteraction("children").optionsType<{
