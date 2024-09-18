@@ -19,7 +19,7 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
   }
 
   const hardwareInformationHistory = await api.widget.hardwareUsage.getHardwareInformationHistory({
-    integrationId: integrationIds[0],
+    integrationId: integrationIds[0] ?? '',
   });
 
   return {
