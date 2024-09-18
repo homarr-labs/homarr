@@ -2,7 +2,7 @@ import { decryptSecret } from "@homarr/common/server";
 import { EVERY_SECOND } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
-import type { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
+import type { CpuLoad, MemoryLoad, NetworkLoad, ServerInfo } from "@homarr/integrations";
 import { DashDotIntegration } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
@@ -38,11 +38,14 @@ export const hardwareUsageJob = createCronJob("hardwareUsage", EVERY_SECOND).wit
           value: decryptSecret(secret.value),
         })),
       });
+
+      const info = await dashDotIntegration.getInfoAsync();
       const cpuLoad = await dashDotIntegration.getCurrentCpuLoadAsync();
       const memoryLoad = await dashDotIntegration.getCurrentMemoryLoadAsync();
       const networkLoad = await dashDotIntegration.getCurrentNetworkLoadAsync();
 
       const cache = createItemAndIntegrationChannel<{
+        info: ServerInfo;
         cpuLoad: CpuLoad;
         memoryLoad: MemoryLoad;
         networkLoad: NetworkLoad;
@@ -51,11 +54,13 @@ export const hardwareUsageJob = createCronJob("hardwareUsage", EVERY_SECOND).wit
         memoryLoad,
         networkLoad,
         cpuLoad,
+        info
       });
       await cache.publishAndUpdateLastStateAsync({
         cpuLoad,
         networkLoad,
         memoryLoad,
+        info
       });
     }
   }

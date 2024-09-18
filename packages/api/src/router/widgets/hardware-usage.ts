@@ -1,12 +1,23 @@
 import { observable } from "@trpc/server/observable";
 
-import type { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
+import type { CpuLoad, MemoryLoad, NetworkLoad, ServerInfo } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const hardwareUsageRouter = createTRPCRouter({
+  getServerInfo: publicProcedure
+    .unstable_concat(createOneIntegrationMiddleware("query", "getDashDot"))
+    .query(async ({ ctx }) => {
+      const channel = createItemAndIntegrationChannel<{
+        info: ServerInfo;
+      }>("hardwareUsage", ctx.integration.id);
+      const data = await channel.getAsync();
+      return {
+        info: data?.data.info ?? ({} as ServerInfo),
+      };
+    }),
   getHardwareInformationHistory: publicProcedure
     .unstable_concat(createOneIntegrationMiddleware("query", "getDashDot"))
     .query(async ({ ctx }) => {

@@ -26,14 +26,11 @@ export type { ExtendedClientStatus } from "./interfaces/downloads/download-clien
 export type { CpuLoad } from "./interfaces/hardware-usage/cpu-load";
 export type { MemoryLoad } from "./interfaces/hardware-usage/memory-load";
 export type { NetworkLoad } from "./interfaces/hardware-usage/network-load";
+export type { ServerInfo } from "./interfaces/hardware-usage/server-info";
 export type { HealthMonitoring } from "./interfaces/health-monitoring/healt-monitoring";
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
 export type { StreamSession } from "./interfaces/media-server/session";
-export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
-export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
-export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
-export type { IntegrationInput } from "./base/integration";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
