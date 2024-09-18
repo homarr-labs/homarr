@@ -1,7 +1,20 @@
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
-import { IconLanguage, IconMoon, IconSun } from "@tabler/icons-react";
+import {
+  IconCategoryPlus,
+  IconFileImport,
+  IconLanguage,
+  IconMailForward,
+  IconMoon,
+  IconPackage,
+  IconPlug,
+  IconSun,
+  IconUserPlus,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 
-import { useI18n } from "@homarr/translation/client";
+import { useModalAction } from "@homarr/modals";
+import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
+import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -9,6 +22,7 @@ import type { inferSearchInteractionDefinition, SearchInteraction } from "../../
 import { interaction } from "../../lib/interaction";
 import type { SearchMode } from "../../lib/mode";
 import { languageChildrenOptions } from "./children/language";
+import { newIntegrationChildrenOptions } from "./children/new-integration";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -40,16 +54,14 @@ export const commandMode = {
         return option.name.toLowerCase().includes(query.toLowerCase());
       },
       useOptions() {
-        const t = useI18n();
+        const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
         const { colorScheme } = useMantineColorScheme();
 
         const commands: (Command & { hidden?: boolean })[] = [
           {
             commandKey: "colorScheme",
             icon: colorScheme === "dark" ? IconSun : IconMoon,
-            name: t(
-              `search.mode.command.group.globalCommand.option.colorScheme.${colorScheme === "dark" ? "light" : "dark"}`,
-            ),
+            name: tOption(`colorScheme.${colorScheme === "dark" ? "light" : "dark"}`),
             useInteraction: () => {
               const { toggleColorScheme } = useMantineColorScheme();
 
@@ -62,8 +74,86 @@ export const commandMode = {
           {
             commandKey: "language",
             icon: IconLanguage,
-            name: "Change language",
+            name: tOption("language.label"),
             useInteraction: interaction.children(languageChildrenOptions),
+          },
+          {
+            commandKey: "newBoard",
+            icon: IconCategoryPlus,
+            name: tOption("newBoard.label"),
+            useInteraction() {
+              const { openModal } = useModalAction(AddBoardModal);
+
+              return {
+                type: "javaScript",
+                onSelect() {
+                  openModal(undefined);
+                },
+              };
+            },
+          },
+          {
+            commandKey: "importBoard",
+            icon: IconFileImport,
+            name: tOption("importBoard.label"),
+            useInteraction() {
+              const { openModal } = useModalAction(ImportBoardModal);
+
+              return {
+                type: "javaScript",
+                onSelect() {
+                  openModal(undefined);
+                },
+              };
+            },
+          },
+          {
+            commandKey: "newApp",
+            icon: IconPackage,
+            name: tOption("newApp.label"),
+            useInteraction: interaction.link(() => ({ href: "/manage/apps/new" })),
+          },
+          {
+            commandKey: "newIntegration",
+            icon: IconPlug,
+            name: tOption("newIntegration.label"),
+            useInteraction: interaction.children(newIntegrationChildrenOptions),
+          },
+          {
+            commandKey: "newUser",
+            icon: IconUserPlus,
+            name: tOption("newUser.label"),
+            useInteraction: interaction.link(() => ({ href: "/manage/users/new" })),
+          },
+          {
+            commandKey: "newInvite",
+            icon: IconMailForward,
+            name: tOption("newInvite.label"),
+            useInteraction() {
+              const { openModal } = useModalAction(InviteCreateModal);
+
+              return {
+                type: "javaScript",
+                onSelect() {
+                  openModal(undefined);
+                },
+              };
+            },
+          },
+          {
+            commandKey: "newGroup",
+            icon: IconUsersGroup,
+            name: tOption("newGroup.label"),
+            useInteraction() {
+              const { openModal } = useModalAction(AddGroupModal);
+
+              return {
+                type: "javaScript",
+                onSelect() {
+                  openModal(undefined);
+                },
+              };
+            },
           },
         ];
 

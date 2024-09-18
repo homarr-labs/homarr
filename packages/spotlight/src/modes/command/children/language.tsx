@@ -7,33 +7,51 @@ import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/
 import { createChildrenOptions } from "../../../lib/children";
 
 export const languageChildrenOptions = createChildrenOptions<Record<string, unknown>>({
-  useActions: () => {
+  useActions: (_, query) => {
+    const normalizedQuery = query.trim().toLowerCase();
     const currentLocale = useCurrentLocale();
-
-    return supportedLanguages.map((localeKey) => ({
-      key: localeKey,
-      component() {
-        return (
-          <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
-            <Group wrap="nowrap">
-              <span className={`fi fi-${localeAttributes[localeKey].flagIcon}`} style={{ borderRadius: 4 }}></span>
-              <Group wrap="nowrap" gap="xs">
-                <Text>{localeAttributes[localeKey].name}</Text>
-                <Text size="xs" c="dimmed" inherit>
-                  ({localeAttributes[localeKey].translatedName})
-                </Text>
+    return supportedLanguages
+      .map((localeKey) => ({ localeKey, attributes: localeAttributes[localeKey] }))
+      .filter(
+        ({ attributes }) =>
+          attributes.name.toLowerCase().includes(normalizedQuery) ||
+          attributes.translatedName.toLowerCase().includes(normalizedQuery),
+      )
+      .sort(
+        (languageA, languageB) =>
+          Math.min(
+            languageA.attributes.name.toLowerCase().indexOf(normalizedQuery),
+            languageA.attributes.translatedName.toLowerCase().indexOf(normalizedQuery),
+          ) -
+          Math.min(
+            languageB.attributes.name.toLowerCase().indexOf(normalizedQuery),
+            languageB.attributes.translatedName.toLowerCase().indexOf(normalizedQuery),
+          ),
+      )
+      .map(({ localeKey, attributes }) => ({
+        key: localeKey,
+        component() {
+          return (
+            <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
+              <Group wrap="nowrap">
+                <span className={`fi fi-${attributes.flagIcon}`} style={{ borderRadius: 4 }}></span>
+                <Group wrap="nowrap" gap="xs">
+                  <Text>{attributes.name}</Text>
+                  <Text size="xs" c="dimmed" inherit>
+                    ({attributes.translatedName})
+                  </Text>
+                </Group>
               </Group>
+              {localeKey === currentLocale && <IconCheck color="currentColor" size={24} />}
             </Group>
-            {localeKey === currentLocale && <IconCheck color="currentColor" size={24} />}
-          </Group>
-        );
-      },
-      useInteraction() {
-        const changeLocale = useChangeLocale();
+          );
+        },
+        useInteraction() {
+          const changeLocale = useChangeLocale();
 
-        return { type: "javaScript", onSelect: () => changeLocale(localeKey) };
-      },
-    }));
+          return { type: "javaScript", onSelect: () => changeLocale(localeKey) };
+        },
+      }));
   },
   detailComponent: () => {
     const t = useI18n();

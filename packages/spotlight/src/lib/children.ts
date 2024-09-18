@@ -4,7 +4,7 @@ import type { inferSearchInteractionDefinition } from "./interaction";
 
 export interface CreateChildrenOptionsProps<TParentOptions extends Record<string, unknown>> {
   detailComponent: ({ options }: { options: TParentOptions }) => ReactNode;
-  useActions: (options: TParentOptions) => ChildrenAction<TParentOptions>[];
+  useActions: (options: TParentOptions, query: string) => ChildrenAction<TParentOptions>[];
 }
 
 export interface ChildrenAction<TParentOptions extends Record<string, unknown>> {

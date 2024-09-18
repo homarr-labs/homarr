@@ -2116,6 +2116,32 @@ export default {
                   },
                 },
               },
+              newBoard: {
+                label: "Create a new board",
+              },
+              importBoard: {
+                label: "Import a board",
+              },
+              newApp: {
+                label: "Create a new app",
+              },
+              newIntegration: {
+                label: "Create a new integration",
+                children: {
+                  detail: {
+                    title: "Select the integration type you want to create",
+                  },
+                },
+              },
+              newUser: {
+                label: "Create a new user",
+              },
+              newInvite: {
+                label: "Create a new invite",
+              },
+              newGroup: {
+                label: "Create a new group",
+              },
             },
           },
         },
