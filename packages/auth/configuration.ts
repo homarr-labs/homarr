@@ -22,7 +22,6 @@ export const createConfiguration = (isCredentialsRequest: boolean, headers: Read
         // Remove the big error message for failed login attempts
         // as it is not useful for the user.
         if (code.name === "CredentialsSignin") {
-          console.error(code, ...message);
           console.warn("The login attempt of a user was not successful.");
           return;
         }
