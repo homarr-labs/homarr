@@ -13,10 +13,6 @@ interface ChildrenActionItemProps {
 export const ChildrenActionItem = ({ childrenOptions, action, query }: ChildrenActionItemProps) => {
   const interaction = action.useInteraction(childrenOptions.option, query);
 
-  if (interaction.type === "disabled") {
-    return <></>;
-  }
-
   const renderRoot =
     interaction.type === "link"
       ? (props: Record<string, unknown>) => {

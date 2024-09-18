@@ -2,7 +2,7 @@ import { Group, Stack, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import { localeAttributes, supportedLanguages } from "@homarr/translation";
-import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
+import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../../lib/children";
 
@@ -35,9 +35,13 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
       },
     }));
   },
-  detailComponent: () => (
-    <Stack mx="md" my="sm">
-      <Text>Select your prefered language</Text>
-    </Stack>
-  ),
+  detailComponent: () => {
+    const t = useI18n();
+
+    return (
+      <Stack mx="md" my="sm">
+        <Text>{t("search.mode.command.group.globalCommand.option.language.children.detail.title")}</Text>
+      </Stack>
+    );
+  },
 });

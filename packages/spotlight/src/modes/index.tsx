@@ -1,6 +1,8 @@
 import { Group, Kbd, Text } from "@mantine/core";
 import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
 
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+
 import { createGroup } from "../lib/group";
 import { interaction } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
@@ -13,48 +15,50 @@ import { userGroupMode } from "./user-group";
 const searchModesWithoutHelp = [userGroupMode, appIntegrationBoardMode, externalMode, commandMode, pageMode] as const;
 
 const helpMode = {
-  name: "help",
+  modeKey: "help",
   character: "?",
-  help: undefined,
-  tip: (
-    <Text size="xs" c="gray.6">
-      Type <Kbd size="xs">⌫</Kbd> to go back
-    </Text>
-  ),
   groups: [
     createGroup({
       keyPath: "character",
-      title: "Modes",
-      options: searchModesWithoutHelp.map(({ character, name, help }) => ({ character, name, help })),
-      component: ({ help, character }) => (
-        <Group px="md" py="xs" w="100%" wrap="nowrap" align="center" justify="space-between">
-          <Text>{help}</Text>
-          <Kbd size="sm">{character}</Kbd>
-        </Group>
-      ),
+      title: (t) => t("search.mode.help.group.mode.title"),
+      options: searchModesWithoutHelp.map(({ character, modeKey }) => ({ character, modeKey })),
+      component: ({ modeKey, character }) => {
+        const t = useScopedI18n(`search.mode.${modeKey}`);
+
+        return (
+          <Group px="md" py="xs" w="100%" wrap="nowrap" align="center" justify="space-between">
+            <Text>{t("help")}</Text>
+            <Kbd size="sm">{character}</Kbd>
+          </Group>
+        );
+      },
       filter: () => true,
-      useInteraction: interaction.mode(({ name }) => ({ mode: name })),
+      useInteraction: interaction.mode(({ modeKey }) => ({ mode: modeKey })),
     }),
     createGroup({
       keyPath: "href",
-      title: "Help",
-      options: [
-        {
-          label: "Documentation",
-          icon: IconBook2,
-          href: "https://homarr.dev/docs/getting-started/",
-        },
-        {
-          label: "Submit an issue",
-          icon: IconBrandGithub,
-          href: "https://github.com/ajnart/homarr/issues/new/choose",
-        },
-        {
-          label: "Community Discord",
-          icon: IconBrandDiscord,
-          href: "https://discord.com/invite/aCsmEV5RgA",
-        },
-      ],
+      title: (t) => t("search.mode.help.group.help.title"),
+      useOptions() {
+        const t = useScopedI18n("search.mode.help.group.help.option");
+
+        return [
+          {
+            label: t("documentation.label"),
+            icon: IconBook2,
+            href: "https://homarr.dev/docs/getting-started/",
+          },
+          {
+            label: t("submitIssue.label"),
+            icon: IconBrandGithub,
+            href: "https://github.com/ajnart/homarr/issues/new/choose",
+          },
+          {
+            label: t("discord.label"),
+            icon: IconBrandDiscord,
+            href: "https://discord.com/invite/aCsmEV5RgA",
+          },
+        ];
+      },
       component: (props) => (
         <Group px="md" py="xs" w="100%" wrap="nowrap" align="center">
           <props.icon />

@@ -1,11 +1,9 @@
-import type { ReactNode } from "react";
+import type { TranslationObject } from "@homarr/translation";
 
 import type { SearchGroup } from "./group";
 
 export interface SearchMode {
-  name: string;
+  modeKey: keyof TranslationObject["search"]["mode"];
   character: string;
-  help: string | undefined;
-  tip: ReactNode;
   groups: SearchGroup[];
 }

@@ -2,6 +2,7 @@ import { Group, Stack, Text } from "@mantine/core";
 import { IconEye } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
 import { createChildrenOptions } from "../../lib/children";
@@ -15,31 +16,39 @@ type User = { id: string; name: string; image: string | null };
 const userChildrenOptions = createChildrenOptions<User>({
   useActions: () => [
     {
-      key: "details",
-      component: () => (
-        <Group mx="md" my="sm">
-          <IconEye stroke={1.5} />
-          <Text>Show user details</Text>
-        </Group>
-      ),
+      key: "detail",
+      component: () => {
+        const t = useI18n();
+
+        return (
+          <Group mx="md" my="sm">
+            <IconEye stroke={1.5} />
+            <Text>{t("search.mode.userGroup.group.user.children.action.detail.label")}</Text>
+          </Group>
+        );
+      },
       useInteraction: interaction.link(({ id }) => ({ href: `/manage/users/${id}/general` })),
     },
   ],
-  detailComponent: ({ options }) => (
-    <Stack mx="md" my="sm">
-      <Text>Select an action for the user</Text>
+  detailComponent: ({ options }) => {
+    const t = useI18n();
 
-      <Group>
-        <UserAvatar user={options} size="sm" />
-        <Text>{options.name}</Text>
-      </Group>
-    </Stack>
-  ),
+    return (
+      <Stack mx="md" my="sm">
+        <Text>{t("search.mode.userGroup.group.user.children.detail.title")}</Text>
+
+        <Group>
+          <UserAvatar user={options} size="sm" />
+          <Text>{options.name}</Text>
+        </Group>
+      </Stack>
+    );
+  },
 });
 
 export const usersSearchGroup = createGroup<User>({
   keyPath: "id",
-  title: "Users",
+  title: (t) => t("search.mode.userGroup.group.user.title"),
   component: (user) => (
     <Group px="md" py="sm">
       <UserAvatar user={user} size="sm" />

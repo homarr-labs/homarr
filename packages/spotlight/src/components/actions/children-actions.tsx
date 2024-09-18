@@ -7,10 +7,10 @@ interface SpotlightChildrenActionsProps {
 }
 
 export const SpotlightChildrenActions = ({ childrenOptions, query }: SpotlightChildrenActionsProps) => {
-  const actions = childrenOptions.useActions();
+  const actions = childrenOptions.useActions(childrenOptions.option);
 
   return actions
-    .filter((action) => !action.hide)
+    .filter((action) => (typeof action.hide === "function" ? !action.hide(childrenOptions.option) : !action.hide))
     .map((action) => (
       <ChildrenActionItem key={action.key} childrenOptions={childrenOptions} query={query} action={action} />
     ));

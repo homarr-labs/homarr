@@ -1,4 +1,5 @@
 import type { MaybePromise } from "@homarr/common/types";
+import type { TranslationObject } from "@homarr/translation";
 
 import type { CreateChildrenOptionsProps } from "./children";
 
@@ -10,7 +11,7 @@ const createSearchInteraction = <TType extends string>(type: TType) => ({
 const searchInteractions = [
   createSearchInteraction("link").optionsType<{ href: string }>(),
   createSearchInteraction("javaScript").optionsType<{ onSelect: () => MaybePromise<void> }>(),
-  createSearchInteraction("mode").optionsType<{ mode: string }>(),
+  createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"] }>(),
   createSearchInteraction("children").optionsType<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useActions: CreateChildrenOptionsProps<any>["useActions"];
@@ -19,8 +20,6 @@ const searchInteractions = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     option: any;
   }>(),
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  createSearchInteraction("disabled").optionsType<{}>(),
 ] as const;
 
 // Union of all search interactions types

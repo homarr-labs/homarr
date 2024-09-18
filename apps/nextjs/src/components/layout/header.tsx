@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 
-import { NewSpotlight } from "@homarr/spotlight";
+import { Spotlight } from "@homarr/spotlight";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
@@ -32,7 +32,7 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
           <UserButton />
         </Group>
       </Group>
-      <NewSpotlight />
+      <Spotlight />
     </AppShellHeader>
   );
 };

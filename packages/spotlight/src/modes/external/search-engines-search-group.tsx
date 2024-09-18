@@ -1,8 +1,9 @@
 import { Group, Kbd, Stack, Text } from "@mantine/core";
-import { IconDownload, IconSearch, IconStar } from "@tabler/icons-react";
 import type { TablerIcon } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
 
-import { createChildrenOptions } from "../../lib/children";
+import { useScopedI18n } from "@homarr/translation/client";
+
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 
@@ -16,55 +17,9 @@ type SearchEngine = {
   urlTemplate: string;
 };
 
-export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
-  useActions: () => [
-    {
-      key: "search",
-      component: ({ name }) => (
-        <Group mx="md" my="sm">
-          <IconSearch stroke={1.5} />
-          <Text>Search with {name}</Text>
-        </Group>
-      ),
-      useInteraction: interaction.link(({ urlTemplate }, query) => ({
-        href: urlTemplate.replace("%s", query),
-      })),
-    },
-    {
-      key: "favorite",
-      component: () => (
-        <Group mx="md" my="sm">
-          <IconStar stroke={1.5} />
-          <Text>Mark as favorite</Text>
-        </Group>
-      ),
-      useInteraction: interaction.javaScript(({ name }) => ({
-        onSelect: () => {
-          console.log(`Marked ${name} as favorite`);
-        },
-      })),
-    },
-  ],
-  detailComponent({ options }) {
-    return (
-      <Stack mx="md" my="sm">
-        <Text>Select an action for the search engine</Text>
-        <Group>
-          {typeof options.image === "string" ? (
-            <img height={24} width={24} src={options.image} alt={options.name} />
-          ) : (
-            <options.image size={24} />
-          )}
-          <Text>{options.name}</Text>
-        </Group>
-      </Stack>
-    );
-  },
-});
-
 export const searchEnginesSearchGroups = createGroup<SearchEngine>({
   keyPath: "short",
-  title: "Search engines",
+  title: (t) => t("search.mode.external.group.searchEngine.title"),
   component: ({ image: Image, name, description, short }) => (
     <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
       <Group wrap="nowrap">
@@ -81,42 +36,48 @@ export const searchEnginesSearchGroups = createGroup<SearchEngine>({
     </Group>
   ),
   filter: (query, { short: id }) => id.toLowerCase().startsWith(query.toLowerCase()),
-  useInteraction: interaction.children(searchEnginesChildrenOptions),
-  options: [
-    {
-      short: "g",
-      name: "Google",
-      image: "https://www.google.com/favicon.ico",
-      description: "Search the web with Google",
-      urlTemplate: "https://www.google.com/search?q=%s",
-    },
-    {
-      short: "b",
-      name: "Bing",
-      image: "https://www.bing.com/favicon.ico",
-      description: "Search the web with Bing",
-      urlTemplate: "https://www.bing.com/search?q=%s",
-    },
-    {
-      short: "d",
-      name: "DuckDuckGo",
-      image: "https://duckduckgo.com/favicon.ico",
-      description: "Search the web with DuckDuckGo",
-      urlTemplate: "https://duckduckgo.com/?q=%s",
-    },
-    {
-      short: "t",
-      name: "Torrents",
-      image: IconDownload,
-      description: "Search for torrents on torrentdownloads.pro",
-      urlTemplate: "https://www.torrentdownloads.pro/search/?search=%s",
-    },
-    {
-      short: "y",
-      name: "YouTube",
-      image: "https://www.youtube.com/favicon.ico",
-      description: "Search for videos on YouTube",
-      urlTemplate: "https://www.youtube.com/results?search_query=%s",
-    },
-  ],
+  useInteraction: interaction.link(({ urlTemplate }, query) => ({
+    href: urlTemplate.replace("%s", query),
+  })),
+  useOptions() {
+    const tOption = useScopedI18n("search.mode.external.group.searchEngine.option");
+
+    return [
+      {
+        short: "g",
+        name: tOption("google.name"),
+        image: "https://www.google.com/favicon.ico",
+        description: tOption("google.description"),
+        urlTemplate: "https://www.google.com/search?q=%s",
+      },
+      {
+        short: "b",
+        name: tOption("bing.name"),
+        image: "https://www.bing.com/favicon.ico",
+        description: tOption("bing.description"),
+        urlTemplate: "https://www.bing.com/search?q=%s",
+      },
+      {
+        short: "d",
+        name: tOption("duckduckgo.name"),
+        image: "https://duckduckgo.com/favicon.ico",
+        description: tOption("duckduckgo.description"),
+        urlTemplate: "https://duckduckgo.com/?q=%s",
+      },
+      {
+        short: "t",
+        name: tOption("torrent.name"),
+        image: IconDownload,
+        description: tOption("torrent.description"),
+        urlTemplate: "https://www.torrentdownloads.pro/search/?search=%s",
+      },
+      {
+        short: "y",
+        name: tOption("youTube.name"),
+        image: "https://www.youtube.com/favicon.ico",
+        description: tOption("youTube.description"),
+        urlTemplate: "https://www.youtube.com/results?search_query=%s",
+      },
+    ];
+  },
 });

@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -26,7 +27,7 @@ export const pagesSearchGroup = createGroup<{
   path: string;
 }>({
   keyPath: "path",
-  title: "Pages",
+  title: (t) => t("search.mode.page.group.page.title"),
   component: ({ name, icon: Icon }) => (
     <Group px="md" py="sm">
       <Icon stroke={1.5} />
@@ -56,46 +57,47 @@ export const pagesSearchGroup = createGroup<{
   },
   useOptions() {
     const { data: session } = useSession();
+    const t = useScopedI18n("search.mode.page.group.page.option");
 
     const managePages = [
       {
         icon: IconHome,
         path: "/manage",
-        name: "Manage home page",
+        name: t("manageHome.label"),
       },
       {
         icon: IconLayoutDashboard,
         path: "/manage/boards",
-        name: "Manage boards",
+        name: t("manageBoard.label"),
       },
       {
         icon: IconBox,
         path: "/manage/apps",
-        name: "Manage apps",
+        name: t("manageApp.label"),
         hidden: !session,
       },
       {
         icon: IconPlug,
         path: "/manage/integrations",
-        name: "Manage integrations",
+        name: t("manageIntegration.label"),
         hidden: !session,
       },
       {
         icon: IconUsers,
         path: "/manage/users",
-        name: "Manage users",
+        name: t("manageUser.label"),
         hidden: !session,
       },
       {
         icon: IconMailForward,
         path: "/manage/users/invites",
-        name: "Manage invites",
+        name: t("manageInvite.label"),
         hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconUsersGroup,
         path: "/manage/users/groups",
-        name: "Manage groups",
+        name: t("manageGroup.label"),
         hidden: !session,
       },
       {
@@ -107,31 +109,31 @@ export const pagesSearchGroup = createGroup<{
       {
         icon: IconPlug,
         path: "/manage/tools/api",
-        name: "Manage API",
+        name: t("manageApi.label"),
         hidden: !session,
       },
       {
         icon: IconLogs,
         path: "/manage/tools/logs",
-        name: "Manage logs",
+        name: t("manageLog.label"),
         hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconReport,
         path: "/manage/tools/tasks",
-        name: "Manage tasks",
+        name: t("manageTask.label"),
         hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconSettings,
         path: "/manage/settings",
-        name: "Global settings",
+        name: t("manageSettings.label"),
         hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconInfoSmall,
         path: "/manage/about",
-        name: "About",
+        name: t("about.label"),
       },
     ];
 
@@ -139,12 +141,12 @@ export const pagesSearchGroup = createGroup<{
       {
         icon: IconHome,
         path: "/boards",
-        name: "Home board",
+        name: t("homeBoard.label"),
       },
       {
         icon: IconSettings,
         path: `/manage/users/${session?.user.id}/general`,
-        name: "Your preferences",
+        name: t("preferences.label"),
         hidden: !session,
       },
     ];

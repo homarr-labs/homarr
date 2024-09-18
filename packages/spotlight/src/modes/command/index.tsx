@@ -13,7 +13,7 @@ import { languageChildrenOptions } from "./children/language";
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> = {
-  key: string;
+  commandKey: string;
   icon: TablerIcon;
   name: string;
   useInteraction: (
@@ -23,17 +23,11 @@ type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> =
 };
 
 export const commandMode = {
-  name: "command",
+  modeKey: "command",
   character: ">",
-  help: "Activate command mode",
-  tip: (
-    <Text size="xs" c="gray.6">
-      TODO: Add tip
-    </Text>
-  ),
   groups: [
     createGroup<Command>({
-      keyPath: "key",
+      keyPath: "commandKey",
       title: "Global commands",
       useInteraction: (option, query) => option.useInteraction(option, query),
       component: ({ icon: Icon, name }) => (
@@ -47,21 +41,26 @@ export const commandMode = {
       },
       useOptions() {
         const t = useI18n();
-        const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+        const { colorScheme } = useMantineColorScheme();
 
         const commands: (Command & { hidden?: boolean })[] = [
           {
-            key: "color-scheme",
+            commandKey: "colorScheme",
             icon: colorScheme === "dark" ? IconSun : IconMoon,
-            name: t(`common.userAvatar.menu.switchTo${colorScheme === "dark" ? "Light" : "Dark"}Mode`),
-            useInteraction: interaction.javaScript(() => ({
-              onSelect() {
-                toggleColorScheme();
-              },
-            })),
+            name: t(
+              `search.mode.command.group.globalCommand.option.colorScheme.${colorScheme === "dark" ? "light" : "dark"}`,
+            ),
+            useInteraction: () => {
+              const { toggleColorScheme } = useMantineColorScheme();
+
+              return {
+                type: "javaScript",
+                onSelect: toggleColorScheme,
+              };
+            },
           },
           {
-            key: "language",
+            commandKey: "language",
             icon: IconLanguage,
             name: "Change language",
             useInteraction: interaction.children(languageChildrenOptions),

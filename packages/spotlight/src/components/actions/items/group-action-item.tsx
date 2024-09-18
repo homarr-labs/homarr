@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Spotlight } from "@mantine/spotlight";
 
+import type { TranslationObject } from "@homarr/translation";
+
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
 import classes from "./action-item.module.css";
@@ -8,7 +10,7 @@ import classes from "./action-item.module.css";
 interface SpotlightGroupActionItemProps<TOption extends Record<string, unknown>> {
   option: TOption;
   query: string;
-  setMode: (mode: string) => void;
+  setMode: (mode: keyof TranslationObject["search"]["mode"]) => void;
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
   group: SearchGroup<TOption>;
 }
@@ -21,10 +23,6 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
   option,
 }: SpotlightGroupActionItemProps<TOption>) => {
   const interaction = group.useInteraction(option, query);
-
-  if (interaction.type === "disabled") {
-    return <></>;
-  }
 
   const renderRoot =
     interaction.type === "link"

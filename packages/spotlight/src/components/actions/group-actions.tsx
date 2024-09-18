@@ -1,15 +1,17 @@
-import { Spotlight } from "@mantine/spotlight";
+import { Center, Loader } from "@mantine/core";
 
+import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { SearchGroup } from "../../lib/group";
 import type { inferSearchInteractionOptions } from "../../lib/interaction";
+import { SpotlightNoResults } from "../no-results";
 import { SpotlightGroupActionItem } from "./items/group-action-item";
 
 interface GroupActionsProps<TOption extends Record<string, unknown>> {
   group: SearchGroup<TOption>;
   query: string;
-  setMode: (mode: string) => void;
+  setMode: (mode: keyof TranslationObject["search"]["mode"]) => void;
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
 
@@ -37,7 +39,7 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
       });
 
     if (filteredOptions.length === 0) {
-      return <Spotlight.Empty>{t("common.search.nothingFound")}</Spotlight.Empty>;
+      return <SpotlightNoResults />;
     }
 
     return filteredOptions.map((option) => (
@@ -52,12 +54,24 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
     ));
   }
 
-  if (options.isLoading || options.isError || !options.data) {
-    return <></>;
+  if (options.isLoading) {
+    return (
+      <Center w="100%" py="sm">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
+  if (options.isError) {
+    return <Center py="sm">{t("search.error.fetch")}</Center>;
+  }
+
+  if (!options.data) {
+    return null;
   }
 
   if (options.data.length === 0) {
-    return <Spotlight.Empty>{t("common.search.nothingFound")}</Spotlight.Empty>;
+    return <SpotlightNoResults />;
   }
 
   return options.data.map((option) => (
