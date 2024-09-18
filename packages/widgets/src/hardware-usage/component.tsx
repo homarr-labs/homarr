@@ -1,12 +1,14 @@
-import { Group, Paper, Stack, Text } from "@mantine/core";
+import { Stack, Code } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
-import { ResponsiveLine } from "@nivo/line";
 
 import { clientApi } from "@homarr/api/client";
 import type { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
 
+import { CpuGraph } from "./graphs/cpu-graph";
+
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
+import { MemoryGraph } from "./graphs/memory-graph";
 
 export default function HardwareUsageWidget({ serverData, integrationIds }: WidgetComponentProps<"hardwareUsage">) {
   const [hardwareUsage, hardwareUsageHandlers] = useListState<{
@@ -33,68 +35,13 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
     throw new NoIntegrationSelectedError();
   }
 
-  const data = [
-    {
-      id: "cpuLoad",
-      color: "red",
-      data: hardwareUsage.map((usage, index) => ({
-        x: `${index}`,
-        y: usage.cpuLoad.sumLoad,
-      })),
-    },
-  ];
-
   const hasLast = hardwareUsage.length > 0;
 
   return (
     <Stack p={"md"}>
-      <Paper pos={"relative"} radius={"md"} w={"100%"} h={250}>
-        <Group pos={"absolute"} gap={"xs"} top={5} left={10}>
-          <Text fw={"bold"}>CPU</Text>
-          {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-          {hasLast && <Text c={"dimmed"}>{hardwareUsage[hardwareUsage.length - 1]!.cpuLoad.sumLoad.toFixed(2)}%</Text>}
-        </Group>
-        <ResponsiveLine
-          data={data}
-          margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          xScale={{ type: "point" }}
-          yScale={{
-            type: "linear",
-            min: 0,
-            max: 100,
-            stacked: false,
-            reverse: false,
-          }}
-          enableSlices="x"
-          sliceTooltip={({ slice }) => {
-            if (slice.points.length === 0) {
-              return null;
-            }
-            return (
-              <Paper p={5} px={8} radius={"lg"} withBorder>
-                <Text c={"dimmed"} size={"xs"}>
-                  {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-                  {slice.points[0]!.data.yFormatted}%
-                </Text>
-              </Paper>
-            );
-          }}
-          curve={"monotoneX"}
-          yFormat=" >-.2f"
-          axisTop={null}
-          axisRight={null}
-          axisBottom={null}
-          axisLeft={null}
-          enablePoints={false}
-          enableTouchCrosshair={true}
-          enableGridX={false}
-          enableGridY={false}
-          enableCrosshair={true}
-          useMesh={true}
-          animate={false}
-        />
-      </Paper>
-      {JSON.stringify(hardwareUsage[hardwareUsage.length - 1])}
+      <CpuGraph cpuLoad={hardwareUsage.map(usage => usage.cpuLoad)} hasLast={hasLast}/>
+      <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)} maxAvailableBytes={6000000000} hasLast={hasLast} />
+      <Code block>{JSON.stringify(hardwareUsage[hardwareUsage.length - 1])}</Code>
     </Stack>
   );
 }
