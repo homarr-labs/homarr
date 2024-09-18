@@ -171,7 +171,7 @@ export const integrationUserPermissions = mysqlTable(
     userId: varchar("user_id", { length: 64 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<IntegrationPermission>().notNull(),
+    permission: varchar("permission", { length: 128 }).$type<IntegrationPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -189,11 +189,12 @@ export const integrationGroupPermissions = mysqlTable(
     groupId: varchar("group_id", { length: 64 })
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<IntegrationPermission>().notNull(),
+    permission: varchar("permission", { length: 128 }).$type<IntegrationPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
       columns: [table.integrationId, table.groupId, table.permission],
+      name: "integration_group_permission__pk",
     }),
   }),
 );
@@ -276,7 +277,7 @@ export const sections = mysqlTable("section", {
   width: int("width"),
   height: int("height"),
   name: text("name"),
-  parentSectionId: text("parent_section_id").references((): AnyMySqlColumn => sections.id, {
+  parentSectionId: varchar("parent_section_id", { length: 64 }).references((): AnyMySqlColumn => sections.id, {
     onDelete: "cascade",
   }),
 });

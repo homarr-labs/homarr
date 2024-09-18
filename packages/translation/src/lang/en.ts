@@ -556,6 +556,7 @@ export default {
       next: "Next",
       checkoutDocs: "Check out the documentation",
       tryAgain: "Try again",
+      loading: "Loading",
     },
     iconPicker: {
       label: "Icon URL",
