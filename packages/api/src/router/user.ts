@@ -178,7 +178,7 @@ export const userRouter = createTRPCRouter({
           name: true,
           image: true,
         },
-        where: like(users.name, "%" + input.query + "%"),
+        where: like(users.name, `%${input.query}%`),
         limit: input.limit,
       });
       return dbUsers.map((user) => ({

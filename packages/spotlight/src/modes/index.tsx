@@ -1,7 +1,7 @@
 import { Group, Kbd, Text } from "@mantine/core";
 import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
 
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../lib/group";
 import { interaction } from "../lib/interaction";
