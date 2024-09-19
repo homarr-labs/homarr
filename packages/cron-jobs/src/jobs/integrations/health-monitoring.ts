@@ -3,6 +3,7 @@ import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { OpenMediaVaultIntegration } from "@homarr/integrations";
+import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 import { createCronJob } from "../../lib";
 
@@ -36,7 +37,9 @@ export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SEC
           value: decryptSecret(secret.value),
         })),
       });
-      await openmediavault.getSystemInfoAsync();
+      const healthInfo = await openmediavault.getSystemInfoAsync();
+      const channel = createItemAndIntegrationChannel("healthMonitoring", integration.integrationId);
+      await channel.publishAndUpdateLastStateAsync(healthInfo);
     }
   }
 });
