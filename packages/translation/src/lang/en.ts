@@ -1097,7 +1097,7 @@ export default {
         },
       },
       popover: {
-        model: "CPU Model",
+        processor: "Processor",
         version: "Version",
         uptime: "Uptime",
         loadAverage: "Load Average",
