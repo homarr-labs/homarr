@@ -1304,6 +1304,24 @@ importers:
 
   packages/spotlight:
     dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../api
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../auth
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
+      '@homarr/modals':
+        specifier: workspace:^0.1.0
+        version: link:../modals
+      '@homarr/modals-collection':
+        specifier: workspace:^0.1.0
+        version: link:../modals-collection
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
@@ -1384,6 +1402,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log

@@ -39,7 +39,7 @@ export default async function ManageBoardsPage() {
       <Stack>
         <Group justify="space-between">
           <Title mb="md">{t("title")}</Title>
-          <CreateBoardButton boardNames={boards.map((board) => board.name)} />
+          <CreateBoardButton />
         </Group>
 
         <Grid mb={{ base: "xl", md: 0 }}>

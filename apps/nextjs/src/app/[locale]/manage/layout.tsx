@@ -113,7 +113,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.help.items.documentation"),
           icon: IconBook2,
-          href: "https://homarr.dev/docs/getting-started/prerequisites",
+          href: "https://homarr.dev/docs/getting-started/",
           external: true,
         },
         {
@@ -123,7 +123,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           external: true,
         },
         {
-          label: t("items.tools.items.docker"),
+          label: t("items.help.items.discord"),
           icon: IconBrandDiscord,
           href: "https://discord.com/invite/aCsmEV5RgA",
           external: true,

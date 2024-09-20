@@ -7,7 +7,6 @@ import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
-import { useRegisterSpotlightActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -27,25 +26,6 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
       refetchOnReconnect: false,
       retry: false,
     },
-  );
-
-  useRegisterSpotlightActions(
-    `app-${options.appId}`,
-    app.href
-      ? [
-          {
-            id: `app-${options.appId}`,
-            title: app.name,
-            description: app.description ?? "",
-            icon: app.iconUrl,
-            group: "app",
-            type: "link",
-            href: parseAppHrefWithVariablesClient(app.href),
-            openInNewTab: options.openInNewTab,
-          },
-        ]
-      : [],
-    [app, options.appId, options.openInNewTab],
   );
 
   return (

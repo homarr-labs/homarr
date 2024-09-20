@@ -3,18 +3,14 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { MaybePromise } from "@homarr/common/types";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-interface InnerProps {
-  onSettled: () => MaybePromise<void>;
-}
-
-export const AddBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
+export const AddBoardModal = createModal(({ actions }) => {
   const t = useI18n();
   const form = useZodForm(validation.board.create, {
     mode: "controlled",
@@ -25,7 +21,9 @@ export const AddBoardModal = createModal<InnerProps>(({ actions, innerProps }) =
     },
   });
   const { mutate, isPending } = clientApi.board.createBoard.useMutation({
-    onSettled: innerProps.onSettled,
+    onSettled: async () => {
+      await revalidatePathActionAsync("/manage/boards");
+    },
   });
 
   const boardNameStatus = useBoardNameStatus(form.values.name);

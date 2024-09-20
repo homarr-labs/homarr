@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
+import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
-import { and, createId, eq, inArray, or } from "@homarr/db";
+import { and, createId, eq, inArray, like, or } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -109,6 +110,79 @@ export const boardRouter = createTRPCRouter({
       isHome: currentUserWhenPresent?.homeBoardId === board.id,
     }));
   }),
+  search: publicProcedure
+    .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session?.user.id;
+      const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.userId, userId ?? ""),
+      });
+
+      const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, userId ?? ""),
+        with: {
+          group: {
+            with: {
+              boardPermissions: {},
+            },
+          },
+        },
+      });
+      const boardIds = permissionsOfCurrentUserWhenPresent
+        .map((permission) => permission.boardId)
+        .concat(
+          permissionsOfCurrentUserGroupsWhenPresent
+            .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
+            .flat(),
+        );
+
+      const currentUserWhenPresent = await ctx.db.query.users.findFirst({
+        where: eq(users.id, userId ?? ""),
+      });
+
+      const foundBoards = await ctx.db.query.boards.findMany({
+        where: and(
+          like(boards.name, `%${input.query}%`),
+          ctx.session?.user.permissions.includes("board-view-all")
+            ? undefined
+            : or(
+                eq(boards.isPublic, true),
+                eq(boards.creatorId, ctx.session?.user.id ?? ""),
+                inArray(boards.id, boardIds),
+              ),
+        ),
+        limit: input.limit,
+        columns: {
+          id: true,
+          name: true,
+          creatorId: true,
+          isPublic: true,
+          logoImageUrl: true,
+        },
+        with: {
+          userPermissions: {
+            where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+          },
+          groupPermissions: {
+            where:
+              permissionsOfCurrentUserGroupsWhenPresent.length >= 1
+                ? inArray(
+                    boardGroupPermissions.groupId,
+                    permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
+                  )
+                : undefined,
+          },
+        },
+      });
+
+      return foundBoards.map((board) => ({
+        id: board.id,
+        name: board.name,
+        logoImageUrl: board.logoImageUrl,
+        permissions: constructBoardPermissions(board, ctx.session),
+        isHome: currentUserWhenPresent?.homeBoardId === board.id,
+      }));
+    }),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
     .input(validation.board.create)
