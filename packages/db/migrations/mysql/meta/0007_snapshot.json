@@ -655,7 +655,7 @@
         },
         "permission": {
           "name": "permission",
-          "type": "text",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -683,8 +683,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "integrationGroupPermissions_integration_id_group_id_permission_pk": {
-          "name": "integrationGroupPermissions_integration_id_group_id_permission_pk",
+        "integration_group_permission__pk": {
+          "name": "integration_group_permission__pk",
           "columns": ["integration_id", "group_id", "permission"]
         }
       },
@@ -819,7 +819,7 @@
         },
         "permission": {
           "name": "permission",
-          "type": "text",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1109,7 +1109,7 @@
         },
         "parent_section_id": {
           "name": "parent_section_id",
-          "type": "text",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

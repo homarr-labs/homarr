@@ -6,6 +6,7 @@ import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
@@ -15,7 +16,6 @@ import { useI18n } from "@homarr/translation/client";
 import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
 

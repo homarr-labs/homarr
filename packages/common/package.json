@@ -26,9 +26,9 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "dayjs": "^1.11.13",
-    "next": "^14.2.11",
+    "next": "^14.2.13",
     "react": "^18.3.1",
-    "tldts": "^6.1.44"
+    "tldts": "^6.1.47"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

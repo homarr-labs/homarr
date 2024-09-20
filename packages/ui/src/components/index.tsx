@@ -8,4 +8,5 @@ export { TextMultiSelect } from "./text-multi-select";
 export { UserAvatar } from "./user-avatar";
 export { UserAvatarGroup } from "./user-avatar-group";
 export { CustomPasswordInput } from "./password-input/password-input";
+export { IntegrationAvatar } from "./integration-avatar";
 export { BetaBadge } from "./beta-badge";

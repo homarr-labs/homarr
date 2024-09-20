@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
-import { and, createId, eq, inArray } from "@homarr/db";
+import { and, asc, createId, eq, inArray, like } from "@homarr/db";
 import {
   groupPermissions,
   integrationGroupPermissions,
@@ -12,7 +12,7 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { getPermissionsWithParents, integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
-import { validation } from "@homarr/validation";
+import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
@@ -33,6 +33,15 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
+  search: protectedProcedure
+    .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.integrations.findMany({
+        where: like(integrations.name, `%${input.query}%`),
+        orderBy: asc(integrations.name),
+        limit: input.limit,
+      });
+    }),
   byId: protectedProcedure.input(validation.integration.byId).query(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
     const integration = await ctx.db.query.integrations.findFirst({

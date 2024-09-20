@@ -556,6 +556,7 @@ export default {
       next: "Next",
       checkoutDocs: "Check out the documentation",
       tryAgain: "Try again",
+      loading: "Loading",
     },
     iconPicker: {
       label: "Icon URL",
@@ -594,16 +595,6 @@ export default {
       placeholder: "Pick value",
       badge: {
         recommended: "Recommended",
-      },
-    },
-    search: {
-      placeholder: "Search for anything",
-      nothingFound: "Nothing found",
-      group: {
-        all: "All",
-        web: "Web",
-        action: "Actions",
-        app: "Apps",
       },
     },
     userAvatar: {
@@ -1722,7 +1713,7 @@ export default {
             copy: {
               title: "Copy invite",
               description:
-                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore</b>. If you do no longer wish to invite said person, you can delete this invitation any time.",
+                "Your invitation has been generated. After this modal closes, you'll not be able to copy this link anymore. If you do no longer wish to invite said person, you can delete this invitation any time.",
               link: "Invitation link",
               button: "Copy & close",
             },
@@ -2054,6 +2045,249 @@ export default {
       },
       about: {
         label: "About",
+      },
+    },
+  },
+  search: {
+    placeholder: "Search for anything",
+    nothingFound: "Nothing found",
+    error: {
+      fetch: "An error occurred while fetching data",
+    },
+    mode: {
+      appIntegrationBoard: {
+        help: "Search for apps, integrations or boards",
+        group: {
+          app: {
+            title: "Apps",
+            children: {
+              action: {
+                open: {
+                  label: "Open app url",
+                },
+                edit: {
+                  label: "Edit app",
+                },
+              },
+              detail: {
+                title: "Select an action for the app",
+              },
+            },
+          },
+          board: {
+            title: "Boards",
+            children: {
+              action: {
+                open: {
+                  label: "Open board",
+                },
+                homeBoard: {
+                  label: "Set as home board",
+                },
+                settings: {
+                  label: "Open settings",
+                },
+              },
+              detail: {
+                title: "Select an action for the board",
+              },
+            },
+          },
+          integration: {
+            title: "Integrations",
+          },
+        },
+      },
+      command: {
+        help: "Activate command mode",
+        group: {
+          globalCommand: {
+            title: "Global commands",
+            option: {
+              colorScheme: {
+                light: "Switch to light mode",
+                dark: "Switch to dark mode",
+              },
+              language: {
+                label: "Change language",
+                children: {
+                  detail: {
+                    title: "Select your prefered language",
+                  },
+                },
+              },
+              newBoard: {
+                label: "Create a new board",
+              },
+              importBoard: {
+                label: "Import a board",
+              },
+              newApp: {
+                label: "Create a new app",
+              },
+              newIntegration: {
+                label: "Create a new integration",
+                children: {
+                  detail: {
+                    title: "Select the integration type you want to create",
+                  },
+                },
+              },
+              newUser: {
+                label: "Create a new user",
+              },
+              newInvite: {
+                label: "Create a new invite",
+              },
+              newGroup: {
+                label: "Create a new group",
+              },
+            },
+          },
+        },
+      },
+      external: {
+        help: "Use an external search engine",
+        group: {
+          searchEngine: {
+            title: "Search engines",
+            option: {
+              google: {
+                name: "Google",
+                description: "Search the web with Google",
+              },
+              bing: {
+                name: "Bing",
+                description: "Search the web with Bing",
+              },
+              duckduckgo: {
+                name: "DuckDuckGo",
+                description: "Search the web with DuckDuckGo",
+              },
+              torrent: {
+                name: "Torrents",
+                description: "Search for torrents on torrentdownloads.pro",
+              },
+              youTube: {
+                name: "YouTube",
+                description: "Search for videos on YouTube",
+              },
+            },
+          },
+        },
+      },
+      help: {
+        group: {
+          mode: {
+            title: "Modes",
+          },
+          help: {
+            title: "Help",
+            option: {
+              documentation: {
+                label: "Documentation",
+              },
+              submitIssue: {
+                label: "Submit an issue",
+              },
+              discord: {
+                label: "Community Discord",
+              },
+            },
+          },
+        },
+      },
+      page: {
+        help: "Search for pages",
+        group: {
+          page: {
+            title: "Pages",
+            option: {
+              manageHome: {
+                label: "Manage home page",
+              },
+              manageBoard: {
+                label: "Manage boards",
+              },
+              manageApp: {
+                label: "Manage apps",
+              },
+              manageIntegration: {
+                label: "Manage integrations",
+              },
+              manageUser: {
+                label: "Manage users",
+              },
+              manageInvite: {
+                label: "Manage invites",
+              },
+              manageGroup: {
+                label: "Manage groups",
+              },
+              manageDocker: {
+                label: "Manage docker",
+              },
+              manageApi: {
+                label: "Swagger API",
+              },
+              manageLog: {
+                label: "View logs",
+              },
+              manageTask: {
+                label: "Manage tasks",
+              },
+              manageSettings: {
+                label: "Global settings",
+              },
+              about: {
+                label: "About",
+              },
+              homeBoard: {
+                label: "Home board",
+              },
+              preferences: {
+                label: "Your preferences",
+              },
+            },
+          },
+        },
+      },
+      userGroup: {
+        help: "Search for users or groups",
+        group: {
+          user: {
+            title: "Users",
+            children: {
+              action: {
+                detail: {
+                  label: "Show user details",
+                },
+              },
+              detail: {
+                title: "Select an action for the user",
+              },
+            },
+          },
+          group: {
+            title: "Groups",
+            children: {
+              action: {
+                detail: {
+                  label: "Show group details",
+                },
+                manageMember: {
+                  label: "Manage members",
+                },
+                managePermission: {
+                  label: "Manage permissions",
+                },
+              },
+              detail: {
+                title: "Select an action for the group",
+              },
+            },
+          },
+        },
       },
     },
   },

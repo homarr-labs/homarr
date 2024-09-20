@@ -26,15 +26,14 @@
   "dependencies": {
     "@ctrl/deluge": "^6.1.0",
     "@ctrl/qbittorrent": "^9.0.1",
-    "@ctrl/transmission": "^6.1.0",
+    "@ctrl/transmission": "^7.0.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@jellyfin/sdk": "^0.10.0",
-    "typed-rpc": "^5.1.0"
+    "@jellyfin/sdk": "^0.10.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

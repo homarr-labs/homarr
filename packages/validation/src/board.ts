@@ -69,23 +69,15 @@ const permissionsSchema = z.object({
   id: z.string(),
 });
 
-export const createOldmarrImportConfigurationSchema = (existingBoardNames: string[]) =>
-  z.object({
-    name: boardNameSchema.refine(
-      (value) => {
-        return existingBoardNames.every((name) => name.toLowerCase().trim() !== value.toLowerCase().trim());
-      },
-      {
-        params: createCustomErrorParams("boardAlreadyExists"),
-      },
-    ),
-    onlyImportApps: z.boolean().default(false),
-    distinctAppsByHref: z.boolean().default(true),
-    screenSize: z.enum(["lg", "md", "sm"]).default("lg"),
-    sidebarBehaviour: z.enum(["remove-items", "last-section"]).default("last-section"),
-  });
+export const oldmarrImportConfigurationSchema = z.object({
+  name: boardNameSchema,
+  onlyImportApps: z.boolean().default(false),
+  distinctAppsByHref: z.boolean().default(true),
+  screenSize: z.enum(["lg", "md", "sm"]).default("lg"),
+  sidebarBehaviour: z.enum(["remove-items", "last-section"]).default("last-section"),
+});
 
-export type OldmarrImportConfiguration = z.infer<ReturnType<typeof createOldmarrImportConfigurationSchema>>;
+export type OldmarrImportConfiguration = z.infer<typeof oldmarrImportConfigurationSchema>;
 
 export const superRefineJsonImportFile = (value: File | null, context: z.RefinementCtx) => {
   if (!value) {
@@ -121,7 +113,7 @@ export const superRefineJsonImportFile = (value: File | null, context: z.Refinem
 
 const importJsonFileSchema = zfd.formData({
   file: zfd.file().superRefine(superRefineJsonImportFile),
-  configuration: zfd.json(createOldmarrImportConfigurationSchema([])),
+  configuration: zfd.json(oldmarrImportConfigurationSchema),
 });
 
 const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
