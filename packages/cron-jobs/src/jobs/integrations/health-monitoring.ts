@@ -1,10 +1,10 @@
 import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
 import { db } from "@homarr/db";
+import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 import { integrationCreatorFromSecrets } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 import { createCronJob } from "../../lib";
-import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 
 export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SECONDS).withCallback(async () => {
   const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {

@@ -2,6 +2,7 @@ import { createTRPCRouter } from "../../trpc";
 import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
+import { downloadsRouter } from "./downloads";
 import { healthMonitoringRouter } from "./health-monitoring";
 import { indexerManagerRouter } from "./indexer-manager";
 import { mediaRequestsRouter } from "./media-requests";
@@ -10,7 +11,6 @@ import { notebookRouter } from "./notebook";
 import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { weatherRouter } from "./weather";
-import { downloadsRouter } from "./downloads";
 
 export const widgetRouter = createTRPCRouter({
   notebook: notebookRouter,

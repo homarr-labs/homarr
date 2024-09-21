@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
-import type { HealthMonitoring} from "@homarr/integrations";
+import type { HealthMonitoring } from "@homarr/integrations";
 import { integrationCreator } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 import { createItemAndIntegrationChannel } from "@homarr/redis";

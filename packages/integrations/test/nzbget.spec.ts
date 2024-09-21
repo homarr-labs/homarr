@@ -2,6 +2,7 @@ import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
+
 import { NzbGetIntegration } from "../src/download-client/nzbget/nzbget-integration";
 
 const username = "nzbget";

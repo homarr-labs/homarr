@@ -11,6 +11,7 @@ import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
+import * as downloads from "./downloads";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
@@ -24,7 +25,6 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as downloads from "./downloads";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 

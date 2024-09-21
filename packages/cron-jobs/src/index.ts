@@ -1,5 +1,6 @@
 import { analyticsJob } from "./jobs/analytics";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
+import { downloadsJob } from "./jobs/integrations/downloads";
 import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
@@ -10,7 +11,6 @@ import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { createCronJobGroup } from "./lib";
-import { downloadsJob } from "./jobs/integrations/downloads";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,
