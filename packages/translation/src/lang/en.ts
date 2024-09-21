@@ -1097,8 +1097,8 @@ export default {
         fifteenMinutes: "15 minutes:",
         total: "Total:",
         used: "Used",
-        diskAvailable: "Available:",
-        memAvailable: "Available",
+        diskAvailable: "Available",
+        memAvailable: "Available:",
       },
       memory: {},
       error: {
