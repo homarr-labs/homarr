@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 import {
   closestCenter,
   DndContext,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
-  UniqueIdentifier,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -16,22 +16,24 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { ActionIcon, ActionIconProps, Card, Fieldset, Stack } from "@mantine/core";
+import type { ActionIconProps } from "@mantine/core";
+import { ActionIcon, Card, Fieldset, Stack } from "@mantine/core";
 import { IconGripHorizontal } from "@tabler/icons-react";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetSortedItemListInput = <TItem extends { id: string }>({
+export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIdentifier>({
   property,
   options,
 }: CommonWidgetInputProps<"sortableItemList">) => {
   const form = useFormContext();
+  const values = form.values.options[property] as TOptionValue[];
+  const { data, isLoading, error } = options.useData(values);
+  const dataMap = useMemo(() => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])), [data]);
+  const [tempMap, setTempMap] = useState<Map<TOptionValue, TItem>>(new Map());
 
-  const values = form.values.options[property] as UniqueIdentifier[];
-  const dataMap = options.useData?.() ?? new Map<UniqueIdentifier, TItem>();
-  const tempMap = new Map<UniqueIdentifier, TItem>();
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [activeId, setActiveId] = useState<TOptionValue | null>(null);
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -40,7 +42,7 @@ export const WidgetSortedItemListInput = <TItem extends { id: string }>({
     }),
   );
   const isFirstAnnouncement = useRef(true);
-  const getIndex = (id: UniqueIdentifier) => values.indexOf(id);
+  const getIndex = (id: TOptionValue) => values.indexOf(id);
   const activeIndex = activeId ? getIndex(activeId) : -1;
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export const WidgetSortedItemListInput = <TItem extends { id: string }>({
     }
   }, [activeId]);
 
-  const getItem = (id: UniqueIdentifier) => {
+  const getItem = (id: TOptionValue) => {
     if (!tempMap.has(id)) {
       return dataMap.get(id);
     }
@@ -57,19 +59,22 @@ export const WidgetSortedItemListInput = <TItem extends { id: string }>({
     return tempMap.get(id);
   };
 
-  const updateItems = (callback: (prev: UniqueIdentifier[]) => UniqueIdentifier[]) => {
+  const updateItems = (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
     form.setFieldValue(`options.${property}`, callback);
   };
 
   const addItem = (item: TItem) => {
-    tempMap.set(item.id, item);
-    form.setFieldValue(`options.${property}`, [...values, item.id]);
+    setTempMap((prev) => {
+      prev.set(options.uniqueIdentifier(item) as TOptionValue, item);
+      return prev;
+    });
+    updateItems((values) => [...values, options.uniqueIdentifier(item) as TOptionValue]);
   };
 
   return (
     <Fieldset legend="Items">
       <Stack>
-        <options.addButton addItem={addItem} />
+        <options.addButton addItem={addItem} values={values} />
 
         <DndContext
           sensors={sensors}
@@ -80,13 +85,13 @@ export const WidgetSortedItemListInput = <TItem extends { id: string }>({
               return;
             }
 
-            setActiveId(active.id);
+            setActiveId(active.id as TOptionValue);
           }}
           onDragEnd={({ over }) => {
             setActiveId(null);
 
             if (over) {
-              const overIndex = getIndex(over.id);
+              const overIndex = getIndex(over.id as TOptionValue);
               if (activeIndex !== overIndex) {
                 updateItems((items) => arrayMove(items, activeIndex, overIndex));
               }
@@ -121,15 +126,21 @@ export const WidgetSortedItemListInput = <TItem extends { id: string }>({
   );
 };
 
-interface ItemProps<TItem extends { id: string }> {
-  id: UniqueIdentifier;
+interface ItemProps<TItem, TOptionValue extends UniqueIdentifier> {
+  id: TOptionValue;
   item: TItem;
   index: number;
   removeItem: () => void;
   options: CommonWidgetInputProps<"sortableItemList">["options"];
 }
 
-const Item = <TItem extends { id: string }>({ id, index, item, removeItem, options }: ItemProps<TItem>) => {
+const Item = <TItem, TOptionValue extends UniqueIdentifier>({
+  id,
+  index,
+  item,
+  removeItem,
+  options,
+}: ItemProps<TItem, TOptionValue>) => {
   const {
     active,
     attributes,

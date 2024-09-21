@@ -1,17 +1,20 @@
 import { ActionIcon, Avatar, Button, Group, Stack, Text } from "@mantine/core";
 import { IconClock, IconX } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { createId } from "@homarr/db/client";
+import { useModalAction } from "@homarr/modals";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
-import type { BookmarkItem } from "./bookmark-item";
+import { AppSelectModal } from "./app-select-modal";
 
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
   icon: IconClock,
   options: optionsBuilder.from((factory) => ({
     title: factory.text(),
-    items: factory.sortableItemList<BookmarkItem>({
+    items: factory.sortableItemList<RouterOutputs["app"]["all"][number], string>({
       itemComponent: ({ item, handle: Handle, removeItem, rootAttributes }) => {
         return (
           <Group {...rootAttributes} tabIndex={0} justify="space-between" wrap="nowrap">
@@ -26,18 +29,26 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
               </Group>
             </Group>
 
-            <ActionIcon variant="transparent" color="red" onClick={() => removeItem?.()}>
+            <ActionIcon variant="transparent" color="red" onClick={() => removeItem()}>
               <IconX size={20} />
             </ActionIcon>
           </Group>
         );
       },
-      addButton(props) {
-        return <Button onClick={() => props.addItem({ id: "", name: "New bookmark" })}>Add bookmark</Button>;
+      addButton({ addItem, values }) {
+        const { openModal } = useModalAction(AppSelectModal);
+
+        return <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>Add bookmark</Button>;
       },
-      useData: () => {
-        const { data } = clientApi.app.all.useQuery();
-        return new Map(data?.map((item) => [item.id, item]) ?? []);
+      uniqueIdentifier: (item) => item.id,
+      useData: (ids) => {
+        const { data, error, isLoading } = clientApi.app.byIds.useQuery(ids);
+
+        return {
+          data,
+          error,
+          isLoading,
+        };
       },
     }),
   })),
