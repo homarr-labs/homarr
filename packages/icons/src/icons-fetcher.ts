@@ -11,6 +11,22 @@ const repositories = [
     new URL("https://api.github.com/repos/walkxcode/dashboard-icons/git/trees/main?recursive=true"),
     "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/{0}",
   ),
+  new GitHubIconRepository(
+    "selfh.st",
+    "selfhst/icons",
+    "CC0-1.0",
+    new URL("https://github.com/selfhst/icons"),
+    new URL("https://api.github.com/repos/selfhst/icons/git/trees/main?recursive=true"),
+    "https://cdn.jsdelivr.net/gh/selfhst/icons/{0}",
+  ),
+  new GitHubIconRepository(
+    "SimpleIcons",
+    "simple-icons/simple-icons",
+    "CC0-1.0",
+    new URL("https://github.com/simple-icons/simple-icons"),
+    new URL("https://api.github.com/repos/simple-icons/simple-icons/git/trees/master?recursive=true"),
+    "https://cdn.simpleicons.org/{1}",
+  ),
   new JsdelivrIconRepository(
     "Papirus",
     "PapirusDevelopmentTeam/papirus-icon-theme",

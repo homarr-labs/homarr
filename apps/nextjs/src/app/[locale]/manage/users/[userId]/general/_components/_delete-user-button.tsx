@@ -6,10 +6,9 @@ import { Button } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface DeleteUserButtonProps {
   user: RouterOutputs["user"]["getById"];

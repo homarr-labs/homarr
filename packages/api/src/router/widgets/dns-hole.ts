@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
-import { AdGuardHomeIntegration, PiHoleIntegration } from "@homarr/integrations";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { integrationCreator } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
@@ -11,21 +12,13 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "piHole", "adGuardHome"))
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${integration.id}`);
           const { data } = await cache.consumeAsync(async () => {
-            let client;
-            switch (integration.kind) {
-              case "piHole":
-                client = new PiHoleIntegration(integration);
-                break;
-              case "adGuardHome":
-                client = new AdGuardHomeIntegration(integration);
-                break;
-            }
+            const client = integrationCreator(integration);
 
             return await client.getSummaryAsync().catch((err) => {
               logger.error("dns-hole router - ", err);
@@ -47,33 +40,17 @@ export const dnsHoleRouter = createTRPCRouter({
     }),
 
   enable: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole", "adGuardHome"))
-    .mutation(async ({ ctx }) => {
-      let client;
-      switch (ctx.integration.kind) {
-        case "piHole":
-          client = new PiHoleIntegration(ctx.integration);
-          break;
-        case "adGuardHome":
-          client = new AdGuardHomeIntegration(ctx.integration);
-          break;
-      }
+    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
+    .mutation(async ({ ctx: { integration } }) => {
+      const client = integrationCreator(integration);
       await client.enableAsync();
     }),
 
   disable: publicProcedure
     .input(controlsInputSchema)
-    .unstable_concat(createOneIntegrationMiddleware("interact", "piHole", "adGuardHome"))
-    .mutation(async ({ ctx, input }) => {
-      let client;
-      switch (ctx.integration.kind) {
-        case "piHole":
-          client = new PiHoleIntegration(ctx.integration);
-          break;
-        case "adGuardHome":
-          client = new AdGuardHomeIntegration(ctx.integration);
-          break;
-      }
+    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
+    .mutation(async ({ ctx: { integration }, input }) => {
+      const client = integrationCreator(integration);
       await client.disableAsync(input.duration);
     }),
 });

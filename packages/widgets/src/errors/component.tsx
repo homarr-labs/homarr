@@ -5,6 +5,7 @@ import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import"
 
 import type { WidgetKind } from "@homarr/definitions";
 
+import type { WidgetDefinition } from "..";
 import { widgetImports } from "..";
 import { ErrorBoundaryError } from "./base";
 import { BaseWidgetError } from "./base-component";
@@ -22,21 +23,28 @@ export const WidgetError = ({ error, resetErrorBoundary, kind }: WidgetErrorProp
     return <BaseWidgetError {...error.getErrorBoundaryData()} onRetry={resetErrorBoundary} />;
   }
 
-  if (error instanceof TRPCClientError && "code" in error.data) {
-    const errorData = error.data as DefaultErrorData;
-
-    if (!("errors" in currentDefinition && errorData.code in currentDefinition.errors)) return null;
-
-    const errorDefinition = currentDefinition.errors[errorData.code as keyof typeof currentDefinition.errors];
-
-    return <BaseWidgetError {...errorDefinition} onRetry={resetErrorBoundary} showLogsLink />;
-  }
-
-  return (
+  const commonFallbackError = (
     <BaseWidgetError
       icon={IconExclamationCircle}
       message={(error as { toString: () => string }).toString()}
       onRetry={resetErrorBoundary}
     />
   );
+
+  if (error instanceof TRPCClientError && "code" in error.data) {
+    const errorData = error.data as DefaultErrorData;
+
+    if (!("errors" in currentDefinition)) return commonFallbackError;
+
+    const errors: Exclude<WidgetDefinition["errors"], undefined> = currentDefinition.errors;
+    const errorDefinition = errors[errorData.code];
+
+    if (!errorDefinition) return commonFallbackError;
+
+    return (
+      <BaseWidgetError {...errorDefinition} onRetry={resetErrorBoundary} showLogsLink={!errorDefinition.hideLogsLink} />
+    );
+  }
+
+  return commonFallbackError;
 };

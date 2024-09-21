@@ -8,8 +8,7 @@ import { IconSearch } from "@tabler/icons-react";
 
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-
-import { IntegrationAvatar } from "../_integration-avatar";
+import { IntegrationAvatar } from "@homarr/ui";
 
 export const IntegrationCreateDropdownContent = () => {
   const t = useI18n();

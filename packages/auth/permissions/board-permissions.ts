@@ -25,17 +25,18 @@ export const constructBoardPermissions = (board: BoardPermissionsProps, session:
   const creatorId = "creator" in board ? board.creator?.id : board.creatorId;
 
   return {
-    hasFullAccess: session?.user.id === creatorId || session?.user.permissions.includes("board-full-all"),
+    hasFullAccess: session?.user.id === creatorId || (session?.user.permissions.includes("board-full-all") ?? false),
     hasChangeAccess:
       session?.user.id === creatorId ||
       board.userPermissions.some(({ permission }) => permission === "modify") ||
       board.groupPermissions.some(({ permission }) => permission === "modify") ||
-      session?.user.permissions.includes("board-modify-all"),
+      (session?.user.permissions.includes("board-modify-all") ?? false) ||
+      (session?.user.permissions.includes("board-full-all") ?? false),
     hasViewAccess:
       session?.user.id === creatorId ||
       board.userPermissions.length >= 1 ||
       board.groupPermissions.length >= 1 ||
       board.isPublic ||
-      session?.user.permissions.includes("board-view-all"),
+      (session?.user.permissions.includes("board-view-all") ?? false),
   };
 };
