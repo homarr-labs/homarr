@@ -60,11 +60,11 @@ export default function HealthMonitoringWidget({
         const formatUptime = (uptime: number) => {
           const days = Math.floor(uptime / (60 * 60 * 24));
           const remainingHours = Math.floor((uptime % (60 * 60 * 24)) / 3600);
-          return t("widget.healthMonitoring.popover.uptime", { days: days, hours: remainingHours });
+          return t("widget.healthMonitoring.popover.uptime", { days, hours: remainingHours });
         };
 
         return (
-          <Box h="100%">
+          <Box key={integrationId} h="100%">
             <Card className="health-card" m="2.5cqmin" p="2.5cqmin" withBorder>
               <Flex
                 className="health-card-elements"

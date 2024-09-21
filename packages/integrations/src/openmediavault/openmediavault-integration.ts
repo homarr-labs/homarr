@@ -37,14 +37,14 @@ export class OpenMediaVaultIntegration extends Integration {
       sessionId = response.sessionid;
       headers["X-OPENMEDIAVAULT-SESSIONID"] = sessionId;
     } else {
-      sessionId = this.extractSessionIdFromCookies(authResponse.headers);
-      const loginToken = this.extractLoginTokenFromCookies(authResponse.headers);
+      sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(authResponse.headers);
+      const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(authResponse.headers);
       headers.Cookie = `${loginToken};${sessionId}`;
     }
     return headers;
   }
 
-  private extractSessionIdFromCookies(headers: Headers): string {
+  static extractSessionIdFromCookies(headers: Headers): string {
     const cookies = headers.get("set-cookie") ?? "";
     const sessionId = cookies
       .split(";")
@@ -57,7 +57,7 @@ export class OpenMediaVaultIntegration extends Integration {
     }
   }
 
-  private extractLoginTokenFromCookies(headers: Headers): string {
+  static extractLoginTokenFromCookies(headers: Headers): string {
     const cookies = headers.get("set-cookie") ?? "";
     const loginToken = cookies
       .split(";")
