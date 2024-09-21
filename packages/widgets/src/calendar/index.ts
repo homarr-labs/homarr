@@ -1,5 +1,6 @@
 import { IconCalendar } from "@tabler/icons-react";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";
@@ -17,7 +18,7 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       defaultValue: 2,
     }),
   })),
-  supportedIntegrations: ["sonarr", "radarr", "lidarr", "readarr"],
+  supportedIntegrations: getIntegrationKindsByCategory("calendar"),
 })
   .withServerData(() => import("./serverData"))
   .withDynamicImport(() => import("./component"));

@@ -156,10 +156,6 @@ export default {
       placeholder: "Wähle eine oder mehrere Optionen aus",
     },
     noResults: "Keine Ergebnisse gefunden",
-    search: {
-      placeholder: "Suche nach etwas",
-      nothingFound: "Nichts gefunden",
-    },
     mantineReactTable: MRT_Localization_DE,
   },
   widget: {
@@ -192,5 +188,9 @@ export default {
         },
       },
     },
+  },
+  search: {
+    placeholder: "Suche nach etwas",
+    nothingFound: "Nichts gefunden",
   },
 } as const;

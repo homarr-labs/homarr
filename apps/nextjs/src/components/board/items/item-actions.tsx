@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import type { Modify } from "@homarr/common/types";
 import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
@@ -71,9 +72,12 @@ export const useItemActions = () => {
           advancedOptions: {
             customCssClasses: [],
           },
-        } satisfies Omit<Item, "kind" | "yOffset" | "xOffset"> & {
-          kind: WidgetKind;
-        };
+        } satisfies Modify<
+          Omit<Item, "yOffset" | "xOffset">,
+          {
+            kind: WidgetKind;
+          }
+        >;
 
         return {
           ...previous,
@@ -105,7 +109,7 @@ export const useItemActions = () => {
           id: createId(),
           yOffset: undefined,
           xOffset: undefined,
-        } satisfies Omit<Item, "yOffset" | "xOffset"> & { yOffset?: number; xOffset?: number };
+        } satisfies Modify<Item, { yOffset?: number; xOffset?: number }>;
 
         return {
           ...previous,

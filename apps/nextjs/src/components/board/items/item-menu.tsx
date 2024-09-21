@@ -107,7 +107,7 @@ export const BoardItemMenu = ({
           }}
         >
           {tItem("action.moveResize")}
-        </Menu.Item>{" "}
+        </Menu.Item>
         <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
           {tItem("action.duplicate")}
         </Menu.Item>

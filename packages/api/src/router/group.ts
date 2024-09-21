@@ -3,9 +3,9 @@ import { TRPCError } from "@trpc/server";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like, not, sql } from "@homarr/db";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema/sqlite";
-import { validation } from "@homarr/validation";
+import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const groupRouter = createTRPCRouter({
   getPaginated: protectedProcedure.input(validation.group.paginated).query(async ({ input, ctx }) => {
@@ -91,6 +91,23 @@ export const groupRouter = createTRPCRouter({
       },
     });
   }),
+  search: publicProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        limit: z.number().min(1).max(100).default(10),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return await ctx.db.query.groups.findMany({
+        where: like(groups.name, `%${input.query}%`),
+        columns: {
+          id: true,
+          name: true,
+        },
+        limit: input.limit,
+      });
+    }),
   createGroup: protectedProcedure.input(validation.group.create).mutation(async ({ input, ctx }) => {
     const normalizedName = normalizeName(input.name);
     await checkSimilarNameAndThrowAsync(ctx.db, normalizedName);

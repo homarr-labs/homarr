@@ -556,6 +556,7 @@ export default {
       next: "Next",
       checkoutDocs: "Check out the documentation",
       tryAgain: "Try again",
+      loading: "Loading",
     },
     iconPicker: {
       label: "Icon URL",
@@ -594,16 +595,6 @@ export default {
       placeholder: "Pick value",
       badge: {
         recommended: "Recommended",
-      },
-    },
-    search: {
-      placeholder: "Search for anything",
-      nothingFound: "Nothing found",
-      group: {
-        all: "All",
-        web: "Web",
-        action: "Actions",
-        app: "Apps",
       },
     },
     userAvatar: {
@@ -1171,6 +1162,99 @@ export default {
       description: "Show the current streams on your media servers",
       option: {},
     },
+    downloads: {
+      name: "Download Client",
+      description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
+      option: {
+        columns: {
+          label: "Columns to show",
+        },
+        enableRowSorting: {
+          label: "Enable items sorting",
+        },
+        defaultSort: {
+          label: "Column used for sorting by default",
+        },
+        descendingDefaultSort: {
+          label: "Invert sorting",
+        },
+        showCompletedUsenet: {
+          label: "Show usenet entries marked as completed",
+        },
+        showCompletedTorrent: {
+          label: "Show torrent entries marked as completed",
+        },
+        activeTorrentThreshold: {
+          label: "Hide completed torrent under this threshold (in kiB/s)",
+        },
+        categoryFilter: {
+          label: "Categories/labels to filter",
+        },
+        filterIsWhitelist: {
+          label: "Filter as a whitelist",
+        },
+        applyFilterToRatio: {
+          label: "Use filter to calculate Ratio",
+        },
+      },
+      errors: {
+        noColumns: "Select Columns in Items",
+        noCommunications: "Can't load data from integration",
+      },
+      items: {
+        actions: { columnTitle: "Controls" },
+        added: { columnTitle: "Added", detailsTitle: "Date Added" },
+        category: { columnTitle: "Extras", detailsTitle: "Categories (Or extra information)" },
+        downSpeed: { columnTitle: "Down", detailsTitle: "Download Speed" },
+        index: { columnTitle: "#", detailsTitle: "Current index within client" },
+        id: { columnTitle: "Id" },
+        integration: { columnTitle: "Integration" },
+        name: { columnTitle: "Job name" },
+        progress: { columnTitle: "Progress", detailsTitle: "Download Progress" },
+        ratio: { columnTitle: "Ratio", detailsTitle: "Torrent ratio (received/sent)" },
+        received: { columnTitle: "Total down", detailsTitle: "Total downloaded" },
+        sent: { columnTitle: "Total up", detailsTitle: "Total Uploaded" },
+        size: { columnTitle: "File Size", detailsTitle: "Total Size of selection/files" },
+        state: { columnTitle: "State", detailsTitle: "Job State" },
+        time: { columnTitle: "Finish time", detailsTitle: "Time since/to completion" },
+        type: { columnTitle: "Type", detailsTitle: "Download Client type" },
+        upSpeed: { columnTitle: "Up", detailsTitle: "Upload Speed" },
+      },
+      states: {
+        downloading: "Downloading",
+        queued: "Queued",
+        paused: "Paused",
+        completed: "Completed",
+        failed: "Failed",
+        processing: "Processing",
+        leeching: "Leeching",
+        stalled: "Stalled",
+        unknown: "Unknown",
+        seeding: "Seeding",
+      },
+      actions: {
+        clients: {
+          modalTitle: "Download clients list",
+          pause: "Pause all clients/items",
+          resume: "Resume all clients/items",
+        },
+        client: {
+          pause: "Pause client",
+          resume: "Resume client",
+        },
+        item: {
+          pause: "Pause Item",
+          resume: "Resume Item",
+          delete: {
+            title: "Delete Item",
+            modalTitle: "Are you sure you want to delete this job?",
+            entry: "Delete entry",
+            entryAndFiles: "Delete entry and file(s)",
+          },
+        },
+      },
+      globalRatio: "Global Ratio",
+    },
     "mediaRequests-requestList": {
       name: "Media Requests List",
       description: "See a list of all media requests from your Overseerr or Jellyseerr instance",
@@ -1662,7 +1746,7 @@ export default {
             copy: {
               title: "Copy invite",
               description:
-                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore</b>. If you do no longer wish to invite said person, you can delete this invitation any time.",
+                "Your invitation has been generated. After this modal closes, you'll not be able to copy this link anymore. If you do no longer wish to invite said person, you can delete this invitation any time.",
               link: "Invitation link",
               button: "Copy & close",
             },
@@ -1778,6 +1862,9 @@ export default {
             },
             mediaOrganizer: {
               label: "Media Organizers",
+            },
+            downloads: {
+              label: "Downloads",
             },
             mediaRequests: {
               label: "Media Requests",
@@ -1994,6 +2081,249 @@ export default {
       },
       about: {
         label: "About",
+      },
+    },
+  },
+  search: {
+    placeholder: "Search for anything",
+    nothingFound: "Nothing found",
+    error: {
+      fetch: "An error occurred while fetching data",
+    },
+    mode: {
+      appIntegrationBoard: {
+        help: "Search for apps, integrations or boards",
+        group: {
+          app: {
+            title: "Apps",
+            children: {
+              action: {
+                open: {
+                  label: "Open app url",
+                },
+                edit: {
+                  label: "Edit app",
+                },
+              },
+              detail: {
+                title: "Select an action for the app",
+              },
+            },
+          },
+          board: {
+            title: "Boards",
+            children: {
+              action: {
+                open: {
+                  label: "Open board",
+                },
+                homeBoard: {
+                  label: "Set as home board",
+                },
+                settings: {
+                  label: "Open settings",
+                },
+              },
+              detail: {
+                title: "Select an action for the board",
+              },
+            },
+          },
+          integration: {
+            title: "Integrations",
+          },
+        },
+      },
+      command: {
+        help: "Activate command mode",
+        group: {
+          globalCommand: {
+            title: "Global commands",
+            option: {
+              colorScheme: {
+                light: "Switch to light mode",
+                dark: "Switch to dark mode",
+              },
+              language: {
+                label: "Change language",
+                children: {
+                  detail: {
+                    title: "Select your prefered language",
+                  },
+                },
+              },
+              newBoard: {
+                label: "Create a new board",
+              },
+              importBoard: {
+                label: "Import a board",
+              },
+              newApp: {
+                label: "Create a new app",
+              },
+              newIntegration: {
+                label: "Create a new integration",
+                children: {
+                  detail: {
+                    title: "Select the integration type you want to create",
+                  },
+                },
+              },
+              newUser: {
+                label: "Create a new user",
+              },
+              newInvite: {
+                label: "Create a new invite",
+              },
+              newGroup: {
+                label: "Create a new group",
+              },
+            },
+          },
+        },
+      },
+      external: {
+        help: "Use an external search engine",
+        group: {
+          searchEngine: {
+            title: "Search engines",
+            option: {
+              google: {
+                name: "Google",
+                description: "Search the web with Google",
+              },
+              bing: {
+                name: "Bing",
+                description: "Search the web with Bing",
+              },
+              duckduckgo: {
+                name: "DuckDuckGo",
+                description: "Search the web with DuckDuckGo",
+              },
+              torrent: {
+                name: "Torrents",
+                description: "Search for torrents on torrentdownloads.pro",
+              },
+              youTube: {
+                name: "YouTube",
+                description: "Search for videos on YouTube",
+              },
+            },
+          },
+        },
+      },
+      help: {
+        group: {
+          mode: {
+            title: "Modes",
+          },
+          help: {
+            title: "Help",
+            option: {
+              documentation: {
+                label: "Documentation",
+              },
+              submitIssue: {
+                label: "Submit an issue",
+              },
+              discord: {
+                label: "Community Discord",
+              },
+            },
+          },
+        },
+      },
+      page: {
+        help: "Search for pages",
+        group: {
+          page: {
+            title: "Pages",
+            option: {
+              manageHome: {
+                label: "Manage home page",
+              },
+              manageBoard: {
+                label: "Manage boards",
+              },
+              manageApp: {
+                label: "Manage apps",
+              },
+              manageIntegration: {
+                label: "Manage integrations",
+              },
+              manageUser: {
+                label: "Manage users",
+              },
+              manageInvite: {
+                label: "Manage invites",
+              },
+              manageGroup: {
+                label: "Manage groups",
+              },
+              manageDocker: {
+                label: "Manage docker",
+              },
+              manageApi: {
+                label: "Swagger API",
+              },
+              manageLog: {
+                label: "View logs",
+              },
+              manageTask: {
+                label: "Manage tasks",
+              },
+              manageSettings: {
+                label: "Global settings",
+              },
+              about: {
+                label: "About",
+              },
+              homeBoard: {
+                label: "Home board",
+              },
+              preferences: {
+                label: "Your preferences",
+              },
+            },
+          },
+        },
+      },
+      userGroup: {
+        help: "Search for users or groups",
+        group: {
+          user: {
+            title: "Users",
+            children: {
+              action: {
+                detail: {
+                  label: "Show user details",
+                },
+              },
+              detail: {
+                title: "Select an action for the user",
+              },
+            },
+          },
+          group: {
+            title: "Groups",
+            children: {
+              action: {
+                detail: {
+                  label: "Show group details",
+                },
+                manageMember: {
+                  label: "Manage members",
+                },
+                managePermission: {
+                  label: "Manage permissions",
+                },
+              },
+              detail: {
+                title: "Select an action for the group",
+              },
+            },
+          },
+        },
       },
     },
   },

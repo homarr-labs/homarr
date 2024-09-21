@@ -19,6 +19,7 @@ export const widgetRouter = createTRPCRouter({
   smartHome: smartHomeRouter,
   mediaServer: mediaServerRouter,
   calendar: calendarRouter,
+  downloads: downloadsRouter,
   mediaRequests: mediaRequestsRouter,
   rssFeed: rssFeedRouter,
   indexerManager: indexerManagerRouter,

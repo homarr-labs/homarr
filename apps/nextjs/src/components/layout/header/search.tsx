@@ -4,13 +4,13 @@ import { TextInput, UnstyledButton } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
 import { openSpotlight } from "@homarr/spotlight";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { HeaderButton } from "./button";
 import classes from "./search.module.css";
 
 export const DesktopSearchInput = () => {
-  const t = useScopedI18n("common.search");
+  const t = useI18n();
 
   return (
     <TextInput
@@ -21,7 +21,10 @@ export const DesktopSearchInput = () => {
       leftSection={<IconSearch size={20} stroke={1.5} />}
       onClick={openSpotlight}
     >
-      {t("placeholder")}
+      {t("common.rtl", {
+        value: t("search.placeholder"),
+        symbol: "...",
+      })}
     </TextInput>
   );
 };

@@ -18,6 +18,7 @@ export const jobGroup = createCronJobGroup({
   smartHomeEntityState: smartHomeEntityStateJob,
   mediaServer: mediaServerJob,
   mediaOrganizer: mediaOrganizerJob,
+  downloads: downloadsJob,
   mediaRequests: mediaRequestsJob,
   rssFeeds: rssFeedsJob,
   indexerManager: indexerManagerJob,

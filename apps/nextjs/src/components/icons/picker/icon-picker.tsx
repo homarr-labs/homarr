@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Combobox, Group, Image, InputBase, Skeleton, Text, useCombobox } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 interface IconPickerProps {
   initialValue?: string;
@@ -18,7 +18,8 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const [search, setSearch] = useState(initialValue ?? "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue ?? null);
 
-  const t = useScopedI18n("common");
+  const t = useI18n();
+  const tCommon = useScopedI18n("common");
 
   const { data, isFetching } = clientApi.icon.findIcons.useQuery({
     searchText: search,
@@ -89,13 +90,13 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           rightSectionPointerEvents="none"
           withAsterisk
           error={error}
-          label={t("iconPicker.label")}
+          label={tCommon("iconPicker.label")}
         />
       </Combobox.Target>
 
       <Combobox.Dropdown>
         <Combobox.Header>
-          <Text c="dimmed">{t("iconPicker.header", { countIcons: data?.countIcons })}</Text>
+          <Text c="dimmed">{tCommon("iconPicker.header", { countIcons: data?.countIcons })}</Text>
         </Combobox.Header>
         <Combobox.Options mah={350} style={{ overflowY: "auto" }}>
           {totalOptions > 0 ? (

@@ -5,9 +5,9 @@ import * as homarrIntegrations from "@homarr/integrations";
 
 import { testConnectionAsync } from "../../integration/integration-test-connection";
 
-vi.mock("@homarr/common", async (importActual) => {
+vi.mock("@homarr/common/server", async (importActual) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const actual = await importActual<typeof import("@homarr/common")>();
+  const actual = await importActual<typeof import("@homarr/common/server")>();
 
   return {
     ...actual,
@@ -18,7 +18,7 @@ vi.mock("@homarr/common", async (importActual) => {
 describe("testConnectionAsync should run test connection of integration", () => {
   test("with input of only form secrets matching api key kind it should use form apiKey", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreatorByKind");
+    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue({
       testConnectionAsync: async () => await Promise.resolve(),
@@ -42,10 +42,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -57,7 +58,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of only null form secrets and the required db secrets matching api key kind it should use db apiKey", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreatorByKind");
+    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue({
       testConnectionAsync: async () => await Promise.resolve(),
@@ -88,10 +89,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -103,7 +105,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of form and db secrets matching api key kind it should use form apiKey", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreatorByKind");
+    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue({
       testConnectionAsync: async () => await Promise.resolve(),
@@ -134,10 +136,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -149,7 +152,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of form apiKey and db secrets for username and password it should use form apiKey when both is allowed", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreatorByKind");
+    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue({
       testConnectionAsync: async () => await Promise.resolve(),
@@ -184,10 +187,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "apiKey",
@@ -199,7 +203,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of null form apiKey and db secrets for username and password it should use db username and password when both is allowed", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreatorByKind");
+    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue({
       testConnectionAsync: async () => await Promise.resolve(),
@@ -234,10 +238,11 @@ describe("testConnectionAsync should run test connection of integration", () => 
     await testConnectionAsync(integration, dbSecrets);
 
     // Assert
-    expect(factorySpy).toHaveBeenCalledWith("piHole", {
+    expect(factorySpy).toHaveBeenCalledWith({
       id: "new",
       name: "Pi Hole",
       url: "http://pi.hole",
+      kind: "piHole",
       decryptedSecrets: [
         expect.objectContaining({
           kind: "username",
