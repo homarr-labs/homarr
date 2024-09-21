@@ -107,7 +107,7 @@ const optionMapping: OptionMapping = {
     cpu: (oldOptions) => oldOptions.cpu,
     memory: (oldOptions) => oldOptions.memory,
     fahrenheit: (oldOptions) => oldOptions.fahrenheit,
-    fileSystem: (oldOptions) => oldOptions.fileSystem
+    fileSystem: (oldOptions) => oldOptions.fileSystem,
   },
   app: null,
 };
