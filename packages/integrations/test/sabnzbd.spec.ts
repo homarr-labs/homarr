@@ -3,7 +3,7 @@ import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "te
 import type { StartedTestContainer } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
 
-import { SabnzbdIntegration } from "../src/download-client/sabnzbd/sabnzbd-integration";
+import { SabnzbdIntegration } from "../src";
 import type { DownloadClientItem } from "../src/interfaces/downloads/download-client-items";
 
 const DEFAULT_API_KEY = "8r45mfes43s3iw7x3oecto6dl9ilxnf9";
