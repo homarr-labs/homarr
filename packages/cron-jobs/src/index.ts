@@ -10,6 +10,7 @@ import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { createCronJobGroup } from "./lib";
+import { downloadsJob } from "./jobs/integrations/downloads";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,

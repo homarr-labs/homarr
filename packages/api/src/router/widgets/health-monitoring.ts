@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
-import type { HealthMonitoring } from "@homarr/integrations";
-import { integrationCreatorByKind } from "@homarr/integrations";
+import type { HealthMonitoring} from "@homarr/integrations";
+import { integrationCreator } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
@@ -15,7 +15,7 @@ export const healthMonitoringRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const client = integrationCreatorByKind(integration.kind, integration);
+          const client = integrationCreator(integration);
 
           try {
             const healthInfo = await client.getSystemInfoAsync();

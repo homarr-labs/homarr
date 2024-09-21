@@ -10,6 +10,7 @@ import { notebookRouter } from "./notebook";
 import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { weatherRouter } from "./weather";
+import { downloadsRouter } from "./downloads";
 
 export const widgetRouter = createTRPCRouter({
   notebook: notebookRouter,

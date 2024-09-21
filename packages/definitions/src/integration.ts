@@ -125,15 +125,9 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openmediavault.png",
     category: ["healthMonitoring"],
   },
-} satisfies Record<
-  string,
-  {
-    name: string;
-    iconUrl: string;
-    secretKinds: [IntegrationSecretKind[], ...IntegrationSecretKind[][]]; // at least one secret kind set is required
-    category: IntegrationCategory[];
-  }
->;
+} as const satisfies Record<string, integrationDefinition>;
+
+export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
 
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
