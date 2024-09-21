@@ -24,25 +24,16 @@ WORKDIR /app
 COPY .gitignore .gitignore
 
 COPY --from=builder /app/tasks-out/json/ .
-COPY --from=builder /app/tasks-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/websocket-out/json/ .
-COPY --from=builder /app/websocket-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/migration-out/json/ .
-COPY --from=builder /app/migration-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/cli-out/json/ .
-COPY --from=builder /app/cli-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/next-out/json/ .
-COPY --from=builder /app/next-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
+# Uses the lockfile to install the dependencies
+RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
+
+# Install sharp for image optimization
 RUN corepack enable pnpm && pnpm install sharp -w
 
 # Build the project
