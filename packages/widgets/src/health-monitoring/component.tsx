@@ -57,6 +57,11 @@ export default function HealthMonitoringWidget({
         const ringSize = width * 0.95;
         const ringThickness = width / 10;
         const progressSize = width * 0.2;
+        const formatUptime = (uptime: number) => {
+          const days = Math.floor(uptime / (60 * 60 * 24));
+          const remainingHours = Math.floor((uptime % (60 * 60 * 24)) / 3600);
+          return t("widget.healthMonitoring.popover.uptime", { days: days, hours: remainingHours });
+        };
 
         return (
           <Box h="100%">
@@ -82,21 +87,19 @@ export default function HealthMonitoringWidget({
                         disabled={!healthInfo.rebootRequired && healthInfo.availablePkgUpdates === 0}
                       >
                         <Avatar size="10cqmin" radius="sm">
-                          <IconInfoSquare size="10cqmin" />
+                          <IconInfoSquare size="8cqmin" />
                         </Avatar>
                       </Indicator>
                     </HoverCard.Target>
                     <HoverCard.Dropdown>
                       <List size="sm" center spacing="0.5cqmin">
                         <List.Item icon={<IconCpu2 size="1cqmin" />}>
-                          {t("widget.healthMonitoring.popover.processor")}: {healthInfo.cpuModelName}
+                          {t("widget.healthMonitoring.popover.processor")} {healthInfo.cpuModelName}
                         </List.Item>
                         <List.Item icon={<IconVersions size="1cqmin" />}>
-                          {t("widget.healthMonitoring.popover.version")}: {healthInfo.version}
+                          {t("widget.healthMonitoring.popover.version")} {healthInfo.version}
                         </List.Item>
-                        <List.Item icon={<IconClock size="1cqmin" />}>
-                          {t("widget.healthMonitoring.popover.uptime")}: {formatUptime(healthInfo.uptime)}
-                        </List.Item>
+                        <List.Item icon={<IconClock size="1cqmin" />}>{formatUptime(healthInfo.uptime)}</List.Item>
                       </List>
                     </HoverCard.Dropdown>
                   </HoverCard>
@@ -119,13 +122,14 @@ export default function HealthMonitoringWidget({
                               <List size="sm" center spacing="0.5cqmin" icon={<IconCpu2 size="1cqmin" />}>
                                 <List.Item icon>{t("widget.healthMonitoring.popover.loadAverage")}</List.Item>
                                 <List.Item>
-                                  1 {t("widget.healthMonitoring.popover.minute")}: {healthInfo.loadAverage["1min"]}
+                                  {t("widget.healthMonitoring.popover.oneMinute")} {healthInfo.loadAverage["1min"]}
                                 </List.Item>
                                 <List.Item>
-                                  5 {t("widget.healthMonitoring.popover.minutes")}: {healthInfo.loadAverage["5min"]}
+                                  {t("widget.healthMonitoring.popover.fiveMinutes")} {healthInfo.loadAverage["5min"]}
                                 </List.Item>
                                 <List.Item>
-                                  15 {t("widget.healthMonitoring.popover.minutes")}: {healthInfo.loadAverage["15min"]}
+                                  {t("widget.healthMonitoring.popover.fifteenMinutes")}{" "}
+                                  {healthInfo.loadAverage["15min"]}
                                 </List.Item>
                               </List>
                             </HoverCard.Dropdown>
@@ -185,10 +189,10 @@ export default function HealthMonitoringWidget({
                             <HoverCard.Dropdown>
                               <List size="sm" center spacing="0.5cqmin" icon={<IconBrain size="1cqmin" />}>
                                 <List.Item __size="1.5cqmin">
-                                  {t("widget.healthMonitoring.popover.total")}: {memoryUsage.memTotal.GB}GiB
+                                  {t("widget.healthMonitoring.popover.total")} {memoryUsage.memTotal.GB}GiB
                                 </List.Item>
                                 <List.Item __size="1.5cqmin">
-                                  {t("widget.healthMonitoring.popover.available")}: {memoryUsage.memFree.GB}GiB (
+                                  {t("widget.healthMonitoring.popover.memAvailable")} {memoryUsage.memFree.GB}GiB (
                                   {memoryUsage.memFree.percent}%)
                                 </List.Item>
                               </List>
@@ -245,7 +249,7 @@ export default function HealthMonitoringWidget({
                         }
                       >
                         <Progress.Section value={100 - disk.percentage} color="default">
-                          <Progress.Label>{t("widget.healthMonitoring.popover.available")}</Progress.Label>
+                          <Progress.Label>{t("widget.healthMonitoring.popover.diskAvailable")}</Progress.Label>
                         </Progress.Section>
                       </Tooltip>
                     </Progress.Root>
@@ -293,12 +297,6 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
       overallStatus: smartDisk?.overallStatus ?? "",
     };
   });
-};
-
-export const formatUptime = (uptime: number) => {
-  const days = Math.floor(uptime / (60 * 60 * 24));
-  const remainingHours = Math.floor((uptime % (60 * 60 * 24)) / 3600);
-  return `${days} days, ${remainingHours} hours`;
 };
 
 export const formatMemoryUsage = (memFree: string, memUsed: string) => {
