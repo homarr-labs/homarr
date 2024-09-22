@@ -44,11 +44,11 @@ export const AppSelectModal = createModal<InnerProps>(({ actions, innerProps }) 
       <Stack>
         <Select
           {...form.getInputProps("id")}
-          label="Select app"
+          label={t("app.action.select.label")}
           searchable
           clearable
           leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
-          nothingFoundMessage="No apps found"
+          nothingFoundMessage={t("app.action.select.notFound")}
           renderOption={renderSelectOption}
           limit={5}
           data={
@@ -73,7 +73,7 @@ export const AppSelectModal = createModal<InnerProps>(({ actions, innerProps }) 
     </form>
   );
 }).withOptions({
-  defaultTitle: "Select app",
+  defaultTitle: (t) => t("app.action.select.label"),
 });
 
 const iconProps = {

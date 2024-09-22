@@ -4,6 +4,7 @@ import { IconClock, IconX } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -36,8 +37,13 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       },
       addButton({ addItem, values }) {
         const { openModal } = useModalAction(AppSelectModal);
+        const t = useI18n();
 
-        return <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>Add bookmark</Button>;
+        return (
+          <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>
+            {t("widget.bookmarks.option.items.add")}
+          </Button>
+        );
       },
       uniqueIdentifier: (item) => item.id,
       useData: (initialIds) => {

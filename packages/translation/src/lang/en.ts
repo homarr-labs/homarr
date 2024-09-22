@@ -359,6 +359,12 @@ export default {
         label: "Url",
       },
     },
+    action: {
+      select: {
+        label: "Select app",
+        notFound: "No app found",
+      },
+    },
   },
   integration: {
     page: {
@@ -777,12 +783,16 @@ export default {
     },
     bookmarks: {
       name: "Bookmarks",
-      description: "Displays a static list of strings or links",
+      description: "Displays multiple app links",
       option: {
         title: {
           label: "Title",
-        }
-      }
+        },
+        items: {
+          label: "Bookmarks",
+          add: "Add bookmark",
+        },
+      },
     },
     dnsHoleSummary: {
       name: "DNS Hole Summary",

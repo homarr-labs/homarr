@@ -20,6 +20,7 @@ import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon, Card, Center, Fieldset, Loader, Stack } from "@mantine/core";
 import { IconGripHorizontal } from "@tabler/icons-react";
 
+import { useWidgetInputTranslation } from "./common";
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
 
@@ -27,17 +28,15 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   property,
   options,
   initialOptions,
+  kind,
 }: CommonWidgetInputProps<"sortableItemList">) => {
+  const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
   const values = form.values.options[property] as TOptionValue[];
   const { data, isLoading, error } = options.useData(initialValues);
   const dataMap = useMemo(() => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])), [data]);
   const [tempMap, setTempMap] = useState<Map<TOptionValue, TItem>>(new Map());
-
-  useEffect(() => {
-    console.error("data changed: ", data);
-  }, [data]);
 
   const [activeId, setActiveId] = useState<TOptionValue | null>(null);
   const sensors = useSensors(
@@ -81,7 +80,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   };
 
   return (
-    <Fieldset legend="Items">
+    <Fieldset legend={t("label")}>
       <Stack>
         <options.addButton addItem={addItem} values={values} />
 

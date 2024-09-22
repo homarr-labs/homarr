@@ -10,8 +10,6 @@ import type { WidgetComponentProps } from "../definition";
 export default function BookmarksWidget({ options, width, height }: WidgetComponentProps<"bookmarks">) {
   const [data] = clientApi.app.byIds.useSuspenseQuery(options.items);
 
-  // Calculates the perfect number of columns for the grid layout based on the width and height in pixels and the number of items
-
   return (
     <Stack h="100%" gap="sm" p="sm">
       <Title order={4} px="0.25rem">
@@ -29,6 +27,7 @@ interface GridLayoutProps {
 }
 
 const GridLayout = ({ data, width, height }: GridLayoutProps) => {
+  // Calculates the perfect number of columns for the grid layout based on the width and height in pixels and the number of items
   const columns = Math.ceil(Math.sqrt(data.length * (width / height)));
 
   return (
