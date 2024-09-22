@@ -6,6 +6,7 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 import type { WidgetKind } from "@homarr/definitions";
 
 import * as app from "./app";
+import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
@@ -24,7 +25,6 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as bookmarks from "./bookmarks";
 
 export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
