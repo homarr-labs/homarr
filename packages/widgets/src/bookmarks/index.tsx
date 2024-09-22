@@ -28,7 +28,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
               </Group>
             </Group>
 
-            <ActionIcon variant="transparent" color="red" onClick={() => removeItem()}>
+            <ActionIcon variant="transparent" color="red" onClick={removeItem}>
               <IconX size={20} />
             </ActionIcon>
           </Group>
