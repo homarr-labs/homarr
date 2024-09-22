@@ -1,4 +1,5 @@
 import { objectKeys } from "@homarr/common";
+import type { AtLeastOneOf } from "@homarr/common/types";
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false },
@@ -8,36 +9,43 @@ export const integrationSecretKindObject = {
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
 
+interface integrationDefinition {
+  name: string;
+  iconUrl: string;
+  secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
+  category: AtLeastOneOf<IntegrationCategory>;
+}
+
 export const integrationDefs = {
   sabNzbd: {
     name: "SABnzbd",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sabnzbd.png",
-    category: ["useNetClient"],
+    category: ["downloadClient", "usenet"],
   },
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nzbget.png",
-    category: ["useNetClient"],
+    category: ["downloadClient", "usenet"],
   },
   deluge: {
     name: "Deluge",
     secretKinds: [["password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/deluge.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "torrent"],
   },
   transmission: {
     name: "Transmission",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/transmission.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "torrent"],
   },
   qBittorrent: {
     name: "qBittorrent",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/qbittorrent.png",
-    category: ["downloadClient"],
+    category: ["downloadClient", "torrent"],
   },
   sonarr: {
     name: "Sonarr",
@@ -111,15 +119,9 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: ["smartHomeServer"],
   },
-} satisfies Record<
-  string,
-  {
-    name: string;
-    iconUrl: string;
-    secretKinds: [IntegrationSecretKind[], ...IntegrationSecretKind[][]]; // at least one secret kind set is required
-    category: IntegrationCategory[];
-  }
->;
+} as const satisfies Record<string, integrationDefinition>;
+
+export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
 
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
@@ -128,14 +130,34 @@ export const getIntegrationName = (integration: IntegrationKind) => integrationD
 export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] =>
   integrationDefs[integration].secretKinds[0];
 
-export const getAllSecretKindOptions = (
-  integration: IntegrationKind,
-): [IntegrationSecretKind[], ...IntegrationSecretKind[][]] => integrationDefs[integration].secretKinds;
+export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
+  integrationDefs[integration].secretKinds;
 
-export const integrationKinds = objectKeys(integrationDefs);
+/**
+ * Get all integration kinds that share a category, typed only by the kinds belonging to the category
+ * @param category Category to filter by, belonging to IntegrationCategory
+ * @returns Partial list of integration kinds
+ */
+export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
+  return objectKeys(integrationDefs).filter((integration) =>
+    integrationDefs[integration].category.some((defCategory) => defCategory === category),
+  ) as AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
+};
 
-export type IntegrationSecretKind = (typeof integrationSecretKinds)[number];
-export type IntegrationKind = (typeof integrationKinds)[number];
+/**
+ * Directly get the types of the list returned by getIntegrationKindsByCategory
+ */
+export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
+  [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number]
+    ? Key
+    : never;
+}[keyof typeof integrationDefs] extends infer U
+  ? //Needed to simplify the type when using it
+    U
+  : never;
+
+export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
+export type IntegrationKind = keyof typeof integrationDefs;
 export type IntegrationCategory =
   | "dnsHole"
   | "mediaService"
@@ -143,6 +165,7 @@ export type IntegrationCategory =
   | "mediaSearch"
   | "mediaRequest"
   | "downloadClient"
-  | "useNetClient"
+  | "usenet"
+  | "torrent"
   | "smartHomeServer"
   | "indexerManager";

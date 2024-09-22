@@ -24,25 +24,16 @@ WORKDIR /app
 COPY .gitignore .gitignore
 
 COPY --from=builder /app/tasks-out/json/ .
-COPY --from=builder /app/tasks-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/websocket-out/json/ .
-COPY --from=builder /app/websocket-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/migration-out/json/ .
-COPY --from=builder /app/migration-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/cli-out/json/ .
-COPY --from=builder /app/cli-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
-
 COPY --from=builder /app/next-out/json/ .
-COPY --from=builder /app/next-out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN corepack enable pnpm && pnpm install
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
+# Uses the lockfile to install the dependencies
+RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
+
+# Install sharp for image optimization
 RUN corepack enable pnpm && pnpm install sharp -w
 
 # Build the project
@@ -61,7 +52,8 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-RUN apk add --no-cache redis bash
+# gettext is required for envsubst
+RUN apk add --no-cache redis nginx bash gettext
 RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
@@ -79,6 +71,11 @@ RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
 RUN chown -R nextjs:nodejs /appdata
+RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
+    mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
+    mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
+    touch /run/nginx/nginx.pid && chown -R nextjs:nodejs /run/nginx/nginx.pid && \
+    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs && chown -R nextjs:nodejs /etc/nginx
 USER nextjs
 
 COPY --from=installer /app/apps/nextjs/next.config.mjs .
@@ -97,6 +94,8 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
+COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
+
 
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'

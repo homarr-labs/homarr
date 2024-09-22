@@ -26,3 +26,5 @@ export {
   type BoardItemAdvancedOptions,
 } from "./shared";
 export { passwordRequirements } from "./user";
+export { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "./board";
+export type { OldmarrImportConfiguration } from "./board";

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 import {
   backgroundImageAttachments,
@@ -8,6 +9,7 @@ import {
 } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
+import { createCustomErrorParams } from "./form/i18n";
 import { createSavePermissionsSchema } from "./permissions";
 import { commonItemSchema, createSectionSchema } from "./shared";
 
@@ -67,6 +69,53 @@ const permissionsSchema = z.object({
   id: z.string(),
 });
 
+export const oldmarrImportConfigurationSchema = z.object({
+  name: boardNameSchema,
+  onlyImportApps: z.boolean().default(false),
+  distinctAppsByHref: z.boolean().default(true),
+  screenSize: z.enum(["lg", "md", "sm"]).default("lg"),
+  sidebarBehaviour: z.enum(["remove-items", "last-section"]).default("last-section"),
+});
+
+export type OldmarrImportConfiguration = z.infer<typeof oldmarrImportConfigurationSchema>;
+
+export const superRefineJsonImportFile = (value: File | null, context: z.RefinementCtx) => {
+  if (!value) {
+    return context.addIssue({
+      code: "invalid_type",
+      expected: "object",
+      received: "null",
+    });
+  }
+
+  if (value.type !== "application/json") {
+    return context.addIssue({
+      code: "custom",
+      params: createCustomErrorParams({
+        key: "invalidFileType",
+        params: { expected: "JSON" },
+      }),
+    });
+  }
+
+  if (value.size > 1024 * 1024) {
+    return context.addIssue({
+      code: "custom",
+      params: createCustomErrorParams({
+        key: "fileTooLarge",
+        params: { maxSize: "1 MB" },
+      }),
+    });
+  }
+
+  return null;
+};
+
+const importJsonFileSchema = zfd.formData({
+  file: zfd.file().superRefine(superRefineJsonImportFile),
+  configuration: zfd.json(oldmarrImportConfigurationSchema),
+});
+
 const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
 
 z.object({
@@ -88,4 +137,5 @@ export const boardSchemas = {
   changeVisibility: changeVisibilitySchema,
   permissions: permissionsSchema,
   savePermissions: savePermissionsSchema,
+  importOldmarrConfig: importJsonFileSchema,
 };

@@ -1,17 +1,15 @@
 "use client";
 
-import type { ReactNode } from "react";
 import React from "react";
-import type { MantineSpacing } from "@mantine/core";
-import { Card, Group, LoadingOverlay, Stack, Switch, Text, Title, UnstyledButton } from "@mantine/core";
+import { Card, LoadingOverlay, Stack, Title } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import type { UseFormReturnType } from "@homarr/form";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useForm } from "@homarr/form";
 import type { defaultServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
+import { SwitchSetting } from "~/app/[locale]/manage/settings/_components/setting-switch";
 
 interface AnalyticsSettingsProps {
   initialData: typeof defaultServerSettings.analytics;
@@ -62,6 +60,7 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
             ms="xl"
             title={t("integrationData.title")}
             text={t("integrationData.text")}
+            disabled={!form.values.enableGeneral}
           />
           <SwitchSetting
             form={form}
@@ -69,6 +68,7 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
             ms="xl"
             title={t("widgetData.title")}
             text={t("widgetData.text")}
+            disabled={!form.values.enableGeneral}
           />
           <SwitchSetting
             form={form}
@@ -76,45 +76,10 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
             ms="xl"
             title={t("usersData.title")}
             text={t("usersData.text")}
+            disabled={!form.values.enableGeneral}
           />
         </Stack>
       </Card>
     </>
-  );
-};
-
-const SwitchSetting = ({
-  form,
-  ms,
-  title,
-  text,
-  formKey,
-}: {
-  form: UseFormReturnType<typeof defaultServerSettings.analytics>;
-  formKey: keyof typeof defaultServerSettings.analytics;
-  ms?: MantineSpacing;
-  title: string;
-  text: ReactNode;
-}) => {
-  const disabled = formKey !== "enableGeneral" && !form.values.enableGeneral;
-  const handleClick = React.useCallback(() => {
-    if (disabled) {
-      return;
-    }
-    form.setFieldValue(formKey, !form.values[formKey]);
-  }, [form, formKey, disabled]);
-
-  return (
-    <Group ms={ms} justify="space-between" gap="lg" align="center" wrap="nowrap">
-      <UnstyledButton style={{ flexGrow: 1 }} onClick={handleClick}>
-        <Stack gap={0}>
-          <Text fw="bold">{title}</Text>
-          <Text c="gray.5" fz={{ base: "xs", md: "sm" }}>
-            {text}
-          </Text>
-        </Stack>
-      </UnstyledButton>
-      <Switch disabled={disabled} onClick={handleClick} checked={form.values[formKey] && !disabled} />
-    </Group>
   );
 };

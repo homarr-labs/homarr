@@ -13,6 +13,7 @@ export default [
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...hooksPlugin.configs.recommended.rules,
       // context.getSource is not a function
+      "react-hooks/rules-of-hooks": "off",
       "react-hooks/exhaustive-deps": "off",
     },
     languageOptions: {

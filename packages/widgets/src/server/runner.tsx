@@ -37,7 +37,7 @@ interface ItemDataLoaderProps {
 
 const ItemDataLoader = async ({ item }: ItemDataLoaderProps) => {
   const widgetImport = widgetImports[item.kind];
-  if (!("serverDataLoader" in widgetImport)) {
+  if (!("serverDataLoader" in widgetImport) || !widgetImport.serverDataLoader) {
     return <ClientServerDataInitalizer id={item.id} serverData={undefined} />;
   }
   const loader = await widgetImport.serverDataLoader();

@@ -86,6 +86,9 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     });
   }, [dimensions, openPreviewDimensionsModal]);
 
+  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
+    setState({ ...state, options: { ...state.options, newOptions } });
+
   return (
     <>
       <Card withBorder w={dimensions.width} h={dimensions.height} p={dimensions.height >= 96 ? undefined : 4}>
@@ -105,6 +108,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
                 isEditMode={editMode}
                 boardId={undefined}
                 itemId={undefined}
+                setOptions={updateOptions}
               />
             </ErrorBoundary>
           )}

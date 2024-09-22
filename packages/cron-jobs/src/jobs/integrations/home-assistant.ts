@@ -1,10 +1,9 @@
 import SuperJSON from "superjson";
 
-import { decryptSecret } from "@homarr/common";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
-import { db, eq } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
-import { HomeAssistantIntegration } from "@homarr/integrations";
+import { db } from "@homarr/db";
+import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
+import { integrationCreatorFromSecrets } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 import { homeAssistantEntityState } from "@homarr/redis";
 
@@ -13,24 +12,8 @@ import type { WidgetComponentProps } from "../../../../widgets";
 import { createCronJob } from "../../lib";
 
 export const smartHomeEntityStateJob = createCronJob("smartHomeEntityState", EVERY_MINUTE).withCallback(async () => {
-  const itemsForIntegration = await db.query.items.findMany({
-    where: eq(items.kind, "smartHome-entityState"),
-    with: {
-      integrations: {
-        with: {
-          integration: {
-            with: {
-              secrets: {
-                columns: {
-                  kind: true,
-                  value: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+  const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {
+    kinds: ["smartHome-entityState"],
   });
 
   for (const itemForIntegration of itemsForIntegration) {
@@ -43,13 +26,7 @@ export const smartHomeEntityStateJob = createCronJob("smartHomeEntityState", EVE
       itemForIntegration.options,
     );
 
-    const homeAssistant = new HomeAssistantIntegration({
-      ...integration,
-      decryptedSecrets: integration.secrets.map((secret) => ({
-        ...secret,
-        value: decryptSecret(secret.value),
-      })),
-    });
+    const homeAssistant = integrationCreatorFromSecrets(integration);
     const state = await homeAssistant.getEntityStateAsync(options.entityId);
 
     if (!state.success) {

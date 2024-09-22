@@ -4,10 +4,9 @@ import { useCallback } from "react";
 import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-
-import { revalidatePathActionAsync } from "~/app/revalidatePathAction";
 
 interface RemoveGroupMemberProps {
   groupId: string;

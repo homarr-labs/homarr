@@ -1,3 +1,4 @@
+import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -57,7 +58,7 @@ const createHomeAssistantContainer = () => {
   return new GenericContainer(IMAGE_NAME)
     .withCopyFilesToContainer([
       {
-        source: __dirname + "/volumes/home-assistant-config.zip",
+        source: join(__dirname, "/volumes/home-assistant-config.zip"),
         target: "/tmp/config.zip",
       },
     ])

@@ -1,5 +1,6 @@
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { MediaRequestList, MediaRequestStats } from "@homarr/integrations";
-import { integrationCreatorByKind } from "@homarr/integrations";
+import { integrationCreator } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
@@ -11,7 +12,9 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 
 export const mediaRequestsRouter = createTRPCRouter({
   getLatestRequests: publicProcedure
-    .unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "overseerr", "jellyseerr"))
+    .unstable_concat(
+      createManyIntegrationOfOneItemMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")),
+    )
     .query(async ({ input }) => {
       return await Promise.all(
         input.integrationIds.map(async (integrationId) => {
@@ -21,7 +24,9 @@ export const mediaRequestsRouter = createTRPCRouter({
       );
     }),
   getStats: publicProcedure
-    .unstable_concat(createManyIntegrationOfOneItemMiddleware("query", "overseerr", "jellyseerr"))
+    .unstable_concat(
+      createManyIntegrationOfOneItemMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")),
+    )
     .query(async ({ input }) => {
       return await Promise.all(
         input.integrationIds.map(async (integrationId) => {
@@ -34,15 +39,15 @@ export const mediaRequestsRouter = createTRPCRouter({
       );
     }),
   answerRequest: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "overseerr", "jellyseerr"))
+    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("mediaRequest")))
     .input(z.object({ requestId: z.number(), answer: z.enum(["approve", "decline"]) }))
-    .mutation(async ({ ctx, input }) => {
-      const integration = integrationCreatorByKind(ctx.integration.kind, ctx.integration);
+    .mutation(async ({ ctx: { integration }, input }) => {
+      const integrationInstance = integrationCreator(integration);
 
       if (input.answer === "approve") {
-        await integration.approveRequestAsync(input.requestId);
+        await integrationInstance.approveRequestAsync(input.requestId);
         return;
       }
-      await integration.declineRequestAsync(input.requestId);
+      await integrationInstance.declineRequestAsync(input.requestId);
     }),
 });

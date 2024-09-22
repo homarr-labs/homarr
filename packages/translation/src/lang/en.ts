@@ -530,6 +530,7 @@ export default {
     symbols: {
       colon: ": ",
     },
+    beta: "Beta",
     error: "Error",
     errors: {
       noData: "No data to show",
@@ -541,6 +542,7 @@ export default {
       backToOverview: "Back to overview",
       create: "Create",
       edit: "Edit",
+      import: "Import",
       insert: "Insert",
       remove: "Remove",
       save: "Save",
@@ -554,6 +556,7 @@ export default {
       next: "Next",
       checkoutDocs: "Check out the documentation",
       tryAgain: "Try again",
+      loading: "Loading",
     },
     iconPicker: {
       label: "Icon URL",
@@ -592,16 +595,6 @@ export default {
       placeholder: "Pick value",
       badge: {
         recommended: "Recommended",
-      },
-    },
-    search: {
-      placeholder: "Search for anything",
-      nothingFound: "Nothing found",
-      group: {
-        all: "All",
-        web: "Web",
-        action: "Actions",
-        app: "Apps",
       },
     },
     userAvatar: {
@@ -644,6 +637,9 @@ export default {
           passwordsDoNotMatch: "Passwords do not match",
           passwordRequirements: "Password does not meet the requirements",
           boardAlreadyExists: "A board with this name already exists",
+          invalidFileType: "Invalid file type, expected {expected}",
+          fileTooLarge: "File is too large, maximum size is {maxSize}",
+          invalidConfiguration: "Invalid configuration",
         },
       },
     },
@@ -1069,6 +1065,20 @@ export default {
         unknown: "Unknown",
       },
     },
+    indexerManager: {
+      name: "Indexer manager status",
+      description: "Status of your indexers",
+      option: {
+        openIndexerSiteInNewTab: {
+          label: "Open indexer site in new tab",
+        },
+      },
+      title: "Indexer manager",
+      testAll: "Test all",
+      error: {
+        internalServerError: "Failed to fetch indexers status",
+      },
+    },
     common: {
       location: {
         query: "City / Postal code",
@@ -1127,6 +1137,99 @@ export default {
       name: "Current media server streams",
       description: "Show the current streams on your media servers",
       option: {},
+    },
+    downloads: {
+      name: "Download Client",
+      description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
+      option: {
+        columns: {
+          label: "Columns to show",
+        },
+        enableRowSorting: {
+          label: "Enable items sorting",
+        },
+        defaultSort: {
+          label: "Column used for sorting by default",
+        },
+        descendingDefaultSort: {
+          label: "Invert sorting",
+        },
+        showCompletedUsenet: {
+          label: "Show usenet entries marked as completed",
+        },
+        showCompletedTorrent: {
+          label: "Show torrent entries marked as completed",
+        },
+        activeTorrentThreshold: {
+          label: "Hide completed torrent under this threshold (in kiB/s)",
+        },
+        categoryFilter: {
+          label: "Categories/labels to filter",
+        },
+        filterIsWhitelist: {
+          label: "Filter as a whitelist",
+        },
+        applyFilterToRatio: {
+          label: "Use filter to calculate Ratio",
+        },
+      },
+      errors: {
+        noColumns: "Select Columns in Items",
+        noCommunications: "Can't load data from integration",
+      },
+      items: {
+        actions: { columnTitle: "Controls" },
+        added: { columnTitle: "Added", detailsTitle: "Date Added" },
+        category: { columnTitle: "Extras", detailsTitle: "Categories (Or extra information)" },
+        downSpeed: { columnTitle: "Down", detailsTitle: "Download Speed" },
+        index: { columnTitle: "#", detailsTitle: "Current index within client" },
+        id: { columnTitle: "Id" },
+        integration: { columnTitle: "Integration" },
+        name: { columnTitle: "Job name" },
+        progress: { columnTitle: "Progress", detailsTitle: "Download Progress" },
+        ratio: { columnTitle: "Ratio", detailsTitle: "Torrent ratio (received/sent)" },
+        received: { columnTitle: "Total down", detailsTitle: "Total downloaded" },
+        sent: { columnTitle: "Total up", detailsTitle: "Total Uploaded" },
+        size: { columnTitle: "File Size", detailsTitle: "Total Size of selection/files" },
+        state: { columnTitle: "State", detailsTitle: "Job State" },
+        time: { columnTitle: "Finish time", detailsTitle: "Time since/to completion" },
+        type: { columnTitle: "Type", detailsTitle: "Download Client type" },
+        upSpeed: { columnTitle: "Up", detailsTitle: "Upload Speed" },
+      },
+      states: {
+        downloading: "Downloading",
+        queued: "Queued",
+        paused: "Paused",
+        completed: "Completed",
+        failed: "Failed",
+        processing: "Processing",
+        leeching: "Leeching",
+        stalled: "Stalled",
+        unknown: "Unknown",
+        seeding: "Seeding",
+      },
+      actions: {
+        clients: {
+          modalTitle: "Download clients list",
+          pause: "Pause all clients/items",
+          resume: "Resume all clients/items",
+        },
+        client: {
+          pause: "Pause client",
+          resume: "Resume client",
+        },
+        item: {
+          pause: "Pause Item",
+          resume: "Resume Item",
+          delete: {
+            title: "Delete Item",
+            modalTitle: "Are you sure you want to delete this job?",
+            entry: "Delete entry",
+            entryAndFiles: "Delete entry and file(s)",
+          },
+        },
+      },
+      globalRatio: "Global Ratio",
     },
     "mediaRequests-requestList": {
       name: "Media Requests List",
@@ -1208,6 +1311,61 @@ export default {
           error: {
             title: "Unable to apply changes",
             message: "The board could not be saved",
+          },
+        },
+      },
+      oldImport: {
+        label: "Import from homarr before 1.0.0",
+        notification: {
+          success: {
+            title: "Import successful",
+            message: "The board was successfully imported",
+          },
+          error: {
+            title: "Import failed",
+            message: "The board could not be imported, check the logs for further details",
+          },
+        },
+        form: {
+          file: {
+            label: "Select JSON file",
+            invalidError: "Invalid configuration file",
+          },
+          apps: {
+            label: "Apps",
+            avoidDuplicates: {
+              label: "Avoid duplicates",
+              description: "Ignores apps where an app with the same href already exists",
+            },
+            onlyImportApps: {
+              label: "Only import apps",
+              description: "Only adds the apps, the board need to be recreated manually",
+            },
+          },
+          name: {
+            label: "Board name",
+          },
+          screenSize: {
+            label: "Screen size",
+            option: {
+              sm: "Small",
+              md: "Medium",
+              lg: "Large",
+            },
+          },
+          sidebarBehavior: {
+            label: "Sidebar behavior",
+            description: "Sidebars were removed in 1.0, you can select what should happen with the items inside them.",
+            option: {
+              lastSection: {
+                label: "Last section",
+                description: "Sidebar will be displayed below the last section",
+              },
+              removeItems: {
+                label: "Remove items",
+                description: "Items contained in the sidebar will be removed",
+              },
+            },
           },
         },
       },
@@ -1564,7 +1722,7 @@ export default {
             copy: {
               title: "Copy invite",
               description:
-                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore</b>. If you do no longer wish to invite said person, you can delete this invitation any time.",
+                "Your invitation has been generated. After this modal closes, you'll not be able to copy this link anymore. If you do no longer wish to invite said person, you can delete this invitation any time.",
               link: "Invitation link",
               button: "Copy & close",
             },
@@ -1631,6 +1789,27 @@ export default {
               text: "Send the amount of users and whether you've activated SSO",
             },
           },
+          crawlingAndIndexing: {
+            title: "Crawling and Indexing",
+            warning:
+              "Enabling or disabling any settings here will severely impact how search engines will index & crawl your page. Any setting is a request and it is up to the crawler to apply these settings. Any modification may take up to multiple days or weeks to apply. Some settings may be search engine specific.",
+            noIndex: {
+              title: "No index",
+              text: "Do not index the website on search engines and don't show it in any search results",
+            },
+            noFollow: {
+              title: "No follow",
+              text: "Do not follow any links while indexing. Disabling this will lead to crawlers attempting to follow all links on Homarr.",
+            },
+            noTranslate: {
+              title: "No translate",
+              text: "When the site language is likely not that the user is likely to want to read, Google will show a translation link in the search results",
+            },
+            noSiteLinksSearchBox: {
+              title: "No site links search box",
+              text: "Google will build a search box with the crawled links along with other direct links. Enabling this will ask Google to disable that box.",
+            },
+          },
         },
       },
       tool: {
@@ -1660,11 +1839,17 @@ export default {
             mediaOrganizer: {
               label: "Media Organizers",
             },
+            downloads: {
+              label: "Downloads",
+            },
             mediaRequests: {
               label: "Media Requests",
             },
             rssFeeds: {
               label: "RSS feeds",
+            },
+            indexerManager: {
+              label: "Indexer Manager",
             },
           },
         },
@@ -1869,6 +2054,249 @@ export default {
       },
       about: {
         label: "About",
+      },
+    },
+  },
+  search: {
+    placeholder: "Search for anything",
+    nothingFound: "Nothing found",
+    error: {
+      fetch: "An error occurred while fetching data",
+    },
+    mode: {
+      appIntegrationBoard: {
+        help: "Search for apps, integrations or boards",
+        group: {
+          app: {
+            title: "Apps",
+            children: {
+              action: {
+                open: {
+                  label: "Open app url",
+                },
+                edit: {
+                  label: "Edit app",
+                },
+              },
+              detail: {
+                title: "Select an action for the app",
+              },
+            },
+          },
+          board: {
+            title: "Boards",
+            children: {
+              action: {
+                open: {
+                  label: "Open board",
+                },
+                homeBoard: {
+                  label: "Set as home board",
+                },
+                settings: {
+                  label: "Open settings",
+                },
+              },
+              detail: {
+                title: "Select an action for the board",
+              },
+            },
+          },
+          integration: {
+            title: "Integrations",
+          },
+        },
+      },
+      command: {
+        help: "Activate command mode",
+        group: {
+          globalCommand: {
+            title: "Global commands",
+            option: {
+              colorScheme: {
+                light: "Switch to light mode",
+                dark: "Switch to dark mode",
+              },
+              language: {
+                label: "Change language",
+                children: {
+                  detail: {
+                    title: "Select your prefered language",
+                  },
+                },
+              },
+              newBoard: {
+                label: "Create a new board",
+              },
+              importBoard: {
+                label: "Import a board",
+              },
+              newApp: {
+                label: "Create a new app",
+              },
+              newIntegration: {
+                label: "Create a new integration",
+                children: {
+                  detail: {
+                    title: "Select the integration type you want to create",
+                  },
+                },
+              },
+              newUser: {
+                label: "Create a new user",
+              },
+              newInvite: {
+                label: "Create a new invite",
+              },
+              newGroup: {
+                label: "Create a new group",
+              },
+            },
+          },
+        },
+      },
+      external: {
+        help: "Use an external search engine",
+        group: {
+          searchEngine: {
+            title: "Search engines",
+            option: {
+              google: {
+                name: "Google",
+                description: "Search the web with Google",
+              },
+              bing: {
+                name: "Bing",
+                description: "Search the web with Bing",
+              },
+              duckduckgo: {
+                name: "DuckDuckGo",
+                description: "Search the web with DuckDuckGo",
+              },
+              torrent: {
+                name: "Torrents",
+                description: "Search for torrents on torrentdownloads.pro",
+              },
+              youTube: {
+                name: "YouTube",
+                description: "Search for videos on YouTube",
+              },
+            },
+          },
+        },
+      },
+      help: {
+        group: {
+          mode: {
+            title: "Modes",
+          },
+          help: {
+            title: "Help",
+            option: {
+              documentation: {
+                label: "Documentation",
+              },
+              submitIssue: {
+                label: "Submit an issue",
+              },
+              discord: {
+                label: "Community Discord",
+              },
+            },
+          },
+        },
+      },
+      page: {
+        help: "Search for pages",
+        group: {
+          page: {
+            title: "Pages",
+            option: {
+              manageHome: {
+                label: "Manage home page",
+              },
+              manageBoard: {
+                label: "Manage boards",
+              },
+              manageApp: {
+                label: "Manage apps",
+              },
+              manageIntegration: {
+                label: "Manage integrations",
+              },
+              manageUser: {
+                label: "Manage users",
+              },
+              manageInvite: {
+                label: "Manage invites",
+              },
+              manageGroup: {
+                label: "Manage groups",
+              },
+              manageDocker: {
+                label: "Manage docker",
+              },
+              manageApi: {
+                label: "Swagger API",
+              },
+              manageLog: {
+                label: "View logs",
+              },
+              manageTask: {
+                label: "Manage tasks",
+              },
+              manageSettings: {
+                label: "Global settings",
+              },
+              about: {
+                label: "About",
+              },
+              homeBoard: {
+                label: "Home board",
+              },
+              preferences: {
+                label: "Your preferences",
+              },
+            },
+          },
+        },
+      },
+      userGroup: {
+        help: "Search for users or groups",
+        group: {
+          user: {
+            title: "Users",
+            children: {
+              action: {
+                detail: {
+                  label: "Show user details",
+                },
+              },
+              detail: {
+                title: "Select an action for the user",
+              },
+            },
+          },
+          group: {
+            title: "Groups",
+            children: {
+              action: {
+                detail: {
+                  label: "Show group details",
+                },
+                manageMember: {
+                  label: "Manage members",
+                },
+                managePermission: {
+                  label: "Manage permissions",
+                },
+              },
+              detail: {
+                title: "Select an action for the group",
+              },
+            },
+          },
+        },
       },
     },
   },
