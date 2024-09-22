@@ -38,7 +38,7 @@ jobs:
         node-version: [20]
     steps:
       - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications || true }}
+        if: ${{ github.events.inputs.send-notifications != false }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -52,7 +52,7 @@ jobs:
           token: ${{ github.token }}
           branch: dev
       - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications || true }}
+        if: ${{ github.events.inputs.send-notifications != false }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -66,7 +66,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications || true }}
+        if: ${{ github.events.inputs.send-notifications != false }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
@@ -120,14 +120,14 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: true
       - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications || true && (github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null) }}
+        if: ${{ github.events.inputs.send-notifications != false && (github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null) }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
           args: "Deployment of image has completed. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
       - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications || true && !(github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null) }}
+        if: ${{ github.events.inputs.send-notifications != false && !(github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null) }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
