@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { UniqueIdentifier } from "@dnd-kit/core";
 import {
   closestCenter,
@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import type { ActionIconProps } from "@mantine/core";
-import { ActionIcon, Card, Fieldset, Stack } from "@mantine/core";
+import { ActionIcon, Card, Center, Fieldset, Loader, Stack } from "@mantine/core";
 import { IconGripHorizontal } from "@tabler/icons-react";
 
 import type { CommonWidgetInputProps } from "./common";
@@ -26,12 +26,18 @@ import { useFormContext } from "./form";
 export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIdentifier>({
   property,
   options,
+  initialOptions,
 }: CommonWidgetInputProps<"sortableItemList">) => {
   const form = useFormContext();
+  const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
   const values = form.values.options[property] as TOptionValue[];
-  const { data, isLoading, error } = options.useData(values);
+  const { data, isLoading, error } = options.useData(initialValues);
   const dataMap = useMemo(() => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])), [data]);
   const [tempMap, setTempMap] = useState<Map<TOptionValue, TItem>>(new Map());
+
+  useEffect(() => {
+    console.error("data changed: ", data);
+  }, [data]);
 
   const [activeId, setActiveId] = useState<TOptionValue | null>(null);
   const sensors = useSensors(
@@ -51,13 +57,16 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
     }
   }, [activeId]);
 
-  const getItem = (id: TOptionValue) => {
-    if (!tempMap.has(id)) {
-      return dataMap.get(id);
-    }
+  const getItem = useCallback(
+    (id: TOptionValue) => {
+      if (!tempMap.has(id)) {
+        return dataMap.get(id);
+      }
 
-    return tempMap.get(id);
-  };
+      return tempMap.get(id);
+    },
+    [tempMap, dataMap],
+  );
 
   const updateItems = (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
     form.setFieldValue(`options.${property}`, callback);
@@ -101,23 +110,44 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
         >
           <SortableContext items={values} strategy={verticalListSortingStrategy}>
             <Stack gap="xs">
-              {values.map((value, index) => {
-                const item = getItem(value);
-                const removeItem = () => {
-                  form.setFieldValue(
-                    `options.${property}`,
-                    values.filter((id) => id !== value),
+              <>
+                {values.map((value, index) => {
+                  const item = getItem(value);
+                  const removeItem = () => {
+                    form.setValues((previous) => {
+                      const previousValues = previous.options?.[property] as TOptionValue[];
+                      return {
+                        ...previous,
+                        options: {
+                          ...previous.options,
+                          [property]: previousValues.filter((id) => id !== value),
+                        },
+                      };
+                    });
+                  };
+
+                  if (!item) {
+                    return null;
+                  }
+
+                  return (
+                    <MemoizedItem
+                      key={value}
+                      id={value}
+                      index={index}
+                      item={item}
+                      removeItem={removeItem}
+                      options={options}
+                    />
                   );
-                };
-
-                if (!item) {
-                  return null;
-                }
-
-                return (
-                  <Item key={value} id={value} index={index} item={item} removeItem={removeItem} options={options} />
-                );
-              })}
+                })}
+                {isLoading && (
+                  <Center h={256}>
+                    <Loader />
+                  </Center>
+                )}
+                {error && <Center h={256}>{JSON.stringify(error)}</Center>}
+              </>
             </Stack>
           </SortableContext>
         </DndContext>
@@ -141,18 +171,7 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
   removeItem,
   options,
 }: ItemProps<TItem, TOptionValue>) => {
-  const {
-    active,
-    attributes,
-    isDragging,
-    isSorting,
-    listeners,
-    overIndex,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-  } = useSortable({
+  const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({
     id,
   });
 
@@ -208,3 +227,5 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
     </Card>
   );
 };
+
+const MemoizedItem = memo(Item);

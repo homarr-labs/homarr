@@ -3,7 +3,6 @@ import { IconClock, IconX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createId } from "@homarr/db/client";
 import { useModalAction } from "@homarr/modals";
 
 import { createWidgetDefinition } from "../definition";
@@ -41,8 +40,8 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
         return <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>Add bookmark</Button>;
       },
       uniqueIdentifier: (item) => item.id,
-      useData: (ids) => {
-        const { data, error, isLoading } = clientApi.app.byIds.useQuery(ids);
+      useData: (initialIds) => {
+        const { data, error, isLoading } = clientApi.app.byIds.useQuery(initialIds);
 
         return {
           data,
