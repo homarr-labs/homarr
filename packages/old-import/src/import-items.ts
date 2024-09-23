@@ -15,11 +15,12 @@ import { mapOptions } from "./widgets/options";
 export const insertItemsAsync = async (
   db: Database,
   widgets: OldmarrWidget[],
-  mappedApps: (OldmarrApp & { newId: string })[],
+  apps: OldmarrApp[],
+  appsMap: Map<string, string>,
   sectionIdMaps: Map<string, string>,
   configuration: OldmarrImportConfiguration,
 ) => {
-  logger.info(`Importing old homarr items widgets=${widgets.length} apps=${mappedApps.length}`);
+  logger.info(`Importing old homarr items widgets=${widgets.length} apps=${apps.length}`);
 
   for (const widget of widgets) {
     // All items should have been moved to the last wrapper
@@ -54,13 +55,13 @@ export const insertItemsAsync = async (
       xOffset: screenSizeShape.location.x,
       yOffset: screenSizeShape.location.y,
       kind,
-      options: SuperJSON.stringify(mapOptions(kind, widget.properties)),
+      options: SuperJSON.stringify(mapOptions(kind, widget.properties, appsMap)),
     });
 
     logger.debug(`Inserted widget id=${widget.id} sectionId=${sectionId}`);
   }
 
-  for (const app of mappedApps) {
+  for (const app of apps) {
     // All items should have been moved to the last wrapper
     if (app.area.type === "sidebar") {
       continue;
@@ -85,7 +86,9 @@ export const insertItemsAsync = async (
       yOffset: screenSizeShape.location.y,
       kind: "app",
       options: SuperJSON.stringify({
-        appId: app.newId,
+        // it's safe to assume that the app exists in the map
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        appId: appsMap.get(app.id)!,
         openInNewTab: app.behaviour.isOpeningNewTab,
         pingEnabled: app.network.enabledStatusChecker,
         showDescriptionTooltip: app.behaviour.tooltipDescription !== "",
