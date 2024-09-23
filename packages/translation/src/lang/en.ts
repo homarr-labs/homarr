@@ -532,10 +532,6 @@ export default {
     },
     beta: "Beta",
     error: "Error",
-    errors: {
-      noData: "No data to show",
-      noIntegration: "No integration selected",
-    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -1098,6 +1094,7 @@ export default {
           logs: "Check logs for more details",
         },
         noIntegration: "No integration selected",
+        noData: "No integration data available",
       },
       option: {},
     },
