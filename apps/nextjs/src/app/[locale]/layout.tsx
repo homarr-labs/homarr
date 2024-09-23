@@ -6,6 +6,8 @@ import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 import "~/styles/scroll-area.scss";
 
+import { cookies } from "next/headers";
+
 import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
@@ -53,7 +55,7 @@ export const viewport: Viewport = {
 
 export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
   const session = await auth();
-  const colorScheme = session?.user.colorScheme;
+  const colorScheme = cookies().get("homarr-color-scheme")?.value ?? "light";
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
