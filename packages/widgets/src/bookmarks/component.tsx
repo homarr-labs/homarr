@@ -8,7 +8,11 @@ import { clientApi } from "@homarr/api/client";
 import type { WidgetComponentProps } from "../definition";
 
 export default function BookmarksWidget({ options, width, height }: WidgetComponentProps<"bookmarks">) {
-  const [data] = clientApi.app.byIds.useSuspenseQuery(options.items);
+  const [data] = clientApi.app.byIds.useSuspenseQuery(options.items, {
+    select(data) {
+      return data.sort((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
+    },
+  });
 
   return (
     <Stack h="100%" gap="sm" p="sm">
