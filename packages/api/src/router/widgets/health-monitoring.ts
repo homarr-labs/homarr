@@ -14,14 +14,13 @@ export const healthMonitoringRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const channel = createItemAndIntegrationChannel<HealthMonitoring>("healthMonitoring", integration.id);
           const data = await channel.getAsync();
-          const healthInfo = data?.data;
-          if (!healthInfo) {
+          if (!data) {
             throw new Error(`No data found for integration ID: ${integration.id}`);
           }
 
           return {
             integrationId: integration.id,
-            healthInfo,
+            healthInfo: data.data,
           };
         }),
       );

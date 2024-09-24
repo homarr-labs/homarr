@@ -4,46 +4,6 @@ import type { HealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
 export class OpenMediaVaultIntegration extends Integration {
-  private async makeOpenMediaVaultRPCCallAsync(
-    serviceName: string,
-    method: string,
-    params: Record<string, unknown>,
-    headers: Record<string, string> = {},
-  ): Promise<Response> {
-    return await fetch(`${this.integration.url}/rpc.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...headers,
-      },
-      body: JSON.stringify({
-        service: serviceName,
-        method,
-        params,
-      }),
-    });
-  }
-
-  private async omvAuthAsync() {
-    const authResponse = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
-    });
-    const authResult = (await authResponse.json()) as Response;
-    const response = (authResult as { response?: { sessionid?: string } }).response;
-    let sessionId;
-    const headers: Record<string, string> = {};
-    if (response?.sessionid) {
-      sessionId = response.sessionid;
-      headers["X-OPENMEDIAVAULT-SESSIONID"] = sessionId;
-    } else {
-      sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(authResponse.headers);
-      const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(authResponse.headers);
-      headers.Cookie = `${loginToken};${sessionId}`;
-    }
-    return headers;
-  }
-
   static extractSessionIdFromCookies(headers: Headers): string {
     const cookies = headers.get("set-cookie") ?? "";
     const sessionId = cookies
@@ -71,17 +31,19 @@ export class OpenMediaVaultIntegration extends Integration {
   }
 
   public async getSystemInfoAsync(): Promise<HealthMonitoring> {
-    const headers = await this.omvAuthAsync();
+    if (!this.headers) {
+      await this.authenticateAndConstructSessionInHeaderAsync();
+    }
 
-    const systemResponses = await this.makeOpenMediaVaultRPCCallAsync("system", "getInformation", {}, headers);
+    const systemResponses = await this.makeOpenMediaVaultRPCCallAsync("system", "getInformation", {}, this.headers);
     const fileSystemResponse = await this.makeOpenMediaVaultRPCCallAsync(
       "filesystemmgmt",
       "enumerateMountedFilesystems",
       { includeroot: true },
-      headers,
+      this.headers,
     );
-    const smartResponse = await this.makeOpenMediaVaultRPCCallAsync("smart", "enumerateDevices", {}, headers);
-    const cpuTempResponse = await this.makeOpenMediaVaultRPCCallAsync("cputemp", "get", {}, headers);
+    const smartResponse = await this.makeOpenMediaVaultRPCCallAsync("smart", "enumerateDevices", {}, this.headers);
+    const cpuTempResponse = await this.makeOpenMediaVaultRPCCallAsync("cputemp", "get", {}, this.headers);
 
     const systemResult = systemInformationSchema.safeParse(await systemResponses.json());
     const fileSystemResult = fileSystemSchema.safeParse(await fileSystemResponse.json());
@@ -147,5 +109,47 @@ export class OpenMediaVaultIntegration extends Integration {
     if (typeof result !== "object" || result === null || !("response" in result)) {
       throw new IntegrationTestConnectionError("invalidJson");
     }
+  }
+
+  private async makeOpenMediaVaultRPCCallAsync(
+    serviceName: string,
+    method: string,
+    params: Record<string, unknown>,
+    headers: Record<string, string> = {},
+  ): Promise<Response> {
+    return await fetch(`${this.integration.url}/rpc.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      body: JSON.stringify({
+        service: serviceName,
+        method,
+        params,
+      }),
+    });
+  }
+
+  private headers: Record<string, string> | undefined = undefined;
+
+  private async authenticateAndConstructSessionInHeaderAsync() {
+    const authResponse = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
+      username: this.getSecretValue("username"),
+      password: this.getSecretValue("password"),
+    });
+    const authResult = (await authResponse.json()) as Response;
+    const response = (authResult as { response?: { sessionid?: string } }).response;
+    let sessionId;
+    const headers: Record<string, string> = {};
+    if (response?.sessionid) {
+      sessionId = response.sessionid;
+      headers["X-OPENMEDIAVAULT-SESSIONID"] = sessionId;
+    } else {
+      sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(authResponse.headers);
+      const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(authResponse.headers);
+      headers.Cookie = `${loginToken};${sessionId}`;
+    }
+    this.headers = headers;
   }
 }

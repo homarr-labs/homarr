@@ -29,6 +29,7 @@ import {
 } from "@tabler/icons-react";
 
 import type { HealthMonitoring } from "@homarr/integrations";
+import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -57,11 +58,6 @@ export default function HealthMonitoringWidget({
         const ringSize = width * 0.95;
         const ringThickness = width / 10;
         const progressSize = width * 0.2;
-        const formatUptime = (uptime: number) => {
-          const days = Math.floor(uptime / (60 * 60 * 24));
-          const remainingHours = Math.floor((uptime % (60 * 60 * 24)) / 3600);
-          return t("widget.healthMonitoring.popover.uptime", { days, hours: remainingHours });
-        };
 
         return (
           <Box key={integrationId} h="100%">
@@ -101,7 +97,7 @@ export default function HealthMonitoringWidget({
                           {t("widget.healthMonitoring.popover.version")} {healthInfo.version}
                         </List.Item>
                         <List.Item className="system-info-uptime" icon={<IconClock size="1cqmin" />}>
-                          {formatUptime(healthInfo.uptime)}
+                          {formatUptime(healthInfo.uptime, t)}
                         </List.Item>
                       </List>
                     </HoverCard.Dropdown>
@@ -288,6 +284,12 @@ export default function HealthMonitoringWidget({
     </Box>
   );
 }
+
+export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) => {
+  const days = Math.floor(uptimeInSeconds / (60 * 60 * 24));
+  const remainingHours = Math.floor((uptimeInSeconds % (60 * 60 * 24)) / 3600);
+  return t("widget.healthMonitoring.popover.uptime", { days, hours: remainingHours });
+};
 
 export const progressColor = (percentage: number) => {
   if (percentage < 40) return "green";
