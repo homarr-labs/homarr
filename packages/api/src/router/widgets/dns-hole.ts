@@ -6,10 +6,10 @@ import type { IntegrationKindByCategory, WidgetKind } from "@homarr/definitions"
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
+import { controlsInputSchema } from "@homarr/integrations/types";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
-import { controlsInputSchema } from "../../../../integrations/src/pi-hole/pi-hole-types";
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -20,7 +20,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .query(async ({ input: { widgetKind }, ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
-          const channel = createItemAndIntegrationChannel<DnsHoleSummary>(widgetKind as WidgetKind, integration.id);
+          const channel = createItemAndIntegrationChannel<DnsHoleSummary>(widgetKind, integration.id);
           const { data: summary, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
 
           return {

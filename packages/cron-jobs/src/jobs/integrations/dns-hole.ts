@@ -3,6 +3,7 @@ import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 import { integrationCreatorFromSecrets } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
+import { logger } from "@homarr/log";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 
 import { createCronJob } from "../../lib";
@@ -21,7 +22,7 @@ export const dnsHoleJob = createCronJob("dnsHole", EVERY_5_SECONDS).withCallback
           const channel = createItemAndIntegrationChannel<DnsHoleSummary>(itemForIntegration.kind, integration.id);
           await channel.publishAndUpdateLastStateAsync(data);
         })
-        .catch((error) => console.error(`Could not retrieve data for ${integration.name}: "${error}"`));
+        .catch((error) => logger.error(`Could not retrieve data for ${integration.name}: "${error}"`));
     }
   }
 });

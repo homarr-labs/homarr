@@ -1,6 +1,6 @@
 import { analyticsJob } from "./jobs/analytics";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
-import { dnsHoleJob } from "./jobs/integrations/dnsHole";
+import { dnsHoleJob } from "./jobs/integrations/dns-hole";
 import { downloadsJob } from "./jobs/integrations/downloads";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
