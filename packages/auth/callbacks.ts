@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import type { NextAuthConfig } from "next-auth";
 
 import type { Database } from "@homarr/db";
-import { db, eq, inArray } from "@homarr/db";
+import { eq, inArray } from "@homarr/db";
 import { groupMembers, groupPermissions, users } from "@homarr/db/schema/sqlite";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
@@ -53,7 +53,7 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
 };
 
 export const createSignInCallback =
-  (adapter: Adapter, isCredentialsRequest: boolean): NextAuthCallbackOf<"signIn"> =>
+  (adapter: Adapter, db: Database, isCredentialsRequest: boolean): NextAuthCallbackOf<"signIn"> =>
   async ({ user }) => {
     if (!isCredentialsRequest) return true;
 
