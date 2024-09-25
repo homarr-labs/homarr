@@ -40,15 +40,15 @@ export default function HealthMonitoringWidget({
   integrationIds,
   serverData,
 }: WidgetComponentProps<"healthMonitoring">) {
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
   const t = useI18n();
   const [healthData] = useListState<{
     integrationId: string;
     healthInfo: HealthMonitoring;
   }>(serverData?.initialData ?? []);
 
+  if (integrationIds.length === 0) {
+    throw new NoIntegrationSelectedError();
+  }
   return (
     <Box h="100%">
       {healthData.map(({ integrationId, healthInfo }) => {
@@ -132,13 +132,14 @@ export default function HealthMonitoringWidget({
                                   {t("widget.healthMonitoring.popover.loadAverage")}
                                 </List.Item>
                                 <List.Item className="load-average-1min">
-                                  {t("widget.healthMonitoring.popover.oneMinute")} {healthInfo.loadAverage["1min"]}
+                                  {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}
                                 </List.Item>
                                 <List.Item className="load-average-5min">
-                                  {t("widget.healthMonitoring.popover.fiveMinutes")} {healthInfo.loadAverage["5min"]}
+                                  {t("widget.healthMonitoring.popover.minutes", { count: 5 })}{" "}
+                                  {healthInfo.loadAverage["5min"]}
                                 </List.Item>
                                 <List.Item className="load-average-15min">
-                                  {t("widget.healthMonitoring.popover.fifteenMinutes")}{" "}
+                                  {t("widget.healthMonitoring.popover.minutes", { count: 15 })}{" "}
                                   {healthInfo.loadAverage["15min"]}
                                 </List.Item>
                               </List>
