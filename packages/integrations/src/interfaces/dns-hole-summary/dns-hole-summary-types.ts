@@ -1,5 +1,5 @@
 export interface DnsHoleSummary {
-  status: "enabled" | "disabled";
+  status?: "enabled" | "disabled";
   domainsBeingBlocked: number;
   adsBlockedToday: number;
   adsBlockedTodayPercentage: number;

@@ -1,42 +1,66 @@
-import { TRPCError } from "@trpc/server";
+import { observable } from "@trpc/server/observable";
 
+import type { Modify } from "@homarr/common/types";
+import type { Integration } from "@homarr/db/schema/sqlite";
+import type { IntegrationKindByCategory, WidgetKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
-import { logger } from "@homarr/log";
-import { createCacheChannel } from "@homarr/redis";
+import { controlsInputSchema } from "@homarr/integrations/types";
+import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { z } from "@homarr/validation";
 
-import { controlsInputSchema } from "../../../../integrations/src/pi-hole/pi-hole-types";
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
+    .input(z.object({ widgetKind: z.enum(["dnsHoleSummary", "dnsHoleControls"]) }))
     .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
-    .query(async ({ ctx }) => {
+    .query(async ({ input: { widgetKind }, ctx }) => {
       const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const cache = createCacheChannel<DnsHoleSummary>(`dns-hole-summary:${integration.id}`);
-          const { data } = await cache.consumeAsync(async () => {
-            const client = integrationCreator(integration);
-
-            return await client.getSummaryAsync().catch((err) => {
-              logger.error("dns-hole router - ", err);
-              throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: `Failed to fetch DNS Hole summary for ${integration.name} (${integration.id})`,
-              });
-            });
-          });
+        ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
+          const channel = createItemAndIntegrationChannel<DnsHoleSummary>(widgetKind, integration.id);
+          const { data: summary, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
 
           return {
-            integrationId: integration.id,
-            integrationKind: integration.kind,
-            summary: data,
+            integration,
+            timestamp,
+            summary,
           };
         }),
       );
       return results;
+    }),
+
+  subscribeToSummary: publicProcedure
+    .input(z.object({ widgetKind: z.enum(["dnsHoleSummary", "dnsHoleControls"]) }))
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
+    .subscription(({ input: { widgetKind }, ctx }) => {
+      return observable<{
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"dnsHole"> }>;
+        timestamp: Date;
+        summary: DnsHoleSummary;
+      }>((emit) => {
+        const unsubscribes: (() => void)[] = [];
+        for (const integrationWithSecrets of ctx.integrations) {
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+          const channel = createItemAndIntegrationChannel<DnsHoleSummary>(widgetKind as WidgetKind, integration.id);
+          const unsubscribe = channel.subscribe((summary) => {
+            emit.next({
+              integration,
+              timestamp: new Date(),
+              summary,
+            });
+          });
+          unsubscribes.push(unsubscribe);
+        }
+        return () => {
+          unsubscribes.forEach((unsubscribe) => {
+            unsubscribe();
+          });
+        };
+      });
     }),
 
   enable: publicProcedure

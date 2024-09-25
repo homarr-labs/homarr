@@ -1,4 +1,4 @@
-import { Stopwatch } from "@homarr/common";
+import { splitToNChunks, Stopwatch } from "@homarr/common";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
 import { db, inArray } from "@homarr/db";
@@ -79,7 +79,10 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     }
 
     if (newIcons.length >= 1) {
-      await transaction.insert(icons).values(newIcons);
+      // We only insert 5000 icons at a time to avoid SQLite limitations
+      for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
+        await transaction.insert(icons).values(chunck);
+      }
     }
     if (deadIcons.length >= 1) {
       await transaction.delete(icons).where(
