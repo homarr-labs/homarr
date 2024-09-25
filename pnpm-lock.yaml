@@ -553,8 +553,8 @@ importers:
         specifier: ^0.35.1
         version: 0.35.1
       '@auth/drizzle-adapter':
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.5.1
+        version: 1.5.1
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1728,8 +1728,8 @@ packages:
       nodemailer:
         optional: true
 
-  '@auth/drizzle-adapter@1.5.0':
-    resolution: {integrity: sha512-JLeooOEoCulPjoLJa2IBKX8RSgSfkhmyaAeO8Xr37y+fitsEvJNqe0SsaRw3D8nXDasppSaop4uUT3ViXP+OZw==}
+  '@auth/drizzle-adapter@1.5.1':
+    resolution: {integrity: sha512-MWroa4hy9Zs7k+LEVpGmwaK1xpLQ/7erylnMdVXy6CijeXXQOvTK//zQtL383JrHTr21zyH/3z0DoDPpG9Txvw==}
 
   '@axiomhq/js@1.0.0-rc.3':
     resolution: {integrity: sha512-Zm10TczcMLounWqC42nMkXQ7XKLqjzLrd5ia022oBKDUZqAFVg2y9d1quQVNV4FlXyg9MKDdfMjpKQRmzEGaog==}
@@ -7850,9 +7850,9 @@ snapshots:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
-  '@auth/drizzle-adapter@1.5.0':
+  '@auth/drizzle-adapter@1.5.1':
     dependencies:
-      '@auth/core': 0.35.0
+      '@auth/core': 0.35.1
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
