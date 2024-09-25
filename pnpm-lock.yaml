@@ -146,8 +146,8 @@ importers:
         specifier: ^5.56.2
         version: 5.56.2(react@18.3.1)
       '@tanstack/react-query-devtools':
-        specifier: ^5.56.2
-        version: 5.56.2(@tanstack/react-query@5.56.2(react@18.3.1))(react@18.3.1)
+        specifier: ^5.58.0
+        version: 5.58.0(@tanstack/react-query@5.56.2(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query-next-experimental':
         specifier: 5.56.2
         version: 5.56.2(@tanstack/react-query@5.56.2(react@18.3.1))(next@14.2.13(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3))(react@18.3.1)
@@ -2973,11 +2973,11 @@ packages:
   '@tanstack/query-core@5.56.2':
     resolution: {integrity: sha512-gor0RI3/R5rVV3gXfddh1MM+hgl0Z4G7tj6Xxpq6p2I03NGPaJ8dITY9Gz05zYYb/EJq9vPas/T4wn9EaDPd4Q==}
 
-  '@tanstack/query-devtools@5.56.1':
-    resolution: {integrity: sha512-xnp9jq/9dHfSCDmmf+A5DjbIjYqbnnUL2ToqlaaviUQGRTapXQ8J+GxusYUu1IG0vZMaWdiVUA4HRGGZYAUU+A==}
+  '@tanstack/query-devtools@5.58.0':
+    resolution: {integrity: sha512-iFdQEFXaYYxqgrv63ots+65FGI+tNp5ZS5PdMU1DWisxk3fez5HG3FyVlbUva+RdYS5hSLbxZ9aw3yEs97GNTw==}
 
-  '@tanstack/react-query-devtools@5.56.2':
-    resolution: {integrity: sha512-7nINJtRZZVwhTTyDdMIcSaXo+EHMLYJu1S2e6FskvvD5prx87LlAXXWZDfU24Qm4HjshEtM5lS3HIOszNGblcw==}
+  '@tanstack/react-query-devtools@5.58.0':
+    resolution: {integrity: sha512-qF0xCyBeVuNLygTO1sAl1X4Gv52w52SeaDdbjYQmtTOooUJ3aAVlBEtiRJFfJblWQ9p/UQG8NIcC/65RjX8Jkw==}
     peerDependencies:
       '@tanstack/react-query': ^5.56.2
       react: ^18 || ^19
@@ -9145,11 +9145,11 @@ snapshots:
 
   '@tanstack/query-core@5.56.2': {}
 
-  '@tanstack/query-devtools@5.56.1': {}
+  '@tanstack/query-devtools@5.58.0': {}
 
-  '@tanstack/react-query-devtools@5.56.2(@tanstack/react-query@5.56.2(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-query-devtools@5.58.0(@tanstack/react-query@5.56.2(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@tanstack/query-devtools': 5.56.1
+      '@tanstack/query-devtools': 5.58.0
       '@tanstack/react-query': 5.56.2(react@18.3.1)
       react: 18.3.1
 
