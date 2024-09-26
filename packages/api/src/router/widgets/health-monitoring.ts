@@ -19,7 +19,7 @@ export const healthMonitoringRouter = createTRPCRouter({
           }
 
           return {
-            integration: integration,
+            integration,
             healthInfo: data.data,
           };
         }),
