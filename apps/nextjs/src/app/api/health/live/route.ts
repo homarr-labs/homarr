@@ -71,9 +71,9 @@ const executeHealthCheckSafelyAsync = async (
   try {
     const values = await callback();
     return {
-      name: name,
+      name,
       status: "healthy",
-      values: values,
+      values,
     };
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -81,7 +81,7 @@ const executeHealthCheckSafelyAsync = async (
     return {
       status: "unhealthy",
       values: {},
-      name: name,
+      name,
     };
   }
 };
