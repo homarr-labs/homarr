@@ -1,6 +1,7 @@
 import {db} from "@homarr/db";
 import {performance} from "perf_hooks";
 import {logger} from "@homarr/log";
+import {handshakeAsync} from "@homarr/redis";
 
 export async function GET() {
   const timeBeforeHealthCheck = performance.now();
@@ -30,7 +31,15 @@ const executeAndAggregateAllHealthChecksAsync = async (): Promise<{
     return {
       latency: after - before,
     };
-  })];
+  }),
+    executeHealthCheckSafelyAsync('redis', async () => {
+      const before = performance.now();
+      await handshakeAsync();
+      const after = performance.now();
+      return {
+        latency: after - before,
+      }
+    })];
 
   const healthCheckResults = await Promise.all(healthChecks);
   const anyUnhealthy = healthCheckResults.some(healthCheck => healthCheck.status === "unhealthy");
