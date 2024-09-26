@@ -30,7 +30,6 @@ import {
   IconVersions,
 } from "@tabler/icons-react";
 
-import type { HealthMonitoring } from "@homarr/integrations";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -43,10 +42,7 @@ export default function HealthMonitoringWidget({
   serverData,
 }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
-  const [healthData] = useListState<{
-    integrationId: string;
-    healthInfo: HealthMonitoring;
-  }>(serverData?.initialData ?? []);
+  const [healthData] = useListState(serverData?.initialData ?? []);
   const [opened, { open, close }] = useDisclosure(false);
 
   if (integrationIds.length === 0) {
@@ -54,7 +50,7 @@ export default function HealthMonitoringWidget({
   }
   return (
     <Box h="100%" className="health-monitoring">
-      {healthData.map(({ integrationId, healthInfo }) => {
+      {healthData.map(({ integration, healthInfo }) => {
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
         const { ref, width } = useElementSize();
@@ -63,7 +59,11 @@ export default function HealthMonitoringWidget({
         const progressSize = width * 0.2;
 
         return (
-          <Box key={integrationId} h="100%" className="health-monitoring-information">
+          <Box
+            key={integration.id}
+            h="100%"
+            className={`health-monitoring-information health-monitoring-${integration.name}`}
+          >
             <Card className="health-monitoring-information-card" m="2.5cqmin" p="2.5cqmin" withBorder>
               <Flex
                 className="health-monitoring-information-card-elements"
@@ -71,7 +71,7 @@ export default function HealthMonitoringWidget({
                 w="100%"
                 justify="space-between"
                 align="center"
-                key={integrationId}
+                key={integration.id}
               >
                 <Box className="health-monitoring-information-card-section">
                   <Indicator
