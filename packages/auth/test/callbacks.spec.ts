@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
 import type { Account } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { describe, expect, it, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
@@ -15,6 +15,7 @@ import { createSessionCallback, createSignInCallback, getCurrentUserPermissionsA
 
 describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
+    // Arrange
     const db = createDb();
 
     await db.insert(groups).values({
@@ -30,11 +31,16 @@ describe("getCurrentUserPermissions", () => {
     });
 
     const userId = "1";
+
+    // Act
     const result = await getCurrentUserPermissionsAsync(db, userId);
+
+    // Assert
     expect(result).toEqual([]);
   });
 
   test("should return empty permissions when user has no groups", async () => {
+    // Arrange
     const db = createDb();
     const userId = "1";
 
@@ -50,11 +56,15 @@ describe("getCurrentUserPermissions", () => {
       id: userId,
     });
 
+    // Act
     const result = await getCurrentUserPermissionsAsync(db, userId);
+
+    // Assert
     expect(result).toEqual([]);
   });
 
   test("should return permissions for user", async () => {
+    // Arrange
     const db = createDb();
     const getPermissionsWithChildrenMock = vi
       .spyOn(definitions, "getPermissionsWithChildren")
@@ -77,14 +87,18 @@ describe("getCurrentUserPermissions", () => {
       permission: "admin",
     });
 
+    // Act
     const result = await getCurrentUserPermissionsAsync(db, mockId);
+
+    // Assert
     expect(result).toEqual(["board-create"]);
     expect(getPermissionsWithChildrenMock).toHaveBeenCalledWith(["admin"]);
   });
 });
 
 describe("session callback", () => {
-  it("should add id and name to session user", async () => {
+  test("should add id and name to session user", async () => {
+    // Arrange
     const user: AdapterUser = {
       id: "id",
       name: "name",
@@ -94,6 +108,8 @@ describe("session callback", () => {
     const token: JWT = {};
     const db = createDb();
     const callback = createSessionCallback(db);
+
+    // Act
     const result = await callback({
       session: {
         user: {
@@ -112,6 +128,8 @@ describe("session callback", () => {
       trigger: "update",
       newSession: {},
     });
+
+    // Assert
     expect(result.user).toBeDefined();
     expect(result.user!.id).toEqual(user.id);
     expect(result.user!.name).toEqual(user.name);
@@ -169,37 +187,56 @@ vi.mock("next/headers", async (importOriginal) => {
 });
 
 describe("createSignInCallback", () => {
-  it("should return true if not credentials request", async () => {
+  test("should return true if not credentials request and set colorScheme & sessionToken cookie", async () => {
+    // Arrange
     const isCredentialsRequest = false;
-    const signInCallback = createSignInCallback(createAdapter(), isCredentialsRequest);
+    const db = await prepareDbForSigninAsync("1");
+    const signInCallback = createSignInCallback(createAdapter(), db, isCredentialsRequest);
+
+    // Act
     const result = await signInCallback({
       user: { id: "1", emailVerified: new Date("2023-01-13") },
       account: {} as Account,
     });
+
+    // Assert
     expect(result).toBe(true);
   });
 
-  it("should return false if no adapter.createSession", async () => {
+  test("should return false if no adapter.createSession", async () => {
+    // Arrange
     const isCredentialsRequest = true;
+    const db = await prepareDbForSigninAsync("1");
     const signInCallback = createSignInCallback(
       // https://github.com/nextauthjs/next-auth/issues/6106
       { createSession: undefined } as unknown as Adapter,
+      db,
       isCredentialsRequest,
     );
+
+    // Act
     const result = await signInCallback({
       user: { id: "1", emailVerified: new Date("2023-01-13") },
       account: {} as Account,
     });
+
+    // Assert
     expect(result).toBe(false);
   });
 
   test("should call adapter.createSession with correct input", async () => {
+    // Arrange
     const adapter = createAdapter();
     const isCredentialsRequest = true;
-    const signInCallback = createSignInCallback(adapter, isCredentialsRequest);
+    const db = await prepareDbForSigninAsync("1");
+    const signInCallback = createSignInCallback(adapter, db, isCredentialsRequest);
     const user = { id: "1", emailVerified: new Date("2023-01-13") };
     const account = {} as Account;
+
+    // Act
     await signInCallback({ user, account });
+
+    // Assert
     expect(adapter.createSession).toHaveBeenCalledWith({
       sessionToken: mockSessionToken,
       userId: user.id,
@@ -213,4 +250,52 @@ describe("createSignInCallback", () => {
       secure: true,
     });
   });
+
+  test("should set colorScheme from db as cookie", async () => {
+    // Arrange
+    const isCredentialsRequest = false;
+    const db = await prepareDbForSigninAsync("1");
+    const signInCallback = createSignInCallback(createAdapter(), db, isCredentialsRequest);
+
+    // Act
+    const result = await signInCallback({
+      user: { id: "1", emailVerified: new Date("2023-01-13") },
+      account: {} as Account,
+    });
+
+    // Assert
+    expect(result).toBe(true);
+    expect(cookies().set).toHaveBeenCalledWith(
+      "homarr-color-scheme",
+      "dark",
+      expect.objectContaining({
+        path: "/",
+      }),
+    );
+  });
+
+  test("should return false if user not found in db", async () => {
+    // Arrange
+    const isCredentialsRequest = true;
+    const db = await prepareDbForSigninAsync("other-id");
+    const signInCallback = createSignInCallback(createAdapter(), db, isCredentialsRequest);
+
+    // Act
+    const result = await signInCallback({
+      user: { id: "1", emailVerified: new Date("2023-01-13") },
+      account: {} as Account,
+    });
+
+    // Assert
+    expect(result).toBe(false);
+  });
 });
+
+const prepareDbForSigninAsync = async (userId: string) => {
+  const db = createDb();
+  await db.insert(users).values({
+    id: userId,
+    colorScheme: "dark",
+  });
+  return db;
+};
