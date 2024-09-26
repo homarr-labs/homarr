@@ -5,24 +5,26 @@ import {
   Box,
   Card,
   Center,
+  Divider,
   Flex,
   Group,
-  HoverCard,
   Indicator,
   List,
+  Modal,
   Progress,
   RingProgress,
+  Stack,
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useElementSize, useListState } from "@mantine/hooks";
+import { useDisclosure, useElementSize, useListState } from "@mantine/hooks";
 import {
   IconBrain,
   IconClock,
   IconCpu,
   IconCpu2,
   IconFileReport,
-  IconInfoSquare,
+  IconInfoCircle,
   IconServer,
   IconTemperature,
   IconVersions,
@@ -45,12 +47,13 @@ export default function HealthMonitoringWidget({
     integrationId: string;
     healthInfo: HealthMonitoring;
   }>(serverData?.initialData ?? []);
+  const [opened, { open, close }] = useDisclosure(false);
 
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
   }
   return (
-    <Box h="100%">
+    <Box h="100%" className="health-monitoring">
       {healthData.map(({ integrationId, healthInfo }) => {
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
@@ -60,91 +63,104 @@ export default function HealthMonitoringWidget({
         const progressSize = width * 0.2;
 
         return (
-          <Box key={integrationId} h="100%">
-            <Card className="health-card" m="2.5cqmin" p="2.5cqmin" withBorder>
+          <Box key={integrationId} h="100%" className="health-monitoring-information">
+            <Card className="health-monitoring-information-card" m="2.5cqmin" p="2.5cqmin" withBorder>
               <Flex
-                className="health-card-elements"
+                className="health-monitoring-information-card-elements"
                 h="100%"
                 w="100%"
                 justify="space-between"
                 align="center"
                 key={integrationId}
               >
-                <Box className="health-card-info">
-                  <HoverCard>
-                    <HoverCard.Target>
-                      <Indicator
-                        className="system-updates-reboot-indicator"
-                        inline
-                        processing
-                        color={healthInfo.rebootRequired ? "red" : healthInfo.availablePkgUpdates > 0 ? "blue" : "gray"}
-                        position="top-end"
-                        size="4cqmin"
-                        label={healthInfo.availablePkgUpdates > 0 ? healthInfo.availablePkgUpdates : undefined}
-                        disabled={!healthInfo.rebootRequired && healthInfo.availablePkgUpdates === 0}
-                      >
-                        <Avatar className="health-info-avatar" size="10cqmin" radius="sm">
-                          <IconInfoSquare className="health-info-icon" size="8cqmin" />
-                        </Avatar>
-                      </Indicator>
-                    </HoverCard.Target>
-                    <HoverCard.Dropdown>
-                      <List className="system-info-dropdown-list" size="sm" center spacing="0.5cqmin">
-                        <List.Item className="system-info-processor" icon={<IconCpu2 size="1cqmin" />}>
+                <Box className="health-monitoring-information-card-section">
+                  <Indicator
+                    className="health-monitoring-updates-reboot-indicator"
+                    inline
+                    processing
+                    color={healthInfo.rebootRequired ? "red" : healthInfo.availablePkgUpdates > 0 ? "blue" : "gray"}
+                    position="top-end"
+                    size="4cqmin"
+                    label={healthInfo.availablePkgUpdates > 0 ? healthInfo.availablePkgUpdates : undefined}
+                    disabled={!healthInfo.rebootRequired && healthInfo.availablePkgUpdates === 0}
+                  >
+                    <Avatar className="health-monitoring-information-icon-avatar" size="10cqmin" radius="sm">
+                      <IconInfoCircle className="health-monitoring-information-icon" size="8cqmin" onClick={open} />
+                    </Avatar>
+                  </Indicator>
+                  <Modal
+                    opened={opened}
+                    onClose={close}
+                    size="auto"
+                    title={t("widget.healthMonitoring.popover.information")}
+                    centered
+                  >
+                    <Stack gap="10px" className="health-monitoring-modal-stack">
+                      <Divider />
+                      <List className="health-monitoring-information-list" center spacing="0.5cqmin">
+                        <List.Item
+                          className="health-monitoring-information-processor"
+                          icon={<IconCpu2 size="1.5cqmin" />}
+                        >
                           {t("widget.healthMonitoring.popover.processor")} {healthInfo.cpuModelName}
                         </List.Item>
-                        <List.Item className="system-info-version" icon={<IconVersions size="1cqmin" />}>
+                        <List.Item
+                          className="health-monitoring-information-memory"
+                          icon={<IconBrain size="1.5cqmin" />}
+                        >
+                          {t("widget.healthMonitoring.popover.memory")} {memoryUsage.memTotal.GB}GiB -{" "}
+                          {t("widget.healthMonitoring.popover.memAvailable")} {memoryUsage.memFree.GB}GiB (
+                          {memoryUsage.memFree.percent}%)
+                        </List.Item>
+                        <List.Item
+                          className="health-monitoring-information-version"
+                          icon={<IconVersions size="1.5cqmin" />}
+                        >
                           {t("widget.healthMonitoring.popover.version")} {healthInfo.version}
                         </List.Item>
-                        <List.Item className="system-info-uptime" icon={<IconClock size="1cqmin" />}>
+                        <List.Item
+                          className="health-monitoring-information-uptime"
+                          icon={<IconClock size="1.5cqmin" />}
+                        >
                           {formatUptime(healthInfo.uptime, t)}
                         </List.Item>
+                        <List.Item
+                          className="health-monitoring-information-load-average"
+                          icon={<IconCpu size="1.5cqmin" />}
+                        >
+                          {t("widget.healthMonitoring.popover.loadAverage")}
+                        </List.Item>
+                        <List m="0.5cqmin" withPadding center spacing="0.5cqmin" icon={<IconCpu size="1cqmin" />}>
+                          <List.Item className="health-monitoring-information-load-average-1min">
+                            {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}
+                          </List.Item>
+                          <List.Item className="health-monitoring-information-load-average-5min">
+                            {t("widget.healthMonitoring.popover.minutes", { count: 5 })}{" "}
+                            {healthInfo.loadAverage["5min"]}
+                          </List.Item>
+                          <List.Item className="health-monitoring-information-load-average-15min">
+                            {t("widget.healthMonitoring.popover.minutes", { count: 15 })}{" "}
+                            {healthInfo.loadAverage["15min"]}
+                          </List.Item>
+                        </List>
                       </List>
-                    </HoverCard.Dropdown>
-                  </HoverCard>
+                    </Stack>
+                  </Modal>
                 </Box>
                 {options.cpu && (
-                  <Box ref={ref} w="100%" h="100%">
+                  <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu">
                     <RingProgress
-                      className="ring-cpu-utilization"
+                      className="health-monitoring-cpu-utilization"
                       roundCaps
                       size={ringSize}
                       thickness={ringThickness}
                       label={
                         <Center style={{ flexDirection: "column" }}>
                           <Text
-                            className="ring-cpu-text"
+                            className="health-monitoring-cpu-utilization-value"
                             size="3cqmin"
                           >{`${healthInfo.cpuUtilization.toFixed(2)}%`}</Text>
-                          <HoverCard>
-                            <HoverCard.Target>
-                              <IconCpu className="ring-cpu-icon" size="7cqmin" />
-                            </HoverCard.Target>
-                            <HoverCard.Dropdown>
-                              <List
-                                className="load-average-dropdown-list"
-                                size="sm"
-                                center
-                                spacing="0.5cqmin"
-                                icon={<IconCpu2 size="1cqmin" />}
-                              >
-                                <List.Item className="load-average-title" icon>
-                                  {t("widget.healthMonitoring.popover.loadAverage")}
-                                </List.Item>
-                                <List.Item className="load-average-1min">
-                                  {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}
-                                </List.Item>
-                                <List.Item className="load-average-5min">
-                                  {t("widget.healthMonitoring.popover.minutes", { count: 5 })}{" "}
-                                  {healthInfo.loadAverage["5min"]}
-                                </List.Item>
-                                <List.Item className="load-average-15min">
-                                  {t("widget.healthMonitoring.popover.minutes", { count: 15 })}{" "}
-                                  {healthInfo.loadAverage["15min"]}
-                                </List.Item>
-                              </List>
-                            </HoverCard.Dropdown>
-                          </HoverCard>
+                          <IconCpu className="health-monitoring-cpu-utilization-icon" size="7cqmin" />
                         </Center>
                       }
                       sections={[
@@ -157,21 +173,21 @@ export default function HealthMonitoringWidget({
                   </Box>
                 )}
                 {healthInfo.cpuTemp && options.cpu && (
-                  <Box ref={ref} w="100%" h="100%">
+                  <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu-temperature">
                     <RingProgress
                       ref={ref}
-                      className="ring-cpu-temp"
+                      className="health-monitoring-cpu-temp"
                       roundCaps
                       size={ringSize}
                       thickness={ringThickness}
                       label={
                         <Center style={{ flexDirection: "column" }}>
-                          <Text className="ring-cpu-temp-text" size="3cqmin">
+                          <Text className="health-monitoring-cpu-temp-value" size="3cqmin">
                             {options.fahrenheit
                               ? `${(healthInfo.cpuTemp * 1.8 + 32).toFixed(1)}°F`
                               : `${healthInfo.cpuTemp}°C`}
                           </Text>
-                          <IconCpu className="ring-cpu-temp-icon" size="7cqmin" />
+                          <IconCpu className="health-monitoring-cpu-temp-icon" size="7cqmin" />
                         </Center>
                       }
                       sections={[
@@ -184,39 +200,18 @@ export default function HealthMonitoringWidget({
                   </Box>
                 )}
                 {options.memory && (
-                  <Box ref={ref} w="100%" h="100%">
+                  <Box ref={ref} w="100%" h="100%" className="health-monitoring-memory">
                     <RingProgress
-                      className="ring-memory"
+                      className="health-monitoring-memory-use"
                       roundCaps
                       size={ringSize}
                       thickness={ringThickness}
                       label={
                         <Center style={{ flexDirection: "column" }}>
-                          <Text className="ring-memory-text" size="3cqmin">
+                          <Text className="health-monitoring-memory-value" size="3cqmin">
                             {memoryUsage.memUsed.GB}GiB
                           </Text>
-                          <HoverCard>
-                            <HoverCard.Target>
-                              <IconBrain className="ring-memory-icon" size="7cqmin" />
-                            </HoverCard.Target>
-                            <HoverCard.Dropdown>
-                              <List
-                                className="ring-memory-dropdown-list"
-                                size="sm"
-                                center
-                                spacing="0.5cqmin"
-                                icon={<IconBrain size="1cqmin" />}
-                              >
-                                <List.Item className="memory-total">
-                                  {t("widget.healthMonitoring.popover.total")} {memoryUsage.memTotal.GB}GiB
-                                </List.Item>
-                                <List.Item className="memory-available">
-                                  {t("widget.healthMonitoring.popover.memAvailable")} {memoryUsage.memFree.GB}GiB (
-                                  {memoryUsage.memFree.percent}%)
-                                </List.Item>
-                              </List>
-                            </HoverCard.Dropdown>
-                          </HoverCard>
+                          <IconBrain className="health-monitoring-memory-icon" size="7cqmin" />
                         </Center>
                       }
                       sections={[
@@ -234,33 +229,45 @@ export default function HealthMonitoringWidget({
             {options.fileSystem &&
               disksData.map((disk) => {
                 return (
-                  <Card className="disk-card" key={disk.deviceName} m="2.5cqmin" p="2.5cqmin" withBorder>
-                    <Flex className="disk-card-status" justify="space-between" align="center" m="1.5cqmin">
+                  <Card
+                    className="health-monitoring-disk-card"
+                    key={disk.deviceName}
+                    m="2.5cqmin"
+                    p="2.5cqmin"
+                    withBorder
+                  >
+                    <Flex className="health-monitoring-disk-status" justify="space-between" align="center" m="1.5cqmin">
                       <Group gap="1cqmin">
-                        <IconServer className="disk-icon" size="5cqmin" />
-                        <Text className="disk-name" size="4cqmin">
+                        <IconServer className="health-monitoring-disk-icon" size="5cqmin" />
+                        <Text className="dihealth-monitoring-disk-name" size="4cqmin">
                           {disk.deviceName}
                         </Text>
                       </Group>
                       <Group gap="1cqmin">
-                        <IconTemperature className="disk-temperature-icon" size="5cqmin" />
-                        <Text className="disk-temperature-value" size="4cqmin">
+                        <IconTemperature className="health-monitoring-disk-temperature-icon" size="5cqmin" />
+                        <Text className="health-monitoring-disk-temperature-value" size="4cqmin">
                           {options.fahrenheit
                             ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
                             : `${disk.temperature}°C`}
                         </Text>
                       </Group>
                       <Group gap="1cqmin">
-                        <IconFileReport className="disk-status-icon" size="5cqmin" />
-                        <Text className="disk-status" size="4cqmin">
+                        <IconFileReport className="health-monitoring-disk-status-icon" size="5cqmin" />
+                        <Text className="health-monitoring-disk-status-value" size="4cqmin">
                           {disk.overallStatus}
                         </Text>
                       </Group>
                     </Flex>
-                    <Progress.Root className="disk-card-use" size={progressSize}>
+                    <Progress.Root className="health-monitoring-disk-use" size={progressSize}>
                       <Tooltip label={disk.used}>
-                        <Progress.Section value={disk.percentage} color={progressColor(disk.percentage)}>
-                          <Progress.Label>{t("widget.healthMonitoring.popover.used")}</Progress.Label>
+                        <Progress.Section
+                          value={disk.percentage}
+                          color={progressColor(disk.percentage)}
+                          className="health-monitoring-disk-use-percentage"
+                        >
+                          <Progress.Label className="health-monitoring-disk-use-value">
+                            {t("widget.healthMonitoring.popover.used")}
+                          </Progress.Label>
                         </Progress.Section>
                       </Tooltip>
 
@@ -271,8 +278,14 @@ export default function HealthMonitoringWidget({
                             : `${(Number(disk.available) / 1024 ** 3).toFixed(2)} GiB`
                         }
                       >
-                        <Progress.Section value={100 - disk.percentage} color="default">
-                          <Progress.Label>{t("widget.healthMonitoring.popover.diskAvailable")}</Progress.Label>
+                        <Progress.Section
+                          className="health-monitoring-disk-available-percentage"
+                          value={100 - disk.percentage}
+                          color="default"
+                        >
+                          <Progress.Label className="health-monitoring-disk-available-value">
+                            {t("widget.healthMonitoring.popover.diskAvailable")}
+                          </Progress.Label>
                         </Progress.Section>
                       </Tooltip>
                     </Progress.Root>
