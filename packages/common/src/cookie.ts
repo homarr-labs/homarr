@@ -1,3 +1,6 @@
+import type { CookieSerializeOptions } from "cookie";
+import { serialize } from "cookie";
+
 export function parseCookies(cookieString: string) {
   const list: Record<string, string> = {};
   const cookieHeader = cookieString;
@@ -14,4 +17,8 @@ export function parseCookies(cookieString: string) {
   });
 
   return list;
+}
+
+export function setClientCookie(name: string, value: string, options: CookieSerializeOptions = {}) {
+  document.cookie = serialize(name, value, options);
 }

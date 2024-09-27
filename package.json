@@ -32,7 +32,7 @@
     "@vitest/coverage-v8": "^2.1.1",
     "@vitest/ui": "^2.1.1",
     "cross-env": "^7.0.3",
-    "jsdom": "^25.0.0",
+    "jsdom": "^25.0.1",
     "prettier": "^3.3.3",
     "testcontainers": "^10.13.1",
     "turbo": "^2.1.2",

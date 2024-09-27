@@ -24,14 +24,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/notifications": "^7.12.2",
-    "@tabler/icons-react": "^3.17.0"
+    "@mantine/notifications": "^7.13.0",
+    "@tabler/icons-react": "^3.18.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.11.0",
+    "eslint": "^9.11.1",
     "typescript": "^5.6.2"
   }
 }

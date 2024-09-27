@@ -1,5 +1,10 @@
 # Run migrations
-node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+if [ $DB_MIGRATIONS_DISABLED = "true" ]; then
+  echo "DB migrations are disabled, skipping"
+else
+    echo "Running DB migrations"
+    node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+fi
 
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file

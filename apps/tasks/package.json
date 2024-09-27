@@ -44,9 +44,9 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^20.16.5",
+    "@types/node": "^20.16.10",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^9.11.0",
+    "eslint": "^9.11.1",
     "prettier": "^3.3.3",
     "tsx": "4.13.3",
     "typescript": "^5.6.2"

@@ -532,10 +532,6 @@ export default {
     },
     beta: "Beta",
     error: "Error",
-    errors: {
-      noData: "No data to show",
-      noIntegration: "No integration selected",
-    },
     action: {
       add: "Add",
       apply: "Apply",
@@ -799,6 +795,7 @@ export default {
       },
       error: {
         internalServerError: "Failed to fetch DNS Hole Summary",
+        integrationsDisconnected: "No data available, all integrations disconnected",
       },
       data: {
         adsBlockedToday: "Blocked today",
@@ -839,6 +836,8 @@ export default {
         set: "Set",
         enabled: "Enabled",
         disabled: "Disabled",
+        processing: "Processing",
+        disconnected: "Disconnected",
         hours: "Hours",
         minutes: "Minutes",
         unlimited: "Leave blank to unlimited",
@@ -1098,6 +1097,7 @@ export default {
           logs: "Check logs for more details",
         },
         noIntegration: "No integration selected",
+        noData: "No integration data available",
       },
       option: {},
     },
@@ -1841,6 +1841,9 @@ export default {
             },
             indexerManager: {
               label: "Indexer Manager",
+            },
+            dnsHole: {
+              label: "DNS Hole Data",
             },
           },
         },

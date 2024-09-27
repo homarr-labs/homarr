@@ -1,18 +1,5 @@
 import { useMemo } from "react";
-import {
-  ActionIcon,
-  Anchor,
-  Avatar,
-  Badge,
-  Card,
-  Center,
-  Group,
-  Image,
-  ScrollArea,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -21,6 +8,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { NoIntegrationSelectedError } from "../../errors";
+import { NoIntegrationDataError } from "../../errors/no-data-integration";
 
 export default function MediaServerWidget({
   integrationIds,
@@ -30,7 +19,6 @@ export default function MediaServerWidget({
   itemId,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
-  const tCommon = useScopedI18n("common");
   const isQueryEnabled = Boolean(itemId);
   const { data: mediaRequests, isError: _isError } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
     {
@@ -67,9 +55,9 @@ export default function MediaServerWidget({
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 
-  if (integrationIds.length === 0) return <Center h="100%">{tCommon("errors.noIntegration")}</Center>;
+  if (integrationIds.length === 0) throw new NoIntegrationSelectedError();
 
-  if (sortedMediaRequests.length === 0) return <Center h="100%">{tCommon("errors.noData")}</Center>;
+  if (sortedMediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (
     <ScrollArea
