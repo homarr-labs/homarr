@@ -1,8 +1,8 @@
-import {performance} from "perf_hooks";
+import { performance } from "perf_hooks";
 
-import {db} from "@homarr/db";
-import {logger} from "@homarr/log";
-import {handshakeAsync} from "@homarr/redis";
+import { db } from "@homarr/db";
+import { logger } from "@homarr/log";
+import { handshakeAsync } from "@homarr/redis";
 
 export async function GET() {
   const timeBeforeHealthCheck = performance.now();
@@ -68,7 +68,7 @@ const executeHealthCheckSafelyAsync = async (
       status: "healthy",
       values: {
         ...values,
-        latency: currentTimeBeforeCallback
+        latency: currentTimeBeforeCallback,
       },
     };
   } catch (error) {
