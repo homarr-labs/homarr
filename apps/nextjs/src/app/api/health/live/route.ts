@@ -1,8 +1,8 @@
-import { performance } from "perf_hooks";
+import {performance} from "perf_hooks";
 
-import { db } from "@homarr/db";
-import { logger } from "@homarr/log";
-import { handshakeAsync } from "@homarr/redis";
+import {db} from "@homarr/db";
+import {logger} from "@homarr/log";
+import {handshakeAsync} from "@homarr/redis";
 
 export async function GET() {
   const timeBeforeHealthCheck = performance.now();
@@ -26,21 +26,13 @@ const executeAndAggregateAllHealthChecksAsync = async (): Promise<{
 }> => {
   const healthChecks = [
     executeHealthCheckSafelyAsync("database", async () => {
-      const before = performance.now();
       // sqlite driver does not support raw query execution. this is for a heartbeat check only - it doesn't matter if data is returned or not
       await db.query.serverSettings.findFirst();
-      const after = performance.now();
-      return {
-        latency: after - before,
-      };
+      return {};
     }),
     executeHealthCheckSafelyAsync("redis", async () => {
-      const before = performance.now();
       await handshakeAsync();
-      const after = performance.now();
-      return {
-        latency: after - before,
-      };
+      return {};
     }),
   ];
 
@@ -69,18 +61,24 @@ const executeHealthCheckSafelyAsync = async (
   callback: () => Promise<object>,
 ): Promise<HealthCheckResult> => {
   try {
+    const currentTimeBeforeCallback = performance.now();
     const values = await callback();
     return {
       name,
       status: "healthy",
-      values,
+      values: {
+        ...values,
+        latency: currentTimeBeforeCallback
+      },
     };
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(`Healthcheck '${name}' has failed: ${error}`);
     return {
       status: "unhealthy",
-      values: {},
+      values: {
+        error,
+      },
       name,
     };
   }
