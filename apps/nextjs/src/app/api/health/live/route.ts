@@ -68,7 +68,7 @@ const executeHealthCheckSafelyAsync = async (
       status: "healthy",
       values: {
         ...values,
-        latency: currentTimeBeforeCallback,
+        latency: performance.now() - currentTimeBeforeCallback,
       },
     };
   } catch (error) {
