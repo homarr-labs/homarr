@@ -2064,7 +2064,6 @@ export default {
   search: {
     placeholder: "Search for anything",
     nothingFound: "Nothing found",
-    settings: "Search settings",
     error: {
       fetch: "An error occurred while fetching data",
     },

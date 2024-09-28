@@ -1,12 +1,10 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { ActionIcon, Anchor, Center, Group, Kbd } from "@mantine/core";
+import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
 import { IconSearch, IconX } from "@tabler/icons-react";
 
-import { useSession } from "@homarr/auth/client";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -23,7 +21,6 @@ export const Spotlight = () => {
   const t = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const activeMode = useMemo(() => searchModes.find((searchMode) => searchMode.modeKey === mode), [mode]);
-  const { data: session } = useSession();
 
   if (!activeMode) {
     return null;
@@ -119,15 +116,6 @@ export const Spotlight = () => {
           />
         )}
       </MantineSpotlight.ActionsList>
-      {session ? (
-        <MantineSpotlight.Footer>
-          <Group align="center" justify="space-between">
-            <Anchor component={Link} href={`/manage/users/${session.user.id}/search`} size="sm">
-              {t("search.settings")}
-            </Anchor>
-          </Group>
-        </MantineSpotlight.Footer>
-      ) : null}
     </MantineSpotlight.Root>
   );
 };
