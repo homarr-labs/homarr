@@ -66,7 +66,7 @@ const helpMode = {
         </Group>
       ),
       filter: () => true,
-      useInteraction: interaction.link(({ href }) => ({ href })),
+      useInteraction: interaction.link(({ href }) => ({ href, newTab: true })),
     }),
   ],
 } satisfies SearchMode;
