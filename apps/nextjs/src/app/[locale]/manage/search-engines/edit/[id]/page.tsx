@@ -1,8 +1,9 @@
-import { Container, Stack, Title } from "@mantine/core";
+import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { getI18n } from "@homarr/translation/server";
 
+import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { SearchEngineEditForm } from "./_search-engine-edit-form";
 
@@ -15,14 +16,12 @@ export default async function SearchEngineEditPage({ params }: SearchEngineEditP
   const t = await getI18n();
 
   return (
-    <>
+    <ManageContainer>
       <DynamicBreadcrumb dynamicMappings={new Map([[params.id, searchEngine.name]])} nonInteractable={["edit"]} />
-      <Container>
-        <Stack>
-          <Title>{t("search.engine.page.edit.title")}</Title>
-          <SearchEngineEditForm searchEngine={searchEngine} />
-        </Stack>
-      </Container>
-    </>
+      <Stack>
+        <Title>{t("search.engine.page.edit.title")}</Title>
+        <SearchEngineEditForm searchEngine={searchEngine} />
+      </Stack>
+    </ManageContainer>
   );
 }
