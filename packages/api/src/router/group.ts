@@ -8,7 +8,7 @@ import { validation, z } from "@homarr/validation";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const groupRouter = createTRPCRouter({
-  getPaginated: protectedProcedure.input(validation.group.paginated).query(async ({ input, ctx }) => {
+  getPaginated: protectedProcedure.input(validation.common.paginated).query(async ({ input, ctx }) => {
     const whereQuery = input.search ? like(groups.name, `%${input.search.trim()}%`) : undefined;
     const groupCount = await ctx.db
       .select({
@@ -45,7 +45,7 @@ export const groupRouter = createTRPCRouter({
       totalCount: groupCount[0]?.count ?? 0,
     };
   }),
-  getById: protectedProcedure.input(validation.group.byId).query(async ({ input, ctx }) => {
+  getById: protectedProcedure.input(validation.common.byId).query(async ({ input, ctx }) => {
     const group = await ctx.db.query.groups.findFirst({
       where: eq(groups.id, input.id),
       with: {
@@ -156,7 +156,7 @@ export const groupRouter = createTRPCRouter({
       })
       .where(eq(groups.id, input.groupId));
   }),
-  deleteGroup: protectedProcedure.input(validation.group.byId).mutation(async ({ input, ctx }) => {
+  deleteGroup: protectedProcedure.input(validation.common.byId).mutation(async ({ input, ctx }) => {
     await throwIfGroupNotFoundAsync(ctx.db, input.id);
 
     await ctx.db.delete(groups).where(eq(groups.id, input.id));

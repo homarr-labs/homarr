@@ -31,7 +31,7 @@ export const appRouter = createTRPCRouter({
         limit: input.limit,
       });
     }),
-  byId: publicProcedure.input(validation.app.byId).query(async ({ ctx, input }) => {
+  byId: publicProcedure.input(validation.common.byId).query(async ({ ctx, input }) => {
     const app = await ctx.db.query.apps.findFirst({
       where: eq(apps.id, input.id),
     });
@@ -76,7 +76,7 @@ export const appRouter = createTRPCRouter({
       })
       .where(eq(apps.id, input.id));
   }),
-  delete: publicProcedure.input(validation.app.byId).mutation(async ({ ctx, input }) => {
+  delete: publicProcedure.input(validation.common.byId).mutation(async ({ ctx, input }) => {
     await ctx.db.delete(apps).where(eq(apps.id, input.id));
   }),
 });

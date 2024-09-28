@@ -4,6 +4,8 @@ import { groupSchemas } from "./group";
 import { iconsSchemas } from "./icons";
 import { integrationSchemas } from "./integration";
 import { locationSchemas } from "./location";
+import { searchEngineSchemas } from "./search-engine";
+import { byIdSchema, paginatedSchema } from "./shared";
 import { userSchemas } from "./user";
 import { widgetSchemas } from "./widgets";
 
@@ -16,6 +18,11 @@ export const validation = {
   widget: widgetSchemas,
   location: locationSchemas,
   icons: iconsSchemas,
+  searchEngine: searchEngineSchemas,
+  common: {
+    paginated: paginatedSchema,
+    byId: byIdSchema,
+  },
 };
 
 export {

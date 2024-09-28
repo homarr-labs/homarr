@@ -343,6 +343,15 @@ export const serverSettings = sqliteTable("serverSetting", {
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
 
+export const searchEngines = sqliteTable("search_engine", {
+  id: text("id").notNull().primaryKey(),
+  iconUrl: text("icon_url").notNull(),
+  name: text("name").notNull(),
+  short: text("short").notNull(),
+  description: text("description"),
+  urlTemplate: text("url_template").notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],

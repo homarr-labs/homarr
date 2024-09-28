@@ -48,7 +48,7 @@ const handleStringError = (issue: z.ZodInvalidStringIssue) => {
     }
 
     return {
-      key: "errors.invalid_string.includes",
+      key: "errors.string.includes",
       params: {
         includes: issue.validation.includes,
       },
