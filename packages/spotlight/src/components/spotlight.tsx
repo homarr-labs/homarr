@@ -64,6 +64,11 @@ export const Spotlight = () => {
             {activeMode.modeKey !== "help" ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
           </Group>
         }
+        styles={{
+          section: {
+            pointerEvents: "all",
+          },
+        }}
         rightSection={
           mode === "help" ? undefined : (
             <ActionIcon
