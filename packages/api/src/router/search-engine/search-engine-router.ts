@@ -42,7 +42,7 @@ export const searchEngineRouter = createTRPCRouter({
     return searchEngine;
   }),
   search: protectedProcedure.input(validation.common.search).query(async ({ ctx, input }) => {
-    return ctx.db.query.searchEngines.findMany({
+    return await ctx.db.query.searchEngines.findMany({
       where: like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
       limit: input.limit,
     });
