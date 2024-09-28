@@ -69,13 +69,3 @@ const createDynamicSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItem
 
 export const createSectionSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
   z.union([createCategorySchema(itemSchema), createEmptySchema(itemSchema), createDynamicSchema(itemSchema)]);
-
-export const paginatedSchema = z.object({
-  search: z.string().optional(),
-  pageSize: z.number().int().positive().default(10),
-  page: z.number().int().positive().default(1),
-});
-
-export const byIdSchema = z.object({
-  id: z.string(),
-});

@@ -2165,6 +2165,16 @@ export default {
         group: {
           searchEngine: {
             title: "Search engines",
+            children: {
+              action: {
+                search: {
+                  label: "Search with {name}",
+                },
+              },
+              detail: {
+                title: "Select an action for the search engine",
+              },
+            },
             option: {
               google: {
                 name: "Google",

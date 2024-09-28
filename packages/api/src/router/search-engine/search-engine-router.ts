@@ -41,11 +41,17 @@ export const searchEngineRouter = createTRPCRouter({
 
     return searchEngine;
   }),
+  search: protectedProcedure.input(validation.common.search).query(async ({ ctx, input }) => {
+    return ctx.db.query.searchEngines.findMany({
+      where: like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
+      limit: input.limit,
+    });
+  }),
   create: protectedProcedure.input(validation.searchEngine.manage).mutation(async ({ ctx, input }) => {
     await ctx.db.insert(searchEngines).values({
       id: createId(),
       name: input.name,
-      short: input.short,
+      short: input.short.toLowerCase(),
       iconUrl: input.iconUrl,
       urlTemplate: input.urlTemplate,
       description: input.description,

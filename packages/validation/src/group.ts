@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import { groupPermissionKeys } from "@homarr/definitions";
 
+import { byIdSchema } from "./common";
 import { zodEnumFromArray } from "./enums";
-import { byIdSchema } from "./shared";
 
 const createSchema = z.object({
   name: z.string().max(64),

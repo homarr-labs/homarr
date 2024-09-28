@@ -15,18 +15,13 @@ interface SpotlightActionGroupsProps {
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
 
-export const SpotlightActionGroups = ({ groups, query, setMode, setChildrenOptions }: SpotlightActionGroupsProps) => {
+export const SpotlightActionGroups = ({ groups, ...others }: SpotlightActionGroupsProps) => {
   const t = useI18n();
 
   return groups.map((group) => (
     <Spotlight.ActionsGroup key={translateIfNecessary(t, group.title)} label={translateIfNecessary(t, group.title)}>
       {/*eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      <SpotlightGroupActions<any>
-        group={group}
-        query={query}
-        setMode={setMode}
-        setChildrenOptions={setChildrenOptions}
-      />
+      <SpotlightGroupActions<any> group={group} {...others} />
     </Spotlight.ActionsGroup>
   ));
 };
