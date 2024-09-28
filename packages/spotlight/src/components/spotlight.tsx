@@ -28,6 +28,7 @@ export const Spotlight = () => {
 
   return (
     <MantineSpotlight.Root
+      yOffset={8}
       onSpotlightClose={() => {
         setMode("help");
         setChildrenOptions(null);
