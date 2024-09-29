@@ -106,7 +106,15 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               return null;
             }
 
-            return <Input key={key} kind={innerProps.kind} property={key} options={value as never} />;
+            return (
+              <Input
+                key={key}
+                kind={innerProps.kind}
+                property={key}
+                options={value as never}
+                initialOptions={innerProps.value.options}
+              />
+            );
           })}
           <Group justify="space-between">
             <Button

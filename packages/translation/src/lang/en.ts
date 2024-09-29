@@ -359,6 +359,12 @@ export default {
         label: "Url",
       },
     },
+    action: {
+      select: {
+        label: "Select app",
+        notFound: "No app found",
+      },
+    },
   },
   integration: {
     page: {
@@ -768,6 +774,19 @@ export default {
         notFound: {
           label: "No app",
           tooltip: "You have no valid app selected",
+        },
+      },
+    },
+    bookmarks: {
+      name: "Bookmarks",
+      description: "Displays multiple app links",
+      option: {
+        title: {
+          label: "Title",
+        },
+        items: {
+          label: "Bookmarks",
+          add: "Add bookmark",
         },
       },
     },

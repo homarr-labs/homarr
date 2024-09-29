@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { asc, createId, eq, like } from "@homarr/db";
+import { asc, createId, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
@@ -18,6 +18,8 @@ export const appRouter = createTRPCRouter({
         id: true,
         name: true,
         iconUrl: true,
+        description: true,
+        href: true,
       },
       orderBy: asc(apps.name),
     });
@@ -44,6 +46,11 @@ export const appRouter = createTRPCRouter({
     }
 
     return app;
+  }),
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
+    return await ctx.db.query.apps.findMany({
+      where: inArray(apps.id, input),
+    });
   }),
   create: publicProcedure.input(validation.app.manage).mutation(async ({ ctx, input }) => {
     await ctx.db.insert(apps).values({
