@@ -50,7 +50,7 @@ export default function HealthMonitoringWidget({
   }
   return (
     <Box h="100%" className="health-monitoring">
-      {healthData.map(({ integration, healthInfo }) => {
+      {healthData.map(({ integrationId, integrationName, healthInfo }) => {
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
         const { ref, width } = useElementSize();
@@ -60,9 +60,9 @@ export default function HealthMonitoringWidget({
 
         return (
           <Box
-            key={integration.id}
+            key={integrationId}
             h="100%"
-            className={`health-monitoring-information health-monitoring-${integration.name}`}
+            className={`health-monitoring-information health-monitoring-${integrationName}`}
           >
             <Card className="health-monitoring-information-card" m="2.5cqmin" p="2.5cqmin" withBorder>
               <Flex
@@ -71,7 +71,7 @@ export default function HealthMonitoringWidget({
                 w="100%"
                 justify="space-between"
                 align="center"
-                key={integration.id}
+                key={integrationId}
               >
                 <Box className="health-monitoring-information-card-section">
                   <Indicator

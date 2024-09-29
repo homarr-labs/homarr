@@ -17,7 +17,7 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     });
 
     return {
-      initialData: currentHealthInfo,
+      initialData: currentHealthInfo.filter((health) => health !== null),
     };
   } catch {
     return {

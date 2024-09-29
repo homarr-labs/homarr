@@ -15,11 +15,12 @@ export const healthMonitoringRouter = createTRPCRouter({
           const channel = createItemAndIntegrationChannel<HealthMonitoring>("healthMonitoring", integration.id);
           const data = await channel.getAsync();
           if (!data) {
-            throw new Error(`No data found for integration ID: ${integration.id}`);
+            return null;
           }
 
           return {
-            integration,
+            integrationId: integration.id,
+            integrationName: integration.name,
             healthInfo: data.data,
           };
         }),
