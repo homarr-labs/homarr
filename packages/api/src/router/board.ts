@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
+import AdmZip from "adm-zip";
 import superjson from "superjson";
+import { zfd } from "zod-form-data";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
@@ -17,10 +19,12 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 import { importAsync } from "@homarr/old-import";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import { createSectionSchema, sharedItemSchema, validation, z } from "@homarr/validation";
+import { createCustomErrorParams } from "@homarr/validation/form";
 
 import { zodUnionFromArray } from "../../../validation/src/enums";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
@@ -547,6 +551,47 @@ export const boardRouter = createTRPCRouter({
       const content = await input.file.text();
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
       await importAsync(ctx.db, oldmarr, input.configuration);
+    }),
+  analyseOldmarrConfigs: protectedProcedure
+    .input(
+      zfd.formData({
+        file: zfd.file().superRefine((value, context) => {
+          if (value.type !== "application/zip") {
+            return context.addIssue({
+              code: "custom",
+              params: createCustomErrorParams({
+                key: "invalidFileType",
+                params: { expected: "ZIP" },
+              }),
+            });
+          }
+
+          return null;
+        }),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const arrayBuffer = await input.file.arrayBuffer();
+      const zip = new AdmZip(Buffer.from(arrayBuffer));
+
+      return zip
+        .getEntries()
+        .map((entry) => {
+          if (entry.entryName.endsWith(".json")) {
+            const content = entry.getData().toString("utf8");
+            const result = oldmarrConfigSchema.safeParse(JSON.parse(content));
+
+            if (!result.success) {
+              logger.error(result.error);
+              return null;
+            }
+
+            return result.data;
+          }
+
+          return null;
+        })
+        .filter((result) => result !== null);
     }),
 });
 

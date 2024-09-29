@@ -21,10 +21,10 @@ importers:
         version: 2.1.2(@types/node@20.16.10)(typescript@5.6.2)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))
+        version: 4.3.1(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/coverage-v8':
         specifier: ^2.1.1
-        version: 2.1.1(vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))
+        version: 2.1.1(vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/ui':
         specifier: ^2.1.1
         version: 2.1.1(vitest@2.1.1)
@@ -48,10 +48,10 @@ importers:
         version: 5.6.2
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.6.2)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))
+        version: 5.0.1(typescript@5.6.2)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       vitest:
         specifier: ^2.1.1
-        version: 2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+        version: 2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
 
   apps/nextjs:
     dependencies:
@@ -127,6 +127,9 @@ importers:
       '@mantine/core':
         specifier: ^7.13.0
         version: 7.13.0(@mantine/hooks@7.13.0(react@18.3.1))(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/dropzone':
+        specifier: ^7.13.0
+        version: 7.13.0(@mantine/core@7.13.0(@mantine/hooks@7.13.0(react@18.3.1))(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.13.0
         version: 7.13.0(react@18.3.1)
@@ -512,6 +515,9 @@ importers:
       '@trpc/server':
         specifier: next
         version: 11.0.0-rc.552
+      adm-zip:
+        specifier: ^0.5.16
+        version: 0.5.16
       dockerode:
         specifier: ^4.0.2
         version: 4.0.2
@@ -537,6 +543,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/adm-zip':
+        specifier: ^0.5.5
+        version: 0.5.5
       '@types/dockerode':
         specifier: ^3.3.31
         version: 3.3.31
@@ -2587,6 +2596,14 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
 
+  '@mantine/dropzone@7.13.0':
+    resolution: {integrity: sha512-NDpSJ6rEN8dJwI5/qImG+6lNH/bLmf3cz4cErMR/DXNMUZGGGVx8V81oJfKoXlQi3P+yy0d6UOPiqAz1wkdC8Q==}
+    peerDependencies:
+      '@mantine/core': 7.13.0
+      '@mantine/hooks': 7.13.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+
   '@mantine/form@7.13.0':
     resolution: {integrity: sha512-CeQbE08D7JNA+YyaGKAdFj40rp0JDFobcobIgNZzIyzXX8QNxIrtGhX3QqKIiwiFcjJi4WCxUSzDrd6vOKaEmA==}
     peerDependencies:
@@ -3274,6 +3291,9 @@ packages:
     resolution: {integrity: sha512-PbowgdRe19+1LvG9yDoesSxtps2bTu1Riuaip1/VBq0AXhd417TzISWDti+V6jRCFE5cwtszNsJo+gGREIlWLQ==}
     hasBin: true
 
+  '@types/adm-zip@0.5.5':
+    resolution: {integrity: sha512-YCGstVMjc4LTY5uK9/obvxBya93axZOVOyf2GSUulADzmLhYE45u2nAssCs/fWBs1Ifq5Vat75JTPwd5XZoPJw==}
+
   '@types/asn1@0.2.4':
     resolution: {integrity: sha512-V91DSJ2l0h0gRhVP4oBfBzRBN9lAbPUkGDMCnwedqPKX2d84aAMc9CulOvxdw1f7DfEYx99afab+Rsm3e52jhA==}
 
@@ -3664,6 +3684,10 @@ packages:
     resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  adm-zip@0.5.16:
+    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
+    engines: {node: '>=12.0'}
 
   aes-decrypter@4.0.1:
     resolution: {integrity: sha512-H1nh/P9VZXUf17AA5NQfJML88CFjVBDuGkp5zDHa7oEhYN9TTpNLJknRY1ie0iSKWlDf6JRnJKaZVDSQdPy6Cg==}
@@ -6400,6 +6424,12 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-dropzone-esm@15.0.1:
+    resolution: {integrity: sha512-RdeGpqwHnoV/IlDFpQji7t7pTtlC2O1i/Br0LWkRZ9hYtLyce814S71h5NolnCZXsIN5wrZId6+8eQj2EBnEzg==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+
   react-error-boundary@4.0.13:
     resolution: {integrity: sha512-b6PwbdSv8XeOSYvjt8LpgpKrZ0yGdtZokYwkwV2wlcZbxgopHX/hgPl5VgpnoVOWd868n1hktM8Qm4b+02MiLQ==}
     peerDependencies:
@@ -8535,6 +8565,14 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  '@mantine/dropzone@7.13.0(@mantine/core@7.13.0(@mantine/hooks@7.13.0(react@18.3.1))(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@mantine/core': 7.13.0(@mantine/hooks@7.13.0(react@18.3.1))(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks': 7.13.0(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-dropzone-esm: 15.0.1(react@18.3.1)
+
   '@mantine/form@7.13.0(react@18.3.1)':
     dependencies:
       fast-deep-equal: 3.1.3
@@ -9467,6 +9505,10 @@ snapshots:
       semver: 7.6.3
       update-check: 1.5.4
 
+  '@types/adm-zip@0.5.5':
+    dependencies:
+      '@types/node': 20.16.10
+
   '@types/asn1@0.2.4':
     dependencies:
       '@types/node': 20.16.10
@@ -9775,18 +9817,18 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.3.1(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))':
+  '@vitejs/plugin-react@4.3.1(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.1(vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))':
+  '@vitest/coverage-v8@2.1.1(vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -9800,7 +9842,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vitest: 2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -9811,13 +9853,13 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))':
+  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@vitest/spy': 2.1.1
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
 
   '@vitest/pretty-format@2.1.1':
     dependencies:
@@ -9847,7 +9889,7 @@ snapshots:
       sirv: 2.0.4
       tinyglobby: 0.2.6
       tinyrainbow: 1.2.0
-      vitest: 2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vitest: 2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
 
   '@vitest/utils@2.1.1':
     dependencies:
@@ -9973,6 +10015,8 @@ snapshots:
       acorn: 8.12.1
 
   acorn@8.12.1: {}
+
+  adm-zip@0.5.16: {}
 
   aes-decrypter@4.0.1:
     dependencies:
@@ -13069,6 +13113,11 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
+  react-dropzone-esm@15.0.1(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
+
   react-error-boundary@4.0.13(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.25.6
@@ -14320,12 +14369,12 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@2.1.1(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0):
+  vite-node@2.1.1(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -14337,18 +14386,18 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@5.0.1(typescript@5.6.2)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)):
+  vite-tsconfig-paths@5.0.1(typescript@5.6.2)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.6.2)
     optionalDependencies:
-      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0):
+  vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -14360,10 +14409,10 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.47)
       terser: 5.32.0
 
-  vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0):
+  vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
     dependencies:
       '@vitest/expect': 2.1.1
-      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0))
+      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/pretty-format': 2.1.1
       '@vitest/runner': 2.1.1
       '@vitest/snapshot': 2.1.1
@@ -14378,8 +14427,8 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
-      vite-node: 2.1.1(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1)(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite-node: 2.1.1(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.16.10

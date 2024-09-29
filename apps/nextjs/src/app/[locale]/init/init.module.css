@@ -1,0 +1,8 @@
+.card {
+  @mixin light {
+    background: var(--mantine-color-gray-1);
+  }
+  @mixin dark {
+    background: var(--mantine-color-dark-8);
+  }
+}

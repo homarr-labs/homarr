@@ -16,15 +16,12 @@ const appNetworkSchema = z.object({
 
 const appAppearanceSchema = z.object({
   iconUrl: z.string(),
-  appNameStatus: z.union([z.literal("normal"), z.literal("hover"), z.literal("hidden")]),
-  positionAppName: z.union([
-    z.literal("row"),
-    z.literal("column"),
-    z.literal("row-reverse"),
-    z.literal("column-reverse"),
-  ]),
-  appNameFontSize: z.number(),
-  lineClampAppName: z.number(),
+  appNameStatus: z.union([z.literal("normal"), z.literal("hover"), z.literal("hidden")]).optional(),
+  positionAppName: z
+    .union([z.literal("row"), z.literal("column"), z.literal("row-reverse"), z.literal("column-reverse")])
+    .optional(),
+  appNameFontSize: z.number().optional(),
+  lineClampAppName: z.number().optional(),
 });
 
 const integrationSchema = z.enum([

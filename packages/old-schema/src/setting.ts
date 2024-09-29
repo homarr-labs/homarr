@@ -28,15 +28,19 @@ const commonSettingsSchema = z.object({
   searchEngine: searchEngineSchema,
 });
 
-const accessSettingsSchema = z.object({
-  allowGuests: z.boolean(),
-});
+const accessSettingsSchema = z
+  .object({
+    allowGuests: z.boolean().default(false),
+  })
+  .catch({ allowGuests: false });
 
-const gridstackSettingsSchema = z.object({
-  columnCountSmall: z.number(),
-  columnCountMedium: z.number(),
-  columnCountLarge: z.number(),
-});
+const gridstackSettingsSchema = z
+  .object({
+    columnCountSmall: z.number().default(3),
+    columnCountMedium: z.number().default(6),
+    columnCountLarge: z.number().default(12),
+  })
+  .catch({ columnCountLarge: 3, columnCountMedium: 6, columnCountSmall: 12 });
 
 const layoutSettingsSchema = z.object({
   enabledLeftSidebar: z.boolean(),
