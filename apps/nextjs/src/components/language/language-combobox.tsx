@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { InputBaseProps } from "@mantine/core";
 import { Combobox, Group, InputBase, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -10,7 +11,7 @@ import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 
 import classes from "./language-combobox.module.css";
 
-export const LanguageCombobox = () => {
+export const LanguageCombobox = ({ variant }: Pick<InputBaseProps, "variant">) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -42,7 +43,7 @@ export const LanguageCombobox = () => {
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
           onClick={handleOnClick}
-          variant="filled"
+          variant={variant ?? "filled"}
         >
           <OptionItem currentLocale={currentLocale} localeKey={currentLocale} />
         </InputBase>

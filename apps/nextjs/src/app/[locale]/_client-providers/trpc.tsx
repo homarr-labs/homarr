@@ -14,6 +14,7 @@ import {
   unstable_httpBatchStreamLink,
   wsLink,
 } from "@trpc/client";
+import type { SuperJSONResult } from "superjson";
 import superjson from "superjson";
 
 import type { AppRouter } from "@homarr/api";
@@ -61,8 +62,8 @@ export function TRPCReactProvider(props: PropsWithChildren) {
                 serialize(object: unknown) {
                   return object;
                 },
-                deserialize(data: unknown) {
-                  return data;
+                deserialize(data: SuperJSONResult) {
+                  return superjson.deserialize<unknown>(data);
                 },
               },
               url: `${getBaseUrl()}/api/trpc`,

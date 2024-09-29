@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
+import "@mantine/dropzone/styles.css";
+import "flag-icons/css/flag-icons.min.css";
 import "~/styles/scroll-area.scss";
 
 import { cookies } from "next/headers";
