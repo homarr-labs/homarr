@@ -6,6 +6,19 @@ else
     node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
 fi
 
+# Generates an encryption key if it doesn't exist and saves it to /secrets/encryptionKey
+# Also sets the ENCRYPTION_KEY environment variable
+encryptonKey=""
+if [ -r /secrets/encryptionKey ]; then
+    echo "Encryption key already exists"
+    encryptonKey=$(cat /secrets/encryptionKey)
+else
+    echo "Generating encryption key"
+    encryptonKey=$(node ./generateEncryptionKey.js)
+    echo $encryptonKey > /secrets/encryptionKey
+fi
+export ENCRYPTION_KEY=$encryptonKey
+
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file
 # 2. Create the nginx configuration file from the template

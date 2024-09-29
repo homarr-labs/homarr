@@ -58,6 +58,8 @@ RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
 VOLUME /appdata
+RUN mkdir /secrets
+VOLUME /secrets
 
 
 
@@ -71,6 +73,7 @@ RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
 RUN chown -R nextjs:nodejs /appdata
+RUN chown -R nextjs:nodejs /secrets
 RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
     mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
     mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
@@ -93,6 +96,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
+COPY --chown=nextjs:nodejs scripts/generateEncryptionKey.js ./generateEncryptionKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
 

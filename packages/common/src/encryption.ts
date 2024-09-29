@@ -1,7 +1,8 @@
 import crypto from "crypto";
 
 const algorithm = "aes-256-cbc"; //Using AES encryption
-const key = Buffer.from("1d71cceced68159ba59a277d056a66173613052cbeeccbfbd15ab1c909455a4d", "hex"); // TODO: generate with const data = crypto.randomBytes(32).toString('hex')
+const encryptonKey = process.env.ENCRYPTION_KEY ?? "0000000000000000000000000000000000000000000000000000000000000000"; // Fallback to a default key for local development
+const key = Buffer.from(encryptonKey, "hex");
 
 export function encryptSecret(text: string): `${string}.${string}` {
   const initializationVector = crypto.randomBytes(16);
