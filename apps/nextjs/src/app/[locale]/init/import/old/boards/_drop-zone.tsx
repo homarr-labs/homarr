@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   Checkbox,
-  CheckboxGroup,
   Fieldset,
   Grid,
   GridCol,
@@ -23,7 +22,7 @@ import { IconFileZip, IconPencil, IconUpload, IconX } from "@tabler/icons-react"
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
-import { OldmarrConfig } from "@homarr/old-schema";
+import type { OldmarrConfig } from "@homarr/old-schema";
 import { SelectWithDescription } from "@homarr/ui";
 import { oldmarrImportConfigurationSchema, z } from "@homarr/validation";
 
@@ -55,11 +54,7 @@ export const ImportBoards = () => {
   const [data, setData] = useState<OldmarrConfig[] | null>(null);
 
   const { mutateAsync, isPending } = clientApi.board.analyseOldmarrConfigs.useMutation();
-  const [selectedBoards, { setState, applyWhere, apply }] = useListState<SelectedBoard>([]);
-  const allSelected = useMemo(
-    () => selectedBoards.every((board) => board.lg && board.md && board.sm),
-    [selectedBoards],
-  );
+  const [selectedBoards, selectedBoardActions] = useListState<SelectedBoard>([]);
 
   const handleFileSelectionAsync = async (file: File | null) => {
     setFile(file);
@@ -74,7 +69,9 @@ export const ImportBoards = () => {
       onSuccess(data) {
         // TODO: Check that names are distinct
         setData(data);
-        setState(data.map((board) => ({ id: board.configProperties.name, sm: false, md: false, lg: false })));
+        selectedBoardActions.setState(
+          data.map((board) => ({ id: board.configProperties.name, sm: false, md: false, lg: false })),
+        );
       },
     });
   };
@@ -204,108 +201,7 @@ export const ImportBoards = () => {
         </Card>
       </GridCol>
       <GridCol span={12}>
-        <Card className={classes.card} w="100%">
-          <Stack>
-            <Stack gap={0}>
-              <Text fw={500}>Found {data?.length ?? 0} boards</Text>
-              <Group justify="space-between">
-                <Text size="sm" c="gray.6">
-                  Choose all boards with there size you want to import.
-                </Text>
-                {allSelected ? (
-                  <Anchor
-                    component="button"
-                    size="sm"
-                    onClick={() => apply((item) => ({ ...item, sm: false, md: false, lg: false }))}
-                  >
-                    Unselect all
-                  </Anchor>
-                ) : (
-                  <Anchor
-                    component="button"
-                    size="sm"
-                    onClick={() => apply((item) => ({ ...item, sm: true, md: true, lg: true }))}
-                  >
-                    Select all
-                  </Anchor>
-                )}
-              </Group>
-            </Stack>
-
-            {data?.map((board) => {
-              const selectedBoard = selectedBoards.find((selected) => selected.id === board.configProperties.name);
-
-              if (!selectedBoard) {
-                return null;
-              }
-
-              const all = selectedBoard.lg && selectedBoard.md && selectedBoard.sm;
-
-              return (
-                <Card withBorder bg="transparent">
-                  <Group justify="space-between" align="center">
-                    <Group>
-                      <Checkbox
-                        checked={all}
-                        indeterminate={!all && (selectedBoard.lg || selectedBoard.md || selectedBoard.sm)}
-                        onChange={(event) =>
-                          applyWhere(
-                            (item) => item.id === selectedBoard.id,
-                            (item) => ({
-                              ...item,
-                              sm: event.target.checked,
-                              md: event.target.checked,
-                              lg: event.target.checked,
-                            }),
-                          )
-                        }
-                      />
-                      <Text size="sm" fw={500}>
-                        {board.configProperties.name.toUpperCase()}
-                      </Text>
-                    </Group>
-
-                    <Group>
-                      <Checkbox
-                        checked={selectedBoard.sm}
-                        onChange={(event) =>
-                          applyWhere(
-                            (item) => item.id === selectedBoard.id,
-                            (item) => ({ ...item, sm: event.target.checked }),
-                          )
-                        }
-                        value="sm"
-                        label="Small"
-                      />
-                      <Checkbox
-                        checked={selectedBoard.md}
-                        onChange={(event) =>
-                          applyWhere(
-                            (item) => item.id === selectedBoard.id,
-                            (item) => ({ ...item, md: event.target.checked }),
-                          )
-                        }
-                        value="md"
-                        label="Medium"
-                      />
-                      <Checkbox
-                        checked={selectedBoard.lg}
-                        onChange={(event) =>
-                          applyWhere(
-                            (item) => item.id === selectedBoard.id,
-                            (item) => ({ ...item, lg: event.target.checked }),
-                          )
-                        }
-                        value="lg"
-                        label="Large"
-                      />
-                    </Group>
-                  </Group>
-                </Card>
-              );
-            })}
-          </Stack>
-        </Card>
+        <SelectedBoardsCard data={data ?? []} selectedBoardState={[selectedBoards, selectedBoardActions]} />
       </GridCol>
       <GridCol span={12}>
         <Card className={classes.card} w="100%">
@@ -358,5 +254,123 @@ export const ImportBoards = () => {
         </Card>
       </GridCol>
     </>
+  );
+};
+
+interface SelectedBoardCardProps {
+  data: OldmarrConfig[];
+  selectedBoardState: ReturnType<typeof useListState<SelectedBoard>>;
+}
+
+const SelectedBoardsCard = ({ data, selectedBoardState }: SelectedBoardCardProps) => {
+  const [selectedBoards, { applyWhere, apply }] = selectedBoardState;
+  const allSelected = useMemo(
+    () => selectedBoards.every((board) => board.lg && board.md && board.sm),
+    [selectedBoards],
+  );
+
+  return (
+    <Card className={classes.card} w="100%">
+      <Stack>
+        <Stack gap={0}>
+          <Text fw={500}>Found {data.length} boards</Text>
+          <Group justify="space-between">
+            <Text size="sm" c="gray.6">
+              Choose all boards with there size you want to import.
+            </Text>
+            {allSelected ? (
+              <Anchor
+                component="button"
+                size="sm"
+                onClick={() => apply((item) => ({ ...item, sm: false, md: false, lg: false }))}
+              >
+                Unselect all
+              </Anchor>
+            ) : (
+              <Anchor
+                component="button"
+                size="sm"
+                onClick={() => apply((item) => ({ ...item, sm: true, md: true, lg: true }))}
+              >
+                Select all
+              </Anchor>
+            )}
+          </Group>
+        </Stack>
+
+        {data.map((board) => {
+          const selectedBoard = selectedBoards.find((selected) => selected.id === board.configProperties.name);
+
+          if (!selectedBoard) {
+            return null;
+          }
+
+          const all = selectedBoard.lg && selectedBoard.md && selectedBoard.sm;
+
+          return (
+            <Card withBorder bg="transparent">
+              <Group justify="space-between" align="center">
+                <Group>
+                  <Checkbox
+                    checked={all}
+                    indeterminate={!all && (selectedBoard.lg || selectedBoard.md || selectedBoard.sm)}
+                    onChange={(event) =>
+                      applyWhere(
+                        (item) => item.id === selectedBoard.id,
+                        (item) => ({
+                          ...item,
+                          sm: event.target.checked,
+                          md: event.target.checked,
+                          lg: event.target.checked,
+                        }),
+                      )
+                    }
+                  />
+                  <Text size="sm" fw={500}>
+                    {board.configProperties.name.toUpperCase()}
+                  </Text>
+                </Group>
+
+                <Group>
+                  <Checkbox
+                    checked={selectedBoard.sm}
+                    onChange={(event) =>
+                      applyWhere(
+                        (item) => item.id === selectedBoard.id,
+                        (item) => ({ ...item, sm: event.target.checked }),
+                      )
+                    }
+                    value="sm"
+                    label="Small"
+                  />
+                  <Checkbox
+                    checked={selectedBoard.md}
+                    onChange={(event) =>
+                      applyWhere(
+                        (item) => item.id === selectedBoard.id,
+                        (item) => ({ ...item, md: event.target.checked }),
+                      )
+                    }
+                    value="md"
+                    label="Medium"
+                  />
+                  <Checkbox
+                    checked={selectedBoard.lg}
+                    onChange={(event) =>
+                      applyWhere(
+                        (item) => item.id === selectedBoard.id,
+                        (item) => ({ ...item, lg: event.target.checked }),
+                      )
+                    }
+                    value="lg"
+                    label="Large"
+                  />
+                </Group>
+              </Group>
+            </Card>
+          );
+        })}
+      </Stack>
+    </Card>
   );
 };
