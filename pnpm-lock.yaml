@@ -20,8 +20,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(@types/node@20.16.10)(typescript@5.6.2)
       '@vitejs/plugin-react':
-        specifier: ^4.3.1
-        version: 4.3.1(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
+        specifier: ^4.3.2
+        version: 4.3.2(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/coverage-v8':
         specifier: ^2.1.1
         version: 2.1.1(vitest@2.1.1(@types/node@20.16.10)(@vitest/ui@2.1.1)(jsdom@25.0.1)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
@@ -3514,8 +3514,8 @@ packages:
   '@videojs/xhr@2.7.0':
     resolution: {integrity: sha512-giab+EVRanChIupZK7gXjHy90y3nncA2phIOyG3Ne5fvpiMJzvqYwiTOnEVW2S4CoYcuKJkomat7bMXA/UoUZQ==}
 
-  '@vitejs/plugin-react@4.3.1':
-    resolution: {integrity: sha512-m/V2syj5CuVnaxcUJOQRel/Wr31FFXRFlnOoq1TVtkCxsY5veGMTEmpWHndrhB2U8ScHtCQB1e+4hWYExQc6Lg==}
+  '@vitejs/plugin-react@4.3.2':
+    resolution: {integrity: sha512-hieu+o05v4glEBucTcKMK3dlES0OeJlD9YVOAPraVMOInBCwzumaIFiUjr4bHK7NPgnAHgiskUoceKercrN8vg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
@@ -9775,7 +9775,7 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.3.1(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
+  '@vitejs/plugin-react@4.3.2(vite@5.4.5(@types/node@20.16.10)(sass@1.79.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
