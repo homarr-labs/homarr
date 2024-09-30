@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Avatar,
   Box,
@@ -17,7 +18,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useElementSize, useListState } from "@mantine/hooks";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
 import {
   IconBrain,
   IconClock,
@@ -30,6 +31,7 @@ import {
   IconVersions,
 } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -42,8 +44,21 @@ export default function HealthMonitoringWidget({
   serverData,
 }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
-  const [healthData] = useListState(serverData?.initialData ?? []);
+  const [healthData, setHealthData] = useState(serverData?.initialData ?? []);
   const [opened, { open, close }] = useDisclosure(false);
+
+  clientApi.widget.healthMonitoring.subscribeHealthStatus.useSubscription(
+    { integrationIds },
+    {
+      onData(newData) {
+        setHealthData((prevData) => {
+          return prevData.map((item) =>
+            item.integrationId === newData.integrationId ? { ...item, healthInfo: newData.healthInfo } : item,
+          );
+        });
+      },
+    },
+  );
 
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
