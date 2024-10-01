@@ -14,6 +14,7 @@ import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
@@ -60,4 +61,5 @@ export const integrationCreators = {
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
+  openmediavault: OpenMediaVaultIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;

@@ -260,3 +260,7 @@ export const createQueueChannel = <TItem>(name: string) => {
     },
   };
 };
+
+export const handshakeAsync = async () => {
+  await getSetClient.hello();
+};
