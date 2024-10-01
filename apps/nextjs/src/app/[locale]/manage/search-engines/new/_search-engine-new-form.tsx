@@ -17,14 +17,13 @@ export const SearchEngineNewForm = () => {
   const router = useRouter();
 
   const { mutate, isPending } = clientApi.searchEngine.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       showSuccessNotification({
         title: t("success.title"),
         message: t("success.message"),
       });
-      void revalidatePathActionAsync("/manage/search-engines").then(() => {
-        router.push("/manage/search-engines");
-      });
+      await revalidatePathActionAsync("/manage/search-engines");
+      router.push("/manage/search-engines");
     },
     onError: () => {
       showErrorNotification({
