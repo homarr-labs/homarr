@@ -1,8 +1,20 @@
 import crypto from "crypto";
 
+import { logger } from "@homarr/log";
+
 const algorithm = "aes-256-cbc"; //Using AES encryption
-const encryptonKey = process.env.ENCRYPTION_KEY ?? "0000000000000000000000000000000000000000000000000000000000000000"; // Fallback to a default key for local development
-const key = Buffer.from(encryptonKey, "hex");
+const fallbackKey = "0000000000000000000000000000000000000000000000000000000000000000";
+const encryptionKey = process.env.ENCRYPTION_KEY ?? fallbackKey; // Fallback to a default key for local development
+if (encryptionKey === fallbackKey) {
+  logger.warn("Using a fallback encryption key, stored secrets are not secure");
+
+  // We never want to use the fallback key in production
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Encryption key is not set");
+  }
+}
+
+const key = Buffer.from(encryptionKey, "hex");
 
 export function encryptSecret(text: string): `${string}.${string}` {
   const initializationVector = crypto.randomBytes(16);

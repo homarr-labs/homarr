@@ -8,16 +8,16 @@ fi
 
 # Generates an encryption key if it doesn't exist and saves it to /secrets/encryptionKey
 # Also sets the ENCRYPTION_KEY environment variable
-encryptonKey=""
+encryptionKey=""
 if [ -r /secrets/encryptionKey ]; then
     echo "Encryption key already exists"
-    encryptonKey=$(cat /secrets/encryptionKey)
+    encryptionKey=$(cat /secrets/encryptionKey)
 else
     echo "Generating encryption key"
-    encryptonKey=$(node ./generateEncryptionKey.js)
-    echo $encryptonKey > /secrets/encryptionKey
+    encryptionKey=$(node ./generateEncryptionKey.js)
+    echo $encryptionKey > /secrets/encryptionKey
 fi
-export ENCRYPTION_KEY=$encryptonKey
+export ENCRYPTION_KEY=$encryptionKey
 
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file
