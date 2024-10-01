@@ -1098,6 +1098,7 @@ export default {
         used: "Used",
         diskAvailable: "Available",
         memAvailable: "Available:",
+        timeStamped: "Last status update: {time} second ago",
       },
       memory: {},
       error: {

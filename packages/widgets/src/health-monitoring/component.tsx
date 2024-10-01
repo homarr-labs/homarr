@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -45,12 +45,21 @@ export default function HealthMonitoringWidget({
 }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
   const [healthData, setHealthData] = useState(serverData?.initialData ?? []);
+  const [timeStamped, setTimeStamped] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeStamped((prevTime) => prevTime + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   clientApi.widget.healthMonitoring.subscribeHealthStatus.useSubscription(
     { integrationIds },
     {
       onData(newData) {
+        setTimeStamped(0);
         setHealthData((prevData) => {
           return prevData.map((item) =>
             item.integrationId === newData.integrationId ? { ...item, healthInfo: newData.healthInfo } : item,
@@ -240,6 +249,9 @@ export default function HealthMonitoringWidget({
                   </Box>
                 )}
               </Flex>
+              <Text className="health-monitoring-status-update-time" c="dimmed" size="3.5cqmin" ta="center">
+                {t("widget.healthMonitoring.popover.timeStamped", { time: timeStamped })}{" "}
+              </Text>
             </Card>
             {options.fileSystem &&
               disksData.map((disk) => {
