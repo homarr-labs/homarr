@@ -1649,8 +1649,8 @@ importers:
         specifier: ^6.10.0
         version: 6.10.0(eslint@9.11.1)
       eslint-plugin-react:
-        specifier: ^7.37.0
-        version: 7.37.0(eslint@9.11.1)
+        specifier: ^7.37.1
+        version: 7.37.1(eslint@9.11.1)
       eslint-plugin-react-hooks:
         specifier: ^4.6.2
         version: 4.6.2(eslint@9.11.1)
@@ -2636,8 +2636,8 @@ packages:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
 
-  '@million/install@1.0.0':
-    resolution: {integrity: sha512-ekVzzMxvSP0Nyjy42hyatDnPCsg1aAEl8cr10MHkICSV318F9Hzc029g42FUrLVjNdo4MaCd84VbGX3Qur972Q==}
+  '@million/install@1.0.1':
+    resolution: {integrity: sha512-VzT3+ZocuIONW0l4UEy4s7BYaAzEAm6qZwY7CZHY+10RcGeOzCSACPuHKG+M7ZOrGLxRfZ0y4x4DYtW8GKv8OQ==}
     hasBin: true
 
   '@million/lint@1.0.0':
@@ -4685,8 +4685,8 @@ packages:
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
 
-  eslint-plugin-react@7.37.0:
-    resolution: {integrity: sha512-IHBePmfWH5lKhJnJ7WB1V+v/GolbB0rjS8XYVCSQCZKaQCAUhMoVoOEn1Ef8Z8Wf0a7l8KTJvuZg5/e4qrZ6nA==}
+  eslint-plugin-react@7.37.1:
+    resolution: {integrity: sha512-xwTnwDqzbDRA8uJ7BMxPs/EXRB3i8ZfnOIp8BsxEQkT0nHPp+WWceqGgo6rKb9ctNi8GJLDT4Go5HAWELa/WMg==}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
@@ -8576,7 +8576,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@million/install@1.0.0':
+  '@million/install@1.0.1':
     dependencies:
       '@antfu/ni': 0.21.12
       '@axiomhq/js': 1.0.0-rc.3
@@ -8596,7 +8596,7 @@ snapshots:
       '@babel/core': 7.25.2
       '@babel/types': 7.25.2
       '@hono/node-server': 1.13.0(hono@4.6.1)
-      '@million/install': 1.0.0
+      '@million/install': 1.0.1
       '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
       '@rrweb/types': 2.0.0-alpha.16
       babel-plugin-syntax-hermes-parser: 0.21.1
@@ -11163,7 +11163,7 @@ snapshots:
     dependencies:
       eslint: 9.11.1
 
-  eslint-plugin-react@7.37.0(eslint@9.11.1):
+  eslint-plugin-react@7.37.1(eslint@9.11.1):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlast: 1.2.5
