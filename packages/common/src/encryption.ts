@@ -9,7 +9,7 @@ if (encryptionKey === fallbackKey) {
   logger.warn("Using a fallback encryption key, stored secrets are not secure");
 
   // We never want to use the fallback key in production
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" && process.env.CI !== "true") {
     throw new Error("Encryption key is not set");
   }
 }
