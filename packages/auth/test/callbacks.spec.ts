@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import type { Adapter, AdapterUser } from "@auth/core/adapters";
 import type { Account } from "next-auth";
@@ -12,6 +10,14 @@ import { createDb } from "@homarr/db/test";
 import * as definitions from "@homarr/definitions";
 
 import { createSessionCallback, createSignInCallback, getCurrentUserPermissionsAsync } from "../callbacks";
+
+// This one is placed here because it's used in multiple tests and needs to be the same reference
+const setCookies = vi.fn();
+vi.mock("next/headers", () => ({
+  cookies: () => ({
+    set: setCookies,
+  }),
+}));
 
 describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
@@ -170,21 +176,6 @@ vi.mock("../session", async (importOriginal) => {
     expireDateAfter,
   } satisfies SessionExport;
 });
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-type HeadersExport = typeof import("next/headers");
-vi.mock("next/headers", async (importOriginal) => {
-  const mod = await importOriginal<HeadersExport>();
-
-  const result = {
-    set: (name: string, value: string, options: Partial<ResponseCookie>) => options as ResponseCookie,
-  } as unknown as ReadonlyRequestCookies;
-
-  vi.spyOn(result, "set");
-
-  const cookies = () => result;
-
-  return { ...mod, cookies } satisfies HeadersExport;
-});
 
 describe("createSignInCallback", () => {
   test("should return true if not credentials request and set colorScheme & sessionToken cookie", async () => {
@@ -232,7 +223,6 @@ describe("createSignInCallback", () => {
     const signInCallback = createSignInCallback(adapter, db, isCredentialsRequest);
     const user = { id: "1", emailVerified: new Date("2023-01-13") };
     const account = {} as Account;
-
     // Act
     await signInCallback({ user, account });
 
@@ -253,7 +243,7 @@ describe("createSignInCallback", () => {
 
   test("should set colorScheme from db as cookie", async () => {
     // Arrange
-    const isCredentialsRequest = false;
+    const isCredentialsRequest = true;
     const db = await prepareDbForSigninAsync("1");
     const signInCallback = createSignInCallback(createAdapter(), db, isCredentialsRequest);
 
