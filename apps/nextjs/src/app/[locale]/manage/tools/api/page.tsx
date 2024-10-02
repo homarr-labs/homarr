@@ -6,14 +6,21 @@ import "./swagger-ui-overrides.css";
 import "./swagger-ui.css";
 
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import SwaggerUI from "swagger-ui-react";
 
 import { openApiDocument } from "@homarr/api";
+import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 
 import { createMetaTitle } from "~/metadata";
 
 export async function generateMetadata() {
+  const session = await auth();
+  if (!session?.user || !session.user.permissions.includes("admin")) {
+    return {};
+  }
+
   const t = await getScopedI18n("management");
 
   return {
@@ -21,7 +28,11 @@ export async function generateMetadata() {
   };
 }
 
-export default function ApiPage() {
+export default async function ApiPage() {
+  const session = await auth();
+  if (!session?.user || !session.user.permissions.includes("admin")) {
+    notFound();
+  }
   const document = openApiDocument(extractBaseUrlFromHeaders(headers()));
 
   return <SwaggerUI spec={document} />;

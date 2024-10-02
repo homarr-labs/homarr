@@ -4,10 +4,10 @@ import { logger } from "@homarr/log";
 import type { LoggerMessage } from "@homarr/redis";
 import { loggingChannel } from "@homarr/redis";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 
 export const logRouter = createTRPCRouter({
-  subscribe: publicProcedure.subscription(() => {
+  subscribe: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
     return observable<LoggerMessage>((emit) => {
       const unsubscribe = loggingChannel.subscribe((data) => {
         emit.next(data);
