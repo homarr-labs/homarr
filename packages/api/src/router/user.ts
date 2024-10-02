@@ -8,7 +8,7 @@ import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const userRouter = createTRPCRouter({
@@ -69,7 +69,8 @@ export const userRouter = createTRPCRouter({
     // Delete invite as it's used
     await ctx.db.delete(invites).where(inviteWhere);
   }),
-  create: publicProcedure
+  create: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"] } })
     .input(validation.user.create)
     .output(z.void())
@@ -130,7 +131,8 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  getAll: publicProcedure
+  getAll: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.void())
     .output(
       z.array(
@@ -155,7 +157,8 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-  selectable: publicProcedure.query(({ ctx }) => {
+  // Is protected because also used in board access / integration access forms
+  selectable: protectedProcedure.query(({ ctx }) => {
     return ctx.db.query.users.findMany({
       columns: {
         id: true,
@@ -164,7 +167,8 @@ export const userRouter = createTRPCRouter({
       },
     });
   }),
-  search: publicProcedure
+  search: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         query: z.string(),
@@ -187,7 +191,14 @@ export const userRouter = createTRPCRouter({
         image: user.image,
       }));
     }),
-  getById: publicProcedure.input(z.object({ userId: z.string() })).query(async ({ input, ctx }) => {
+  getById: protectedProcedure.input(z.object({ userId: z.string() })).query(async ({ input, ctx }) => {
+    // Only admins can view other users details
+    if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not allowed to view other users details",
+      });
+    }
     const user = await ctx.db.query.users.findFirst({
       columns: {
         id: true,
@@ -210,7 +221,15 @@ export const userRouter = createTRPCRouter({
 
     return user;
   }),
-  editProfile: publicProcedure.input(validation.user.editProfile).mutation(async ({ input, ctx }) => {
+  editProfile: protectedProcedure.input(validation.user.editProfile).mutation(async ({ input, ctx }) => {
+    // Only admins can view other users details
+    if (ctx.session.user.id !== input.id && !ctx.session.user.permissions.includes("admin")) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not allowed to edit other users details",
+      });
+    }
+
     const user = await ctx.db.query.users.findFirst({
       columns: { email: true, provider: true },
       where: eq(users.id, input.id),
@@ -242,7 +261,15 @@ export const userRouter = createTRPCRouter({
       })
       .where(eq(users.id, input.id));
   }),
-  delete: publicProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
+  delete: protectedProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
+    // Only admins and user itself can delete a user
+    if (ctx.session.user.id !== input && !ctx.session.user.permissions.includes("admin")) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not allowed to delete other users",
+      });
+    }
+
     await ctx.db.delete(users).where(eq(users.id, input));
   }),
   changePassword: protectedProcedure.input(validation.user.changePasswordApi).mutation(async ({ ctx, input }) => {
@@ -311,7 +338,7 @@ export const userRouter = createTRPCRouter({
     .input(validation.user.changeHomeBoard.and(z.object({ userId: z.string() })))
     .mutation(async ({ input, ctx }) => {
       const user = ctx.session.user;
-      // Only admins can change other users' passwords
+      // Only admins can change other users passwords
       if (!user.permissions.includes("admin") && user.id !== input.userId) {
         throw new TRPCError({
           code: "NOT_FOUND",
