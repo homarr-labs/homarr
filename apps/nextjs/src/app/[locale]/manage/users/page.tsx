@@ -1,4 +1,5 @@
 import { api } from "@homarr/api/server";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -15,10 +16,12 @@ export async function generateMetadata() {
 
 export default async function UsersPage() {
   const userList = await api.user.getAll();
+  const credentialsProviderEnabled = isProviderEnabled("credentials");
+
   return (
     <>
       <DynamicBreadcrumb />
-      <UserListComponent initialUserList={userList} />
+      <UserListComponent initialUserList={userList} credentialsProviderEnabled={credentialsProviderEnabled} />
     </>
   );
 }
