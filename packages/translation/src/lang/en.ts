@@ -24,6 +24,7 @@ export default {
     field: {
       email: {
         label: "E-Mail",
+        verified: "Verified",
       },
       username: {
         label: "Username",
