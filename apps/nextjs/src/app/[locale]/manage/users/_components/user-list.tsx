@@ -15,9 +15,10 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
+  credentialsProviderEnabled: boolean;
 }
 
-export const UserListComponent = ({ initialUserList }: UserListComponentProps) => {
+export const UserListComponent = ({ initialUserList, credentialsProviderEnabled }: UserListComponentProps) => {
   const tUserList = useScopedI18n("management.page.user.list");
   const t = useI18n();
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
@@ -68,11 +69,12 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
     enableFullScreenToggle: false,
     layoutMode: "grid-no-grow",
     getRowId: (row) => row.id,
-    renderTopToolbarCustomActions: () => (
-      <Button component={Link} href="/manage/users/create">
-        Create New User
-      </Button>
-    ),
+    renderTopToolbarCustomActions: () =>
+      credentialsProviderEnabled ? (
+        <Button component={Link} href="/manage/users/create">
+          {t("management.page.user.create.title")}
+        </Button>
+      ) : null,
     state: {
       isLoading,
     },
