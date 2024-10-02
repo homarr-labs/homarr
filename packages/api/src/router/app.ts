@@ -4,7 +4,7 @@ import { asc, createId, eq, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const appRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
@@ -45,7 +45,7 @@ export const appRouter = createTRPCRouter({
 
     return app;
   }),
-  create: publicProcedure.input(validation.app.manage).mutation(async ({ ctx, input }) => {
+  create: protectedProcedure.input(validation.app.manage).mutation(async ({ ctx, input }) => {
     await ctx.db.insert(apps).values({
       id: createId(),
       name: input.name,
@@ -54,7 +54,7 @@ export const appRouter = createTRPCRouter({
       href: input.href,
     });
   }),
-  update: publicProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
+  update: protectedProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
     const app = await ctx.db.query.apps.findFirst({
       where: eq(apps.id, input.id),
     });
@@ -76,7 +76,7 @@ export const appRouter = createTRPCRouter({
       })
       .where(eq(apps.id, input.id));
   }),
-  delete: publicProcedure.input(validation.app.byId).mutation(async ({ ctx, input }) => {
+  delete: protectedProcedure.input(validation.app.byId).mutation(async ({ ctx, input }) => {
     await ctx.db.delete(apps).where(eq(apps.id, input.id));
   }),
 });
