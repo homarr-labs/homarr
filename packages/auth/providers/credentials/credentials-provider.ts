@@ -10,30 +10,25 @@ type CredentialsConfiguration = Parameters<typeof Credentials>[0];
 
 export const createCredentialsConfiguration = (db: Database) =>
   ({
+    id: "credentials",
     type: "credentials",
     name: "Credentials",
-    credentials: {
-      name: {
-        label: "Username",
-        type: "text",
-      },
-      password: {
-        label: "Password",
-        type: "password",
-      },
-      isLdap: {
-        label: "LDAP",
-        type: "checkbox",
-      },
-    },
     // eslint-disable-next-line no-restricted-syntax
     async authorize(credentials) {
       const data = await validation.user.signIn.parseAsync(credentials);
 
-      if (data.credentialType === "ldap") {
-        return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);
-      }
-
       return await authorizeWithBasicCredentialsAsync(db, data);
+    },
+  }) satisfies CredentialsConfiguration;
+
+export const createLdapConfiguration = (db: Database) =>
+  ({
+    id: "ldap",
+    type: "credentials",
+    name: "Ldap",
+    // eslint-disable-next-line no-restricted-syntax
+    async authorize(credentials) {
+      const data = await validation.user.signIn.parseAsync(credentials);
+      return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);
     },
   }) satisfies CredentialsConfiguration;

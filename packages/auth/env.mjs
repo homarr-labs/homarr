@@ -74,6 +74,7 @@ export const env = createEnv({
           AUTH_OIDC_CLIENT_NAME: z.string().min(1).default("OIDC"),
           AUTH_OIDC_AUTO_LOGIN: booleanSchema,
           AUTH_OIDC_SCOPE_OVERWRITE: z.string().min(1).default("openid email profile groups"),
+          AUTH_OIDC_GROUPS_ATTRIBUTE: z.string().default("groups"), // Is used in the signIn event to assign the correct groups, key is from object of decoded id_token
         }
       : {}),
     ...(authProviders.includes("ldap")
@@ -113,6 +114,7 @@ export const env = createEnv({
     AUTH_OIDC_CLIENT_SECRET: process.env.AUTH_OIDC_CLIENT_SECRET,
     AUTH_OIDC_ISSUER: process.env.AUTH_OIDC_ISSUER,
     AUTH_OIDC_SCOPE_OVERWRITE: process.env.AUTH_OIDC_SCOPE_OVERWRITE,
+    AUTH_OIDC_GROUPS_ATTRIBUTE: process.env.AUTH_OIDC_GROUPS_ATTRIBUTE,
     AUTH_LDAP_USERNAME_ATTRIBUTE: process.env.AUTH_LDAP_USERNAME_ATTRIBUTE,
     AUTH_LDAP_USER_MAIL_ATTRIBUTE: process.env.AUTH_LDAP_USER_MAIL_ATTRIBUTE,
     AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG: process.env.AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG,

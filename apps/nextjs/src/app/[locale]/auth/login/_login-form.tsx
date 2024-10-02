@@ -12,8 +12,7 @@ import type { useForm } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
-import { validation } from "@homarr/validation";
+import { validation, z } from "@homarr/validation";
 
 interface LoginFormProps {
   providers: string[];
@@ -22,15 +21,17 @@ interface LoginFormProps {
   callbackUrl: string;
 }
 
+const extendedValidation = validation.user.signIn.extend({ provider: z.enum(["credentials", "ldap"]) });
+
 export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, callbackUrl }: LoginFormProps) => {
   const t = useScopedI18n("user");
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
-  const form = useZodForm(validation.user.signIn, {
+  const form = useZodForm(extendedValidation, {
     initialValues: {
       name: "",
       password: "",
-      credentialType: "basic",
+      provider: "credentials",
     },
   });
 
@@ -95,14 +96,14 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
       <Stack gap="lg">
         {credentialInputsVisible && (
           <>
-            <form onSubmit={form.onSubmit((credentials) => void signInAsync("credentials", credentials))}>
+            <form onSubmit={form.onSubmit((credentials) => void signInAsync(credentials.provider, credentials))}>
               <Stack gap="lg">
                 <TextInput label={t("field.username.label")} {...form.getInputProps("name")} />
                 <PasswordInput label={t("field.password.label")} {...form.getInputProps("password")} />
 
                 {providers.includes("credentials") && (
                   <Stack gap="sm">
-                    <SubmitButton isPending={isPending} form={form} credentialType="basic">
+                    <SubmitButton isPending={isPending} form={form} provider="credentials">
                       {t("action.login.label")}
                     </SubmitButton>
                     <PasswordForgottenCollapse username={form.values.name} />
@@ -110,7 +111,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
                 )}
 
                 {providers.includes("ldap") && (
-                  <SubmitButton isPending={isPending} form={form} credentialType="ldap">
+                  <SubmitButton isPending={isPending} form={form} provider="ldap">
                     {t("action.login.labelWith", { provider: "LDAP" })}
                   </SubmitButton>
                 )}
@@ -133,18 +134,18 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
 interface SubmitButtonProps {
   isPending: boolean;
   form: ReturnType<typeof useForm<FormType, (values: FormType) => FormType>>;
-  credentialType: "basic" | "ldap";
+  provider: "credentials" | "ldap";
 }
 
-const SubmitButton = ({ isPending, form, credentialType, children }: PropsWithChildren<SubmitButtonProps>) => {
-  const isCurrentProviderActive = form.getValues().credentialType === credentialType;
+const SubmitButton = ({ isPending, form, provider, children }: PropsWithChildren<SubmitButtonProps>) => {
+  const isCurrentProviderActive = form.getValues().provider === provider;
 
   return (
     <Button
       type="submit"
-      name={credentialType}
+      name={provider}
       fullWidth
-      onClick={() => form.setFieldValue("credentialType", credentialType)}
+      onClick={() => form.setFieldValue("provider", provider)}
       loading={isPending && isCurrentProviderActive}
       disabled={isPending && !isCurrentProviderActive}
     >
@@ -181,4 +182,4 @@ const PasswordForgottenCollapse = ({ username }: PasswordForgottenCollapseProps)
   );
 };
 
-type FormType = z.infer<typeof validation.user.signIn>;
+type FormType = z.infer<typeof extendedValidation>;
