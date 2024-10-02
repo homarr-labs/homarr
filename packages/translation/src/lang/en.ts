@@ -1627,12 +1627,12 @@ export default {
     page: {
       home: {
         statistic: {
-          countBoards: "Boards",
-          createUser: "Create new user",
-          createInvite: "Create new invite",
-          addIntegration: "Create integration",
-          addApp: "Add app",
-          manageRoles: "Manage roles",
+          board: "Boards",
+          user: "Users",
+          invite: "Invites",
+          integration: "Integrations",
+          app: "Apps",
+          group: "Groups",
         },
         statisticLabel: {
           boards: "Boards",
