@@ -195,6 +195,32 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     [moveItemToSection, moveInnerSectionToSection, section.id],
   );
 
+  // initialize the gridstack
+  useEffect(() => {
+    const isReady = initializeGridstack({
+      section,
+      itemIds,
+      refs: {
+        items: itemRefs,
+        wrapper: wrapperRef,
+        gridstack: gridRef,
+      },
+      sectionColumnCount: columnCount,
+    });
+
+    // If the section is ready mark it as ready
+    // When all sections are ready the board is ready and will get visible
+    if (isReady) {
+      markAsReady(section.id);
+    }
+
+    // Only run this effect when the section items change
+  }, [itemIds.length, columnCount]);
+
+  /**
+   * IMPORTANT: This effect has to be placed after the effect to initialize the gridstack
+   * because we need the gridstack object to add the listeners
+   */
   useEffect(() => {
     if (!isEditMode) return;
     const currentGrid = gridRef.current;
@@ -230,28 +256,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       currentGrid?.off("added");
     };
   }, [isEditMode, onAdd, onChange]);
-
-  // initialize the gridstack
-  useEffect(() => {
-    const isReady = initializeGridstack({
-      section,
-      itemIds,
-      refs: {
-        items: itemRefs,
-        wrapper: wrapperRef,
-        gridstack: gridRef,
-      },
-      sectionColumnCount: columnCount,
-    });
-
-    // If the section is ready mark it as ready
-    // When all sections are ready the board is ready and will get visible
-    if (isReady) {
-      markAsReady(section.id);
-    }
-
-    // Only run this effect when the section items change
-  }, [itemIds.length, columnCount]);
 
   const sectionHeight = section.kind === "dynamic" && "height" in section ? (section.height as number) : null;
 
