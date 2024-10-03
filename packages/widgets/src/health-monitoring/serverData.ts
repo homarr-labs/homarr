@@ -1,6 +1,7 @@
 "use server";
 
 import { api } from "@homarr/api/server";
+import type { HealthMonitoring } from "@homarr/integrations";
 
 import type { WidgetProps } from "../definition";
 
@@ -17,7 +18,16 @@ export default async function getServerDataAsync({ integrationIds }: WidgetProps
     });
 
     return {
-      initialData: currentHealthInfo.filter((health) => health !== null),
+      initialData: currentHealthInfo.filter(
+        (
+          health,
+        ): health is {
+          integrationId: string;
+          integrationName: string;
+          healthInfo: HealthMonitoring;
+          timestamp: Date;
+        } => health.healthInfo !== null,
+      ),
     };
   } catch {
     return {

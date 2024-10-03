@@ -13,15 +13,13 @@ export const healthMonitoringRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
           const channel = createItemAndIntegrationChannel<HealthMonitoring>("healthMonitoring", integration.id);
-          const data = await channel.getAsync();
-          if (!data) {
-            return null;
-          }
+          const { data: healthInfo, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
 
           return {
             integrationId: integration.id,
             integrationName: integration.name,
-            healthInfo: data.data,
+            healthInfo,
+            timestamp,
           };
         }),
       );
