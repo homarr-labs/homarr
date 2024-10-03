@@ -659,6 +659,9 @@ importers:
 
   packages/common:
     dependencies:
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -11294,7 +11297,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.5
 
   esutils@2.0.3: {}
 
