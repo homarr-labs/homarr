@@ -49,7 +49,7 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
 
       <Group justify="space-between">
         <SearchInput
-          placeholder={t("common.rtl", {
+          placeholder={t("common.rtl.default", {
             value: tMembers("search"),
             symbol: "...",
           })}

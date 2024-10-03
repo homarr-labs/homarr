@@ -61,7 +61,10 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
       {options.pingEnabled && app.href ? (
         <Suspense
           fallback={
-            <PingDot color="blue" tooltip={t("common.rtl", { symbol: "…", value: t("common.action.loading") })} />
+            <PingDot
+              color="blue"
+              tooltip={t("common.rtl.default", { symbol: "…", value: t("common.action.loading") })}
+            />
           }
         >
           <PingIndicator href={app.href} />
