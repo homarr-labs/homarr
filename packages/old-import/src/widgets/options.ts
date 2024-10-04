@@ -103,6 +103,12 @@ const optionMapping: OptionMapping = {
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
   },
+  healthMonitoring: {
+    cpu: (oldOptions) => oldOptions.cpu,
+    memory: (oldOptions) => oldOptions.memory,
+    fahrenheit: (oldOptions) => oldOptions.fahrenheit,
+    fileSystem: (oldOptions) => oldOptions.fileSystem,
+  },
   app: null,
 };
 

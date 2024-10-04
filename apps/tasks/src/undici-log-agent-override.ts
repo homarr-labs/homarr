@@ -9,8 +9,21 @@ class LoggingAgent extends Agent {
   }
 
   dispatch(options: Dispatcher.DispatchOptions, handler: Dispatcher.DispatchHandlers): boolean {
+    const url = new URL(`${options.origin as string}${options.path}`);
+
+    // The below code should prevent sensitive data from being logged as
+    // some integrations use query parameters for auth
+    url.searchParams.forEach((value, key) => {
+      if (value === "") return; // Skip empty values
+      if (/^\d{1,12}$/.test(value)) return; // Skip small numbers
+      if (value === "true" || value === "false") return; // Skip boolean values
+      if (/^[a-zA-Z]{1,12}$/.test(value)) return; // Skip short strings
+
+      url.searchParams.set(key, "REDACTED");
+    });
+
     logger.info(
-      `Dispatching request ${options.method} ${options.origin as string}${options.path} (${Object.keys(options.headers as object).length} headers)`,
+      `Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers as object).length} headers)`,
     );
     return super.dispatch(options, handler);
   }

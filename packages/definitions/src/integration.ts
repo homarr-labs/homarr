@@ -119,6 +119,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: ["smartHomeServer"],
   },
+  openmediavault: {
+    name: "OpenMediaVault",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openmediavault.png",
+    category: ["healthMonitoring"],
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
@@ -168,4 +174,5 @@ export type IntegrationCategory =
   | "usenet"
   | "torrent"
   | "smartHomeServer"
-  | "indexerManager";
+  | "indexerManager"
+  | "healthMonitoring";

@@ -9,6 +9,7 @@ import {
   IconMailForward,
   IconPlug,
   IconReport,
+  IconSearch,
   IconSettings,
   IconUsers,
   IconUsersGroup,
@@ -80,6 +81,12 @@ export const pagesSearchGroup = createGroup<{
         icon: IconPlug,
         path: "/manage/integrations",
         name: t("manageIntegration.label"),
+        hidden: !session,
+      },
+      {
+        icon: IconSearch,
+        path: "/manage/search-engines",
+        name: t("manageSearchEngine.label"),
         hidden: !session,
       },
       {

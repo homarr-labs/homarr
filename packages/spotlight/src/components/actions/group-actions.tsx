@@ -1,4 +1,5 @@
 import { Center, Loader } from "@mantine/core";
+import { useWindowEvent } from "@mantine/hooks";
 
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -26,6 +27,11 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
     "options" in group ? () => group.options : "useOptions" in group ? group.useOptions : group.useQueryOptions;
   const options = useOptions(query);
   const t = useI18n();
+
+  useWindowEvent("keydown", (event) => {
+    const optionsArray = Array.isArray(options) ? options : (options.data ?? []);
+    group.onKeyDown?.(event, optionsArray, query, { setChildrenOptions });
+  });
 
   if (Array.isArray(options)) {
     const filteredOptions = options
