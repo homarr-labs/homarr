@@ -111,8 +111,11 @@ export const Spotlight = () => {
             }}
             setChildrenOptions={(options) => {
               setChildrenOptions(options);
-              setQuery("");
-              setTimeout(() => selectAction(0, spotlightStore));
+
+              setTimeout(() => {
+                setQuery("");
+                selectAction(0, spotlightStore);
+              });
             }}
             query={query}
             groups={activeMode.groups}

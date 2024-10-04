@@ -341,6 +341,15 @@ export const serverSettings = mysqlTable("serverSetting", {
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
 
+export const searchEngines = mysqlTable("search_engine", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  iconUrl: text("icon_url").notNull(),
+  name: varchar("name", { length: 64 }).notNull(),
+  short: varchar("short", { length: 8 }).notNull(),
+  description: text("description"),
+  urlTemplate: text("url_template").notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],

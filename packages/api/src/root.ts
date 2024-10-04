@@ -9,6 +9,7 @@ import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
+import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
 import { widgetRouter } from "./router/widgets";
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   integration: integrationRouter,
   board: boardRouter,
   app: innerAppRouter,
+  searchEngine: searchEngineRouter,
   widget: widgetRouter,
   location: locationRouter,
   log: logRouter,

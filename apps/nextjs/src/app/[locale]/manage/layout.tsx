@@ -15,6 +15,7 @@ import {
   IconPlug,
   IconQuestionMark,
   IconReport,
+  IconSearch,
   IconSettings,
   IconTool,
   IconUser,
@@ -52,6 +53,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconPlug,
       href: "/manage/integrations",
       label: t("items.integrations"),
+    },
+    {
+      icon: IconSearch,
+      href: "/manage/search-engines",
+      label: t("items.searchEngies"),
     },
     {
       icon: IconUser,
