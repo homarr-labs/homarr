@@ -140,7 +140,17 @@ export default function HealthMonitoringWidget({
                             {t("common.rtl.remainder", {
                               value: t("widget.healthMonitoring.popover.memory"),
                               symbol: t("common.symbols.colon"),
-                              remainder: `${memoryUsage.memTotal.GB}GiB - ${t("widget.healthMonitoring.popover.available")} ${memoryUsage.memFree.GB}GiB (${memoryUsage.memFree.percent}%)`,
+                              remainder: `${memoryUsage.memTotal.GB}GiB`,
+                            })}
+                          </List.Item>
+                          <List.Item
+                            className="health-monitoring-information-memory-available"
+                            icon={<IconBrain size="1.5cqmin" />}
+                          >
+                            {t("common.rtl.remainder", {
+                              value: t("widget.healthMonitoring.popover.available"),
+                              symbol: t("common.symbols.colon"),
+                              remainder: `${memoryUsage.memFree.GB}GiB (${memoryUsage.memFree.percent}%)`,
                             })}
                           </List.Item>
                           <List.Item
