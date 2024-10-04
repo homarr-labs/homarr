@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { ActionIcon, Group, Indicator, Menu, Popover, Stack, UnstyledButton } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
@@ -13,6 +13,7 @@ import { useDynamicSectionActions } from "./dynamic-actions";
 import { useAboveDynamicSectionIds } from "./dynamic-context";
 
 export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isEditMode] = useEditMode();
   const aboveIds = useAboveDynamicSectionIds();
   const board = useRequiredBoard();
@@ -30,9 +31,20 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
 
   if (aboveIds.length >= 1 && !hasItemInTopRightCorner) {
     return (
-      <Popover width="auto" position="right" withArrow shadow="md">
-        <Popover.Target>
-          <UnstyledButton pos="absolute" top={4} right={4} style={{ zIndex: 10 }}>
+      <Popover width="auto" position="right" withArrow shadow="md" returnFocus>
+        <Popover.Target popupType="menu">
+          <UnstyledButton
+            pos="absolute"
+            top={4}
+            right={4}
+            style={{ zIndex: 10 }}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                event.preventDefault();
+                document.querySelectorAll<HTMLButtonElement>("[data-section-item]")[0]?.focus();
+              }
+            }}
+          >
             <Indicator label={aboveIds.length + 1} styles={{ indicator: { height: "1rem" } }} offset={4}>
               <ActionIcon component="div" variant="default" radius={"xl"}>
                 <IconDotsVertical size={"1rem"} />
@@ -40,7 +52,19 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
             </Indicator>
           </UnstyledButton>
         </Popover.Target>
-        <Popover.Dropdown>
+        <Popover.Dropdown
+          ref={dropdownRef}
+          role="menu"
+          aria-orientation="vertical"
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+              event.preventDefault();
+              document.querySelectorAll<HTMLButtonElement>("[data-section-item]")[0]?.focus();
+            }
+          }}
+        >
+          <div tabIndex={-1} data-autofocus data-mantine-stop-propagation style={{ outline: 0 }} />
           <Stack>
             {[...aboveIds, section.id].map((id, index) => (
               <Fragment key={id}>
@@ -90,7 +114,7 @@ const DesktopButton = ({ index, id }: DesktopButtonProps) => {
 
   return (
     <InnerMenu id={id} trigger="hover">
-      <UnstyledButton visibleFrom="md" ref={ref}>
+      <UnstyledButton data-section-item visibleFrom="md" ref={ref}>
         Section {index + 1}
       </UnstyledButton>
     </InnerMenu>
