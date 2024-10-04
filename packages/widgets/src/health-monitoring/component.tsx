@@ -35,6 +35,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
+import { humanFileSize } from "@homarr/common";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -56,7 +57,9 @@ export default function HealthMonitoringWidget({
       onData(newData) {
         setHealthData((prevData) => {
           return prevData.map((item) =>
-            item.integrationId === newData.integrationId ? { ...item, healthInfo: newData.healthInfo } : item,
+            item.integrationId === newData.integrationId
+              ? { ...item, healthInfo: newData.healthInfo, timestamp: newData.timestamp }
+              : item,
           );
         });
       },
@@ -127,11 +130,11 @@ export default function HealthMonitoringWidget({
                             className="health-monitoring-information-processor"
                             icon={<IconCpu2 size="1.5cqmin" />}
                           >
-                            {t("common.rtl.default", {
+                            {t("common.rtl.remainder", {
                               value: t("widget.healthMonitoring.popover.processor"),
                               symbol: t("common.symbols.colon"),
-                            })}{" "}
-                            {healthInfo.cpuModelName}
+                              remainder: healthInfo.cpuModelName,
+                            })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-memory"
@@ -150,18 +153,21 @@ export default function HealthMonitoringWidget({
                             {t("common.rtl.remainder", {
                               value: t("widget.healthMonitoring.popover.available"),
                               symbol: t("common.symbols.colon"),
-                              remainder: `${memoryUsage.memFree.GB}GiB (${memoryUsage.memFree.percent}%)`,
+                              remainder: `${memoryUsage.memFree.GB}GiB (${t("common.rtl.default", {
+                                value: memoryUsage.memFree.percent,
+                                symbol: t("common.symbols.percent"),
+                              })})`,
                             })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-version"
                             icon={<IconVersions size="1.5cqmin" />}
                           >
-                            {t("common.rtl.default", {
+                            {t("common.rtl.remainder", {
                               value: t("widget.healthMonitoring.popover.version"),
                               symbol: t("common.symbols.colon"),
-                            })}{" "}
-                            {healthInfo.version}
+                              remainder: healthInfo.version,
+                            })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-uptime"
@@ -180,25 +186,25 @@ export default function HealthMonitoringWidget({
                           </List.Item>
                           <List m="0.5cqmin" withPadding center spacing="0.5cqmin" icon={<IconCpu size="1cqmin" />}>
                             <List.Item className="health-monitoring-information-load-average-1min">
-                              {t("common.rtl.default", {
+                              {t("common.rtl.remainder", {
                                 value: t("widget.healthMonitoring.popover.minute"),
                                 symbol: t("common.symbols.colon"),
-                              })}{" "}
-                              {healthInfo.loadAverage["1min"]}
+                                remainder: healthInfo.loadAverage["1min"],
+                              })}
                             </List.Item>
                             <List.Item className="health-monitoring-information-load-average-5min">
-                              {t("common.rtl.default", {
+                              {t("common.rtl.remainder", {
                                 value: t("widget.healthMonitoring.popover.minutes", { count: 5 }),
                                 symbol: t("common.symbols.colon"),
-                              })}{" "}
-                              {healthInfo.loadAverage["5min"]}
+                                remainder: healthInfo.loadAverage["5min"],
+                              })}
                             </List.Item>
                             <List.Item className="health-monitoring-information-load-average-15min">
-                              {t("common.rtl.default", {
+                              {t("common.rtl.remainder", {
                                 value: t("widget.healthMonitoring.popover.minutes", { count: 15 }),
                                 symbol: t("common.symbols.colon"),
-                              })}{" "}
-                              {healthInfo.loadAverage["15min"]}
+                                remainder: healthInfo.loadAverage["15min"],
+                              })}
                             </List.Item>
                           </List>
                         </List>
@@ -214,10 +220,12 @@ export default function HealthMonitoringWidget({
                         thickness={ringThickness}
                         label={
                           <Center style={{ flexDirection: "column" }}>
-                            <Text
-                              className="health-monitoring-cpu-utilization-value"
-                              size="3cqmin"
-                            >{`${healthInfo.cpuUtilization.toFixed(2)}%`}</Text>
+                            <Text className="health-monitoring-cpu-utilization-value" size="3cqmin">
+                              {t("common.rtl.default", {
+                                value: healthInfo.cpuUtilization.toFixed(2),
+                                symbol: t("common.symbols.percent"),
+                              })}
+                            </Text>
                             <IconCpu className="health-monitoring-cpu-utilization-icon" size="7cqmin" />
                           </Center>
                         }
@@ -276,7 +284,10 @@ export default function HealthMonitoringWidget({
                           {
                             value: Number(memoryUsage.memUsed.percent),
                             color: progressColor(Number(memoryUsage.memUsed.percent)),
-                            tooltip: `${memoryUsage.memUsed.percent}%`,
+                            tooltip: t("common.rtl.default", {
+                              value: memoryUsage.memUsed.percent,
+                              symbol: t("common.symbols.percent"),
+                            }),
                           },
                         ]}
                       />
@@ -295,7 +306,7 @@ export default function HealthMonitoringWidget({
                 disksData.map((disk) => {
                   return (
                     <Card
-                      className="health-monitoring-disk-card"
+                      className={`health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`}
                       key={disk.deviceName}
                       m="2.5cqmin"
                       p="2.5cqmin"
@@ -341,13 +352,7 @@ export default function HealthMonitoringWidget({
                           </Progress.Section>
                         </Tooltip>
 
-                        <Tooltip
-                          label={
-                            Number(disk.available) / 1024 ** 4 >= 1
-                              ? `${(Number(disk.available) / 1024 ** 4).toFixed(2)} TiB`
-                              : `${(Number(disk.available) / 1024 ** 3).toFixed(2)} GiB`
-                          }
-                        >
+                        <Tooltip label={humanFileSize(Number(disk.available))}>
                           <Progress.Section
                             className="health-monitoring-disk-available-percentage"
                             value={100 - disk.percentage}

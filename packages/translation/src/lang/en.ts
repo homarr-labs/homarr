@@ -532,6 +532,7 @@ export default {
     },
     symbols: {
       colon: ": ",
+      percent: "%",
     },
     beta: "Beta",
     error: "Error",
