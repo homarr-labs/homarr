@@ -38,7 +38,7 @@ export const createConfiguration = (isCredentialsRequest: boolean, headers: Read
     ]),
     callbacks: {
       session: createSessionCallback(db),
-      signIn: createSignInCallback(adapter, isCredentialsRequest),
+      signIn: createSignInCallback(adapter, db, isCredentialsRequest),
     },
     redirectProxyUrl: createRedirectUri(headers, "/api/auth"),
     secret: "secret-is-not-defined-yet", // TODO: This should be added later

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import type { PropsWithChildren } from "react";
+import { useState } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
 import { createTheme, isMantineColorScheme, MantineProvider } from "@mantine/core";
+import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { parseCookies, setClientCookie } from "@homarr/common";
 
 export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
   const manager = useColorSchemeManager();
@@ -50,7 +52,8 @@ function useColorSchemeManager(): MantineColorSchemeManager {
       }
 
       try {
-        return (window.localStorage.getItem(key) as MantineColorScheme | undefined) ?? defaultValue;
+        const cookies = parseCookies(document.cookie);
+        return (cookies[key] as MantineColorScheme | undefined) ?? defaultValue;
       } catch {
         return defaultValue;
       }
@@ -61,6 +64,7 @@ function useColorSchemeManager(): MantineColorSchemeManager {
         if (session) {
           mutateColorScheme({ colorScheme: value });
         }
+        setClientCookie(key, value, { expires: dayjs().add(1, "year").toDate() });
         window.localStorage.setItem(key, value);
       } catch (error) {
         console.warn("[@mantine/core] Local storage color scheme manager was unable to save color scheme.", error);

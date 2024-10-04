@@ -23,8 +23,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@auth/core": "^0.35.1",
-    "@auth/drizzle-adapter": "^1.5.1",
+    "@auth/core": "^0.35.3",
+    "@auth/drizzle-adapter": "^1.5.3",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
@@ -33,9 +33,9 @@
     "@t3-oss/env-nextjs": "^0.11.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
-    "ldapts": "7.2.0",
-    "next": "^14.2.13",
-    "next-auth": "5.0.0-beta.21",
+    "ldapts": "7.2.1",
+    "next": "^14.2.14",
+    "next-auth": "5.0.0-beta.22",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

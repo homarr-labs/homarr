@@ -2,6 +2,7 @@ import { analyticsJob } from "./jobs/analytics";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { dnsHoleJob } from "./jobs/integrations/dns-hole";
 import { downloadsJob } from "./jobs/integrations/downloads";
+import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
@@ -24,6 +25,7 @@ export const jobGroup = createCronJobGroup({
   mediaRequests: mediaRequestsJob,
   rssFeeds: rssFeedsJob,
   indexerManager: indexerManagerJob,
+  healthMonitoring: healthMonitoringJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];

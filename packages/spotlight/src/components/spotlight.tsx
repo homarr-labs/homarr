@@ -28,6 +28,7 @@ export const Spotlight = () => {
 
   return (
     <MantineSpotlight.Root
+      yOffset={8}
       onSpotlightClose={() => {
         setMode("help");
         setChildrenOptions(null);
@@ -64,6 +65,11 @@ export const Spotlight = () => {
             {activeMode.modeKey !== "help" ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
           </Group>
         }
+        styles={{
+          section: {
+            pointerEvents: "all",
+          },
+        }}
         rightSection={
           mode === "help" ? undefined : (
             <ActionIcon
@@ -105,8 +111,11 @@ export const Spotlight = () => {
             }}
             setChildrenOptions={(options) => {
               setChildrenOptions(options);
-              setQuery("");
-              setTimeout(() => selectAction(0, spotlightStore));
+
+              setTimeout(() => {
+                setQuery("");
+                selectAction(0, spotlightStore);
+              });
             }}
             query={query}
             groups={activeMode.groups}
