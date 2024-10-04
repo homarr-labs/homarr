@@ -1,6 +1,6 @@
 export const defaultContent = `
 <p style="text-align: center">
-    <img src="/imgs/logo/logo.png" width="25%">
+    <img src="/logo/logo.png" width="25%">
 </p>
 <h2>Welcome to <strong><span style="color: rgb(250, 82, 82)">Homarr</span>'s</strong> notebook widget</h2>
 <p>
