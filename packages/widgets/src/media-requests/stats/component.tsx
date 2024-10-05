@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import type { Icon } from "@tabler/icons-react";
@@ -13,7 +14,6 @@ import {
   IconThumbUp,
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
-import { useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { RequestStats } from "@homarr/integrations/types";
