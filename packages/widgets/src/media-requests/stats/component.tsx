@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import type { Icon } from "@tabler/icons-react";
@@ -14,6 +13,7 @@ import {
   IconThumbUp,
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
+import { useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { RequestStats } from "@homarr/integrations/types";
@@ -31,7 +31,6 @@ export default function MediaServerWidget({
   itemId,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const tCommon = useScopedI18n("common");
   const isQueryEnabled = Boolean(itemId);
   const { data: requestStats, isError: _isError } = clientApi.widget.mediaRequests.getStats.useQuery(
     {
@@ -188,8 +187,7 @@ export default function MediaServerWidget({
                   {user.displayName}
                 </Text>
                 <Text className="mediaRequests-stats-users-user-request-count" size="4cqmin">
-                  {tCommon("rtl", { value: t("titles.users.requests"), symbol: tCommon("symbols.colon") }) +
-                    user.requestCount}
+                  {`${t("titles.users.requests")}: ${user.requestCount}`}
                 </Text>
               </Stack>
               <Space flex={1} />

@@ -36,13 +36,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
       <Stack>
         <Title>{t("group.title")}</Title>
         <Group justify="space-between">
-          <SearchInput
-            placeholder={t("common.rtl", {
-              value: t("group.search"),
-              symbol: "...",
-            })}
-            defaultValue={searchParams.search}
-          />
+          <SearchInput placeholder={`${t("group.search")}...`} defaultValue={searchParams.search} />
           <AddGroup />
         </Group>
         <Table striped highlightOnHover>

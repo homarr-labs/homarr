@@ -527,10 +527,8 @@ export default {
     },
   },
   common: {
-    rtl: "{value}{symbol}",
-    symbols: {
-      colon: ": ",
-    },
+    // Either "ltr" or "rtl"
+    direction: "ltr",
     beta: "Beta",
     error: "Error",
     action: {
