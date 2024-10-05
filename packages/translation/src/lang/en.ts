@@ -1010,7 +1010,7 @@ export default {
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
         weekStartOnSanday: {
-          label: "Week start on sanday",
+          label: "Week start on sunday",
         },
         filterPastMonths: {
           label: "Start from",
