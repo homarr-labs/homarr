@@ -17,6 +17,9 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       validate: z.number().min(2).max(9999),
       defaultValue: 2,
     }),
+    weekStartOnSanday: factory.switch({
+      defaultValue: false,
+    }),
   })),
   supportedIntegrations: getIntegrationKindsByCategory("calendar"),
 })

@@ -9,16 +9,19 @@ import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 
-export default function CalendarWidget({ isEditMode, serverData }: WidgetComponentProps<"calendar">) {
+export default function CalendarWidget({ isEditMode, serverData, options }: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
   const params = useParams();
   const locale = params.locale as string;
+
+  const firstDayOfWeek = options.weekStartOnSanday ? 0 : 1;
 
   return (
     <Calendar
       defaultDate={new Date()}
       onPreviousMonth={setMonth}
       onNextMonth={setMonth}
+      firstDayOfWeek={firstDayOfWeek}
       locale={locale}
       hideWeekdays={false}
       date={month}
