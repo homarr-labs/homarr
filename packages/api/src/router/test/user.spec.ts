@@ -227,7 +227,7 @@ describe("editProfile shoud update user", () => {
 
     // act
     await caller.editProfile({
-      id: id,
+      id,
       name: "ABC",
       email: "",
     });
