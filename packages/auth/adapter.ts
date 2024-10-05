@@ -1,11 +1,12 @@
 import type { Adapter } from "@auth/core/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
-import { and, db, eq } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { and, eq } from "@homarr/db";
 import { accounts, users } from "@homarr/db/schema/sqlite";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 
-export const createAdapter = (provider: SupportedAuthProvider | "unknown"): Adapter => {
+export const createAdapter = (db: Database, provider: SupportedAuthProvider | "unknown"): Adapter => {
   const drizzleAdapter = DrizzleAdapter(db, { usersTable: users, accountsTable: accounts });
 
   return {

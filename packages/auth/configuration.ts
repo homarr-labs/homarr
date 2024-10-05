@@ -32,7 +32,7 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
       },
     },
     trustHost: true,
-    adapter: createAdapter(provider),
+    adapter: createAdapter(db, provider),
     providers: filterProviders([
       Credentials(createCredentialsConfiguration(db)),
       Credentials(createLdapConfiguration(db)),
