@@ -21,10 +21,7 @@ interface ApiKeysManagementProps {
 export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
   const { openModal } = useModalAction(CopyApiKeyModal);
   const { mutate, isPending } = clientApi.apiKeys.create.useMutation({
-    onSettled: async (data) => {
-      if (!data) {
-        return;
-      }
+    async onSuccess(data) {
       openModal({
         apiKey: data.randomToken,
       });
