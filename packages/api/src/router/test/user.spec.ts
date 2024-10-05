@@ -247,6 +247,7 @@ describe("editProfile shoud update user", () => {
       homeBoardId: null,
       provider: "credentials",
       colorScheme: "auto",
+      firstDayOfWeek: 1,
     });
   });
 
@@ -289,6 +290,7 @@ describe("editProfile shoud update user", () => {
       homeBoardId: null,
       provider: "credentials",
       colorScheme: "auto",
+      firstDayOfWeek: 1,
     });
   });
 });
@@ -315,6 +317,7 @@ describe("delete should delete user", () => {
         homeBoardId: null,
         provider: "ldap" as const,
         colorScheme: "auto" as const,
+        firstDayOfWeek: 1 as const,
       },
       {
         id: userToDelete,
@@ -326,6 +329,7 @@ describe("delete should delete user", () => {
         salt: null,
         homeBoardId: null,
         colorScheme: "auto" as const,
+        firstDayOfWeek: 1 as const,
       },
       {
         id: createId(),
@@ -338,6 +342,7 @@ describe("delete should delete user", () => {
         homeBoardId: null,
         provider: "oidc" as const,
         colorScheme: "auto" as const,
+        firstDayOfWeek: 1 as const,
       },
     ];
 
