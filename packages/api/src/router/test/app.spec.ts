@@ -11,6 +11,11 @@ import { appRouter } from "../app";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
+const defaultSession: Session = {
+  user: { id: createId(), permissions: [], colorScheme: "light" },
+  expires: new Date().toISOString(),
+};
+
 describe("all should return all apps", () => {
   test("should return all apps", async () => {
     const db = createDb();
@@ -89,7 +94,7 @@ describe("create should create a new app with all arguments", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
     const input = {
       name: "Mantine",
@@ -112,7 +117,7 @@ describe("create should create a new app with all arguments", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
     const input = {
       name: "Mantine",
@@ -137,7 +142,7 @@ describe("update should update an app", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
 
     const appId = createId();
@@ -172,7 +177,7 @@ describe("update should update an app", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
 
     const actAsync = async () =>
@@ -192,7 +197,7 @@ describe("delete should delete an app", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
 
     const appId = createId();

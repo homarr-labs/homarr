@@ -4,7 +4,7 @@ import { asc, createId, eq, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const appRouter = createTRPCRouter({
   all: publicProcedure
@@ -102,7 +102,7 @@ export const appRouter = createTRPCRouter({
 
       return app;
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(validation.app.manage)
     .output(z.void())
     .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
@@ -115,7 +115,7 @@ export const appRouter = createTRPCRouter({
         href: input.href,
       });
     }),
-  update: publicProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
+  update: protectedProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
     const app = await ctx.db.query.apps.findFirst({
       where: eq(apps.id, input.id),
     });
@@ -137,7 +137,7 @@ export const appRouter = createTRPCRouter({
       })
       .where(eq(apps.id, input.id));
   }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .output(z.void())
     .meta({ openapi: { method: "DELETE", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .input(validation.common.byId)
