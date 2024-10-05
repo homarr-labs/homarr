@@ -37,7 +37,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
         <Title>{t("group.title")}</Title>
         <Group justify="space-between">
           <SearchInput
-            placeholder={t("common.rtl", {
+            placeholder={t("common.rtl.default", {
               value: t("group.search"),
               symbol: "...",
             })}

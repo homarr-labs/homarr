@@ -527,9 +527,13 @@ export default {
     },
   },
   common: {
-    rtl: "{value}{symbol}",
+    rtl: {
+      remainder: "{value}{symbol}{remainder}",
+      default: "{value}{symbol}",
+    },
     symbols: {
       colon: ": ",
+      percent: "%",
     },
     beta: "Beta",
     error: "Error",
@@ -562,6 +566,9 @@ export default {
     information: {
       min: "Min",
       max: "Max",
+      days: "Days",
+      hours: "Hours",
+      minutes: "Minutes",
     },
     notification: {
       create: {
@@ -1089,16 +1096,16 @@ export default {
       },
       popover: {
         information: "Information",
-        processor: "Processor:",
-        memory: "Memory:",
-        version: "Version:",
-        uptime: "Uptime: {days} days, {hours} hours",
-        loadAverage: "Load average:",
-        minute: "1 minute:",
-        minutes: "{count} minutes:",
+        processor: "Processor",
+        memory: "Memory",
+        version: "Version",
+        uptime: "Uptime",
+        loadAverage: "Load average",
+        minute: "1 minute",
+        minutes: "{count} minutes",
         used: "Used",
-        diskAvailable: "Available",
-        memAvailable: "Available:",
+        available: "Available",
+        lastSeen: "Last status update",
       },
       memory: {},
       error: {

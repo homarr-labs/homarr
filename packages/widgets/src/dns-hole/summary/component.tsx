@@ -101,7 +101,7 @@ const stats = [
   {
     icon: IconPercentage,
     value: (data, t) =>
-      t("common.rtl", {
+      t("common.rtl.default", {
         value: formatNumber(
           data.reduce((count, { adsBlockedTodayPercentage }) => count + adsBlockedTodayPercentage, 0),
           2,

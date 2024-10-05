@@ -13,15 +13,13 @@ export const healthMonitoringRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
           const channel = createItemAndIntegrationChannel<HealthMonitoring>("healthMonitoring", integration.id);
-          const data = await channel.getAsync();
-          if (!data) {
-            return null;
-          }
+          const { data: healthInfo, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
 
           return {
             integrationId: integration.id,
             integrationName: integration.name,
-            healthInfo: data.data,
+            healthInfo,
+            timestamp,
           };
         }),
       );
@@ -30,7 +28,7 @@ export const healthMonitoringRouter = createTRPCRouter({
   subscribeHealthStatus: publicProcedure
     .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault"))
     .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; healthInfo: HealthMonitoring }>((emit) => {
+      return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
           const channel = createItemAndIntegrationChannel<HealthMonitoring>("healthMonitoring", integration.id);
@@ -38,6 +36,7 @@ export const healthMonitoringRouter = createTRPCRouter({
             emit.next({
               integrationId: integration.id,
               healthInfo,
+              timestamp: new Date(0),
             });
           });
           unsubscribes.push(unsubscribe);

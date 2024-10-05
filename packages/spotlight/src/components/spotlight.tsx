@@ -51,7 +51,7 @@ export const Spotlight = () => {
       store={spotlightStore}
     >
       <MantineSpotlight.Search
-        placeholder={t("common.rtl", {
+        placeholder={t("common.rtl.default", {
           value: t("search.placeholder"),
           symbol: "...",
         })}
