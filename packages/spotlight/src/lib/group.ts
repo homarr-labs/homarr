@@ -2,7 +2,7 @@ import type { UseTRPCQueryResult } from "@trpc/react-query/shared";
 
 import type { stringOrTranslation } from "@homarr/translation";
 
-import type { inferSearchInteractionDefinition, SearchInteraction } from "./interaction";
+import type { inferSearchInteractionDefinition, inferSearchInteractionOptions, SearchInteraction } from "./interaction";
 
 type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps extends Record<string, unknown>> = {
   // key path is used to define the path to a unique key in the option object
@@ -10,6 +10,14 @@ type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps ext
   title: stringOrTranslation;
   component: (option: TOption) => JSX.Element;
   useInteraction: (option: TOption, query: string) => inferSearchInteractionDefinition<SearchInteraction>;
+  onKeyDown?: (
+    event: KeyboardEvent,
+    options: TOption[],
+    query: string,
+    actions: {
+      setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
+    },
+  ) => void;
 } & TOptionProps;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

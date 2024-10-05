@@ -71,7 +71,7 @@ export const userRouter = createTRPCRouter({
   }),
   create: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"] } })
+    .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"], protect: true } })
     .input(validation.user.create)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
@@ -145,7 +145,7 @@ export const userRouter = createTRPCRouter({
         }),
       ),
     )
-    .meta({ openapi: { method: "GET", path: "/api/users", tags: ["users"] } })
+    .meta({ openapi: { method: "GET", path: "/api/users", tags: ["users"], protect: true } })
     .query(({ ctx }) => {
       return ctx.db.query.users.findMany({
         columns: {

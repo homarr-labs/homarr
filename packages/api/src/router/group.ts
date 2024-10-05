@@ -11,7 +11,7 @@ import { throwIfCredentialsDisabled } from "./invite/checks";
 export const groupRouter = createTRPCRouter({
   getPaginated: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(validation.group.paginated)
+    .input(validation.common.paginated)
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(groups.name, `%${input.search.trim()}%`) : undefined;
       const groupCount = await ctx.db
@@ -51,7 +51,7 @@ export const groupRouter = createTRPCRouter({
     }),
   getById: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(validation.group.byId)
+    .input(validation.common.byId)
     .query(async ({ input, ctx }) => {
       const group = await ctx.db.query.groups.findFirst({
         where: eq(groups.id, input.id),
@@ -179,7 +179,7 @@ export const groupRouter = createTRPCRouter({
     }),
   deleteGroup: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(validation.group.byId)
+    .input(validation.common.byId)
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
 

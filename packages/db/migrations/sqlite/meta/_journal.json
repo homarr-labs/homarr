@@ -57,6 +57,20 @@
       "when": 1723746828385,
       "tag": "0007_known_ultragirl",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1727526190343,
+      "tag": "0008_third_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1728074724956,
+      "tag": "0009_stale_roulette",
+      "breakpoints": true
     }
   ]
 }

@@ -19,6 +19,17 @@ import type {
 } from "@homarr/definitions";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
+export const apiKeys = mysqlTable("apiKey", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  apiKey: text("apiKey").notNull(),
+  salt: text("salt").notNull(),
+  userId: varchar("userId", { length: 64 })
+    .notNull()
+    .references((): AnyMySqlColumn => users.id, {
+      onDelete: "cascade",
+    }),
+});
+
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
   name: text("name"),
@@ -339,6 +350,22 @@ export const iconRepositories = mysqlTable("iconRepository", {
 export const serverSettings = mysqlTable("serverSetting", {
   settingKey: varchar("key", { length: 64 }).notNull().unique().primaryKey(),
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
+});
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
+
+export const searchEngines = mysqlTable("search_engine", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  iconUrl: text("icon_url").notNull(),
+  name: varchar("name", { length: 64 }).notNull(),
+  short: varchar("short", { length: 8 }).notNull(),
+  description: text("description"),
+  urlTemplate: text("url_template").notNull(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
