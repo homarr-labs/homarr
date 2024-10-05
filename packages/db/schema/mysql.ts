@@ -1,7 +1,8 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
 import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
-import { boolean, index, int, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlTable, primaryKey, text, timestamp, tinyint, varchar } from "drizzle-orm/mysql-core";
 
 import type {
   BackgroundImageAttachment,
@@ -32,6 +33,7 @@ export const users = mysqlTable("user", {
     onDelete: "set null",
   }),
   colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("auto").notNull(),
+  firstDayOfWeek: tinyint("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
 });
 
 export const accounts = mysqlTable(

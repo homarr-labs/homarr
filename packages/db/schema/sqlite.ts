@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { DayOfWeek } from "@mantine/dates";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
@@ -33,6 +34,7 @@ export const users = sqliteTable("user", {
     onDelete: "set null",
   }),
   colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
+  firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
 });
 
 export const accounts = sqliteTable(
