@@ -71,6 +71,13 @@
       "when": 1728074724956,
       "tag": "0009_stale_roulette",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1728142590232,
+      "tag": "0010_gorgeous_stingray",
+      "breakpoints": true
     }
   ]
 }
