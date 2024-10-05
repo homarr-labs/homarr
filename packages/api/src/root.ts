@@ -1,3 +1,4 @@
+import { apiKeysRouter } from "./router/apiKeys";
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { cronJobsRouter } from "./router/cron-jobs";
@@ -31,6 +32,7 @@ export const appRouter = createTRPCRouter({
   docker: dockerRouter,
   serverSettings: serverSettingsRouter,
   cronJobs: cronJobsRouter,
+  apiKeys: apiKeysRouter,
 });
 
 // export type definition of API

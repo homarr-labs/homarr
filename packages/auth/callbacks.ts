@@ -3,6 +3,7 @@ import type { Adapter } from "@auth/core/adapters";
 import dayjs from "dayjs";
 import type { NextAuthConfig } from "next-auth";
 
+import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
 import { groupMembers, groupPermissions, users } from "@homarr/db/schema/sqlite";
@@ -28,6 +29,21 @@ export const getCurrentUserPermissionsAsync = async (db: Database, userId: strin
   const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
 
   return getPermissionsWithChildren(permissionKeys);
+};
+
+export const createSessionAsync = async (
+  db: Database,
+  user: { id: string; email: string | null },
+): Promise<Session> => {
+  return {
+    expires: dayjs().add(1, "day").toISOString(),
+    user: {
+      ...user,
+      email: user.email ?? "",
+      permissions: await getCurrentUserPermissionsAsync(db, user.id),
+      colorScheme: "auto",
+    },
+  } as Session;
 };
 
 export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session"> => {

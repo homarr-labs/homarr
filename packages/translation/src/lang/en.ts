@@ -537,10 +537,8 @@ export default {
     },
   },
   common: {
-    rtl: "{value}{symbol}",
-    symbols: {
-      colon: ": ",
-    },
+    // Either "ltr" or "rtl"
+    direction: "ltr",
     beta: "Beta",
     error: "Error",
     action: {
@@ -1895,6 +1893,35 @@ export default {
             },
             dnsHole: {
               label: "DNS Hole Data",
+            },
+          },
+        },
+        api: {
+          title: "API",
+          modal: {
+            createApiToken: {
+              title: "API token created",
+              description:
+                "API token was created. Be careful, this token is encrypted in the database and will never be transferred again to you. If you loose this token, you'll no longer be able to retrieve this specific token.",
+              button: "Copy and close",
+            },
+          },
+          tab: {
+            documentation: {
+              label: "Documentation",
+            },
+            apiKey: {
+              label: "Authentication",
+              title: "API Keys",
+              button: {
+                createApiToken: "Create API token",
+              },
+              table: {
+                header: {
+                  id: "ID",
+                  createdBy: "Created by",
+                },
+              },
             },
           },
         },

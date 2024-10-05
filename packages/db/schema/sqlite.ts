@@ -21,6 +21,17 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 
+export const apiKeys = sqliteTable("apiKey", {
+  id: text("id").notNull().primaryKey(),
+  apiKey: text("apiKey").notNull(),
+  salt: text("salt").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references((): AnySQLiteColumn => users.id, {
+      onDelete: "cascade",
+    }),
+});
+
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -344,6 +355,13 @@ export const serverSettings = sqliteTable("serverSetting", {
   settingKey: text("key").notNull().unique().primaryKey(),
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
 
 export const searchEngines = sqliteTable("search_engine", {
   id: text("id").notNull().primaryKey(),

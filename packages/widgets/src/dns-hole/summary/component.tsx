@@ -100,14 +100,11 @@ const stats = [
   },
   {
     icon: IconPercentage,
-    value: (data, t) =>
-      t("common.rtl", {
-        value: formatNumber(
-          data.reduce((count, { adsBlockedTodayPercentage }) => count + adsBlockedTodayPercentage, 0),
-          2,
-        ),
-        symbol: "%",
-      }),
+    value: (data) =>
+      `${formatNumber(
+        data.reduce((count, { adsBlockedTodayPercentage }) => count + adsBlockedTodayPercentage, 0),
+        2,
+      )}%`,
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
     color: "rgba(255, 165, 20, 0.4)", // YELLOW
   },
@@ -135,7 +132,7 @@ const stats = [
 
 interface StatItem {
   icon: TablerIcon;
-  value: (x: DnsHoleSummary[], t: TranslationFunction) => string;
+  value: (x: DnsHoleSummary[]) => string;
   label: stringOrTranslation;
   color: string;
 }
@@ -184,14 +181,14 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
           gap="1cqmin"
         >
           <Text
-            key={item.value(data, t)}
+            key={item.value(data)}
             className="summary-card-value text-flash"
             ta="center"
             size="20cqmin"
             fw="bold"
             style={{ "--glow-size": "2.5cqmin" }}
           >
-            {item.value(data, t)}
+            {item.value(data)}
           </Text>
           {item.label && (
             <Text className="summary-card-label" ta="center" size="15cqmin">
