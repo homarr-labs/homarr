@@ -18,6 +18,9 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       defaultValue: [],
       validate: z.string().url(),
     }),
+    anableRtl: factory.switch({
+      defaultValue: false,
+    }),
     textLinesClamp: factory.number({
       defaultValue: 5,
       validate: z.number().min(1).max(50),
