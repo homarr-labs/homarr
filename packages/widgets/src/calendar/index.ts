@@ -6,7 +6,7 @@ import { z } from "@homarr/validation";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("calendar", {
+export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
   options: optionsBuilder.from((factory) => ({
     filterPastMonths: factory.number({
@@ -19,6 +19,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     }),
   })),
   supportedIntegrations: getIntegrationKindsByCategory("calendar"),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

@@ -6,6 +6,8 @@ import { jobGroup } from "@homarr/cron-jobs";
 
 import { seedServerSettingsAsync } from "./seed-server-settings";
 
+declare module "*.css";
+
 void (async () => {
   registerCronJobRunner();
   await jobGroup.startAllAsync();

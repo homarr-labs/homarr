@@ -1,3 +1,4 @@
+import { hashKey } from "@tanstack/query-core";
 import superjson from "superjson";
 
 import { createId } from "@homarr/db";
@@ -169,6 +170,17 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
 
 export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
   const channelName = `item:${kind}:integration:${integrationId}`;
+  return createChannelWithLatestAndEvents<TData>(channelName);
+};
+
+export const createIntegrationOptionsChannel = <TData>(
+  integrationId: string,
+  queryKey: string,
+  options: Record<string, unknown>,
+) => {
+  const optionsKey = Buffer.from(hashKey([options])).toString("base64");
+  const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
+  logger.warn(channelName);
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 

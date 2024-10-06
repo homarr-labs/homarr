@@ -1,8 +1,6 @@
 import { observable } from "@trpc/server/observable";
 
-import type { Modify } from "@homarr/common/types";
-import type { Integration } from "@homarr/db/schema/sqlite";
-import type { IntegrationKindByCategory, WidgetKind } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
@@ -10,27 +8,39 @@ import { controlsInputSchema } from "@homarr/integrations/types";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { dnsHoleHandler } from "../../../../cron-jobs/src/jobs/integrations/dns-hole";
+import { createIntegrationWidgetHandlerRouter } from "../../../../cron-jobs/src/lib/handler";
+import {
+  createManyIntegrationMiddleware,
+  createManyIntegrationMiddleware2,
+  createOneIntegrationMiddleware,
+} from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
     .input(z.object({ widgetKind: z.enum(["dnsHoleSummary", "dnsHoleControls"]) }))
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
-    .query(async ({ input: { widgetKind }, ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
-          const channel = createItemAndIntegrationChannel<DnsHoleSummary>(widgetKind, integration.id);
-          const { data: summary, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
+    .unstable_concat(createManyIntegrationMiddleware2("query", ...getIntegrationKindsByCategory("dnsHole")))
+    .query(async ({ ctx }) => {
+      const handler = createIntegrationWidgetHandlerRouter(dnsHoleHandler, {
+        widgetKinds: ["dnsHoleSummary", "dnsHoleControls"],
+      });
 
-          return {
-            integration,
-            timestamp,
-            summary,
-          };
-        }),
+      const results = await handler(ctx.integrations, {});
+
+      const integrationMap = new Map(
+        ctx.integrations.map(({ secrets: _unsave, ...saveIntegrationFields }) => [
+          saveIntegrationFields.id,
+          saveIntegrationFields,
+        ]),
       );
-      return results;
+
+      return results.map((result) => ({
+        // Integration is always defined as it's the same array for map and handler
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        integration: integrationMap.get(result.integrationId)!,
+        summary: result.data,
+      }));
     }),
 
   subscribeToSummary: publicProcedure
@@ -38,8 +48,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .subscription(({ input: { widgetKind }, ctx }) => {
       return observable<{
-        integration: Modify<Integration, { kind: IntegrationKindByCategory<"dnsHole"> }>;
-        timestamp: Date;
+        integrationId: string;
         summary: DnsHoleSummary;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -48,8 +57,7 @@ export const dnsHoleRouter = createTRPCRouter({
           const channel = createItemAndIntegrationChannel<DnsHoleSummary>(widgetKind as WidgetKind, integration.id);
           const unsubscribe = channel.subscribe((summary) => {
             emit.next({
-              integration,
-              timestamp: new Date(),
+              integrationId: integration.id,
               summary,
             });
           });

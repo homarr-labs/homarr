@@ -9,7 +9,7 @@
   "scripts": {
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
-    "dev": "pnpm with-env tsx ./src/main.ts",
+    "dev": "pnpm with-env tsx --experimental-loader ./ignore-css-loader.mjs ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

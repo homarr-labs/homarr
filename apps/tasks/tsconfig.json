@@ -1,6 +1,7 @@
 {
   "extends": "@homarr/tsconfig/base.json",
   "compilerOptions": {
+    "lib": ["esnext"],
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
