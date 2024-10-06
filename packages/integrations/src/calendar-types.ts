@@ -2,7 +2,7 @@ export interface CalendarEvent {
   name: string;
   subName: string;
   date: Date;
-  releaseType?: "Cinemas" | "Physical" | "Digital";
+  releaseType?: "Cinemas" | "Physical" | "Digital" | undefined;
   description?: string;
   thumbnail?: string;
   mediaInformation?: {
