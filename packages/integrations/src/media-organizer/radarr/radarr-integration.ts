@@ -37,19 +37,36 @@ export class RadarrIntegration extends Integration {
     });
     const radarrCalendarEvents = await z.array(radarrCalendarEventSchema).parseAsync(await response.json());
 
-    return radarrCalendarEvents.map(
-      (radarrCalendarEvent): CalendarEvent => ({
+    return radarrCalendarEvents.flatMap((radarrCalendarEvent): CalendarEvent[] => {
+      const commonFields = {
         name: radarrCalendarEvent.title,
         subName: radarrCalendarEvent.originalTitle,
         description: radarrCalendarEvent.overview,
         thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
-        date: radarrCalendarEvent.inCinemas,
         mediaInformation: {
-          type: "movie",
+          type: "movie" as const,
         },
         links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
-      }),
-    );
+      };
+
+      return [
+        {
+          ...commonFields,
+          date: radarrCalendarEvent.inCinemas,
+          releaseType: "Cinemas",
+        },
+        {
+          ...commonFields,
+          date: radarrCalendarEvent.physicalRelease,
+          releaseType: "Physical",
+        },
+        {
+          ...commonFields,
+          date: radarrCalendarEvent.digitalRelease,
+          releaseType: "Digital",
+        },
+      ];
+    });
   }
 
   private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
@@ -119,6 +136,8 @@ const radarrCalendarEventSchema = z.object({
   title: z.string(),
   originalTitle: z.string(),
   inCinemas: z.string().transform((value) => new Date(value)),
+  physicalRelease: z.string().transform((value) => new Date(value)),
+  digitalRelease: z.string().transform((value) => new Date(value)),
   overview: z.string().optional(),
   titleSlug: z.string(),
   images: radarrCalendarEventImageSchema,

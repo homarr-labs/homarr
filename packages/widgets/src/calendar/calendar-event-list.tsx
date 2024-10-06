@@ -48,6 +48,11 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                   className={classes.badge}
                 >{`S${event.mediaInformation.seasonNumber} / E${event.mediaInformation.episodeNumber}`}</Badge>
               )}
+              {event.mediaInformation?.type === "movie" && (
+                <Badge size="xs" pos={"absolute"} bottom={-6} left={"50%"} className={classes.badge}>
+                  {event.releaseType}
+                </Badge>
+              )}
             </Box>
             <Stack style={{ flexGrow: 1 }} gap={0}>
               <Group justify={"space-between"} align={"start"} mb={"xs"} wrap="nowrap">

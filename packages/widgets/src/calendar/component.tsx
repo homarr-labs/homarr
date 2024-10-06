@@ -9,7 +9,7 @@ import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 
-export default function CalendarWidget({ isEditMode, serverData }: WidgetComponentProps<"calendar">) {
+export default function CalendarWidget({ isEditMode, serverData, options }: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
   const params = useParams();
   const locale = params.locale as string;
@@ -64,7 +64,17 @@ export default function CalendarWidget({ isEditMode, serverData }: WidgetCompone
         },
       }}
       renderDay={(date) => {
-        const eventsForDate = (serverData?.initialData ?? []).filter((event) => dayjs(event.date).isSame(date, "day"));
+        const eventsForDate = (serverData?.initialData ?? []).filter((event) => {
+          const isSameDay = dayjs(event.date).isSame(date, "day");
+          const isTVShow = event.mediaInformation?.type === "tv";
+          const isMovie =
+            event.mediaInformation?.type === "movie" &&
+            event.releaseType &&
+            options.releaseType.includes(event.releaseType);
+
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          return isSameDay && (isMovie || isTVShow);
+        });
         return <CalendarDay date={date} events={eventsForDate} disabled={isEditMode} />;
       }}
     />

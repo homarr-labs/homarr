@@ -1008,6 +1008,9 @@ export default {
       name: "Calendar",
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
+        releaseType: {
+          label: "Radarr release type",
+        },
         filterPastMonths: {
           label: "Start from",
         },
