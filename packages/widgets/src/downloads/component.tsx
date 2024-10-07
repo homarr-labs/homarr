@@ -162,6 +162,8 @@ export default function DownloadClientsWidget({
             //Append index not found (new integration)
             return [...(prevData ?? []), data];
           }
+
+          return undefined;
         });
 
         //Reset no update timer
