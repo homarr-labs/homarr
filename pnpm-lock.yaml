@@ -1612,8 +1612,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       video.js:
-        specifier: ^8.17.4
-        version: 8.17.4
+        specifier: ^8.18.1
+        version: 8.18.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -3520,15 +3520,11 @@ packages:
   '@umami/node@0.4.0':
     resolution: {integrity: sha512-pyphprbiF7KiDSc+SWZ4/rVM8B5vU27zIiFfEPj2lEqczpI4xAKSp+dM3tlzyRAWJL32fcbCfAaLGhJZQV13Rg==}
 
-  '@videojs/http-streaming@3.13.3':
-    resolution: {integrity: sha512-L7H+iTeqHeZ5PylzOx+pT3CVyzn4TALWYTJKkIc1pDaV/cTVfNGtG+9/vXPAydD+wR/xH1M9/t2JH8tn/DCT4w==}
+  '@videojs/http-streaming@3.14.2':
+    resolution: {integrity: sha512-c+sg+rrrSrRekBZxd+sNpzjRteIcOEQRJllqCBcz6MrgSaGJGDzV1xhGSAFnxX8E/xfqQeF060us5474WwYi3Q==}
     engines: {node: '>=8', npm: '>=5'}
     peerDependencies:
       video.js: ^8.14.0
-
-  '@videojs/vhs-utils@3.0.5':
-    resolution: {integrity: sha512-PKVgdo8/GReqdx512F+ombhS+Bzogiofy1LgAj4tN8PfdBx3HSS7V5WfJotKTqtOWGwVfSWsrYN/t09/DSryrw==}
-    engines: {node: '>=8', npm: '>=5'}
 
   '@videojs/vhs-utils@4.0.0':
     resolution: {integrity: sha512-xJp7Yd4jMLwje2vHCUmi8MOUU76nxiwII3z4Eg3Ucb+6rrkFVGosrXlMgGnaLjq724j3wzNElRZ71D/CKrTtxg==}
@@ -3691,9 +3687,6 @@ packages:
     resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-
-  aes-decrypter@4.0.1:
-    resolution: {integrity: sha512-H1nh/P9VZXUf17AA5NQfJML88CFjVBDuGkp5zDHa7oEhYN9TTpNLJknRY1ie0iSKWlDf6JRnJKaZVDSQdPy6Cg==}
 
   aes-decrypter@4.0.2:
     resolution: {integrity: sha512-lc+/9s6iJvuaRe5qDlMTpCFjnwpkeOXp8qP3oiZ5jsj1MRg+SBVUmmICrhxHvc8OELSmc+fEyyxAuppY6hrWzw==}
@@ -7553,8 +7546,8 @@ packages:
     resolution: {integrity: sha512-OljLrQ9SQdOUqTaQxqL5dEfZWrXExyyWsozYlAWFawPVNuD83igl7uJD2RTkNMbniIYgt8l81eCJGIdQF7avLQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  video.js@8.17.4:
-    resolution: {integrity: sha512-AECieAxKMKB/QgYK36ci50phfpWys6bFT6+pGMpSafeFYSoZaQ2Vpl83T9Qqcesv4TO7oNtiycnVeaBnrva2oA==}
+  video.js@8.18.1:
+    resolution: {integrity: sha512-oQ4M/HD2fFgEPHfmVMWxGykRFIpOmVhK0XZ4PSsPTgN2jH6E6+92f/RI2mDXDb0yu+Fxv9fxMUm0M7Z2K3Zo9w==}
 
   videojs-contrib-quality-levels@4.1.0:
     resolution: {integrity: sha512-TfrXJJg1Bv4t6TOCMEVMwF/CoS8iENYsWNKip8zfhB5kTcegiFYezEA0eHAJPU64ZC8NQbxQgOwAsYU8VXbOWA==}
@@ -9793,22 +9786,16 @@ snapshots:
 
   '@umami/node@0.4.0': {}
 
-  '@videojs/http-streaming@3.13.3(video.js@8.17.4)':
+  '@videojs/http-streaming@3.14.2(video.js@8.18.1)':
     dependencies:
       '@babel/runtime': 7.25.6
-      '@videojs/vhs-utils': 4.0.0
-      aes-decrypter: 4.0.1
+      '@videojs/vhs-utils': 4.1.1
+      aes-decrypter: 4.0.2
       global: 4.4.0
       m3u8-parser: 7.2.0
       mpd-parser: 1.3.0
       mux.js: 7.0.3
-      video.js: 8.17.4
-
-  '@videojs/vhs-utils@3.0.5':
-    dependencies:
-      '@babel/runtime': 7.25.6
-      global: 4.4.0
-      url-toolkit: 2.2.5
+      video.js: 8.18.1
 
   '@videojs/vhs-utils@4.0.0':
     dependencies:
@@ -10025,13 +10012,6 @@ snapshots:
       acorn: 8.12.1
 
   acorn@8.12.1: {}
-
-  aes-decrypter@4.0.1:
-    dependencies:
-      '@babel/runtime': 7.25.6
-      '@videojs/vhs-utils': 3.0.5
-      global: 4.4.0
-      pkcs7: 1.0.4
 
   aes-decrypter@4.0.2:
     dependencies:
@@ -14340,25 +14320,25 @@ snapshots:
 
   validate-npm-package-name@5.0.1: {}
 
-  video.js@8.17.4:
+  video.js@8.18.1:
     dependencies:
       '@babel/runtime': 7.25.6
-      '@videojs/http-streaming': 3.13.3(video.js@8.17.4)
-      '@videojs/vhs-utils': 4.0.0
+      '@videojs/http-streaming': 3.14.2(video.js@8.18.1)
+      '@videojs/vhs-utils': 4.1.1
       '@videojs/xhr': 2.7.0
       aes-decrypter: 4.0.2
       global: 4.4.0
       m3u8-parser: 7.2.0
       mpd-parser: 1.3.0
       mux.js: 7.0.3
-      videojs-contrib-quality-levels: 4.1.0(video.js@8.17.4)
+      videojs-contrib-quality-levels: 4.1.0(video.js@8.18.1)
       videojs-font: 4.2.0
       videojs-vtt.js: 0.15.5
 
-  videojs-contrib-quality-levels@4.1.0(video.js@8.17.4):
+  videojs-contrib-quality-levels@4.1.0(video.js@8.18.1):
     dependencies:
       global: 4.4.0
-      video.js: 8.17.4
+      video.js: 8.18.1
 
   videojs-font@4.2.0: {}
 
