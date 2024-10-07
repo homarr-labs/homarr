@@ -75,7 +75,7 @@ export default function CalendarWidget({ isEditMode, serverData, options }: Widg
               ]
             ).find((date) => dayjs(date).isSame(tileDate, "day")),
           }))
-          .filter((event): event is CalendarEvent => !!event.date);
+          .filter((event): event is CalendarEvent => Boolean(event.date));
         return <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode} />;
       }}
     />
