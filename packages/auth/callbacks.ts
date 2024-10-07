@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import type { NextAuthConfig } from "next-auth";
 
 import type { Session } from "@homarr/auth";
