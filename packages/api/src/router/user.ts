@@ -208,6 +208,7 @@ export const userRouter = createTRPCRouter({
         image: true,
         provider: true,
         homeBoardId: true,
+        firstDayOfWeek: true,
       },
       where: eq(users.id, input.userId),
     });
@@ -375,6 +376,53 @@ export const userRouter = createTRPCRouter({
       })
       .where(eq(users.id, ctx.session.user.id));
   }),
+  getFirstDayOfWeekForUserOrDefault: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.session?.user) {
+      return 1 as const;
+    }
+
+    const user = await ctx.db.query.users.findFirst({
+      columns: {
+        id: true,
+        firstDayOfWeek: true,
+      },
+      where: eq(users.id, ctx.session.user.id),
+    });
+
+    return user?.firstDayOfWeek ?? (1 as const);
+  }),
+  changeFirstDayOfWeek: protectedProcedure
+    .input(validation.user.firstDayOfWeek.and(validation.common.byId))
+    .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users' passwords
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.id),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          firstDayOfWeek: input.firstDayOfWeek,
+        })
+        .where(eq(users.id, ctx.session.user.id));
+    }),
 });
 
 const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {

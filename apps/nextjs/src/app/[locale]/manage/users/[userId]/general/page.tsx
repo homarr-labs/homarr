@@ -13,6 +13,7 @@ import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { DeleteUserButton } from "./_components/_delete-user-button";
+import { FirstDayOfWeek } from "./_components/_first-day-of-week";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
 
@@ -91,6 +92,11 @@ export default async function EditUserPage({ params }: Props) {
             label: board.name,
           }))}
         />
+      </Stack>
+
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.firstDayOfWeek")}</Title>
+        <FirstDayOfWeek user={user} />
       </Stack>
 
       {isCredentialsUser && (

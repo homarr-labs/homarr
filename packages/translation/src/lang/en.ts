@@ -106,6 +106,16 @@ export default {
           },
         },
       },
+      changeFirstDayOfWeek: {
+        notification: {
+          success: {
+            message: "First day of week changed successfully",
+          },
+          error: {
+            message: "Unable to change first day of week",
+          },
+        },
+      },
       manageAvatar: {
         changeImage: {
           label: "Change image",
@@ -1692,6 +1702,7 @@ export default {
             item: {
               language: "Language & Region",
               board: "Home board",
+              firstDayOfWeek: "First day of the week",
             },
           },
           security: {
