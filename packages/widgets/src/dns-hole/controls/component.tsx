@@ -18,7 +18,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -39,15 +38,24 @@ export default function DnsHoleControlsWidget({
   options,
   integrationIds,
   isEditMode,
-  serverData,
 }: WidgetComponentProps<typeof widgetKind>) {
   // DnsHole integrations with interaction permissions
   const integrationsWithInteractions = useIntegrationsWithInteractAccess()
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
-
-  // Initial summaries, null summary means disconnected, undefined status means processing
-  const [summaries, setSummaries] = useState(serverData?.initialData ?? []);
+  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+    {
+      widgetKind: "dnsHoleControls",
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
+  );
+  const utils = clientApi.useUtils();
 
   // Subscribe to summary updates
   clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
@@ -57,8 +65,22 @@ export default function DnsHoleControlsWidget({
     },
     {
       onData: (data) => {
-        setSummaries((prevSummaries) =>
-          prevSummaries.map((summary) => (summary.integration.id === data.integration.id ? data : summary)),
+        utils.widget.dnsHole.summary.setData(
+          {
+            widgetKind: "dnsHoleControls",
+            integrationIds,
+          },
+          (prevData) => {
+            if (!prevData) return undefined;
+
+            const newData = prevData.map((summary) =>
+              summary.integration.id === data.integrationId
+                ? { integration: summary.integration, summary: data.summary }
+                : summary,
+            );
+
+            return newData;
+          },
         );
       },
     },
@@ -67,40 +89,80 @@ export default function DnsHoleControlsWidget({
   // Mutations for dnsHole state, set to undefined on click, and change again on settle
   const { mutate: enableDns } = clientApi.widget.dnsHole.enable.useMutation({
     onSettled: (_, error, { integrationId }) => {
-      setSummaries((prevSummaries) =>
-        prevSummaries.map((data) => ({
-          ...data,
-          summary:
-            data.integration.id === integrationId && data.summary
-              ? { ...data.summary, status: error ? "disabled" : "enabled" }
-              : data.summary,
-        })),
+      utils.widget.dnsHole.summary.setData(
+        {
+          widgetKind: "dnsHoleControls",
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
+
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: error ? "disabled" : "enabled",
+                  },
+                }
+              : item,
+          );
+        },
       );
     },
   });
   const { mutate: disableDns } = clientApi.widget.dnsHole.disable.useMutation({
     onSettled: (_, error, { integrationId }) => {
-      setSummaries((prevSummaries) =>
-        prevSummaries.map((data) => ({
-          ...data,
-          summary:
-            data.integration.id === integrationId && data.summary
-              ? { ...data.summary, status: error ? "enabled" : "disabled" }
-              : data.summary,
-        })),
+      utils.widget.dnsHole.summary.setData(
+        {
+          widgetKind: "dnsHoleControls",
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
+
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: error ? "enabled" : "disabled",
+                  },
+                }
+              : item,
+          );
+        },
       );
     },
   });
   const toggleDns = (integrationId: string) => {
-    const integrationStatus = summaries.find(({ integration }) => integration.id === integrationId);
+    const integrationStatus = summaries.find((item) => item.integration.id === integrationId);
     if (!integrationStatus?.summary?.status) return;
-    setSummaries((prevSummaries) =>
-      prevSummaries.map((data) => ({
-        ...data,
-        summary:
-          data.integration.id === integrationId && data.summary ? { ...data.summary, status: undefined } : data.summary,
-      })),
+
+    utils.widget.dnsHole.summary.setData(
+      {
+        widgetKind: "dnsHoleControls",
+        integrationIds,
+      },
+      (prevData) => {
+        if (!prevData) return [];
+
+        return prevData.map((item) =>
+          item.integration.id === integrationId && item.summary
+            ? {
+                ...item,
+                summary: {
+                  ...item.summary,
+                  status: undefined,
+                },
+              }
+            : item,
+        );
+      },
     );
+
     if (integrationStatus.summary.status === "enabled") {
       disableDns({ integrationId, duration: 0 });
     } else {
@@ -110,8 +172,10 @@ export default function DnsHoleControlsWidget({
 
   // make lists of enabled and disabled interactable integrations (with permissions, not disconnected and not processing)
   const integrationsSummaries = summaries.reduce(
-    (acc, { summary, integration: { id } }) =>
-      integrationsWithInteractions.includes(id) && summary?.status != null ? (acc[summary.status].push(id), acc) : acc,
+    (acc, { summary, integration }) =>
+      integrationsWithInteractions.includes(integration.id) && summary?.status != null
+        ? (acc[summary.status].push(integration.id), acc)
+        : acc,
     { enabled: [] as string[], disabled: [] as string[] },
   );
 
@@ -252,11 +316,10 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   t,
 }) => {
   // Independently determine connection status, current state and permissions
-  const isConnected = data.summary !== null && Math.abs(dayjs(data.timestamp).diff()) < 30000;
   const isEnabled = data.summary?.status ? data.summary.status === "enabled" : undefined;
   const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
   // Use all factors to infer the state of the action buttons
-  const controlEnabled = isInteractPermitted && isEnabled !== undefined && isConnected;
+  const controlEnabled = isInteractPermitted && isEnabled !== undefined;
 
   return (
     <Card
@@ -273,7 +336,6 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
           w="20cqmin"
           h="20cqmin"
           fit="contain"
-          style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
         />
         <Flex className="dns-hole-controls-item-data-stack" direction="column" gap="1.5cqmin">
           <Text className="dns-hole-controls-item-integration-name" fz="7cqmin">
@@ -298,24 +360,16 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                 c="var(--mantine-color-text)"
                 styles={{ section: { marginInlineEnd: "2.5cqmin" } }}
                 leftSection={
-                  isConnected && (
-                    <IconCircleFilled
-                      className="dns-hole-controls-item-status-icon"
-                      color={dnsLightStatus(isEnabled)}
-                      style={{ height: "3.5cqmin", width: "3.5cqmin" }}
-                    />
-                  )
+                  <IconCircleFilled
+                    className="dns-hole-controls-item-status-icon"
+                    color={dnsLightStatus(isEnabled)}
+                    style={{ height: "3.5cqmin", width: "3.5cqmin" }}
+                  />
                 }
               >
                 {t(
                   `widget.dnsHoleControls.controls.${
-                    !isConnected
-                      ? "disconnected"
-                      : typeof isEnabled === "undefined"
-                        ? "processing"
-                        : isEnabled
-                          ? "enabled"
-                          : "disabled"
+                    isEnabled === undefined ? "processing" : isEnabled ? "enabled" : "disabled"
                   }`,
                 )}
               </Badge>

@@ -1,15 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip } from "@mantine/core";
+import { Box, Card, Flex, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
-import { integrationDefs } from "@homarr/definitions";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import type { stringOrTranslation, TranslationFunction } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
@@ -20,12 +17,21 @@ import { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 
-export default function DnsHoleSummaryWidget({
-  options,
-  integrationIds,
-  serverData,
-}: WidgetComponentProps<typeof widgetKind>) {
-  const [summaries, setSummaries] = useState(serverData?.initialData ?? []);
+export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
+  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+    {
+      widgetKind,
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select: (data) => data.map((item) => item.summary).filter((item) => item !== undefined),
+    },
+  );
+  const utils = clientApi.useUtils();
 
   const t = useI18n();
 
@@ -36,27 +42,26 @@ export default function DnsHoleSummaryWidget({
     },
     {
       onData: (data) => {
-        setSummaries((prevSummaries) =>
-          prevSummaries.map((summary) => (summary.integration.id === data.integration.id ? data : summary)),
+        utils.widget.dnsHole.summary.setData(
+          {
+            widgetKind,
+            integrationIds,
+          },
+          (prevData) => {
+            if (!prevData) {
+              return undefined;
+            }
+
+            const newData = prevData.map((item) =>
+              item.integration.id === data.integrationId
+                ? { integration: item.integration, summary: data.summary }
+                : item,
+            );
+            return newData;
+          },
         );
       },
     },
-  );
-
-  const data = useMemo(
-    () =>
-      summaries
-        .filter(
-          (
-            pair,
-          ): pair is {
-            integration: typeof pair.integration;
-            timestamp: typeof pair.timestamp;
-            summary: DnsHoleSummary;
-          } => pair.summary !== null && Math.abs(dayjs(pair.timestamp).diff()) < 30000,
-        )
-        .flatMap(({ summary }) => summary),
-    [summaries, serverData],
   );
 
   if (integrationIds.length === 0) {
@@ -65,24 +70,9 @@ export default function DnsHoleSummaryWidget({
 
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)} p="2cqmin">
-      {data.length > 0 ? (
-        stats.map((item) => (
-          <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
-        ))
-      ) : (
-        <Stack h="100%" w="100%" justify="center" align="center" gap="2.5cqmin" p="2.5cqmin">
-          <AvatarGroup spacing="10cqmin">
-            {summaries.map(({ integration }) => (
-              <Tooltip key={integration.id} label={integration.name}>
-                <Avatar h="35cqmin" w="35cqmin" src={integrationDefs[integration.kind].iconUrl} />
-              </Tooltip>
-            ))}
-          </AvatarGroup>
-          <Text fz="10cqmin" ta="center">
-            {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
-          </Text>
-        </Stack>
-      )}
+      {stats.map((item) => (
+        <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={summaries} t={t} />
+      ))}
     </Box>
   );
 }

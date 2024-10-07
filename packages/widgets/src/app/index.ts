@@ -3,7 +3,7 @@ import { IconApps, IconDeviceDesktopX } from "@tabler/icons-react";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("app", {
+export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
   options: optionsBuilder.from((factory) => ({
     appId: factory.app(),

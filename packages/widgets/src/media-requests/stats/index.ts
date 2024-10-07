@@ -4,10 +4,8 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 
-export const { componentLoader, definition, serverDataLoader } = createWidgetDefinition("mediaRequests-requestStats", {
+export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestStats", {
   icon: IconChartBar,
   options: {},
   supportedIntegrations: getIntegrationKindsByCategory("mediaRequest"),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));
