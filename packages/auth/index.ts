@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import type { DefaultSession } from "@auth/core/types";
 
-import type { ColorScheme, GroupPermissionKey } from "@homarr/definitions";
+import type { ColorScheme, GroupPermissionKey, SupportedAuthProvider } from "@homarr/definitions";
 
 import { createConfiguration } from "./configuration";
 
@@ -19,6 +19,7 @@ declare module "next-auth" {
 
 export * from "./security";
 
-export const createHandlers = (isCredentialsRequest: boolean) => createConfiguration(isCredentialsRequest, headers());
+// See why it's unknown in the [...nextauth]/route.ts file
+export const createHandlers = (provider: SupportedAuthProvider | "unknown") => createConfiguration(provider, headers());
 
 export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";
