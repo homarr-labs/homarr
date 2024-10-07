@@ -17,6 +17,7 @@ import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { createRedirectUri } from "./redirect";
 import { generateSessionToken, sessionTokenCookieName } from "./session";
 
+// See why it's unknown in the [...nextauth]/route.ts file
 export const createConfiguration = (provider: SupportedAuthProvider | "unknown", headers: ReadonlyHeaders | null) =>
   NextAuth({
     logger: {
