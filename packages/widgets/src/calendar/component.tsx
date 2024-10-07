@@ -15,7 +15,7 @@ export default function CalendarWidget({ isEditMode, serverData }: WidgetCompone
   const [month, setMonth] = useState(new Date());
   const params = useParams();
   const locale = params.locale as string;
-  const [firstDayOfWeek] = clientApi.user.getFirstDayOfWeek.useSuspenseQuery();
+  const [firstDayOfWeek] = clientApi.user.getFirstDayOfWeekForUserOrDefault.useSuspenseQuery();
 
   return (
     <Calendar

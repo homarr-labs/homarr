@@ -376,7 +376,7 @@ export const userRouter = createTRPCRouter({
       })
       .where(eq(users.id, ctx.session.user.id));
   }),
-  getFirstDayOfWeek: publicProcedure.query(async ({ ctx }) => {
+  getFirstDayOfWeekForUserOrDefault: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.session?.user) {
       return 1 as const;
     }
