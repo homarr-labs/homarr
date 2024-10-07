@@ -641,8 +641,6 @@ export default function DownloadClientsWidget({
     },
   });
 
-  const isLangRtl = tCommon("rtl", { value: "0", symbol: "1" }).startsWith("1");
-
   //Used for Global Torrent Ratio
   const globalTraffic = clients
     .filter(({ integration: { kind } }) =>
@@ -676,13 +674,12 @@ export default function DownloadClientsWidget({
         px="var(--space-size)"
         justify={integrationTypes.includes("torrent") ? "space-between" : "end"}
         style={{
-          flexDirection: isLangRtl ? "row-reverse" : "row",
           borderTop: "0.0625rem solid var(--border-color)",
         }}
       >
         {integrationTypes.includes("torrent") && (
-          <Group pt="var(--space-size)" style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}>
-            <Text>{tCommon("rtl", { value: t("globalRatio"), symbol: tCommon("symbols.colon") })}</Text>
+          <Group pt="var(--space-size)">
+            <Text>{`${t("globalRatio")}:`}</Text>
             <Text>{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
         )}
@@ -758,21 +755,10 @@ const NormalizedLine = ({
   values?: number | string | string[];
 }) => {
   const t = useScopedI18n("widget.downloads.items");
-  const tCommon = useScopedI18n("common");
-  const translatedKey = t(`${itemKey}.detailsTitle`);
-  const isLangRtl = tCommon("rtl", { value: "0", symbol: "1" }).startsWith("1"); //Maybe make a common "isLangRtl" somewhere
-  const keyString = tCommon("rtl", { value: translatedKey, symbol: tCommon("symbols.colon") });
   if (typeof values !== "number" && (values === undefined || values.length === 0)) return null;
   return (
-    <Group
-      w="100%"
-      display="flex"
-      style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}
-      align="top"
-      justify="space-between"
-      wrap="nowrap"
-    >
-      <Text>{keyString}</Text>
+    <Group w="100%" display="flex" align="top" justify="space-between" wrap="nowrap">
+      <Text>{`${t(`${itemKey}.detailsTitle`)}:`}</Text>
       {Array.isArray(values) ? (
         <Stack>
           {values.map((value) => (

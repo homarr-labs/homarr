@@ -51,10 +51,7 @@ export const Spotlight = () => {
       store={spotlightStore}
     >
       <MantineSpotlight.Search
-        placeholder={t("common.rtl", {
-          value: t("search.placeholder"),
-          symbol: "...",
-        })}
+        placeholder={`${t("search.placeholder")}...`}
         ref={inputRef}
         leftSectionWidth={activeMode.modeKey !== "help" ? 80 : 48}
         leftSection={
@@ -111,8 +108,11 @@ export const Spotlight = () => {
             }}
             setChildrenOptions={(options) => {
               setChildrenOptions(options);
-              setQuery("");
-              setTimeout(() => selectAction(0, spotlightStore));
+
+              setTimeout(() => {
+                setQuery("");
+                selectAction(0, spotlightStore);
+              });
             }}
             query={query}
             groups={activeMode.groups}

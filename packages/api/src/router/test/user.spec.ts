@@ -4,8 +4,21 @@ import type { Session } from "@homarr/auth";
 import { createId, eq, schema } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
+import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { userRouter } from "../user";
+
+const defaultOwnerId = createId();
+const createSession = (permissions: GroupPermissionKey[]) =>
+  ({
+    user: {
+      id: defaultOwnerId,
+      permissions,
+      colorScheme: "light",
+    },
+    expires: new Date().toISOString(),
+  }) satisfies Session;
+const defaultSession = createSession([]);
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", async () => {
@@ -212,14 +225,13 @@ describe("editProfile shoud update user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
 
-    const id = createId();
     const emailVerified = new Date(2024, 0, 5);
 
     await db.insert(schema.users).values({
-      id,
+      id: defaultOwnerId,
       name: "TEST 1",
       email: "abc@gmail.com",
       emailVerified,
@@ -227,17 +239,17 @@ describe("editProfile shoud update user", () => {
 
     // act
     await caller.editProfile({
-      id: id,
+      id: defaultOwnerId,
       name: "ABC",
       email: "",
     });
 
     // assert
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
-      id,
+      id: defaultOwnerId,
       name: "ABC",
       email: "abc@gmail.com",
       emailVerified,
@@ -255,13 +267,11 @@ describe("editProfile shoud update user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
 
-    const id = createId();
-
     await db.insert(schema.users).values({
-      id,
+      id: defaultOwnerId,
       name: "TEST 1",
       email: "abc@gmail.com",
       emailVerified: new Date(2024, 0, 5),
@@ -269,17 +279,17 @@ describe("editProfile shoud update user", () => {
 
     // act
     await caller.editProfile({
-      id,
+      id: defaultOwnerId,
       name: "ABC",
       email: "myNewEmail@gmail.com",
     });
 
     // assert
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, id));
+    const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
     expect(user[0]).toStrictEqual({
-      id,
+      id: defaultOwnerId,
       name: "ABC",
       email: "myNewEmail@gmail.com",
       emailVerified: null,
@@ -298,10 +308,8 @@ describe("delete should delete user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
-      session: null,
+      session: defaultSession,
     });
-
-    const userToDelete = createId();
 
     const initialUsers = [
       {
@@ -317,7 +325,7 @@ describe("delete should delete user", () => {
         colorScheme: "auto" as const,
       },
       {
-        id: userToDelete,
+        id: defaultOwnerId,
         name: "User 2",
         email: null,
         emailVerified: null,
@@ -343,7 +351,7 @@ describe("delete should delete user", () => {
 
     await db.insert(schema.users).values(initialUsers);
 
-    await caller.delete(userToDelete);
+    await caller.delete(defaultOwnerId);
 
     const usersInDb = await db.select().from(schema.users);
     expect(usersInDb).toStrictEqual([initialUsers[0], initialUsers[2]]);

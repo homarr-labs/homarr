@@ -12,6 +12,7 @@ import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { Analytics } from "~/components/layout/analytics";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
@@ -56,6 +57,8 @@ export const viewport: Viewport = {
 export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
   const session = await auth();
   const colorScheme = cookies().get("homarr-color-scheme")?.value ?? "light";
+  const tCommon = await getScopedI18n("common");
+  const direction = tCommon("direction");
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
@@ -70,7 +73,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
-    <html lang="en" data-mantine-color-scheme={colorScheme} suppressHydrationWarning>
+    <html lang="en" dir={direction} data-mantine-color-scheme={colorScheme} suppressHydrationWarning>
       <head>
         <Analytics />
         <SearchEngineOptimization />

@@ -9,6 +9,7 @@ import {
   IconMailForward,
   IconPlug,
   IconReport,
+  IconSearch,
   IconSettings,
   IconUsers,
   IconUsersGroup,
@@ -83,10 +84,16 @@ export const pagesSearchGroup = createGroup<{
         hidden: !session,
       },
       {
+        icon: IconSearch,
+        path: "/manage/search-engines",
+        name: t("manageSearchEngine.label"),
+        hidden: !session,
+      },
+      {
         icon: IconUsers,
         path: "/manage/users",
         name: t("manageUser.label"),
-        hidden: !session,
+        hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconMailForward,
@@ -98,7 +105,7 @@ export const pagesSearchGroup = createGroup<{
         icon: IconUsersGroup,
         path: "/manage/users/groups",
         name: t("manageGroup.label"),
-        hidden: !session,
+        hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconBrandDocker,
@@ -110,7 +117,7 @@ export const pagesSearchGroup = createGroup<{
         icon: IconPlug,
         path: "/manage/tools/api",
         name: t("manageApi.label"),
-        hidden: !session,
+        hidden: !session?.user.permissions.includes("admin"),
       },
       {
         icon: IconLogs,

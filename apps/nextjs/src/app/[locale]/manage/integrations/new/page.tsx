@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Container, Group, Stack, Title } from "@mantine/core";
 
+import { auth } from "@homarr/auth/next";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
@@ -18,6 +19,11 @@ interface NewIntegrationPageProps {
 }
 
 export default async function IntegrationsNewPage({ searchParams }: NewIntegrationPageProps) {
+  const session = await auth();
+  if (!session?.user.permissions.includes("integration-create")) {
+    notFound();
+  }
+
   const result = z.enum(integrationKinds).safeParse(searchParams.kind);
   if (!result.success) {
     notFound();

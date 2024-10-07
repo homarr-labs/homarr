@@ -9,6 +9,14 @@ import * as definitions from "@homarr/definitions";
 
 import { createSessionCallback, getCurrentUserPermissionsAsync } from "../callbacks";
 
+// This one is placed here because it's used in multiple tests and needs to be the same reference
+const setCookies = vi.fn();
+vi.mock("next/headers", () => ({
+  cookies: () => ({
+    set: setCookies,
+  }),
+}));
+
 describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
     // Arrange
