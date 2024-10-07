@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Calendar } from "@mantine/dates";
 import dayjs from "dayjs";
 
+import { clientApi } from "@homarr/api/client";
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import type { WidgetComponentProps } from "../definition";
@@ -15,6 +16,7 @@ export default function CalendarWidget({ isEditMode, serverData, options }: Widg
   const [month, setMonth] = useState(new Date());
   const params = useParams();
   const locale = params.locale as string;
+  const [firstDayOfWeek] = clientApi.user.getFirstDayOfWeekForUserOrDefault.useSuspenseQuery();
 
   return (
     <Calendar
@@ -25,6 +27,7 @@ export default function CalendarWidget({ isEditMode, serverData, options }: Widg
       hideWeekdays={false}
       date={month}
       maxLevel="month"
+      firstDayOfWeek={firstDayOfWeek}
       w="100%"
       h="100%"
       static={isEditMode}

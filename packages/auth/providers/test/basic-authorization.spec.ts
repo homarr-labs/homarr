@@ -25,7 +25,6 @@ describe("authorizeWithBasicCredentials", () => {
     const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "test",
       password: "test",
-      credentialType: "basic",
     });
 
     // Assert
@@ -47,7 +46,6 @@ describe("authorizeWithBasicCredentials", () => {
     const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "test",
       password: "wrong",
-      credentialType: "basic",
     });
 
     // Assert
@@ -69,7 +67,6 @@ describe("authorizeWithBasicCredentials", () => {
     const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "wrong",
       password: "test",
-      credentialType: "basic",
     });
 
     // Assert
@@ -88,7 +85,6 @@ describe("authorizeWithBasicCredentials", () => {
     const result = await authorizeWithBasicCredentialsAsync(db, {
       name: "test",
       password: "test",
-      credentialType: "basic",
     });
 
     // Assert
