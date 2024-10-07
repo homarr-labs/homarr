@@ -1010,6 +1010,11 @@ export default {
       option: {
         releaseType: {
           label: "Radarr release type",
+          options: {
+            inCinemas: "In cinemas",
+            digitalRelease: "Digital release",
+            physicalRelease: "Physical release",
+          },
         },
         filterPastMonths: {
           label: "Start from",

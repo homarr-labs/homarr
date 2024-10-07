@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { Calendar } from "@mantine/dates";
 import dayjs from "dayjs";
 
+import type { CalendarEvent } from "@homarr/integrations/types";
+
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
@@ -63,19 +65,18 @@ export default function CalendarWidget({ isEditMode, serverData, options }: Widg
           padding: 0,
         },
       }}
-      renderDay={(date) => {
-        const eventsForDate = (serverData?.initialData ?? []).filter((event) => {
-          const isSameDay = dayjs(event.date).isSame(date, "day");
-          const isTVShow = event.mediaInformation?.type === "tv";
-          const isMovie =
-            event.mediaInformation?.type === "movie" &&
-            event.releaseType &&
-            options.releaseType.includes(event.releaseType);
-
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-          return isSameDay && (isMovie || isTVShow);
-        });
-        return <CalendarDay date={date} events={eventsForDate} disabled={isEditMode} />;
+      renderDay={(tileDate) => {
+        const eventsForDate = (serverData?.initialData ?? [])
+          .map((event) => ({
+            ...event,
+            date: (
+              event.dates?.filter(({ type }) => options.releaseType.includes(type)).map(({ date }) => date) ?? [
+                event.date,
+              ]
+            ).find((date) => dayjs(date).isSame(tileDate, "day")),
+          }))
+          .filter((event): event is CalendarEvent => !!event.date);
+        return <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode} />;
       }}
     />
   );

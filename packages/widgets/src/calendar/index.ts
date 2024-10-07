@@ -1,6 +1,7 @@
 import { IconCalendar } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { radarrReleaseTypes } from "@homarr/integrations/types";
 import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";
@@ -10,8 +11,11 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
   icon: IconCalendar,
   options: optionsBuilder.from((factory) => ({
     releaseType: factory.multiSelect({
-      defaultValue: ["Cinemas", "Digital"],
-      options: ["Cinemas", "Digital", "Physical"],
+      defaultValue: ["inCinemas", "digitalRelease"],
+      options: radarrReleaseTypes.map((value) => ({
+        value,
+        label: (t) => t(`widget.calendar.option.releaseType.options.${value}`),
+      })),
     }),
     filterPastMonths: factory.number({
       validate: z.number().min(2).max(9999),
