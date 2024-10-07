@@ -6,7 +6,7 @@ import { byIdSchema } from "./common";
 import { zodEnumFromArray } from "./enums";
 
 const createSchema = z.object({
-  name: z.string().max(64),
+  name: z.string().trim().min(1).max(64),
 });
 
 const updateSchema = createSchema.merge(byIdSchema);
