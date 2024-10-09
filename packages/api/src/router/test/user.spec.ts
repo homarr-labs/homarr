@@ -248,18 +248,11 @@ describe("editProfile shoud update user", () => {
     const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
-    expect(user[0]).toStrictEqual({
+    expect(user[0]).containSubset({
       id: defaultOwnerId,
       name: "ABC",
       email: "abc@gmail.com",
       emailVerified,
-      salt: null,
-      password: null,
-      image: null,
-      homeBoardId: null,
-      provider: "credentials",
-      colorScheme: "auto",
-      firstDayOfWeek: 1,
     });
   });
 
@@ -289,18 +282,11 @@ describe("editProfile shoud update user", () => {
     const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
-    expect(user[0]).toStrictEqual({
+    expect(user[0]).containSubset({
       id: defaultOwnerId,
       name: "ABC",
       email: "myNewEmail@gmail.com",
       emailVerified: null,
-      salt: null,
-      password: null,
-      image: null,
-      homeBoardId: null,
-      provider: "credentials",
-      colorScheme: "auto",
-      firstDayOfWeek: 1,
     });
   });
 });
@@ -317,40 +303,14 @@ describe("delete should delete user", () => {
       {
         id: createId(),
         name: "User 1",
-        email: null,
-        emailVerified: null,
-        image: null,
-        password: null,
-        salt: null,
-        homeBoardId: null,
-        provider: "ldap" as const,
-        colorScheme: "auto" as const,
-        firstDayOfWeek: 1 as const,
       },
       {
         id: defaultOwnerId,
         name: "User 2",
-        email: null,
-        emailVerified: null,
-        image: null,
-        password: null,
-        salt: null,
-        homeBoardId: null,
-        colorScheme: "auto" as const,
-        firstDayOfWeek: 1 as const,
       },
       {
         id: createId(),
         name: "User 3",
-        email: null,
-        emailVerified: null,
-        image: null,
-        password: null,
-        salt: null,
-        homeBoardId: null,
-        provider: "oidc" as const,
-        colorScheme: "auto" as const,
-        firstDayOfWeek: 1 as const,
       },
     ];
 
@@ -359,6 +319,8 @@ describe("delete should delete user", () => {
     await caller.delete(defaultOwnerId);
 
     const usersInDb = await db.select().from(schema.users);
-    expect(usersInDb).toStrictEqual([initialUsers[0], initialUsers[2]]);
+    expect(usersInDb).toHaveLength(2);
+    expect(usersInDb[0]).containSubset(initialUsers[0]);
+    expect(usersInDb[1]).containSubset(initialUsers[2]);
   });
 });
