@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -32,9 +33,12 @@ export const PingIndicator = ({ href }: PingIndicatorProps) => {
     },
   );
 
+  const isError = "error" in pingResult || pingResult.statusCode >= 500;
+
   return (
     <PingDot
-      color={"error" in pingResult || pingResult.statusCode >= 500 ? "red" : "green"}
+      icon={isError ? IconX : IconCheck}
+      color={isError ? "red" : "green"}
       tooltip={"statusCode" in pingResult ? pingResult.statusCode.toString() : pingResult.error}
     />
   );

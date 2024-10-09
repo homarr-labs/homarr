@@ -1,23 +1,33 @@
 import type { MantineColor } from "@mantine/core";
 import { Box, Tooltip } from "@mantine/core";
 
+import { clientApi } from "@homarr/api/client";
+import type { TablerIcon } from "@homarr/ui";
+
 interface PingDotProps {
+  icon: TablerIcon;
   color: MantineColor;
   tooltip: string;
 }
 
-export const PingDot = ({ color, tooltip }: PingDotProps) => {
+export const PingDot = ({ color, tooltip, ...props }: PingDotProps) => {
+  const [pingIconsEnabled] = clientApi.user.getPingIconsEnabledOrDefault.useSuspenseQuery();
+
   return (
     <Box bottom="2.5cqmin" right="2.5cqmin" pos="absolute">
       <Tooltip label={tooltip}>
-        <Box
-          bg={color}
-          style={{
-            borderRadius: "100%",
-          }}
-          w="10cqmin"
-          h="10cqmin"
-        ></Box>
+        {pingIconsEnabled ? (
+          <props.icon style={{ width: "10cqmin", height: "10cqmin" }} color={color} />
+        ) : (
+          <Box
+            bg={color}
+            style={{
+              borderRadius: "100%",
+            }}
+            w="10cqmin"
+            h="10cqmin"
+          ></Box>
+        )}
       </Tooltip>
     </Box>
   );
