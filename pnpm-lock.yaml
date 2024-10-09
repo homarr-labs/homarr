@@ -553,8 +553,8 @@ importers:
   packages/auth:
     dependencies:
       '@auth/core':
-        specifier: ^0.36.0
-        version: 0.36.0
+        specifier: ^0.37.0
+        version: 0.37.0
       '@auth/drizzle-adapter':
         specifier: ^1.7.0
         version: 1.7.0
@@ -833,8 +833,8 @@ importers:
   packages/db:
     dependencies:
       '@auth/core':
-        specifier: ^0.36.0
-        version: 0.36.0
+        specifier: ^0.37.0
+        version: 0.37.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1708,20 +1708,6 @@ packages:
 
   '@auth/core@0.35.3':
     resolution: {integrity: sha512-g6qfiqU4OtyvIEZ8J7UoIwAxEnNnLJV0/f/DW41U+4G5nhBlaCrnKhawJIJpU0D3uavXLeDT3B0BkjtiimvMDA==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-
-  '@auth/core@0.36.0':
-    resolution: {integrity: sha512-tK+TEYHdM0nkW2uUxAZylpKk2nIf3jsAWzi920E5irxJlymihWzI8nQcz9McfmKux7lmtdpC6TiysayFP7sLYg==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -5498,9 +5484,6 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
 
-  jose@5.9.2:
-    resolution: {integrity: sha512-ILI2xx/I57b20sd7rHZvgiiQrmp2mcotwsAH+5ajbpFQbrYVQdNHYlQhoA5cFb78CgtBOxtC05TeA+mcgkuCqQ==}
-
   jose@5.9.3:
     resolution: {integrity: sha512-egLIoYSpcd+QUF+UHgobt5YzI2Pkw/H39ou9suW687MY6PmCwPmkNV/4TNjn1p2tX5xO3j0d0sq5hiYE24bSlg==}
 
@@ -6017,9 +6000,6 @@ packages:
 
   nwsapi@2.2.12:
     resolution: {integrity: sha512-qXDmcVlZV4XRtKFzddidpfVP4oMSGhga+xdMc25mv8kaLUHtgzCDhUxkrN8exkGdTlLNaXj7CV3GtON7zuGZ+w==}
-
-  oauth4webapi@2.15.0:
-    resolution: {integrity: sha512-6nZnlxj6M3LeVrxB7bgxwY8hq0B5Quemxhbw85evRlK70qCCUm9O1s47AepSmgYUbkwLTFedP1DZ1eBUIKyRSw==}
 
   oauth4webapi@2.17.0:
     resolution: {integrity: sha512-lbC0Z7uzAFNFyzEYRIC+pkSVvDHJTbEW+dYlSBAlCYDe6RxUkJ26bClhk8ocBZip1wfI9uKTe0fm4Ib4RHn6uQ==}
@@ -7892,16 +7872,6 @@ snapshots:
       '@panva/hkdf': 1.2.1
       '@types/cookie': 0.6.0
       cookie: 0.6.0
-      jose: 5.9.2
-      oauth4webapi: 2.15.0
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-
-  '@auth/core@0.36.0':
-    dependencies:
-      '@panva/hkdf': 1.2.1
-      '@types/cookie': 0.6.0
-      cookie: 0.7.1
       jose: 5.9.3
       oauth4webapi: 2.17.0
       preact: 10.11.3
@@ -12083,8 +12053,6 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jose@5.9.2: {}
-
   jose@5.9.3: {}
 
   jotai@2.10.0(@types/react@18.3.11)(react@18.3.1):
@@ -12597,8 +12565,6 @@ snapshots:
       set-blocking: 2.0.0
 
   nwsapi@2.2.12: {}
-
-  oauth4webapi@2.15.0: {}
 
   oauth4webapi@2.17.0: {}
 
