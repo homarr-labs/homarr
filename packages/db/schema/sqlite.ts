@@ -46,6 +46,7 @@ export const users = sqliteTable("user", {
   }),
   colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
   firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(

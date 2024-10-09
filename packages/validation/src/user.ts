@@ -108,6 +108,10 @@ const firstDayOfWeekSchema = z.object({
   firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
 });
 
+const pingIconsEnabledSchema = z.object({
+  pingIconsEnabled: z.boolean(),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   registration: registrationSchema,
@@ -121,4 +125,5 @@ export const userSchemas = {
   changePasswordApi: changePasswordApiSchema,
   changeColorScheme: changeColorSchemeSchema,
   firstDayOfWeek: firstDayOfWeekSchema,
+  pingIconsEnabled: pingIconsEnabledSchema,
 };

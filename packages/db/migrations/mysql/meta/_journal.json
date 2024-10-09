@@ -78,6 +78,13 @@
       "when": 1728142597094,
       "tag": "0010_melted_pestilence",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1728490046896,
+      "tag": "0011_freezing_banshee",
+      "breakpoints": true
     }
   ]
 }
