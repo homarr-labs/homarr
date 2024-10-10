@@ -28,7 +28,6 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     layout: createBoardLayout({
       headerActions: <BoardContentHeaderActions />,
       getInitialBoardAsync: getInitialBoard,
-      isBoardContentPage: true,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async () => {

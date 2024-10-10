@@ -27,30 +27,26 @@ import classes from "./component.module.css";
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
-  serverData,
   itemId,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const isQueryEnabled = Boolean(itemId);
-  const { data: requestStats, isError: _isError } = clientApi.widget.mediaRequests.getStats.useQuery(
+  const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
     {
       integrationIds,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       itemId: itemId!,
     },
     {
-      initialData: !serverData ? undefined : serverData.initialData,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      enabled: integrationIds.length > 0 && isQueryEnabled,
     },
   );
 
   const { width, height, ref } = useElementSize();
 
   const baseData = useMemo(
-    () => requestStats?.filter((group) => group != null).flatMap((group) => group.data) ?? [],
+    () => requestStats.filter((group) => group != null).flatMap((group) => group.data),
     [requestStats],
   );
 

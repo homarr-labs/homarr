@@ -4,7 +4,7 @@ import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, useServerDataFor } from "@homarr/widgets";
+import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 
 import type { Item } from "~/app/[locale]/boards/_types";
@@ -53,15 +53,12 @@ interface InnerContentProps {
 const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
-  const serverData = useServerDataFor(item.id);
   const Comp = loadWidgetDynamic(item.kind);
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
   const newItem = { ...item, options };
   const { updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
     updateItemOptions({ itemId: item.id, newOptions });
-
-  if (!serverData?.isReady) return null;
 
   return (
     <QueryErrorResetBoundary>
@@ -79,8 +76,6 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           <Comp
             options={options as never}
             integrationIds={item.integrationIds}
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            serverData={serverData?.data as never}
             isEditMode={isEditMode}
             boardId={board.id}
             itemId={item.id}

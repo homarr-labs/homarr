@@ -5,7 +5,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
-export const { componentLoader, definition, serverDataLoader } = createWidgetDefinition("mediaRequests-requestList", {
+export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestList", {
   icon: IconZoomQuestion,
   options: optionsBuilder.from((factory) => ({
     linksTargetNewTab: factory.switch({
@@ -13,6 +13,4 @@ export const { componentLoader, definition, serverDataLoader } = createWidgetDef
     }),
   })),
   supportedIntegrations: getIntegrationKindsByCategory("mediaRequest"),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

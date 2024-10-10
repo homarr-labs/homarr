@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
 import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
@@ -20,12 +20,20 @@ import { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 
-export default function DnsHoleSummaryWidget({
-  options,
-  integrationIds,
-  serverData,
-}: WidgetComponentProps<typeof widgetKind>) {
-  const [summaries, setSummaries] = useState(serverData?.initialData ?? []);
+export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
+  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+    {
+      widgetKind,
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
+  );
+  const utils = clientApi.useUtils();
 
   const t = useI18n();
 
@@ -36,8 +44,21 @@ export default function DnsHoleSummaryWidget({
     },
     {
       onData: (data) => {
-        setSummaries((prevSummaries) =>
-          prevSummaries.map((summary) => (summary.integration.id === data.integration.id ? data : summary)),
+        utils.widget.dnsHole.summary.setData(
+          {
+            widgetKind,
+            integrationIds,
+          },
+          (prevData) => {
+            if (!prevData) {
+              return undefined;
+            }
+
+            const newData = prevData.map((item) =>
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+            );
+            return newData;
+          },
         );
       },
     },
@@ -46,17 +67,10 @@ export default function DnsHoleSummaryWidget({
   const data = useMemo(
     () =>
       summaries
-        .filter(
-          (
-            pair,
-          ): pair is {
-            integration: typeof pair.integration;
-            timestamp: typeof pair.timestamp;
-            summary: DnsHoleSummary;
-          } => pair.summary !== null && Math.abs(dayjs(pair.timestamp).diff()) < 30000,
-        )
-        .flatMap(({ summary }) => summary),
-    [summaries, serverData],
+        .filter((pair) => Math.abs(dayjs(pair.timestamp).diff()) < 30000)
+        .flatMap(({ summary }) => summary)
+        .filter((summary) => summary !== null),
+    [summaries],
   );
 
   if (integrationIds.length === 0) {

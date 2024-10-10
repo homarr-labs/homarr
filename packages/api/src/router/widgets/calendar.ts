@@ -9,11 +9,12 @@ export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
     .unstable_concat(createManyIntegrationOfOneItemMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .query(async ({ ctx }) => {
-      return await Promise.all(
+      const result = await Promise.all(
         ctx.integrations.flatMap(async (integration) => {
           const cache = createItemAndIntegrationChannel<CalendarEvent[]>("calendar", integration.id);
           return await cache.getAsync();
         }),
       );
+      return result.filter((item) => item !== null).flatMap((item) => item.data);
     }),
 });

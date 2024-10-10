@@ -30,8 +30,6 @@ export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
 export type { WidgetDefinition } from "./definition";
 export { WidgetEditModal } from "./modals/widget-edit-modal";
-export { useServerDataFor } from "./server/provider";
-export { GlobalItemServerDataRunner } from "./server/runner";
 export type { WidgetComponentProps };
 
 export const widgetImports = {
