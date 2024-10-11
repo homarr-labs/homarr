@@ -2,6 +2,7 @@ import { Box, Card } from "@mantine/core";
 
 import type { DynamicSection } from "~/app/[locale]/boards/_types";
 import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
+import { DynamicSectionProvider } from "./dynamic/dynamic-context";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";
 import { GridStack } from "./gridstack/gridstack";
 import classes from "./item.module.css";
@@ -27,7 +28,9 @@ export const BoardDynamicSection = ({ section }: Props) => {
         }}
         p={0}
       >
-        <GridStack section={section} className="min-row" />
+        <DynamicSectionProvider section={section}>
+          <GridStack section={section} className="min-row" />
+        </DynamicSectionProvider>
       </Card>
       <BoardDynamicSectionMenu section={section} />
     </Box>
