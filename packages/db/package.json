@@ -9,7 +9,8 @@
     "./client": "./client.ts",
     "./schema/sqlite": "./schema/sqlite.ts",
     "./test": "./test/index.ts",
-    "./queries": "./queries/index.ts"
+    "./queries": "./queries/index.ts",
+    "./validationSchemas/*": "./validationSchemas/*.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
@@ -41,6 +42,7 @@
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.25.0",
     "drizzle-orm": "^0.34.1",
+    "drizzle-zod": "^0.5.1",
     "mysql2": "3.11.3"
   },
   "devDependencies": {

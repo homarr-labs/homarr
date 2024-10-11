@@ -11,7 +11,9 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const serverSettingsRouter = createTRPCRouter({
   // this must be public so anonymous users also get analytics
-  getAnalytics: publicProcedure.query(async ({ ctx }) => {
+  getAnalytics: publicProcedure
+    .input(z.undefined())
+    .query(async ({ ctx }) => {
     const setting = await ctx.db.query.serverSettings.findFirst({
       where: eq(serverSettings.settingKey, "analytics"),
     });
@@ -30,7 +32,8 @@ export const serverSettingsRouter = createTRPCRouter({
 
     return SuperJSON.parse<(typeof defaultServerSettings)["analytics"]>(setting.value);
   }),
-  getAll: protectedProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure
+    .query(async ({ ctx }) => {
     const settings = await ctx.db.query.serverSettings.findMany();
 
     const data = {} as ServerSettings;
