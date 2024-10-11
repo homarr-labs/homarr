@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { DayOfWeek } from "@mantine/dates";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
@@ -20,6 +21,17 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 
+export const apiKeys = sqliteTable("apiKey", {
+  id: text("id").notNull().primaryKey(),
+  apiKey: text("apiKey").notNull(),
+  salt: text("salt").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references((): AnySQLiteColumn => users.id, {
+      onDelete: "cascade",
+    }),
+});
+
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -33,6 +45,7 @@ export const users = sqliteTable("user", {
     onDelete: "set null",
   }),
   colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
+  firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
 });
 
 export const accounts = sqliteTable(
@@ -342,6 +355,13 @@ export const serverSettings = sqliteTable("serverSetting", {
   settingKey: text("key").notNull().unique().primaryKey(),
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
 
 export const searchEngines = sqliteTable("search_engine", {
   id: text("id").notNull().primaryKey(),

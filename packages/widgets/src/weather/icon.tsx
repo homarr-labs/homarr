@@ -62,18 +62,8 @@ export const WeatherDescription = ({ weatherOnly, time, weatherCode, maxTemp, mi
     <Stack align="center" gap="0">
       <Text fz="24px">{dayjs(time).format("dddd MMMM D YYYY")}</Text>
       <Text fz="16px">{t(`kind.${name}`)}</Text>
-      <Text fz="16px">
-        {tCommon("rtl", {
-          value: tCommon("information.max"),
-          symbol: tCommon("symbols.colon"),
-        }) + maxTemp}
-      </Text>
-      <Text fz="16px">
-        {tCommon("rtl", {
-          value: tCommon("information.min"),
-          symbol: tCommon("symbols.colon"),
-        }) + minTemp}
-      </Text>
+      <Text fz="16px">{`${tCommon("information.max")}: ${maxTemp}`}</Text>
+      <Text fz="16px">{`${tCommon("information.min")}: ${minTemp}`}</Text>
     </Stack>
   );
 };

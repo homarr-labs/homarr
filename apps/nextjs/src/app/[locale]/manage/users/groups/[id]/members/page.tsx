@@ -48,13 +48,7 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
       )}
 
       <Group justify="space-between">
-        <SearchInput
-          placeholder={t("common.rtl", {
-            value: tMembers("search"),
-            symbol: "...",
-          })}
-          defaultValue={searchParams.search}
-        />
+        <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
         {isProviderEnabled("credentials") && (
           <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
         )}

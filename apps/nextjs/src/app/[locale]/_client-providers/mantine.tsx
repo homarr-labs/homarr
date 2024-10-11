@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { createTheme, isMantineColorScheme, MantineProvider } from "@mantine/core";
+import { createTheme, DirectionProvider, isMantineColorScheme, MantineProvider } from "@mantine/core";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
@@ -14,16 +14,18 @@ export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
   const manager = useColorSchemeManager();
 
   return (
-    <MantineProvider
-      defaultColorScheme="auto"
-      colorSchemeManager={manager}
-      theme={createTheme({
-        primaryColor: "red",
-        autoContrast: true,
-      })}
-    >
-      {children}
-    </MantineProvider>
+    <DirectionProvider>
+      <MantineProvider
+        defaultColorScheme="auto"
+        colorSchemeManager={manager}
+        theme={createTheme({
+          primaryColor: "red",
+          autoContrast: true,
+        })}
+      >
+        {children}
+      </MantineProvider>
+    </DirectionProvider>
   );
 };
 

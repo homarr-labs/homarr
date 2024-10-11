@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Anchor, Group, Stack, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Title } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination, UserAvatarGroup } from "@homarr/ui";
 import { z } from "@homarr/validation";
@@ -26,6 +28,12 @@ interface GroupsListPageProps {
 }
 
 export default async function GroupsListPage(props: GroupsListPageProps) {
+  const session = await auth();
+
+  if (!session?.user.permissions.includes("admin")) {
+    return notFound();
+  }
+
   const t = await getI18n();
   const searchParams = searchParamsSchema.parse(props.searchParams);
   const { items: groups, totalCount } = await api.group.getPaginated(searchParams);
@@ -36,13 +44,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
       <Stack>
         <Title>{t("group.title")}</Title>
         <Group justify="space-between">
-          <SearchInput
-            placeholder={t("common.rtl", {
-              value: t("group.search"),
-              symbol: "...",
-            })}
-            defaultValue={searchParams.search}
-          />
+          <SearchInput placeholder={`${t("group.search")}...`} defaultValue={searchParams.search} />
           <AddGroup />
         </Group>
         <Table striped highlightOnHover>
