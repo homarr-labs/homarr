@@ -92,7 +92,7 @@ export const Spotlight = () => {
 
       {childrenOptions ? (
         <Group>
-          <childrenOptions.detailComponent options={childrenOptions.option as never} />
+          <childrenOptions.DetailComponent options={childrenOptions.option as never} />
         </Group>
       ) : null}
 

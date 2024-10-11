@@ -23,7 +23,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
     const actions: (ChildrenAction<Board> & { hidden?: boolean })[] = [
       {
         key: "open",
-        component: () => {
+        Component: () => {
           const t = useI18n();
 
           return (
@@ -37,7 +37,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
       },
       {
         key: "homeBoard",
-        component: () => {
+        Component: () => {
           const t = useI18n();
 
           return (
@@ -61,7 +61,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
       },
       {
         key: "settings",
-        component: () => {
+        Component: () => {
           const t = useI18n();
 
           return (
@@ -78,7 +78,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
 
     return actions;
   },
-  detailComponent: ({ options: board }) => {
+  DetailComponent: ({ options: board }) => {
     const t = useI18n();
 
     return (
@@ -102,7 +102,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
 export const boardsSearchGroup = createGroup<Board>({
   keyPath: "id",
   title: "Boards",
-  component: (board) => (
+  Component: (board) => (
     <Group px="md" py="sm">
       {board.logoImageUrl ? (
         <img src={board.logoImageUrl} alt={board.name} width={24} height={24} />

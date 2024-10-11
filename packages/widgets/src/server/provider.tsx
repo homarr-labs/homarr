@@ -70,5 +70,5 @@ export const useServerDataInitializer = (id: string, serverData: Record<string, 
 
   useEffect(() => {
     context.setItemServerData(id, serverData);
-  }, []);
+  }, [context, id, serverData]);
 };

@@ -46,7 +46,7 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
       form.clearFieldError(`options.${property}.latitude`);
       form.clearFieldError(`options.${property}.longitude`);
     },
-    [handleChange],
+    [form, handleChange, property],
   );
 
   const onSearch = useCallback(() => {

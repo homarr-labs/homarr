@@ -56,7 +56,7 @@ export default function DnsHoleSummaryWidget({
           } => pair.summary !== null && Math.abs(dayjs(pair.timestamp).diff()) < 30000,
         )
         .flatMap(({ summary }) => summary),
-    [summaries, serverData],
+    [summaries],
   );
 
   if (integrationIds.length === 0) {

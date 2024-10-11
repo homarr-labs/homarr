@@ -30,7 +30,7 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
       )
       .map(({ localeKey, attributes }) => ({
         key: localeKey,
-        component() {
+        Component() {
           return (
             <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
               <Group wrap="nowrap">
@@ -53,7 +53,7 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
         },
       }));
   },
-  detailComponent: () => {
+  DetailComponent: () => {
     const t = useI18n();
 
     return (
