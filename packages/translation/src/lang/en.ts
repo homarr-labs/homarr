@@ -106,6 +106,16 @@ export default {
           },
         },
       },
+      changeFirstDayOfWeek: {
+        notification: {
+          success: {
+            message: "First day of week changed successfully",
+          },
+          error: {
+            message: "Unable to change first day of week",
+          },
+        },
+      },
       manageAvatar: {
         changeImage: {
           label: "Change image",
@@ -527,10 +537,8 @@ export default {
     },
   },
   common: {
-    rtl: "{value}{symbol}",
-    symbols: {
-      colon: ": ",
-    },
+    // Either "ltr" or "rtl"
+    direction: "ltr",
     beta: "Beta",
     error: "Error",
     action: {
@@ -1629,12 +1637,12 @@ export default {
     page: {
       home: {
         statistic: {
-          countBoards: "Boards",
-          createUser: "Create new user",
-          createInvite: "Create new invite",
-          addIntegration: "Create integration",
-          addApp: "Add app",
-          manageRoles: "Manage roles",
+          board: "Boards",
+          user: "Users",
+          invite: "Invites",
+          integration: "Integrations",
+          app: "Apps",
+          group: "Groups",
         },
         statisticLabel: {
           boards: "Boards",
@@ -1694,6 +1702,7 @@ export default {
             item: {
               language: "Language & Region",
               board: "Home board",
+              firstDayOfWeek: "First day of the week",
             },
           },
           security: {
@@ -1884,6 +1893,35 @@ export default {
             },
             dnsHole: {
               label: "DNS Hole Data",
+            },
+          },
+        },
+        api: {
+          title: "API",
+          modal: {
+            createApiToken: {
+              title: "API token created",
+              description:
+                "API token was created. Be careful, this token is encrypted in the database and will never be transferred again to you. If you loose this token, you'll no longer be able to retrieve this specific token.",
+              button: "Copy and close",
+            },
+          },
+          tab: {
+            documentation: {
+              label: "Documentation",
+            },
+            apiKey: {
+              label: "Authentication",
+              title: "API Keys",
+              button: {
+                createApiToken: "Create API token",
+              },
+              table: {
+                header: {
+                  id: "ID",
+                  createdBy: "Created by",
+                },
+              },
             },
           },
         },

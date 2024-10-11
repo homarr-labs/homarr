@@ -1,8 +1,8 @@
 import { CredentialsSignin } from "@auth/core/errors";
 
 import type { Database, InferInsertModel } from "@homarr/db";
-import { and, createId, eq, inArray } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema/sqlite";
+import { and, createId, eq } from "@homarr/db";
+import { users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
@@ -99,18 +99,6 @@ export const authorizeWithLdapCredentialsAsync = async (
       emailVerified: true,
       provider: true,
     },
-    with: {
-      groups: {
-        with: {
-          group: {
-            columns: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-    },
     where: and(eq(users.email, mailResult.data), eq(users.provider, "ldap")),
   });
 
@@ -128,79 +116,16 @@ export const authorizeWithLdapCredentialsAsync = async (
 
     await db.insert(users).values(insertUser);
 
-    user = {
-      ...insertUser,
-      groups: [],
-    };
+    user = insertUser;
 
     logger.info(`User ${credentials.name} created successfully.`);
   }
 
-  if (user.name !== credentials.name) {
-    logger.warn(`User ${credentials.name} found in the database but with different name. Updating...`);
-
-    user.name = credentials.name;
-
-    await db.update(users).set({ name: user.name }).where(eq(users.id, user.id));
-
-    logger.info(`User ${credentials.name} updated successfully.`);
-  }
-
-  const ldapGroupsUserIsNotIn = userGroups.filter(
-    (group) => !user.groups.some((userGroup) => userGroup.group.name === group),
-  );
-
-  if (ldapGroupsUserIsNotIn.length > 0) {
-    logger.debug(
-      `Homarr does not have the user in certain groups. user=${user.name} count=${ldapGroupsUserIsNotIn.length}`,
-    );
-
-    const groupIds = await db.query.groups.findMany({
-      columns: {
-        id: true,
-      },
-      where: inArray(groups.name, ldapGroupsUserIsNotIn),
-    });
-
-    logger.debug(`Homarr has found groups in the database user is not in. user=${user.name} count=${groupIds.length}`);
-
-    if (groupIds.length > 0) {
-      await db.insert(groupMembers).values(
-        groupIds.map((group) => ({
-          userId: user.id,
-          groupId: group.id,
-        })),
-      );
-
-      logger.info(`Added user to groups successfully. user=${user.name} count=${groupIds.length}`);
-    } else {
-      logger.debug(`User is already in all groups of Homarr. user=${user.name}`);
-    }
-  }
-
-  const homarrGroupsUserIsNotIn = user.groups.filter((userGroup) => !userGroups.includes(userGroup.group.name));
-
-  if (homarrGroupsUserIsNotIn.length > 0) {
-    logger.debug(
-      `Homarr has the user in certain groups that LDAP does not have. user=${user.name} count=${homarrGroupsUserIsNotIn.length}`,
-    );
-
-    await db.delete(groupMembers).where(
-      and(
-        eq(groupMembers.userId, user.id),
-        inArray(
-          groupMembers.groupId,
-          homarrGroupsUserIsNotIn.map(({ groupId }) => groupId),
-        ),
-      ),
-    );
-
-    logger.info(`Removed user from groups successfully. user=${user.name} count=${homarrGroupsUserIsNotIn.length}`);
-  }
-
   return {
     id: user.id,
-    name: user.name,
+    name: credentials.name,
+    // Groups is used in events.ts to synchronize groups with external systems
+    groups: userGroups,
   };
 };
 

@@ -1,3 +1,4 @@
+import type { DayOfWeek } from "@mantine/dates";
 import { z } from "zod";
 
 import { colorSchemes } from "@homarr/definitions";
@@ -56,7 +57,6 @@ const initUserSchema = createUserSchema;
 const signInSchema = z.object({
   name: z.string().min(1),
   password: z.string().min(1),
-  credentialType: z.enum(["basic", "ldap"]),
 });
 
 const registrationSchema = z
@@ -104,6 +104,10 @@ const changeColorSchemeSchema = z.object({
   colorScheme: zodEnumFromArray(colorSchemes),
 });
 
+const firstDayOfWeekSchema = z.object({
+  firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   registration: registrationSchema,
@@ -116,4 +120,5 @@ export const userSchemas = {
   changeHomeBoard: changeHomeBoardSchema,
   changePasswordApi: changePasswordApiSchema,
   changeColorScheme: changeColorSchemeSchema,
+  firstDayOfWeek: firstDayOfWeekSchema,
 };

@@ -31,7 +31,6 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
   const searchParams = searchParamsSchema.parse(props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
 
-  const t = await getI18n();
   const tEngine = await getScopedI18n("search.engine");
 
   return (
@@ -40,13 +39,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
       <Stack>
         <Title>{tEngine("page.list.title")}</Title>
         <Group justify="space-between" align="center">
-          <SearchInput
-            placeholder={t("common.rtl", {
-              value: tEngine("search"),
-              symbol: "...",
-            })}
-            defaultValue={searchParams.search}
-          />
+          <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} />
           <MobileAffixButton component={Link} href="/manage/search-engines/new">
             {tEngine("page.create.title")}
           </MobileAffixButton>
