@@ -70,7 +70,7 @@
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
     "react-simple-code-editor": "^0.14.1",
-    "sass": "^1.79.4",
+    "sass": "^1.79.5",
     "superjson": "2.2.1",
     "swagger-ui-react": "^5.17.14",
     "use-deep-compare-effect": "^1.8.1"
