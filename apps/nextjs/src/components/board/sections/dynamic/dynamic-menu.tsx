@@ -1,5 +1,6 @@
-import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
+import type { ReactNode } from "react";
+import { Menu } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -8,7 +9,13 @@ import type { DynamicSection } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useDynamicSectionActions } from "./dynamic-actions";
 
-export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }) => {
+interface Props {
+  section: DynamicSection;
+  withinPortal?: boolean;
+  target: ReactNode;
+}
+
+export const BoardDynamicSectionMenu = ({ withinPortal, section, target }: Props) => {
   const t = useI18n();
   const tDynamic = useScopedI18n("section.dynamic");
   const { removeDynamicSection } = useDynamicSectionActions();
@@ -28,12 +35,8 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
   };
 
   return (
-    <Menu withinPortal withArrow position="right-start" arrowPosition="center">
-      <Menu.Target>
-        <ActionIcon variant="default" radius={"xl"} pos="absolute" top={4} right={4} style={{ zIndex: 10 }}>
-          <IconDotsVertical size={"1rem"} />
-        </ActionIcon>
-      </Menu.Target>
+    <Menu withinPortal={withinPortal} withArrow position="right-start" arrowPosition="center">
+      <Menu.Target>{target}</Menu.Target>
       <Menu.Dropdown miw={128}>
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>

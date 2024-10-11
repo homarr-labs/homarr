@@ -1,4 +1,5 @@
-import { Box, Card } from "@mantine/core";
+import { ActionIcon, Box, Card } from "@mantine/core";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 import type { DynamicSection } from "~/app/[locale]/boards/_types";
 import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
@@ -32,7 +33,15 @@ export const BoardDynamicSection = ({ section }: Props) => {
           <GridStack section={section} className="min-row" />
         </DynamicSectionProvider>
       </Card>
-      <BoardDynamicSectionMenu section={section} />
+      <BoardDynamicSectionMenu
+        section={section}
+        withinPortal
+        target={
+          <ActionIcon variant="default" radius="xl" pos="absolute" top={4} right={4} style={{ zIndex: 10 }}>
+            <IconDotsVertical size="1rem" />
+          </ActionIcon>
+        }
+      />
     </Box>
   );
 };
