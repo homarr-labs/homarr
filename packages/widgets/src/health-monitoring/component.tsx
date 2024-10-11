@@ -17,7 +17,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useElementSize, useListState } from "@mantine/hooks";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
 import {
   IconBrain,
   IconClock,
@@ -30,19 +30,27 @@ import {
   IconVersions,
 } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
 
-export default function HealthMonitoringWidget({
-  options,
-  integrationIds,
-  serverData,
-}: WidgetComponentProps<"healthMonitoring">) {
+export default function HealthMonitoringWidget({ options, integrationIds }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
-  const [healthData] = useListState(serverData?.initialData ?? []);
+  const [healthData] = clientApi.widget.healthMonitoring.getHealthStatus.useSuspenseQuery(
+    {
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select: (data) => data.filter((health) => health !== null),
+    },
+  );
   const [opened, { open, close }] = useDisclosure(false);
 
   if (integrationIds.length === 0) {

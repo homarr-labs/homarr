@@ -31,7 +31,7 @@ const columnsSort = columnsList.filter((column) =>
   sortingExclusion.some((exclusion) => exclusion !== column),
 ) as Exclude<typeof columnsList, (typeof sortingExclusion)[number]>;
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("downloads", {
+export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
   options: optionsBuilder.from(
     (factory) => ({
@@ -105,6 +105,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
     },
   ),
   supportedIntegrations: getIntegrationKindsByCategory("downloadClient"),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

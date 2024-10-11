@@ -151,6 +151,68 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
 };
 
 /**
+ * Creates a middleware that provides the integrations in the context that are of the specified kinds and have the specified item
+ * It also ensures that the user has permission to perform the specified action on the integrations
+ * @param action query for showing data or interact for mutating data
+ * @param kinds kinds of integrations that are supported
+ * @returns middleware that can be used with trpc
+ * @example publicProcedure.unstable_concat(createManyIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
+ * @throws TRPCError NOT_FOUND if the integration was not found
+ * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
+ */
+export const createManyIntegrationMiddleware2 = <TKind extends IntegrationKind>(
+  action: IntegrationAction,
+  ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
+) => {
+  return publicProcedure
+    .input(z.object({ integrationIds: z.array(z.string()).min(1) }))
+    .use(async ({ ctx, input, next }) => {
+      const dbIntegrations = await ctx.db.query.integrations.findMany({
+        where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
+        with: {
+          secrets: true,
+          items: {
+            with: {
+              item: {
+                with: {
+                  section: {
+                    columns: {
+                      boardId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          userPermissions: true,
+          groupPermissions: true,
+        },
+      });
+
+      const offset = input.integrationIds.length - dbIntegrations.length;
+      if (offset !== 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}: ([${input.integrationIds.join(",")}] compared to [${dbIntegrations.join(",")}])`,
+        });
+      }
+
+      await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
+
+      return next({
+        ctx: {
+          integrations: dbIntegrations.map(
+            ({ kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
+              ...rest,
+              kind: kind as TKind,
+            }),
+          ),
+        },
+      });
+    });
+};
+
+/**
  * Creates a middleware that provides the integrations and their items in the context that are of the specified kinds and have the specified item
  * It also ensures that the user has permission to perform the specified action on the integrations
  * @param action query for showing data or interact for mutating data

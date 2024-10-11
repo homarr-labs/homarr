@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 import { Avatar, Box, Group, Text } from "@mantine/core";
-import { useListState } from "@mantine/hooks";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -12,14 +11,19 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function MediaServerWidget({
-  serverData,
-  integrationIds,
-  isEditMode,
-}: WidgetComponentProps<"mediaServer">) {
-  const [currentStreams, currentStreamsHandlers] = useListState<{ integrationId: string; sessions: StreamSession[] }>(
-    serverData?.initialData ?? [],
+export default function MediaServerWidget({ integrationIds, isEditMode }: WidgetComponentProps<"mediaServer">) {
+  const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
+    {
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
   );
+  const utils = clientApi.useUtils();
+
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
     () => [
       {
@@ -62,15 +66,17 @@ export default function MediaServerWidget({
     {
       enabled: !isEditMode,
       onData(data) {
-        currentStreamsHandlers.applyWhere(
-          (pair) => pair.integrationId === data.integrationId,
-          (pair) => {
-            return {
-              ...pair,
-              sessions: data.data,
-            };
-          },
-        );
+        utils.widget.mediaServer.getCurrentStreams.setData({ integrationIds }, (previousData) => {
+          return previousData?.map((pair) => {
+            if (pair.integrationId === data.integrationId) {
+              return {
+                ...pair,
+                sessions: data.data,
+              };
+            }
+            return pair;
+          });
+        });
       },
     },
   );

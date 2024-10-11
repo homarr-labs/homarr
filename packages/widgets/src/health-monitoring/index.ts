@@ -3,7 +3,7 @@ import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("healthMonitoring", {
+export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
   options: optionsBuilder.from((factory) => ({
     fahrenheit: factory.switch({
@@ -26,6 +26,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       message: (t) => t("widget.healthMonitoring.error.internalServerError"),
     },
   },
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));
