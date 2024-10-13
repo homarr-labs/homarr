@@ -6,12 +6,18 @@ import { Calendar } from "@mantine/dates";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
+import type { CalendarEvent } from "@homarr/integrations/types";
 
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 
-export default function CalendarWidget({ isEditMode, integrationIds, itemId }: WidgetComponentProps<"calendar">) {
+export default function CalendarWidget({
+  isEditMode,
+  integrationIds,
+  itemId,
+  options,
+}: WidgetComponentProps<"calendar">) {
   const [events] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(
     {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -80,9 +86,16 @@ export default function CalendarWidget({ isEditMode, integrationIds, itemId }: W
           padding: 0,
         },
       }}
-      renderDay={(date) => {
-        const eventsForDate = (serverData?.initialData ?? []).filter((event) => dayjs(event.date).isSame(date, "day"));
-        return <CalendarDay date={date} events={eventsForDate} disabled={isEditMode} />;
+      renderDay={(tileDate) => {
+        const eventsForDate = events
+          .map((event) => ({
+            ...event,
+            date: (event.dates?.filter(({ type }) => options.releaseType.includes(type)) ?? [event]).find(({ date }) =>
+              dayjs(date).isSame(tileDate, "day"),
+            )?.date,
+          }))
+          .filter((event): event is CalendarEvent => Boolean(event.date));
+        return <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode} />;
       }}
     />
   );

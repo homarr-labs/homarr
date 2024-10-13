@@ -74,7 +74,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                 ) : (
                   <Group gap={3} wrap="nowrap">
                     <IconClock opacity={0.7} size={"1rem"} />
-                    <Text c={"dimmed"}>{dayjs(event.date.toString()).format("HH:mm")}</Text>
+                    <Text c={"dimmed"}>{dayjs(event.date).format("HH:mm")}</Text>
                   </Group>
                 )}
               </Group>

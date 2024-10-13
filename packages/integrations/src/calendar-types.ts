@@ -1,11 +1,11 @@
 export const radarrReleaseTypes = ["inCinemas", "digitalRelease", "physicalRelease"] as const;
-type ReleaseTypes = (typeof radarrReleaseTypes)[number];
+type ReleaseType = (typeof radarrReleaseTypes)[number];
 
 export interface CalendarEvent {
   name: string;
   subName: string;
   date: Date;
-  dates?: { type: ReleaseTypes; date: Date }[];
+  dates?: { type: ReleaseType; date: Date }[];
   description?: string;
   thumbnail?: string;
   mediaInformation?: {
