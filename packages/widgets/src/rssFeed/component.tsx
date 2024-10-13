@@ -3,15 +3,29 @@ import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import { clientApi } from "@homarr/api/client";
+
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
-export default function RssFeed({ serverData, options }: WidgetComponentProps<"rssFeed">) {
-  if (serverData?.initialData === undefined) {
-    return null;
-  }
+export default function RssFeed({ options, itemId }: WidgetComponentProps<"rssFeed">) {
+  const [rssFeeds] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(
+    {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      itemId: itemId!,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select(data) {
+        return data?.data ?? [];
+      },
+    },
+  );
 
-  const entries = serverData.initialData
+  const entries = rssFeeds
     .filter((feedGroup) => feedGroup.feed.entries !== undefined)
     .flatMap((feedGroup) => feedGroup.feed.entries)
     .filter((entry) => entry !== undefined)

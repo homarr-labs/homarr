@@ -209,6 +209,7 @@ export const userRouter = createTRPCRouter({
         provider: true,
         homeBoardId: true,
         firstDayOfWeek: true,
+        pingIconsEnabled: true,
       },
       where: eq(users.id, input.userId),
     });
@@ -376,6 +377,39 @@ export const userRouter = createTRPCRouter({
       })
       .where(eq(users.id, ctx.session.user.id));
   }),
+  getPingIconsEnabledOrDefault: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.session?.user) {
+      return false;
+    }
+
+    const user = await ctx.db.query.users.findFirst({
+      columns: {
+        id: true,
+        pingIconsEnabled: true,
+      },
+      where: eq(users.id, ctx.session.user.id),
+    });
+
+    return user?.pingIconsEnabled ?? false;
+  }),
+  changePingIconsEnabled: protectedProcedure
+    .input(validation.user.pingIconsEnabled.and(validation.common.byId))
+    .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users ping icons enabled
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          pingIconsEnabled: input.pingIconsEnabled,
+        })
+        .where(eq(users.id, ctx.session.user.id));
+    }),
   getFirstDayOfWeekForUserOrDefault: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.session?.user) {
       return 1 as const;
@@ -394,7 +428,7 @@ export const userRouter = createTRPCRouter({
   changeFirstDayOfWeek: protectedProcedure
     .input(validation.user.firstDayOfWeek.and(validation.common.byId))
     .mutation(async ({ input, ctx }) => {
-      // Only admins can change other users' passwords
+      // Only admins can change other users first day of week
       if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
         throw new TRPCError({
           code: "NOT_FOUND",

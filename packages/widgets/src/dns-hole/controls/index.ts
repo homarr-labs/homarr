@@ -7,7 +7,7 @@ import { optionsBuilder } from "../../options";
 
 export const widgetKind = "dnsHoleControls";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition(widgetKind, {
+export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconDeviceGamepad,
   options: optionsBuilder.from((factory) => ({
     showToggleAllButtons: factory.switch({
@@ -21,6 +21,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       message: (t) => t("widget.dnsHoleControls.error.internalServerError"),
     },
   },
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));
