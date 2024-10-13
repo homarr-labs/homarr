@@ -123,7 +123,7 @@ importers:
         version: link:../../packages/widgets
       '@mantine/colors-generator':
         specifier: ^7.13.2
-        version: 7.13.2(chroma-js@3.1.1)
+        version: 7.13.2(chroma-js@3.1.2)
       '@mantine/core':
         specifier: ^7.13.2
         version: 7.13.2(@mantine/hooks@7.13.2(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -176,8 +176,8 @@ importers:
         specifier: ^5.5.0
         version: 5.5.0
       chroma-js:
-        specifier: ^3.1.1
-        version: 3.1.1
+        specifier: ^3.1.2
+        version: 3.1.2
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -4119,8 +4119,8 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
 
-  chroma-js@3.1.1:
-    resolution: {integrity: sha512-CGr6w73Gi86142RWqZ1RjED/CyduYw2vMTikQZUvr2jGIihnZlMo/Kzm9rYHWDP2pJc6eebwc8CkX0iteBon+A==}
+  chroma-js@3.1.2:
+    resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
 
   chrome-trace-event@1.0.4:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
@@ -8627,9 +8627,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mantine/colors-generator@7.13.2(chroma-js@3.1.1)':
+  '@mantine/colors-generator@7.13.2(chroma-js@3.1.2)':
     dependencies:
-      chroma-js: 3.1.1
+      chroma-js: 3.1.2
 
   '@mantine/core@7.13.2(@mantine/hooks@7.13.2(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -10582,7 +10582,7 @@ snapshots:
 
   chownr@2.0.0: {}
 
-  chroma-js@3.1.1: {}
+  chroma-js@3.1.2: {}
 
   chrome-trace-event@1.0.4: {}
 
