@@ -42,7 +42,7 @@
     "@mantine/hooks": "^7.13.2",
     "@mantine/modals": "^7.13.2",
     "@mantine/tiptap": "^7.13.2",
-    "@million/lint": "1.0.9",
+    "@million/lint": "1.0.10",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tabler/icons-react": "^3.19.0",
     "@tanstack/react-query": "^5.59.9",

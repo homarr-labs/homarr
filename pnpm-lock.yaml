@@ -137,8 +137,8 @@ importers:
         specifier: ^7.13.2
         version: 7.13.2(@mantine/core@7.13.2(@mantine/hooks@7.13.2(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.2(react@18.3.1))(@tiptap/extension-link@2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0))(@tiptap/react@2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@million/lint':
-        specifier: 1.0.9
-        version: 1.0.9(rollup@4.21.3)(webpack-sources@3.2.3)
+        specifier: 1.0.10
+        version: 1.0.10(rollup@4.21.3)(webpack-sources@3.2.3)
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.6.3)(zod@3.23.8)
@@ -2663,12 +2663,12 @@ packages:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
 
-  '@million/install@1.0.9':
-    resolution: {integrity: sha512-tJk7azrjsIkHl/xTppFw8K7M/CIrqa1y9J75By+dtW6jZBQi51DQlsp5J1SuAcTR89XwpGEuhN29HOvHosblPw==}
+  '@million/install@1.0.10':
+    resolution: {integrity: sha512-MZL++9DtBCul1oZthuY3v2JLqe2gjHXrH4l5Y8dIK9UB6A50k8d9wa4cT/x160ISNkB4ouZ3dJKJhP56isQAew==}
     hasBin: true
 
-  '@million/lint@1.0.9':
-    resolution: {integrity: sha512-sKqdKUb0zfF2DUXAWuhbxIm+0j7CqG+689azpcSVEdW3zn9ezj3AoL7ne229Q9ElJAmr8Z0zCM73tH5QtyfXzA==}
+  '@million/lint@1.0.10':
+    resolution: {integrity: sha512-lWCU6S+a4bukGQiHCWvdlwvZcCKy3y6unxCzTAHgV1EEBeX7MBD1NdiXV4VdDpB1DozN2HrbyXtbXmU9/6KKcA==}
     hasBin: true
 
   '@next/env@14.2.15':
@@ -4623,6 +4623,9 @@ packages:
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
+
+  effect@3.9.2:
+    resolution: {integrity: sha512-1sx/v1HTWHTodXfzWxAFg+SCF+ACgpJVruaAMIh/NmDVvrUsf0x9PzpXvkgJUbQ1fMdmKYK//FqxeHSQ+Zxv/Q==}
 
   electron-to-chromium@1.5.23:
     resolution: {integrity: sha512-mBhODedOXg4v5QWwl21DjM5amzjmI1zw9EPrPK/5Wx7C8jt33bpZNrC7OhHUG3pxRtbLpr3W2dXT+Ph1SsfRZA==}
@@ -8716,7 +8719,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@million/install@1.0.9':
+  '@million/install@1.0.10':
     dependencies:
       '@antfu/ni': 0.21.12
       '@axiomhq/js': 1.0.0-rc.3
@@ -8726,17 +8729,18 @@ snapshots:
       ast-types: 0.14.2
       cli-high: 0.4.2
       diff: 5.2.0
+      effect: 3.9.2
       nanoid: 5.0.7
       recast: 0.23.9
       xycolors: 0.1.2
 
-  '@million/lint@1.0.9(rollup@4.21.3)(webpack-sources@3.2.3)':
+  '@million/lint@1.0.10(rollup@4.21.3)(webpack-sources@3.2.3)':
     dependencies:
       '@axiomhq/js': 1.0.0-rc.3
       '@babel/core': 7.25.2
       '@babel/types': 7.25.2
       '@hono/node-server': 1.13.0(hono@4.6.1)
-      '@million/install': 1.0.9
+      '@million/install': 1.0.10
       '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
       '@rrweb/types': 2.0.0-alpha.16
       babel-plugin-syntax-hermes-parser: 0.21.1
@@ -11010,6 +11014,8 @@ snapshots:
       react: 18.3.1
 
   eastasianwidth@0.2.0: {}
+
+  effect@3.9.2: {}
 
   electron-to-chromium@1.5.23: {}
 
