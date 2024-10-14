@@ -4,57 +4,118 @@ import { asc, createId, eq, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const appRouter = createTRPCRouter({
-  all: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.apps.findMany({
-      orderBy: asc(apps.name),
-    });
-  }),
-  selectable: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.apps.findMany({
-      columns: {
-        id: true,
-        name: true,
-        iconUrl: true,
-      },
-      orderBy: asc(apps.name),
-    });
-  }),
+  all: publicProcedure
+    .input(z.void())
+    .output(
+      z.array(
+        z.object({
+          name: z.string(),
+          id: z.string(),
+          description: z.string().nullable(),
+          iconUrl: z.string(),
+          href: z.string().nullable(),
+        }),
+      ),
+    )
+    .meta({ openapi: { method: "GET", path: "/api/apps", tags: ["apps"], protect: true } })
+    .query(({ ctx }) => {
+      return ctx.db.query.apps.findMany({
+        orderBy: asc(apps.name),
+      });
+    }),
   search: publicProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
-    .query(async ({ ctx, input }) => {
-      return await ctx.db.query.apps.findMany({
+    .output(
+      z.array(
+        z.object({
+          name: z.string(),
+          id: z.string(),
+          description: z.string().nullable(),
+          iconUrl: z.string(),
+          href: z.string().nullable(),
+        }),
+      ),
+    )
+    .meta({ openapi: { method: "GET", path: "/api/apps/search", tags: ["apps"], protect: true } })
+    .query(({ ctx, input }) => {
+      return ctx.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
         orderBy: asc(apps.name),
         limit: input.limit,
       });
     }),
-  byId: publicProcedure.input(validation.app.byId).query(async ({ ctx, input }) => {
-    const app = await ctx.db.query.apps.findFirst({
-      where: eq(apps.id, input.id),
-    });
-
-    if (!app) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "App not found",
+  selectable: publicProcedure
+    .input(z.void())
+    .output(
+      z.array(
+        z.object({
+          name: z.string(),
+          id: z.string(),
+          iconUrl: z.string(),
+        }),
+      ),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/apps/selectable",
+        tags: ["apps"],
+        protect: true,
+      },
+    })
+    .query(({ ctx }) => {
+      return ctx.db.query.apps.findMany({
+        columns: {
+          id: true,
+          name: true,
+          iconUrl: true,
+        },
+        orderBy: asc(apps.name),
       });
-    }
+    }),
+  byId: publicProcedure
+    .input(validation.common.byId)
+    .output(
+      z.object({
+        name: z.string(),
+        id: z.string(),
+        description: z.string().nullable(),
+        iconUrl: z.string(),
+        href: z.string().nullable(),
+      }),
+    )
+    .meta({ openapi: { method: "GET", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
+    .query(async ({ ctx, input }) => {
+      const app = await ctx.db.query.apps.findFirst({
+        where: eq(apps.id, input.id),
+      });
 
-    return app;
-  }),
-  create: publicProcedure.input(validation.app.manage).mutation(async ({ ctx, input }) => {
-    await ctx.db.insert(apps).values({
-      id: createId(),
-      name: input.name,
-      description: input.description,
-      iconUrl: input.iconUrl,
-      href: input.href,
-    });
-  }),
-  update: publicProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
+      if (!app) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "App not found",
+        });
+      }
+
+      return app;
+    }),
+  create: protectedProcedure
+    .input(validation.app.manage)
+    .output(z.void())
+    .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.insert(apps).values({
+        id: createId(),
+        name: input.name,
+        description: input.description,
+        iconUrl: input.iconUrl,
+        href: input.href,
+      });
+    }),
+  update: protectedProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
     const app = await ctx.db.query.apps.findFirst({
       where: eq(apps.id, input.id),
     });
@@ -76,7 +137,11 @@ export const appRouter = createTRPCRouter({
       })
       .where(eq(apps.id, input.id));
   }),
-  delete: publicProcedure.input(validation.app.byId).mutation(async ({ ctx, input }) => {
-    await ctx.db.delete(apps).where(eq(apps.id, input.id));
-  }),
+  delete: protectedProcedure
+    .output(z.void())
+    .meta({ openapi: { method: "DELETE", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
+    .input(validation.common.byId)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(apps).where(eq(apps.id, input.id));
+    }),
 });

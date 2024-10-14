@@ -21,10 +21,7 @@ export const DesktopSearchInput = () => {
       leftSection={<IconSearch size={20} stroke={1.5} />}
       onClick={openSpotlight}
     >
-      {t("common.rtl.default", {
-        value: t("search.placeholder"),
-        symbol: "...",
-      })}
+      {`${t("search.placeholder")}...`}
     </TextInput>
   );
 };

@@ -8,4 +8,12 @@ export const openApiDocument = (base: string) =>
     version: "1.0.0",
     baseUrl: base,
     docsUrl: "https://homarr.dev",
+    securitySchemes: {
+      apikey: {
+        type: "apiKey",
+        name: "ApiKey",
+        description: "API key which can be obtained in the Homarr administration dashboard",
+        in: "header",
+      },
+    },
   });

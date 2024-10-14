@@ -19,6 +19,7 @@ import { IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/i
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
@@ -30,8 +31,9 @@ import { CreateBoardButton } from "./_components/create-board-button";
 
 export default async function ManageBoardsPage() {
   const t = await getScopedI18n("management.page.board");
-
+  const session = await auth();
   const boards = await api.board.getAllBoards();
+  const canCreateBoards = session?.user.permissions.includes("board-create");
 
   return (
     <ManageContainer>
@@ -39,7 +41,7 @@ export default async function ManageBoardsPage() {
       <Stack>
         <Group justify="space-between">
           <Title mb="md">{t("title")}</Title>
-          <CreateBoardButton />
+          {canCreateBoards && <CreateBoardButton />}
         </Group>
 
         <Grid mb={{ base: "xl", md: 0 }}>

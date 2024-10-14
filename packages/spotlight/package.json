@@ -30,12 +30,12 @@
     "@homarr/modals-collection": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^7.13.1",
-    "@mantine/hooks": "^7.13.1",
-    "@mantine/spotlight": "^7.13.1",
+    "@mantine/core": "^7.13.2",
+    "@mantine/hooks": "^7.13.2",
+    "@mantine/spotlight": "^7.13.2",
     "@tabler/icons-react": "^3.19.0",
     "jotai": "^2.10.0",
-    "next": "^14.2.13",
+    "next": "^14.2.15",
     "react": "^18.3.1",
     "use-deep-compare-effect": "^1.8.1"
   },
@@ -43,8 +43,8 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.11.1",
-    "typescript": "^5.6.2"
+    "eslint": "^9.12.0",
+    "typescript": "^5.6.3"
   },
   "prettier": "@homarr/prettier-config"
 }

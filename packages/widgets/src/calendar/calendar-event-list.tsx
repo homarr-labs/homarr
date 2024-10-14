@@ -15,6 +15,7 @@ import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./calendar-event-list.module.css";
 
@@ -24,6 +25,7 @@ interface CalendarEventListProps {
 
 export const CalendarEventList = ({ events }: CalendarEventListProps) => {
   const { colorScheme } = useMantineColorScheme();
+  const t = useI18n();
   return (
     <ScrollArea
       offsetScrollbars
@@ -57,14 +59,24 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                       {event.subName}
                     </Text>
                   )}
-                  <Text fw={"bold"} lineClamp={1}>
+                  <Text fw={"bold"} lineClamp={1} size="sm">
                     {event.name}
                   </Text>
                 </Stack>
-                <Group gap={3} wrap="nowrap">
-                  <IconClock opacity={0.7} size={"1rem"} />
-                  <Text c={"dimmed"}>{dayjs(event.date.toString()).format("HH:mm")}</Text>
-                </Group>
+                {event.dates ? (
+                  <Group wrap="nowrap">
+                    <Text c="dimmed" size="sm">
+                      {t(
+                        `widget.calendar.option.releaseType.options.${event.dates.find(({ date }) => event.date === date)?.type ?? "inCinemas"}`,
+                      )}
+                    </Text>
+                  </Group>
+                ) : (
+                  <Group gap={3} wrap="nowrap">
+                    <IconClock opacity={0.7} size={"1rem"} />
+                    <Text c={"dimmed"}>{dayjs(event.date).format("HH:mm")}</Text>
+                  </Group>
+                )}
               </Group>
               {event.description && (
                 <Text size={"xs"} c={"dimmed"} lineClamp={2}>

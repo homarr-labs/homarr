@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { Anchor, Button, Group, Text, ThemeIcon, Title } from "@mantine/core";
+import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
@@ -15,9 +15,10 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];
+  credentialsProviderEnabled: boolean;
 }
 
-export const UserListComponent = ({ initialUserList }: UserListComponentProps) => {
+export const UserListComponent = ({ initialUserList, credentialsProviderEnabled }: UserListComponentProps) => {
   const tUserList = useScopedI18n("management.page.user.list");
   const t = useI18n();
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
@@ -29,7 +30,7 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
       {
         accessorKey: "name",
         header: t("user.field.username.label"),
-        grow: 100,
+        grow: 1,
         Cell: ({ renderedCellValue, row }) => (
           <Group>
             <UserAvatar size="sm" user={row.original} />
@@ -42,13 +43,14 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
       {
         accessorKey: "email",
         header: t("user.field.email.label"),
+        size: 300,
         Cell: ({ renderedCellValue, row }) => (
-          <Group>
+          <Group wrap="nowrap" gap="sm">
             {row.original.email ? renderedCellValue : <Text>-</Text>}
             {row.original.emailVerified && (
-              <ThemeIcon radius="xl" size="sm">
-                <IconCheck size="1rem" />
-              </ThemeIcon>
+              <Tooltip label={t("user.field.email.verified")} position="top">
+                <IconCheck color="var(--mantine-color-green-4)" size="1rem" />
+              </Tooltip>
             )}
           </Group>
         ),
@@ -68,11 +70,12 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
     enableFullScreenToggle: false,
     layoutMode: "grid-no-grow",
     getRowId: (row) => row.id,
-    renderTopToolbarCustomActions: () => (
-      <Button component={Link} href="/manage/users/create">
-        Create New User
-      </Button>
-    ),
+    renderTopToolbarCustomActions: () =>
+      credentialsProviderEnabled ? (
+        <Button component={Link} href="/manage/users/create">
+          {t("management.page.user.create.title")}
+        </Button>
+      ) : null,
     state: {
       isLoading,
     },

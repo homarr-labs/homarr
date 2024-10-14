@@ -24,6 +24,7 @@ export default {
     field: {
       email: {
         label: "E-Mail",
+        verified: "Verified",
       },
       username: {
         label: "Username",
@@ -46,6 +47,9 @@ export default {
       },
       homeBoard: {
         label: "Home board",
+      },
+      pingIconsEnabled: {
+        label: "Use icons for pings",
       },
     },
     error: {
@@ -102,6 +106,26 @@ export default {
           },
           error: {
             message: "Unable to change home board",
+          },
+        },
+      },
+      changeFirstDayOfWeek: {
+        notification: {
+          success: {
+            message: "First day of week changed successfully",
+          },
+          error: {
+            message: "Unable to change first day of week",
+          },
+        },
+      },
+      changePingIconsEnabled: {
+        notification: {
+          success: {
+            message: "Ping icons toggled successfully",
+          },
+          error: {
+            message: "Unable to toggle ping icons",
           },
         },
       },
@@ -303,8 +327,8 @@ export default {
       list: {
         title: "Apps",
         noResults: {
-          title: "There aren't any apps.",
-          description: "Create your first app",
+          title: "There aren't any apps",
+          action: "Create your first app",
         },
       },
       create: {
@@ -526,14 +550,8 @@ export default {
     },
   },
   common: {
-    rtl: {
-      remainder: "{value}{symbol}{remainder}",
-      default: "{value}{symbol}",
-    },
-    symbols: {
-      colon: ": ",
-      percent: "%",
-    },
+    // Either "ltr" or "rtl"
+    direction: "ltr",
     beta: "Beta",
     error: "Error",
     action: {
@@ -1016,6 +1034,14 @@ export default {
       name: "Calendar",
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
+        releaseType: {
+          label: "Radarr release type",
+          options: {
+            inCinemas: "In cinemas",
+            digitalRelease: "Digital release",
+            physicalRelease: "Physical release",
+          },
+        },
         filterPastMonths: {
           label: "Start from",
         },
@@ -1601,6 +1627,7 @@ export default {
         boards: "Boards",
         apps: "Apps",
         integrations: "Integrations",
+        searchEngies: "Search engines",
         users: {
           label: "Users",
           items: {
@@ -1634,12 +1661,12 @@ export default {
     page: {
       home: {
         statistic: {
-          countBoards: "Boards",
-          createUser: "Create new user",
-          createInvite: "Create new invite",
-          addIntegration: "Create integration",
-          addApp: "Add app",
-          manageRoles: "Manage roles",
+          board: "Boards",
+          user: "Users",
+          invite: "Invites",
+          integration: "Integrations",
+          app: "Apps",
+          group: "Groups",
         },
         statisticLabel: {
           boards: "Boards",
@@ -1699,6 +1726,8 @@ export default {
             item: {
               language: "Language & Region",
               board: "Home board",
+              firstDayOfWeek: "First day of the week",
+              accessibility: "Accessibility",
             },
           },
           security: {
@@ -1892,6 +1921,35 @@ export default {
             },
           },
         },
+        api: {
+          title: "API",
+          modal: {
+            createApiToken: {
+              title: "API token created",
+              description:
+                "API token was created. Be careful, this token is encrypted in the database and will never be transferred again to you. If you loose this token, you'll no longer be able to retrieve this specific token.",
+              button: "Copy and close",
+            },
+          },
+          tab: {
+            documentation: {
+              label: "Documentation",
+            },
+            apiKey: {
+              label: "Authentication",
+              title: "API Keys",
+              button: {
+                createApiToken: "Create API token",
+              },
+              table: {
+                header: {
+                  id: "ID",
+                  createdBy: "Created by",
+                },
+              },
+            },
+          },
+        },
       },
       about: {
         version: "Version {version}",
@@ -2055,13 +2113,22 @@ export default {
           label: "New",
         },
       },
+      "search-engines": {
+        label: "Search engines",
+        new: {
+          label: "New",
+        },
+        edit: {
+          label: "Edit",
+        },
+      },
       apps: {
         label: "Apps",
         new: {
-          label: "New App",
+          label: "New",
         },
         edit: {
-          label: "Edit App",
+          label: "Edit",
         },
       },
       users: {
@@ -2199,6 +2266,16 @@ export default {
         group: {
           searchEngine: {
             title: "Search engines",
+            children: {
+              action: {
+                search: {
+                  label: "Search with {name}",
+                },
+              },
+              detail: {
+                title: "Select an action for the search engine",
+              },
+            },
             option: {
               google: {
                 name: "Google",
@@ -2262,6 +2339,9 @@ export default {
               },
               manageIntegration: {
                 label: "Manage integrations",
+              },
+              manageSearchEngine: {
+                label: "Manage search engines",
               },
               manageUser: {
                 label: "Manage users",
@@ -2333,6 +2413,72 @@ export default {
               detail: {
                 title: "Select an action for the group",
               },
+            },
+          },
+        },
+      },
+    },
+    engine: {
+      search: "Find a search engine",
+      field: {
+        name: {
+          label: "Name",
+        },
+        short: {
+          label: "Short",
+        },
+        urlTemplate: {
+          label: "URL search template",
+        },
+        description: {
+          label: "Description",
+        },
+      },
+      page: {
+        list: {
+          title: "Search engines",
+          noResults: {
+            title: "There aren't any search engines",
+            action: "Create your first search engine",
+          },
+        },
+        create: {
+          title: "New search engine",
+          notification: {
+            success: {
+              title: "Search engine created",
+              message: "The search engine was created successfully",
+            },
+            error: {
+              title: "Search engine not created",
+              message: "The search engine could not be created",
+            },
+          },
+        },
+        edit: {
+          title: "Edit search engine",
+          notification: {
+            success: {
+              title: "Changes applied successfully",
+              message: "The search engine was saved successfully",
+            },
+            error: {
+              title: "Unable to apply changes",
+              message: "The search engine could not be saved",
+            },
+          },
+        },
+        delete: {
+          title: "Delete search engine",
+          message: "Are you sure you want to delete the search engine '{name}'?",
+          notification: {
+            success: {
+              title: "Search engine deleted",
+              message: "The search engine was deleted successfully",
+            },
+            error: {
+              title: "Search engine not deleted",
+              message: "The search engine could not be deleted",
             },
           },
         },

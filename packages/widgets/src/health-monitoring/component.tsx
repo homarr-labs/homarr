@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   ActionIcon,
   Box,
@@ -36,30 +35,60 @@ import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize } from "@homarr/common";
+import type { HealthMonitoring } from "@homarr/integrations";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
 
-export default function HealthMonitoringWidget({
-  options,
-  integrationIds,
-  serverData,
-}: WidgetComponentProps<"healthMonitoring">) {
+export default function HealthMonitoringWidget({ options, integrationIds }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
-  const [healthData, setHealthData] = useState(serverData?.initialData ?? []);
+  const [healthData] = clientApi.widget.healthMonitoring.getHealthStatus.useSuspenseQuery(
+    {
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select: (data) =>
+        data.filter(
+          (
+            health,
+          ): health is {
+            integrationId: string;
+            integrationName: string;
+            healthInfo: HealthMonitoring;
+            timestamp: Date;
+          } => health.healthInfo !== null,
+        ),
+    },
+  );
   const [opened, { open, close }] = useDisclosure(false);
+  const utils = clientApi.useUtils();
 
   clientApi.widget.healthMonitoring.subscribeHealthStatus.useSubscription(
     { integrationIds },
     {
-      onData(newData) {
-        setHealthData((prevData) => {
-          return prevData.map((item) =>
-            item.integrationId === newData.integrationId
-              ? { ...item, healthInfo: newData.healthInfo, timestamp: newData.timestamp }
-              : item,
+      onData(data) {
+        utils.widget.healthMonitoring.getHealthStatus.setData({ integrationIds }, (prevData) => {
+          if (!prevData) {
+            return undefined;
+          }
+          const newData = prevData.map((item) =>
+            item.integrationId === data.integrationId ? { ...item, healthInfo: data.healthInfo } : item,
+          );
+          return newData.filter(
+            (
+              health,
+            ): health is {
+              integrationId: string;
+              integrationName: string;
+              healthInfo: HealthMonitoring;
+              timestamp: Date;
+            } => health.healthInfo !== null,
           );
         });
       },
@@ -130,44 +159,28 @@ export default function HealthMonitoringWidget({
                             className="health-monitoring-information-processor"
                             icon={<IconCpu2 size="1.5cqmin" />}
                           >
-                            {t("common.rtl.remainder", {
-                              value: t("widget.healthMonitoring.popover.processor"),
-                              symbol: t("common.symbols.colon"),
-                              remainder: healthInfo.cpuModelName,
-                            })}
+                            {t("widget.healthMonitoring.popover.processor", { cpuModelName: healthInfo.cpuModelName })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-memory"
                             icon={<IconBrain size="1.5cqmin" />}
                           >
-                            {t("common.rtl.remainder", {
-                              value: t("widget.healthMonitoring.popover.memory"),
-                              symbol: t("common.symbols.colon"),
-                              remainder: `${memoryUsage.memTotal.GB}GiB`,
-                            })}
+                            {t("widget.healthMonitoring.popover.memory", { memory: `${memoryUsage.memTotal.GB}GiB` })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-memory-available"
                             icon={<IconBrain size="1.5cqmin" />}
                           >
-                            {t("common.rtl.remainder", {
-                              value: t("widget.healthMonitoring.popover.available"),
-                              symbol: t("common.symbols.colon"),
-                              remainder: `${memoryUsage.memFree.GB}GiB (${t("common.rtl.default", {
-                                value: memoryUsage.memFree.percent,
-                                symbol: t("common.symbols.percent"),
-                              })})`,
+                            {t("widget.healthMonitoring.popover.memoryAvailable", {
+                              memoryAvailable: `${memoryUsage.memFree.GB}GiB`,
+                              percent: `${memoryUsage.memFree.percent}%`,
                             })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-version"
                             icon={<IconVersions size="1.5cqmin" />}
                           >
-                            {t("common.rtl.remainder", {
-                              value: t("widget.healthMonitoring.popover.version"),
-                              symbol: t("common.symbols.colon"),
-                              remainder: healthInfo.version,
-                            })}
+                            {t("widget.healthMonitoring.popover.version", { version: healthInfo.version })}
                           </List.Item>
                           <List.Item
                             className="health-monitoring-information-uptime"
@@ -179,32 +192,17 @@ export default function HealthMonitoringWidget({
                             className="health-monitoring-information-load-average"
                             icon={<IconCpu size="1.5cqmin" />}
                           >
-                            {t("common.rtl.default", {
-                              value: t("widget.healthMonitoring.popover.loadAverage"),
-                              symbol: t("common.symbols.colon"),
-                            })}
+                            {t("widget.healthMonitoring.popover.loadAverage")}
                           </List.Item>
                           <List m="0.5cqmin" withPadding center spacing="0.5cqmin" icon={<IconCpu size="1cqmin" />}>
                             <List.Item className="health-monitoring-information-load-average-1min">
-                              {t("common.rtl.remainder", {
-                                value: t("widget.healthMonitoring.popover.minute"),
-                                symbol: t("common.symbols.colon"),
-                                remainder: healthInfo.loadAverage["1min"],
-                              })}
+                              {t("widget.healthMonitoring.popover.minute")}
                             </List.Item>
                             <List.Item className="health-monitoring-information-load-average-5min">
-                              {t("common.rtl.remainder", {
-                                value: t("widget.healthMonitoring.popover.minutes", { count: 5 }),
-                                symbol: t("common.symbols.colon"),
-                                remainder: healthInfo.loadAverage["5min"],
-                              })}
+                              {t("widget.healthMonitoring.popover.minutes", { count: 5 })}
                             </List.Item>
                             <List.Item className="health-monitoring-information-load-average-15min">
-                              {t("common.rtl.remainder", {
-                                value: t("widget.healthMonitoring.popover.minutes", { count: 15 }),
-                                symbol: t("common.symbols.colon"),
-                                remainder: healthInfo.loadAverage["15min"],
-                              })}
+                              {t("widget.healthMonitoring.popover.minutes", { count: 15 })}
                             </List.Item>
                           </List>
                         </List>
@@ -221,10 +219,7 @@ export default function HealthMonitoringWidget({
                         label={
                           <Center style={{ flexDirection: "column" }}>
                             <Text className="health-monitoring-cpu-utilization-value" size="3cqmin">
-                              {t("common.rtl.default", {
-                                value: healthInfo.cpuUtilization.toFixed(2),
-                                symbol: t("common.symbols.percent"),
-                              })}
+                              {`${healthInfo.cpuUtilization.toFixed(2)}%`}
                             </Text>
                             <IconCpu className="health-monitoring-cpu-utilization-icon" size="7cqmin" />
                           </Center>
@@ -284,10 +279,7 @@ export default function HealthMonitoringWidget({
                           {
                             value: Number(memoryUsage.memUsed.percent),
                             color: progressColor(Number(memoryUsage.memUsed.percent)),
-                            tooltip: t("common.rtl.default", {
-                              value: memoryUsage.memUsed.percent,
-                              symbol: t("common.symbols.percent"),
-                            }),
+                            tooltip: `${memoryUsage.memUsed.percent}%`,
                           },
                         ]}
                       />
@@ -295,10 +287,8 @@ export default function HealthMonitoringWidget({
                   )}
                 </Flex>
                 <Text className="health-monitoring-status-update-time" c="dimmed" size="3.5cqmin" ta="center">
-                  {t("common.rtl.remainder", {
-                    value: t("widget.healthMonitoring.popover.lastSeen"),
-                    symbol: t("common.symbols.colon"),
-                    remainder: dayjs(timestamp).fromNow(),
+                  {t("widget.healthMonitoring.popover.lastSeen", {
+                    lastSeen: dayjs(timestamp).fromNow(),
                   })}
                 </Text>
               </Card>
@@ -383,11 +373,7 @@ export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) =>
   const minutes = uptimeDuration.minutes();
   const formattedUptime = `${days} ${t("common.information.days")}, ${hours} ${t("common.information.hours")}, ${minutes} ${t("common.information.minutes")}`;
 
-  return t("common.rtl.remainder", {
-    value: t("widget.healthMonitoring.popover.uptime"),
-    symbol: t("common.symbols.colon"),
-    remainder: formattedUptime,
-  });
+  return t("widget.healthMonitoring.popover.uptime", { uptime: formattedUptime });
 };
 
 export const progressColor = (percentage: number) => {

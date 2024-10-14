@@ -5,7 +5,8 @@ import type { Database } from "@homarr/db";
 
 import { getCurrentUserPermissionsAsync } from "./callbacks";
 
-export const sessionTokenCookieName = "next-auth.session-token";
+// Default of authjs
+export const sessionTokenCookieName = "authjs.session-token";
 
 export const expireDateAfter = (seconds: number) => {
   return new Date(Date.now() + seconds * 1000);

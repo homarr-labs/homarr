@@ -21,7 +21,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useListState, useTimeout } from "@mantine/hooks";
+import { useDisclosure, useTimeout } from "@mantine/hooks";
 import type { IconProps } from "@tabler/icons-react";
 import {
   IconAlertTriangle,
@@ -40,9 +40,6 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { humanFileSize } from "@homarr/common";
-import type { Modify } from "@homarr/common/types";
-import type { Integration } from "@homarr/db/schema/sqlite";
-import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type {
   DownloadClientJobsAndStatus,
@@ -91,30 +88,35 @@ export default function DownloadClientsWidget({
   isEditMode,
   integrationIds,
   options,
-  serverData,
   setOptions,
 }: WidgetComponentProps<"downloads">) {
   const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const [currentItems, currentItemsHandlers] = useListState<{
-    integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
-    timestamp: Date;
-    data: DownloadClientJobsAndStatus | null;
-  }>(
-    //Automatically invalidate data older than 30 seconds
-    serverData?.initialData?.map((item) =>
-      dayjs().diff(item.timestamp) < invalidateTime ? item : { ...item, timestamp: new Date(0), data: null },
-    ) ?? [],
+  const [currentItems] = clientApi.widget.downloads.getJobsAndStatuses.useSuspenseQuery(
+    {
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select(data) {
+        return data.map((item) =>
+          dayjs().diff(item.timestamp) < invalidateTime ? item : { ...item, timestamp: new Date(0), data: null },
+        );
+      },
+    },
   );
+  const utils = clientApi.useUtils();
 
   //Invalidate all data after no update for 30 seconds using timer
   const invalidationTimer = useTimeout(
     () => {
-      currentItemsHandlers.applyWhere(
-        () => true,
-        (item) => ({ ...item, timestamp: new Date(0), data: null }),
+      utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) =>
+        prevData?.map((item) => ({ ...item, timestamp: new Date(0), data: null })),
       );
     },
     invalidateTime,
@@ -146,20 +148,24 @@ export default function DownloadClientsWidget({
           //Don't update already invalid data (new Date (0))
           .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime && timestamp > new Date(0))
           .map(({ integration }) => integration.id);
-        currentItemsHandlers.applyWhere(
-          ({ integration }) => invalidIndexes.includes(integration.id),
-          //Set date to now so it won't update that integration for at least 30 seconds
-          (item) => ({ ...item, timestamp: new Date(0), data: null }),
+        utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) =>
+          prevData?.map((item) =>
+            invalidIndexes.includes(item.integration.id) ? item : { ...item, timestamp: new Date(0), data: null },
+          ),
         );
-        //Find id to update
-        const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
-        if (updateIndex >= 0) {
-          //Update found index
-          currentItemsHandlers.setItem(updateIndex, data);
-        } else if (integrationIds.includes(data.integration.id)) {
-          //Append index not found (new integration)
-          currentItemsHandlers.append(data);
-        }
+        utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) => {
+          const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
+          if (updateIndex >= 0) {
+            //Update found index
+            return prevData?.map((pair, index) => (index === updateIndex ? data : pair));
+          } else if (integrationIds.includes(data.integration.id)) {
+            //Append index not found (new integration)
+            return [...(prevData ?? []), data];
+          }
+
+          return undefined;
+        });
+
         //Reset no update timer
         invalidationTimer.clear();
         invalidationTimer.start();
@@ -641,8 +647,6 @@ export default function DownloadClientsWidget({
     },
   });
 
-  const isLangRtl = tCommon("rtl", { value: "0", symbol: "1" }).startsWith("1");
-
   //Used for Global Torrent Ratio
   const globalTraffic = clients
     .filter(({ integration: { kind } }) =>
@@ -676,13 +680,12 @@ export default function DownloadClientsWidget({
         px="var(--space-size)"
         justify={integrationTypes.includes("torrent") ? "space-between" : "end"}
         style={{
-          flexDirection: isLangRtl ? "row-reverse" : "row",
           borderTop: "0.0625rem solid var(--border-color)",
         }}
       >
         {integrationTypes.includes("torrent") && (
-          <Group pt="var(--space-size)" style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}>
-            <Text>{tCommon("rtl", { value: t("globalRatio"), symbol: tCommon("symbols.colon") })}</Text>
+          <Group pt="var(--space-size)">
+            <Text>{`${t("globalRatio")}:`}</Text>
             <Text>{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
         )}
@@ -758,21 +761,10 @@ const NormalizedLine = ({
   values?: number | string | string[];
 }) => {
   const t = useScopedI18n("widget.downloads.items");
-  const tCommon = useScopedI18n("common");
-  const translatedKey = t(`${itemKey}.detailsTitle`);
-  const isLangRtl = tCommon("rtl", { value: "0", symbol: "1" }).startsWith("1"); //Maybe make a common "isLangRtl" somewhere
-  const keyString = tCommon("rtl", { value: translatedKey, symbol: tCommon("symbols.colon") });
   if (typeof values !== "number" && (values === undefined || values.length === 0)) return null;
   return (
-    <Group
-      w="100%"
-      display="flex"
-      style={{ flexDirection: isLangRtl ? "row-reverse" : "row" }}
-      align="top"
-      justify="space-between"
-      wrap="nowrap"
-    >
-      <Text>{keyString}</Text>
+    <Group w="100%" display="flex" align="top" justify="space-between" wrap="nowrap">
+      <Text>{`${t(`${itemKey}.detailsTitle`)}:`}</Text>
       {Array.isArray(values) ? (
         <Stack>
           {values.map((value) => (
