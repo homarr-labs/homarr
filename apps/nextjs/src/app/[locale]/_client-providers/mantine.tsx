@@ -16,7 +16,7 @@ export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
   return (
     <DirectionProvider>
       <MantineProvider
-        defaultColorScheme="auto"
+        defaultColorScheme="dark"
         colorSchemeManager={manager}
         theme={createTheme({
           primaryColor: "red",
@@ -62,6 +62,7 @@ function useColorSchemeManager(): MantineColorSchemeManager {
     },
 
     set: (value) => {
+      if (value === "auto") return;
       try {
         if (session) {
           mutateColorScheme({ colorScheme: value });

@@ -44,7 +44,7 @@ export const users = sqliteTable("user", {
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
+  colorScheme: text("colorScheme").$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
 });
