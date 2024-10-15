@@ -7,7 +7,7 @@ import { optionsBuilder } from "../../options";
 
 export const widgetKind = "dnsHoleSummary";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition(widgetKind, {
+export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconAd,
   options: optionsBuilder.from((factory) => ({
     usePiHoleColors: factory.switch({
@@ -28,6 +28,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       message: (t) => t("widget.dnsHoleSummary.error.internalServerError"),
     },
   },
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

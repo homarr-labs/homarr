@@ -39,16 +39,25 @@ export default function DnsHoleControlsWidget({
   options,
   integrationIds,
   isEditMode,
-  serverData,
 }: WidgetComponentProps<typeof widgetKind>) {
   // DnsHole integrations with interaction permissions
   const integrationsWithInteractions = useIntegrationsWithInteractAccess()
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  // Initial summaries, null summary means disconnected, undefined status means processing
-  const [summaries, setSummaries] = useState(serverData?.initialData ?? []);
-
+  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+    {
+      widgetKind: "dnsHoleControls",
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
+  );
+  const utils = clientApi.useUtils();
   // Subscribe to summary updates
   clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
     {
@@ -57,8 +66,20 @@ export default function DnsHoleControlsWidget({
     },
     {
       onData: (data) => {
-        setSummaries((prevSummaries) =>
-          prevSummaries.map((summary) => (summary.integration.id === data.integration.id ? data : summary)),
+        utils.widget.dnsHole.summary.setData(
+          {
+            widgetKind: "dnsHoleControls",
+            integrationIds,
+          },
+          (prevData) => {
+            if (!prevData) return undefined;
+
+            const newData = prevData.map((summary) =>
+              summary.integration.id === data.integration.id ? { ...summary, summary: data.summary } : summary,
+            );
+
+            return newData;
+          },
         );
       },
     },
@@ -67,39 +88,77 @@ export default function DnsHoleControlsWidget({
   // Mutations for dnsHole state, set to undefined on click, and change again on settle
   const { mutate: enableDns } = clientApi.widget.dnsHole.enable.useMutation({
     onSettled: (_, error, { integrationId }) => {
-      setSummaries((prevSummaries) =>
-        prevSummaries.map((data) => ({
-          ...data,
-          summary:
-            data.integration.id === integrationId && data.summary
-              ? { ...data.summary, status: error ? "disabled" : "enabled" }
-              : data.summary,
-        })),
+      utils.widget.dnsHole.summary.setData(
+        {
+          widgetKind: "dnsHoleControls",
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
+
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: error ? "disabled" : "enabled",
+                  },
+                }
+              : item,
+          );
+        },
       );
     },
   });
   const { mutate: disableDns } = clientApi.widget.dnsHole.disable.useMutation({
     onSettled: (_, error, { integrationId }) => {
-      setSummaries((prevSummaries) =>
-        prevSummaries.map((data) => ({
-          ...data,
-          summary:
-            data.integration.id === integrationId && data.summary
-              ? { ...data.summary, status: error ? "enabled" : "disabled" }
-              : data.summary,
-        })),
+      utils.widget.dnsHole.summary.setData(
+        {
+          widgetKind: "dnsHoleControls",
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
+
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: error ? "enabled" : "disabled",
+                  },
+                }
+              : item,
+          );
+        },
       );
     },
   });
   const toggleDns = (integrationId: string) => {
     const integrationStatus = summaries.find(({ integration }) => integration.id === integrationId);
     if (!integrationStatus?.summary?.status) return;
-    setSummaries((prevSummaries) =>
-      prevSummaries.map((data) => ({
-        ...data,
-        summary:
-          data.integration.id === integrationId && data.summary ? { ...data.summary, status: undefined } : data.summary,
-      })),
+    utils.widget.dnsHole.summary.setData(
+      {
+        widgetKind: "dnsHoleControls",
+        integrationIds,
+      },
+      (prevData) => {
+        if (!prevData) return [];
+
+        return prevData.map((item) =>
+          item.integration.id === integrationId && item.summary
+            ? {
+                ...item,
+                summary: {
+                  ...item.summary,
+                  status: undefined,
+                },
+              }
+            : item,
+        );
+      },
     );
     if (integrationStatus.summary.status === "enabled") {
       disableDns({ integrationId, duration: 0 });

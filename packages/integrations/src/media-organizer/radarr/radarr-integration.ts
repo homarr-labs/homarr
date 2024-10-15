@@ -1,8 +1,10 @@
+import type { AtLeastOneOf } from "@homarr/common/types";
 import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
 import { Integration } from "../../base/integration";
 import type { CalendarEvent } from "../../calendar-types";
+import { radarrReleaseTypes } from "../../calendar-types";
 
 export class RadarrIntegration extends Integration {
   /**
@@ -37,19 +39,23 @@ export class RadarrIntegration extends Integration {
     });
     const radarrCalendarEvents = await z.array(radarrCalendarEventSchema).parseAsync(await response.json());
 
-    return radarrCalendarEvents.map(
-      (radarrCalendarEvent): CalendarEvent => ({
+    return radarrCalendarEvents.map((radarrCalendarEvent): CalendarEvent => {
+      const dates = radarrReleaseTypes
+        .map((type) => (radarrCalendarEvent[type] ? { type, date: radarrCalendarEvent[type] } : undefined))
+        .filter((date) => date) as AtLeastOneOf<Exclude<CalendarEvent["dates"], undefined>[number]>;
+      return {
         name: radarrCalendarEvent.title,
         subName: radarrCalendarEvent.originalTitle,
         description: radarrCalendarEvent.overview,
         thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
-        date: radarrCalendarEvent.inCinemas,
+        date: dates[0].date,
+        dates,
         mediaInformation: {
           type: "movie",
         },
         links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
-      }),
-    );
+      };
+    });
   }
 
   private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
@@ -118,7 +124,18 @@ const radarrCalendarEventImageSchema = z.array(
 const radarrCalendarEventSchema = z.object({
   title: z.string(),
   originalTitle: z.string(),
-  inCinemas: z.string().transform((value) => new Date(value)),
+  inCinemas: z
+    .string()
+    .transform((value) => new Date(value))
+    .optional(),
+  physicalRelease: z
+    .string()
+    .transform((value) => new Date(value))
+    .optional(),
+  digitalRelease: z
+    .string()
+    .transform((value) => new Date(value))
+    .optional(),
   overview: z.string().optional(),
   titleSlug: z.string(),
   images: radarrCalendarEventImageSchema,

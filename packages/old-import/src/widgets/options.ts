@@ -23,6 +23,7 @@ const optionMapping: OptionMapping = {
   },
   "mediaRequests-requestStats": {},
   calendar: {
+    releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
     filterFutureMonths: () => undefined,
     filterPastMonths: () => undefined,
   },

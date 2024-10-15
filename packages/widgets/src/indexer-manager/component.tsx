@@ -1,25 +1,26 @@
 "use client";
 
-import { useState } from "react";
 import { Anchor, Button, Card, Container, Flex, Group, ScrollArea, Text } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { Indexer } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
 
-export default function IndexerManagerWidget({
-  options,
-  integrationIds,
-  serverData,
-}: WidgetComponentProps<"indexerManager">) {
+export default function IndexerManagerWidget({ options, integrationIds }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
-  const [indexersData, setIndexersData] = useState<{ integrationId: string; indexers: Indexer[] }[]>(
-    serverData?.initialData ?? [],
+  const [indexersData] = clientApi.widget.indexerManager.getIndexersStatus.useSuspenseQuery(
+    { integrationIds },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
   );
+  const utils = clientApi.useUtils();
 
   const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation();
 
@@ -27,11 +28,11 @@ export default function IndexerManagerWidget({
     { integrationIds },
     {
       onData(newData) {
-        setIndexersData((prevData) => {
-          return prevData.map((item) =>
+        utils.widget.indexerManager.getIndexersStatus.setData({ integrationIds }, (previousData) =>
+          previousData?.map((item) =>
             item.integrationId === newData.integrationId ? { ...item, indexers: newData.indexers } : item,
-          );
-        });
+          ),
+        );
       },
     },
   );

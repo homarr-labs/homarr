@@ -45,6 +45,7 @@ export const users = mysqlTable("user", {
   }),
   colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("auto").notNull(),
   firstDayOfWeek: tinyint("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: boolean("pingIconsEnabled").default(false).notNull(),
 });
 
 export const accounts = mysqlTable(

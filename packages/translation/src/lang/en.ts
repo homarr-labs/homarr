@@ -48,6 +48,9 @@ export default {
       homeBoard: {
         label: "Home board",
       },
+      pingIconsEnabled: {
+        label: "Use icons for pings",
+      },
     },
     error: {
       usernameTaken: "Username already taken",
@@ -113,6 +116,16 @@ export default {
           },
           error: {
             message: "Unable to change first day of week",
+          },
+        },
+      },
+      changePingIconsEnabled: {
+        notification: {
+          success: {
+            message: "Ping icons toggled successfully",
+          },
+          error: {
+            message: "Unable to toggle ping icons",
           },
         },
       },
@@ -1018,6 +1031,14 @@ export default {
       name: "Calendar",
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
+        releaseType: {
+          label: "Radarr release type",
+          options: {
+            inCinemas: "In cinemas",
+            digitalRelease: "Digital release",
+            physicalRelease: "Physical release",
+          },
+        },
         filterPastMonths: {
           label: "Start from",
         },
@@ -1703,6 +1724,7 @@ export default {
               language: "Language & Region",
               board: "Home board",
               firstDayOfWeek: "First day of the week",
+              accessibility: "Accessibility",
             },
           },
           security: {

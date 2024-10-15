@@ -5,7 +5,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("indexerManager", {
+export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
   options: optionsBuilder.from((factory) => ({
     openIndexerSiteInNewTab: factory.switch({
@@ -19,6 +19,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       message: (t) => t("widget.indexerManager.error.internalServerError"),
     },
   },
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

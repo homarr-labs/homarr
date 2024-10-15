@@ -15,11 +15,12 @@ import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
 import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { createRedirectUri } from "./redirect";
-import { generateSessionToken, sessionTokenCookieName } from "./session";
+import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
 
 // See why it's unknown in the [...nextauth]/route.ts file
-export const createConfiguration = (provider: SupportedAuthProvider | "unknown", headers: ReadonlyHeaders | null) =>
-  NextAuth({
+export const createConfiguration = (provider: SupportedAuthProvider | "unknown", headers: ReadonlyHeaders | null) => {
+  const adapter = createAdapter(db, provider);
+  return NextAuth({
     logger: {
       error: (code, ...message) => {
         // Remove the big error message for failed login attempts
@@ -33,7 +34,7 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
       },
     },
     trustHost: true,
-    adapter: createAdapter(db, provider),
+    adapter,
     providers: filterProviders([
       Credentials(createCredentialsConfiguration(db)),
       Credentials(createLdapConfiguration(db)),
@@ -42,6 +43,38 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
     ]),
     callbacks: {
       session: createSessionCallback(db),
+      // eslint-disable-next-line no-restricted-syntax
+      signIn: async ({ user }) => {
+        /**
+         * For credentials provider only jwt is supported by default
+         * so we have to create the session and set the cookie manually.
+         */
+        if (provider !== "credentials" && provider !== "ldap") {
+          return true;
+        }
+
+        if (!adapter.createSession || !user.id) {
+          return false;
+        }
+
+        const expires = expireDateAfter(env.AUTH_SESSION_EXPIRY_TIME);
+        const sessionToken = generateSessionToken();
+        await adapter.createSession({
+          sessionToken,
+          expires,
+          userId: user.id,
+        });
+
+        cookies().set(sessionTokenCookieName, sessionToken, {
+          path: "/",
+          expires: expires,
+          httpOnly: true,
+          sameSite: "lax",
+          secure: true,
+        });
+
+        return true;
+      },
     },
     events: {
       signIn: createSignInEventHandler(db),
@@ -68,3 +101,4 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
       },
     },
   });
+};
