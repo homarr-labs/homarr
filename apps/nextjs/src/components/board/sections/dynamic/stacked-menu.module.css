@@ -1,0 +1,26 @@
+.item {
+  font-size: var(--mantine-font-size-sm);
+  width: 100%;
+  padding: calc(var(--mantine-spacing-xs) / 1.5) var(--mantine-spacing-sm);
+  border-radius: var(--popover-radius, var(--mantine-radius-default));
+  color: var(--menu-item-color, var(--mantine-color-text));
+  display: flex;
+  align-items: center;
+  user-select: none;
+
+  &:where([data-disabled], :disabled) {
+    color: var(--mantine-color-dimmed);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &:where([data-hovered]) {
+    @mixin where-light {
+      background-color: var(--menu-item-hover, var(--mantine-color-gray-1));
+    }
+
+    @mixin where-dark {
+      background-color: var(--menu-item-hover, var(--mantine-color-dark-4));
+    }
+  }
+}
