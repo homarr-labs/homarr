@@ -137,8 +137,8 @@ importers:
         specifier: ^7.13.2
         version: 7.13.2(@mantine/core@7.13.2(@mantine/hooks@7.13.2(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.2(react@18.3.1))(@tiptap/extension-link@2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0))(@tiptap/react@2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@million/lint':
-        specifier: 1.0.10
-        version: 1.0.10(rollup@4.21.3)(webpack-sources@3.2.3)
+        specifier: 1.0.11
+        version: 1.0.11(rollup@4.21.3)(webpack-sources@3.2.3)
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.6.3)(zod@3.23.8)
@@ -2663,12 +2663,12 @@ packages:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
 
-  '@million/install@1.0.10':
-    resolution: {integrity: sha512-MZL++9DtBCul1oZthuY3v2JLqe2gjHXrH4l5Y8dIK9UB6A50k8d9wa4cT/x160ISNkB4ouZ3dJKJhP56isQAew==}
+  '@million/install@1.0.11':
+    resolution: {integrity: sha512-koRlY6tCYa6isBUTheP0pL7PC31pBY1QlL8F/Yaorcx6gIyZSJNVqTGBDqLvDeeV8QcmD/S9mswSazI/FsyGKQ==}
     hasBin: true
 
-  '@million/lint@1.0.10':
-    resolution: {integrity: sha512-lWCU6S+a4bukGQiHCWvdlwvZcCKy3y6unxCzTAHgV1EEBeX7MBD1NdiXV4VdDpB1DozN2HrbyXtbXmU9/6KKcA==}
+  '@million/lint@1.0.11':
+    resolution: {integrity: sha512-OztUXhhEHwUiPPcrSXBAqyv1GppnV0evvT9xMGA3BGOhLaR/X79s4qTyziTT0i0rMNcK23HJgKqJfDtcQt/v9w==}
     hasBin: true
 
   '@next/env@14.2.15':
@@ -8719,7 +8719,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@million/install@1.0.10':
+  '@million/install@1.0.11':
     dependencies:
       '@antfu/ni': 0.21.12
       '@axiomhq/js': 1.0.0-rc.3
@@ -8734,13 +8734,13 @@ snapshots:
       recast: 0.23.9
       xycolors: 0.1.2
 
-  '@million/lint@1.0.10(rollup@4.21.3)(webpack-sources@3.2.3)':
+  '@million/lint@1.0.11(rollup@4.21.3)(webpack-sources@3.2.3)':
     dependencies:
       '@axiomhq/js': 1.0.0-rc.3
       '@babel/core': 7.25.2
       '@babel/types': 7.25.2
       '@hono/node-server': 1.13.0(hono@4.6.1)
-      '@million/install': 1.0.10
+      '@million/install': 1.0.11
       '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
       '@rrweb/types': 2.0.0-alpha.16
       babel-plugin-syntax-hermes-parser: 0.21.1
