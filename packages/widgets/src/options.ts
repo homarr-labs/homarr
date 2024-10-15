@@ -107,6 +107,7 @@ const optionsFactory = {
   app: () => ({
     type: "app" as const,
     defaultValue: "",
+    withDescription: false,
   }),
 };
 
