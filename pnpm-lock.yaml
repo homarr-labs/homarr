@@ -857,8 +857,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       drizzle-kit:
-        specifier: ^0.25.0
-        version: 0.25.0
+        specifier: ^0.26.0
+        version: 0.26.0
       drizzle-orm:
         specifier: ^0.34.1
         version: 0.34.1(@types/better-sqlite3@7.6.11)(@types/react@18.3.11)(better-sqlite3@11.3.0)(mysql2@3.11.3)(react@18.3.1)
@@ -4528,8 +4528,8 @@ packages:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
     engines: {node: '>=4'}
 
-  drizzle-kit@0.25.0:
-    resolution: {integrity: sha512-Rcf0nYCAKizwjWQCY+d3zytyuTbDb81NcaPor+8NebESlUz1+9W3uGl0+r9FhU4Qal5Zv9j/7neXCSCe7DHzjA==}
+  drizzle-kit@0.26.0:
+    resolution: {integrity: sha512-bTtqvQZW21zFjAfIUJSkuHMWyxaHGTtvC05ivmu9na6m3fu7AlJ+rfKgh5vGR7+Jnga7t7evONkQHrs0hxqJXg==}
     hasBin: true
 
   drizzle-orm@0.34.1:
@@ -10996,7 +10996,7 @@ snapshots:
 
   drange@1.1.1: {}
 
-  drizzle-kit@0.25.0:
+  drizzle-kit@0.26.0:
     dependencies:
       '@drizzle-team/brocli': 0.10.1
       '@esbuild-kit/esm-loader': 2.6.5
