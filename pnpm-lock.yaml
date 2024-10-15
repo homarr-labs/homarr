@@ -860,8 +860,8 @@ importers:
         specifier: ^0.26.0
         version: 0.26.0
       drizzle-orm:
-        specifier: ^0.34.1
-        version: 0.34.1(@types/better-sqlite3@7.6.11)(@types/react@18.3.11)(better-sqlite3@11.3.0)(mysql2@3.11.3)(react@18.3.1)
+        specifier: ^0.35.0
+        version: 0.35.0(@types/better-sqlite3@7.6.11)(@types/react@18.3.11)(better-sqlite3@11.3.0)(mysql2@3.11.3)(react@18.3.1)
       mysql2:
         specifier: 3.11.3
         version: 3.11.3
@@ -4532,8 +4532,8 @@ packages:
     resolution: {integrity: sha512-bTtqvQZW21zFjAfIUJSkuHMWyxaHGTtvC05ivmu9na6m3fu7AlJ+rfKgh5vGR7+Jnga7t7evONkQHrs0hxqJXg==}
     hasBin: true
 
-  drizzle-orm@0.34.1:
-    resolution: {integrity: sha512-t+zCwyWWt8xTqtYV4doE/xYmT7hpv1L8pQ66zddEz+3VWyedBBtctjMAp22mAJPfyWurRQXUJ1nrTtqLq+DqNA==}
+  drizzle-orm@0.35.0:
+    resolution: {integrity: sha512-fyTKnQ6WZQqSUy6yM4Do2tJPBg1ALR0vJtO9xUTLLubD+0qS1PPuu8aVOeLZQo+g8RPJn+Vqoh30/3lSS8/a2w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -11005,7 +11005,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.34.1(@types/better-sqlite3@7.6.11)(@types/react@18.3.11)(better-sqlite3@11.3.0)(mysql2@3.11.3)(react@18.3.1):
+  drizzle-orm@0.35.0(@types/better-sqlite3@7.6.11)(@types/react@18.3.11)(better-sqlite3@11.3.0)(mysql2@3.11.3)(react@18.3.1):
     optionalDependencies:
       '@types/better-sqlite3': 7.6.11
       '@types/react': 18.3.11
