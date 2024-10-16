@@ -56,7 +56,7 @@ export const viewport: Viewport = {
 
 export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
   const session = await auth();
-  const colorScheme = cookies().get("homarr-color-scheme")?.value ?? "light";
+  const colorScheme = cookies().get("homarr-color-scheme")?.value ?? "dark";
   const tCommon = await getScopedI18n("common");
   const direction = tCommon("direction");
 
@@ -73,7 +73,15 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
-    <html lang="en" dir={direction} data-mantine-color-scheme={colorScheme} suppressHydrationWarning>
+    <html
+      lang="en"
+      dir={direction}
+      data-mantine-color-scheme={colorScheme}
+      style={{
+        backgroundColor: colorScheme === "dark" ? "#242424" : "#fff",
+      }}
+      suppressHydrationWarning
+    >
       <head>
         <Analytics />
         <SearchEngineOptimization />
