@@ -22,7 +22,7 @@ const helpMode = {
       keyPath: "character",
       title: (t) => t("search.mode.help.group.mode.title"),
       options: searchModesWithoutHelp.map(({ character, modeKey }) => ({ character, modeKey })),
-      component: ({ modeKey, character }) => {
+      Component: ({ modeKey, character }) => {
         const t = useScopedI18n(`search.mode.${modeKey}`);
 
         return (
@@ -59,7 +59,7 @@ const helpMode = {
           },
         ];
       },
-      component: (props) => (
+      Component: (props) => (
         <Group px="md" py="xs" w="100%" wrap="nowrap" align="center">
           <props.icon />
           <Text>{props.label}</Text>

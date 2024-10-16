@@ -39,7 +39,7 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
       success: validationResult.success,
       result: validationResult,
     };
-  }, [search]);
+  }, [options.validate, search]);
 
   const error = React.useMemo(() => {
     /* hide the error when nothing is being typed since "" is not valid but is not an explicit error */

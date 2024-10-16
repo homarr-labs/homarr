@@ -44,7 +44,7 @@ export const commandMode = {
       keyPath: "commandKey",
       title: "Global commands",
       useInteraction: (option, query) => option.useInteraction(option, query),
-      component: ({ icon: Icon, name }) => (
+      Component: ({ icon: Icon, name }) => (
         <Group px="md" py="sm">
           <Icon stroke={1.5} />
           <Text>{name}</Text>
