@@ -34,6 +34,17 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
       },
     },
     trustHost: true,
+    cookies: {
+      sessionToken: {
+        name: sessionTokenCookieName,
+        options: {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          secure: true,
+        },
+      },
+    },
     adapter,
     providers: filterProviders([
       Credentials(createCredentialsConfiguration(db)),
