@@ -20,7 +20,7 @@ export const newIntegrationChildrenOptions = createChildrenOptions<Record<string
       )
       .map(([kind, integrationDef]) => ({
         key: kind,
-        component() {
+        Component() {
           return (
             <Group mx="md" my="sm" wrap="nowrap" w="100%">
               <IntegrationAvatar kind={kind} size="sm" />
@@ -31,7 +31,7 @@ export const newIntegrationChildrenOptions = createChildrenOptions<Record<string
         useInteraction: interaction.link(() => ({ href: `/manage/integrations/new?kind=${kind}` })),
       }));
   },
-  detailComponent() {
+  DetailComponent() {
     const t = useI18n();
 
     return (

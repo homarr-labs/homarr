@@ -38,7 +38,7 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
     (id: string, canceled?: boolean) => {
       dispatch({ type: "CLOSE", modalId: id, canceled });
     },
-    [stateRef, dispatch],
+    [dispatch],
   );
 
   const openModalInner: ModalContextProps["openModalInner"] = useCallback(
@@ -63,10 +63,7 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
     [dispatch],
   );
 
-  const handleCloseModal = useCallback(
-    () => state.current && closeModal(state.current.id),
-    [closeModal, state.current?.id],
-  );
+  const handleCloseModal = useCallback(() => state.current && closeModal(state.current.id), [closeModal, state]);
 
   const activeModals = state.modals.filter((modal) => modal.id === state.current?.id || modal.props.keepMounted);
 

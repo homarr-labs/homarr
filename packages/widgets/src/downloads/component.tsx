@@ -2,7 +2,7 @@
 
 import "../widgets-common.css";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { MantineStyleProp } from "@mantine/core";
 import {
   ActionIcon,
@@ -233,7 +233,19 @@ export default function DownloadClientsWidget({
         )
         //flatMap already sorts by integration by nature, add sorting by integration type (usenet | torrent)
         .sort(({ type: typeA }, { type: typeB }) => typeA.length - typeB.length),
-    [currentItems, integrationIds, options],
+    [
+      currentItems,
+      integrationIds,
+      integrationsWithInteractions,
+      mutateDeleteItem,
+      mutatePauseItem,
+      mutateResumeItem,
+      options.activeTorrentThreshold,
+      options.categoryFilter,
+      options.filterIsWhitelist,
+      options.showCompletedTorrent,
+      options.showCompletedUsenet,
+    ],
   );
 
   //Flatten Clients Array for which each elements has the integration and general client infos.
@@ -278,7 +290,14 @@ export default function DownloadClientsWidget({
           ({ status: statusA }, { status: statusB }) =>
             (statusA?.type.length ?? Infinity) - (statusB?.type.length ?? Infinity),
         ),
-    [currentItems, integrationIds, options],
+    [
+      currentItems,
+      integrationIds,
+      integrationsWithInteractions,
+      options.applyFilterToRatio,
+      options.categoryFilter,
+      options.filterIsWhitelist,
+    ],
   );
 
   //Check existing types between torrents and usenet
@@ -333,37 +352,40 @@ export default function DownloadClientsWidget({
   };
 
   //Base element in common with all columns
-  const columnsDefBase = ({
-    key,
-    showHeader,
-    align,
-  }: {
-    key: keyof ExtendedDownloadClientItem;
-    showHeader: boolean;
-    align?: "center" | "left" | "right" | "justify" | "char";
-  }): MRT_ColumnDef<ExtendedDownloadClientItem> => {
-    const style: MantineStyleProp = {
-      minWidth: 0,
-      width: "var(--column-width)",
-      height: "var(--ratio-width)",
-      padding: "var(--space-size)",
-      transition: "unset",
-      "--key-width": columnsRatios[key],
-      "--column-width": "calc((var(--key-width)/var(--total-width) * 100cqw))",
-    };
-    return {
-      id: key,
-      accessorKey: key,
-      header: key,
-      size: columnsRatios[key],
-      mantineTableBodyCellProps: { style, align },
-      mantineTableHeadCellProps: {
-        style,
-        align: isEditMode ? "center" : align,
-      },
-      Header: () => (showHeader && !isEditMode ? <Text fw={700}>{t(`items.${key}.columnTitle`)}</Text> : ""),
-    };
-  };
+  const columnsDefBase = useCallback(
+    ({
+      key,
+      showHeader,
+      align,
+    }: {
+      key: keyof ExtendedDownloadClientItem;
+      showHeader: boolean;
+      align?: "center" | "left" | "right" | "justify" | "char";
+    }): MRT_ColumnDef<ExtendedDownloadClientItem> => {
+      const style: MantineStyleProp = {
+        minWidth: 0,
+        width: "var(--column-width)",
+        height: "var(--ratio-width)",
+        padding: "var(--space-size)",
+        transition: "unset",
+        "--key-width": columnsRatios[key],
+        "--column-width": "calc((var(--key-width)/var(--total-width) * 100cqw))",
+      };
+      return {
+        id: key,
+        accessorKey: key,
+        header: key,
+        size: columnsRatios[key],
+        mantineTableBodyCellProps: { style, align },
+        mantineTableHeadCellProps: {
+          style,
+          align: isEditMode ? "center" : align,
+        },
+        Header: () => (showHeader && !isEditMode ? <Text fw={700}>{t(`items.${key}.columnTitle`)}</Text> : ""),
+      };
+    },
+    [isEditMode, t],
+  );
 
   //Make columns and cell elements, Memoized to data with deps on data and EditMode
   const columns = useMemo<MRT_ColumnDef<ExtendedDownloadClientItem>[]>(
@@ -580,7 +602,7 @@ export default function DownloadClientsWidget({
         },
       },
     ],
-    [clickedIndex, isEditMode, data, integrationIds, options],
+    [columnsDefBase, t, tCommon],
   );
 
   //Table build and config
@@ -704,10 +726,7 @@ interface ItemInfoModalProps {
 }
 
 const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalProps) => {
-  const item = useMemo<ExtendedDownloadClientItem | undefined>(
-    () => items[currentIndex],
-    [items, currentIndex, opened],
-  );
+  const item = useMemo<ExtendedDownloadClientItem | undefined>(() => items[currentIndex], [items, currentIndex]);
   const t = useScopedI18n("widget.downloads.states");
   //The use case for "No item found" should be impossible, hence no translation
   return (

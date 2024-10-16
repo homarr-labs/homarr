@@ -77,7 +77,15 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
-    <html lang="en" dir={direction} data-mantine-color-scheme={colorScheme} suppressHydrationWarning>
+    <html
+      lang="en"
+      dir={direction}
+      data-mantine-color-scheme={colorScheme}
+      style={{
+        backgroundColor: colorScheme === "dark" ? "#242424" : "#fff",
+      }}
+      suppressHydrationWarning
+    >
       <head>
         <Analytics />
         <SearchEngineOptimization />
@@ -93,5 +101,5 @@ export default async function Layout(props: { children: React.ReactNode; params:
 }
 
 const getColorScheme = () => {
-  return cookies().get("homarr-color-scheme")?.value ?? "light";
+  return cookies().get("homarr-color-scheme")?.value ?? "dark";
 };
