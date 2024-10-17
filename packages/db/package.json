@@ -39,7 +39,7 @@
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@testcontainers/mysql": "^10.13.2",
-    "better-sqlite3": "^11.3.0",
+    "better-sqlite3": "^11.4.0",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.26.2",
     "drizzle-orm": "^0.35.1",
