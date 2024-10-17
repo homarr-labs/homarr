@@ -1,5 +1,5 @@
 export interface Indexer {
-  id: number;
+  id: number | string;
   name: string;
   url: string;
   /**
@@ -7,6 +7,6 @@ export interface Indexer {
    * Status: when there is an error with the indexer site.
    * If one of the options are false the indexer is off.
    */
-  enabled: boolean;
+  enabled?: boolean;
   status: boolean;
 }
