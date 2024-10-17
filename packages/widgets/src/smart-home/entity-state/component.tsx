@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Center, Stack, Text, UnstyledButton } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -38,7 +38,7 @@ export default function SmartHomeEntityStateWidget({
 
   const attribute = options.entityUnit.length > 0 ? " " + options.entityUnit : "";
 
-  const handleClick = React.useCallback(() => {
+  const handleClick = useCallback(() => {
     if (isEditMode) {
       return;
     }
@@ -51,7 +51,7 @@ export default function SmartHomeEntityStateWidget({
       entityId: options.entityId,
       integrationId: integrationIds[0] ?? "",
     });
-  }, []);
+  }, [integrationIds, isEditMode, mutate, options.clickable, options.entityId]);
 
   return (
     <UnstyledButton

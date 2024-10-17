@@ -72,7 +72,7 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
         () => undefined,
       );
     }
-  }, [videoRef]);
+  }, [options.hasAutoPlay, options.hasControls, options.isMuted, videoRef]);
 
   return (
     <Group justify="center" w="100%" h="100%" pos="relative">

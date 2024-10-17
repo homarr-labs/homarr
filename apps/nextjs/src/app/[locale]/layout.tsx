@@ -28,8 +28,7 @@ const fontSans = Inter({
   variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
+export const generateMetadata = (): Metadata => ({
   title: "Homarr",
   description:
     "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
@@ -40,12 +39,17 @@ export const metadata: Metadata = {
     url: "https://homarr.dev",
     siteName: "Homarr Documentation",
   },
-  twitter: {
-    card: "summary_large_image",
-    site: "@jullerino",
-    creator: "@jullerino",
+  icons: {
+    icon: "/logo/logo.png",
+    apple: "/logo/logo.png",
   },
-};
+  appleWebApp: {
+    title: "Homarr",
+    capable: true,
+    startupImage: { url: "/logo/logo.png" },
+    statusBarStyle: getColorScheme() === "dark" ? "black-translucent" : "default",
+  },
+});
 
 export const viewport: Viewport = {
   themeColor: [
@@ -56,7 +60,7 @@ export const viewport: Viewport = {
 
 export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
   const session = await auth();
-  const colorScheme = cookies().get("homarr-color-scheme")?.value ?? "light";
+  const colorScheme = getColorScheme();
   const tCommon = await getScopedI18n("common");
   const direction = tCommon("direction");
 
@@ -73,7 +77,15 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
-    <html lang="en" dir={direction} data-mantine-color-scheme={colorScheme} suppressHydrationWarning>
+    <html
+      lang="en"
+      dir={direction}
+      data-mantine-color-scheme={colorScheme}
+      style={{
+        backgroundColor: colorScheme === "dark" ? "#242424" : "#fff",
+      }}
+      suppressHydrationWarning
+    >
       <head>
         <Analytics />
         <SearchEngineOptimization />
@@ -87,3 +99,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
     </html>
   );
 }
+
+const getColorScheme = () => {
+  return cookies().get("homarr-color-scheme")?.value ?? "dark";
+};

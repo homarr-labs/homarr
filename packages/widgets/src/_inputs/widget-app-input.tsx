@@ -1,19 +1,22 @@
 "use client";
 
 import { memo, useMemo } from "react";
+import Link from "next/link";
 import type { SelectProps } from "@mantine/core";
-import { Group, Loader, Select } from "@mantine/core";
+import { Anchor, Group, Loader, Select, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetAppInput = ({ property, kind, options }: CommonWidgetInputProps<"app">) => {
-  const t = useWidgetInputTranslation(kind, property);
+export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">) => {
+  const t = useI18n();
+  const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const { data: apps, isPending } = clientApi.app.selectable.useQuery();
 
@@ -24,10 +27,11 @@ export const WidgetAppInput = ({ property, kind, options }: CommonWidgetInputPro
 
   return (
     <Select
-      label={t("label")}
+      label={tInput("label")}
       searchable
       limit={10}
       leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
+      nothingFoundMessage={t("widget.common.app.noData")}
       renderOption={renderSelectOption}
       data={
         apps?.map((app) => ({
@@ -36,7 +40,18 @@ export const WidgetAppInput = ({ property, kind, options }: CommonWidgetInputPro
           iconUrl: app.iconUrl,
         })) ?? []
       }
-      description={options.withDescription ? t("description") : undefined}
+      inputWrapperOrder={["label", "input", "description", "error"]}
+      description={
+        <Text size="xs">
+          {t("widget.common.app.description", {
+            here: (
+              <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
+                {t("common.here")}
+              </Anchor>
+            ),
+          })}
+        </Text>
+      }
       {...form.getInputProps(`options.${property}`)}
     />
   );

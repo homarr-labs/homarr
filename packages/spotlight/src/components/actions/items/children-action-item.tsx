@@ -24,7 +24,7 @@ export const ChildrenActionItem = ({ childrenOptions, action, query }: ChildrenA
 
   return (
     <Spotlight.Action renderRoot={renderRoot} onClick={onClick} className={classes.spotlightAction}>
-      <action.component {...childrenOptions.option} />
+      <action.Component {...childrenOptions.option} />
     </Spotlight.Action>
   );
 };

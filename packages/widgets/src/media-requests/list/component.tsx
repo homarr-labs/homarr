@@ -46,7 +46,7 @@ export default function MediaServerWidget({
           }
           return 0;
         }),
-    [mediaRequests, integrationIds],
+    [mediaRequests],
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
