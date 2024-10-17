@@ -10,6 +10,7 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
+import { JackettIntegration } from "../jackett/jackett-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
@@ -61,5 +62,6 @@ export const integrationCreators = {
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
+  jackett: JackettIntegration,
   openmediavault: OpenMediaVaultIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;
