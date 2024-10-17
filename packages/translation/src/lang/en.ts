@@ -1123,10 +1123,10 @@ export default {
       popover: {
         information: "Information",
         processor: "Processor: {cpuModelName}",
-        memory: "Memory: {memory}",
-        memoryAvailable: "Available: {memoryAvailable} ({percent})",
+        memory: "Memory: {memory}GiB",
+        memoryAvailable: "Available: {memoryAvailable}GiB ({percent}%)",
         version: "Version: {version}",
-        uptime: "Uptime: {uptime}",
+        uptime: "Uptime: {days} Days, {hours} Hours, {minutes} Minutes",
         loadAverage: "Load average:",
         minute: "1 minute",
         minutes: "{count} minutes",

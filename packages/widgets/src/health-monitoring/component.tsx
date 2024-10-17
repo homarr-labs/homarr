@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Avatar,
   Box,
   Card,
   Center,
@@ -38,6 +39,8 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
+
+dayjs.extend(duration);
 
 export default function HealthMonitoringWidget({ options, integrationIds }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
@@ -146,21 +149,30 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                           className="health-monitoring-information-processor"
                           icon={<IconCpu2 size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.processor")} {healthInfo.cpuModelName}
+                          {t("widget.healthMonitoring.popover.processor", { cpuModelName: healthInfo.cpuModelName })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-memory"
                           icon={<IconBrain size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.memory")} {memoryUsage.memTotal.GB}GiB -{" "}
-                          {t("widget.healthMonitoring.popover.memAvailable")} {memoryUsage.memFree.GB}GiB (
-                          {memoryUsage.memFree.percent}%)
+                          {t("widget.healthMonitoring.popover.memory", { memory: memoryUsage.memTotal.GB })}
+                        </List.Item>
+                        <List.Item
+                          className="health-monitoring-information-memory"
+                          icon={<IconBrain size="1.5cqmin" />}
+                        >
+                          {t("widget.healthMonitoring.popover.memoryAvailable", {
+                            memoryAvailable: memoryUsage.memFree.GB,
+                            percent: memoryUsage.memFree.percent,
+                          })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-version"
                           icon={<IconVersions size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.version")} {healthInfo.version}
+                          {t("widget.healthMonitoring.popover.version", {
+                            version: healthInfo.version,
+                          })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-uptime"
@@ -250,7 +262,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                           color="default"
                         >
                           <Progress.Label className="health-monitoring-disk-available-value" fz="2.5cqmin">
-                            {t("widget.healthMonitoring.popover.diskAvailable")}
+                            {t("widget.healthMonitoring.popover.available")}
                           </Progress.Label>
                         </Progress.Section>
                       </Tooltip>
@@ -266,14 +278,12 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
 }
 
 export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) => {
-  dayjs.extend(duration);
   const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");
   const days = uptimeDuration.days();
   const hours = uptimeDuration.hours();
   const minutes = uptimeDuration.minutes();
-  const formattedUptime = `${days} ${t("common.information.days")}, ${hours} ${t("common.information.hours")}, ${minutes} ${t("common.information.minutes")}`;
 
-  return t("widget.healthMonitoring.popover.uptime", { uptime: formattedUptime });
+  return t("widget.healthMonitoring.popover.uptime", { days: days, hours: hours, minutes: minutes });
 };
 
 export const progressColor = (percentage: number) => {
