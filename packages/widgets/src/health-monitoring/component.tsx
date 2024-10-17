@@ -283,7 +283,7 @@ export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) =>
   const hours = uptimeDuration.hours();
   const minutes = uptimeDuration.minutes();
 
-  return t("widget.healthMonitoring.popover.uptime", { days: days, hours: hours, minutes: minutes });
+  return t("widget.healthMonitoring.popover.uptime", { days, hours, minutes });
 };
 
 export const progressColor = (percentage: number) => {
