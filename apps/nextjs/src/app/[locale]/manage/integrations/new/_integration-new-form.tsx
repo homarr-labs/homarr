@@ -9,7 +9,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions } from "@homarr/definitions";
+import { getAllSecretKindOptions, getIntegrationName } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
@@ -32,7 +32,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const router = useRouter();
   const form = useZodForm(validation.integration.create.omit({ kind: true }), {
     initialValues: {
-      name: searchParams.name ?? "",
+      name: searchParams.name ?? getIntegrationName(searchParams.kind),
       url: searchParams.url ?? "",
       secrets: secretKinds[0].map((kind) => ({
         kind,
@@ -81,7 +81,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
       <Stack>
-        <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
+        <TextInput withAsterisk label={t("integration.field.name.label")} autoFocus {...form.getInputProps("name")} />
 
         <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
 

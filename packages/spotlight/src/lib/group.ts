@@ -8,7 +8,7 @@ type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps ext
   // key path is used to define the path to a unique key in the option object
   keyPath: keyof TOption;
   title: stringOrTranslation;
-  component: (option: TOption) => JSX.Element;
+  Component: (option: TOption) => JSX.Element;
   useInteraction: (option: TOption, query: string) => inferSearchInteractionDefinition<SearchInteraction>;
   onKeyDown?: (
     event: KeyboardEvent,

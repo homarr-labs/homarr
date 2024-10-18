@@ -39,7 +39,7 @@ export const GridStackItem = ({
     if (type !== "section") return;
     innerRef.current.gridstackNode.minW = minWidth;
     innerRef.current.gridstackNode.minH = minHeight;
-  }, [minWidth, minHeight, innerRef]);
+  }, [minWidth, minHeight, innerRef, type]);
 
   return (
     <Box

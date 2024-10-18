@@ -15,7 +15,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
   useActions: () => [
     {
       key: "search",
-      component: ({ name }) => {
+      Component: ({ name }) => {
         const tChildren = useScopedI18n("search.mode.external.group.searchEngine.children");
 
         return (
@@ -30,7 +30,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
       })),
     },
   ],
-  detailComponent({ options }) {
+  DetailComponent({ options }) {
     const tChildren = useScopedI18n("search.mode.external.group.searchEngine.children");
     return (
       <Stack mx="md" my="sm">
@@ -47,7 +47,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
 export const searchEnginesSearchGroups = createGroup<SearchEngine>({
   keyPath: "short",
   title: (t) => t("search.mode.external.group.searchEngine.title"),
-  component: ({ iconUrl, name, short, description }) => {
+  Component: ({ iconUrl, name, short, description }) => {
     return (
       <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
         <Group wrap="nowrap">

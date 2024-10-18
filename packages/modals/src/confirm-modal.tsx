@@ -53,7 +53,7 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
         actions.closeModal();
       }
     },
-    [cancelProps?.onClick, onCancel, actions.closeModal],
+    [cancelProps, onCancel, closeOnCancel, actions],
   );
 
   const handleConfirm = useCallback(
@@ -73,7 +73,7 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
       }
       setLoading(false);
     },
-    [confirmProps?.onClick, onConfirm, actions.closeModal],
+    [confirmProps, onConfirm, closeOnConfirm, actions],
   );
 
   return (

@@ -579,6 +579,7 @@ export default {
       tryAgain: "Try again",
       loading: "Loading",
     },
+    here: "here",
     iconPicker: {
       label: "Icon URL",
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
@@ -1159,6 +1160,14 @@ export default {
             fallback: "Unknown",
           },
         },
+      },
+      integration: {
+        noData: "No integration found",
+        description: "Click {here} to create a new integration",
+      },
+      app: {
+        noData: "No app found",
+        description: "Click {here} to create a new app",
       },
       error: {
         action: {
