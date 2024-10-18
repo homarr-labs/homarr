@@ -10,7 +10,7 @@ import { interaction } from "../../lib/interaction";
 export const integrationsSearchGroup = createGroup<{ id: string; kind: IntegrationKind; name: string }>({
   keyPath: "id",
   title: (t) => t("search.mode.appIntegrationBoard.group.integration.title"),
-  component: (integration) => (
+  Component: (integration) => (
     <Group px="md" py="sm">
       <IntegrationAvatar size="sm" kind={integration.kind} />
 

@@ -31,7 +31,7 @@ export default function SmartHomeTriggerAutomationWidget({
       automationId: options.automationId,
       integrationId: integrationIds[0] ?? "",
     });
-  }, [isEditMode]);
+  }, [integrationIds, isEditMode, mutateAsync, options.automationId]);
   return (
     <UnstyledButton onClick={handleClick} style={{ cursor: !isEditMode ? "pointer" : "initial" }} w="100%" h="100%">
       {isShowSuccess && (

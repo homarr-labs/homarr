@@ -16,7 +16,7 @@ const appChildrenOptions = createChildrenOptions<App>({
   useActions: () => [
     {
       key: "open",
-      component: () => {
+      Component: () => {
         const t = useI18n();
 
         return (
@@ -34,7 +34,7 @@ const appChildrenOptions = createChildrenOptions<App>({
     },
     {
       key: "edit",
-      component: () => {
+      Component: () => {
         const t = useI18n();
 
         return (
@@ -47,7 +47,7 @@ const appChildrenOptions = createChildrenOptions<App>({
       useInteraction: interaction.link(({ id }) => ({ href: `/manage/apps/edit/${id}` })),
     },
   ],
-  detailComponent: ({ options }) => {
+  DetailComponent: ({ options }) => {
     const t = useI18n();
 
     return (
@@ -75,7 +75,7 @@ const appChildrenOptions = createChildrenOptions<App>({
 export const appsSearchGroup = createGroup<App>({
   keyPath: "id",
   title: (t) => t("search.mode.appIntegrationBoard.group.app.title"),
-  component: (app) => (
+  Component: (app) => (
     <Group px="md" py="sm">
       <Avatar
         size="sm"

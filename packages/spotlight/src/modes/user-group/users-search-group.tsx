@@ -17,7 +17,7 @@ const userChildrenOptions = createChildrenOptions<User>({
   useActions: () => [
     {
       key: "detail",
-      component: () => {
+      Component: () => {
         const t = useI18n();
 
         return (
@@ -30,7 +30,7 @@ const userChildrenOptions = createChildrenOptions<User>({
       useInteraction: interaction.link(({ id }) => ({ href: `/manage/users/${id}/general` })),
     },
   ],
-  detailComponent: ({ options }) => {
+  DetailComponent: ({ options }) => {
     const t = useI18n();
 
     return (
@@ -49,7 +49,7 @@ const userChildrenOptions = createChildrenOptions<User>({
 export const usersSearchGroup = createGroup<User>({
   keyPath: "id",
   title: (t) => t("search.mode.userGroup.group.user.title"),
-  component: (user) => (
+  Component: (user) => (
     <Group px="md" py="sm">
       <UserAvatar user={user} size="sm" />
       <Text>{user.name}</Text>

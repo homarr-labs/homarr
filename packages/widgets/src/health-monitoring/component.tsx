@@ -17,7 +17,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useElementSize, useListState } from "@mantine/hooks";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
 import {
   IconBrain,
   IconClock,
@@ -29,42 +29,91 @@ import {
   IconTemperature,
   IconVersions,
 } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 
+import { clientApi } from "@homarr/api/client";
+import type { HealthMonitoring } from "@homarr/integrations";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
 
-export default function HealthMonitoringWidget({
-  options,
-  integrationIds,
-  serverData,
-}: WidgetComponentProps<"healthMonitoring">) {
+dayjs.extend(duration);
+
+export default function HealthMonitoringWidget({ options, integrationIds }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
-  const [healthData] = useListState(serverData?.initialData ?? []);
+  const [healthData] = clientApi.widget.healthMonitoring.getHealthStatus.useSuspenseQuery(
+    {
+      integrationIds,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select: (data) =>
+        data.filter(
+          (
+            health,
+          ): health is {
+            integrationId: string;
+            integrationName: string;
+            healthInfo: HealthMonitoring;
+            timestamp: Date;
+          } => health.healthInfo !== null,
+        ),
+    },
+  );
   const [opened, { open, close }] = useDisclosure(false);
+  const utils = clientApi.useUtils();
+
+  clientApi.widget.healthMonitoring.subscribeHealthStatus.useSubscription(
+    { integrationIds },
+    {
+      onData(data) {
+        utils.widget.healthMonitoring.getHealthStatus.setData({ integrationIds }, (prevData) => {
+          if (!prevData) {
+            return undefined;
+          }
+          const newData = prevData.map((item) =>
+            item.integrationId === data.integrationId
+              ? { ...item, healthInfo: data.healthInfo, timestamp: new Date(0) }
+              : item,
+          );
+          return newData.filter(
+            (
+              health,
+            ): health is {
+              integrationId: string;
+              integrationName: string;
+              healthInfo: HealthMonitoring;
+              timestamp: Date;
+            } => health.healthInfo !== null,
+          );
+        });
+      },
+    },
+  );
 
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
   }
   return (
-    <Box h="100%" className="health-monitoring">
-      {healthData.map(({ integrationId, integrationName, healthInfo }) => {
-        const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
+    <Stack h="100%" gap="2.5cqmin" className="health-monitoring">
+      {healthData.map(({ integrationId, integrationName, healthInfo, timestamp }) => {
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
-        const { ref, width } = useElementSize();
-        const ringSize = width * 0.95;
-        const ringThickness = width / 10;
-        const progressSize = width * 0.2;
-
+        const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         return (
-          <Box
+          <Stack
+            gap="2.5cqmin"
             key={integrationId}
             h="100%"
             className={`health-monitoring-information health-monitoring-${integrationName}`}
+            p="2.5cqmin"
           >
-            <Card className="health-monitoring-information-card" m="2.5cqmin" p="2.5cqmin" withBorder>
+            <Card className="health-monitoring-information-card" p="2.5cqmin" withBorder>
               <Flex
                 className="health-monitoring-information-card-elements"
                 h="100%"
@@ -102,21 +151,30 @@ export default function HealthMonitoringWidget({
                           className="health-monitoring-information-processor"
                           icon={<IconCpu2 size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.processor")} {healthInfo.cpuModelName}
+                          {t("widget.healthMonitoring.popover.processor", { cpuModelName: healthInfo.cpuModelName })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-memory"
                           icon={<IconBrain size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.memory")} {memoryUsage.memTotal.GB}GiB -{" "}
-                          {t("widget.healthMonitoring.popover.memAvailable")} {memoryUsage.memFree.GB}GiB (
-                          {memoryUsage.memFree.percent}%)
+                          {t("widget.healthMonitoring.popover.memory", { memory: memoryUsage.memTotal.GB })}
+                        </List.Item>
+                        <List.Item
+                          className="health-monitoring-information-memory"
+                          icon={<IconBrain size="1.5cqmin" />}
+                        >
+                          {t("widget.healthMonitoring.popover.memoryAvailable", {
+                            memoryAvailable: memoryUsage.memFree.GB,
+                            percent: memoryUsage.memFree.percent,
+                          })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-version"
                           icon={<IconVersions size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.version")} {healthInfo.version}
+                          {t("widget.healthMonitoring.popover.version", {
+                            version: healthInfo.version,
+                          })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-uptime"
@@ -147,92 +205,28 @@ export default function HealthMonitoringWidget({
                     </Stack>
                   </Modal>
                 </Box>
-                {options.cpu && (
-                  <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu">
-                    <RingProgress
-                      className="health-monitoring-cpu-utilization"
-                      roundCaps
-                      size={ringSize}
-                      thickness={ringThickness}
-                      label={
-                        <Center style={{ flexDirection: "column" }}>
-                          <Text
-                            className="health-monitoring-cpu-utilization-value"
-                            size="3cqmin"
-                          >{`${healthInfo.cpuUtilization.toFixed(2)}%`}</Text>
-                          <IconCpu className="health-monitoring-cpu-utilization-icon" size="7cqmin" />
-                        </Center>
-                      }
-                      sections={[
-                        {
-                          value: Number(healthInfo.cpuUtilization.toFixed(2)),
-                          color: progressColor(Number(healthInfo.cpuUtilization.toFixed(2))),
-                        },
-                      ]}
-                    />
-                  </Box>
-                )}
+                {options.cpu && <CpuRing cpuUtilization={healthInfo.cpuUtilization} />}
                 {healthInfo.cpuTemp && options.cpu && (
-                  <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu-temperature">
-                    <RingProgress
-                      ref={ref}
-                      className="health-monitoring-cpu-temp"
-                      roundCaps
-                      size={ringSize}
-                      thickness={ringThickness}
-                      label={
-                        <Center style={{ flexDirection: "column" }}>
-                          <Text className="health-monitoring-cpu-temp-value" size="3cqmin">
-                            {options.fahrenheit
-                              ? `${(healthInfo.cpuTemp * 1.8 + 32).toFixed(1)}°F`
-                              : `${healthInfo.cpuTemp}°C`}
-                          </Text>
-                          <IconCpu className="health-monitoring-cpu-temp-icon" size="7cqmin" />
-                        </Center>
-                      }
-                      sections={[
-                        {
-                          value: healthInfo.cpuTemp,
-                          color: progressColor(healthInfo.cpuTemp),
-                        },
-                      ]}
-                    />
-                  </Box>
+                  <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} />
                 )}
-                {options.memory && (
-                  <Box ref={ref} w="100%" h="100%" className="health-monitoring-memory">
-                    <RingProgress
-                      className="health-monitoring-memory-use"
-                      roundCaps
-                      size={ringSize}
-                      thickness={ringThickness}
-                      label={
-                        <Center style={{ flexDirection: "column" }}>
-                          <Text className="health-monitoring-memory-value" size="3cqmin">
-                            {memoryUsage.memUsed.GB}GiB
-                          </Text>
-                          <IconBrain className="health-monitoring-memory-icon" size="7cqmin" />
-                        </Center>
-                      }
-                      sections={[
-                        {
-                          value: Number(memoryUsage.memUsed.percent),
-                          color: progressColor(Number(memoryUsage.memUsed.percent)),
-                          tooltip: `${memoryUsage.memUsed.percent}%`,
-                        },
-                      ]}
-                    />
-                  </Box>
-                )}
+                {options.memory && <MemoryRing available={healthInfo.memAvailable} used={healthInfo.memUsed} />}
               </Flex>
+              <Text
+                className="health-monitoring-status-update-time"
+                c="dimmed"
+                size="3.5cqmin"
+                ta="center"
+                mb="2.5cqmin"
+              >
+                {t("widget.healthMonitoring.popover.lastSeen", { lastSeen: dayjs(timestamp).fromNow() })}
+              </Text>
             </Card>
             {options.fileSystem &&
               disksData.map((disk) => {
                 return (
                   <Card
-                    className="health-monitoring-disk-card"
+                    className={`health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`}
                     key={disk.deviceName}
-                    m="2.5cqmin"
                     p="2.5cqmin"
                     withBorder
                   >
@@ -258,14 +252,14 @@ export default function HealthMonitoringWidget({
                         </Text>
                       </Group>
                     </Flex>
-                    <Progress.Root className="health-monitoring-disk-use" size={progressSize}>
+                    <Progress.Root className="health-monitoring-disk-use" h="6cqmin">
                       <Tooltip label={disk.used}>
                         <Progress.Section
                           value={disk.percentage}
                           color={progressColor(disk.percentage)}
                           className="health-monitoring-disk-use-percentage"
                         >
-                          <Progress.Label className="health-monitoring-disk-use-value">
+                          <Progress.Label className="health-monitoring-disk-use-value" fz="2.5cqmin">
                             {t("widget.healthMonitoring.popover.used")}
                           </Progress.Label>
                         </Progress.Section>
@@ -283,8 +277,8 @@ export default function HealthMonitoringWidget({
                           value={100 - disk.percentage}
                           color="default"
                         >
-                          <Progress.Label className="health-monitoring-disk-available-value">
-                            {t("widget.healthMonitoring.popover.diskAvailable")}
+                          <Progress.Label className="health-monitoring-disk-available-value" fz="2.5cqmin">
+                            {t("widget.healthMonitoring.popover.available")}
                           </Progress.Label>
                         </Progress.Section>
                       </Tooltip>
@@ -292,17 +286,20 @@ export default function HealthMonitoringWidget({
                   </Card>
                 );
               })}
-          </Box>
+          </Stack>
         );
       })}
-    </Box>
+    </Stack>
   );
 }
 
 export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) => {
-  const days = Math.floor(uptimeInSeconds / (60 * 60 * 24));
-  const remainingHours = Math.floor((uptimeInSeconds % (60 * 60 * 24)) / 3600);
-  return t("widget.healthMonitoring.popover.uptime", { days, hours: remainingHours });
+  const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");
+  const days = uptimeDuration.days();
+  const hours = uptimeDuration.hours();
+  const minutes = uptimeDuration.minutes();
+
+  return t("widget.healthMonitoring.popover.uptime", { days, hours, minutes });
 };
 
 export const progressColor = (percentage: number) => {
@@ -339,6 +336,95 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
       overallStatus: smartDisk?.overallStatus ?? "",
     };
   });
+};
+
+const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
+  const { width, ref } = useElementSize();
+
+  return (
+    <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu">
+      <RingProgress
+        className="health-monitoring-cpu-utilization"
+        roundCaps
+        size={width * 0.95}
+        thickness={width / 10}
+        label={
+          <Center style={{ flexDirection: "column" }}>
+            <Text
+              className="health-monitoring-cpu-utilization-value"
+              size="3cqmin"
+            >{`${cpuUtilization.toFixed(2)}%`}</Text>
+            <IconCpu className="health-monitoring-cpu-utilization-icon" size="7cqmin" />
+          </Center>
+        }
+        sections={[
+          {
+            value: Number(cpuUtilization.toFixed(2)),
+            color: progressColor(Number(cpuUtilization.toFixed(2))),
+          },
+        ]}
+      />
+    </Box>
+  );
+};
+
+const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: number }) => {
+  const { width, ref } = useElementSize();
+  return (
+    <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu-temperature">
+      <RingProgress
+        className="health-monitoring-cpu-temp"
+        roundCaps
+        size={width * 0.95}
+        thickness={width / 10}
+        label={
+          <Center style={{ flexDirection: "column" }}>
+            <Text className="health-monitoring-cpu-temp-value" size="3cqmin">
+              {fahrenheit ? `${(cpuTemp * 1.8 + 32).toFixed(1)}°F` : `${cpuTemp}°C`}
+            </Text>
+            <IconCpu className="health-monitoring-cpu-temp-icon" size="7cqmin" />
+          </Center>
+        }
+        sections={[
+          {
+            value: cpuTemp,
+            color: progressColor(cpuTemp),
+          },
+        ]}
+      />
+    </Box>
+  );
+};
+
+const MemoryRing = ({ available, used }: { available: string; used: string }) => {
+  const { width, ref } = useElementSize();
+  const memoryUsage = formatMemoryUsage(available, used);
+
+  return (
+    <Box ref={ref} w="100%" h="100%" className="health-monitoring-memory">
+      <RingProgress
+        className="health-monitoring-memory-use"
+        roundCaps
+        size={width * 0.95}
+        thickness={width / 10}
+        label={
+          <Center style={{ flexDirection: "column" }}>
+            <Text className="health-monitoring-memory-value" size="3cqmin">
+              {memoryUsage.memUsed.GB}GiB
+            </Text>
+            <IconBrain className="health-monitoring-memory-icon" size="7cqmin" />
+          </Center>
+        }
+        sections={[
+          {
+            value: Number(memoryUsage.memUsed.percent),
+            color: progressColor(Number(memoryUsage.memUsed.percent)),
+            tooltip: `${memoryUsage.memUsed.percent}%`,
+          },
+        ]}
+      />
+    </Box>
+  );
 };
 
 export const formatMemoryUsage = (memFree: string, memUsed: string) => {

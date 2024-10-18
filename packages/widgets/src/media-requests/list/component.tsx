@@ -15,30 +15,26 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   options,
-  serverData,
   itemId,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
-  const isQueryEnabled = Boolean(itemId);
-  const { data: mediaRequests, isError: _isError } = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
+  const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
     {
       integrationIds,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       itemId: itemId!,
     },
     {
-      initialData: !serverData ? undefined : serverData.initialData,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      enabled: integrationIds.length > 0 && isQueryEnabled,
     },
   );
 
   const sortedMediaRequests = useMemo(
     () =>
       mediaRequests
-        ?.filter((group) => group != null)
+        .filter((group) => group != null)
         .flatMap((group) => group.data)
         .flatMap(({ medias, integration }) => medias.map((media) => ({ ...media, integrationId: integration.id })))
         .sort(({ status: statusA }, { status: statusB }) => {
@@ -49,8 +45,8 @@ export default function MediaServerWidget({
             return 1;
           }
           return 0;
-        }) ?? [],
-    [mediaRequests, integrationIds],
+        }),
+    [mediaRequests],
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
