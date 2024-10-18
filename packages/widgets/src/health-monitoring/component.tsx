@@ -78,7 +78,9 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
             return undefined;
           }
           const newData = prevData.map((item) =>
-            item.integrationId === data.integrationId ? { ...item, healthInfo: data.healthInfo } : item,
+            item.integrationId === data.integrationId
+              ? { ...item, healthInfo: data.healthInfo, timestamp: new Date(0) }
+              : item,
           );
           return newData.filter(
             (
@@ -100,7 +102,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
   }
   return (
     <Stack h="100%" gap="2.5cqmin" className="health-monitoring">
-      {healthData.map(({ integrationId, integrationName, healthInfo }) => {
+      {healthData.map(({ integrationId, integrationName, healthInfo, timestamp }) => {
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         return (
@@ -209,6 +211,15 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                 )}
                 {options.memory && <MemoryRing available={healthInfo.memAvailable} used={healthInfo.memUsed} />}
               </Flex>
+              <Text
+                className="health-monitoring-status-update-time"
+                c="dimmed"
+                size="3.5cqmin"
+                ta="center"
+                mb="2.5cqmin"
+              >
+                {t("widget.healthMonitoring.popover.lastSeen", { lastSeen: dayjs(timestamp).fromNow() })}
+              </Text>
             </Card>
             {options.fileSystem &&
               disksData.map((disk) => {
