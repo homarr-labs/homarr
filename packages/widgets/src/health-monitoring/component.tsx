@@ -213,7 +213,12 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
             {options.fileSystem &&
               disksData.map((disk) => {
                 return (
-                  <Card className="health-monitoring-disk-card" key={disk.deviceName} p="2.5cqmin" withBorder>
+                  <Card
+                    className={`health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`}
+                    key={disk.deviceName}
+                    p="2.5cqmin"
+                    withBorder
+                  >
                     <Flex className="health-monitoring-disk-status" justify="space-between" align="center" m="1.5cqmin">
                       <Group gap="1cqmin">
                         <IconServer className="health-monitoring-disk-icon" size="5cqmin" />
