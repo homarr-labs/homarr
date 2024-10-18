@@ -121,13 +121,12 @@ export const groupRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(validation.group.create)
     .mutation(async ({ input, ctx }) => {
-      const normalizedName = normalizeName(input.name);
-      await checkSimilarNameAndThrowAsync(ctx.db, normalizedName);
+      await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
       const id = createId();
       await ctx.db.insert(groups).values({
         id,
-        name: normalizedName,
+        name: input.name,
         ownerId: ctx.session.user.id,
       });
 
@@ -138,14 +137,14 @@ export const groupRouter = createTRPCRouter({
     .input(validation.group.update)
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
+      await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
 
-      const normalizedName = normalizeName(input.name);
-      await checkSimilarNameAndThrowAsync(ctx.db, normalizedName, input.id);
+      await checkSimilarNameAndThrowAsync(ctx.db, input.name, input.id);
 
       await ctx.db
         .update(groups)
         .set({
-          name: normalizedName,
+          name: input.name,
         })
         .where(eq(groups.id, input.id));
     }),
@@ -169,6 +168,7 @@ export const groupRouter = createTRPCRouter({
     .input(validation.group.groupUser)
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
 
       await ctx.db
         .update(groups)
@@ -182,6 +182,7 @@ export const groupRouter = createTRPCRouter({
     .input(validation.common.byId)
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
+      await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
 
       await ctx.db.delete(groups).where(eq(groups.id, input.id));
     }),
@@ -190,6 +191,7 @@ export const groupRouter = createTRPCRouter({
     .input(validation.group.groupUser)
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfCredentialsDisabled();
 
       const user = await ctx.db.query.users.findFirst({
@@ -213,6 +215,7 @@ export const groupRouter = createTRPCRouter({
     .input(validation.group.groupUser)
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfCredentialsDisabled();
 
       await ctx.db
@@ -220,8 +223,6 @@ export const groupRouter = createTRPCRouter({
         .where(and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.userId)));
     }),
 });
-
-const normalizeName = (name: string) => name.trim();
 
 const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreId?: string) => {
   const similar = await db.query.groups.findFirst({
@@ -232,6 +233,19 @@ const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreI
     throw new TRPCError({
       code: "CONFLICT",
       message: "Found group with similar name",
+    });
+  }
+};
+
+const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
+  const group = await db.query.groups.findFirst({
+    where: eq(groups.id, id),
+  });
+
+  if (group?.name === "everyone") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Action is forbidden for reserved group names",
     });
   }
 };

@@ -120,7 +120,7 @@ export const groupMembers = mysqlTable(
 
 export const groups = mysqlTable("group", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
-  name: varchar("name", { length: 64 }).notNull(),
+  name: varchar("name", { length: 64 }).unique().notNull(),
   ownerId: varchar("owner_id", { length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),

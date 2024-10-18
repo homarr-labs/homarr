@@ -121,7 +121,7 @@ export const groupMembers = sqliteTable(
 
 export const groups = sqliteTable("group", {
   id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").unique().notNull(),
   ownerId: text("owner_id").references(() => users.id, {
     onDelete: "set null",
   }),

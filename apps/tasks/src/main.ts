@@ -4,10 +4,7 @@ import "./undici-log-agent-override";
 import { registerCronJobRunner } from "@homarr/cron-job-runner";
 import { jobGroup } from "@homarr/cron-jobs";
 
-import { seedServerSettingsAsync } from "./seed-server-settings";
-
 void (async () => {
   registerCronJobRunner();
   await jobGroup.startAllAsync();
-  await seedServerSettingsAsync();
 })();

@@ -6,9 +6,11 @@ import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { env } from "@homarr/auth/env.mjs";
 import { isProviderEnabled } from "@homarr/auth/server";
+import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, UserAvatar } from "@homarr/ui";
 
+import { ReservedGroupAlert } from "../_reserved-group-alert";
 import { AddGroupMember } from "./_add-group-member";
 import { RemoveGroupMember } from "./_remove-group-member";
 
@@ -25,6 +27,7 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
   const t = await getI18n();
   const tMembers = await getScopedI18n("management.page.group.setting.members");
   const group = await api.group.getById({ id: params.id });
+  const isReserved = group.name === everyoneGroup;
 
   const filteredMembers = searchParams.search
     ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -41,15 +44,19 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
     <Stack>
       <Title>{tMembers("title")}</Title>
 
-      {providerTypes !== "credentials" && (
-        <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-          {t(`group.memberNotice.${providerTypes}`)}
-        </Alert>
+      {isReserved ? (
+        <ReservedGroupAlert />
+      ) : (
+        providerTypes !== "credentials" && (
+          <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+            {t(`group.memberNotice.${providerTypes}`)}
+          </Alert>
+        )
       )}
 
       <Group justify="space-between">
         <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
-        {isProviderEnabled("credentials") && (
+        {isProviderEnabled("credentials") && !isReserved && (
           <AddGroupMember groupId={group.id} presentUserIds={group.members.map((member) => member.id)} />
         )}
       </Group>
@@ -63,7 +70,7 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
       <Table striped highlightOnHover>
         <TableTbody>
           {filteredMembers.map((member) => (
-            <Row key={group.id} member={member} groupId={group.id} />
+            <Row key={group.id} member={member} groupId={group.id} disabled={isReserved} />
           ))}
         </TableTbody>
       </Table>
@@ -74,9 +81,10 @@ export default async function GroupsDetailPage({ params, searchParams }: GroupsD
 interface RowProps {
   member: RouterOutputs["group"]["getById"]["members"][number];
   groupId: string;
+  disabled?: boolean;
 }
 
-const Row = ({ member, groupId }: RowProps) => {
+const Row = ({ member, groupId, disabled }: RowProps) => {
   return (
     <TableTr>
       <TableTd>
@@ -88,7 +96,7 @@ const Row = ({ member, groupId }: RowProps) => {
         </Group>
       </TableTd>
       <TableTd w={100}>
-        {member.provider === "credentials" && <RemoveGroupMember user={member} groupId={groupId} />}
+        {member.provider === "credentials" && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}
       </TableTd>
     </TableTr>
   );
