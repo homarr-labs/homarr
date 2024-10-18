@@ -85,6 +85,13 @@
       "when": 1728490026154,
       "tag": "0011_classy_angel",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1729284756013,
+      "tag": "0012_faithful_weapon_omega",
+      "breakpoints": true
     }
   ]
 }
