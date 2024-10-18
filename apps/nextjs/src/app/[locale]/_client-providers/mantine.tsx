@@ -33,7 +33,7 @@ function useColorSchemeManager(): MantineColorSchemeManager {
   const { data: session } = useSession();
 
   const updateCookieValue = (value: Exclude<MantineColorScheme, "auto">) => {
-    setClientCookie(key, value, { expires: dayjs().add(1, "year").toDate() });
+    setClientCookie(key, value, { expires: dayjs().add(1, "year").toDate(), path: "/" });
   };
 
   const { mutate: mutateColorScheme } = clientApi.user.changeColorScheme.useMutation({
