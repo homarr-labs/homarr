@@ -2,10 +2,10 @@ import Link from "next/link";
 import { Alert, Anchor } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
-import { useI18n } from "@homarr/translation/client";
+import { getI18n } from "@homarr/translation/server";
 
-export const ReservedGroupAlert = () => {
-  const t = useI18n();
+export const ReservedGroupAlert = async () => {
+  const t = await getI18n();
 
   return (
     <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
