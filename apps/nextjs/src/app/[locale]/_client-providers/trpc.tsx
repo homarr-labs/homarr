@@ -19,11 +19,23 @@ import superjson from "superjson";
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
+import { env } from "~/env.mjs";
+
+const constructWebsocketUrl = () => {
+  const fallback = "ws://localhost:3001/websockets";
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+
+  if (env.NODE_ENV === "development") {
+    return fallback;
+  }
+
+  return `ws://${window.location.hostname}:${window.location.port}/websockets`;
+};
+
 const wsClient = createWSClient({
-  url:
-    typeof window === "undefined"
-      ? "ws://localhost:3001/websockets"
-      : `ws://${window.location.hostname}:${window.location.port}/websockets`,
+  url: constructWebsocketUrl(),
 });
 
 export function TRPCReactProvider(props: PropsWithChildren) {
