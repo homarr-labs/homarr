@@ -77,6 +77,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/prowlarr.png",
     category: ["indexerManager"],
   },
+  jackett: {
+    name: "Jackett",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jackett.png",
+    category: ["indexerManager"],
+  },
   jellyfin: {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
