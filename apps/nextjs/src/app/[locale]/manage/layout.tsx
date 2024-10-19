@@ -66,6 +66,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconPhoto,
       href: "/manage/medias",
       label: t("items.medias"),
+      hidden: !session,
     },
     {
       icon: IconUser,
