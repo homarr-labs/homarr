@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Alert, Anchor } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
+import { createDocumentationLink } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 
 export const ReservedGroupAlert = async () => {
@@ -14,7 +15,7 @@ export const ReservedGroupAlert = async () => {
           <Anchor
             size="sm"
             component={Link}
-            href="https://deploy-preview-113--homarr-docs.netlify.app/docs/management/users/#special-groups"
+            href={createDocumentationLink("/docs/management/users", "#special-groups")}
             target="_blank"
           >
             {t("common.action.checkoutDocs")}

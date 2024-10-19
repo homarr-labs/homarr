@@ -39,7 +39,7 @@ export default tseslint.config(
         "warn",
         {
           min: 3,
-          exceptions: ["_", "i", "z", "t", "id", "db"], // _ for unused variables, i for index, z for zod, t for translation
+          exceptions: ["_", "i", "z", "t", "id", "db", "fs"], // _ for unused variables, i for index, z for zod, t for translation
           properties: "never", // This allows for example the use of <Grid.Col span={{ sm: 12, md: 6 }}> as sm and md would be too short
         },
       ],
