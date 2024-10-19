@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX `group_name_unique` ON `group` (`name`);

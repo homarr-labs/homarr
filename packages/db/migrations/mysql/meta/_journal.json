@@ -85,13 +85,6 @@
       "when": 1728490046896,
       "tag": "0011_freezing_banshee",
       "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "5",
-      "when": 1729095429105,
-      "tag": "0012_right_korath",
-      "breakpoints": true
     }
   ]
 }
