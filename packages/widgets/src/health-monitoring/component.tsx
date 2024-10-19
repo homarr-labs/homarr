@@ -29,13 +29,18 @@ import {
   IconTemperature,
   IconVersions,
 } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
+import type { HealthMonitoring } from "@homarr/integrations";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
+
+dayjs.extend(duration);
 
 export default function HealthMonitoringWidget({ options, integrationIds }: WidgetComponentProps<"healthMonitoring">) {
   const t = useI18n();
@@ -48,17 +53,56 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
-      select: (data) => data.filter((health) => health !== null),
+      select: (data) =>
+        data.filter(
+          (
+            health,
+          ): health is {
+            integrationId: string;
+            integrationName: string;
+            healthInfo: HealthMonitoring;
+            timestamp: Date;
+          } => health.healthInfo !== null,
+        ),
     },
   );
   const [opened, { open, close }] = useDisclosure(false);
+  const utils = clientApi.useUtils();
+
+  clientApi.widget.healthMonitoring.subscribeHealthStatus.useSubscription(
+    { integrationIds },
+    {
+      onData(data) {
+        utils.widget.healthMonitoring.getHealthStatus.setData({ integrationIds }, (prevData) => {
+          if (!prevData) {
+            return undefined;
+          }
+          const newData = prevData.map((item) =>
+            item.integrationId === data.integrationId
+              ? { ...item, healthInfo: data.healthInfo, timestamp: new Date(0) }
+              : item,
+          );
+          return newData.filter(
+            (
+              health,
+            ): health is {
+              integrationId: string;
+              integrationName: string;
+              healthInfo: HealthMonitoring;
+              timestamp: Date;
+            } => health.healthInfo !== null,
+          );
+        });
+      },
+    },
+  );
 
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
   }
   return (
     <Stack h="100%" gap="2.5cqmin" className="health-monitoring">
-      {healthData.map(({ integrationId, integrationName, healthInfo }) => {
+      {healthData.map(({ integrationId, integrationName, healthInfo, timestamp }) => {
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         return (
@@ -107,21 +151,30 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                           className="health-monitoring-information-processor"
                           icon={<IconCpu2 size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.processor")} {healthInfo.cpuModelName}
+                          {t("widget.healthMonitoring.popover.processor", { cpuModelName: healthInfo.cpuModelName })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-memory"
                           icon={<IconBrain size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.memory")} {memoryUsage.memTotal.GB}GiB -{" "}
-                          {t("widget.healthMonitoring.popover.memAvailable")} {memoryUsage.memFree.GB}GiB (
-                          {memoryUsage.memFree.percent}%)
+                          {t("widget.healthMonitoring.popover.memory", { memory: memoryUsage.memTotal.GB })}
+                        </List.Item>
+                        <List.Item
+                          className="health-monitoring-information-memory"
+                          icon={<IconBrain size="1.5cqmin" />}
+                        >
+                          {t("widget.healthMonitoring.popover.memoryAvailable", {
+                            memoryAvailable: memoryUsage.memFree.GB,
+                            percent: memoryUsage.memFree.percent,
+                          })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-version"
                           icon={<IconVersions size="1.5cqmin" />}
                         >
-                          {t("widget.healthMonitoring.popover.version")} {healthInfo.version}
+                          {t("widget.healthMonitoring.popover.version", {
+                            version: healthInfo.version,
+                          })}
                         </List.Item>
                         <List.Item
                           className="health-monitoring-information-uptime"
@@ -158,11 +211,25 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                 )}
                 {options.memory && <MemoryRing available={healthInfo.memAvailable} used={healthInfo.memUsed} />}
               </Flex>
+              <Text
+                className="health-monitoring-status-update-time"
+                c="dimmed"
+                size="3.5cqmin"
+                ta="center"
+                mb="2.5cqmin"
+              >
+                {t("widget.healthMonitoring.popover.lastSeen", { lastSeen: dayjs(timestamp).fromNow() })}
+              </Text>
             </Card>
             {options.fileSystem &&
               disksData.map((disk) => {
                 return (
-                  <Card className="health-monitoring-disk-card" key={disk.deviceName} p="2.5cqmin" withBorder>
+                  <Card
+                    className={`health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`}
+                    key={disk.deviceName}
+                    p="2.5cqmin"
+                    withBorder
+                  >
                     <Flex className="health-monitoring-disk-status" justify="space-between" align="center" m="1.5cqmin">
                       <Group gap="1cqmin">
                         <IconServer className="health-monitoring-disk-icon" size="5cqmin" />
@@ -211,7 +278,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                           color="default"
                         >
                           <Progress.Label className="health-monitoring-disk-available-value" fz="2.5cqmin">
-                            {t("widget.healthMonitoring.popover.diskAvailable")}
+                            {t("widget.healthMonitoring.popover.available")}
                           </Progress.Label>
                         </Progress.Section>
                       </Tooltip>
@@ -227,9 +294,12 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
 }
 
 export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) => {
-  const days = Math.floor(uptimeInSeconds / (60 * 60 * 24));
-  const remainingHours = Math.floor((uptimeInSeconds % (60 * 60 * 24)) / 3600);
-  return t("widget.healthMonitoring.popover.uptime", { days, hours: remainingHours });
+  const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");
+  const days = uptimeDuration.days();
+  const hours = uptimeDuration.hours();
+  const minutes = uptimeDuration.minutes();
+
+  return t("widget.healthMonitoring.popover.uptime", { days, hours, minutes });
 };
 
 export const progressColor = (percentage: number) => {
