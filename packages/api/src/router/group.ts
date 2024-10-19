@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like, not, sql } from "@homarr/db";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema/sqlite";
+import { everyoneGroup } from "@homarr/definitions";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
@@ -238,11 +239,9 @@ const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreI
 };
 
 const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
-  const group = await db.query.groups.findFirst({
-    where: eq(groups.id, id),
-  });
+  const count = await db.$count(groups, and(eq(groups.id, id), eq(groups.name, everyoneGroup)));
 
-  if (group?.name === "everyone") {
+  if (count > 0) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Action is forbidden for reserved group names",
