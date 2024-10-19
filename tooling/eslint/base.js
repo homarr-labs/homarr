@@ -80,6 +80,11 @@ export default tseslint.config(
             "VariableDeclarator[init.type=/FunctionExpression$/][init.async=true][id.name=/^[a-z].*$/][id.name!=/Async$/]",
           message: "Async function name must end in 'Async' (variable declarator)",
         },
+        {
+          // \\u002F is the unicode escape for / and is used because of https://github.com/estools/esquery/issues/68
+          selector: "Literal[value=/^https:\\u002F\\u002Fhomarr\\.dev\\u002F.*$/]",
+          message: "Links to 'https://homarr.dev/' should be used with createDocumentationLink method",
+        },
       ],
     },
   },
