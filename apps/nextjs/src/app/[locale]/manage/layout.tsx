@@ -12,6 +12,7 @@ import {
   IconLayoutDashboard,
   IconLogs,
   IconMailForward,
+  IconPhoto,
   IconPlug,
   IconQuestionMark,
   IconReport,
@@ -60,6 +61,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconSearch,
       href: "/manage/search-engines",
       label: t("items.searchEngies"),
+    },
+    {
+      icon: IconPhoto,
+      href: "/manage/medias",
+      label: t("items.medias"),
     },
     {
       icon: IconUser,

@@ -549,6 +549,44 @@ export default {
       full: "Full integration access",
     },
   },
+  media: {
+    plural: "Medias",
+    search: "Find a media",
+    field: {
+      name: "Name",
+      size: "Size",
+      creator: "Creator",
+    },
+    action: {
+      upload: {
+        label: "Upload media",
+        file: "Select file",
+        notification: {
+          success: {
+            message: "The media was successfully uploaded",
+          },
+          error: {
+            message: "The media could not be uploaded",
+          },
+        },
+      },
+      delete: {
+        label: "Delete media",
+        description: "Are you sure you want to delete the media {name}?",
+        notification: {
+          success: {
+            message: "The media was successfully deleted",
+          },
+          error: {
+            message: "The media could not be deleted",
+          },
+        },
+      },
+      copy: {
+        label: "Copy URL",
+      },
+    },
+  },
   common: {
     // Either "ltr" or "rtl"
     direction: "ltr",
@@ -1638,6 +1676,7 @@ export default {
         apps: "Apps",
         integrations: "Integrations",
         searchEngies: "Search engines",
+        medias: "Medias",
         users: {
           label: "Users",
           items: {
@@ -2131,6 +2170,9 @@ export default {
         edit: {
           label: "Edit",
         },
+      },
+      medias: {
+        label: "Medias",
       },
       apps: {
         label: "Apps",
