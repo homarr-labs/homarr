@@ -553,8 +553,8 @@ importers:
   packages/auth:
     dependencies:
       '@auth/core':
-        specifier: ^0.37.1
-        version: 0.37.1
+        specifier: ^0.37.2
+        version: 0.37.2
       '@auth/drizzle-adapter':
         specifier: ^1.7.1
         version: 1.7.1
@@ -833,8 +833,8 @@ importers:
   packages/db:
     dependencies:
       '@auth/core':
-        specifier: ^0.37.1
-        version: 0.37.1
+        specifier: ^0.37.2
+        version: 0.37.2
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1708,6 +1708,20 @@ packages:
 
   '@auth/core@0.37.1':
     resolution: {integrity: sha512-85PosPEZXHKZhEaAH5DVCig2N1Cu5PC8CbWX03Dw9g1JISLHyrRT0RZRcaWlgmz+0Ua4N52sFRX+g9WARQaUlA==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
+
+  '@auth/core@0.37.2':
+    resolution: {integrity: sha512-kUvzyvkcd6h1vpeMAojK2y7+PAV5H+0Cc9+ZlKYDFhDY31AlvsB+GW5vNO4qE3Y07KeQgvNO9U0QUx/fN62kBw==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -7938,6 +7952,16 @@ snapshots:
   '@antfu/ni@0.21.12': {}
 
   '@auth/core@0.37.1':
+    dependencies:
+      '@panva/hkdf': 1.2.1
+      '@types/cookie': 0.6.0
+      cookie: 0.7.1
+      jose: 5.9.3
+      oauth4webapi: 3.0.0
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+
+  '@auth/core@0.37.2':
     dependencies:
       '@panva/hkdf': 1.2.1
       '@types/cookie': 0.6.0

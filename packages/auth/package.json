@@ -23,7 +23,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@auth/core": "^0.37.1",
+    "@auth/core": "^0.37.2",
     "@auth/drizzle-adapter": "^1.7.1",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
