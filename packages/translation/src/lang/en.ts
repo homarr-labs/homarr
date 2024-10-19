@@ -2395,6 +2395,9 @@ export default {
               manageSearchEngine: {
                 label: "Manage search engines",
               },
+              manageMedia: {
+                label: "Manage medias",
+              },
               manageUser: {
                 label: "Manage users",
               },
