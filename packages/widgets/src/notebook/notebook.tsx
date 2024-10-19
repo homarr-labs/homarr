@@ -189,17 +189,31 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
 
   addEventListener("onReadOnlyCheck", handleOnReadOnlyCheck);
 
-  const handleEditToggleCallback = (previous: boolean) => {
-    const current = !previous;
-    if (!editor) return current;
-    editor.setEditable(current);
+  const handleContentUpdate = useCallback(
+    (contentUpdate: string) => {
+      setToSaveContent(contentUpdate);
+      // This is not available in preview mode
+      if (boardId && itemId) {
+        void mutateAsync({ boardId, itemId, content: contentUpdate });
+      }
+    },
+    [boardId, itemId, mutateAsync],
+  );
 
-    handleContentUpdate(content);
+  const handleEditToggleCallback = useCallback(
+    (previous: boolean) => {
+      const current = !previous;
+      if (!editor) return current;
+      editor.setEditable(current);
 
-    return current;
-  };
+      handleContentUpdate(content);
 
-  const handleEditCancelCallback = () => {
+      return current;
+    },
+    [content, editor, handleContentUpdate],
+  );
+
+  const handleEditCancelCallback = useCallback(() => {
     if (!editor) return false;
     editor.setEditable(false);
 
@@ -207,19 +221,11 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
     editor.commands.setContent(toSaveContent);
 
     return false;
-  };
+  }, [editor, toSaveContent]);
 
   const handleEditCancel = useCallback(() => {
     setIsEditing(handleEditCancelCallback);
   }, [setIsEditing, handleEditCancelCallback]);
-
-  const handleContentUpdate = (contentUpdate: string) => {
-    setToSaveContent(contentUpdate);
-    // This is not available in preview mode
-    if (boardId && itemId) {
-      void mutateAsync({ boardId, itemId, content: contentUpdate });
-    }
-  };
 
   const handleEditToggle = useCallback(() => {
     setIsEditing(handleEditToggleCallback);

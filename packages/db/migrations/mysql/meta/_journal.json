@@ -57,6 +57,34 @@
       "when": 1723749320706,
       "tag": "0007_boring_nocturne",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1727532165317,
+      "tag": "0008_far_lifeguard",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1728074730696,
+      "tag": "0009_wakeful_tenebrous",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1728142597094,
+      "tag": "0010_melted_pestilence",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1728490046896,
+      "tag": "0011_freezing_banshee",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { CredentialsSignin } from "@auth/core/errors";
 
-import type { Database } from "@homarr/db";
+import type { Database, InferInsertModel } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
@@ -105,32 +105,27 @@ export const authorizeWithLdapCredentialsAsync = async (
   if (!user) {
     logger.info(`User ${credentials.name} not found in the database. Creating...`);
 
-    user = {
+    const insertUser = {
       id: createId(),
       name: credentials.name,
       email: mailResult.data,
       emailVerified: new Date(), // assume email is verified
       image: null,
       provider: "ldap",
-    };
-    await db.insert(users).values(user);
+    } satisfies InferInsertModel<typeof users>;
+
+    await db.insert(users).values(insertUser);
+
+    user = insertUser;
 
     logger.info(`User ${credentials.name} created successfully.`);
   }
 
-  if (user.name !== credentials.name) {
-    logger.warn(`User ${credentials.name} found in the database but with different name. Updating...`);
-
-    user.name = credentials.name;
-
-    await db.update(users).set({ name: user.name }).where(eq(users.id, user.id));
-
-    logger.info(`User ${credentials.name} updated successfully.`);
-  }
-
   return {
     id: user.id,
-    name: user.name,
+    name: credentials.name,
+    // Groups is used in events.ts to synchronize groups with external systems
+    groups: userGroups,
   };
 };
 

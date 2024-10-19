@@ -53,7 +53,7 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
         actions.closeModal();
       }
     },
-    [cancelProps?.onClick, onCancel, actions.closeModal],
+    [cancelProps, onCancel, closeOnCancel, actions],
   );
 
   const handleConfirm = useCallback(
@@ -73,7 +73,7 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
       }
       setLoading(false);
     },
-    [confirmProps?.onClick, onConfirm, actions.closeModal],
+    [confirmProps, onConfirm, closeOnConfirm, actions],
   );
 
   return (
@@ -85,7 +85,7 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
           {cancelProps?.children ?? translateIfNecessary(t, cancelLabel)}
         </Button>
 
-        <Button {...confirmProps} onClick={handleConfirm} color="red.9" loading={loading}>
+        <Button data-autofocus {...confirmProps} onClick={handleConfirm} color="red.9" loading={loading}>
           {confirmProps?.children ?? translateIfNecessary(t, confirmLabel)}
         </Button>
       </Group>

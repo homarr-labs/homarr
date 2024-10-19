@@ -3,10 +3,9 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Database } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import { groups, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
 
-import { createSaltAsync, hashPasswordAsync } from "../../security";
 import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";
 import * as ldapClient from "../credentials/ldap-client";
 
@@ -15,6 +14,7 @@ vi.mock("../../env.mjs", () => ({
     AUTH_LDAP_BIND_DN: "bind_dn",
     AUTH_LDAP_BIND_PASSWORD: "bind_password",
     AUTH_LDAP_USER_MAIL_ATTRIBUTE: "mail",
+    AUTH_LDAP_GROUP_CLASS: "group",
   },
 }));
 
@@ -34,7 +34,6 @@ describe("authorizeWithLdapCredentials", () => {
       authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
-        credentialType: "ldap",
       });
 
     // Assert
@@ -57,7 +56,6 @@ describe("authorizeWithLdapCredentials", () => {
       authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
-        credentialType: "ldap",
       });
 
     // Assert
@@ -87,7 +85,6 @@ describe("authorizeWithLdapCredentials", () => {
       authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
-        credentialType: "ldap",
       });
 
     // Assert
@@ -120,7 +117,6 @@ describe("authorizeWithLdapCredentials", () => {
       authorizeWithLdapCredentialsAsync(null as unknown as Database, {
         name: "test",
         password: "test",
-        credentialType: "ldap",
       });
 
     // Assert
@@ -152,11 +148,11 @@ describe("authorizeWithLdapCredentials", () => {
     const result = await authorizeWithLdapCredentialsAsync(db, {
       name: "test",
       password: "test",
-      credentialType: "ldap",
     });
 
     // Assert
     expect(result.name).toBe("test");
+    expect(result.groups).toHaveLength(0); // Groups are needed in signIn events callback
     const dbUser = await db.query.users.findFirst({
       where: eq(users.name, "test"),
     });
@@ -171,7 +167,6 @@ describe("authorizeWithLdapCredentials", () => {
     // Arrange
     const db = createDb();
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    const salt = await createSaltAsync();
     spy.mockImplementation(
       () =>
         ({
@@ -190,8 +185,6 @@ describe("authorizeWithLdapCredentials", () => {
     await db.insert(users).values({
       id: createId(),
       name: "test",
-      salt,
-      password: await hashPasswordAsync("test", salt),
       email: "test@gmail.com",
       provider: "credentials",
     });
@@ -200,11 +193,11 @@ describe("authorizeWithLdapCredentials", () => {
     const result = await authorizeWithLdapCredentialsAsync(db, {
       name: "test",
       password: "test",
-      credentialType: "ldap",
     });
 
     // Assert
     expect(result.name).toBe("test");
+    expect(result.groups).toHaveLength(0); // Groups are needed in signIn events callback
     const dbUser = await db.query.users.findFirst({
       where: and(eq(users.name, "test"), eq(users.provider, "ldap")),
     });
@@ -222,16 +215,31 @@ describe("authorizeWithLdapCredentials", () => {
     expect(credentialsUser?.id).not.toBe(result.id);
   });
 
-  test("should authorize user with correct credentials and update name", async () => {
+  // The name update occurs in the signIn event callback
+  test("should authorize user with correct credentials and return updated name", async () => {
     // Arrange
+    const spy = vi.spyOn(ldapClient, "LdapClient");
+    spy.mockImplementation(
+      () =>
+        ({
+          bindAsync: vi.fn(() => Promise.resolve()),
+          searchAsync: vi.fn(() =>
+            Promise.resolve([
+              {
+                dn: "test55",
+                mail: "test@gmail.com",
+              },
+            ]),
+          ),
+          disconnectAsync: vi.fn(),
+        }) as unknown as ldapClient.LdapClient,
+    );
+
     const userId = createId();
     const db = createDb();
-    const salt = await createSaltAsync();
     await db.insert(users).values({
       id: userId,
       name: "test-old",
-      salt,
-      password: await hashPasswordAsync("test", salt),
       email: "test@gmail.com",
       provider: "ldap",
     });
@@ -240,11 +248,10 @@ describe("authorizeWithLdapCredentials", () => {
     const result = await authorizeWithLdapCredentialsAsync(db, {
       name: "test",
       password: "test",
-      credentialType: "ldap",
     });
 
     // Assert
-    expect(result).toEqual({ id: userId, name: "test" });
+    expect(result).toEqual({ id: userId, name: "test", groups: [] });
 
     const dbUser = await db.query.users.findFirst({
       where: eq(users.id, userId),
@@ -252,8 +259,57 @@ describe("authorizeWithLdapCredentials", () => {
 
     expect(dbUser).toBeDefined();
     expect(dbUser?.id).toBe(userId);
-    expect(dbUser?.name).toBe("test");
+    expect(dbUser?.name).toBe("test-old");
     expect(dbUser?.email).toBe("test@gmail.com");
     expect(dbUser?.provider).toBe("ldap");
+  });
+
+  test("should authorize user with correct credentials and return his groups", async () => {
+    // Arrange
+    const spy = vi.spyOn(ldapClient, "LdapClient");
+    spy.mockImplementation(
+      () =>
+        ({
+          bindAsync: vi.fn(() => Promise.resolve()),
+          searchAsync: vi.fn((argument: { options: { filter: string } }) =>
+            argument.options.filter.includes("group")
+              ? Promise.resolve([
+                  {
+                    cn: "homarr_example",
+                  },
+                ])
+              : Promise.resolve([
+                  {
+                    dn: "test55",
+                    mail: "test@gmail.com",
+                  },
+                ]),
+          ),
+          disconnectAsync: vi.fn(),
+        }) as unknown as ldapClient.LdapClient,
+    );
+    const db = createDb();
+    const userId = createId();
+    await db.insert(users).values({
+      id: userId,
+      name: "test",
+      email: "test@gmail.com",
+      provider: "ldap",
+    });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "homarr_example",
+    });
+
+    // Act
+    const result = await authorizeWithLdapCredentialsAsync(db, {
+      name: "test",
+      password: "test",
+    });
+
+    // Assert
+    expect(result).toEqual({ id: userId, name: "test", groups: ["homarr_example"] });
   });
 });

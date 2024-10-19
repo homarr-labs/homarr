@@ -8,7 +8,6 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { z } from "@homarr/validation";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { useItemActions } from "./item-actions";
 
 interface InnerProps {
   gridStack: GridStack;
@@ -21,7 +20,6 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   const t = useI18n();
   // Keep track of the maximum width based on the x offset
   const maxWidthRef = useRef(innerProps.columnCount - innerProps.item.xOffset);
-  const { moveAndResizeItem } = useItemActions();
   const form = useZodForm(
     z.object({
       xOffset: z
@@ -62,7 +60,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       });
       actions.closeModal();
     },
-    [moveAndResizeItem],
+    [actions, innerProps.gridStack, innerProps.item.id],
   );
 
   return (

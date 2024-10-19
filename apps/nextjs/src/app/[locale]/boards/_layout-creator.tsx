@@ -4,7 +4,6 @@ import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
 
 import { logger } from "@homarr/log";
-import { GlobalItemServerDataRunner } from "@homarr/widgets";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
@@ -18,13 +17,11 @@ import { BoardMantineProvider } from "./(content)/_theme";
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
-  isBoardContentPage: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
   getInitialBoardAsync: getInitialBoard,
-  isBoardContentPage,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -42,21 +39,19 @@ export const createBoardLayout = <TParams extends Params>({
     });
 
     return (
-      <GlobalItemServerDataRunner board={initialBoard} shouldRun={isBoardContentPage}>
-        <BoardProvider initialBoard={initialBoard}>
-          <BoardMantineProvider>
-            <CustomCss />
-            <ClientShell hasNavigation={false}>
-              <MainHeader
-                logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-                actions={headerActions}
-                hasNavigation={false}
-              />
-              <AppShellMain>{children}</AppShellMain>
-            </ClientShell>
-          </BoardMantineProvider>
-        </BoardProvider>
-      </GlobalItemServerDataRunner>
+      <BoardProvider initialBoard={initialBoard}>
+        <BoardMantineProvider>
+          <CustomCss />
+          <ClientShell hasNavigation={false}>
+            <MainHeader
+              logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+              actions={headerActions}
+              hasNavigation={false}
+            />
+            <AppShellMain>{children}</AppShellMain>
+          </ClientShell>
+        </BoardMantineProvider>
+      </BoardProvider>
     );
   };
 

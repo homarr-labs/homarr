@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
 import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
@@ -59,11 +60,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && app.href ? (
-        <Suspense
-          fallback={
-            <PingDot color="blue" tooltip={t("common.rtl", { symbol: "…", value: t("common.action.loading") })} />
-          }
-        >
+        <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
           <PingIndicator href={app.href} />
         </Suspense>
       ) : null}

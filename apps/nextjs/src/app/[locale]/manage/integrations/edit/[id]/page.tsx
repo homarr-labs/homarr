@@ -6,6 +6,7 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { IntegrationAccessSettings } from "../../_components/integration-access-settings";
 import { EditIntegrationForm } from "./_integration-edit-form";
 
@@ -16,7 +17,7 @@ interface EditIntegrationPageProps {
 export default async function EditIntegrationPage({ params }: EditIntegrationPageProps) {
   const editT = await getScopedI18n("integration.page.edit");
   const t = await getI18n();
-  const integration = await api.integration.byId({ id: params.id });
+  const integration = await api.integration.byId({ id: params.id }).catch(catchTrpcNotFound);
   const integrationPermissions = await api.integration.getIntegrationPermissions({ id: integration.id });
 
   return (

@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { DayOfWeek } from "@mantine/dates";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
@@ -20,6 +21,17 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 
+export const apiKeys = sqliteTable("apiKey", {
+  id: text("id").notNull().primaryKey(),
+  apiKey: text("apiKey").notNull(),
+  salt: text("salt").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references((): AnySQLiteColumn => users.id, {
+      onDelete: "cascade",
+    }),
+});
+
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -32,7 +44,9 @@ export const users = sqliteTable("user", {
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
+  colorScheme: text("colorScheme").$type<ColorScheme>().default("dark").notNull(),
+  firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(
@@ -341,6 +355,22 @@ export const iconRepositories = sqliteTable("iconRepository", {
 export const serverSettings = sqliteTable("serverSetting", {
   settingKey: text("key").notNull().unique().primaryKey(),
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
+});
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
+
+export const searchEngines = sqliteTable("search_engine", {
+  id: text("id").notNull().primaryKey(),
+  iconUrl: text("icon_url").notNull(),
+  name: text("name").notNull(),
+  short: text("short").notNull(),
+  description: text("description"),
+  urlTemplate: text("url_template").notNull(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
