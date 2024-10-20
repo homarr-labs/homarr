@@ -154,9 +154,7 @@ export const medias = sqliteTable("media", {
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),
-  creatorId: text("creator_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "set null" }),
+  creatorId: text("creator_id").references(() => users.id, { onDelete: "set null" }),
 });
 
 export const integrations = sqliteTable(

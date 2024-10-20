@@ -106,12 +106,16 @@ const Row = ({ media }: RowProps) => {
       <TableTd>{media.name}</TableTd>
       <TableTd>{humanFileSize(media.size)}</TableTd>
       <TableTd>
-        <Group gap="sm">
-          <UserAvatar user={media.creator} size="sm" />
-          <Anchor component={Link} href={`/manage/users/${media.creator.id}/general`} size="sm">
-            {media.creator.name}
-          </Anchor>
-        </Group>
+        {media.creator ? (
+          <Group gap="sm">
+            <UserAvatar user={media.creator} size="sm" />
+            <Anchor component={Link} href={`/manage/users/${media.creator.id}/general`} size="sm">
+              {media.creator.name}
+            </Anchor>
+          </Group>
+        ) : (
+          "-"
+        )}
       </TableTd>
       <TableTd w={64}>
         <Group wrap="nowrap" gap="xs">
