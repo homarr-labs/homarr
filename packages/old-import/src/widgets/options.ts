@@ -82,6 +82,7 @@ const optionMapping: OptionMapping = {
   },
   rssFeed: {
     feedUrls: (oldOptions) => oldOptions.rssFeedUrl,
+    anableRtl: (oldOptions) => oldOptions.anableRtl,
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
   },
