@@ -5,19 +5,14 @@ import { apps } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { selectAppSchema } from "@homarr/db/validationSchemas/app";
 
 export const appRouter = createTRPCRouter({
   all: publicProcedure
     .input(z.void())
     .output(
       z.array(
-        z.object({
-          name: z.string(),
-          id: z.string(),
-          description: z.string().nullable(),
-          iconUrl: z.string(),
-          href: z.string().nullable(),
-        }),
+        selectAppSchema
       ),
     )
     .meta({ openapi: { method: "GET", path: "/api/apps", tags: ["apps"], protect: true } })
@@ -30,13 +25,7 @@ export const appRouter = createTRPCRouter({
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
     .output(
       z.array(
-        z.object({
-          name: z.string(),
-          id: z.string(),
-          description: z.string().nullable(),
-          iconUrl: z.string(),
-          href: z.string().nullable(),
-        }),
+        selectAppSchema,
       ),
     )
     .meta({ openapi: { method: "GET", path: "/api/apps/search", tags: ["apps"], protect: true } })
@@ -51,11 +40,7 @@ export const appRouter = createTRPCRouter({
     .input(z.void())
     .output(
       z.array(
-        z.object({
-          name: z.string(),
-          id: z.string(),
-          iconUrl: z.string(),
-        }),
+        selectAppSchema.pick({ id: true, name: true, iconUrl: true }),
       ),
     )
     .meta({
@@ -79,13 +64,7 @@ export const appRouter = createTRPCRouter({
   byId: publicProcedure
     .input(validation.common.byId)
     .output(
-      z.object({
-        name: z.string(),
-        id: z.string(),
-        description: z.string().nullable(),
-        iconUrl: z.string(),
-        href: z.string().nullable(),
-      }),
+      selectAppSchema,
     )
     .meta({ openapi: { method: "GET", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .query(async ({ ctx, input }) => {
@@ -115,28 +94,32 @@ export const appRouter = createTRPCRouter({
         href: input.href,
       });
     }),
-  update: protectedProcedure.input(validation.app.edit).mutation(async ({ ctx, input }) => {
-    const app = await ctx.db.query.apps.findFirst({
-      where: eq(apps.id, input.id),
-    });
-
-    if (!app) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "App not found",
+  update: protectedProcedure
+    .input(validation.app.edit)
+    .output(z.void())
+    .meta({ openapi: { method: "PATCH", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
+    .mutation(async ({ ctx, input }) => {
+      const app = await ctx.db.query.apps.findFirst({
+        where: eq(apps.id, input.id),
       });
-    }
 
-    await ctx.db
-      .update(apps)
-      .set({
-        name: input.name,
-        description: input.description,
-        iconUrl: input.iconUrl,
-        href: input.href,
-      })
-      .where(eq(apps.id, input.id));
-  }),
+      if (!app) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "App not found",
+        });
+      }
+
+      await ctx.db
+        .update(apps)
+        .set({
+          name: input.name,
+          description: input.description,
+          iconUrl: input.iconUrl,
+          href: input.href,
+        })
+        .where(eq(apps.id, input.id));
+    }),
   delete: protectedProcedure
     .output(z.void())
     .meta({ openapi: { method: "DELETE", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
