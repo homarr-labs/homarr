@@ -22,20 +22,6 @@ import { clientApi } from "@homarr/api/client";
 import { env } from "~/env.mjs";
 
 const constructWebsocketUrl = () => {
-  if (typeof window === "undefined") {
-    return "ws://localhost:3001/websockets";
-  }
-
-  if (env.NODE_ENV === "development") {
-    return "ws://localhost:3001/websockets";
-  }
-
-  return `ws://${window.location.hostname}:${window.location.port}/websockets`;
-};
-
-import { env } from "~/env.mjs";
-
-const constructWebsocketUrl = () => {
   const fallback = "ws://localhost:3001/websockets";
   if (typeof window === "undefined") {
     return fallback;
