@@ -10,12 +10,16 @@ import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors";
 import { MemoryGraph } from "./graphs/memory-graph";
 
-export default function HardwareUsageWidget({ serverData, integrationIds }: WidgetComponentProps<"hardwareUsage">) {
+export default function HardwareUsageWidget({ integrationIds }: WidgetComponentProps<"hardwareUsage">) {
+  const [hardwareUsageHistory] = clientApi.widget.hardwareUsage.getHardwareInformationHistory.useSuspenseQuery({
+    integrationId: integrationIds[0] ?? ""
+  }, {});
+
   const [hardwareUsage, hardwareUsageHandlers] = useListState<{
     cpuLoad: CpuLoad;
     memoryLoad: MemoryLoad;
     networkLoad: NetworkLoad;
-  }>(serverData ? [serverData.initialData.hardwareInformationHistory] : []);
+  }>([hardwareUsageHistory]);
 
   clientApi.widget.hardwareUsage.subscribeCpu.useSubscription(
     {
@@ -40,9 +44,8 @@ export default function HardwareUsageWidget({ serverData, integrationIds }: Widg
   return (
     <Stack p={"md"}>
       <CpuGraph cpuLoad={hardwareUsage.map(usage => usage.cpuLoad)} hasLast={hasLast}/>
-      <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)} maxAvailableBytes={6000000000} hasLast={hasLast} />
-      <Code block>{JSON.stringify(hardwareUsage[hardwareUsage.length - 1])}</Code>
-      <Code block>{JSON.stringify(serverData?.initialData.serverInfo)}</Code>
+      <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)} maxAvailableBytes={6000000000}
+                   hasLast={hasLast}/>
     </Stack>
   );
 }
