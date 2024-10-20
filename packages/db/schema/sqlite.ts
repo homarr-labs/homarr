@@ -148,7 +148,7 @@ export const invites = sqliteTable("invite", {
 export const medias = sqliteTable("media", {
   id: text("id").notNull().primaryKey(),
   name: text("name").notNull(),
-  content: blob("content").$type<Buffer>().notNull(),
+  content: blob("content", { mode: "buffer" }).$type<Buffer>().notNull(),
   contentType: text("content_type").notNull(),
   size: int("size").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
