@@ -10,15 +10,15 @@ export const mediaRouter = createTRPCRouter({
   getPaginated: protectedProcedure
     .input(
       validation.common.paginated.and(
-        z.object({ showAll: z.boolean().default(false), search: z.string().trim().default("") }),
+        z.object({ includeFromAllUsers: z.boolean().default(false), search: z.string().trim().default("") }),
       ),
     )
     .query(async ({ ctx, input }) => {
-      const includeAll = ctx.session.user.permissions.includes("admin") && input.showAll;
+      const includeFromAllUsers = ctx.session.user.permissions.includes("admin") && input.includeFromAllUsers;
 
       const where = and(
         input.search.length >= 1 ? like(medias.name, `%${input.search}%`) : undefined,
-        includeAll ? undefined : eq(medias.creatorId, ctx.session.user.id),
+        includeFromAllUsers ? undefined : eq(medias.creatorId, ctx.session.user.id),
       );
       const dbMedias = await ctx.db.query.medias.findMany({
         where,

@@ -1765,6 +1765,9 @@ export default {
           },
         },
       },
+      media: {
+        includeFromAllUsers: "Include media from all users",
+      },
       user: {
         back: "Back to users",
         fieldsDisabledExternalProvider:

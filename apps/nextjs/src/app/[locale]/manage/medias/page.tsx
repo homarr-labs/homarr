@@ -15,12 +15,12 @@ import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CopyMedia } from "./_actions/copy-media";
 import { DeleteMedia } from "./_actions/delete-media";
-import { ShowAllSwitch } from "./_actions/show-all";
+import { IncludeFromAllUsersSwitch } from "./_actions/show-all";
 import { UploadMedia } from "./_actions/upload-media";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
-  showAll: z
+  includeFromAllUsers: z
     .string()
     .regex(/true|false/)
     .catch("false")
@@ -57,7 +57,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
         <Group justify="space-between">
           <Group>
             <SearchInput placeholder={`${t("media.search")}...`} defaultValue={searchParams.search} />
-            {isAdmin && <ShowAllSwitch defaultChecked={searchParams.showAll} />}
+            {isAdmin && <IncludeFromAllUsersSwitch defaultChecked={searchParams.includeFromAllUsers} />}
           </Group>
 
           <UploadMedia />
