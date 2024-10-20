@@ -7,7 +7,6 @@ export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { DashDotIntegration } from "./dashdot/dashdot-integration";
 export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
 export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
-export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
 export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
