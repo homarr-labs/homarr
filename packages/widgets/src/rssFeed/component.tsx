@@ -36,7 +36,7 @@ export default function RssFeed({ options, itemId }: WidgetComponentProps<"rssFe
     })
     .slice(0, options.maximumAmountPosts as number);
 
-  const languageDir = options.anableRtl ? "RTL" : "LTR";
+  const languageDir = options.enableRtl ? "RTL" : "LTR";
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" p="4cqmin">
