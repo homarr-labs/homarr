@@ -1351,7 +1351,7 @@ export default {
         feedUrls: {
           label: "Feed URLs",
         },
-        anableRtl: {
+        enableRtl: {
           label: "Enable RTL",
         },
         textLinesClamp: {
