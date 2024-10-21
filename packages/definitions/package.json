@@ -18,7 +18,8 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "tsx ./src/docs/codegen.ts"
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {

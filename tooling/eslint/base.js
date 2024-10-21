@@ -39,7 +39,7 @@ export default tseslint.config(
         "warn",
         {
           min: 3,
-          exceptions: ["_", "i", "z", "t", "id", "db"], // _ for unused variables, i for index, z for zod, t for translation
+          exceptions: ["_", "i", "z", "t", "id", "db", "fs"], // _ for unused variables, i for index, z for zod, t for translation
           properties: "never", // This allows for example the use of <Grid.Col span={{ sm: 12, md: 6 }}> as sm and md would be too short
         },
       ],
@@ -79,6 +79,11 @@ export default tseslint.config(
           selector:
             "VariableDeclarator[init.type=/FunctionExpression$/][init.async=true][id.name=/^[a-z].*$/][id.name!=/Async$/]",
           message: "Async function name must end in 'Async' (variable declarator)",
+        },
+        {
+          // \\u002F is the unicode escape for / and is used because of https://github.com/estools/esquery/issues/68
+          selector: "Literal[value=/^https:\\u002F\\u002Fhomarr\\.dev\\u002F.*$/]",
+          message: "Links to 'https://homarr.dev/' should be used with createDocumentationLink method",
         },
       ],
     },
