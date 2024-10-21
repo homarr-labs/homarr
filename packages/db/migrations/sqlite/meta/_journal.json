@@ -92,13 +92,6 @@
       "when": 1729348200091,
       "tag": "0012_ambiguous_black_panther",
       "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "6",
-      "when": 1729415919596,
-      "tag": "0013_bent_alex_wilder",
-      "breakpoints": true
     }
   ]
 }

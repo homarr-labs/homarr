@@ -92,13 +92,6 @@
       "when": 1729348221072,
       "tag": "0012_abnormal_wendell_vaughn",
       "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "5",
-      "when": 1729363267562,
-      "tag": "0013_pretty_boom_boom",
-      "breakpoints": true
     }
   ]
 }
