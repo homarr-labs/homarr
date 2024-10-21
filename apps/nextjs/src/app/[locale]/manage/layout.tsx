@@ -26,6 +26,7 @@ import {
 
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
+import { createDocumentationLink } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
@@ -131,7 +132,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.help.items.documentation"),
           icon: IconBook2,
-          href: "https://homarr.dev/docs/getting-started/",
+          href: createDocumentationLink("/docs/getting-started"),
           external: true,
         },
         {

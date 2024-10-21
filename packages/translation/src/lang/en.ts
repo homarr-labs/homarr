@@ -249,6 +249,9 @@ export default {
       mixed: "Some members are from external providers and cannot be managed here",
       external: "All members are from external providers and cannot be managed here",
     },
+    reservedNotice: {
+      message: "This group is reserved for system use and restricts some actions. {checkoutDocs}",
+    },
     action: {
       create: {
         label: "New group",
@@ -1388,6 +1391,9 @@ export default {
       option: {
         feedUrls: {
           label: "Feed URLs",
+        },
+        enableRtl: {
+          label: "Enable RTL",
         },
         textLinesClamp: {
           label: "Description line clamp",

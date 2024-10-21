@@ -18,6 +18,9 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       defaultValue: [],
       validate: z.string().url(),
     }),
+    enableRtl: factory.switch({
+      defaultValue: false,
+    }),
     textLinesClamp: factory.number({
       defaultValue: 5,
       validate: z.number().min(1).max(50),
