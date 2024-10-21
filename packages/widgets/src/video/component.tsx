@@ -13,6 +13,8 @@ import classes from "./component.module.css";
 
 import "video.js/dist/video-js.css";
 
+import { createDocumentationLink } from "@homarr/definitions";
+
 export default function VideoWidget({ options }: WidgetComponentProps<"video">) {
   if (options.feedUrl.trim() === "") {
     return <NoUrl />;
@@ -46,7 +48,7 @@ const ForYoutubeUseIframe = () => {
       <Stack align="center" gap="xs">
         <IconBrandYoutube />
         <Title order={4}>{t("widget.video.error.forYoutubeUseIframe")}</Title>
-        <Anchor href="https://homarr.dev/docs/widgets/iframe/">{t("common.action.checkoutDocs")}</Anchor>
+        <Anchor href={createDocumentationLink("/docs/widgets/iframe")}>{t("common.action.checkoutDocs")}</Anchor>
       </Stack>
     </Center>
   );

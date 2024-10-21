@@ -1,6 +1,7 @@
 import { Group, Kbd, Text } from "@mantine/core";
 import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
 
+import { createDocumentationLink } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../lib/group";
@@ -45,7 +46,7 @@ const helpMode = {
           {
             label: t("documentation.label"),
             icon: IconBook2,
-            href: "https://homarr.dev/docs/getting-started/",
+            href: createDocumentationLink("/docs/getting-started"),
           },
           {
             label: t("submitIssue.label"),
