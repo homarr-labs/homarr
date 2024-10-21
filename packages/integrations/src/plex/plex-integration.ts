@@ -21,7 +21,37 @@ export class PlexIntegration extends Integration {
     }
     const videoElements = mediaContainer.Video;
 
-    return [];
+    const videos = videoElements
+      .map((videoElement): StreamSession | undefined => {
+        const userElement = videoElement.User ? videoElement.User[0] : undefined;
+        const playerElement = videoElement.Player ? videoElement.Player[0] : undefined;
+        const sessionElement = videoElement.Session ? videoElement.Session[0] : undefined;
+
+        if (!playerElement) {
+          return undefined;
+        }
+
+        return {
+          sessionId: sessionElement?.$.id ?? "unknown",
+          sessionName: `${playerElement.$.product} (${playerElement.$.title})`,
+          user: {
+            userId: userElement?.$.id ?? "Anonymous",
+            username: userElement?.$.title ?? "Anonymous",
+            profilePictureUrl: userElement?.$.thumb ?? null,
+          },
+          currentlyPlaying: {
+            type: this.getCurrentlyPlayingType(videoElement.$.type) ?? "video",
+            name: videoElement.$.grandparentTitle ?? videoElement.$.title ?? "Unknown",
+            seasonName: videoElement.$.parentTitle,
+            episodeName: videoElement.$.title ?? null,
+            albumName: videoElement.$.type === "track" ? (videoElement.$.parentTitle ?? null) : null,
+            episodeCount: videoElement.$.index ?? null,
+          },
+        };
+      })
+      .filter((session): session is StreamSession => session !== undefined);
+
+    return videos;
   }
 
   public async testConnectionAsync(): Promise<void> {
@@ -40,5 +70,18 @@ export class PlexIntegration extends Integration {
         throw new IntegrationTestConnectionError("invalidCredentials");
       },
     });
+  }
+
+  private getCurrentlyPlayingType(type: string): "movie" | "audio" | "video" | "tv" | undefined {
+    switch (type) {
+      case "movie":
+        return "movie";
+      case "episode":
+        return "video";
+      case "track":
+        return "audio";
+      default:
+        return undefined;
+    }
   }
 }

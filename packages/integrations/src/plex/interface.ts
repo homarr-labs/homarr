@@ -13,28 +13,9 @@ interface MediaContainer {
         title: string;
       };
     }[];
-    Media?: {
-      $: {
-        videoCodec: string;
-        videoFrameRate: string;
-        audioCodec: string;
-        audioChannels: number;
-        width: number;
-        height: number;
-        bitrate: number;
-      };
-    }[];
     Session?: {
       $: {
         id: string;
-      };
-    }[];
-    TranscodeSession?: {
-      $: {
-        videoCodec: string;
-        audioCodec: string;
-        width: number;
-        height: number;
       };
     }[];
     $: {
