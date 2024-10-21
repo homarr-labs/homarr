@@ -40,8 +40,8 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/xml2js": "^0.4.14"
+    "@types/xml2js": "^0.4.14",
     "eslint": "^9.13.0",
-    "typescript": "^5.6.3",
+    "typescript": "^5.6.3"
   }
 }
