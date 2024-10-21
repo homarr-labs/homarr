@@ -40,7 +40,7 @@ export class PlexIntegration extends Integration {
             profilePictureUrl: userElement?.$.thumb ?? null,
           },
           currentlyPlaying: {
-            type: this.getCurrentlyPlayingType(videoElement.$.type) ?? "video",
+            type: PlexIntegration.getCurrentlyPlayingType(videoElement.$.type) ?? "video",
             name: videoElement.$.grandparentTitle ?? videoElement.$.title ?? "Unknown",
             seasonName: videoElement.$.parentTitle,
             episodeName: videoElement.$.title ?? null,
@@ -72,7 +72,7 @@ export class PlexIntegration extends Integration {
     });
   }
 
-  private getCurrentlyPlayingType(type: string): "movie" | "audio" | "video" | "tv" | undefined {
+  static getCurrentlyPlayingType(type: string): "movie" | "audio" | "video" | "tv" | undefined {
     switch (type) {
       case "movie":
         return "movie";
