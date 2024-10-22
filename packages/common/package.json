@@ -29,7 +29,7 @@
     "dayjs": "^1.11.13",
     "next": "^14.2.15",
     "react": "^18.3.1",
-    "tldts": "^6.1.53"
+    "tldts": "^6.1.54"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
