@@ -1,5 +1,7 @@
 import { parseStringPromise } from "xml2js";
 
+import { logger } from "@homarr/log";
+
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { StreamSession } from "../interfaces/media-server/session";
@@ -9,14 +11,18 @@ export class PlexIntegration extends Integration {
   public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 
-    const response = await fetch(`${this.integration.url}/status/sessions?X-Plex-Token=${token}`);
+    const response = await fetch(`${this.integration.url}/status/sessions`, {
+      headers: {
+        "X-Plex-Token": token,
+      },
+    });
     const body = await response.text();
-
     // convert xml response to objects, as there is no JSON api
-    const data = (await parseStringPromise(body)) as PlexResponse;
+    const data = await PlexIntegration.parseXmlAsync<PlexResponse>(body);
     const mediaContainer = data.MediaContainer;
     // no sessions are open or available
     if (!mediaContainer.Video) {
+      logger.info("No active video sessions found in MediaContainer");
       return [];
     }
     const videoElements = mediaContainer.Video;
@@ -59,7 +65,11 @@ export class PlexIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}?X-Plex-Token=${token}`);
+        return await fetch(this.integration.url, {
+          headers: {
+            "X-Plex-Token": token,
+          },
+        });
       },
       handleResponseAsync: async (response) => {
         const result = await response.text();
@@ -70,6 +80,10 @@ export class PlexIntegration extends Integration {
         throw new IntegrationTestConnectionError("invalidCredentials");
       },
     });
+  }
+
+  static async parseXmlAsync<T>(xml: string): Promise<T> {
+    return parseStringPromise(xml) as Promise<T>;
   }
 
   static getCurrentlyPlayingType(type: string): "movie" | "audio" | "video" | "tv" | undefined {
