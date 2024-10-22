@@ -36,7 +36,6 @@ export const hardwareUsageRouter = createTRPCRouter({
   subscribeCpu: publicProcedure
     .unstable_concat(createOneIntegrationMiddleware("query", "getDashDot"))
     .subscription(({ ctx }) => {
-      console.log("subscribend!!!");
       return observable<{ cpuLoad: CpuLoad; memoryLoad: MemoryLoad; networkLoad: NetworkLoad }>((emit) => {
         const channel = createItemAndIntegrationChannel<{
           cpuLoad: CpuLoad;

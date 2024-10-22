@@ -1,14 +1,14 @@
-import { Paper, Text } from "@mantine/core";
-import { ResponsiveLine } from "@nivo/line";
-import type { CpuLoad } from "@homarr/integrations";
-import { GraphWrapper } from "./wrapper";
+import {Paper, Text} from "@mantine/core";
+import {ResponsiveLine} from "@nivo/line";
+import type {CpuLoad} from "@homarr/integrations";
+import {GraphWrapper} from "./wrapper";
 
 interface CpuGraphProps {
   cpuLoad: CpuLoad[];
   hasLast: boolean;
 }
 
-export const CpuGraph = ({ cpuLoad, hasLast }: CpuGraphProps) => {
+export const CpuGraph = ({cpuLoad, hasLast}: CpuGraphProps) => {
   const data = [
     {
       id: "cpuLoad",
@@ -20,11 +20,13 @@ export const CpuGraph = ({ cpuLoad, hasLast }: CpuGraphProps) => {
     },
   ];
   return (
-    <GraphWrapper title={"CPU"} subtitle={`${cpuLoad[cpuLoad.length - 1]!.sumLoad.toFixed(2)}%`} showSubtitle={hasLast}>
+    <GraphWrapper title={"CPU"}
+                  subtitle={`${cpuLoad.length > 0 ? cpuLoad[cpuLoad.length - 1]!.sumLoad.toFixed(2) : 0}%`}
+                  showSubtitle={hasLast}>
       <ResponsiveLine
         data={data}
-        margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-        xScale={{ type: "point" }}
+        margin={{top: 10, right: 10, bottom: 10, left: 10}}
+        xScale={{type: "point"}}
         yScale={{
           type: "linear",
           min: 0,
@@ -33,7 +35,7 @@ export const CpuGraph = ({ cpuLoad, hasLast }: CpuGraphProps) => {
           reverse: false,
         }}
         enableSlices="x"
-        sliceTooltip={({ slice }) => {
+        sliceTooltip={({slice}) => {
           if (slice.points.length === 0) {
             return null;
           }

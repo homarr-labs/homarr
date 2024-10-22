@@ -34,7 +34,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         const beforeCallbackTook = stopwatch.getElapsedInHumanWords();
         await callback();
         const callbackTook = stopwatch.getElapsedInHumanWords();
-        creatorOptions.logger.logInfo(
+        creatorOptions.logger.logDebug(
           `The callback of '${name}' cron job succeeded (before callback took ${beforeCallbackTook}, callback took ${callbackTook})`,
         );
         await creatorOptions.onCallbackSuccess?.(name);

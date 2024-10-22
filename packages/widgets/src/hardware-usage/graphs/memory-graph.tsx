@@ -1,8 +1,8 @@
-import type { MemoryLoad } from "@homarr/integrations";
-import { GraphWrapper } from "./wrapper";
-import { ResponsiveLine } from "@nivo/line";
-import { Paper, Text } from "@mantine/core";
-import { humanFileSize } from "@homarr/common";
+import type {MemoryLoad} from "@homarr/integrations";
+import {GraphWrapper} from "./wrapper";
+import {ResponsiveLine} from "@nivo/line";
+import {Paper, Text} from "@mantine/core";
+import {humanFileSize} from "@homarr/common";
 
 interface MemoryGraphProps {
   memoryLoad: MemoryLoad[];
@@ -10,7 +10,7 @@ interface MemoryGraphProps {
   maxAvailableBytes: number; // TODO: pass this value
 }
 
-export const MemoryGraph = ({ memoryLoad, hasLast, maxAvailableBytes }: MemoryGraphProps) => {
+export const MemoryGraph = ({memoryLoad, hasLast, maxAvailableBytes}: MemoryGraphProps) => {
   const data = [
     {
       id: "memoryLoad",
@@ -22,11 +22,13 @@ export const MemoryGraph = ({ memoryLoad, hasLast, maxAvailableBytes }: MemoryGr
     },
   ];
   return (
-    <GraphWrapper title={"Memory"} subtitle={`${humanFileSize(memoryLoad[memoryLoad.length - 1]!.loadInBytes)} / ${humanFileSize(maxAvailableBytes)}`} showSubtitle={hasLast}>
+    <GraphWrapper title={"Memory"}
+                  subtitle={`${humanFileSize(memoryLoad.length > 0 ? memoryLoad[memoryLoad.length - 1]!.loadInBytes : 0)} / ${humanFileSize(maxAvailableBytes)}`}
+                  showSubtitle={hasLast}>
       <ResponsiveLine
         data={data}
-        margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-        xScale={{ type: "point" }}
+        margin={{top: 10, right: 10, bottom: 10, left: 10}}
+        xScale={{type: "point"}}
         yScale={{
           type: "linear",
           min: 0,
@@ -35,7 +37,7 @@ export const MemoryGraph = ({ memoryLoad, hasLast, maxAvailableBytes }: MemoryGr
           reverse: false,
         }}
         enableSlices="x"
-        sliceTooltip={({ slice }) => {
+        sliceTooltip={({slice}) => {
           if (slice.points.length === 0) {
             return null;
           }

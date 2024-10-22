@@ -1,19 +1,23 @@
-import { Stack, Code } from "@mantine/core";
-import { useListState } from "@mantine/hooks";
+import {Stack} from "@mantine/core";
+import {useListState} from "@mantine/hooks";
 
-import { clientApi } from "@homarr/api/client";
-import type { CpuLoad, MemoryLoad, NetworkLoad } from "@homarr/integrations";
+import {clientApi} from "@homarr/api/client";
+import type {CpuLoad, MemoryLoad, NetworkLoad} from "@homarr/integrations";
 
-import { CpuGraph } from "./graphs/cpu-graph";
+import {CpuGraph} from "./graphs/cpu-graph";
 
-import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationSelectedError } from "../errors";
-import { MemoryGraph } from "./graphs/memory-graph";
+import type {WidgetComponentProps} from "../definition";
+import {NoIntegrationSelectedError} from "../errors";
+import {MemoryGraph} from "./graphs/memory-graph";
 
-export default function HardwareUsageWidget({ integrationIds }: WidgetComponentProps<"hardwareUsage">) {
+export default function HardwareUsageWidget({integrationIds}: WidgetComponentProps<"hardwareUsage">) {
   const [hardwareUsageHistory] = clientApi.widget.hardwareUsage.getHardwareInformationHistory.useSuspenseQuery({
     integrationId: integrationIds[0] ?? ""
   }, {});
+
+  const [serverInfo] = clientApi.widget.hardwareUsage.getServerInfo.useSuspenseQuery({
+    integrationId: integrationIds[0] ?? ""
+  });
 
   const [hardwareUsage, hardwareUsageHandlers] = useListState<{
     cpuLoad: CpuLoad;
@@ -44,7 +48,8 @@ export default function HardwareUsageWidget({ integrationIds }: WidgetComponentP
   return (
     <Stack p={"md"}>
       <CpuGraph cpuLoad={hardwareUsage.map(usage => usage.cpuLoad)} hasLast={hasLast}/>
-      <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)} maxAvailableBytes={6000000000}
+      <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)}
+                   maxAvailableBytes={serverInfo.info.maxAvailableMemoryBytes}
                    hasLast={hasLast}/>
     </Stack>
   );
