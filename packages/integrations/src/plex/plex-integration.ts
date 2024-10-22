@@ -18,7 +18,7 @@ export class PlexIntegration extends Integration {
     });
     const body = await response.text();
     // convert xml response to objects, as there is no JSON api
-    const data = await PlexIntegration.parseXmlAsync<PlexResponse>(body);
+    const data = await PlexIntegration.parseXml<PlexResponse>(body);
     const mediaContainer = data.MediaContainer;
     // no sessions are open or available
     if (!mediaContainer.Video) {
@@ -46,7 +46,7 @@ export class PlexIntegration extends Integration {
             profilePictureUrl: userElement?.$.thumb ?? null,
           },
           currentlyPlaying: {
-            type: PlexIntegration.getCurrentlyPlayingType(videoElement.$.type) ?? "video",
+            type: videoElement.$.live === "1" ? "tv" : PlexIntegration.getCurrentlyPlayingType(videoElement.$.type),
             name: videoElement.$.grandparentTitle ?? videoElement.$.title ?? "Unknown",
             seasonName: videoElement.$.parentTitle,
             episodeName: videoElement.$.title ?? null,
@@ -72,21 +72,22 @@ export class PlexIntegration extends Integration {
         });
       },
       handleResponseAsync: async (response) => {
-        const result = await response.text();
-        const parsedResponse = (await parseStringPromise(result)) as unknown;
-        if (typeof parsedResponse === "object" && parsedResponse !== null) {
+        try {
+          const result = await response.text();
+          await PlexIntegration.parseXml<PlexResponse>(result);
           return;
+        } catch {
+          throw new IntegrationTestConnectionError("invalidCredentials");
         }
-        throw new IntegrationTestConnectionError("invalidCredentials");
       },
     });
   }
 
-  static async parseXmlAsync<T>(xml: string): Promise<T> {
+  static parseXml<T>(xml: string): Promise<T> {
     return parseStringPromise(xml) as Promise<T>;
   }
 
-  static getCurrentlyPlayingType(type: string): "movie" | "audio" | "video" | "tv" | undefined {
+  static getCurrentlyPlayingType(type: string): NonNullable<StreamSession["currentlyPlaying"]>["type"] {
     switch (type) {
       case "movie":
         return "movie";
@@ -95,7 +96,7 @@ export class PlexIntegration extends Integration {
       case "track":
         return "audio";
       default:
-        return undefined;
+        return "video";
     }
   }
 }

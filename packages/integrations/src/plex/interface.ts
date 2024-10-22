@@ -24,6 +24,7 @@ interface MediaContainer {
       title?: string;
       index?: number;
       type: string;
+      live?: string;
     };
   }[];
 }
