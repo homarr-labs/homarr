@@ -9,6 +9,7 @@ import {CpuGraph} from "./graphs/cpu-graph";
 import type {WidgetComponentProps} from "../definition";
 import {NoIntegrationSelectedError} from "../errors";
 import {MemoryGraph} from "./graphs/memory-graph";
+import {NetworkGraph} from "./graphs/network-graph";
 
 export default function HardwareUsageWidget({integrationIds}: WidgetComponentProps<"hardwareUsage">) {
   const [hardwareUsageHistory] = clientApi.widget.hardwareUsage.getHardwareInformationHistory.useSuspenseQuery({
@@ -51,6 +52,7 @@ export default function HardwareUsageWidget({integrationIds}: WidgetComponentPro
       <MemoryGraph memoryLoad={hardwareUsage.map(usage => usage.memoryLoad)}
                    maxAvailableBytes={serverInfo.info.maxAvailableMemoryBytes}
                    hasLast={hasLast}/>
+      <NetworkGraph networkLoad={hardwareUsage.map(usage => usage.networkLoad)} hasLast={hasLast}/>
     </Stack>
   );
 }
