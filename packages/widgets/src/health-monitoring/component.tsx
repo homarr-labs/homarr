@@ -79,7 +79,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
           }
           const newData = prevData.map((item) =>
             item.integrationId === data.integrationId
-              ? { ...item, healthInfo: data.healthInfo, timestamp: new Date(0) }
+              ? { ...item, healthInfo: data.healthInfo, timestamp: data.timestamp }
               : item,
           );
           return newData.filter(
@@ -323,19 +323,21 @@ interface SmartData {
 }
 
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
-  return fileSystems.map((fileSystem) => {
-    const baseDeviceName = fileSystem.deviceName.replace(/[0-9]+$/, "");
-    const smartDisk = smartData.find((smart) => smart.deviceName === baseDeviceName);
+  return fileSystems
+    .map((fileSystem) => {
+      const baseDeviceName = fileSystem.deviceName.replace(/[0-9]+$/, "");
+      const smartDisk = smartData.find((smart) => smart.deviceName === baseDeviceName);
 
-    return {
-      deviceName: smartDisk?.deviceName ?? fileSystem.deviceName,
-      used: fileSystem.used,
-      available: fileSystem.available,
-      percentage: fileSystem.percentage,
-      temperature: smartDisk?.temperature ?? 0,
-      overallStatus: smartDisk?.overallStatus ?? "",
-    };
-  });
+      return {
+        deviceName: smartDisk?.deviceName ?? fileSystem.deviceName,
+        used: fileSystem.used,
+        available: fileSystem.available,
+        percentage: fileSystem.percentage,
+        temperature: smartDisk?.temperature ?? 0,
+        overallStatus: smartDisk?.overallStatus ?? "",
+      };
+    })
+    .sort((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));
 };
 
 const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {

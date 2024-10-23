@@ -36,7 +36,7 @@ export const healthMonitoringRouter = createTRPCRouter({
             emit.next({
               integrationId: integration.id,
               healthInfo,
-              timestamp: new Date(0),
+              timestamp: new Date(),
             });
           });
           unsubscribes.push(unsubscribe);
