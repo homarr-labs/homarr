@@ -20,18 +20,19 @@ export class PlexIntegration extends Integration {
     // convert xml response to objects, as there is no JSON api
     const data = await PlexIntegration.parseXml<PlexResponse>(body);
     const mediaContainer = data.MediaContainer;
+    const mediaElements = [mediaContainer.Video ?? [], mediaContainer.Track ?? []].flat();
+
     // no sessions are open or available
-    if (!mediaContainer.Video) {
+    if (mediaElements.length === 0) {
       logger.info("No active video sessions found in MediaContainer");
       return [];
     }
-    const videoElements = mediaContainer.Video;
 
-    const videos = videoElements
-      .map((videoElement): StreamSession | undefined => {
-        const userElement = videoElement.User ? videoElement.User[0] : undefined;
-        const playerElement = videoElement.Player ? videoElement.Player[0] : undefined;
-        const sessionElement = videoElement.Session ? videoElement.Session[0] : undefined;
+    const medias = mediaElements
+      .map((mediaElement): StreamSession | undefined => {
+        const userElement = mediaElement.User ? mediaElement.User[0] : undefined;
+        const playerElement = mediaElement.Player ? mediaElement.Player[0] : undefined;
+        const sessionElement = mediaElement.Session ? mediaElement.Session[0] : undefined;
 
         if (!playerElement) {
           return undefined;
@@ -46,18 +47,18 @@ export class PlexIntegration extends Integration {
             profilePictureUrl: userElement?.$.thumb ?? null,
           },
           currentlyPlaying: {
-            type: videoElement.$.live === "1" ? "tv" : PlexIntegration.getCurrentlyPlayingType(videoElement.$.type),
-            name: videoElement.$.grandparentTitle ?? videoElement.$.title ?? "Unknown",
-            seasonName: videoElement.$.parentTitle,
-            episodeName: videoElement.$.title ?? null,
-            albumName: videoElement.$.type === "track" ? (videoElement.$.parentTitle ?? null) : null,
-            episodeCount: videoElement.$.index ?? null,
+            type: mediaElement.$.live === "1" ? "tv" : PlexIntegration.getCurrentlyPlayingType(mediaElement.$.type),
+            name: mediaElement.$.grandparentTitle ?? mediaElement.$.title ?? "Unknown",
+            seasonName: mediaElement.$.parentTitle,
+            episodeName: mediaElement.$.title ?? null,
+            albumName: mediaElement.$.type === "track" ? (mediaElement.$.parentTitle ?? null) : null,
+            episodeCount: mediaElement.$.index ?? null,
           },
         };
       })
       .filter((session): session is StreamSession => session !== undefined);
 
-    return videos;
+    return medias;
   }
 
   public async testConnectionAsync(): Promise<void> {
