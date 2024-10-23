@@ -21,7 +21,7 @@ importers:
         version: 2.2.3(@types/node@20.17.0)(typescript@5.6.3)
       '@vitejs/plugin-react':
         specifier: ^4.3.3
-        version: 4.3.3(vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
+        version: 4.3.3(vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/coverage-v8':
         specifier: ^2.1.3
         version: 2.1.3(vitest@2.1.3)
@@ -48,10 +48,10 @@ importers:
         version: 5.6.3
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.6.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
+        version: 5.0.1(typescript@5.6.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+        version: 2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
 
   apps/nextjs:
     dependencies:
@@ -153,13 +153,13 @@ importers:
         version: 5.59.16(@tanstack/react-query@5.59.16(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query-next-experimental':
         specifier: 5.59.16
-        version: 5.59.16(@tanstack/react-query@5.59.16(react@18.3.1))(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3))(react@18.3.1)
+        version: 5.59.16(@tanstack/react-query@5.59.16(react@18.3.1))(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4))(react@18.3.1)
       '@trpc/client':
         specifier: next
         version: 11.0.0-rc.593(@trpc/server@11.0.0-rc.593)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/react-query@11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/server@11.0.0-rc.593)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.593)(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/react-query@11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/server@11.0.0-rc.593)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.593)(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/react-query':
         specifier: next
         version: 11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/server@11.0.0-rc.593)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -201,7 +201,7 @@ importers:
         version: 2.0.0-beta.7(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.13.4(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(@tabler/icons-react@3.20.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       postcss-preset-mantine:
         specifier: ^1.17.0
         version: 1.17.0(postcss@8.4.47)
@@ -221,8 +221,8 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       sass:
-        specifier: ^1.80.3
-        version: 1.80.3
+        specifier: ^1.80.4
+        version: 1.80.4
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -517,7 +517,7 @@ importers:
         version: 4.0.2
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -587,10 +587,10 @@ importers:
         version: 7.2.1
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       next-auth:
         specifier: 5.0.0-beta.25
-        version: 5.0.0-beta.25(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3))(react@18.3.1)
+        version: 5.0.0-beta.25(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -667,7 +667,7 @@ importers:
         version: 1.11.13
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1129,7 +1129,7 @@ importers:
         version: 1.11.13
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1363,7 +1363,7 @@ importers:
         version: 2.10.1(@types/react@18.3.12)(react@18.3.1)
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1449,7 +1449,7 @@ importers:
         version: 2.0.0-beta.7(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.13.4(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(@tabler/icons-react@3.20.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1619,7 +1619,7 @@ importers:
         version: 2.0.0-beta.7(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.13.4(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(@tabler/icons-react@3.20.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.16
-        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+        version: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -6963,8 +6963,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sass@1.80.3:
-    resolution: {integrity: sha512-ptDWyVmDMVielpz/oWy3YP3nfs7LpJTHIJZboMVs8GEC9eUmtZTZhMHlTW98wY4aEorDfjN38+Wr/XjskFWcfA==}
+  sass@1.80.4:
+    resolution: {integrity: sha512-rhMQ2tSF5CsuuspvC94nPM9rToiAFw2h3JTrLlgmNw1MH79v8Cr3DH6KF6o6r+8oofY3iYVPUf66KzC8yuVN1w==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -9557,10 +9557,10 @@ snapshots:
       '@tanstack/react-query': 5.59.16(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query-next-experimental@5.59.16(@tanstack/react-query@5.59.16(react@18.3.1))(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3))(react@18.3.1)':
+  '@tanstack/react-query-next-experimental@5.59.16(@tanstack/react-query@5.59.16(react@18.3.1))(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4))(react@18.3.1)':
     dependencies:
       '@tanstack/react-query': 5.59.16(react@18.3.1)
-      next: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+      next: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react: 18.3.1
 
   '@tanstack/react-query@5.59.16(react@18.3.1)':
@@ -9803,11 +9803,11 @@ snapshots:
     dependencies:
       '@trpc/server': 11.0.0-rc.593
 
-  '@trpc/next@11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/react-query@11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/server@11.0.0-rc.593)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.593)(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@trpc/next@11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/react-query@11.0.0-rc.593(@tanstack/react-query@5.59.16(react@18.3.1))(@trpc/client@11.0.0-rc.593(@trpc/server@11.0.0-rc.593))(@trpc/server@11.0.0-rc.593)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@trpc/server@11.0.0-rc.593)(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@trpc/client': 11.0.0-rc.593(@trpc/server@11.0.0-rc.593)
       '@trpc/server': 11.0.0-rc.593
-      next: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+      next: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
@@ -10175,14 +10175,14 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.3.3(vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
+  '@vitejs/plugin-react@4.3.3(vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10200,7 +10200,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vitest: 2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10211,13 +10211,13 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
+  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@vitest/spy': 2.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
 
   '@vitest/pretty-format@2.1.3':
     dependencies:
@@ -10247,7 +10247,7 @@ snapshots:
       sirv: 2.0.4
       tinyglobby: 0.2.6
       tinyrainbow: 1.2.0
-      vitest: 2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vitest: 2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
 
   '@vitest/utils@2.1.3':
     dependencies:
@@ -12791,10 +12791,10 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-auth@5.0.0-beta.25(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3))(react@18.3.1):
+  next-auth@5.0.0-beta.25(next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4))(react@18.3.1):
     dependencies:
       '@auth/core': 0.37.2
-      next: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
+      next: 14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4)
       react: 18.3.1
 
   next-international@1.2.4:
@@ -12803,7 +12803,7 @@ snapshots:
       international-types: 0.8.1
       server-only: 0.0.1
 
-  next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3):
+  next@14.2.16(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.4):
     dependencies:
       '@next/env': 14.2.16
       '@swc/helpers': 0.5.5
@@ -12824,7 +12824,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.16
       '@next/swc-win32-ia32-msvc': 14.2.16
       '@next/swc-win32-x64-msvc': 14.2.16
-      sass: 1.80.3
+      sass: 1.80.4
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -13770,7 +13770,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sass@1.80.3:
+  sass@1.80.4:
     dependencies:
       '@parcel/watcher': 2.4.1
       chokidar: 4.0.0
@@ -14695,12 +14695,12 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@2.1.3(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
+  vite-node@2.1.3(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -14712,18 +14712,18 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@5.0.1(typescript@5.6.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)):
+  vite-tsconfig-paths@5.0.1(typescript@5.6.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.6.3)
     optionalDependencies:
-      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
+  vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -14731,14 +14731,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.17.0
       fsevents: 2.3.3
-      sass: 1.80.3
+      sass: 1.80.4
       sugarss: 4.0.1(postcss@8.4.47)
       terser: 5.32.0
 
-  vitest@2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
+  vitest@2.1.3(@types/node@20.17.0)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0):
     dependencies:
       '@vitest/expect': 2.1.3
-      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
+      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/pretty-format': 2.1.3
       '@vitest/runner': 2.1.3
       '@vitest/snapshot': 2.1.3
@@ -14753,8 +14753,8 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
-      vite-node: 2.1.3(@types/node@20.17.0)(sass@1.80.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite: 5.4.5(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
+      vite-node: 2.1.3(@types/node@20.17.0)(sass@1.80.4)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.17.0
