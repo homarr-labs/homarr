@@ -17,7 +17,7 @@ export const useChangeLocale = () => {
       }
 
       startTransition(() => {
-        router.replace("/" + newLocale + pathname);
+        router.replace(`/${newLocale}/${pathname}`);
       });
     },
     isPending,
