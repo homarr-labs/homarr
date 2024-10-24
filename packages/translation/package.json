@@ -8,7 +8,8 @@
     ".": "./index.ts",
     "./client": "./src/client.ts",
     "./server": "./src/server.ts",
-    "./middleware": "./src/middleware.ts"
+    "./middleware": "./src/middleware.ts",
+    "./request": "./src/request.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,7 +28,8 @@
   "dependencies": {
     "dayjs": "^1.11.13",
     "mantine-react-table": "2.0.0-beta.7",
-    "next-international": "^1.2.4"
+    "next-international": "^1.2.4",
+    "next-intl": "3.23.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

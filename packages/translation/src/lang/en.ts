@@ -668,7 +668,7 @@ export default {
         },
       },
     },
-    mantineReactTable: MRT_Localization_EN,
+    mantineReactTable: MRT_Localization_EN as Readonly<Record<keyof typeof MRT_Localization_EN, string>>,
   },
   section: {
     dynamic: {
@@ -1167,11 +1167,11 @@ export default {
       },
       integration: {
         noData: "No integration found",
-        description: "Click {here} to create a new integration",
+        description: "Click <here></here> to create a new integration",
       },
       app: {
         noData: "No app found",
-        description: "Click {here} to create a new app",
+        description: "Click <here></here> to create a new app",
       },
       error: {
         action: {

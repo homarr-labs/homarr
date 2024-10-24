@@ -47,7 +47,7 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
           );
         },
         useInteraction() {
-          const changeLocale = useChangeLocale();
+          const { changeLocale } = useChangeLocale();
 
           return { type: "javaScript", onSelect: () => changeLocale(localeKey) };
         },

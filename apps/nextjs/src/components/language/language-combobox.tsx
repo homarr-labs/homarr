@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Combobox, Group, InputBase, Text, useCombobox } from "@mantine/core";
+import { Combobox, Group, InputBase, Loader, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";
@@ -15,7 +15,7 @@ export const LanguageCombobox = () => {
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
   const currentLocale = useCurrentLocale();
-  const changeLocale = useChangeLocale();
+  const { changeLocale, isPending } = useChangeLocale();
 
   const handleOnOptionSubmit = React.useCallback(
     (value: string) => {
@@ -39,6 +39,7 @@ export const LanguageCombobox = () => {
           component="button"
           type="button"
           pointer
+          leftSection={isPending ? <Loader size={16} /> : null}
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
           onClick={handleOnClick}

@@ -1,7 +1,7 @@
 import { supportedLanguages } from ".";
 
 const _enTranslations = () => import("./lang/en");
-type EnTranslation = typeof _enTranslations;
+export type EnTranslation = typeof _enTranslations;
 
 export const languageMapping = () => {
   const mapping: Record<string, unknown> = {};

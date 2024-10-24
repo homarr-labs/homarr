@@ -2,14 +2,9 @@ import type { ParamsObject } from "international-types";
 import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod";
 import { ZodIssueCode } from "zod";
 
-import type { TranslationObject } from "@homarr/translation";
+import type { TranslationFunction, TranslationObject } from "@homarr/translation";
 
-export const zodErrorMap = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TFunction extends (key: string, ...params: any[]) => string,
->(
-  t: TFunction,
-) => {
+export const zodErrorMap = <TFunction extends TranslationFunction>(t: TFunction) => {
   return (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
     const error = handleZodError(issue, ctx);
     if ("message" in error && error.message) {
