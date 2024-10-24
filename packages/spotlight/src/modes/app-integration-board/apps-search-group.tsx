@@ -30,7 +30,7 @@ const appChildrenOptions = createChildrenOptions<App>({
         },
 
         useInteraction: interaction.link((option) => ({
-          href: option.href!,
+          href: option.href ?? "",
           newTab: openAppsInNewTab,
         })),
         hide(option) {
