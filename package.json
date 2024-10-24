@@ -2,7 +2,7 @@
   "name": "homarr",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "cli": "pnpm with-env tsx packages/cli/index.ts",
