@@ -1,14 +1,11 @@
+import type { SupportedLanguage } from "./config";
+import { supportedLanguages } from "./config";
 import type { stringOrTranslation, TranslationFunction } from "./type";
 
 export * from "./type";
-export * from "./locale-attributes";
-
-export const supportedLanguages = ["en", "de"] as const;
-export type SupportedLanguage = (typeof supportedLanguages)[number];
-
-export const defaultLocale = "en";
-export { languageMapping } from "./lang";
-export type { TranslationKeys, EnTranslation } from "./lang";
+export * from "./config";
+export { createLanguageMapping } from "./mapping";
+export type { TranslationKeys } from "./mapping";
 
 export const translateIfNecessary = (t: TranslationFunction, value: stringOrTranslation | undefined) => {
   if (typeof value === "function") {

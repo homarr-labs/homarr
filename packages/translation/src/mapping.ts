@@ -1,9 +1,9 @@
-import { supportedLanguages } from ".";
+import { supportedLanguages } from "./config";
 
 const _enTranslations = () => import("./lang/en");
-export type EnTranslation = typeof _enTranslations;
+type EnTranslation = typeof _enTranslations;
 
-export const languageMapping = () => {
+export const createLanguageMapping = () => {
   const mapping: Record<string, unknown> = {};
 
   for (const language of supportedLanguages) {
