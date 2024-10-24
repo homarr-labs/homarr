@@ -1,4 +1,3 @@
-import type { ParamsObject } from "international-types";
 import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod";
 import { ZodIssueCode } from "zod";
 
@@ -134,7 +133,7 @@ type CustomErrorKey = keyof TranslationObject["common"]["zod"]["errors"]["custom
 export interface CustomErrorParams<TKey extends CustomErrorKey> {
   i18n: {
     key: TKey;
-    params: ParamsObject<TranslationObject["common"]["zod"]["errors"]["custom"][TKey]>;
+    params: Record<string, unknown>;
   };
 }
 
