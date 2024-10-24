@@ -7,6 +7,7 @@ import {
   IconLayoutDashboard,
   IconLogs,
   IconMailForward,
+  IconPhoto,
   IconPlug,
   IconReport,
   IconSearch,
@@ -87,6 +88,12 @@ export const pagesSearchGroup = createGroup<{
         icon: IconSearch,
         path: "/manage/search-engines",
         name: t("manageSearchEngine.label"),
+        hidden: !session,
+      },
+      {
+        icon: IconPhoto,
+        path: "/manage/medias",
+        name: t("manageMedia.label"),
         hidden: !session,
       },
       {
