@@ -133,7 +133,7 @@ type CustomErrorKey = keyof TranslationObject["common"]["zod"]["errors"]["custom
 export interface CustomErrorParams<TKey extends CustomErrorKey> {
   i18n: {
     key: TKey;
-    params: Record<string, unknown>;
+    params?: Record<string, unknown>;
   };
 }
 
