@@ -13,40 +13,46 @@ import { interaction } from "../../lib/interaction";
 type App = { id: string; name: string; iconUrl: string; href: string | null };
 
 const appChildrenOptions = createChildrenOptions<App>({
-  useActions: () => [
-    {
-      key: "open",
-      Component: () => {
-        const t = useI18n();
+  useActions: () => {
+    const [openAppsInNewTab] = clientApi.user.getOpenAppsInNewTabOrDefault.useSuspenseQuery();
+    return [
+      {
+        key: "open",
+        Component: () => {
+          const t = useI18n();
 
-        return (
-          <Group mx="md" my="sm">
-            <IconExternalLink stroke={1.5} />
-            <Text>{t("search.mode.appIntegrationBoard.group.app.children.action.open.label")}</Text>
-          </Group>
-        );
-      },
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      useInteraction: interaction.link((option) => ({ href: option.href! })),
-      hide(option) {
-        return !option.href;
-      },
-    },
-    {
-      key: "edit",
-      Component: () => {
-        const t = useI18n();
+          return (
+            <Group mx="md" my="sm">
+              <IconExternalLink stroke={1.5} />
+              <Text>{t("search.mode.appIntegrationBoard.group.app.children.action.open.label")}</Text>
+            </Group>
+          );
+        },
 
-        return (
-          <Group mx="md" my="sm">
-            <IconEye stroke={1.5} />
-            <Text>{t("search.mode.appIntegrationBoard.group.app.children.action.edit.label")}</Text>
-          </Group>
-        );
+        useInteraction: interaction.link((option) => ({
+          href: option.href!,
+          newTab: openAppsInNewTab,
+        })),
+        hide(option) {
+          return !option.href;
+        },
       },
-      useInteraction: interaction.link(({ id }) => ({ href: `/manage/apps/edit/${id}` })),
-    },
-  ],
+      {
+        key: "edit",
+        Component: () => {
+          const t = useI18n();
+
+          return (
+            <Group mx="md" my="sm">
+              <IconEye stroke={1.5} />
+              <Text>{t("search.mode.appIntegrationBoard.group.app.children.action.edit.label")}</Text>
+            </Group>
+          );
+        },
+        useInteraction: interaction.link(({ id }) => ({ href: `/manage/apps/edit/${id}` })),
+      },
+    ];
+  },
   DetailComponent: ({ options }) => {
     const t = useI18n();
 

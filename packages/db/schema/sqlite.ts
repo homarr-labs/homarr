@@ -5,7 +5,6 @@ import { relations } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -20,6 +19,7 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
 export const apiKeys = sqliteTable("apiKey", {
   id: text("id").notNull().primaryKey(),
@@ -47,6 +47,7 @@ export const users = sqliteTable("user", {
   colorScheme: text("colorScheme").$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
+  openAppsInNewTab: int("openAppsInNewTab", { mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(

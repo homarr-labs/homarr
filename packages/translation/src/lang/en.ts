@@ -51,6 +51,9 @@ export default {
       pingIconsEnabled: {
         label: "Use icons for pings",
       },
+      openAppsInNewTab: {
+        label: "Open apps in new tab",
+      },
     },
     error: {
       usernameTaken: "Username already taken",
@@ -116,6 +119,16 @@ export default {
           },
           error: {
             message: "Unable to change first day of week",
+          },
+        },
+      },
+      changeOpenAppsInNewTab: {
+        notification: {
+          success: {
+            message: "Open apps in new tab changed successfully",
+          },
+          error: {
+            message: "Unable to change Open apps in new tab",
           },
         },
       },
@@ -1743,6 +1756,7 @@ export default {
               language: "Language & Region",
               board: "Home board",
               firstDayOfWeek: "First day of the week",
+              openAppsInNewTab: "Open apps in new tab",
               accessibility: "Accessibility",
             },
           },

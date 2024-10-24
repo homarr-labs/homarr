@@ -209,6 +209,7 @@ export const userRouter = createTRPCRouter({
         provider: true,
         homeBoardId: true,
         firstDayOfWeek: true,
+        openAppsInNewTab: true,
         pingIconsEnabled: true,
       },
       where: eq(users.id, input.userId),
@@ -454,6 +455,39 @@ export const userRouter = createTRPCRouter({
         .update(users)
         .set({
           firstDayOfWeek: input.firstDayOfWeek,
+        })
+        .where(eq(users.id, ctx.session.user.id));
+    }),
+  getOpenAppsInNewTabOrDefault: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.session?.user) {
+      return false;
+    }
+
+    const user = await ctx.db.query.users.findFirst({
+      columns: {
+        id: true,
+        openAppsInNewTab: true,
+      },
+      where: eq(users.id, ctx.session.user.id),
+    });
+
+    return user?.openAppsInNewTab ?? false;
+  }),
+  changeOpenAppsInNewTab: protectedProcedure
+    .input(validation.user.openAppsInNewTab.and(validation.common.byId))
+    .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users open apps in new tab
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          openAppsInNewTab: input.openAppsInNewTab,
         })
         .where(eq(users.id, ctx.session.user.id));
     }),

@@ -3,6 +3,7 @@ import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, 
 import { IconApps, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { api } from "@homarr/api/server";
 import { parseAppHrefWithVariablesServer } from "@homarr/common/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
@@ -45,6 +46,7 @@ interface AppCardProps {
 
 const AppCard = async ({ app }: AppCardProps) => {
   const t = await getScopedI18n("app");
+  const [openAppsInNewTab] = clientApi.user.getOpenAppsInNewTabOrDefault.useSuspenseQuery();
 
   return (
     <Card>
@@ -70,7 +72,13 @@ const AppCard = async ({ app }: AppCardProps) => {
               </Text>
             )}
             {app.href && (
-              <Anchor href={parseAppHrefWithVariablesServer(app.href)} lineClamp={1} size="sm" w="min-content">
+              <Anchor
+                href={parseAppHrefWithVariablesServer(app.href)}
+                target={openAppsInNewTab ? "_blank" : "_self"}
+                lineClamp={1}
+                size="sm"
+                w="min-content"
+              >
                 {parseAppHrefWithVariablesServer(app.href)}
               </Anchor>
             )}
