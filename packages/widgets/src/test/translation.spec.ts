@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { objectEntries } from "@homarr/common";
-import { languageMapping } from "@homarr/translation";
+import { createLanguageMapping } from "@homarr/translation";
 
 import { widgetImports } from "..";
 
 describe("Widget properties with description should have matching translations", async () => {
-  const enTranslation = await languageMapping().en();
+  const enTranslation = await createLanguageMapping().en();
   objectEntries(widgetImports).forEach(([key, value]) => {
     Object.entries(value.definition.options).forEach(
       ([optionKey, optionValue]: [string, { withDescription?: boolean }]) => {
@@ -25,7 +25,7 @@ describe("Widget properties with description should have matching translations",
 });
 
 describe("Widget properties should have matching name translations", async () => {
-  const enTranslation = await languageMapping().en();
+  const enTranslation = await createLanguageMapping().en();
   objectEntries(widgetImports).forEach(([key, value]) => {
     Object.keys(value.definition.options).forEach((optionKey) => {
       it(`should have matching translations for ${optionKey} option name of ${key} widget`, () => {

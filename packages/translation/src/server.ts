@@ -1,8 +1,8 @@
-import { createI18nServer } from "next-international/server";
+import { getTranslations } from "next-intl/server";
 
-import { languageMapping } from "./lang";
-import enTranslation from "./lang/en";
+export const { getI18n, getScopedI18n } = {
+  getI18n: getTranslations,
+  getScopedI18n: getTranslations,
+};
 
-export const { getI18n, getScopedI18n, getStaticParams } = createI18nServer(languageMapping(), {
-  fallbackLocale: enTranslation,
-});
+export { getMessages as getI18nMessages } from "next-intl/server";

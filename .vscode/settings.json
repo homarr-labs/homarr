@@ -27,7 +27,7 @@
     "Umami"
   ],
   "i18n-ally.dirStructure": "auto",
-  "i18n-ally.enabledFrameworks": ["next-international"],
+  "i18n-ally.enabledFrameworks": ["next-intl"],
   "i18n-ally.localesPaths": ["./packages/translation/src/lang/"],
   "i18n-ally.enabledParsers": ["ts"],
   "i18n-ally.extract.keyMaxLength": 0,

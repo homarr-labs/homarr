@@ -2,11 +2,15 @@
 import "@homarr/auth/env.mjs";
 
 import MillionLint from "@million/lint";
+import createNextIntlPlugin from "next-intl/plugin";
 
 import "./src/env.mjs";
 
+// Package path does not work... so we need to use relative path
+const withNextIntl = createNextIntlPlugin("../../packages/translation/src/request.ts");
+
 /** @type {import("next").NextConfig} */
-const config = {
+const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   /** We already do linting and typechecking as separate tasks in CI */
@@ -34,4 +38,4 @@ const config = {
 // Skip transform is used because of webpack loader, without it for example 'Tooltip.Floating' will not work and show an error
 const withMillionLint = MillionLint.next({ rsc: true, skipTransform: true, telemetry: false });
 
-export default config;
+export default withNextIntl(nextConfig);

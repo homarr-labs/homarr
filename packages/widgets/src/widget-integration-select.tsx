@@ -92,8 +92,8 @@ export const WidgetIntegrationSelect = ({
           inputWrapperOrder={["label", "input", "description", "error"]}
           description={
             <Text size="xs">
-              {t("widget.common.integration.description", {
-                here: (
+              {t.rich("widget.common.integration.description", {
+                here: () => (
                   <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">
                     {t("common.here")}
                   </Anchor>
