@@ -14,6 +14,7 @@ import { canAccessUserEditPage } from "../access";
 import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { FirstDayOfWeek } from "./_components/_first-day-of-week";
+import { OpenAppsInNewTab } from "./_components/_open-apps-in-new-tab";
 import { PingIconsEnabled } from "./_components/_ping-icons-enabled";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
@@ -98,6 +99,11 @@ export default async function EditUserPage({ params }: Props) {
       <Stack mb="lg">
         <Title order={2}>{tGeneral("item.firstDayOfWeek")}</Title>
         <FirstDayOfWeek user={user} />
+      </Stack>
+
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.openAppsInNewTab")}</Title>
+        <OpenAppsInNewTab user={user} />
       </Stack>
 
       <Stack mb="lg">
