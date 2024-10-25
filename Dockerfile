@@ -30,6 +30,9 @@ COPY --from=builder /app/cli-out/json/ .
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
+# Is used for postinstall of docs definitions
+COPY --from=builder /app/packages/definitions/src/docs ./packages/definitions/src/docs
+
 # Uses the lockfile to install the dependencies
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
 

@@ -85,6 +85,20 @@
       "when": 1728490026154,
       "tag": "0011_classy_angel",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1729348200091,
+      "tag": "0012_ambiguous_black_panther",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1729369389386,
+      "tag": "0013_faithful_hex",
+      "breakpoints": true
     }
   ]
 }

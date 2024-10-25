@@ -4,6 +4,7 @@ export type OldmarrRssDefinition = CommonOldmarrWidgetDefinition<
   "rss",
   {
     rssFeedUrl: string[];
+    enableRtl: boolean;
     refreshInterval: number;
     dangerousAllowSanitizedItemContent: boolean;
     textLinesClamp: number;

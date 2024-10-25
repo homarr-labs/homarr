@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -37,6 +36,8 @@ export default function RssFeed({ options, itemId }: WidgetComponentProps<"rssFe
     })
     .slice(0, options.maximumAmountPosts as number);
 
+  const languageDir = options.enableRtl ? "RTL" : "LTR";
+
   return (
     <ScrollArea className="scroll-area-w100" w="100%" p="4cqmin">
       <Stack w={"100%"} gap="4cqmin">
@@ -56,12 +57,13 @@ export default function RssFeed({ options, itemId }: WidgetComponentProps<"rssFe
             )}
 
             <Flex gap="2.5cqmin" direction="column" w="100%">
-              <Text fz="4cqmin" lh="5cqmin" lineClamp={2}>
+              <Text dir={languageDir} fz="4cqmin" lh="5cqmin" lineClamp={2}>
                 {feedEntry.title}
               </Text>
               {feedEntry.description && (
                 <Text
                   className={feedEntry.description}
+                  dir={languageDir}
                   c="dimmed"
                   size="3.5cqmin"
                   lineClamp={options.textLinesClamp as number}
