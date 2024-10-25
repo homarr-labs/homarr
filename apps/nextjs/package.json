@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev",
+    "dev": "pnpm with-env next dev --turbopack",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "start": "pnpm with-env next start",
@@ -63,11 +63,11 @@
     "glob": "^11.0.0",
     "jotai": "^2.10.1",
     "mantine-react-table": "2.0.0-beta.7",
-    "next": "^14.2.16",
+    "next": "15.0.1",
     "postcss-preset-mantine": "^1.17.0",
     "prismjs": "^1.29.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "19.0.0-rc-69d4b800-20241021",
+    "react-dom": "19.0.0-rc-69d4b800-20241021",
     "react-error-boundary": "^4.1.2",
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.80.4",
@@ -82,13 +82,19 @@
     "@types/chroma-js": "2.4.4",
     "@types/node": "^20.17.0",
     "@types/prismjs": "^1.26.5",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "@types/swagger-ui-react": "^4.18.3",
     "concurrently": "^9.0.1",
     "eslint": "^9.13.0",
     "node-loader": "^2.0.0",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "npm:types-react@19.0.0-rc.1",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    }
   }
 }

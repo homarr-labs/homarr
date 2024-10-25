@@ -9,8 +9,8 @@ interface InitializeGridstackProps {
   section: Omit<Section, "items">;
   itemIds: string[];
   refs: {
-    wrapper: RefObject<HTMLDivElement>;
-    items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
+    wrapper: RefObject<HTMLDivElement | null>;
+    items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement | null>>>;
     gridstack: MutableRefObject<GridStack | undefined>;
   };
   sectionColumnCount: number;

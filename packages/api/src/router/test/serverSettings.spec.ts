@@ -10,7 +10,7 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 import { serverSettingsRouter } from "../serverSettings";
 
 // Mock the auth module to return an empty session
-vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/auth", () => ({ auth: () => (({}) as Session) }));
 
 const defaultSession = {
   user: {

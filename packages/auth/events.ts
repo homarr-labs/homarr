@@ -52,7 +52,7 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     }
 
     // We use a cookie as localStorage is not shared with server (otherwise flickering would occur)
-    cookies().set("homarr-color-scheme", dbUser.colorScheme, {
+    (await cookies()).set("homarr-color-scheme", dbUser.colorScheme, {
       path: "/",
       expires: dayjs().add(1, "year").toDate(),
     });

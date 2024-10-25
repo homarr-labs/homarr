@@ -36,7 +36,7 @@ const defaultSession = {
 } satisfies Session;
 
 // Mock the auth module to return an empty session
-vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/auth", () => ({ auth: () => (({}) as Session) }));
 
 const createRandomUserAsync = async (db: Database) => {
   const userId = createId();

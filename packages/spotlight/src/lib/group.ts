@@ -4,6 +4,8 @@ import type { stringOrTranslation } from "@homarr/translation";
 
 import type { inferSearchInteractionDefinition, inferSearchInteractionOptions, SearchInteraction } from "./interaction";
 
+import type { JSX } from "react";
+
 type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps extends Record<string, unknown>> = {
   // key path is used to define the path to a unique key in the option object
   keyPath: keyof TOption;

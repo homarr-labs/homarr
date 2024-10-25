@@ -7,7 +7,7 @@ import * as ping from "@homarr/ping";
 import { appRouter } from "../../widgets/app";
 
 // Mock the auth module to return an empty session
-vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/auth", () => ({ auth: () => (({}) as Session) }));
 vi.mock("@homarr/ping", () => ({ sendPingRequestAsync: async () => await Promise.resolve(null) }));
 
 describe("ping should call sendPingRequestAsync with url and return result", () => {

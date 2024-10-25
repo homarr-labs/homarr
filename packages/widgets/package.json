@@ -59,9 +59,10 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "mantine-react-table": "2.0.0-beta.7",
-    "next": "^14.2.16",
-    "react": "^18.3.1",
-    "video.js": "^8.18.1"
+    "next": "15.0.1",
+    "react": "19.0.0-rc-69d4b800-20241021",
+    "video.js": "^8.18.1",
+    "react-dom": "19.0.0-rc-69d4b800-20241021"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

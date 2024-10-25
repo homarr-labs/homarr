@@ -10,12 +10,13 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { PermissionForm, PermissionSwitch, SaveAffix } from "./_group-permission-form";
 
 interface GroupPermissionsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function GroupPermissionsPage({ params }: GroupPermissionsPageProps) {
+export default async function GroupPermissionsPage(props: GroupPermissionsPageProps) {
+  const params = await props.params;
   const group = await api.group.getById({ id: params.id });
   const tPermissions = await getScopedI18n("group.permission");
   const t = await getI18n();

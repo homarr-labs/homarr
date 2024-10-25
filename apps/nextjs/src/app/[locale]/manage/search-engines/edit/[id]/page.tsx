@@ -8,10 +8,11 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { SearchEngineEditForm } from "./_search-engine-edit-form";
 
 interface SearchEngineEditPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function SearchEngineEditPage({ params }: SearchEngineEditPageProps) {
+export default async function SearchEngineEditPage(props: SearchEngineEditPageProps) {
+  const params = await props.params;
   const searchEngine = await api.searchEngine.byId({ id: params.id });
   const t = await getI18n();
 

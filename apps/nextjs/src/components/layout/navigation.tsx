@@ -5,6 +5,8 @@ import type { TablerIcon } from "@homarr/ui";
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";
 
+import type { JSX } from "react";
+
 interface MainNavigationProps {
   headerSection?: JSX.Element;
   footerSection?: JSX.Element;

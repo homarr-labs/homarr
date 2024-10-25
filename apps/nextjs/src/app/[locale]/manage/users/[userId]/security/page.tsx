@@ -10,12 +10,13 @@ import { canAccessUserEditPage } from "../access";
 import { ChangePasswordForm } from "./_components/_change-password-form";
 
 interface Props {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
-export default async function UserSecurityPage({ params }: Props) {
+export default async function UserSecurityPage(props: Props) {
+  const params = await props.params;
   const session = await auth();
   const tSecurity = await getScopedI18n("management.page.user.setting.security");
   const user = await api.user

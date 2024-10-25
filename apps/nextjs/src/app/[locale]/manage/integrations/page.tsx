@@ -44,12 +44,13 @@ import { DeleteIntegrationActionButton } from "./_integration-buttons";
 import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
 
 interface IntegrationsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     tab?: IntegrationKind;
-  };
+  }>;
 }
 
-export default async function IntegrationsPage({ searchParams }: IntegrationsPageProps) {
+export default async function IntegrationsPage(props: IntegrationsPageProps) {
+  const searchParams = await props.searchParams;
   const integrations = await api.integration.all();
   const session = await auth();
   const t = await getScopedI18n("integration");

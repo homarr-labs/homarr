@@ -29,9 +29,10 @@ vi.mock("next/headers", async (importOriginal) => {
 
   vi.spyOn(result, "set");
 
-  const cookies = () => result;
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const cookiesAsync = async () => result;
 
-  return { ...mod, cookies } satisfies HeadersExport;
+  return { ...mod, cookies: cookiesAsync } satisfies HeadersExport;
 });
 
 describe("createSignInEventHandler should create signInEventHandler", () => {
@@ -238,7 +239,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
 
     // Assert
-    expect(cookies().set).toHaveBeenCalledWith(
+    expect((await cookies()).set).toHaveBeenCalledWith(
       "homarr-color-scheme",
       "dark",
       expect.objectContaining({

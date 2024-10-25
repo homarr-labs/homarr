@@ -17,7 +17,7 @@ interface Props extends BoxProps {
   height: number;
   minWidth?: number;
   minHeight?: number;
-  innerRef: React.RefObject<GridItemHTMLElement> | undefined;
+  innerRef: React.RefObject<GridItemHTMLElement | null> | undefined;
 }
 
 export const GridStackItem = ({
@@ -42,7 +42,7 @@ export const GridStackItem = ({
   }, [minWidth, minHeight, innerRef, type]);
 
   return (
-    <Box
+    (<Box
       {...boxProps}
       className={combineClasses("grid-stack-item", boxProps.className)}
       data-id={id}
@@ -54,9 +54,9 @@ export const GridStackItem = ({
       gs-h={height}
       gs-min-w={minWidth}
       gs-min-h={minHeight}
-      ref={innerRef as React.RefObject<HTMLDivElement>}
+      ref={innerRef as React.RefObject<HTMLDivElement | null>}
     >
       {children}
-    </Box>
+    </Box>)
   );
 };

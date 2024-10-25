@@ -23,7 +23,7 @@ const defaultSessionWithPermissions = (permissions: GroupPermissionKey[] = []) =
   }) satisfies Session;
 
 // Mock the auth module to return an empty session
-vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/auth", () => ({ auth: () => (({}) as Session) }));
 vi.mock("../../integration/integration-test-connection", () => ({
   testConnectionAsync: async () => await Promise.resolve(undefined),
 }));

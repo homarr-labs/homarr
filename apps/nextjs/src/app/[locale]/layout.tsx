@@ -30,7 +30,8 @@ const fontSans = Inter({
   variable: "--font-sans",
 });
 
-export const generateMetadata = (): Metadata => ({
+// eslint-disable-next-line no-restricted-syntax
+export const generateMetadata = async (): Promise<Metadata> => ({
   title: "Homarr",
   description:
     "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
@@ -49,7 +50,7 @@ export const generateMetadata = (): Metadata => ({
     title: "Homarr",
     capable: true,
     startupImage: { url: "/logo/logo.png" },
-    statusBarStyle: getColorScheme() === "dark" ? "black-translucent" : "default",
+    statusBarStyle: (await getColorSchemeAsync()) === "dark" ? "black-translucent" : "default",
   },
 });
 
@@ -60,13 +61,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
-  if (!isLocaleSupported(props.params.locale)) {
+export default async function Layout(props: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  if (!isLocaleSupported((await props.params).locale)) {
     notFound();
   }
 
   const session = await auth();
-  const colorScheme = getColorScheme();
+  const colorScheme = await getColorSchemeAsync();
   const tCommon = await getScopedI18n("common");
   const direction = tCommon("direction");
   const i18nMessages = await getI18nMessages();
@@ -85,7 +86,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
     <html
-      lang={props.params.locale}
+      lang={(await props.params).locale}
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{
@@ -107,6 +108,6 @@ export default async function Layout(props: { children: React.ReactNode; params:
   );
 }
 
-const getColorScheme = () => {
-  return cookies().get("homarr-color-scheme")?.value ?? "dark";
+const getColorSchemeAsync = async () => {
+  return (await cookies()).get("homarr-color-scheme")?.value ?? "dark";
 };

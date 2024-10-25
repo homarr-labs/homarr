@@ -83,7 +83,7 @@ const iconProps = {
 };
 
 const createRenderOption = (users: RouterOutputs["user"]["selectable"]): SelectProps["renderOption"] =>
-  function InnerRenderRoot({ option, checked }) {
+  (function InnerRenderRoot({ option, checked }) {
     const user = users.find((user) => user.id === option.value);
     if (!user) return null;
 
@@ -94,4 +94,4 @@ const createRenderOption = (users: RouterOutputs["user"]["selectable"]): SelectP
         {checked && <IconCheck style={{ marginInlineStart: "auto" }} {...iconProps} />}
       </Group>
     );
-  };
+  });

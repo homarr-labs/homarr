@@ -7,10 +7,11 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AppEditForm } from "./_app-edit-form";
 
 interface AppEditPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function AppEditPage({ params }: AppEditPageProps) {
+export default async function AppEditPage(props: AppEditPageProps) {
+  const params = await props.params;
   const app = await api.app.byId({ id: params.id });
   const t = await getI18n();
 

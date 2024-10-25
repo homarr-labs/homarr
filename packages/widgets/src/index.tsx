@@ -3,6 +3,7 @@ import type { Loader } from "next/dynamic";
 import dynamic from "next/dynamic";
 import { Center, Loader as UiLoader } from "@mantine/core";
 
+import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 
 import * as app from "./app";
@@ -20,13 +21,12 @@ import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as notebook from "./notebook";
+import { WidgetOptionDefinition } from "./options";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
-
-export { reduceWidgetOptionsWithDefaultValues } from "./options";
 
 export type { WidgetDefinition } from "./definition";
 export { WidgetEditModal } from "./modals/widget-edit-modal";
@@ -82,3 +82,15 @@ export type inferSupportedIntegrations<TKind extends WidgetKind> = (WidgetImport
 }
   ? WidgetImports[TKind]["definition"]["supportedIntegrations"]
   : string[])[number];
+
+export const reduceWidgetOptionsWithDefaultValues = (kind: WidgetKind, currentValue: Record<string, unknown> = {}) => {
+  const definition = widgetImports[kind].definition;
+  const options = definition.options as Record<string, WidgetOptionDefinition>;
+  return objectEntries(options).reduce(
+    (prev, [key, value]) => ({
+      ...prev,
+      [key]: currentValue[key] ?? value.defaultValue,
+    }),
+    {} as Record<string, unknown>,
+  );
+};

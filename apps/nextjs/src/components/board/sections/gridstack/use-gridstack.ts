@@ -11,8 +11,8 @@ import { useSectionActions } from "../section-actions";
 import { initializeGridstack } from "./init-gridstack";
 
 export interface UseGridstackRefs {
-  wrapper: RefObject<HTMLDivElement>;
-  items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
+  wrapper: RefObject<HTMLDivElement | null>;
+  items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement | null>>>;
   gridstack: MutableRefObject<GridStack | undefined>;
 }
 
@@ -60,9 +60,9 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   // define reference for wrapper - is used to calculate the width of the wrapper
   const { ref: wrapperRef, width, height } = useElementSize<HTMLDivElement>();
   // references to the diffrent items contained in the gridstack
-  const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement>>>({});
+  const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement | null>>>({});
   // reference of the gridstack object for modifications after initialization
-  const gridRef = useRef<GridStack>();
+  const gridRef = useRef<GridStack>(undefined);
 
   const board = useRequiredBoard();
 

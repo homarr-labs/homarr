@@ -33,8 +33,9 @@
     "@mantine/core": "^7.13.4",
     "@tabler/icons-react": "^3.20.0",
     "dayjs": "^1.11.13",
-    "next": "^14.2.16",
-    "react": "^18.3.1"
+    "next": "15.0.1",
+    "react": "19.0.0-rc-69d4b800-20241021",
+    "react-dom": "19.0.0-rc-69d4b800-20241021"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

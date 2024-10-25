@@ -15,15 +15,17 @@ import { AddGroupMember } from "./_add-group-member";
 import { RemoveGroupMember } from "./_remove-group-member";
 
 interface GroupsDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     search: string | undefined;
-  };
+  }>;
 }
 
-export default async function GroupsDetailPage({ params, searchParams }: GroupsDetailPageProps) {
+export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const t = await getI18n();
   const tMembers = await getScopedI18n("management.page.group.setting.members");
   const group = await api.group.getById({ id: params.id });

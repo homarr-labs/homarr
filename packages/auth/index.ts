@@ -1,4 +1,4 @@
-import { headers } from "next/headers";
+import { headers, type UnsafeUnwrappedHeaders } from "next/headers";
 import type { DefaultSession } from "@auth/core/types";
 
 import type { ColorScheme, GroupPermissionKey, SupportedAuthProvider } from "@homarr/definitions";
@@ -20,6 +20,6 @@ declare module "next-auth" {
 export * from "./security";
 
 // See why it's unknown in the [...nextauth]/route.ts file
-export const createHandlers = (provider: SupportedAuthProvider | "unknown") => createConfiguration(provider, headers());
+export const createHandlers = (provider: SupportedAuthProvider | "unknown") => createConfiguration(provider, (headers() as unknown as UnsafeUnwrappedHeaders));
 
 export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

@@ -11,7 +11,7 @@ import type { RouterInputs } from "../../..";
 import { dockerRouter } from "../../docker/docker-router";
 
 // Mock the auth module to return an empty session
-vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/auth", () => ({ auth: () => (({}) as Session) }));
 vi.mock("@homarr/redis", () => ({
   createCacheChannel: () => ({
     // eslint-disable-next-line @typescript-eslint/require-await

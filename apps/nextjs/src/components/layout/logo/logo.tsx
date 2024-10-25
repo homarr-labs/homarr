@@ -15,7 +15,7 @@ export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoPr
   ) : (
     // we only want to use next/image for logos that we are sure will be preloaded and are allowed
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={size} height={size} />
+    (<img src={src} alt={alt} width={size} height={size} />)
   );
 
 const logoWithTitleSizes = {

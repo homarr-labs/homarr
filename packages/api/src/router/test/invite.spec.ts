@@ -20,7 +20,7 @@ const defaultSession = {
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", async () => {
   const mod = await import("@homarr/auth/security");
-  return { ...mod, auth: () => ({}) as Session };
+  return { ...mod, auth: () => (({}) as Session) };
 });
 
 // Mock the env module to return the credentials provider

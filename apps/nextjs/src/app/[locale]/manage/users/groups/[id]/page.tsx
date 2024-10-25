@@ -11,12 +11,13 @@ import { ReservedGroupAlert } from "./_reserved-group-alert";
 import { TransferGroupOwnership } from "./_transfer-group-ownership";
 
 interface GroupsDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function GroupsDetailPage({ params }: GroupsDetailPageProps) {
+export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
+  const params = await props.params;
   const group = await api.group.getById({ id: params.id });
   const tGeneral = await getScopedI18n("management.page.group.setting.general");
   const tGroupAction = await getScopedI18n("group.action");

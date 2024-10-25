@@ -4,7 +4,9 @@ import "@mantine/tiptap/styles.css";
 
 import type { WidgetComponentProps } from "../definition";
 
-const Notebook = dynamic(() => import("./notebook").then((module) => module.Notebook), {
+const Notebook = dynamic(() => import("./notebook").then((module) => ({
+  default: module.Notebook
+})), {
   ssr: false,
 });
 

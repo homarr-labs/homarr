@@ -9,7 +9,7 @@ import { createDb } from "@homarr/db/test";
 import { appRouter } from "../app";
 
 // Mock the auth module to return an empty session
-vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/auth", () => ({ auth: () => (({}) as Session) }));
 
 const defaultSession: Session = {
   user: { id: createId(), permissions: [], colorScheme: "light" },
