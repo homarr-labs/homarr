@@ -5,7 +5,7 @@ import type { NextAuthConfig } from "next-auth";
 import { and, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { groupMembers, groups, users } from "@homarr/db/schema/sqlite";
-import { everyoneGroup } from "@homarr/definitions";
+import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import { env } from "./env.mjs";
@@ -52,7 +52,7 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     }
 
     // We use a cookie as localStorage is not shared with server (otherwise flickering would occur)
-    cookies().set("homarr-color-scheme", dbUser.colorScheme, {
+    cookies().set(colorSchemeCookieKey, dbUser.colorScheme, {
       path: "/",
       expires: dayjs().add(1, "year").toDate(),
     });

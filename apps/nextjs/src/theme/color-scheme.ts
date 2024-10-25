@@ -4,9 +4,10 @@ import { cookies } from "next/headers";
 import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import type { ColorScheme } from "@homarr/definitions";
+import { colorSchemeCookieKey } from "@homarr/definitions";
 
 export const getCurrentColorSchemeAsync = cache(async () => {
-  const cookieValue = cookies().get("homarr-color-scheme")?.value;
+  const cookieValue = cookies().get(colorSchemeCookieKey)?.value;
 
   if (cookieValue) {
     return cookieValue as ColorScheme;

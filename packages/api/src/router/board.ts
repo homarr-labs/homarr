@@ -227,6 +227,14 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+
+      if (input.visibility !== "public" && boardSettings.defaultBoardId === input.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot make default board private",
+        });
+      }
 
       await ctx.db
         .update(boards)
@@ -251,12 +259,14 @@ export const boardRouter = createTRPCRouter({
         })
       : null;
 
-    const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
-    const boardWhere = user?.homeBoardId
-      ? eq(boards.id, user.homeBoardId)
-      : boardSettings.defaultBoardId
-        ? eq(boards.id, boardSettings.defaultBoardId)
-        : null;
+    // 1. user home board, 2. default board, 3. not found
+    let boardWhere: SQL<unknown> | null = null;
+    if (user?.homeBoardId) {
+      boardWhere = eq(boards.id, user.homeBoardId);
+    } else {
+      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+      boardWhere = boardSettings.defaultBoardId ? eq(boards.id, boardSettings.defaultBoardId) : null;
+    }
 
     if (!boardWhere) {
       throw new TRPCError({

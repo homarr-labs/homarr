@@ -7,19 +7,22 @@ import { SelectWithCustomItems } from "node_modules/@homarr/ui/src/components/se
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonSettingsForm } from "./common-form";
 
 export const AppearanceSettingsForm = ({ defaultValues }: { defaultValues: ServerSettings["appearance"] }) => {
+  const tApperance = useScopedI18n("management.page.settings.section.appearance");
+
   return (
     <CommonSettingsForm settingKey="appearance" defaultValues={defaultValues}>
       {(form) => (
         <>
           <SelectWithCustomItems
-            label="Default color scheme"
+            label={tApperance("defaultColorScheme.label")}
             data={colorSchemes.map((scheme) => ({
               value: scheme,
-              label: scheme,
+              label: tApperance(`defaultColorScheme.options.${scheme}`),
             }))}
             {...form.getInputProps("defaultColorScheme")}
             SelectOption={ApperanceCustomOption}

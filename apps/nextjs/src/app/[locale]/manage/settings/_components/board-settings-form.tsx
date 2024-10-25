@@ -6,10 +6,12 @@ import { SelectWithCustomItems } from "node_modules/@homarr/ui/src/components/se
 
 import { clientApi } from "@homarr/api/client";
 import type { ServerSettings } from "@homarr/server-settings";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonSettingsForm } from "./common-form";
 
 export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSettings["board"] }) => {
+  const tBoard = useScopedI18n("management.page.settings.section.board");
   const [selectableBoards] = clientApi.board.getPublicBoards.useSuspenseQuery();
 
   return (
@@ -17,8 +19,8 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
       {(form) => (
         <>
           <SelectWithCustomItems
-            label="Global default board"
-            description="Only public boards are available for selection"
+            label={tBoard("defaultBoard.label")}
+            description={tBoard("defaultBoard.description")}
             data={selectableBoards.map((board) => ({
               value: board.id,
               label: board.name,

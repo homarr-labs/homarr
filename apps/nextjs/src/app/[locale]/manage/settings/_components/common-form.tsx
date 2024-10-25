@@ -6,6 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings } from "@homarr/server-settings";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 export const CommonSettingsForm = <TKey extends keyof ServerSettings>({
   settingKey,
@@ -16,15 +17,17 @@ export const CommonSettingsForm = <TKey extends keyof ServerSettings>({
   defaultValues: ServerSettings[TKey];
   children: (form: ReturnType<typeof useForm<ServerSettings[TKey]>>) => React.ReactNode;
 }) => {
+  const t = useI18n();
+  const tSettings = useScopedI18n("management.page.settings");
   const { mutateAsync, isPending } = clientApi.serverSettings.saveSettings.useMutation({
     onSuccess() {
       showSuccessNotification({
-        message: "Settings saved successfully",
+        message: tSettings("notification.success.message"),
       });
     },
     onError() {
       showErrorNotification({
-        message: "Failed to save settings",
+        message: tSettings("notification.error.message"),
       });
     },
   });
@@ -45,7 +48,7 @@ export const CommonSettingsForm = <TKey extends keyof ServerSettings>({
         {children(form)}
         <Group justify="end">
           <Button type="submit" loading={isPending}>
-            Save
+            {t("common.action.save")}
           </Button>
         </Group>
       </Stack>
