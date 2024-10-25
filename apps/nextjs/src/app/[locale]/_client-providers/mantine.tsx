@@ -8,14 +8,18 @@ import dayjs from "dayjs";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
+import type { ColorScheme } from "@homarr/definitions";
 
-export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
+export const CustomMantineProvider = ({
+  children,
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const manager = useColorSchemeManager();
 
   return (
     <DirectionProvider>
       <MantineProvider
-        defaultColorScheme="dark"
+        defaultColorScheme={defaultColorScheme}
         colorSchemeManager={manager}
         theme={createTheme({
           primaryColor: "red",
@@ -28,7 +32,7 @@ export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-function useColorSchemeManager(): MantineColorSchemeManager {
+export function useColorSchemeManager(): MantineColorSchemeManager {
   const key = "homarr-color-scheme";
   const { data: session } = useSession();
 

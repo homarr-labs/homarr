@@ -4,6 +4,7 @@ import superjson from "superjson";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { and, createId, eq, inArray, like, or } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   boardGroupPermissions,
   boards,
@@ -41,6 +42,16 @@ export const boardRouter = createTRPCRouter({
         throw error;
       }
     }),
+  getPublicBoards: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.boards.findMany({
+      columns: {
+        id: true,
+        name: true,
+        logoImageUrl: true,
+      },
+      where: eq(boards.isPublic, true),
+    });
+  }),
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
@@ -240,7 +251,20 @@ export const boardRouter = createTRPCRouter({
         })
       : null;
 
-    const boardWhere = user?.homeBoardId ? eq(boards.id, user.homeBoardId) : eq(boards.name, "home");
+    const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+    const boardWhere = user?.homeBoardId
+      ? eq(boards.id, user.homeBoardId)
+      : boardSettings.defaultBoardId
+        ? eq(boards.id, boardSettings.defaultBoardId)
+        : null;
+
+    if (!boardWhere) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No home board found",
+      });
+    }
+
     await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);

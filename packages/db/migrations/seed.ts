@@ -1,5 +1,6 @@
 import SuperJSON from "superjson";
 
+import { objectKeys } from "@homarr/common";
 import { everyoneGroup } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
@@ -32,21 +33,33 @@ const seedEveryoneGroupAsync = async (db: Database) => {
 
 const seedServerSettingsAsync = async (db: Database) => {
   const serverSettingsData = await db.query.serverSettings.findMany();
-  let insertedSettingsCount = 0;
 
   for (const settingsKey of defaultServerSettingsKeys) {
-    if (serverSettingsData.some((setting) => setting.settingKey === settingsKey)) {
-      return;
+    const currentDbEntry = serverSettingsData.find((setting) => setting.settingKey === settingsKey);
+    if (!currentDbEntry) {
+      await db.insert(serverSettings).values({
+        settingKey: settingsKey,
+        value: SuperJSON.stringify(defaultServerSettings[settingsKey]),
+      });
+      console.log(`Created serverSetting through seed key=${settingsKey}`);
+      continue;
     }
 
-    await db.insert(serverSettings).values({
-      settingKey: settingsKey,
-      value: SuperJSON.stringify(defaultServerSettings[settingsKey]),
-    });
-    insertedSettingsCount++;
-  }
+    const currentSettings = SuperJSON.parse<Record<string, unknown>>(currentDbEntry.value);
+    const defaultSettings = defaultServerSettings[settingsKey];
+    const missingKeys = objectKeys(defaultSettings).filter((key) => !(key in currentSettings));
 
-  if (insertedSettingsCount > 0) {
-    console.info(`Inserted ${insertedSettingsCount} missing settings`);
+    if (missingKeys.length == 0) {
+      console.info(`Skipping seeding for serverSetting as it already exists key=${settingsKey}`);
+      continue;
+    }
+
+    await db
+      .update(serverSettings)
+      .set({
+        value: SuperJSON.stringify({ ...defaultSettings, ...currentSettings }), // Add missing keys
+      })
+      .where(eq(serverSettings.settingKey, settingsKey));
+    console.log(`Updated serverSetting through seed key=${settingsKey}`);
   }
 };

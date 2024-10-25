@@ -1,9 +1,15 @@
-import { createI18nMiddleware } from "next-international/middleware";
+import { createI18nMiddleware as internalCreateI18nMiddleware } from "next-international/middleware";
 
-import { defaultLocale, supportedLanguages } from ".";
+import type { SupportedLanguage } from ".";
+import { supportedLanguages } from ".";
 
-export const I18nMiddleware = createI18nMiddleware({
-  locales: supportedLanguages,
-  defaultLocale,
-  urlMappingStrategy: "rewrite",
-});
+export const createI18nMiddleware = (defaultLocale: SupportedLanguage) =>
+  internalCreateI18nMiddleware({
+    locales: supportedLanguages,
+    defaultLocale,
+    // TODO: check with new translation library if it uses the default or accepted language from browser
+    resolveLocaleFromRequest() {
+      return defaultLocale;
+    },
+    urlMappingStrategy: "rewrite",
+  });
