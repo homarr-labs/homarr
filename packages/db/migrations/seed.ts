@@ -49,7 +49,7 @@ const seedServerSettingsAsync = async (db: Database) => {
     const defaultSettings = defaultServerSettings[settingsKey];
     const missingKeys = objectKeys(defaultSettings).filter((key) => !(key in currentSettings));
 
-    if (missingKeys.length == 0) {
+    if (missingKeys.length === 0) {
       console.info(`Skipping seeding for serverSetting as it already exists key=${settingsKey}`);
       continue;
     }
