@@ -29,6 +29,15 @@ const optionMapping: OptionMapping = {
     // And the mapping is created in insertAppsAsync
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     items: (oldOptions, appsMap) => oldOptions.items.map((item) => appsMap.get(item.id)!),
+    layout: (oldOptions) => {
+      const mappedLayouts: Record<typeof oldOptions.layout, WidgetComponentProps<"bookmarks">["options"]["layout"]> = {
+        autoGrid: "grid",
+        horizontal: "row",
+        vertical: "column",
+      };
+
+      return mappedLayouts[oldOptions.layout];
+    },
   },
   calendar: {
     releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
