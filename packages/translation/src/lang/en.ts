@@ -575,7 +575,7 @@ export default {
       },
       delete: {
         label: "Delete media",
-        description: "Are you sure you want to delete the media {name}?",
+        description: "Are you sure you want to delete the media <bName></bName>?",
         notification: {
           success: {
             message: "The media was successfully deleted",
