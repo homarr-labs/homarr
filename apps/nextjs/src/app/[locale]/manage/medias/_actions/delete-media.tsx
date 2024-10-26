@@ -21,7 +21,7 @@ export const DeleteMedia = ({ media }: DeleteMediaProps) => {
   const onClick = () => {
     openConfirmModal({
       title: t("media.action.delete.label"),
-      children: t("media.action.delete.description", { name: <b>{media.name}</b> }),
+      children: t.rich("media.action.delete.description", { bName: () => <b>{media.name}</b> }),
       // eslint-disable-next-line no-restricted-syntax
       onConfirm: async () => {
         await mutateAsync({ id: media.id });
