@@ -35,7 +35,7 @@ const FlexLayout = ({ data, direction }: FlexLayoutProps) => {
   return (
     <Flex direction={direction} gap="0" h="100%" w="100%">
       {data.map((app, index) => (
-        <div key={index} style={{ display: "flex", flex: "1", flexDirection: direction }}>
+        <div key={app.id} style={{ display: "flex", flex: "1", flexDirection: direction }}>
           <Divider
             m="3px"
             orientation={direction !== "column" ? "vertical" : "horizontal"}
