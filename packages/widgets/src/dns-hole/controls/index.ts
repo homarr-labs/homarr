@@ -5,7 +5,9 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("dnsHoleControls", {
+export const widgetKind = "dnsHoleControls";
+
+export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconDeviceGamepad,
   options: optionsBuilder.from((factory) => ({
     showToggleAllButtons: factory.switch({
@@ -19,6 +21,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       message: (t) => t("widget.dnsHoleControls.error.internalServerError"),
     },
   },
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

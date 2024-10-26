@@ -121,10 +121,10 @@ const optionsFactory = {
     values: [] as string[],
     validate: input?.validate,
   }),
-  app: (input?: Omit<CommonInput<string>, "defaultValue">) => ({
+  app: () => ({
     type: "app" as const,
     defaultValue: "",
-    withDescription: input?.withDescription ?? false,
+    withDescription: false,
   }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,

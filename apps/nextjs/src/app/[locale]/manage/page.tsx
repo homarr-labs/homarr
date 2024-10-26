@@ -3,6 +3,7 @@ import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -28,6 +29,7 @@ export async function generateMetadata() {
 
 export default async function ManagementPage() {
   const statistics = await api.home.getStats();
+  const session = await auth();
   const t = await getScopedI18n("management.page.home");
 
   const links: LinkProps[] = [
@@ -35,38 +37,40 @@ export default async function ManagementPage() {
       count: statistics.countBoards,
       href: "/manage/boards",
       subtitle: t("statisticLabel.boards"),
-      title: t("statistic.countBoards"),
+      title: t("statistic.board"),
     },
     {
       count: statistics.countUsers,
       href: "/manage/users",
       subtitle: t("statisticLabel.authentication"),
-      title: t("statistic.createUser"),
+      title: t("statistic.user"),
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
-      hidden: !isProviderEnabled("credentials"),
       count: statistics.countInvites,
       href: "/manage/users/invites",
       subtitle: t("statisticLabel.authentication"),
-      title: t("statistic.createInvite"),
+      title: t("statistic.invite"),
+      hidden: !isProviderEnabled("credentials") || !session?.user.permissions.includes("admin"),
     },
     {
       count: statistics.countIntegrations,
       href: "/manage/integrations",
       subtitle: t("statisticLabel.resources"),
-      title: t("statistic.addIntegration"),
+      title: t("statistic.integration"),
     },
     {
       count: statistics.countApps,
       href: "/manage/apps",
       subtitle: t("statisticLabel.resources"),
-      title: t("statistic.addApp"),
+      title: t("statistic.app"),
     },
     {
       count: statistics.countGroups,
       href: "/manage/users/groups",
       subtitle: t("statisticLabel.authorization"),
-      title: t("statistic.manageRoles"),
+      title: t("statistic.group"),
+      hidden: !session?.user.permissions.includes("admin"),
     },
   ];
   return (

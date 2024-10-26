@@ -16,7 +16,7 @@ const searchInteractions = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useActions: CreateChildrenOptionsProps<any>["useActions"];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    detailComponent: CreateChildrenOptionsProps<any>["detailComponent"];
+    DetailComponent: CreateChildrenOptionsProps<any>["DetailComponent"];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     option: any;
   }>(),

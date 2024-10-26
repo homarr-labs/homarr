@@ -1,140 +1,287 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ActionIcon, Badge, Button, Card, Flex, Image, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
+import "../../widgets-common.css";
 
+import { useState } from "react";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Image,
+  ScrollArea,
+  Stack,
+  Text,
+  Tooltip,
+  UnstyledButton,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
+import dayjs from "dayjs";
+
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
+import { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 import TimerModal from "./TimerModal";
 
-const dnsLightStatus = (enabled: boolean): "green" | "red" => (enabled ? "green" : "red");
+const dnsLightStatus = (enabled: boolean | undefined) =>
+  `var(--mantine-color-${typeof enabled === "undefined" ? "blue" : enabled ? "green" : "red"}-6`;
 
-export default function DnsHoleControlsWidget({ options, integrationIds }: WidgetComponentProps<"dnsHoleControls">) {
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
-  const t = useI18n();
-  const [status, setStatus] = useState<{ integrationId: string; enabled: boolean }[]>(
-    integrationIds.map((id) => ({ integrationId: id, enabled: false })),
-  );
-  const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
-  const [opened, { close, open }] = useDisclosure(false);
+export default function DnsHoleControlsWidget({
+  options,
+  integrationIds,
+  isEditMode,
+}: WidgetComponentProps<typeof widgetKind>) {
+  // DnsHole integrations with interaction permissions
+  const integrationsWithInteractions = useIntegrationsWithInteractAccess()
+    .map(({ id }) => id)
+    .filter((id) => integrationIds.includes(id));
 
-  const [data] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
+  const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
+      widgetKind: "dnsHoleControls",
       integrationIds,
     },
     {
       refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       retry: false,
     },
   );
+  const utils = clientApi.useUtils();
+  // Subscribe to summary updates
+  clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
+    {
+      widgetKind,
+      integrationIds,
+    },
+    {
+      onData: (data) => {
+        utils.widget.dnsHole.summary.setData(
+          {
+            widgetKind: "dnsHoleControls",
+            integrationIds,
+          },
+          (prevData) => {
+            if (!prevData) return undefined;
 
-  useEffect(() => {
-    const newStatus = data.map((integrationData) => ({
-      integrationId: integrationData.integrationId,
-      enabled: integrationData.summary.status === "enabled",
-    }));
-    setStatus(newStatus);
-  }, [data]);
+            const newData = prevData.map((summary) =>
+              summary.integration.id === data.integration.id ? { ...summary, summary: data.summary } : summary,
+            );
 
+            return newData;
+          },
+        );
+      },
+    },
+  );
+
+  // Mutations for dnsHole state, set to undefined on click, and change again on settle
   const { mutate: enableDns } = clientApi.widget.dnsHole.enable.useMutation({
-    onSuccess: (_, variables) => {
-      setStatus((prevStatus) =>
-        prevStatus.map((item) => (item.integrationId === variables.integrationId ? { ...item, enabled: true } : item)),
+    onSettled: (_, error, { integrationId }) => {
+      utils.widget.dnsHole.summary.setData(
+        {
+          widgetKind: "dnsHoleControls",
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
+
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: error ? "disabled" : "enabled",
+                  },
+                }
+              : item,
+          );
+        },
       );
     },
   });
   const { mutate: disableDns } = clientApi.widget.dnsHole.disable.useMutation({
-    onSuccess: (_, variables) => {
-      setStatus((prevStatus) =>
-        prevStatus.map((item) => (item.integrationId === variables.integrationId ? { ...item, enabled: false } : item)),
+    onSettled: (_, error, { integrationId }) => {
+      utils.widget.dnsHole.summary.setData(
+        {
+          widgetKind: "dnsHoleControls",
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
+
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: error ? "enabled" : "disabled",
+                  },
+                }
+              : item,
+          );
+        },
       );
     },
   });
   const toggleDns = (integrationId: string) => {
-    const integrationStatus = status.find((item) => item.integrationId === integrationId);
-    if (integrationStatus?.enabled) {
+    const integrationStatus = summaries.find(({ integration }) => integration.id === integrationId);
+    if (!integrationStatus?.summary?.status) return;
+    utils.widget.dnsHole.summary.setData(
+      {
+        widgetKind: "dnsHoleControls",
+        integrationIds,
+      },
+      (prevData) => {
+        if (!prevData) return [];
+
+        return prevData.map((item) =>
+          item.integration.id === integrationId && item.summary
+            ? {
+                ...item,
+                summary: {
+                  ...item.summary,
+                  status: undefined,
+                },
+              }
+            : item,
+        );
+      },
+    );
+    if (integrationStatus.summary.status === "enabled") {
       disableDns({ integrationId, duration: 0 });
     } else {
       enableDns({ integrationId });
     }
   };
 
-  const enabledIntegrations = integrationIds.filter((id) => status.find((item) => item.integrationId === id)?.enabled);
-  const disabledIntegrations = integrationIds.filter(
-    (id) => !status.find((item) => item.integrationId === id)?.enabled,
+  // make lists of enabled and disabled interactable integrations (with permissions, not disconnected and not processing)
+  const integrationsSummaries = summaries.reduce(
+    (acc, { summary, integration: { id } }) =>
+      integrationsWithInteractions.includes(id) && summary?.status != null ? (acc[summary.status].push(id), acc) : acc,
+    { enabled: [] as string[], disabled: [] as string[] },
   );
 
+  const t = useI18n();
+
+  // Timer modal setup
+  const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
+  const [opened, { close, open }] = useDisclosure(false);
+
+  const controlAllButtonsVisible = options.showToggleAllButtons && integrationsWithInteractions.length > 0;
+
+  if (integrationIds.length === 0) {
+    throw new NoIntegrationSelectedError();
+  }
+
   return (
-    <Flex h="100%" direction="column" gap={0} p="2.5cqmin">
-      {options.showToggleAllButtons && (
-        <Flex m="2.5cqmin" gap="2.5cqmin">
+    <Flex
+      className="dns-hole-controls-stack"
+      h="100%"
+      direction="column"
+      p="2.5cqmin"
+      gap="2.5cqmin"
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+    >
+      {controlAllButtonsVisible && (
+        <Flex className="dns-hole-controls-buttons" gap="2.5cqmin">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
-              onClick={() => disabledIntegrations.forEach((integrationId) => enableDns({ integrationId }))}
-              disabled={disabledIntegrations.length === 0}
+              className="dns-hole-controls-enable-all-button"
+              onClick={() => integrationsSummaries.disabled.forEach((integrationId) => toggleDns(integrationId))}
+              disabled={integrationsSummaries.disabled.length === 0}
               variant="light"
               color="green"
-              fullWidth
-              h="2rem"
+              h="fit-content"
+              p="1.25cqmin"
+              bd={0}
+              radius="2.5cqmin"
+              flex={1}
             >
-              <IconPlayerPlay size={20} />
+              <IconPlayerPlay
+                className="dns-hole-controls-enable-all-icon"
+                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+              />
             </Button>
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
             <Button
+              className="dns-hole-controls-timer-all-button"
               onClick={() => {
-                setSelectedIntegrationIds(enabledIntegrations);
+                setSelectedIntegrationIds(integrationsSummaries.enabled);
                 open();
               }}
-              disabled={enabledIntegrations.length === 0}
+              disabled={integrationsSummaries.enabled.length === 0}
               variant="light"
               color="yellow"
-              fullWidth
-              h="2rem"
+              h="fit-content"
+              p="1.25cqmin"
+              bd={0}
+              radius="2.5cqmin"
+              flex={1}
             >
-              <IconClockPause size={20} />
+              <IconClockPause
+                className="dns-hole-controls-timer-all-icon"
+                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+              />
             </Button>
           </Tooltip>
 
           <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
             <Button
-              onClick={() => enabledIntegrations.forEach((integrationId) => disableDns({ integrationId, duration: 0 }))}
-              disabled={enabledIntegrations.length === 0}
+              className="dns-hole-controls-disable-all-button"
+              onClick={() => integrationsSummaries.enabled.forEach((integrationId) => toggleDns(integrationId))}
+              disabled={integrationsSummaries.enabled.length === 0}
               variant="light"
               color="red"
-              fullWidth
-              h="2rem"
+              h="fit-content"
+              p="1.25cqmin"
+              bd={0}
+              radius="2.5cqmin"
+              flex={1}
             >
-              <IconPlayerStop size={20} />
+              <IconPlayerStop
+                className="dns-hole-controls-disable-all-icon"
+                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+              />
             </Button>
           </Tooltip>
         </Flex>
       )}
 
-      <Stack m="2.5cqmin" gap="2.5cqmin" flex={1} justify={options.showToggleAllButtons ? "flex-end" : "space-evenly"}>
-        {data.map((integrationData) => (
-          <ControlsCard
-            key={integrationData.integrationId}
-            integrationId={integrationData.integrationId}
-            integrationKind={integrationData.integrationKind}
-            toggleDns={toggleDns}
-            status={status}
-            setSelectedIntegrationIds={setSelectedIntegrationIds}
-            open={open}
-            t={t}
-          />
-        ))}
-      </Stack>
+      <ScrollArea className="dns-hole-controls-integration-list-scroll-area flexed-scroll-area">
+        <Stack
+          className="dns-hole-controls-integration-list"
+          gap="2.5cqmin"
+          flex={1}
+          justify={controlAllButtonsVisible ? "flex-end" : "space-evenly"}
+        >
+          {summaries.map((summary) => (
+            <ControlsCard
+              key={summary.integration.id}
+              integrationsWithInteractions={integrationsWithInteractions}
+              toggleDns={toggleDns}
+              data={summary}
+              setSelectedIntegrationIds={setSelectedIntegrationIds}
+              open={open}
+              t={t}
+            />
+          ))}
+        </Stack>
+      </ScrollArea>
 
       <TimerModal
         opened={opened}
@@ -147,52 +294,109 @@ export default function DnsHoleControlsWidget({ options, integrationIds }: Widge
 }
 
 interface ControlsCardProps {
-  integrationId: string;
-  integrationKind: string;
+  integrationsWithInteractions: string[];
   toggleDns: (integrationId: string) => void;
-  status: { integrationId: string; enabled: boolean }[];
+  data: RouterOutputs["widget"]["dnsHole"]["summary"][number];
   setSelectedIntegrationIds: (integrationId: string[]) => void;
   open: () => void;
   t: TranslationFunction;
 }
 
 const ControlsCard: React.FC<ControlsCardProps> = ({
-  integrationId,
-  integrationKind,
+  integrationsWithInteractions,
   toggleDns,
-  status,
+  data,
   setSelectedIntegrationIds,
   open,
   t,
 }) => {
-  const integrationStatus = status.find((item) => item.integrationId === integrationId);
-  const isEnabled = integrationStatus?.enabled ?? false;
-  const integrationDef = integrationKind === "piHole" ? integrationDefs.piHole : integrationDefs.adGuardHome;
+  // Independently determine connection status, current state and permissions
+  const isConnected = data.summary !== null && Math.abs(dayjs(data.timestamp).diff()) < 30000;
+  const isEnabled = data.summary?.status ? data.summary.status === "enabled" : undefined;
+  const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
+  // Use all factors to infer the state of the action buttons
+  const controlEnabled = isInteractPermitted && isEnabled !== undefined && isConnected;
 
   return (
-    <Card key={integrationId} withBorder p="2.5cqmin" radius="2.5cqmin">
-      <Flex justify="space-between" align="center" direction="row" m="2.5cqmin">
-        <Image src={integrationDef.iconUrl} width="50cqmin" height="50cqmin" fit="contain" />
-        <Flex direction="column">
-          <Text>{integrationDef.name}</Text>
-          <Flex direction="row" gap="2cqmin">
-            <UnstyledButton onClick={() => toggleDns(integrationId)}>
-              <Badge variant="dot" color={dnsLightStatus(isEnabled)}>
-                {t(`widget.dnsHoleControls.controls.${isEnabled ? "enabled" : "disabled"}`)}
+    <Card
+      className={`dns-hole-controls-integration-item-outer-shell dns-hole-controls-integration-item-${data.integration.id} dns-hole-controls-integration-item-${data.integration.name}`}
+      key={data.integration.id}
+      withBorder
+      p="2.5cqmin"
+      radius="2.5cqmin"
+    >
+      <Flex className="dns-hole-controls-item-container" gap="4cqmin" align="center" direction="row">
+        <Image
+          className="dns-hole-controls-item-icon"
+          src={integrationDefs[data.integration.kind].iconUrl}
+          w="20cqmin"
+          h="20cqmin"
+          fit="contain"
+          style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
+        />
+        <Flex className="dns-hole-controls-item-data-stack" direction="column" gap="1.5cqmin">
+          <Text className="dns-hole-controls-item-integration-name" fz="7cqmin">
+            {data.integration.name}
+          </Text>
+          <Flex className="dns-hole-controls-item-controls" direction="row" gap="1.5cqmin">
+            <UnstyledButton
+              className="dns-hole-controls-item-toggle-button"
+              disabled={!controlEnabled}
+              display="contents"
+              style={{ cursor: controlEnabled ? "pointer" : "default" }}
+              onClick={() => toggleDns(data.integration.id)}
+            >
+              <Badge
+                className={`dns-hole-controls-item-toggle-button-styling${controlEnabled ? " hoverable-component clickable-component" : ""}`}
+                bd="0.1cqmin solid var(--border-color)"
+                px="2.5cqmin"
+                h="7.5cqmin"
+                fz="4.5cqmin"
+                lts="0.1cqmin"
+                color="var(--background-color)"
+                c="var(--mantine-color-text)"
+                styles={{ section: { marginInlineEnd: "2.5cqmin" } }}
+                leftSection={
+                  isConnected && (
+                    <IconCircleFilled
+                      className="dns-hole-controls-item-status-icon"
+                      color={dnsLightStatus(isEnabled)}
+                      style={{ height: "3.5cqmin", width: "3.5cqmin" }}
+                    />
+                  )
+                }
+              >
+                {t(
+                  `widget.dnsHoleControls.controls.${
+                    !isConnected
+                      ? "disconnected"
+                      : typeof isEnabled === "undefined"
+                        ? "processing"
+                        : isEnabled
+                          ? "enabled"
+                          : "disabled"
+                  }`,
+                )}
               </Badge>
             </UnstyledButton>
             <ActionIcon
-              disabled={!isEnabled}
-              size={20}
-              radius="xl"
-              top="2.67px"
-              variant="default"
+              className="dns-hole-controls-item-timer-button"
+              display={isInteractPermitted ? undefined : "none"}
+              disabled={!controlEnabled || !isEnabled}
+              color="yellow"
+              size="fit-content"
+              radius="999px 999px 0px 999px"
+              bd={0}
+              variant="subtle"
               onClick={() => {
-                setSelectedIntegrationIds([integrationId]);
+                setSelectedIntegrationIds([data.integration.id]);
                 open();
               }}
             >
-              <IconClockPause size={20} color="red" />
+              <IconClockPause
+                className="dns-hole-controls-item-timer-icon"
+                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+              />
             </ActionIcon>
           </Flex>
         </Flex>

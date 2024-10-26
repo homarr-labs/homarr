@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ActionIcon, Avatar, Card, Center, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import type { Icon } from "@tabler/icons-react";
 import {
@@ -16,40 +16,37 @@ import {
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
+import type { RequestStats } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import type { RequestStats } from "../../../../integrations/src/interfaces/media-requests/media-request";
 import type { WidgetComponentProps } from "../../definition";
+import { NoIntegrationSelectedError } from "../../errors";
+import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
 
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
-  serverData,
   itemId,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const tCommon = useScopedI18n("common");
-  const isQueryEnabled = Boolean(itemId);
-  const { data: requestStats, isError: _isError } = clientApi.widget.mediaRequests.getStats.useQuery(
+  const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
     {
       integrationIds,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       itemId: itemId!,
     },
     {
-      initialData: !serverData ? undefined : serverData.initialData,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      enabled: integrationIds.length > 0 && isQueryEnabled,
     },
   );
 
   const { width, height, ref } = useElementSize();
 
   const baseData = useMemo(
-    () => requestStats?.filter((group) => group != null).flatMap((group) => group.data) ?? [],
+    () => requestStats.filter((group) => group != null).flatMap((group) => group.data),
     [requestStats],
   );
 
@@ -64,19 +61,9 @@ export default function MediaServerWidget({
     [baseData],
   );
 
-  if (integrationIds.length === 0)
-    return (
-      <Center ref={ref} h="100%">
-        {tCommon("errors.noIntegration")}
-      </Center>
-    );
+  if (integrationIds.length === 0) throw new NoIntegrationSelectedError();
 
-  if (users.length === 0 || stats.length === 0)
-    return (
-      <Center ref={ref} h="100%">
-        {tCommon("errors.noData")}
-      </Center>
-    );
+  if (users.length === 0 || stats.length === 0) throw new NoIntegrationDataError();
 
   //Add processing and available
   const data = [
@@ -196,8 +183,7 @@ export default function MediaServerWidget({
                   {user.displayName}
                 </Text>
                 <Text className="mediaRequests-stats-users-user-request-count" size="4cqmin">
-                  {tCommon("rtl", { value: t("titles.users.requests"), symbol: tCommon("symbols.colon") }) +
-                    user.requestCount}
+                  {`${t("titles.users.requests")}: ${user.requestCount}`}
                 </Text>
               </Stack>
               <Space flex={1} />

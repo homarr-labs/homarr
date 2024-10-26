@@ -31,6 +31,7 @@ const optionMapping: OptionMapping = {
     items: (oldOptions, appsMap) => oldOptions.items.map((item) => appsMap.get(item.id)!),
   },
   calendar: {
+    releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
     filterFutureMonths: () => undefined,
     filterPastMonths: () => undefined,
   },
@@ -89,6 +90,7 @@ const optionMapping: OptionMapping = {
   },
   rssFeed: {
     feedUrls: (oldOptions) => oldOptions.rssFeedUrl,
+    enableRtl: (oldOptions) => oldOptions.enableRtl,
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
   },
@@ -110,6 +112,12 @@ const optionMapping: OptionMapping = {
   mediaServer: {},
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
+  },
+  healthMonitoring: {
+    cpu: (oldOptions) => oldOptions.cpu,
+    memory: (oldOptions) => oldOptions.memory,
+    fahrenheit: (oldOptions) => oldOptions.fahrenheit,
+    fileSystem: (oldOptions) => oldOptions.fileSystem,
   },
   app: null,
 };

@@ -1,31 +1,19 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "packageRules": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+  packageRules: [
     {
-      "matchPackagePatterns": [
-        "^@homarr/",
-        "tsx" // Disabled for now as version 0.14.4 did not work with the current version of homarr. It resulted in a ERR_MODULE_NOT_FOUND error
-      ],
-      "enabled": false
+      matchPackagePatterns: ["^@homarr/"],
+      enabled: false,
     },
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
-      "automerge": true
-    }
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      automerge: true,
+    },
   ],
-  "updateInternalDeps": true,
-  "rangeStrategy": "bump",
-  "automerge": false,
-  "baseBranches": [
-    "dev"
-  ],
-  "dependencyDashboard": false
+  updateInternalDeps: true,
+  rangeStrategy: "bump",
+  automerge: false,
+  baseBranches: ["dev"],
+  dependencyDashboard: false,
 }

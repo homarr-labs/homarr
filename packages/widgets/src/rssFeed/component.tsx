@@ -1,17 +1,30 @@
-import React from "react";
 import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import { clientApi } from "@homarr/api/client";
+
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
-export default function RssFeed({ serverData, options }: WidgetComponentProps<"rssFeed">) {
-  if (serverData?.initialData === undefined) {
-    return null;
-  }
+export default function RssFeed({ options, itemId }: WidgetComponentProps<"rssFeed">) {
+  const [rssFeeds] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(
+    {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      itemId: itemId!,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      select(data) {
+        return data?.data ?? [];
+      },
+    },
+  );
 
-  const entries = serverData.initialData
+  const entries = rssFeeds
     .filter((feedGroup) => feedGroup.feed.entries !== undefined)
     .flatMap((feedGroup) => feedGroup.feed.entries)
     .filter((entry) => entry !== undefined)
@@ -22,6 +35,8 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
       return new Date(entryB.published).getTime() - new Date(entryA.published).getTime();
     })
     .slice(0, options.maximumAmountPosts as number);
+
+  const languageDir = options.enableRtl ? "RTL" : "LTR";
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" p="4cqmin">
@@ -42,12 +57,13 @@ export default function RssFeed({ serverData, options }: WidgetComponentProps<"r
             )}
 
             <Flex gap="2.5cqmin" direction="column" w="100%">
-              <Text fz="4cqmin" lh="5cqmin" lineClamp={2}>
+              <Text dir={languageDir} fz="4cqmin" lh="5cqmin" lineClamp={2}>
                 {feedEntry.title}
               </Text>
               {feedEntry.description && (
                 <Text
                   className={feedEntry.description}
+                  dir={languageDir}
                   c="dimmed"
                   size="3.5cqmin"
                   lineClamp={options.textLinesClamp as number}

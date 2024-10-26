@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:20.17.0-alpine AS base
+FROM node:20.18.0-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -30,6 +30,9 @@ COPY --from=builder /app/cli-out/json/ .
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
+# Is used for postinstall of docs definitions
+COPY --from=builder /app/packages/definitions/src/docs ./packages/definitions/src/docs
+
 # Uses the lockfile to install the dependencies
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
 
@@ -46,6 +49,7 @@ COPY --from=builder /app/cli-out/full/ .
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
+ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
 RUN corepack enable pnpm && pnpm build
 
@@ -58,6 +62,8 @@ RUN mkdir /appdata
 RUN mkdir /appdata/db
 RUN mkdir /appdata/redis
 VOLUME /appdata
+RUN mkdir /secrets
+VOLUME /secrets
 
 
 
@@ -71,6 +77,7 @@ RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
 RUN chown -R nextjs:nodejs /appdata
+RUN chown -R nextjs:nodejs /secrets
 RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
     mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
     mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
@@ -93,6 +100,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
+COPY --chown=nextjs:nodejs scripts/generateEncryptionKey.js ./generateEncryptionKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
 

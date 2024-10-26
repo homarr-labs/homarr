@@ -38,17 +38,17 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "superjson": "2.2.1",
-    "undici": "6.19.8"
+    "undici": "6.20.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^20.16.5",
+    "@types/node": "^20.17.1",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^9.11.0",
+    "eslint": "^9.13.0",
     "prettier": "^3.3.3",
-    "tsx": "4.13.3",
-    "typescript": "^5.6.2"
+    "tsx": "4.19.1",
+    "typescript": "^5.6.3"
   }
 }

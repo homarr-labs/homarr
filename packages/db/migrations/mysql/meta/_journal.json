@@ -57,6 +57,48 @@
       "when": 1723749320706,
       "tag": "0007_boring_nocturne",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1727532165317,
+      "tag": "0008_far_lifeguard",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1728074730696,
+      "tag": "0009_wakeful_tenebrous",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1728142597094,
+      "tag": "0010_melted_pestilence",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1728490046896,
+      "tag": "0011_freezing_banshee",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1729348221072,
+      "tag": "0012_abnormal_wendell_vaughn",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1729369383739,
+      "tag": "0013_youthful_vulture",
+      "breakpoints": true
     }
   ]
 }

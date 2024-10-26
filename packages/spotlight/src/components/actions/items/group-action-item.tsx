@@ -48,7 +48,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
       closeSpotlightOnTrigger={interaction.type !== "mode" && interaction.type !== "children"}
       className={classes.spotlightAction}
     >
-      <group.component {...option} />
+      <group.Component {...option} />
     </Spotlight.Action>
   );
 };

@@ -11,12 +11,15 @@ import { optionsBuilder } from "../options";
  * - https://datatracker.ietf.org/doc/html/rfc5023
  * - https://www.jsonfeed.org/version/1.1/
  */
-export const { definition, componentLoader, serverDataLoader } = createWidgetDefinition("rssFeed", {
+export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
   icon: IconRss,
   options: optionsBuilder.from((factory) => ({
     feedUrls: factory.multiText({
       defaultValue: [],
       validate: z.string().url(),
+    }),
+    enableRtl: factory.switch({
+      defaultValue: false,
     }),
     textLinesClamp: factory.number({
       defaultValue: 5,
@@ -27,6 +30,4 @@ export const { definition, componentLoader, serverDataLoader } = createWidgetDef
       validate: z.number().min(1).max(9999),
     }),
   })),
-})
-  .withServerData(() => import("./serverData"))
-  .withDynamicImport(() => import("./component"));
+}).withDynamicImport(() => import("./component"));

@@ -30,6 +30,7 @@ import { IconChevronDown, IconChevronUp, IconPencil } from "@tabler/icons-react"
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
@@ -50,7 +51,10 @@ interface IntegrationsPageProps {
 
 export default async function IntegrationsPage({ searchParams }: IntegrationsPageProps) {
   const integrations = await api.integration.all();
+  const session = await auth();
   const t = await getScopedI18n("integration");
+
+  const canCreateIntegrations = session?.user.permissions.includes("integration-create") ?? false;
 
   return (
     <ManageContainer>
@@ -59,23 +63,27 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>
 
-          <Box>
-            <IntegrationSelectMenu>
-              <Affix hiddenFrom="md" position={{ bottom: 20, right: 20 }}>
-                <MenuTarget>
-                  <Button rightSection={<IconChevronUp size={16} stroke={1.5} />}>{t("action.create")}</Button>
-                </MenuTarget>
-              </Affix>
-            </IntegrationSelectMenu>
-          </Box>
+          {canCreateIntegrations && (
+            <>
+              <Box>
+                <IntegrationSelectMenu>
+                  <Affix hiddenFrom="md" position={{ bottom: 20, right: 20 }}>
+                    <MenuTarget>
+                      <Button rightSection={<IconChevronUp size={16} stroke={1.5} />}>{t("action.create")}</Button>
+                    </MenuTarget>
+                  </Affix>
+                </IntegrationSelectMenu>
+              </Box>
 
-          <Box visibleFrom="md">
-            <IntegrationSelectMenu>
-              <MenuTarget>
-                <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
-              </MenuTarget>
-            </IntegrationSelectMenu>
-          </Box>
+              <Box visibleFrom="md">
+                <IntegrationSelectMenu>
+                  <MenuTarget>
+                    <Button rightSection={<IconChevronDown size={16} stroke={1.5} />}>{t("action.create")}</Button>
+                  </MenuTarget>
+                </IntegrationSelectMenu>
+              </Box>
+            </>
+          )}
         </Group>
 
         <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
@@ -102,6 +110,8 @@ interface IntegrationListProps {
 
 const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps) => {
   const t = await getScopedI18n("integration");
+  const session = await auth();
+  const hasFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
 
   if (integrations.length === 0) {
     return <div>{t("page.list.empty")}</div>;
@@ -151,18 +161,20 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                     </TableTd>
                     <TableTd>
                       <Group justify="end">
-                        <ActionIconGroup>
-                          <ActionIcon
-                            component={Link}
-                            href={`/manage/integrations/edit/${integration.id}`}
-                            variant="subtle"
-                            color="gray"
-                            aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                          >
-                            <IconPencil size={16} stroke={1.5} />
-                          </ActionIcon>
-                          <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
-                        </ActionIconGroup>
+                        {(hasFullAccess || integration.permissions.hasFullAccess) && (
+                          <ActionIconGroup>
+                            <ActionIcon
+                              component={Link}
+                              href={`/manage/integrations/edit/${integration.id}`}
+                              variant="subtle"
+                              color="gray"
+                              aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                            >
+                              <IconPencil size={16} stroke={1.5} />
+                            </ActionIcon>
+                            <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                          </ActionIconGroup>
+                        )}
                       </Group>
                     </TableTd>
                   </TableTr>
@@ -177,18 +189,21 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                   <Stack gap={0}>
                     <Group justify="space-between" align="center" wrap="nowrap">
                       <Text>{integration.name}</Text>
-                      <ActionIconGroup>
-                        <ActionIcon
-                          component={Link}
-                          href={`/manage/integrations/edit/${integration.id}`}
-                          variant="subtle"
-                          color="gray"
-                          aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                        >
-                          <IconPencil size={16} stroke={1.5} />
-                        </ActionIcon>
-                        <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
-                      </ActionIconGroup>
+                      {hasFullAccess ||
+                        (integration.permissions.hasFullAccess && (
+                          <ActionIconGroup>
+                            <ActionIcon
+                              component={Link}
+                              href={`/manage/integrations/edit/${integration.id}`}
+                              variant="subtle"
+                              color="gray"
+                              aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                            >
+                              <IconPencil size={16} stroke={1.5} />
+                            </ActionIcon>
+                            <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                          </ActionIconGroup>
+                        ))}
                     </Group>
                     <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
                       {integration.url}

@@ -1,2 +1,2 @@
-export const colorSchemes = ["light", "dark", "auto"] as const;
+export const colorSchemes = ["light", "dark"] as const;
 export type ColorScheme = (typeof colorSchemes)[number];

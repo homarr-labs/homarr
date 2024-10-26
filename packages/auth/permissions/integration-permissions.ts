@@ -12,15 +12,17 @@ export interface IntegrationPermissionsProps {
 }
 
 export const constructIntegrationPermissions = (integration: IntegrationPermissionsProps, session: Session | null) => {
+  const permissions = integration.userPermissions
+    .concat(integration.groupPermissions)
+    .map(({ permission }) => permission);
+
   return {
-    hasFullAccess: session?.user.permissions.includes("integration-full-all") ?? false,
+    hasFullAccess:
+      (session?.user.permissions.includes("integration-full-all") ?? false) || permissions.includes("full"),
     hasInteractAccess:
-      integration.userPermissions.some(({ permission }) => permission === "interact") ||
-      integration.groupPermissions.some(({ permission }) => permission === "interact") ||
+      permissions.includes("full") ||
+      permissions.includes("interact") ||
       (session?.user.permissions.includes("integration-interact-all") ?? false),
-    hasUseAccess:
-      integration.userPermissions.length >= 1 ||
-      integration.groupPermissions.length >= 1 ||
-      (session?.user.permissions.includes("integration-use-all") ?? false),
+    hasUseAccess: permissions.length >= 1 || (session?.user.permissions.includes("integration-use-all") ?? false),
   };
 };
