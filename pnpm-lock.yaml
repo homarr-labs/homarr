@@ -1399,6 +1399,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13

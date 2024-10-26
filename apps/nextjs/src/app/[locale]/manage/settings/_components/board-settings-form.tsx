@@ -2,11 +2,11 @@
 
 import { Group, Text } from "@mantine/core";
 import { IconLayoutDashboard } from "@tabler/icons-react";
-import { SelectWithCustomItems } from "node_modules/@homarr/ui/src/components/select-with-custom-items";
 
 import { clientApi } from "@homarr/api/client";
 import type { ServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
+import { SelectWithCustomItems } from "@homarr/ui";
 
 import { CommonSettingsForm } from "./common-form";
 

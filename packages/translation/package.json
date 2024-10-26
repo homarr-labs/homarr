@@ -27,6 +27,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
     "deepmerge": "4.3.1",
     "mantine-react-table": "2.0.0-beta.7",

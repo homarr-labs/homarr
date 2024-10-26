@@ -24,7 +24,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import "flag-icons/css/flag-icons.min.css";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
-import { LanguageCombobox } from "./language/language-combobox";
+import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
@@ -72,7 +72,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         <Menu.Divider />
 
         <Menu.Item p={0} closeMenuOnClick={false}>
-          <LanguageCombobox />
+          <CurrentLanguageCombobox />
         </Menu.Item>
         <Menu.Divider />
         {Boolean(session.data) && (

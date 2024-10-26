@@ -2,12 +2,12 @@
 
 import { Group, Text } from "@mantine/core";
 import { IconMoon, IconSun } from "@tabler/icons-react";
-import { SelectWithCustomItems } from "node_modules/@homarr/ui/src/components/select-with-custom-items";
 
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
+import { SelectWithCustomItems } from "@homarr/ui";
 
 import { CommonSettingsForm } from "./common-form";
 
