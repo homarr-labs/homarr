@@ -161,21 +161,20 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                     </TableTd>
                     <TableTd>
                       <Group justify="end">
-                        {hasFullAccess ||
-                          (integration.permissions.hasFullAccess && (
-                            <ActionIconGroup>
-                              <ActionIcon
-                                component={Link}
-                                href={`/manage/integrations/edit/${integration.id}`}
-                                variant="subtle"
-                                color="gray"
-                                aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                              >
-                                <IconPencil size={16} stroke={1.5} />
-                              </ActionIcon>
-                              <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
-                            </ActionIconGroup>
-                          ))}
+                        {(hasFullAccess || integration.permissions.hasFullAccess) && (
+                          <ActionIconGroup>
+                            <ActionIcon
+                              component={Link}
+                              href={`/manage/integrations/edit/${integration.id}`}
+                              variant="subtle"
+                              color="gray"
+                              aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                            >
+                              <IconPencil size={16} stroke={1.5} />
+                            </ActionIcon>
+                            <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                          </ActionIconGroup>
+                        )}
                       </Group>
                     </TableTd>
                   </TableTr>

@@ -61,7 +61,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
         id: user.id,
       });
     },
-    [user.id, mutate],
+    [isProviderCredentials, mutate, user.id],
   );
 
   return (

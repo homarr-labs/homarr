@@ -47,7 +47,7 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
         ),
       },
     ],
-    [],
+    [t],
   );
 
   const table = useMantineReactTable({

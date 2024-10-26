@@ -1,6 +1,7 @@
 import { Group, Kbd, Text } from "@mantine/core";
 import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
 
+import { createDocumentationLink } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../lib/group";
@@ -22,7 +23,7 @@ const helpMode = {
       keyPath: "character",
       title: (t) => t("search.mode.help.group.mode.title"),
       options: searchModesWithoutHelp.map(({ character, modeKey }) => ({ character, modeKey })),
-      component: ({ modeKey, character }) => {
+      Component: ({ modeKey, character }) => {
         const t = useScopedI18n(`search.mode.${modeKey}`);
 
         return (
@@ -45,7 +46,7 @@ const helpMode = {
           {
             label: t("documentation.label"),
             icon: IconBook2,
-            href: "https://homarr.dev/docs/getting-started/",
+            href: createDocumentationLink("/docs/getting-started"),
           },
           {
             label: t("submitIssue.label"),
@@ -59,7 +60,7 @@ const helpMode = {
           },
         ];
       },
-      component: (props) => (
+      Component: (props) => (
         <Group px="md" py="xs" w="100%" wrap="nowrap" align="center">
           <props.icon />
           <Text>{props.label}</Text>

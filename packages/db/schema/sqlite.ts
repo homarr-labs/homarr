@@ -44,8 +44,9 @@ export const users = sqliteTable("user", {
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
+  colorScheme: text("colorScheme").$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(
@@ -120,7 +121,7 @@ export const groupMembers = sqliteTable(
 
 export const groups = sqliteTable("group", {
   id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").unique().notNull(),
   ownerId: text("owner_id").references(() => users.id, {
     onDelete: "set null",
   }),

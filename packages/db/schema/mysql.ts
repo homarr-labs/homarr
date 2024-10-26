@@ -43,8 +43,9 @@ export const users = mysqlTable("user", {
   homeBoardId: varchar("homeBoardId", { length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("auto").notNull(),
+  colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: tinyint("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: boolean("pingIconsEnabled").default(false).notNull(),
 });
 
 export const accounts = mysqlTable(
@@ -119,7 +120,7 @@ export const groupMembers = mysqlTable(
 
 export const groups = mysqlTable("group", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
-  name: varchar("name", { length: 64 }).notNull(),
+  name: varchar("name", { length: 64 }).unique().notNull(),
   ownerId: varchar("owner_id", { length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),

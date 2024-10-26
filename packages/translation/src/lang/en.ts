@@ -48,6 +48,9 @@ export default {
       homeBoard: {
         label: "Home board",
       },
+      pingIconsEnabled: {
+        label: "Use icons for pings",
+      },
     },
     error: {
       usernameTaken: "Username already taken",
@@ -113,6 +116,16 @@ export default {
           },
           error: {
             message: "Unable to change first day of week",
+          },
+        },
+      },
+      changePingIconsEnabled: {
+        notification: {
+          success: {
+            message: "Ping icons toggled successfully",
+          },
+          error: {
+            message: "Unable to toggle ping icons",
           },
         },
       },
@@ -235,6 +248,9 @@ export default {
     memberNotice: {
       mixed: "Some members are from external providers and cannot be managed here",
       external: "All members are from external providers and cannot be managed here",
+    },
+    reservedNotice: {
+      message: "This group is reserved for system use and restricts some actions. {checkoutDocs}",
     },
     action: {
       create: {
@@ -563,6 +579,7 @@ export default {
       tryAgain: "Try again",
       loading: "Loading",
     },
+    here: "here",
     iconPicker: {
       label: "Icon URL",
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
@@ -570,6 +587,9 @@ export default {
     information: {
       min: "Min",
       max: "Max",
+      days: "Days",
+      hours: "Hours",
+      minutes: "Minutes",
     },
     notification: {
       create: {
@@ -1018,6 +1038,14 @@ export default {
       name: "Calendar",
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
+        releaseType: {
+          label: "Radarr release type",
+          options: {
+            inCinemas: "In cinemas",
+            digitalRelease: "Digital release",
+            physicalRelease: "Physical release",
+          },
+        },
         filterPastMonths: {
           label: "Start from",
         },
@@ -1097,16 +1125,17 @@ export default {
       },
       popover: {
         information: "Information",
-        processor: "Processor:",
-        memory: "Memory:",
-        version: "Version:",
-        uptime: "Uptime: {days} days, {hours} hours",
+        processor: "Processor: {cpuModelName}",
+        memory: "Memory: {memory}GiB",
+        memoryAvailable: "Available: {memoryAvailable}GiB ({percent}%)",
+        version: "Version: {version}",
+        uptime: "Uptime: {days} Days, {hours} Hours, {minutes} Minutes",
         loadAverage: "Load average:",
-        minute: "1 minute:",
-        minutes: "{count} minutes:",
+        minute: "1 minute",
+        minutes: "{count} minutes",
         used: "Used",
-        diskAvailable: "Available",
-        memAvailable: "Available:",
+        available: "Available",
+        lastSeen: "Last status update: {lastSeen}",
       },
       memory: {},
       error: {
@@ -1135,6 +1164,14 @@ export default {
             fallback: "Unknown",
           },
         },
+      },
+      integration: {
+        noData: "No integration found",
+        description: "Click {here} to create a new integration",
+      },
+      app: {
+        noData: "No app found",
+        description: "Click {here} to create a new app",
       },
       error: {
         action: {
@@ -1316,6 +1353,9 @@ export default {
       option: {
         feedUrls: {
           label: "Feed URLs",
+        },
+        enableRtl: {
+          label: "Enable RTL",
         },
         textLinesClamp: {
           label: "Description line clamp",
@@ -1703,6 +1743,7 @@ export default {
               language: "Language & Region",
               board: "Home board",
               firstDayOfWeek: "First day of the week",
+              accessibility: "Accessibility",
             },
           },
           security: {

@@ -16,7 +16,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
   useActions: () => [
     {
       key: "detail",
-      component: () => {
+      Component: () => {
         const t = useI18n();
         return (
           <Group mx="md" my="sm">
@@ -29,7 +29,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
     },
     {
       key: "manageMember",
-      component: () => {
+      Component: () => {
         const t = useI18n();
         return (
           <Group mx="md" my="sm">
@@ -42,7 +42,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
     },
     {
       key: "managePermission",
-      component: () => {
+      Component: () => {
         const t = useI18n();
         return (
           <Group mx="md" my="sm">
@@ -54,7 +54,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
       useInteraction: interaction.link(({ id }) => ({ href: `/manage/users/groups/${id}/permissions` })),
     },
   ],
-  detailComponent: ({ options }) => {
+  DetailComponent: ({ options }) => {
     const t = useI18n();
     return (
       <Stack mx="md" my="sm">
@@ -71,7 +71,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
 export const groupsSearchGroup = createGroup<Group>({
   keyPath: "id",
   title: "Groups",
-  component: ({ name }) => (
+  Component: ({ name }) => (
     <Group px="md" py="sm">
       <Text>{name}</Text>
     </Group>
