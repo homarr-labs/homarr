@@ -35,7 +35,10 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
   const values = form.values.options[property] as TOptionValue[];
   const { data, isLoading, error } = options.useData(initialValues);
-  const dataMap = useMemo(() => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])), [data]);
+  const dataMap = useMemo(
+    () => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])),
+    [data, options],
+  );
   const [tempMap, setTempMap] = useState<Map<TOptionValue, TItem>>(new Map());
 
   const [activeId, setActiveId] = useState<TOptionValue | null>(null);

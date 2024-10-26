@@ -14,8 +14,15 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
   icon: IconClock,
   options: optionsBuilder.from((factory) => ({
     title: factory.text(),
+    layout: factory.select({
+      options: (["grid", "row", "column"] as const).map((value) => ({
+        value,
+        label: (t) => t(`widget.bookmarks.option.layout.option.${value}.label`),
+      })),
+      defaultValue: "column",
+    }),
     items: factory.sortableItemList<RouterOutputs["app"]["all"][number], string>({
-      itemComponent: ({ item, handle: Handle, removeItem, rootAttributes }) => {
+      ItemComponent: ({ item, handle: Handle, removeItem, rootAttributes }) => {
         return (
           <Group {...rootAttributes} tabIndex={0} justify="space-between" wrap="nowrap">
             <Group wrap="nowrap">
@@ -35,7 +42,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
           </Group>
         );
       },
-      addButton({ addItem, values }) {
+      AddButton({ addItem, values }) {
         const { openModal } = useModalAction(AppSelectModal);
         const t = useI18n();
 

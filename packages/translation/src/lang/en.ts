@@ -813,6 +813,20 @@ export default {
         title: {
           label: "Title",
         },
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
         items: {
           label: "Bookmarks",
           add: "Add bookmark",

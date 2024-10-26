@@ -27,8 +27,8 @@ interface MultiSelectInput<TOptions extends SelectOption[]>
 
 interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier>
   extends Omit<CommonInput<TOptionValue[]>, "withDescription"> {
-  addButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
-  itemComponent: (props: {
+  AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
+  ItemComponent: (props: {
     item: TItem;
     removeItem: () => void;
     rootAttributes: DraggableAttributes;
@@ -131,8 +131,8 @@ const optionsFactory = {
   ) => ({
     type: "sortableItemList" as const,
     defaultValue: [] as TOptionValue[],
-    itemComponent: input.itemComponent,
-    addButton: input.addButton,
+    itemComponent: input.ItemComponent,
+    addButton: input.AddButton,
     uniqueIdentifier: input.uniqueIdentifier,
     useData: input.useData,
     withDescription: false,
