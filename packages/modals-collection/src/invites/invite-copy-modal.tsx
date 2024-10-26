@@ -12,8 +12,11 @@ export const InviteCopyModal = createModal<RouterOutputs["invite"]["createInvite
 
   return (
     <Stack>
-      <Text>{t("action.copy.description")}</Text>
-      {/* TODO: When next-international v2 is released the descriptions bold element can be implemented, see https://github.com/QuiiBz/next-international/pull/361 for progress */}
+      <Text>
+        {t.rich("action.copy.description", {
+          b: (children) => <b>{children}</b>,
+        })}
+      </Text>
       <Link href={createPath(innerProps)}>{t("action.copy.link")}</Link>
       <Stack gap="xs">
         <Text fw="bold">{t("field.id.label")}:</Text>

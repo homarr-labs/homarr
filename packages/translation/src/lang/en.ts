@@ -706,7 +706,7 @@ export default {
         },
       },
     },
-    mantineReactTable: MRT_Localization_EN,
+    mantineReactTable: MRT_Localization_EN as Readonly<Record<keyof typeof MRT_Localization_EN, string>>,
   },
   section: {
     dynamic: {
@@ -1205,11 +1205,11 @@ export default {
       },
       integration: {
         noData: "No integration found",
-        description: "Click {here} to create a new integration",
+        description: "Click <here></here> to create a new integration",
       },
       app: {
         noData: "No app found",
-        description: "Click {here} to create a new app",
+        description: "Click <here></here> to create a new app",
       },
       error: {
         action: {
@@ -1842,7 +1842,7 @@ export default {
             copy: {
               title: "Copy invite",
               description:
-                "Your invitation has been generated. After this modal closes, you'll not be able to copy this link anymore. If you do no longer wish to invite said person, you can delete this invitation any time.",
+                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore.</b> If you do no longer wish to invite said person, you can delete this invitation any time.",
               link: "Invitation link",
               button: "Copy & close",
             },
