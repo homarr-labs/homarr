@@ -43,8 +43,8 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
       inputWrapperOrder={["label", "input", "description", "error"]}
       description={
         <Text size="xs">
-          {t("widget.common.app.description", {
-            here: (
+          {t.rich("widget.common.app.description", {
+            here: () => (
               <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
                 {t("common.here")}
               </Anchor>

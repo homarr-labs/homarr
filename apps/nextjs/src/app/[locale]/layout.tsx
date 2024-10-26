@@ -6,18 +6,21 @@ import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 import "~/styles/scroll-area.scss";
 
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+
 import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
-import { getScopedI18n } from "@homarr/translation/server";
+import { isLocaleSupported } from "@homarr/translation";
+import { getI18nMessages, getScopedI18n } from "@homarr/translation/server";
 
 import { Analytics } from "~/components/layout/analytics";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
-import { NextInternationalProvider } from "./_client-providers/next-international";
 import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { composeWrappers } from "./compose";
@@ -59,10 +62,15 @@ export const viewport: Viewport = {
 };
 
 export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
+  if (!isLocaleSupported(props.params.locale)) {
+    notFound();
+  }
+
   const session = await auth();
   const colorScheme = await getCurrentColorSchemeAsync();
   const tCommon = await getScopedI18n("common");
   const direction = tCommon("direction");
+  const i18nMessages = await getI18nMessages();
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
@@ -70,7 +78,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
-    (innerProps) => <NextInternationalProvider {...innerProps} locale={props.params.locale} />,
+    (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} />,
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
   ]);
@@ -78,7 +86,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
     <html
-      lang="en"
+      lang={props.params.locale}
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{

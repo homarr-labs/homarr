@@ -1,15 +1,12 @@
-import { createI18nMiddleware as internalCreateI18nMiddleware } from "next-international/middleware";
+import createMiddleware from "next-intl/middleware";
 
 import type { SupportedLanguage } from ".";
-import { supportedLanguages } from ".";
+import { createRouting } from "./routing";
 
 export const createI18nMiddleware = (defaultLocale: SupportedLanguage) =>
-  internalCreateI18nMiddleware({
-    locales: supportedLanguages,
-    defaultLocale,
-    // TODO: check with new translation library if it uses the default or accepted language from browser
-    resolveLocaleFromRequest() {
-      return defaultLocale;
-    },
-    urlMappingStrategy: "rewrite",
-  });
+  createMiddleware(createRouting(defaultLocale));
+
+export const config = {
+  // Match only internationalized pathnames
+  matcher: ["/", "/(de|en)/:path*"],
+};

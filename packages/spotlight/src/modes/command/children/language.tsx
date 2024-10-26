@@ -1,7 +1,7 @@
 import { Group, Stack, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
-import { localeAttributes, supportedLanguages } from "@homarr/translation";
+import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../../lib/children";
@@ -11,34 +11,34 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
     const normalizedQuery = query.trim().toLowerCase();
     const currentLocale = useCurrentLocale();
     return supportedLanguages
-      .map((localeKey) => ({ localeKey, attributes: localeAttributes[localeKey] }))
+      .map((localeKey) => ({ localeKey, configuration: localeConfigurations[localeKey] }))
       .filter(
-        ({ attributes }) =>
-          attributes.name.toLowerCase().includes(normalizedQuery) ||
-          attributes.translatedName.toLowerCase().includes(normalizedQuery),
+        ({ configuration }) =>
+          configuration.name.toLowerCase().includes(normalizedQuery) ||
+          configuration.translatedName.toLowerCase().includes(normalizedQuery),
       )
       .sort(
         (languageA, languageB) =>
           Math.min(
-            languageA.attributes.name.toLowerCase().indexOf(normalizedQuery),
-            languageA.attributes.translatedName.toLowerCase().indexOf(normalizedQuery),
+            languageA.configuration.name.toLowerCase().indexOf(normalizedQuery),
+            languageA.configuration.translatedName.toLowerCase().indexOf(normalizedQuery),
           ) -
           Math.min(
-            languageB.attributes.name.toLowerCase().indexOf(normalizedQuery),
-            languageB.attributes.translatedName.toLowerCase().indexOf(normalizedQuery),
+            languageB.configuration.name.toLowerCase().indexOf(normalizedQuery),
+            languageB.configuration.translatedName.toLowerCase().indexOf(normalizedQuery),
           ),
       )
-      .map(({ localeKey, attributes }) => ({
+      .map(({ localeKey, configuration }) => ({
         key: localeKey,
         Component() {
           return (
             <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
               <Group wrap="nowrap">
-                <span className={`fi fi-${attributes.flagIcon}`} style={{ borderRadius: 4 }}></span>
+                <span className={`fi fi-${configuration.flagIcon}`} style={{ borderRadius: 4 }}></span>
                 <Group wrap="nowrap" gap="xs">
-                  <Text>{attributes.name}</Text>
+                  <Text>{configuration.name}</Text>
                   <Text size="xs" c="dimmed" inherit>
-                    ({attributes.translatedName})
+                    ({configuration.translatedName})
                   </Text>
                 </Group>
               </Group>
@@ -47,7 +47,7 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
           );
         },
         useInteraction() {
-          const changeLocale = useChangeLocale();
+          const { changeLocale } = useChangeLocale();
 
           return { type: "javaScript", onSelect: () => changeLocale(localeKey) };
         },
