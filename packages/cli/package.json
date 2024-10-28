@@ -23,7 +23,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@drizzle-team/brocli": "^0.10.1",
+    "@drizzle-team/brocli": "^0.10.2",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
