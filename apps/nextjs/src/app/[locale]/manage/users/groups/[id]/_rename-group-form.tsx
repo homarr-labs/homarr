@@ -58,7 +58,7 @@ export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
         },
       );
     },
-    [group.id, mutate, t],
+    [group.id, mutate, t, disabled],
   );
 
   return (

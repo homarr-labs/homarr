@@ -1,8 +1,6 @@
 export const defaultServerSettingsKeys = ["analytics", "crawlingAndIndexing"] as const;
 
-export type ServerSettingsRecord = {
-  [key in (typeof defaultServerSettingsKeys)[number]]: Record<string, unknown>;
-};
+export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
 
 export const defaultServerSettings = {
   analytics: {
