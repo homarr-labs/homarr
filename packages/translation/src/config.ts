@@ -1,11 +1,6 @@
 import { objectKeys } from "@homarr/common";
 
 export const localeConfigurations = {
-  ar: {
-    name: "العربية",
-    translatedName: "Arabic",
-    flagIcon: "bh",
-  },
   cn: {
     name: "中文",
     translatedName: "Chinese (Simplified)",
@@ -31,11 +26,6 @@ export const localeConfigurations = {
     translatedName: "English",
     flagIcon: "us",
   },
-  fr: {
-    name: "Français",
-    translatedName: "French",
-    flagIcon: "fr",
-  },
   el: {
     name: "Ελληνικά",
     translatedName: "Greek",
@@ -50,6 +40,11 @@ export const localeConfigurations = {
     name: "Eesti",
     translatedName: "Estonian",
     flagIcon: "ee",
+  },
+  fr: {
+    name: "Français",
+    translatedName: "French",
+    flagIcon: "fr",
   },
   he: {
     name: "עברית",
