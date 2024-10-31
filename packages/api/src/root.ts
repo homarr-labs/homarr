@@ -10,6 +10,7 @@ import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
+import { mediaRouter } from "./router/medias/media-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
@@ -33,6 +34,7 @@ export const appRouter = createTRPCRouter({
   serverSettings: serverSettingsRouter,
   cronJobs: cronJobsRouter,
   apiKeys: apiKeysRouter,
+  media: mediaRouter,
 });
 
 // export type definition of API

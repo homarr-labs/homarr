@@ -5,6 +5,7 @@ import { groupSchemas } from "./group";
 import { iconsSchemas } from "./icons";
 import { integrationSchemas } from "./integration";
 import { locationSchemas } from "./location";
+import { mediaSchemas } from "./media";
 import { searchEngineSchemas } from "./search-engine";
 import { userSchemas } from "./user";
 import { widgetSchemas } from "./widgets";
@@ -19,6 +20,7 @@ export const validation = {
   location: locationSchemas,
   icons: iconsSchemas,
   searchEngine: searchEngineSchemas,
+  media: mediaSchemas,
   common: commonSchemas,
 };
 
@@ -32,3 +34,4 @@ export {
   type BoardItemIntegration,
 } from "./shared";
 export { passwordRequirements } from "./user";
+export { supportedMediaUploadFormats } from "./media";

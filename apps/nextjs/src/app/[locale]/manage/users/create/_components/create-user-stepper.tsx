@@ -60,7 +60,10 @@ export const UserCreateStepperComponent = () => {
       })
       .refine((data) => data.password === data.confirmPassword, {
         path: ["confirmPassword"],
-        params: createCustomErrorParams("passwordsDoNotMatch"),
+        params: createCustomErrorParams({
+          key: "passwordsDoNotMatch",
+          params: {},
+        }),
       }),
     {
       initialValues: {

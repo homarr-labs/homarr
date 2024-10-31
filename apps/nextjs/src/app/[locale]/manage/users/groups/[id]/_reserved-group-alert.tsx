@@ -10,8 +10,8 @@ export const ReservedGroupAlert = async () => {
 
   return (
     <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-      {t("group.reservedNotice.message", {
-        checkoutDocs: (
+      {t.rich("group.reservedNotice.message", {
+        checkoutDocs: () => (
           <Anchor
             size="sm"
             component={Link}
