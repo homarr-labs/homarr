@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Combobox, Group, InputBase, Loader, Text, useCombobox } from "@mantine/core";
+import { Combobox, Group, InputBase, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";
@@ -49,13 +49,15 @@ export const LanguageCombobox = () => {
         </InputBase>
       </Combobox.Target>
       <Combobox.Dropdown>
-        <Combobox.Options>
-          {supportedLanguages.map((languageKey) => (
-            <Combobox.Option value={languageKey} key={languageKey}>
-              <OptionItem currentLocale={currentLocale} localeKey={languageKey} showCheck />
-            </Combobox.Option>
-          ))}
-        </Combobox.Options>
+        <ScrollArea h={300}>
+          <Combobox.Options>
+            {supportedLanguages.map((languageKey) => (
+              <Combobox.Option value={languageKey} key={languageKey}>
+                <OptionItem currentLocale={currentLocale} localeKey={languageKey} showCheck />
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        </ScrollArea>
       </Combobox.Dropdown>
     </Combobox>
   );
