@@ -29,7 +29,7 @@ export const getPackageAttributesAsync = async () => {
   };
 };
 
-type PackageJsonDependencies = { [key in string]: string };
+type PackageJsonDependencies = Record<string, string>;
 interface PackageJson {
   dependencies: PackageJsonDependencies | undefined;
 }

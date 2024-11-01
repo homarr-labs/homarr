@@ -9,11 +9,35 @@ import { objectEntries } from "@homarr/common";
 import * as mysqlSchema from "../schema/mysql";
 import * as sqliteSchema from "../schema/sqlite";
 
+// We need the following two types as there is currently no support for Buffer in mysql and
+// so we use a custom type which results in the config beeing different
+type FixedMysqlConfig = {
+  [key in keyof MysqlConfig]: {
+    [column in keyof MysqlConfig[key]]: {
+      [property in Exclude<keyof MysqlConfig[key][column], "dataType" | "data">]: MysqlConfig[key][column][property];
+    } & {
+      dataType: MysqlConfig[key][column]["data"] extends Buffer ? "buffer" : MysqlConfig[key][column]["dataType"];
+      data: MysqlConfig[key][column]["data"] extends Buffer ? Buffer : MysqlConfig[key][column]["data"];
+    };
+  };
+};
+
+type FixedSqliteConfig = {
+  [key in keyof SqliteConfig]: {
+    [column in keyof SqliteConfig[key]]: {
+      [property in Exclude<keyof SqliteConfig[key][column], "dataType" | "data">]: SqliteConfig[key][column][property];
+    } & {
+      dataType: SqliteConfig[key][column]["dataType"] extends Buffer ? "buffer" : SqliteConfig[key][column]["dataType"];
+      data: SqliteConfig[key][column]["data"] extends Buffer ? Buffer : SqliteConfig[key][column]["data"];
+    };
+  };
+};
+
 test("schemas should match", () => {
   expectTypeOf<SqliteTables>().toEqualTypeOf<MysqlTables>();
   expectTypeOf<MysqlTables>().toEqualTypeOf<SqliteTables>();
-  expectTypeOf<SqliteConfig>().toEqualTypeOf<MysqlConfig>();
-  expectTypeOf<MysqlConfig>().toEqualTypeOf<SqliteConfig>();
+  expectTypeOf<FixedSqliteConfig>().toEqualTypeOf<FixedMysqlConfig>();
+  expectTypeOf<FixedMysqlConfig>().toEqualTypeOf<FixedSqliteConfig>();
 
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
     Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {

@@ -1,9 +1,9 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { DayOfWeek } from "@mantine/dates";
 import type { InferSelectModel } from "drizzle-orm";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import type {
@@ -143,6 +143,18 @@ export const invites = sqliteTable("invite", {
   creatorId: text("creator_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const medias = sqliteTable("media", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  content: blob("content", { mode: "buffer" }).$type<Buffer>().notNull(),
+  contentType: text("content_type").notNull(),
+  size: int("size").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  creatorId: text("creator_id").references(() => users.id, { onDelete: "set null" }),
 });
 
 export const integrations = sqliteTable(
@@ -387,6 +399,14 @@ export const userRelations = relations(users, ({ many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  medias: many(medias),
+}));
+
+export const mediaRelations = relations(medias, ({ one }) => ({
+  creator: one(users, {
+    fields: [medias.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const iconRelations = relations(icons, ({ one }) => ({

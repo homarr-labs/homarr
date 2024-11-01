@@ -552,6 +552,44 @@ export default {
       full: "Full integration access",
     },
   },
+  media: {
+    plural: "Medias",
+    search: "Find a media",
+    field: {
+      name: "Name",
+      size: "Size",
+      creator: "Creator",
+    },
+    action: {
+      upload: {
+        label: "Upload media",
+        file: "Select file",
+        notification: {
+          success: {
+            message: "The media was successfully uploaded",
+          },
+          error: {
+            message: "The media could not be uploaded",
+          },
+        },
+      },
+      delete: {
+        label: "Delete media",
+        description: "Are you sure you want to delete the media <bName></bName>?",
+        notification: {
+          success: {
+            message: "The media was successfully deleted",
+          },
+          error: {
+            message: "The media could not be deleted",
+          },
+        },
+      },
+      copy: {
+        label: "Copy URL",
+      },
+    },
+  },
   common: {
     // Either "ltr" or "rtl"
     direction: "ltr",
@@ -668,7 +706,7 @@ export default {
         },
       },
     },
-    mantineReactTable: MRT_Localization_EN,
+    mantineReactTable: MRT_Localization_EN as Readonly<Record<keyof typeof MRT_Localization_EN, string>>,
   },
   section: {
     dynamic: {
@@ -1167,11 +1205,11 @@ export default {
       },
       integration: {
         noData: "No integration found",
-        description: "Click {here} to create a new integration",
+        description: "Click <here></here> to create a new integration",
       },
       app: {
         noData: "No app found",
-        description: "Click {here} to create a new app",
+        description: "Click <here></here> to create a new app",
       },
       error: {
         action: {
@@ -1644,6 +1682,7 @@ export default {
         apps: "Apps",
         integrations: "Integrations",
         searchEngies: "Search engines",
+        medias: "Medias",
         users: {
           label: "Users",
           items: {
@@ -1732,6 +1771,9 @@ export default {
           },
         },
       },
+      media: {
+        includeFromAllUsers: "Include media from all users",
+      },
       user: {
         back: "Back to users",
         fieldsDisabledExternalProvider:
@@ -1800,7 +1842,7 @@ export default {
             copy: {
               title: "Copy invite",
               description:
-                "Your invitation has been generated. After this modal closes, you'll not be able to copy this link anymore. If you do no longer wish to invite said person, you can delete this invitation any time.",
+                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore.</b> If you do no longer wish to invite said person, you can delete this invitation any time.",
               link: "Invitation link",
               button: "Copy & close",
             },
@@ -2138,6 +2180,9 @@ export default {
           label: "Edit",
         },
       },
+      medias: {
+        label: "Medias",
+      },
       apps: {
         label: "Apps",
         new: {
@@ -2358,6 +2403,9 @@ export default {
               },
               manageSearchEngine: {
                 label: "Manage search engines",
+              },
+              manageMedia: {
+                label: "Manage medias",
               },
               manageUser: {
                 label: "Manage users",
