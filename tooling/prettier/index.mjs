@@ -26,6 +26,7 @@ const config = {
       },
     },
   ],
+  endOfLine: "lf",
 };
 
 export default config;
