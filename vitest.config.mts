@@ -18,7 +18,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["html", "json-summary", "json"],
       all: true,
-      exclude: ["apps/nextjs/.next/"],
+      exclude: (configDefaults.coverage.exclude ?? []).concat("apps/nextjs/.next/"),
       reportOnFailure: true,
     },
 
