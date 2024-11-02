@@ -51,6 +51,8 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
       );
     }
 
+    logger.info(`User '${dbUser.name}' logged in at ${dayjs().format()}`);
+
     // We use a cookie as localStorage is not shared with server (otherwise flickering would occur)
     cookies().set(colorSchemeCookieKey, dbUser.colorScheme, {
       path: "/",
