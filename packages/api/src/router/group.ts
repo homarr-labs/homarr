@@ -80,9 +80,9 @@ export const groupRouter = createTRPCRouter({
               id: true,
               name: true,
               image: true,
-              email: true
-            }
-          }
+              email: true,
+            },
+          },
         },
       });
 

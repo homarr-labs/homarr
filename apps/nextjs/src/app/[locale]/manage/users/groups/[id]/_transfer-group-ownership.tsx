@@ -77,7 +77,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
   const fullWidth = useMatches({
     xs: true,
     sm: true,
-    md: false
+    md: false,
   });
 
   return (
