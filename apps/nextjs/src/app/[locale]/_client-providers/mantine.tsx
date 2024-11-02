@@ -16,7 +16,6 @@ export const CustomMantineProvider = ({
   defaultColorScheme,
 }: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const manager = useColorSchemeManager();
-
   return (
     <DirectionProvider>
       <MantineProvider

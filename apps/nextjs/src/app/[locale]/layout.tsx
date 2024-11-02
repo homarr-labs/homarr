@@ -13,12 +13,13 @@ import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
-import { isLocaleSupported } from "@homarr/translation";
-import { getI18nMessages, getScopedI18n } from "@homarr/translation/server";
+import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
+import { getI18nMessages } from "@homarr/translation/server";
 
 import { Analytics } from "~/components/layout/analytics";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
+import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
 import { AuthProvider } from "./_client-providers/session";
@@ -68,8 +69,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   const session = await auth();
   const colorScheme = await getCurrentColorSchemeAsync();
-  const tCommon = await getScopedI18n("common");
-  const direction = tCommon("direction");
+  const direction = isLocaleRTL(props.params.locale) ? "rtl" : "ltr";
   const i18nMessages = await getI18nMessages();
 
   const StackedProvider = composeWrappers([
@@ -78,6 +78,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
+    (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} />,
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
