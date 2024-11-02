@@ -1,9 +1,9 @@
 import type { UmamiEventData } from "@umami/node";
 import { Umami } from "@umami/node";
-import SuperJSON from "superjson";
 
-import { count, db, eq } from "@homarr/db";
-import { integrations, items, serverSettings, users } from "@homarr/db/schema/sqlite";
+import { count, db } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import { integrations, items, users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { defaultServerSettings } from "@homarr/server-settings";
 
@@ -12,18 +12,7 @@ import { UMAMI_HOST_URL, UMAMI_WEBSITE_ID } from "./constants";
 
 export const sendServerAnalyticsAsync = async () => {
   const stopWatch = new Stopwatch();
-  const setting = await db.query.serverSettings.findFirst({
-    where: eq(serverSettings.settingKey, "analytics"),
-  });
-
-  if (!setting) {
-    logger.info(
-      "Server does not know the configured state of analytics. No data will be sent. Enable analytics in the settings",
-    );
-    return;
-  }
-
-  const analyticsSettings = SuperJSON.parse<typeof defaultServerSettings.analytics>(setting.value);
+  const analyticsSettings = await getServerSettingByKeyAsync(db, "analytics");
 
   if (!analyticsSettings.enableGeneral) {
     logger.info("Analytics are disabled. No data will be sent. Enable analytics in the settings");

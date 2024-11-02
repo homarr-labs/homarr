@@ -6,26 +6,30 @@ import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
-import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 
 import classes from "./language-combobox.module.css";
 
-export const LanguageCombobox = () => {
+interface LanguageComboboxProps {
+  label?: string;
+  value: SupportedLanguage;
+  onChange: (value: SupportedLanguage) => void;
+  isPending?: boolean;
+}
+
+export const LanguageCombobox = ({ label, value, onChange, isPending }: LanguageComboboxProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
-  const currentLocale = useCurrentLocale();
-  const { changeLocale, isPending } = useChangeLocale();
 
   const handleOnOptionSubmit = React.useCallback(
     (value: string) => {
       if (!value) {
         return;
       }
-      changeLocale(value as SupportedLanguage);
+      onChange(value as SupportedLanguage);
       combobox.closeDropdown();
     },
-    [changeLocale, combobox],
+    [onChange, combobox],
   );
 
   const handleOnClick = React.useCallback(() => {
@@ -39,20 +43,21 @@ export const LanguageCombobox = () => {
           component="button"
           type="button"
           pointer
+          label={label}
           leftSection={isPending ? <Loader size={16} /> : null}
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
           onClick={handleOnClick}
           variant="filled"
         >
-          <OptionItem currentLocale={currentLocale} localeKey={currentLocale} />
+          <OptionItem currentLocale={value} localeKey={value} />
         </InputBase>
       </Combobox.Target>
       <Combobox.Dropdown>
         <Combobox.Options>
           {supportedLanguages.map((languageKey) => (
             <Combobox.Option value={languageKey} key={languageKey}>
-              <OptionItem currentLocale={currentLocale} localeKey={languageKey} showCheck />
+              <OptionItem currentLocale={value} localeKey={languageKey} showCheck />
             </Combobox.Option>
           ))}
         </Combobox.Options>

@@ -23,4 +23,4 @@ export const localeConfigurations = {
 export const supportedLanguages = objectKeys(localeConfigurations);
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
-export const defaultLocale = "en" satisfies SupportedLanguage;
+export const fallbackLocale = "en" satisfies SupportedLanguage;

@@ -8,6 +8,7 @@ import { logger } from "@homarr/log";
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
+import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
 import { BoardProvider } from "./(content)/_context";
 import type { Params } from "./(content)/_creator";
@@ -37,10 +38,11 @@ export const createBoardLayout = <TParams extends Params>({
 
       throw error;
     });
+    const colorScheme = await getCurrentColorSchemeAsync();
 
     return (
       <BoardProvider initialBoard={initialBoard}>
-        <BoardMantineProvider>
+        <BoardMantineProvider defaultColorScheme={colorScheme}>
           <CustomCss />
           <ClientShell hasNavigation={false}>
             <MainHeader

@@ -1922,6 +1922,14 @@ export default {
       },
       settings: {
         title: "Settings",
+        notification: {
+          success: {
+            message: "Settings saved successfully",
+          },
+          error: {
+            message: "Failed to save settings",
+          },
+        },
         section: {
           analytics: {
             title: "Analytics",
@@ -1961,6 +1969,29 @@ export default {
             noSiteLinksSearchBox: {
               title: "No site links search box",
               text: "Google will build a search box with the crawled links along with other direct links. Enabling this will ask Google to disable that box.",
+            },
+          },
+          board: {
+            title: "Boards",
+            defaultBoard: {
+              label: "Global default board",
+              description: "Only public boards are available for selection",
+            },
+          },
+          appearance: {
+            title: "Appearance",
+            defaultColorScheme: {
+              label: "Default color scheme",
+              options: {
+                light: "Light",
+                dark: "Dark",
+              },
+            },
+          },
+          culture: {
+            title: "Culture",
+            defaultLocale: {
+              label: "Default language",
             },
           },
         },

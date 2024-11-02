@@ -1303,6 +1303,13 @@ importers:
         version: 5.6.3
 
   packages/server-settings:
+    dependencies:
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1392,9 +1399,15 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      deepmerge:
+        specifier: 4.3.1
+        version: 4.3.1
       mantine-react-table:
         specifier: 2.0.0-beta.7
         version: 2.0.0-beta.7(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/dates@7.13.4(@mantine/core@7.13.4(@mantine/hooks@7.13.4(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.13.4(react@18.3.1))(@tabler/icons-react@3.21.0(react@18.3.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
