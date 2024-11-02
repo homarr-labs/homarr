@@ -4,7 +4,7 @@ import type { ComboboxItem, ComboboxLikeRenderOptionInput } from "@mantine/core"
 import { Group, Select, Text, useMantineColorScheme } from "@mantine/core";
 import { IconCheck, IconMoon, IconSunFilled } from "@tabler/icons-react";
 
-const colorSchemes = ["dark", "light"] as const;
+import { colorSchemes } from "@homarr/definitions";
 
 export const ColorSchemeSelect = () => {
   const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -12,7 +12,6 @@ export const ColorSchemeSelect = () => {
 
   return (
     <Select
-      defaultValue="dark"
       value={colorScheme}
       variant="unstyled"
       unselectable="off"

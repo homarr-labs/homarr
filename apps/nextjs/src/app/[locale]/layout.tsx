@@ -14,6 +14,7 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
+import type { ColorScheme } from "@homarr/definitions";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { isLocaleSupported } from "@homarr/translation";
@@ -110,5 +111,5 @@ export default async function Layout(props: { children: React.ReactNode; params:
 }
 
 const getColorScheme = () => {
-  return cookies().get("homarr-color-scheme")?.value ?? "dark";
+  return (cookies().get("homarr-color-scheme")?.value as ColorScheme | undefined) ?? "dark";
 };
