@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Dit veld is ongeldig",
-                "required": "Dit veld is verplicht"
+                "required": "Dit veld is verplicht",
+                "string": {
+                    "startsWith": "Dit veld moet beginnen met {startsWith}",
+                    "endsWith": "Dit veld moet eindigen op {endsWith}",
+                    "includes": "Dit veld moet {includes} bevatten."
+                },
+                "tooSmall": {
+                    "string": "Dit veld moet minstens {minimum} tekens lang zijn",
+                    "number": "Dit veld moet groter of gelijk zijn aan {minimum}"
+                },
+                "tooBig": {
+                    "string": "Dit veld mag maximaal {maximum} tekens lang zijn",
+                    "number": "Dit veld moet kleiner of gelijk zijn aan {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Gekleurde tekst markeren",
                 "code": "Code",
                 "clear": "Opmaak wissen",
+                "heading": "Koptekst {level}",
+                "align": "Tekst uitlijnen: {position}",
                 "blockquote": "Blokquote",
                 "horizontalLine": "Horizontale lijn",
                 "bulletList": "Opsommingslijst",
@@ -399,6 +414,7 @@
                 "search": "Zoeken",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Onbekend"
                     }

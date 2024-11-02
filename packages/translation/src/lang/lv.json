@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Šis lauks nav derīgs",
-                "required": "Šis lauks ir obligāts"
+                "required": "Šis lauks ir obligāts",
+                "string": {
+                    "startsWith": "Šim laukam jāsākas ar {startsWith}",
+                    "endsWith": "Šim laukam jābeidzas ar {endsWith}",
+                    "includes": "Šajā laukā jāiekļauj {includes}"
+                },
+                "tooSmall": {
+                    "string": "Šim laukam jābūt vismaz {minimum} rakstzīmju garam",
+                    "number": "Šim laukam jābūt lielākam vai vienādam ar {minimum}"
+                },
+                "tooBig": {
+                    "string": "Šim laukam jābūt ne garākam par {maximum} rakstzīmēm",
+                    "number": "Šim laukam jābūt mazākam vai vienādam ar {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Krāsains izcelts teksts",
                 "code": "Kods",
                 "clear": "Notīrīt formatējumu",
+                "heading": "Virsraksts {level}",
+                "align": "Teksta līdzināšana: {position}",
                 "blockquote": "Citāts",
                 "horizontalLine": "Horizontāla līnija",
                 "bulletList": "Aizzīmju saraksts",
@@ -399,6 +414,7 @@
                 "search": "Meklēt",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Nezināms"
                     }

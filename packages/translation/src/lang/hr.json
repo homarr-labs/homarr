@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Ovo polje nije važeće",
-                "required": "ovo polje je obavezno"
+                "required": "ovo polje je obavezno",
+                "string": {
+                    "startsWith": "Ovo polje mora započeti s {startsWith}",
+                    "endsWith": "Ovo polje mora završavati s {endsWith}",
+                    "includes": "Ovo polje mora sadržavati {includes}"
+                },
+                "tooSmall": {
+                    "string": "Ovo polje mora sadržavati najmanje {minimum} znakova",
+                    "number": "Ovo polje mora biti veće ili jednako {minimum}"
+                },
+                "tooBig": {
+                    "string": "Ovo polje mora sadržavati najviše {maximum} znakova",
+                    "number": "Ovo polje mora biti manje ili jednako {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "",
                 "code": "",
                 "clear": "",
+                "heading": "",
+                "align": "",
                 "blockquote": "",
                 "horizontalLine": "",
                 "bulletList": "",
@@ -399,6 +414,7 @@
                 "search": "traži",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Nepoznato"
                     }

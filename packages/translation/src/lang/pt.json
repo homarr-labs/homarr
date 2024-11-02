@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Esse campo é inválido",
-                "required": "Este campo é obrigatório"
+                "required": "Este campo é obrigatório",
+                "string": {
+                    "startsWith": "Esse campo deve começar com {startsWith}",
+                    "endsWith": "Esse campo deve terminar com {endsWith}",
+                    "includes": "Esse campo deve incluir {includes}"
+                },
+                "tooSmall": {
+                    "string": "Esse campo deve ter pelo menos {minimum} caracteres",
+                    "number": "Esse campo deve ser maior ou igual a {minimum}"
+                },
+                "tooBig": {
+                    "string": "Esse campo deve ter no máximo {maximum} caracteres",
+                    "number": "Esse campo deve ser menor ou igual a {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Texto colorido em destaque",
                 "code": "Código",
                 "clear": "Limpar formatação",
+                "heading": "Cabeçalho {level}",
+                "align": "Alinhar texto: {position}",
                 "blockquote": "Bloco de Citação",
                 "horizontalLine": "Linha horizontal",
                 "bulletList": "Lista de marcadores",
@@ -399,6 +414,7 @@
                 "search": "Pesquisa",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Desconhecido"
                     }

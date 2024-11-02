@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Ce champ est invalide",
-                "required": "Ce champ est requis"
+                "required": "Ce champ est requis",
+                "string": {
+                    "startsWith": "Ce champ doit commencer par {startsWith}",
+                    "endsWith": "Ce champ doit terminer par {endsWith}",
+                    "includes": "Ce champ doit inclure {includes}"
+                },
+                "tooSmall": {
+                    "string": "Ce champ doit faire au moins {minimum} caractères",
+                    "number": "Ce champ doit être supérieur ou égal à {minimum}"
+                },
+                "tooBig": {
+                    "string": "Ce champ doit faire au plus {maximum} caractères",
+                    "number": "Ce champ doit être inférieur ou égal à {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Surligner en couleur",
                 "code": "Code",
                 "clear": "Effacer la mise en forme",
+                "heading": "Titre {level}",
+                "align": "Aligner le texte : {position}",
                 "blockquote": "Citation",
                 "horizontalLine": "Ligne horizontale",
                 "bulletList": "Liste à puces",
@@ -399,6 +414,7 @@
                 "search": "Rechercher",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Inconnu"
                     }

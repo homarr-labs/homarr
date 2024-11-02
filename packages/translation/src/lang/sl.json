@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "To polje je neveljavno",
-                "required": "To polje je obvezno"
+                "required": "To polje je obvezno",
+                "string": {
+                    "startsWith": "To polje se mora začeti s {startsWith}.",
+                    "endsWith": "To polje se mora končati s {endsWith}.",
+                    "includes": "To polje mora vsebovati {includes}."
+                },
+                "tooSmall": {
+                    "string": "To polje mora biti dolgo vsaj {minimum} znakov.",
+                    "number": "To polje mora biti večje ali enako {minimum}"
+                },
+                "tooBig": {
+                    "string": "To polje mora biti dolgo največ {maximum} znakov.",
+                    "number": "To polje mora biti manjše ali enako {maximum}."
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Barvni poudarek besedila",
                 "code": "Koda",
                 "clear": "Jasno oblikovanje",
+                "heading": "Naslov {level}",
+                "align": "Poravnava besedila: {position}",
                 "blockquote": "Blokovni citat",
                 "horizontalLine": "Vodoravna črta",
                 "bulletList": "Seznam kroglic",
@@ -399,6 +414,7 @@
                 "search": "Iskanje",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Neznano"
                     }

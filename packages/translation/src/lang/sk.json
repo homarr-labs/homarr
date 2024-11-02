@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Toto pole je neplatné",
-                "required": "Toto pole je povinné"
+                "required": "Toto pole je povinné",
+                "string": {
+                    "startsWith": "Toto pole musí začínať na {startsWith}",
+                    "endsWith": "Toto pole musí končiť na {endsWith}",
+                    "includes": "Toto pole musí obsahovať {includes}"
+                },
+                "tooSmall": {
+                    "string": "Toto pole musí byť dlhé aspoň {minimum} znakov",
+                    "number": "Toto pole musí byť väčšie alebo rovné {minimum}"
+                },
+                "tooBig": {
+                    "string": "Toto pole musí mať najviac {maximum} znakov",
+                    "number": "Toto pole musí byť menšie alebo rovné {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Farebné zvýraznenie textu",
                 "code": "Kód",
                 "clear": "Vyčistiť formátovanie",
+                "heading": "Nadpis {level}",
+                "align": "Zarovnanie textu: {position}",
                 "blockquote": "Citát",
                 "horizontalLine": "Horizontálna čiara",
                 "bulletList": "Zoznam odrážok",
@@ -399,6 +414,7 @@
                 "search": "Hladať",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Neznámy"
                     }

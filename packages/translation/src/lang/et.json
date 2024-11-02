@@ -122,7 +122,20 @@
         "zod": {
             "errors": {
                 "default": "",
-                "required": ""
+                "required": "",
+                "string": {
+                    "startsWith": "",
+                    "endsWith": "",
+                    "includes": ""
+                },
+                "tooSmall": {
+                    "string": "",
+                    "number": ""
+                },
+                "tooBig": {
+                    "string": "",
+                    "number": ""
+                }
             }
         }
     },
@@ -238,6 +251,8 @@
                 "colorHighlight": "",
                 "code": "",
                 "clear": "",
+                "heading": "",
+                "align": "",
                 "blockquote": "",
                 "horizontalLine": "",
                 "bulletList": "",
@@ -389,6 +404,7 @@
                 "search": "",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": ""
                     }

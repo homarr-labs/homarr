@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Dette feltet er ugyldig",
-                "required": "Dette feltet er obligatorisk"
+                "required": "Dette feltet er obligatorisk",
+                "string": {
+                    "startsWith": "Dette feltet må starte med {startsWith}",
+                    "endsWith": "Dette feltet må slutte med {endsWith}",
+                    "includes": "Dette feltet må inneholde {includes}"
+                },
+                "tooSmall": {
+                    "string": "Dette feltet må være på minst {minimum} tegn",
+                    "number": "Dette feltet må være større enn eller lik {minimum}"
+                },
+                "tooBig": {
+                    "string": "Dette feltet må være på maksimalt {maximum} tegn",
+                    "number": "Dette feltet må være mindre enn eller lik {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Farget uthevet tekst",
                 "code": "Kode",
                 "clear": "Fjern formatering",
+                "heading": "Overskrift {level}",
+                "align": "Juster tekst: {position}",
                 "blockquote": "Blokksitat",
                 "horizontalLine": "Horisontal linje",
                 "bulletList": "Punktliste",
@@ -399,6 +414,7 @@
                 "search": "Søk",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Ukjent"
                     }

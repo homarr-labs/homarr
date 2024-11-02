@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "このフィールドは無効です。",
-                "required": "このフィールドは必須です"
+                "required": "このフィールドは必須です",
+                "string": {
+                    "startsWith": "このフィールドは {startsWith}で始まらなければならない。",
+                    "endsWith": "このフィールドの末尾は {endsWith}でなければならない。",
+                    "includes": "このフィールドには {includes}を含めなければならない。"
+                },
+                "tooSmall": {
+                    "string": "このフィールドは {minimum} 文字以上で入力してください。",
+                    "number": "このフィールドは {minimum}以上でなければならない。"
+                },
+                "tooBig": {
+                    "string": "このフィールドは {maximum} 文字以内で入力してください。",
+                    "number": "このフィールドは {maximum}以下でなければならない。"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "色付きのハイライトテキスト",
                 "code": "コード",
                 "clear": "書式をクリア",
+                "heading": "見出し {level}",
+                "align": "テキストの整列: {position}",
                 "blockquote": "引用",
                 "horizontalLine": "水平線",
                 "bulletList": "箇条書きリスト",
@@ -399,6 +414,7 @@
                 "search": "検索",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "不明"
                     }

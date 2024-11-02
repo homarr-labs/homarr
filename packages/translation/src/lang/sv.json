@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Fältet är ogiltigt",
-                "required": "Detta fält är obligatoriskt"
+                "required": "Detta fält är obligatoriskt",
+                "string": {
+                    "startsWith": "Det här fältet måste börja med {startsWith}",
+                    "endsWith": "Detta fält måste sluta med {endsWith}",
+                    "includes": "Detta fält måste innehålla {includes}"
+                },
+                "tooSmall": {
+                    "string": "Detta fält måste vara minst {minimum} tecken långt",
+                    "number": "Detta fält måste vara större än eller lika med {minimum}"
+                },
+                "tooBig": {
+                    "string": "Detta fält får vara högst {maximum} tecken långt",
+                    "number": "Detta fält måste vara mindre än eller lika med {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Färgad markerad text",
                 "code": "Kod",
                 "clear": "Rensa formatering",
+                "heading": "Rubrik {level}",
+                "align": "Justera text: {position}",
                 "blockquote": "Blockcitat",
                 "horizontalLine": "Horisontell linje",
                 "bulletList": "Punktlista",
@@ -399,6 +414,7 @@
                 "search": "Sök",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Okänd"
                     }

@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "该字段无效",
-                "required": "此字段为必填"
+                "required": "此字段为必填",
+                "string": {
+                    "startsWith": "该字段必须以 {startsWith} 开头",
+                    "endsWith": "该字段必须以 {endsWith} 结尾",
+                    "includes": "该字段必须包含 {includes}"
+                },
+                "tooSmall": {
+                    "string": "该字段的长度必须至少为 {minimum} 个字符",
+                    "number": "该字段必须大于或等于 {minimum}"
+                },
+                "tooBig": {
+                    "string": "该字段的长度不得超过 {maximum} 个字符",
+                    "number": "该字段必须小于或等于 {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "彩色高亮文本",
                 "code": "代码",
                 "clear": "清除格式",
+                "heading": "标题 {level}",
+                "align": "对齐文本： {position}",
                 "blockquote": "引用",
                 "horizontalLine": "横线",
                 "bulletList": "符号列表",
@@ -399,6 +414,7 @@
                 "search": "搜索",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "未知"
                     }

@@ -122,7 +122,20 @@
         "zod": {
             "errors": {
                 "default": "",
-                "required": "Šis laukelis yra privalomas"
+                "required": "Šis laukelis yra privalomas",
+                "string": {
+                    "startsWith": "",
+                    "endsWith": "",
+                    "includes": ""
+                },
+                "tooSmall": {
+                    "string": "",
+                    "number": ""
+                },
+                "tooBig": {
+                    "string": "",
+                    "number": ""
+                }
             }
         }
     },
@@ -242,6 +255,8 @@
                 "colorHighlight": "Spalvotas paryškintas tekstas",
                 "code": "Kodas",
                 "clear": "Išvalyti formatavimą",
+                "heading": "Antraštė {level}",
+                "align": "Teksto lygiavimas: {position}",
                 "blockquote": "Kabutės",
                 "horizontalLine": "Horizontali linija",
                 "bulletList": "Suženklintasis sąrašas",
@@ -395,6 +410,7 @@
                 "search": "Ieškoti",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Nežinoma"
                     }

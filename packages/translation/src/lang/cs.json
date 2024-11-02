@@ -126,7 +126,20 @@
         "zod": {
             "errors": {
                 "default": "Toto pole je neplatné",
-                "required": "Toto pole je nutné vyplnit"
+                "required": "Toto pole je nutné vyplnit",
+                "string": {
+                    "startsWith": "Toto pole musí začínat {startsWith}",
+                    "endsWith": "Toto pole musí končit {endsWith}",
+                    "includes": "Toto pole musí obsahovat {includes}"
+                },
+                "tooSmall": {
+                    "string": "Toto pole musí obsahovat alespoň {minimum} znaků",
+                    "number": "Toto pole musí být větší nebo rovno {minimum}"
+                },
+                "tooBig": {
+                    "string": "Toto pole může být maximálně {maximum} znaků dlouhé",
+                    "number": "Toto pole musí být menší nebo rovno {maximum}"
+                }
             }
         }
     },
@@ -246,6 +259,8 @@
                 "colorHighlight": "Barevné zvýraznění textu",
                 "code": "Kód",
                 "clear": "Vymazat formátování",
+                "heading": "Nadpis {level}",
+                "align": "Zarovnat text: {position}",
                 "blockquote": "Citace",
                 "horizontalLine": "Vodorovná čára",
                 "bulletList": "Odrážkový seznam",
@@ -399,6 +414,7 @@
                 "search": "Vyhledat",
                 "table": {
                     "header": {},
+                    "action": {},
                     "population": {
                         "fallback": "Neznámý"
                     }
