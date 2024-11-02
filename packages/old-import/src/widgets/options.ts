@@ -1,6 +1,5 @@
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import type { OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
@@ -143,7 +142,6 @@ export const mapOptions = <K extends WidgetKind>(
   oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[K] }>["options"],
   appsMap: Map<string, string>,
 ) => {
-  logger.debug(`Mapping old homarr options for widget kind=${kind} options=${JSON.stringify(oldOptions)}`);
   if (optionMapping[kind] === null) {
     return null;
   }
@@ -152,7 +150,6 @@ export const mapOptions = <K extends WidgetKind>(
   return objectEntries(mapping).reduce(
     (acc, [key, value]) => {
       const newValue = value(oldOptions as never, appsMap);
-      logger.debug(`Mapping old homarr option kind=${kind} key=${key as string} newValue=${newValue as string}`);
       if (newValue !== undefined) {
         acc[key as string] = newValue;
       }

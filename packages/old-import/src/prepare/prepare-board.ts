@@ -2,8 +2,8 @@ import { createId } from "@homarr/db/client";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import { mapColor } from "./mappers/map-colors";
-import { mapColumnCount } from "./mappers/map-column-count";
+import { mapColor } from "../mappers/map-colors";
+import { mapColumnCount } from "../mappers/map-column-count";
 
 export const prepareBoard = (old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
   return {

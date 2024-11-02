@@ -3,7 +3,7 @@ import { createId } from "@homarr/db/client";
 import type { apps as appsTable } from "@homarr/db/schema/sqlite";
 import type { OldmarrApp } from "@homarr/old-schema";
 
-import type { BookmarkApp } from "./widgets/definitions/bookmark";
+import type { BookmarkApp } from "../widgets/definitions/bookmark";
 
 type DbAppWithoutId = Omit<InferSelectModel<typeof appsTable>, "id">;
 

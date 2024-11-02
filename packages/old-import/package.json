@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./prepare/multiple": "./src/prepare/multiple.ts",
+    "./prepare": "./src/prepare/index.ts"
   },
   "typesVersions": {
     "*": {

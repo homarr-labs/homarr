@@ -21,11 +21,15 @@ import { useListState } from "@mantine/hooks";
 import { IconFileZip, IconPencil, IconUpload, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { objectKeys } from "@homarr/common";
 import { useZodForm } from "@homarr/form";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import { SelectWithDescription } from "@homarr/ui";
+import type { OldmarrImportConfiguration } from "@homarr/validation";
 import { oldmarrImportConfigurationSchema, z } from "@homarr/validation";
 
+import { prepareMultipleImports } from "../../../../../../../../../packages/old-import/src/prepare/multiple";
+import { OldmarrBookmarkDefinition } from "../../../../../../../../../packages/old-import/src/widgets/definitions/bookmark";
 import classes from "../../../init.module.css";
 
 interface SelectedBoard {
@@ -213,47 +217,93 @@ export const ImportBoards = () => {
               </Text>
             </Stack>
 
-            <Stack gap="xs">
-              <Card withBorder bg="transparent">
-                <Group justify="space-between" align="center">
-                  <Text size="sm" fw={500}>
-                    Boards
-                  </Text>
-
-                  <Text size="sm">12</Text>
-                </Group>
-              </Card>
-
-              <Card withBorder bg="transparent">
-                <Stack gap={4}>
-                  <Group justify="space-between" align="center">
-                    <Text size="sm" fw={500}>
-                      Apps
-                    </Text>
-
-                    <Text size="sm">12</Text>
-                  </Group>
-                  <Text size="xs" c="gray.6">
-                    This will remove 6 duplicates.
-                  </Text>
-                </Stack>
-              </Card>
-              <Card withBorder bg="transparent">
-                <Group justify="space-between" align="center">
-                  <Text size="sm" fw={500}>
-                    Integrations
-                  </Text>
-
-                  <Text size="sm">12</Text>
-                </Group>
-              </Card>
-            </Stack>
+            <Summary data={data ?? []} selectedBoards={selectedBoards} configuration={form.values} />
 
             <Button fullWidth>Confirm import and continue</Button>
           </Stack>
         </Card>
       </GridCol>
     </>
+  );
+};
+
+interface SummaryProps {
+  data: OldmarrConfig[];
+  selectedBoards: SelectedBoard[];
+  configuration: Omit<OldmarrImportConfiguration, "name" | "screenSize">;
+}
+
+const Summary = ({ data, selectedBoards, configuration }: SummaryProps) => {
+  const summary = useMemo(() => {
+    const imports = selectedBoards
+      .map((selected) => {
+        const old = data.find((board) => board.configProperties.name === selected.id);
+        if (!old) {
+          return [];
+        }
+
+        const screenSizes = objectKeys(selected).filter((key) => key !== "id");
+
+        return screenSizes
+          .filter((screenSize) => selected[screenSize])
+          .map((screenSize) => ({
+            configuration: { name: `${old.configProperties.name}-${screenSize}`, screenSize },
+            old: structuredClone(old), // Creates a deep copy without references
+          }));
+      })
+      .flatMap((entry) => entry);
+
+    const preparedImports = prepareMultipleImports(imports, configuration);
+    const appsWithDuplicates =
+      imports.flatMap((entry) => entry.old.apps).length +
+      imports
+        .flatMap((entry) => entry.old.widgets)
+        .filter((widget) => widget.type === "bookmark")
+        .reduce((acc, widget) => acc + (widget.properties as OldmarrBookmarkDefinition["options"]).items.length, 0);
+
+    return {
+      apps: preparedImports.apps.length,
+      boards: preparedImports.boards.length,
+      appsWithDuplicates,
+    };
+  }, [data, selectedBoards, configuration]);
+
+  return (
+    <Stack gap="xs">
+      <Card withBorder bg="transparent">
+        <Group justify="space-between" align="center">
+          <Text size="sm" fw={500}>
+            Boards
+          </Text>
+
+          <Text size="sm">{summary.boards}</Text>
+        </Group>
+      </Card>
+
+      <Card withBorder bg="transparent">
+        <Stack gap={4}>
+          <Group justify="space-between" align="center">
+            <Text size="sm" fw={500}>
+              Apps
+            </Text>
+
+            <Text size="sm">{summary.apps}</Text>
+          </Group>
+          <Text size="xs" c="gray.6">
+            This will remove {summary.appsWithDuplicates - summary.apps} duplicates.
+          </Text>
+        </Stack>
+      </Card>
+      <Card withBorder bg="transparent">
+        <Group justify="space-between" align="center">
+          <Text size="sm" fw={500}>
+            Integrations
+          </Text>
+
+          <Text size="sm">12</Text>
+        </Group>
+      </Card>
+    </Stack>
   );
 };
 

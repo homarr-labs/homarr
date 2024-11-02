@@ -1,16 +1,15 @@
 import SuperJSON from "superjson";
 
 import type { InferInsertModel } from "@homarr/db";
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/db/client";
 import type { items } from "@homarr/db/schema/sqlite";
-import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import type { WidgetComponentProps } from "../../widgets/src/definition";
-import { OldHomarrScreenSizeError } from "./import-error";
-import { mapKind } from "./widgets/definitions";
-import { mapOptions } from "./widgets/options";
+import type { WidgetComponentProps } from "../../../widgets/src/definition";
+import { OldHomarrScreenSizeError } from "../import-error";
+import { mapKind } from "../widgets/definitions";
+import { mapOptions } from "../widgets/options";
 
 export const prepareItems = (
   widgets: OldmarrWidget[],
@@ -30,7 +29,6 @@ export const prepareItems = (
     const kind = mapKind(widget.type);
 
     if (!kind) {
-      logger.error(`Widget has no kind id=${widget.id} type=${widget.type}`);
       continue;
     }
 
