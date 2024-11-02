@@ -12,9 +12,11 @@ import {
   IconLayoutDashboard,
   IconLogs,
   IconMailForward,
+  IconPhoto,
   IconPlug,
   IconQuestionMark,
   IconReport,
+  IconSearch,
   IconSettings,
   IconTool,
   IconUser,
@@ -22,7 +24,9 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
+import { createDocumentationLink } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
@@ -32,6 +36,7 @@ import { ClientShell } from "~/components/layout/shell";
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
   const t = await getScopedI18n("management.navbar");
+  const session = await auth();
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -54,8 +59,20 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.integrations"),
     },
     {
+      icon: IconSearch,
+      href: "/manage/search-engines",
+      label: t("items.searchEngies"),
+    },
+    {
+      icon: IconPhoto,
+      href: "/manage/medias",
+      label: t("items.medias"),
+      hidden: !session,
+    },
+    {
       icon: IconUser,
       label: t("items.users.label"),
+      hidden: !session?.user.permissions.includes("admin"),
       items: [
         {
           label: t("items.users.items.manage"),
@@ -78,6 +95,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       label: t("items.tools.label"),
       icon: IconTool,
+      hidden: !session?.user.permissions.includes("admin"),
       items: [
         {
           label: t("items.tools.items.docker"),
@@ -105,6 +123,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.settings"),
       href: "/manage/settings",
       icon: IconSettings,
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
       label: t("items.help.label"),
@@ -113,7 +132,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.help.items.documentation"),
           icon: IconBook2,
-          href: "https://homarr.dev/docs/getting-started/",
+          href: createDocumentationLink("/docs/getting-started"),
           external: true,
         },
         {

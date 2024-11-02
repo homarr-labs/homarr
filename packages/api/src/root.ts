@@ -1,3 +1,4 @@
+import { apiKeysRouter } from "./router/apiKeys";
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { cronJobsRouter } from "./router/cron-jobs";
@@ -9,6 +10,8 @@ import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
+import { mediaRouter } from "./router/medias/media-router";
+import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
 import { widgetRouter } from "./router/widgets";
@@ -21,6 +24,7 @@ export const appRouter = createTRPCRouter({
   integration: integrationRouter,
   board: boardRouter,
   app: innerAppRouter,
+  searchEngine: searchEngineRouter,
   widget: widgetRouter,
   location: locationRouter,
   log: logRouter,
@@ -29,6 +33,8 @@ export const appRouter = createTRPCRouter({
   docker: dockerRouter,
   serverSettings: serverSettingsRouter,
   cronJobs: cronJobsRouter,
+  apiKeys: apiKeysRouter,
+  media: mediaRouter,
 });
 
 // export type definition of API

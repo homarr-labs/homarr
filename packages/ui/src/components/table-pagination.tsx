@@ -34,7 +34,7 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
     (control: ControlType) => {
       return getItemProps(calculatePageFor(control, current, total));
     },
-    [current],
+    [current, getItemProps, total],
   );
 
   const handleChange = useCallback(
@@ -43,7 +43,7 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
       params.set("page", page.toString());
       replace(`${pathName}?${params.toString()}`);
     },
-    [pathName, searchParams],
+    [pathName, replace, searchParams],
   );
 
   return (

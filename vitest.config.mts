@@ -8,6 +8,7 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     environment: "jsdom",
     include: ["**/*.spec.ts"],
+    clearMocks: true,
     poolOptions: {
       threads: {
         singleThread: false,
@@ -18,7 +19,7 @@ export default defineConfig({
       reporter: ["html", "json-summary", "json"],
       all: true,
       exclude: ["apps/nextjs/.next/"],
-      reportOnFailure: true
+      reportOnFailure: true,
     },
 
     exclude: [...configDefaults.exclude, "apps/nextjs/.next"],

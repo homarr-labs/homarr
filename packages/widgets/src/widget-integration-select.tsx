@@ -1,7 +1,9 @@
 "use client";
 
 import type { FocusEventHandler } from "react";
+import Link from "next/link";
 import {
+  Anchor,
   Avatar,
   CheckIcon,
   CloseButton,
@@ -86,7 +88,23 @@ export const WidgetIntegrationSelect = ({
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput pointer onClick={() => combobox.toggleDropdown()} {...props}>
+        <PillsInput
+          inputWrapperOrder={["label", "input", "description", "error"]}
+          description={
+            <Text size="xs">
+              {t.rich("widget.common.integration.description", {
+                here: () => (
+                  <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">
+                    {t("common.here")}
+                  </Anchor>
+                ),
+              })}
+            </Text>
+          }
+          pointer
+          onClick={() => combobox.toggleDropdown()}
+          {...props}
+        >
           <Pill.Group>
             {values.length > 0 ? values : <Input.Placeholder>{t("common.multiSelect.placeholder")}</Input.Placeholder>}
 
@@ -108,7 +126,15 @@ export const WidgetIntegrationSelect = ({
       </Combobox.DropdownTarget>
 
       <Combobox.Dropdown>
-        <Combobox.Options>{options}</Combobox.Options>
+        <Combobox.Options>
+          {options.length >= 1 ? (
+            options
+          ) : (
+            <Text p={4} size="sm" ta="center" c="var(--mantine-color-dimmed)">
+              {t("widget.common.integration.noData")}
+            </Text>
+          )}
+        </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>
   );

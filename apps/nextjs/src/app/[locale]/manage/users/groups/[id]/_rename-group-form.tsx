@@ -15,9 +15,10 @@ interface RenameGroupFormProps {
     id: string;
     name: string;
   };
+  disabled?: boolean;
 }
 
-export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
+export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.group.updateGroup.useMutation();
   const form = useZodForm(validation.group.update.pick({ name: true }), {
@@ -28,6 +29,9 @@ export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
 
   const handleSubmit = useCallback(
     (values: FormType) => {
+      if (disabled) {
+        return;
+      }
       mutate(
         {
           ...values,
@@ -54,19 +58,21 @@ export const RenameGroupForm = ({ group }: RenameGroupFormProps) => {
         },
       );
     },
-    [group.id, mutate, t],
+    [group.id, mutate, t, disabled],
   );
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput label={t("group.field.name")} {...form.getInputProps("name")} />
+        <TextInput label={t("group.field.name")} {...form.getInputProps("name")} disabled={disabled} />
 
-        <Group justify="end">
-          <Button type="submit" color="teal" loading={isPending}>
-            {t("common.action.saveChanges")}
-          </Button>
-        </Group>
+        {!disabled && (
+          <Group justify="end">
+            <Button type="submit" color="teal" loading={isPending}>
+              {t("common.action.saveChanges")}
+            </Button>
+          </Group>
+        )}
       </Stack>
     </form>
   );

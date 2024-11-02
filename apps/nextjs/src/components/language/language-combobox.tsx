@@ -2,11 +2,11 @@
 
 import React from "react";
 import type { InputBaseProps } from "@mantine/core";
-import { Combobox, Group, InputBase, Text, useCombobox } from "@mantine/core";
+import { Combobox, Group, InputBase, Loader, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";
-import { localeAttributes, supportedLanguages } from "@homarr/translation";
+import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 
 import classes from "./language-combobox.module.css";
@@ -16,7 +16,7 @@ export const LanguageCombobox = ({ variant }: Pick<InputBaseProps, "variant">) =
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
   const currentLocale = useCurrentLocale();
-  const changeLocale = useChangeLocale();
+  const { changeLocale, isPending } = useChangeLocale();
 
   const handleOnOptionSubmit = React.useCallback(
     (value: string) => {
@@ -40,6 +40,7 @@ export const LanguageCombobox = ({ variant }: Pick<InputBaseProps, "variant">) =
           component="button"
           type="button"
           pointer
+          leftSection={isPending ? <Loader size={16} /> : null}
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
           onClick={handleOnClick}
@@ -73,11 +74,11 @@ const OptionItem = ({
   return (
     <Group wrap="nowrap" justify="space-between">
       <Group wrap="nowrap">
-        <span className={`fi fi-${localeAttributes[localeKey].flagIcon} ${classes.flagIcon}`}></span>
+        <span className={`fi fi-${localeConfigurations[localeKey].flagIcon} ${classes.flagIcon}`}></span>
         <Group wrap="nowrap" gap="xs">
-          <Text>{localeAttributes[localeKey].name}</Text>
+          <Text>{localeConfigurations[localeKey].name}</Text>
           <Text size="xs" c="dimmed" inherit>
-            ({localeAttributes[localeKey].translatedName})
+            ({localeConfigurations[localeKey].translatedName})
           </Text>
         </Group>
       </Group>

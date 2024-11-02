@@ -9,10 +9,7 @@ const manageAppSchema = z.object({
 
 const editAppSchema = manageAppSchema.and(z.object({ id: z.string() }));
 
-const byIdSchema = z.object({ id: z.string() });
-
 export const appSchemas = {
   manage: manageAppSchema,
   edit: editAppSchema,
-  byId: byIdSchema,
 };

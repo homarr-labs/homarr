@@ -1,8 +1,9 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { DayOfWeek } from "@mantine/dates";
 import type { InferSelectModel } from "drizzle-orm";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import type {
@@ -20,6 +21,17 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 
+export const apiKeys = sqliteTable("apiKey", {
+  id: text("id").notNull().primaryKey(),
+  apiKey: text("apiKey").notNull(),
+  salt: text("salt").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references((): AnySQLiteColumn => users.id, {
+      onDelete: "cascade",
+    }),
+});
+
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -32,7 +44,9 @@ export const users = sqliteTable("user", {
   homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: text("colorScheme").$type<ColorScheme>().default("auto").notNull(),
+  colorScheme: text("colorScheme").$type<ColorScheme>().default("dark").notNull(),
+  firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(
@@ -107,7 +121,7 @@ export const groupMembers = sqliteTable(
 
 export const groups = sqliteTable("group", {
   id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").unique().notNull(),
   ownerId: text("owner_id").references(() => users.id, {
     onDelete: "set null",
   }),
@@ -129,6 +143,18 @@ export const invites = sqliteTable("invite", {
   creatorId: text("creator_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const medias = sqliteTable("media", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  content: blob("content", { mode: "buffer" }).$type<Buffer>().notNull(),
+  contentType: text("content_type").notNull(),
+  size: int("size").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  creatorId: text("creator_id").references(() => users.id, { onDelete: "set null" }),
 });
 
 export const integrations = sqliteTable(
@@ -343,6 +369,22 @@ export const serverSettings = sqliteTable("serverSetting", {
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
 
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
+
+export const searchEngines = sqliteTable("search_engine", {
+  id: text("id").notNull().primaryKey(),
+  iconUrl: text("icon_url").notNull(),
+  name: text("name").notNull(),
+  short: text("short").notNull(),
+  description: text("description"),
+  urlTemplate: text("url_template").notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -357,6 +399,14 @@ export const userRelations = relations(users, ({ many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  medias: many(medias),
+}));
+
+export const mediaRelations = relations(medias, ({ one }) => ({
+  creator: one(users, {
+    fields: [medias.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const iconRelations = relations(icons, ({ one }) => ({

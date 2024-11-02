@@ -24,6 +24,7 @@ export default {
     field: {
       email: {
         label: "E-Mail",
+        verified: "Verified",
       },
       username: {
         label: "Username",
@@ -46,6 +47,9 @@ export default {
       },
       homeBoard: {
         label: "Home board",
+      },
+      pingIconsEnabled: {
+        label: "Use icons for pings",
       },
     },
     error: {
@@ -102,6 +106,26 @@ export default {
           },
           error: {
             message: "Unable to change home board",
+          },
+        },
+      },
+      changeFirstDayOfWeek: {
+        notification: {
+          success: {
+            message: "First day of week changed successfully",
+          },
+          error: {
+            message: "Unable to change first day of week",
+          },
+        },
+      },
+      changePingIconsEnabled: {
+        notification: {
+          success: {
+            message: "Ping icons toggled successfully",
+          },
+          error: {
+            message: "Unable to toggle ping icons",
           },
         },
       },
@@ -225,6 +249,9 @@ export default {
       mixed: "Some members are from external providers and cannot be managed here",
       external: "All members are from external providers and cannot be managed here",
     },
+    reservedNotice: {
+      message: "This group is reserved for system use and restricts some actions. {checkoutDocs}",
+    },
     action: {
       create: {
         label: "New group",
@@ -303,8 +330,8 @@ export default {
       list: {
         title: "Apps",
         noResults: {
-          title: "There aren't any apps.",
-          description: "Create your first app",
+          title: "There aren't any apps",
+          action: "Create your first app",
         },
       },
       create: {
@@ -357,6 +384,12 @@ export default {
       },
       url: {
         label: "Url",
+      },
+    },
+    action: {
+      select: {
+        label: "Select app",
+        notFound: "No app found",
       },
     },
   },
@@ -525,11 +558,47 @@ export default {
       full: "Full integration access",
     },
   },
-  common: {
-    rtl: "{value}{symbol}",
-    symbols: {
-      colon: ": ",
+  media: {
+    plural: "Medias",
+    search: "Find a media",
+    field: {
+      name: "Name",
+      size: "Size",
+      creator: "Creator",
     },
+    action: {
+      upload: {
+        label: "Upload media",
+        file: "Select file",
+        notification: {
+          success: {
+            message: "The media was successfully uploaded",
+          },
+          error: {
+            message: "The media could not be uploaded",
+          },
+        },
+      },
+      delete: {
+        label: "Delete media",
+        description: "Are you sure you want to delete the media <bName></bName>?",
+        notification: {
+          success: {
+            message: "The media was successfully deleted",
+          },
+          error: {
+            message: "The media could not be deleted",
+          },
+        },
+      },
+      copy: {
+        label: "Copy URL",
+      },
+    },
+  },
+  common: {
+    // Either "ltr" or "rtl"
+    direction: "ltr",
     beta: "Beta",
     error: "Error",
     action: {
@@ -554,6 +623,7 @@ export default {
       tryAgain: "Try again",
       loading: "Loading",
     },
+    here: "here",
     iconPicker: {
       label: "Icon URL",
       header: "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
@@ -561,6 +631,9 @@ export default {
     information: {
       min: "Min",
       max: "Max",
+      days: "Days",
+      hours: "Hours",
+      minutes: "Minutes",
     },
     notification: {
       create: {
@@ -639,7 +712,7 @@ export default {
         },
       },
     },
-    mantineReactTable: MRT_Localization_EN,
+    mantineReactTable: MRT_Localization_EN as Readonly<Record<keyof typeof MRT_Localization_EN, string>>,
   },
   section: {
     dynamic: {
@@ -768,6 +841,33 @@ export default {
         notFound: {
           label: "No app",
           tooltip: "You have no valid app selected",
+        },
+      },
+    },
+    bookmarks: {
+      name: "Bookmarks",
+      description: "Displays multiple app links",
+      option: {
+        title: {
+          label: "Title",
+        },
+        layout: {
+          label: "Layout",
+          option: {
+            row: {
+              label: "Horizontal",
+            },
+            column: {
+              label: "Vertical",
+            },
+            grid: {
+              label: "Grid",
+            },
+          },
+        },
+        items: {
+          label: "Bookmarks",
+          add: "Add bookmark",
         },
       },
     },
@@ -1009,6 +1109,14 @@ export default {
       name: "Calendar",
       description: "Display events from your integrations in a calendar view within a certain relative time period",
       option: {
+        releaseType: {
+          label: "Radarr release type",
+          options: {
+            inCinemas: "In cinemas",
+            digitalRelease: "Digital release",
+            physicalRelease: "Physical release",
+          },
+        },
         filterPastMonths: {
           label: "Start from",
         },
@@ -1069,6 +1177,42 @@ export default {
         internalServerError: "Failed to fetch indexers status",
       },
     },
+    healthMonitoring: {
+      name: "System Health Monitoring",
+      description: "Displays information showing the health and status of your system(s).",
+      option: {
+        fahrenheit: {
+          label: "CPU Temp in Fahrenheit",
+        },
+        cpu: {
+          label: "Show CPU Info",
+        },
+        memory: {
+          label: "Show Memory Info",
+        },
+        fileSystem: {
+          label: "Show Filesystem Info",
+        },
+      },
+      popover: {
+        information: "Information",
+        processor: "Processor: {cpuModelName}",
+        memory: "Memory: {memory}GiB",
+        memoryAvailable: "Available: {memoryAvailable}GiB ({percent}%)",
+        version: "Version: {version}",
+        uptime: "Uptime: {days} Days, {hours} Hours, {minutes} Minutes",
+        loadAverage: "Load average:",
+        minute: "1 minute",
+        minutes: "{count} minutes",
+        used: "Used",
+        available: "Available",
+        lastSeen: "Last status update: {lastSeen}",
+      },
+      memory: {},
+      error: {
+        internalServerError: "Failed to fetch health status",
+      },
+    },
     common: {
       location: {
         query: "City / Postal code",
@@ -1091,6 +1235,14 @@ export default {
             fallback: "Unknown",
           },
         },
+      },
+      integration: {
+        noData: "No integration found",
+        description: "Click <here></here> to create a new integration",
+      },
+      app: {
+        noData: "No app found",
+        description: "Click <here></here> to create a new app",
       },
       error: {
         action: {
@@ -1272,6 +1424,9 @@ export default {
       option: {
         feedUrls: {
           label: "Feed URLs",
+        },
+        enableRtl: {
+          label: "Enable RTL",
         },
         textLinesClamp: {
           label: "Description line clamp",
@@ -1559,6 +1714,8 @@ export default {
         boards: "Boards",
         apps: "Apps",
         integrations: "Integrations",
+        searchEngies: "Search engines",
+        medias: "Medias",
         users: {
           label: "Users",
           items: {
@@ -1592,12 +1749,12 @@ export default {
     page: {
       home: {
         statistic: {
-          countBoards: "Boards",
-          createUser: "Create new user",
-          createInvite: "Create new invite",
-          addIntegration: "Create integration",
-          addApp: "Add app",
-          manageRoles: "Manage roles",
+          board: "Boards",
+          user: "Users",
+          invite: "Invites",
+          integration: "Integrations",
+          app: "Apps",
+          group: "Groups",
         },
         statisticLabel: {
           boards: "Boards",
@@ -1647,6 +1804,9 @@ export default {
           },
         },
       },
+      media: {
+        includeFromAllUsers: "Include media from all users",
+      },
       user: {
         back: "Back to users",
         fieldsDisabledExternalProvider:
@@ -1657,6 +1817,8 @@ export default {
             item: {
               language: "Language & Region",
               board: "Home board",
+              firstDayOfWeek: "First day of the week",
+              accessibility: "Accessibility",
             },
           },
           security: {
@@ -1713,7 +1875,7 @@ export default {
             copy: {
               title: "Copy invite",
               description:
-                "Your invitation has been generated. After this modal closes, you'll not be able to copy this link anymore. If you do no longer wish to invite said person, you can delete this invitation any time.",
+                "Your invitation has been generated. After this modal closes, <b>you'll not be able to copy this link anymore.</b> If you do no longer wish to invite said person, you can delete this invitation any time.",
               link: "Invitation link",
               button: "Copy & close",
             },
@@ -1842,8 +2004,40 @@ export default {
             indexerManager: {
               label: "Indexer Manager",
             },
+            healthMonitoring: {
+              label: "Health Monitoring",
+            },
             dnsHole: {
               label: "DNS Hole Data",
+            },
+          },
+        },
+        api: {
+          title: "API",
+          modal: {
+            createApiToken: {
+              title: "API token created",
+              description:
+                "API token was created. Be careful, this token is encrypted in the database and will never be transferred again to you. If you loose this token, you'll no longer be able to retrieve this specific token.",
+              button: "Copy and close",
+            },
+          },
+          tab: {
+            documentation: {
+              label: "Documentation",
+            },
+            apiKey: {
+              label: "Authentication",
+              title: "API Keys",
+              button: {
+                createApiToken: "Create API token",
+              },
+              table: {
+                header: {
+                  id: "ID",
+                  createdBy: "Created by",
+                },
+              },
             },
           },
         },
@@ -2010,13 +2204,25 @@ export default {
           label: "New",
         },
       },
+      "search-engines": {
+        label: "Search engines",
+        new: {
+          label: "New",
+        },
+        edit: {
+          label: "Edit",
+        },
+      },
+      medias: {
+        label: "Medias",
+      },
       apps: {
         label: "Apps",
         new: {
-          label: "New App",
+          label: "New",
         },
         edit: {
-          label: "Edit App",
+          label: "Edit",
         },
       },
       users: {
@@ -2154,6 +2360,16 @@ export default {
         group: {
           searchEngine: {
             title: "Search engines",
+            children: {
+              action: {
+                search: {
+                  label: "Search with {name}",
+                },
+              },
+              detail: {
+                title: "Select an action for the search engine",
+              },
+            },
             option: {
               google: {
                 name: "Google",
@@ -2217,6 +2433,12 @@ export default {
               },
               manageIntegration: {
                 label: "Manage integrations",
+              },
+              manageSearchEngine: {
+                label: "Manage search engines",
+              },
+              manageMedia: {
+                label: "Manage medias",
               },
               manageUser: {
                 label: "Manage users",
@@ -2288,6 +2510,72 @@ export default {
               detail: {
                 title: "Select an action for the group",
               },
+            },
+          },
+        },
+      },
+    },
+    engine: {
+      search: "Find a search engine",
+      field: {
+        name: {
+          label: "Name",
+        },
+        short: {
+          label: "Short",
+        },
+        urlTemplate: {
+          label: "URL search template",
+        },
+        description: {
+          label: "Description",
+        },
+      },
+      page: {
+        list: {
+          title: "Search engines",
+          noResults: {
+            title: "There aren't any search engines",
+            action: "Create your first search engine",
+          },
+        },
+        create: {
+          title: "New search engine",
+          notification: {
+            success: {
+              title: "Search engine created",
+              message: "The search engine was created successfully",
+            },
+            error: {
+              title: "Search engine not created",
+              message: "The search engine could not be created",
+            },
+          },
+        },
+        edit: {
+          title: "Edit search engine",
+          notification: {
+            success: {
+              title: "Changes applied successfully",
+              message: "The search engine was saved successfully",
+            },
+            error: {
+              title: "Unable to apply changes",
+              message: "The search engine could not be saved",
+            },
+          },
+        },
+        delete: {
+          title: "Delete search engine",
+          message: "Are you sure you want to delete the search engine '{name}'?",
+          notification: {
+            success: {
+              title: "Search engine deleted",
+              message: "The search engine was deleted successfully",
+            },
+            error: {
+              title: "Search engine not deleted",
+              message: "The search engine could not be deleted",
             },
           },
         },

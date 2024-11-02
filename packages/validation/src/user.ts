@@ -1,3 +1,4 @@
+import type { DayOfWeek } from "@mantine/dates";
 import { z } from "zod";
 
 import { colorSchemes } from "@homarr/definitions";
@@ -29,7 +30,10 @@ const passwordSchema = z
       return passwordRequirements.every((requirement) => requirement.check(value));
     },
     {
-      params: createCustomErrorParams("passwordRequirements"),
+      params: createCustomErrorParams({
+        key: "passwordRequirements",
+        params: {},
+      }),
     },
   );
 
@@ -37,7 +41,10 @@ const confirmPasswordRefine = [
   (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
   {
     path: ["confirmPassword"],
-    params: createCustomErrorParams("passwordsDoNotMatch"),
+    params: createCustomErrorParams({
+      key: "passwordsDoNotMatch",
+      params: {},
+    }),
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ] satisfies [(args: any) => boolean, unknown];
@@ -56,7 +63,6 @@ const initUserSchema = createUserSchema;
 const signInSchema = z.object({
   name: z.string().min(1),
   password: z.string().min(1),
-  credentialType: z.enum(["basic", "ldap"]),
 });
 
 const registrationSchema = z
@@ -104,6 +110,14 @@ const changeColorSchemeSchema = z.object({
   colorScheme: zodEnumFromArray(colorSchemes),
 });
 
+const firstDayOfWeekSchema = z.object({
+  firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
+});
+
+const pingIconsEnabledSchema = z.object({
+  pingIconsEnabled: z.boolean(),
+});
+
 export const userSchemas = {
   signIn: signInSchema,
   registration: registrationSchema,
@@ -116,4 +130,6 @@ export const userSchemas = {
   changeHomeBoard: changeHomeBoardSchema,
   changePasswordApi: changePasswordApiSchema,
   changeColorScheme: changeColorSchemeSchema,
+  firstDayOfWeek: firstDayOfWeekSchema,
+  pingIconsEnabled: pingIconsEnabledSchema,
 };

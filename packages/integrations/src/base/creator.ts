@@ -14,8 +14,10 @@ import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
+import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
@@ -50,6 +52,7 @@ export const integrationCreators = {
   adGuardHome: AdGuardHomeIntegration,
   homeAssistant: HomeAssistantIntegration,
   jellyfin: JellyfinIntegration,
+  plex: PlexIntegration,
   sonarr: SonarrIntegration,
   radarr: RadarrIntegration,
   sabNzbd: SabnzbdIntegration,
@@ -60,4 +63,5 @@ export const integrationCreators = {
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
+  openmediavault: OpenMediaVaultIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;

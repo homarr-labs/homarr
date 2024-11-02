@@ -56,7 +56,7 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
         router.refresh();
       },
     });
-  }, [openModal, router]);
+  }, [logoutUrl, openModal, router]);
 
   return (
     <Menu width={300} withArrow withinPortal>

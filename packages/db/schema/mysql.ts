@@ -1,7 +1,19 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
 import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
-import { boolean, index, int, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  customType,
+  index,
+  int,
+  mysqlTable,
+  primaryKey,
+  text,
+  timestamp,
+  tinyint,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 import type {
   BackgroundImageAttachment,
@@ -19,6 +31,23 @@ import type {
 } from "@homarr/definitions";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
+const customBlob = customType<{ data: Buffer }>({
+  dataType() {
+    return "BLOB";
+  },
+});
+
+export const apiKeys = mysqlTable("apiKey", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  apiKey: text("apiKey").notNull(),
+  salt: text("salt").notNull(),
+  userId: varchar("userId", { length: 64 })
+    .notNull()
+    .references((): AnyMySqlColumn => users.id, {
+      onDelete: "cascade",
+    }),
+});
+
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
   name: text("name"),
@@ -31,7 +60,9 @@ export const users = mysqlTable("user", {
   homeBoardId: varchar("homeBoardId", { length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("auto").notNull(),
+  colorScheme: varchar("colorScheme", { length: 5 }).$type<ColorScheme>().default("dark").notNull(),
+  firstDayOfWeek: tinyint("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: boolean("pingIconsEnabled").default(false).notNull(),
 });
 
 export const accounts = mysqlTable(
@@ -106,7 +137,7 @@ export const groupMembers = mysqlTable(
 
 export const groups = mysqlTable("group", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
-  name: varchar("name", { length: 64 }).notNull(),
+  name: varchar("name", { length: 64 }).unique().notNull(),
   ownerId: varchar("owner_id", { length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),
@@ -126,6 +157,16 @@ export const invites = mysqlTable("invite", {
   creatorId: varchar("creator_id", { length: 64 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const medias = mysqlTable("media", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  name: varchar("name", { length: 512 }).notNull(),
+  content: customBlob("content").notNull(),
+  contentType: text("content_type").notNull(),
+  size: int("size").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  creatorId: varchar("creator_id", { length: 64 }).references(() => users.id, { onDelete: "set null" }),
 });
 
 export const integrations = mysqlTable(
@@ -341,6 +382,22 @@ export const serverSettings = mysqlTable("serverSetting", {
   value: text("value").default('{"json": {}}').notNull(), // empty superjson object
 });
 
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
+
+export const searchEngines = mysqlTable("search_engine", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  iconUrl: text("icon_url").notNull(),
+  name: varchar("name", { length: 64 }).notNull(),
+  short: varchar("short", { length: 8 }).notNull(),
+  description: text("description"),
+  urlTemplate: text("url_template").notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -355,6 +412,13 @@ export const userRelations = relations(users, ({ many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+}));
+
+export const mediaRelations = relations(medias, ({ one }) => ({
+  creator: one(users, {
+    fields: [medias.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const iconRelations = relations(icons, ({ one }) => ({

@@ -13,6 +13,7 @@ type OptionMapping = {
     : {
         [OptionsKey in keyof WidgetComponentProps<WidgetKey>["options"]]: (
           oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[WidgetKey] }>["options"],
+          appsMap: Map<string, string>,
         ) => WidgetComponentProps<WidgetKey>["options"][OptionsKey] | undefined;
       };
 };
@@ -22,7 +23,24 @@ const optionMapping: OptionMapping = {
     linksTargetNewTab: (oldOptions) => oldOptions.openInNewTab,
   },
   "mediaRequests-requestStats": {},
+  bookmarks: {
+    title: (oldOptions) => oldOptions.name,
+    // It's safe to assume that the app exists, because the app is always created before the widget
+    // And the mapping is created in insertAppsAsync
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    items: (oldOptions, appsMap) => oldOptions.items.map((item) => appsMap.get(item.id)!),
+    layout: (oldOptions) => {
+      const mappedLayouts: Record<typeof oldOptions.layout, WidgetComponentProps<"bookmarks">["options"]["layout"]> = {
+        autoGrid: "grid",
+        horizontal: "row",
+        vertical: "column",
+      };
+
+      return mappedLayouts[oldOptions.layout];
+    },
+  },
   calendar: {
+    releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
     filterFutureMonths: () => undefined,
     filterPastMonths: () => undefined,
   },
@@ -81,6 +99,7 @@ const optionMapping: OptionMapping = {
   },
   rssFeed: {
     feedUrls: (oldOptions) => oldOptions.rssFeedUrl,
+    enableRtl: (oldOptions) => oldOptions.enableRtl,
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
   },
@@ -103,6 +122,12 @@ const optionMapping: OptionMapping = {
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
   },
+  healthMonitoring: {
+    cpu: (oldOptions) => oldOptions.cpu,
+    memory: (oldOptions) => oldOptions.memory,
+    fahrenheit: (oldOptions) => oldOptions.fahrenheit,
+    fileSystem: (oldOptions) => oldOptions.fileSystem,
+  },
   app: null,
 };
 
@@ -110,11 +135,13 @@ const optionMapping: OptionMapping = {
  * Maps the oldmarr options to the newmarr options
  * @param kind item kind to map
  * @param oldOptions oldmarr options for this item
+ * @param appsMap map of old app ids to new app ids
  * @returns newmarr options for this item or null if the item did not exist in oldmarr
  */
 export const mapOptions = <K extends WidgetKind>(
   kind: K,
   oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[K] }>["options"],
+  appsMap: Map<string, string>,
 ) => {
   logger.debug(`Mapping old homarr options for widget kind=${kind} options=${JSON.stringify(oldOptions)}`);
   if (optionMapping[kind] === null) {
@@ -124,7 +151,7 @@ export const mapOptions = <K extends WidgetKind>(
   const mapping = optionMapping[kind];
   return objectEntries(mapping).reduce(
     (acc, [key, value]) => {
-      const newValue = value(oldOptions as never);
+      const newValue = value(oldOptions as never, appsMap);
       logger.debug(`Mapping old homarr option kind=${kind} key=${key as string} newValue=${newValue as string}`);
       if (newValue !== undefined) {
         acc[key as string] = newValue;
