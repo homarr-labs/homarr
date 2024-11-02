@@ -14,13 +14,12 @@ import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
-import type { SupportedLanguage } from "@homarr/translation";
-import { isLocaleRTL, isLocaleSupported, localeConfigurations } from "@homarr/translation";
-import { LocalizationProvider } from "@homarr/translation/provider";
+import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { getI18nMessages } from "@homarr/translation/server";
 
 import { Analytics } from "~/components/layout/analytics";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
+import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
 import { AuthProvider } from "./_client-providers/session";
@@ -71,7 +70,6 @@ export default async function Layout(props: { children: React.ReactNode; params:
   const colorScheme = getColorScheme();
   const direction = isLocaleRTL(props.params.locale) ? "rtl" : "ltr";
   const i18nMessages = await getI18nMessages();
-  const mantineReactTableTranslations = await localeConfigurations[props.params.locale].importMrtLocalization();
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
@@ -79,14 +77,8 @@ export default async function Layout(props: { children: React.ReactNode; params:
     },
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
-    (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} locale={props.params.locale} />,
-    (innerProps) => (
-      <LocalizationProvider
-        {...innerProps}
-        locale={props.params.locale as SupportedLanguage}
-        mantineReactTable={mantineReactTableTranslations}
-      />
-    ),
+    (innerProps) => <DayJsLoader {...innerProps} />,
+    (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} />,
     (innerProps) => <CustomMantineProvider {...innerProps} />,
     (innerProps) => <ModalProvider {...innerProps} />,
   ]);

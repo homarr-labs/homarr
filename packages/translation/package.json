@@ -10,7 +10,7 @@
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",
     "./request": "./src/request.ts",
-    "./provider": "./src/provider.tsx"
+    "./dayjs": "./src/dayjs.ts"
   },
   "typesVersions": {
     "*": {

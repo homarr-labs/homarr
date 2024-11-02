@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import { ActionIcon, Avatar, Button, Card, Collapse, Group, Kbd, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
@@ -23,7 +22,6 @@ interface SecretCardProps {
 }
 
 export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
-  const params = useParams<{ locale: string }>();
   const t = useI18n();
   const { isPublic } = integrationSecretKindObject[secret.kind];
   const [publicSecretDisplayOpened, { toggle: togglePublicSecretDisplay }] = useDisclosure(false);
@@ -45,7 +43,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
           <Group>
             <Text c="gray.6" size="sm">
               {t("integration.secrets.lastUpdated", {
-                date: dayjs().locale(params.locale).to(dayjs(secret.updatedAt)),
+                date: dayjs().to(dayjs(secret.updatedAt)),
               })}
             </Text>
             {isPublic ? (
