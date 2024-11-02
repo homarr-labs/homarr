@@ -8,5 +8,5 @@ export const DayJsLoader = ({ children }: PropsWithChildren) => {
   // Load the dayjs localization for the current locale with suspense
   useSuspenseDayJsLocalization();
 
-  return <>{children}</>;
+  return children;
 };
