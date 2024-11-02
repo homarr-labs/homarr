@@ -15,6 +15,7 @@ import {
   integrations,
   items,
   sections,
+  serverSettings,
   users,
 } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
@@ -473,13 +474,19 @@ describe("deleteBoard should delete board", () => {
 });
 
 describe("getHomeBoard should return home board", () => {
-  it("should return home board", async () => {
+  test("should return user home board when user has one", async () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
     const caller = boardRouter.createCaller({ db, session: defaultSession });
 
     const fullBoardProps = await createFullBoardAsync(db, "home");
+    await db
+      .update(users)
+      .set({
+        homeBoardId: fullBoardProps.boardId,
+      })
+      .where(eq(users.id, defaultCreatorId));
 
     // Act
     const result = await caller.getHomeBoard();
@@ -490,6 +497,40 @@ describe("getHomeBoard should return home board", () => {
       ...fullBoardProps,
     });
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
+  });
+  test("should return global home board when user doesn't have one", async () => {
+    // Arrange
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+
+    const fullBoardProps = await createFullBoardAsync(db, "home");
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: SuperJSON.stringify({ defaultBoardId: fullBoardProps.boardId }),
+    });
+
+    // Act
+    const result = await caller.getHomeBoard();
+
+    // Assert
+    expectInputToBeFullBoardWithName(result, {
+      name: "home",
+      ...fullBoardProps,
+    });
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
+  });
+  test("should throw error when home board not configured in serverSettings", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, session: defaultSession });
+    await createFullBoardAsync(db, "home");
+
+    // Act
+    const actAsync = async () => await caller.getHomeBoard();
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("No home board found");
   });
 });
 

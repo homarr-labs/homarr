@@ -12,7 +12,7 @@ import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import { useRequiredBoard } from "../../(content)/_context";
 import classes from "./danger.module.css";
 
-export const DangerZoneSettingsContent = () => {
+export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: boolean }) => {
   const board = useRequiredBoard();
   const t = useScopedI18n("board.setting");
   const router = useRouter();
@@ -90,14 +90,18 @@ export const DangerZoneSettingsContent = () => {
         buttonText={t("section.dangerZone.action.rename.button")}
         onClick={onRenameClick}
       />
-      <Divider />
-      <DangerZoneRow
-        label={t("section.dangerZone.action.visibility.label")}
-        description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
-        buttonText={t(`section.dangerZone.action.visibility.button.${visibility}`)}
-        onClick={onVisibilityClick}
-        isPending={isChangeVisibilityPending}
-      />
+      {hideVisibility ? null : (
+        <>
+          <Divider />
+          <DangerZoneRow
+            label={t("section.dangerZone.action.visibility.label")}
+            description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
+            buttonText={t(`section.dangerZone.action.visibility.button.${visibility}`)}
+            onClick={onVisibilityClick}
+            isPending={isChangeVisibilityPending}
+          />
+        </>
+      )}
       <Divider />
       <DangerZoneRow
         label={t("section.dangerZone.action.delete.label")}

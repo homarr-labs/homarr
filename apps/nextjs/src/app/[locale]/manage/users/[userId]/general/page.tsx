@@ -6,7 +6,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
-import { LanguageCombobox } from "~/components/language/language-combobox";
+import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-not-found";
 import { createMetaTitle } from "~/metadata";
@@ -81,7 +81,7 @@ export default async function EditUserPage({ params }: Props) {
 
       <Stack mb="lg">
         <Title order={2}>{tGeneral("item.language")}</Title>
-        <LanguageCombobox />
+        <CurrentLanguageCombobox />
       </Stack>
 
       <Stack mb="lg">

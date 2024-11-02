@@ -6,7 +6,6 @@ import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 import "~/styles/scroll-area.scss";
 
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 
@@ -19,6 +18,7 @@ import { getI18nMessages } from "@homarr/translation/server";
 
 import { Analytics } from "~/components/layout/analytics";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
+import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
@@ -31,7 +31,8 @@ const fontSans = Inter({
   variable: "--font-sans",
 });
 
-export const generateMetadata = (): Metadata => ({
+// eslint-disable-next-line no-restricted-syntax
+export const generateMetadata = async (): Promise<Metadata> => ({
   title: "Homarr",
   description:
     "Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
@@ -50,7 +51,7 @@ export const generateMetadata = (): Metadata => ({
     title: "Homarr",
     capable: true,
     startupImage: { url: "/logo/logo.png" },
-    statusBarStyle: getColorScheme() === "dark" ? "black-translucent" : "default",
+    statusBarStyle: (await getCurrentColorSchemeAsync()) === "dark" ? "black-translucent" : "default",
   },
 });
 
@@ -67,7 +68,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
   }
 
   const session = await auth();
-  const colorScheme = getColorScheme();
+  const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL(props.params.locale) ? "rtl" : "ltr";
   const i18nMessages = await getI18nMessages();
 
@@ -79,7 +80,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
     (innerProps) => <TRPCReactProvider {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} />,
-    (innerProps) => <CustomMantineProvider {...innerProps} />,
+    (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
   ]);
 
@@ -107,7 +108,3 @@ export default async function Layout(props: { children: React.ReactNode; params:
     </html>
   );
 }
-
-const getColorScheme = () => {
-  return cookies().get("homarr-color-scheme")?.value ?? "dark";
-};

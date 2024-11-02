@@ -40,56 +40,20 @@ describe("getAll server settings", () => {
 
     await expect(actAsync()).rejects.toThrow();
   });
-  test("getAll should return server", async () => {
+  test("getAll should return default server settings when nothing in database", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
       session: defaultSession,
     });
 
-    await db.insert(serverSettings).values([
-      {
-        settingKey: defaultServerSettingsKeys[0],
-        value: SuperJSON.stringify(defaultServerSettings.analytics),
-      },
-    ]);
-
     const result = await caller.getAll();
 
-    expect(result).toStrictEqual({
-      analytics: {
-        enableGeneral: true,
-        enableWidgetData: false,
-        enableIntegrationData: false,
-        enableUserData: false,
-      },
-    });
+    expect(result).toStrictEqual(defaultServerSettings);
   });
 });
 
 describe("saveSettings", () => {
-  test("saveSettings should return false when it did not update one", async () => {
-    const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
-      db,
-      session: defaultSession,
-    });
-
-    const result = await caller.saveSettings({
-      settingsKey: "analytics",
-      value: {
-        enableGeneral: true,
-        enableWidgetData: true,
-        enableIntegrationData: true,
-        enableUserData: true,
-      },
-    });
-
-    expect(result).toBe(false);
-
-    const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings.length).toBe(0);
-  });
   test("saveSettings should update settings and return true when it updated only one", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
@@ -104,7 +68,7 @@ describe("saveSettings", () => {
       },
     ]);
 
-    const result = await caller.saveSettings({
+    await caller.saveSettings({
       settingsKey: "analytics",
       value: {
         enableGeneral: true,
@@ -113,8 +77,6 @@ describe("saveSettings", () => {
         enableUserData: true,
       },
     });
-
-    expect(result).toBe(true);
 
     const dbSettings = await db.select().from(serverSettings);
     expect(dbSettings).toStrictEqual([
