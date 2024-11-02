@@ -11,7 +11,6 @@ import { parseCookies, setClientCookie } from "@homarr/common";
 
 export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
   const manager = useColorSchemeManager();
-
   return (
     <DirectionProvider>
       <MantineProvider

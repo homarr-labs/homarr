@@ -3,7 +3,7 @@ import type { NamespaceKeys, NestedKeyOf } from "next-intl";
 import type { RemoveReadonly } from "@homarr/common/types";
 
 import type { useI18n, useScopedI18n } from "./client";
-import type enTranslation from "./lang/en";
+import type enTranslation from "./lang/en.json";
 
 export type TranslationFunction = ReturnType<typeof useI18n<never>>;
 export type ScopedTranslationFunction<

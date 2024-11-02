@@ -9,7 +9,8 @@
     "./client": "./src/client/index.ts",
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",
-    "./request": "./src/request.ts"
+    "./request": "./src/request.ts",
+    "./provider": "./src/provider.tsx"
   },
   "typesVersions": {
     "*": {
