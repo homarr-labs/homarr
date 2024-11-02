@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Button } from "@mantine/core";
+import { Button, useMatches } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -74,8 +74,14 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
     );
   }, [group.id, group.name, innerOwnerId, mutateAsync, openConfirmModal, openModal, tRoot, tTransfer]);
 
+  const fullWidth = useMatches({
+    xs: true,
+    sm: true,
+    md: false
+  });
+
   return (
-    <Button variant="subtle" color="red" onClick={handleTransfer}>
+    <Button variant="subtle" color="red" onClick={handleTransfer} fullWidth={fullWidth}>
       {tTransfer("label")}
     </Button>
   );

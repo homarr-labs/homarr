@@ -1906,6 +1906,9 @@ export default {
         setting: {
           general: {
             title: "General",
+            owner: "Owner",
+            ownerOfGroup: "Owner of this group",
+            ownerOfGroupDeleted: "The owner of this group was deleted. It currently has no owner."
           },
           members: {
             title: "Members",
