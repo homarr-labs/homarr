@@ -1932,7 +1932,10 @@
         "back": "Back to groups",
         "setting": {
           "general": {
-            "title": "General"
+            "title": "General",
+            "owner": "Owner",
+            "ownerOfGroup": "Owner of this group",
+            "ownerOfGroupDeleted": "The owner of this group was deleted. It currently has no owner."
           },
           "members": {
             "title": "Members",
