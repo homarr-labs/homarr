@@ -1,20 +1,6 @@
 import type { FocusEventHandler } from "react";
 import { useState } from "react";
-import {
-  Badge,
-  Box,
-  Card,
-  Combobox,
-  Group,
-  Image,
-  InputBase,
-  Paper,
-  SimpleGrid,
-  Skeleton,
-  Stack,
-  Text,
-  useCombobox,
-} from "@mantine/core";
+import { Badge, Box, Card, Combobox, Image, InputBase, Paper, Skeleton, Stack, Text, useCombobox } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -75,7 +61,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
     ));
 
     return (
-      <Paper p="xs">
+      <Paper p="xs" key={group.slug}>
         <Text mb="sm" size="sm" fw="bold">
           {group.slug}
         </Text>
