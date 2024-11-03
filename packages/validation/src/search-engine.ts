@@ -1,23 +1,41 @@
-import { searchEngineTypes } from "@homarr/definitions";
+import type { ZodTypeAny } from "zod";
 import { z } from "zod";
+
+import type { SearchEngineTypes } from "@homarr/definitions";
+
+const genericSearchEngine = z.object({
+  type: z.literal("generic" satisfies SearchEngineTypes),
+  urlTemplate: z.string().min(1).startsWith("http").includes("%s"),
+});
+
+const fromIntegrationSearchEngine = z.object({
+  type: z.literal("fromIntegration" satisfies SearchEngineTypes),
+  integrationId: z.string().optional(),
+});
 
 const manageSearchEngineSchema = z.object({
   name: z.string().min(1).max(64),
   short: z.string().min(1).max(8),
   iconUrl: z.string().min(1),
-  urlTemplate: z.string().min(1).startsWith("http").includes("%s"),
   description: z.string().max(512).nullable(),
-  type: z.enum(searchEngineTypes),
-  integrationId: z.string().optional()
 });
 
-const editSearchEngineSchema = manageSearchEngineSchema
-  .extend({
-    id: z.string(),
-  })
-  .omit({ short: true });
+const createManageSearchEngineSchema = <T extends ZodTypeAny>(
+  callback: (schema: typeof manageSearchEngineSchema) => T,
+) =>
+  z
+    .discriminatedUnion("type", [genericSearchEngine, fromIntegrationSearchEngine])
+    .and(callback(manageSearchEngineSchema));
+
+const editSearchEngineSchema = createManageSearchEngineSchema((schema) =>
+  schema
+    .extend({
+      id: z.string(),
+    })
+    .omit({ short: true }),
+);
 
 export const searchEngineSchemas = {
-  manage: manageSearchEngineSchema,
+  manage: createManageSearchEngineSchema((schema) => schema),
   edit: editSearchEngineSchema,
 };

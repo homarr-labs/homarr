@@ -383,8 +383,9 @@ export const searchEngines = sqliteTable("search_engine", {
   name: text("name").notNull(),
   short: text("short").notNull(),
   description: text("description"),
-  urlTemplate: text("url_template").notNull(),
-  type: text("type").$type<SearchEngineTypes>().notNull()
+  urlTemplate: text("url_template"),
+  type: text("type").$type<SearchEngineTypes>().notNull(),
+  integrationId: text("integration_id").references(() => integrations.id, { onDelete: "cascade" }),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
@@ -556,6 +557,13 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   item: one(items, {
     fields: [integrationItems.itemId],
     references: [items.id],
+  }),
+}));
+
+export const searchRelations = relations(searchEngines, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [searchEngines.integrationId],
+    references: [integrations.id],
   }),
 }));
 

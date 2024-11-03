@@ -38,11 +38,8 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
       urlTemplate: "",
       description: "",
       type: "generic",
-      integrationId: undefined,
     },
   });
-
-  console.log(integrationData);
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>

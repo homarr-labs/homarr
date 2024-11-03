@@ -91,9 +91,11 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
                 {searchEngine.description}
               </Text>
             )}
-            <Anchor href={searchEngine.urlTemplate.replace("%s", "test")} lineClamp={1} size="sm">
-              {searchEngine.urlTemplate}
-            </Anchor>
+            {searchEngine.type === "generic" && searchEngine.urlTemplate !== null && (
+              <Anchor href={searchEngine.urlTemplate.replace("%s", "test")} lineClamp={1} size="sm">
+                {searchEngine.urlTemplate}
+              </Anchor>
+            )}
           </Stack>
         </Group>
         <Group>
