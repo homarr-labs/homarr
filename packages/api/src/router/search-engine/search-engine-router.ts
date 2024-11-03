@@ -39,7 +39,19 @@ export const searchEngineRouter = createTRPCRouter({
       });
     }
 
-    return searchEngine;
+    return searchEngine.type === "fromIntegration"
+      ? {
+          ...searchEngine,
+          type: "fromIntegration" as const,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          integrationId: searchEngine.integrationId!,
+        }
+      : {
+          ...searchEngine,
+          type: "generic" as const,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          urlTemplate: searchEngine.urlTemplate!,
+        };
   }),
   search: protectedProcedure.input(validation.common.search).query(async ({ ctx, input }) => {
     return await ctx.db.query.searchEngines.findMany({
