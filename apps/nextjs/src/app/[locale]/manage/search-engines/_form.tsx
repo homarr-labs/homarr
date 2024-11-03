@@ -28,7 +28,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
   const { submitButtonTranslation, handleSubmit, initialValues, isPending, disableShort } = props;
   const t = useI18n();
 
-  const { data: integrationData } = clientApi.integration.allThatSupportSearch.useQuery();
+  const integrationData = clientApi.integration.allThatSupportSearch.useSuspenseQuery();
 
   const form = useZodForm(validation.searchEngine.manage, {
     initialValues: initialValues ?? {
@@ -71,7 +71,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
         {form.values.type === "fromIntegration" && (
           <WidgetIntegrationSelect
             label="Integration"
-            data={integrationData ?? []}
+            data={integrationData}
             canSelectMultiple={false}
             onChange={(value) => form.setFieldValue("integrationId", value[0])}
             value={form.values.integrationId !== undefined ? [form.values.integrationId] : []}

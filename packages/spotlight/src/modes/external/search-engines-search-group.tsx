@@ -43,8 +43,8 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
       ];
     }
 
-    return (data ?? []).map((searchResult) => ({
-      key: "search",
+    return (data ?? []).map((searchResult, index) => ({
+      key: `search-result-${index}`,
       Component: () => {
         return (
           <Group mx="md" my="sm" wrap="nowrap">
@@ -56,7 +56,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
             <Stack gap={2}>
               <Text>{searchResult.name}</Text>
               {searchResult.text && (
-                <Text c="dimmed" lineClamp={2}>
+                <Text c="dimmed" size="sm" lineClamp={2}>
                   {searchResult.text}
                 </Text>
               )}

@@ -560,7 +560,7 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   }),
 }));
 
-export const searchRelations = relations(searchEngines, ({ one }) => ({
+export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
   integration: one(integrations, {
     fields: [searchEngines.integrationId],
     references: [integrations.id],

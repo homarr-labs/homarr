@@ -2593,7 +2593,8 @@
           "noResults": {
             "title": "There aren't any search engines",
             "action": "Create your first search engine"
-          }
+          },
+          "interactive": "Interactive, uses an integration"
         },
         "create": {
           "title": "New search engine",
