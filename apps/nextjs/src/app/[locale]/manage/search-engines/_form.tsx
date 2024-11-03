@@ -28,7 +28,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
   const { submitButtonTranslation, handleSubmit, initialValues, isPending, disableShort } = props;
   const t = useI18n();
 
-  const { data: integrationData } = clientApi.integration.all.useQuery();
+  const { data: integrationData } = clientApi.integration.allThatSupportSearch.useQuery();
 
   const form = useZodForm(validation.searchEngine.manage, {
     initialValues: initialValues ?? {

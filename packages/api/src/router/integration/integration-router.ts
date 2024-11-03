@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
+import { objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 import { and, asc, createId, eq, inArray, like } from "@homarr/db";
@@ -11,8 +12,13 @@ import {
   integrationSecrets,
   integrationUserPermissions,
 } from "@homarr/db/schema/sqlite";
-import type { IntegrationSecretKind } from "@homarr/definitions";
-import { getPermissionsWithParents, integrationKinds, integrationSecretKindObject } from "@homarr/definitions";
+import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import {
+  getPermissionsWithParents,
+  integrationDefs,
+  integrationKinds,
+  integrationSecretKindObject,
+} from "@homarr/definitions";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -39,6 +45,54 @@ export const integrationRouter = createTRPCRouter({
       },
     });
     return integrations
+      .map((integration) => {
+        const permissions = integration.userPermissions
+          .map(({ permission }) => permission)
+          .concat(integration.groupPermissions.map(({ permission }) => permission));
+
+        return {
+          id: integration.id,
+          name: integration.name,
+          kind: integration.kind,
+          url: integration.url,
+          permissions: {
+            hasUseAccess:
+              permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
+            hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
+            hasFullAccess: permissions.includes("full"),
+          },
+        };
+      })
+      .sort(
+        (integrationA, integrationB) =>
+          integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
+      );
+  }),
+  allThatSupportSearch: publicProcedure.query(async ({ ctx }) => {
+    const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+      where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+    });
+
+    const integrationsFromDb = await ctx.db.query.integrations.findMany({
+      with: {
+        userPermissions: {
+          where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+        },
+        groupPermissions: {
+          where: inArray(
+            integrationGroupPermissions.groupId,
+            groupsOfCurrentUser.map((group) => group.groupId),
+          ),
+        },
+      },
+      where: inArray(
+        integrations.kind,
+        objectEntries(integrationDefs)
+          .filter(([_, integration]) => integration.supportsSearch)
+          .map(([kind, _]) => kind),
+      ),
+    });
+    return integrationsFromDb
       .map((integration) => {
         const permissions = integration.userPermissions
           .map(({ permission }) => permission)
