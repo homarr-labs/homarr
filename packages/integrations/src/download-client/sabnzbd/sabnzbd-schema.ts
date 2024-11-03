@@ -87,7 +87,7 @@ export const historySchema = z.object({
         size: z.string(),
         category: z.string(),
         pp: z.string(),
-        retry: z.number(),
+        retry: z.number().or(z.boolean()),
         script: z.string(),
         nzb_name: z.string(),
         download_time: z.number(),
