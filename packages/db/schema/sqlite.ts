@@ -16,6 +16,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  SearchEngineTypes,
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
@@ -383,6 +384,7 @@ export const searchEngines = sqliteTable("search_engine", {
   short: text("short").notNull(),
   description: text("description"),
   urlTemplate: text("url_template").notNull(),
+  type: text("type").$type<SearchEngineTypes>().notNull()
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({

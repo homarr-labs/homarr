@@ -1,3 +1,4 @@
+import { searchEngineTypes } from "@homarr/definitions";
 import { z } from "zod";
 
 const manageSearchEngineSchema = z.object({
@@ -6,6 +7,8 @@ const manageSearchEngineSchema = z.object({
   iconUrl: z.string().min(1),
   urlTemplate: z.string().min(1).startsWith("http").includes("%s"),
   description: z.string().max(512).nullable(),
+  type: z.enum(searchEngineTypes),
+  integrationId: z.string().optional()
 });
 
 const editSearchEngineSchema = manageSearchEngineSchema
