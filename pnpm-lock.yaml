@@ -24,7 +24,7 @@ importers:
         version: 4.3.3(vite@5.4.5(@types/node@22.8.7)(sass@1.80.6)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/coverage-v8':
         specifier: ^2.1.4
-        version: 2.1.4(vitest@2.1.4)
+        version: 2.1.4(vitest@2.1.4(@types/node@22.8.7)(@vitest/ui@2.1.4)(jsdom@25.0.1)(sass@1.80.6)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))
       '@vitest/ui':
         specifier: ^2.1.4
         version: 2.1.4(vitest@2.1.4)
@@ -952,6 +952,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -10338,7 +10341,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.4(vitest@2.1.4)':
+  '@vitest/coverage-v8@2.1.4(vitest@2.1.4(@types/node@22.8.7)(@vitest/ui@2.1.4)(jsdom@25.0.1)(sass@1.80.6)(sugarss@4.0.1(postcss@8.4.47))(terser@5.32.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3

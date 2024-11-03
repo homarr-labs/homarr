@@ -33,7 +33,7 @@ export class JsdelivrIconRepository extends IconRepository {
           const fileNameWithExtension = file.base;
 
           return {
-            imageUrl: new URL(this.repositoryBlobUrlTemplate.replace("{0}", path).replace("{1}", file.name)),
+            imageUrl: this.repositoryBlobUrlTemplate.replace("{0}", path).replace("{1}", file.name),
             fileNameWithExtension,
             local: false,
             sizeInBytes,

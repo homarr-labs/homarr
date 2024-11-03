@@ -35,11 +35,8 @@ export class GitHubIconRepository extends IconRepository {
         .map(({ path, size: sizeInBytes, sha: checksum }) => {
           const file = parse(path);
           const fileNameWithExtension = file.base;
-          const imageUrl = new URL(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.repositoryBlobUrlTemplate!.replace("{0}", path).replace("{1}", file.name),
-          );
-
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const imageUrl = this.repositoryBlobUrlTemplate!.replace("{0}", path).replace("{1}", file.name);
           return {
             imageUrl,
             fileNameWithExtension,
