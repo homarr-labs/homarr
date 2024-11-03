@@ -1,6 +1,20 @@
 import type { FocusEventHandler } from "react";
 import { useState } from "react";
-import { Combobox, Group, Image, InputBase, Skeleton, Text, useCombobox } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Card,
+  Combobox,
+  Group,
+  Image,
+  InputBase,
+  Paper,
+  SimpleGrid,
+  Skeleton,
+  Stack,
+  Text,
+  useCombobox,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -35,33 +49,45 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
 
   const groups = notNullableData.map((group) => {
     const options = group.icons.map((item) => (
-      <Combobox.Option value={item.url} key={item.id}>
-        <Group>
-          <Image src={item.url} w={20} h={20} />
-          <Text>{item.name}</Text>
-        </Group>
-      </Combobox.Option>
+      <Card
+        onClick={() => {
+          const value = item.url;
+          setValue(value);
+          setPreviewUrl(value);
+          setSearch(value);
+          onChange(value);
+          combobox.closeDropdown();
+        }}
+        key={item.id}
+        p="sm"
+        pos="relative"
+        style={{ overflow: "visible", cursor: "pointer" }}
+      >
+        <Box w={50} h={50}>
+          <Image src={item.url} w={50} h={50} radius="md" />
+        </Box>
+        {item.url.endsWith(".svg") && (
+          <Badge pos="absolute" top={0} right={0} style={{ transform: "translate3d(5px, -8px, 0)" }} size="sm">
+            SVG
+          </Badge>
+        )}
+      </Card>
     ));
 
     return (
-      <Combobox.Group label={group.slug} key={group.id}>
-        {options}
-      </Combobox.Group>
+      <Paper p="xs">
+        <Text mb="sm" size="sm" fw="bold">
+          {group.slug}
+        </Text>
+        <Box display="flex" style={{ gap: 8, flexWrap: "wrap" }}>
+          {options}
+        </Box>
+      </Paper>
     );
   });
 
   return (
-    <Combobox
-      onOptionSubmit={(value) => {
-        setValue(value);
-        setPreviewUrl(value);
-        setSearch(value);
-        onChange(value);
-        combobox.closeDropdown();
-      }}
-      store={combobox}
-      withinPortal
-    >
+    <Combobox store={combobox} withinPortal>
       <Combobox.Target>
         <InputBase
           rightSection={<Combobox.Chevron />}
@@ -91,16 +117,14 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           withAsterisk
           error={error}
           label={tCommon("iconPicker.label")}
+          placeholder={tCommon("iconPicker.header", { countIcons: data?.countIcons })}
         />
       </Combobox.Target>
 
       <Combobox.Dropdown>
-        <Combobox.Header>
-          <Text c="dimmed">{tCommon("iconPicker.header", { countIcons: data?.countIcons })}</Text>
-        </Combobox.Header>
         <Combobox.Options mah={350} style={{ overflowY: "auto" }}>
           {totalOptions > 0 ? (
-            groups
+            <Stack gap={4}>{groups}</Stack>
           ) : !isFetching ? (
             <Combobox.Empty>{t("search.nothingFound")}</Combobox.Empty>
           ) : (
