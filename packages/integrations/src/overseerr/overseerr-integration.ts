@@ -202,30 +202,32 @@ interface MovieInformation {
 }
 
 const searchSchema = z.object({
-  results: z.array(
-    z.discriminatedUnion("mediaType", [
-      z.object({
-        id: z.number(),
-        mediaType: z.literal("tv"),
-        name: z.string(),
-        posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
-        overview: z.string(),
-      }),
-      z.object({
-        id: z.number(),
-        mediaType: z.literal("movie"),
-        title: z.string(),
-        posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
-        overview: z.string(),
-      }),
-      z.object({
-        id: z.number(),
-        mediaType: z.literal("person"),
-        name: z.string(),
-        profilePath: z.string().startsWith("/").endsWith(".jpg").nullable(),
-      }),
-    ]),
-  ).optional(),
+  results: z
+    .array(
+      z.discriminatedUnion("mediaType", [
+        z.object({
+          id: z.number(),
+          mediaType: z.literal("tv"),
+          name: z.string(),
+          posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+          overview: z.string(),
+        }),
+        z.object({
+          id: z.number(),
+          mediaType: z.literal("movie"),
+          title: z.string(),
+          posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+          overview: z.string(),
+        }),
+        z.object({
+          id: z.number(),
+          mediaType: z.literal("person"),
+          name: z.string(),
+          profilePath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+        }),
+      ]),
+    )
+    .optional(),
 });
 
 const getRequestsSchema = z.object({

@@ -56,7 +56,7 @@ export const searchEngineRouter = createTRPCRouter({
       urlTemplate: input.urlTemplate,
       description: input.description,
       type: input.type,
-      integrationId: input.integrationId
+      integrationId: input.integrationId,
     });
   }),
   update: protectedProcedure.input(validation.searchEngine.edit).mutation(async ({ ctx, input }) => {

@@ -6,7 +6,10 @@ import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection }
 import { zodErrorMap } from "@homarr/validation/form";
 
 export const useZodForm = <
-  TSchema extends AnyZodObject | ZodEffects<AnyZodObject> | ZodIntersection<AnyZodObject | ZodDiscriminatedUnion<string, AnyZodObject[]>, AnyZodObject>,
+  TSchema extends
+    | AnyZodObject
+    | ZodEffects<AnyZodObject>
+    | ZodIntersection<AnyZodObject | ZodDiscriminatedUnion<string, AnyZodObject[]>, AnyZodObject>,
 >(
   schema: TSchema,
   options: Omit<
