@@ -15,8 +15,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
-    const json: object = await response.json();
-    const schemaData = await searchSchema.parseAsync(json);
+    const schemaData = await searchSchema.parseAsync(await response.json());
 
     if (!schemaData.results) {
       return [];
@@ -290,16 +289,22 @@ const getUsersSchema = z.object({
     }),
 });
 
-const constructSearchResultImage = (appUrl: string, result: z.infer<typeof searchSchema>["results"][number]) => {
+const constructSearchResultImage = (
+  appUrl: string,
+  result: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number],
+) => {
   const path = getResultImagePath(appUrl, result);
   if (!path) {
-    return null;
+    return undefined;
   }
 
   return `https://image.tmdb.org/t/p/w600_and_h900_bestv2${path}`;
 };
 
-const getResultImagePath = (appUrl: string, result: z.infer<typeof searchSchema>["results"][number]) => {
+const getResultImagePath = (
+  appUrl: string,
+  result: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number],
+) => {
   switch (result.mediaType) {
     case "person":
       return result.profilePath;
@@ -307,6 +312,8 @@ const getResultImagePath = (appUrl: string, result: z.infer<typeof searchSchema>
     case "movie":
       return result.posterPath;
     default:
-      throw new Error(`Unable to get search result image from media type '${result.mediaType}'`);
+      throw new Error(
+        `Unable to get search result image from media type '${(result as { mediaType: string }).mediaType}'`,
+      );
   }
 };

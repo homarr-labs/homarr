@@ -53,10 +53,10 @@ export const searchEngineRouter = createTRPCRouter({
       name: input.name,
       short: input.short.toLowerCase(),
       iconUrl: input.iconUrl,
-      urlTemplate: input.urlTemplate,
+      urlTemplate: "urlTemplate" in input ? input.urlTemplate : null,
       description: input.description,
       type: input.type,
-      integrationId: input.integrationId,
+      integrationId: "integrationId" in input ? input.integrationId : null,
     });
   }),
   update: protectedProcedure.input(validation.searchEngine.edit).mutation(async ({ ctx, input }) => {
@@ -76,8 +76,9 @@ export const searchEngineRouter = createTRPCRouter({
       .set({
         name: input.name,
         iconUrl: input.iconUrl,
-        urlTemplate: input.urlTemplate,
+        urlTemplate: "urlTemplate" in input ? input.urlTemplate : null,
         description: input.description,
+        integrationId: "integrationId" in input ? input.integrationId : null,
       })
       .where(eq(searchEngines.id, input.id));
   }),
