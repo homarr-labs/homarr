@@ -44,7 +44,7 @@ const repositories = [
     new URL("https://data.jsdelivr.com/v1/packages/gh/loganmarchione/homelab-svg-assets@main?structure=flat"),
     "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/{0}",
   ),
-  new LocalIconRepository()
+  new LocalIconRepository(),
 ];
 
 export const fetchIconsAsync = async (): Promise<RepositoryIconGroup[]> => {
