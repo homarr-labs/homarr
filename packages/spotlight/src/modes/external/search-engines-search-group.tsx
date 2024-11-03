@@ -51,7 +51,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
             {searchResult.image ? (
               <Image src={searchResult.image} w={35} h={50} fit="cover" radius={"md"} />
             ) : (
-              <IconSearch stroke={1.5} />
+              <IconSearch stroke={1.5} size={35} />
             )}
             <Stack gap={2}>
               <Text>{searchResult.name}</Text>
