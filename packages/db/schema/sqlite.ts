@@ -384,7 +384,7 @@ export const searchEngines = sqliteTable("search_engine", {
   short: text("short").notNull(),
   description: text("description"),
   urlTemplate: text("url_template"),
-  type: text("type").$type<SearchEngineType>().notNull(),
+  type: text("type").$type<SearchEngineType>().notNull().default("generic"),
   integrationId: text("integration_id").references(() => integrations.id, { onDelete: "cascade" }),
 });
 
