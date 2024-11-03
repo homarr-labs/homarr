@@ -1,9 +1,10 @@
 import type { InferInsertModel, InferSelectModel } from "@homarr/db";
 import { createId } from "@homarr/db/client";
 import type { apps as appsTable } from "@homarr/db/schema/sqlite";
-import type { OldmarrApp } from "@homarr/old-schema";
+import type { OldmarrConfig } from "@homarr/old-schema";
 
-import type { BookmarkApp } from "../widgets/definitions/bookmark";
+import { getAppsFromOldmarrConfig } from "../apps";
+import { doAppsMatch } from "../compare/apps";
 
 type DbAppWithoutId = Omit<InferSelectModel<typeof appsTable>, "id">;
 
@@ -13,85 +14,20 @@ interface AppMapping extends DbAppWithoutId {
   exists: boolean;
 }
 
-export const prepareApps = (apps: OldmarrApp[], bookmarkApps: BookmarkApp[]) => {
-  /*const existingAppsWithHref = distinctAppsByHref
-    ? await db.query.apps.findMany({
-        where: inArray(appsTable.href, [
-          ...new Set(apps.map((app) => app.url).concat(bookmarkApps.map((app) => app.href))),
-        ]),
-      })
-    : [];*/
+export const prepareApps = (old: OldmarrConfig, existingApps: InferSelectModel<typeof appsTable>[]) => {
+  const mappedApps = getAppsFromOldmarrConfig(old);
 
-  // Generate mappings for all apps from old to new ids
+  const appsToCreate: InferInsertModel<typeof appsTable>[] = [];
   const appMappings: AppMapping[] = [];
-  addMappingFor(apps, appMappings, [], convertApp);
-  addMappingFor(bookmarkApps, appMappings, [], convertBookmarkApp);
 
-  const appsToCreate = appMappings
-    .filter((app) => !app.exists)
-    .map(
-      (app) =>
-        ({
-          id: app.newId,
-          name: app.name,
-          iconUrl: app.iconUrl,
-          href: app.href,
-          description: app.description,
-        }) satisfies InferInsertModel<typeof appsTable>,
-    );
-
-  // Generates a map from old key to new key for all apps
-  return {
-    map: new Map(
-      appMappings
-        .map((app) => app.ids.map((id) => ({ id, newId: app.newId })))
-        .flat()
-        .map(({ id, newId }) => [id, newId]),
-    ),
-    appsToCreate,
-  };
-};
-
-/**
- * Creates a callback to be used in a find method that compares the old app with the new app
- * @param app either an oldmarr app or a bookmark app
- * @param convertApp a function that converts the app to a new app
- * @returns a callback that compares the old app with the new app and returns true if they are the same
- */
-const createFindCallback = <TApp extends OldmarrApp | BookmarkApp>(
-  app: TApp,
-  convertApp: (app: TApp) => DbAppWithoutId,
-) => {
-  const oldApp = convertApp(app);
-
-  return (dbApp: DbAppWithoutId) =>
-    oldApp.href === dbApp.href &&
-    oldApp.name === dbApp.name &&
-    oldApp.iconUrl === dbApp.iconUrl &&
-    oldApp.description === dbApp.description;
-};
-
-/**
- * Adds mappings for the given apps to the appMappings array
- * @param apps apps to add mappings for
- * @param appMappings existing app mappings
- * @param existingAppsWithHref existing apps with href
- * @param convertApp a function that converts the app to a new app
- */
-const addMappingFor = <TApp extends OldmarrApp | BookmarkApp>(
-  apps: TApp[],
-  appMappings: AppMapping[],
-  existingAppsWithHref: InferSelectModel<typeof appsTable>[],
-  convertApp: (app: TApp) => DbAppWithoutId,
-) => {
-  for (const app of apps) {
-    const previous = appMappings.find(createFindCallback(app, convertApp));
+  for (const app of mappedApps) {
+    const previous = appMappings.find((previousApp) => doAppsMatch(app, previousApp));
     if (previous) {
       previous.ids.push(app.id);
       continue;
     }
 
-    const existing = existingAppsWithHref.find(createFindCallback(app, convertApp));
+    const existing = existingApps.find((existingApp) => doAppsMatch(app, existingApp));
     if (existing) {
       appMappings.push({
         ids: [app.id],
@@ -105,33 +41,28 @@ const addMappingFor = <TApp extends OldmarrApp | BookmarkApp>(
       continue;
     }
 
+    const newId = createId();
     appMappings.push({
       ids: [app.id],
-      newId: createId(),
-      ...convertApp(app),
+      newId,
+      ...app,
       exists: false,
     });
+
+    appsToCreate.push({
+      ...app,
+      id: newId,
+    });
   }
+
+  // Generates a map from old key to new key for all apps
+  return {
+    map: new Map(
+      appMappings
+        .map((app) => app.ids.map((id) => ({ id, newId: app.newId })))
+        .flat()
+        .map(({ id, newId }) => [id, newId]),
+    ),
+    appsToCreate,
+  };
 };
-
-/**
- * Converts an oldmarr app to a new app
- * @param app oldmarr app
- * @returns new app
- */
-const convertApp = (app: OldmarrApp): DbAppWithoutId => ({
-  name: app.name,
-  href: app.behaviour.externalUrl === "" ? app.url : app.behaviour.externalUrl,
-  iconUrl: app.appearance.iconUrl,
-  description: app.behaviour.tooltipDescription ?? null,
-});
-
-/**
- * Converts a bookmark app to a new app
- * @param app bookmark app
- * @returns new app
- */
-const convertBookmarkApp = (app: BookmarkApp): DbAppWithoutId => ({
-  ...app,
-  description: null,
-});

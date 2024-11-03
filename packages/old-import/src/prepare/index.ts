@@ -1,13 +1,13 @@
-import type { InferInsertModel } from "@homarr/db";
-import type { apps, boards, integrations, integrationSecrets, sections } from "@homarr/db/schema/sqlite";
+import type { InferInsertModel, InferSelectModel } from "@homarr/db";
+import { apps, boards, integrations, integrationSecrets, sections } from "@homarr/db/schema/sqlite";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import type { BookmarkApp } from "../widgets/definitions/bookmark";
 import { fixSectionIssues } from "./fix-section-issues";
 import { moveWidgetsAndAppsIfMerge } from "./move-widgets-and-apps-merge";
 import { prepareApps } from "./prepare-apps";
 import { prepareBoard } from "./prepare-board";
+import { prepareIntegrations } from "./prepare-integrations";
 import { prepareItems } from "./prepare-items";
 import { prepareSections } from "./prepare-sections";
 
@@ -19,13 +19,12 @@ export interface ImportThingsToCreate {
   integrationSecrets: InferInsertModel<typeof integrationSecrets>[];
 }
 
-export const prepareImport = (old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
-  const bookmarkApps = old.widgets
-    .filter((widget) => widget.type === "bookmark")
-    .map((widget) => widget.properties.items)
-    .flat() as BookmarkApp[];
-
-  const { map: appsMap, appsToCreate } = prepareApps(old.apps, bookmarkApps);
+export const prepareImport = (
+  old: OldmarrConfig,
+  configuration: OldmarrImportConfiguration,
+  existingApps: InferSelectModel<typeof apps>[] = [],
+) => {
+  const { map: appsMap, appsToCreate } = prepareApps(old, configuration.distinctAppsByHref ? existingApps : []);
 
   if (configuration.onlyImportApps) {
     return {
@@ -33,6 +32,7 @@ export const prepareImport = (old: OldmarrConfig, configuration: OldmarrImportCo
       boards: [],
       items: [],
       sections: [],
+      integrations: [],
     };
   }
 
@@ -43,6 +43,8 @@ export const prepareImport = (old: OldmarrConfig, configuration: OldmarrImportCo
 
   const { map: sectionIdMap, sectionsToCreate } = prepareSections(categories, wrappers, board.id);
 
+  const integrationsToCreate = prepareIntegrations(old);
+
   const itemsToCreate = prepareItems(widgets, apps, appsMap, sectionIdMap, configuration);
 
   return {
@@ -50,5 +52,6 @@ export const prepareImport = (old: OldmarrConfig, configuration: OldmarrImportCo
     boards: [board],
     items: itemsToCreate,
     sections: sectionsToCreate,
+    integrations: integrationsToCreate,
   };
 };

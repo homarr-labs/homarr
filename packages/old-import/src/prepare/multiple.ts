@@ -7,6 +7,7 @@ import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import { prepareImport } from ".";
 import type { WidgetComponentProps } from "../../../widgets/src";
+import { doAppsMatch } from "../compare/apps";
 
 type ImportSpecificConfigurationFields = keyof Pick<OldmarrImportConfiguration, "name" | "screenSize">;
 
@@ -17,12 +18,14 @@ export const prepareMultipleImports = (
   const preparedImports = imports.map(({ configuration: { name, screenSize }, old }) => {
     try {
       return prepareImport(old, { ...configuration, name, screenSize });
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         apps: [],
         boards: [],
         sections: [],
         items: [],
+        integrations: [],
       };
     }
   });
@@ -57,6 +60,7 @@ export const prepareMultipleImports = (
     boards: preparedImports.flatMap((preparedImport) => preparedImport.boards),
     sections: preparedImports.flatMap((preparedImport) => preparedImport.sections),
     items: preparedItems,
+    integrations: preparedImports.flatMap((preparedImport) => preparedImport.integrations),
   };
 };
 
@@ -83,9 +87,3 @@ const distinctApps = (preparedApps: InferInsertModel<typeof apps>[], distinct: b
     mapping,
   };
 };
-
-const doAppsMatch = (appA: InferInsertModel<typeof apps>, appB: InferInsertModel<typeof apps>) =>
-  appA.href === appB.href &&
-  appA.name === appB.name &&
-  appA.iconUrl === appB.iconUrl &&
-  appA.description === appB.description;

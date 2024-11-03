@@ -13,31 +13,30 @@ export const prepareSections = (
   const idMap = new Map<string, string>([...wrapperIds, ...categoryIds].map((id) => [id, createId()]));
 
   const sectionsToCreate: InferInsertModel<typeof sections>[] = [];
-  sectionsToCreate.concat(
-    wrappers.map((section) => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      id: idMap.get(section.id)!,
-      boardId,
-      xOffset: 0,
-      yOffset: section.position,
-      kind: "empty",
-    })),
-  );
-
-  sectionsToCreate.concat(
-    categories.map((section) => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      id: idMap.get(section.id)!,
-      boardId,
-      xOffset: 0,
-      yOffset: section.position,
-      kind: "category",
-      name: section.name,
-    })),
-  );
 
   return {
     map: idMap,
-    sectionsToCreate,
+    sectionsToCreate: sectionsToCreate
+      .concat(
+        wrappers.map((section) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          id: idMap.get(section.id)!,
+          boardId,
+          xOffset: 0,
+          yOffset: section.position,
+          kind: "empty",
+        })),
+      )
+      .concat(
+        categories.map((section) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          id: idMap.get(section.id)!,
+          boardId,
+          xOffset: 0,
+          yOffset: section.position,
+          kind: "category",
+          name: section.name,
+        })),
+      ),
   };
 };

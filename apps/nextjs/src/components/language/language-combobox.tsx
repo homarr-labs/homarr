@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Combobox, Group, InputBase, InputBaseProps, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
+import type { InputBaseProps } from "@mantine/core";
+import { Combobox, Group, InputBase, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";

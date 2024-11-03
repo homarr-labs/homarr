@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { startTransition, useMemo, useState } from "react";
 import {
   Anchor,
   Button,
@@ -10,7 +10,6 @@ import {
   Grid,
   GridCol,
   Group,
-  PasswordInput,
   rem,
   Stack,
   Switch,
@@ -29,7 +28,7 @@ import type { OldmarrImportConfiguration } from "@homarr/validation";
 import { oldmarrImportConfigurationSchema, z } from "@homarr/validation";
 
 import { prepareMultipleImports } from "../../../../../../../../../packages/old-import/src/prepare/multiple";
-import { OldmarrBookmarkDefinition } from "../../../../../../../../../packages/old-import/src/widgets/definitions/bookmark";
+import type { OldmarrBookmarkDefinition } from "../../../../../../../../../packages/old-import/src/widgets/definitions/bookmark";
 import classes from "../../../init.module.css";
 
 interface SelectedBoard {
@@ -44,18 +43,21 @@ export const ImportBoards = () => {
   const form = useZodForm(
     oldmarrImportConfigurationSchema
       .omit({ name: true, screenSize: true })
-      .extend({ integrationDownloadToken: z.string() }),
+      .extend({ encryptionToken: z.string().optional() }),
     {
       initialValues: {
         distinctAppsByHref: true,
         onlyImportApps: false,
         sidebarBehaviour: "last-section",
-        integrationDownloadToken: "",
+        encryptionToken: "",
       },
     },
   );
 
   const [data, setData] = useState<OldmarrConfig[] | null>(null);
+  // TODO: Add modal to enter encryption token
+  const [checksum, setChecksum] = useState<string[] | null>(null);
+  const [userCount, setUserCount] = useState<number>(0);
 
   const { mutateAsync, isPending } = clientApi.board.analyseOldmarrConfigs.useMutation();
   const [selectedBoards, selectedBoardActions] = useListState<SelectedBoard>([]);
@@ -70,12 +72,16 @@ export const ImportBoards = () => {
     const formData = new FormData();
     formData.append("file", file);
     await mutateAsync(formData, {
-      onSuccess(data) {
+      onSuccess({ configurations, checksum, userCount }) {
         // TODO: Check that names are distinct
-        setData(data);
-        selectedBoardActions.setState(
-          data.map((board) => ({ id: board.configProperties.name, sm: false, md: false, lg: false })),
-        );
+        startTransition(() => {
+          setData(configurations);
+          setChecksum(checksum ?? null);
+          setUserCount(userCount);
+          selectedBoardActions.setState(
+            configurations.map((board) => ({ id: board.configProperties.name, sm: false, md: false, lg: false })),
+          );
+        });
       },
     });
   };
@@ -194,13 +200,6 @@ export const ImportBoards = () => {
               ]}
               {...form.getInputProps("sidebarBehaviour")}
             />
-
-            <PasswordInput
-              withAsterisk
-              styles={{ wrapper: { "--input-bg": "transparent" } }}
-              label="Integration download token"
-              {...form.getInputProps("integrationDownloadToken")}
-            />
           </Stack>
         </Card>
       </GridCol>
@@ -217,7 +216,12 @@ export const ImportBoards = () => {
               </Text>
             </Stack>
 
-            <Summary data={data ?? []} selectedBoards={selectedBoards} configuration={form.values} />
+            <Summary
+              data={data ?? []}
+              userCount={userCount}
+              selectedBoards={selectedBoards}
+              configuration={form.values}
+            />
 
             <Button fullWidth>Confirm import and continue</Button>
           </Stack>
@@ -231,9 +235,10 @@ interface SummaryProps {
   data: OldmarrConfig[];
   selectedBoards: SelectedBoard[];
   configuration: Omit<OldmarrImportConfiguration, "name" | "screenSize">;
+  userCount: number;
 }
 
-const Summary = ({ data, selectedBoards, configuration }: SummaryProps) => {
+const Summary = ({ data, selectedBoards, configuration, userCount }: SummaryProps) => {
   const summary = useMemo(() => {
     const imports = selectedBoards
       .map((selected) => {
@@ -261,9 +266,12 @@ const Summary = ({ data, selectedBoards, configuration }: SummaryProps) => {
         .filter((widget) => widget.type === "bookmark")
         .reduce((acc, widget) => acc + (widget.properties as OldmarrBookmarkDefinition["options"]).items.length, 0);
 
+    console.log(preparedImports.integrations);
+
     return {
       apps: preparedImports.apps.length,
       boards: preparedImports.boards.length,
+      integrations: preparedImports.integrations.length,
       appsWithDuplicates,
     };
   }, [data, selectedBoards, configuration]);
@@ -300,7 +308,17 @@ const Summary = ({ data, selectedBoards, configuration }: SummaryProps) => {
             Integrations
           </Text>
 
-          <Text size="sm">12</Text>
+          <Text size="sm">{summary.integrations}</Text>
+        </Group>
+      </Card>
+
+      <Card withBorder bg="transparent">
+        <Group justify="space-between" align="center">
+          <Text size="sm" fw={500}>
+            Credential users
+          </Text>
+
+          <Text size="sm">{userCount}</Text>
         </Group>
       </Card>
     </Stack>

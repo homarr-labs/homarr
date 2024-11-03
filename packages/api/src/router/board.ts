@@ -608,24 +608,34 @@ export const boardRouter = createTRPCRouter({
       const arrayBuffer = await input.file.arrayBuffer();
       const zip = new AdmZip(Buffer.from(arrayBuffer));
 
-      return zip
+      const configurations = zip
         .getEntries()
         .map((entry) => {
-          if (entry.entryName.endsWith(".json")) {
-            const content = entry.getData().toString("utf8");
-            const result = oldmarrConfigSchema.safeParse(JSON.parse(content));
+          if (entry.entryName === "users/users.json") return null;
+          if (!entry.entryName.endsWith(".json")) return null;
 
-            if (!result.success) {
-              logger.error(result.error);
-              return null;
-            }
+          const content = entry.getData().toString("utf8");
+          console.log(content);
+          const result = oldmarrConfigSchema.safeParse(JSON.parse(content));
 
-            return result.data;
+          if (!result.success) {
+            logger.error(result.error);
+            return null;
           }
 
-          return null;
+          return result.data;
         })
         .filter((result) => result !== null);
+
+      const checksum = zip.getEntry("checksum.txt")?.getData().toString("utf8").split("\n");
+      const userData = zip.getEntry("users/users.json")?.getData().toString("utf8");
+      const userCount = userData ? (JSON.parse(userData) as unknown[]).length : 0;
+
+      return {
+        configurations,
+        checksum,
+        userCount,
+      };
     }),
 });
 

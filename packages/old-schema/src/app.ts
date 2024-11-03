@@ -72,3 +72,4 @@ export const oldmarrAppSchema = z
   .and(tileBaseSchema);
 
 export type OldmarrApp = z.infer<typeof oldmarrAppSchema>;
+export type OldmarrIntegrationType = z.infer<typeof integrationSchema>;

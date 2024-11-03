@@ -1,99 +1,42 @@
-import type { InferInsertModel } from "@homarr/db";
-import type { apps, boards, integrations, integrationSecrets, sections } from "@homarr/db/schema/sqlite";
+import { inArray } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { apps, boards, items, sections } from "@homarr/db/schema/sqlite";
+import { logger } from "@homarr/log";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import { fixSectionIssues } from "./fix-section-issues";
-import { prepareApps } from "./import-apps";
-import { prepareBoard } from "./import-board";
-import { prepareItems } from "./import-items";
-import { prepareSections } from "./import-sections";
-import { moveWidgetsAndAppsIfMerge } from "./move-widgets-and-apps-merge";
-import type { BookmarkApp } from "./widgets/definitions/bookmark";
+import { getAppsFromOldmarrConfig } from "./apps";
+import { prepareImport } from "./prepare";
 
-export interface ImportThingsToCreate {
-  apps: InferInsertModel<typeof apps>[];
-  boards: InferInsertModel<typeof boards>[];
-  sections: InferInsertModel<typeof sections>[];
-  integrations: InferInsertModel<typeof integrations>[];
-  integrationSecrets: InferInsertModel<typeof integrationSecrets>[];
-}
-
-export const prepareImport = (old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
-  const bookmarkApps = old.widgets
-    .filter((widget) => widget.type === "bookmark")
-    .map((widget) => widget.properties.items)
-    .flat() as BookmarkApp[];
-
-  const { map: appsMap, appsToCreate } = prepareApps(old.apps, bookmarkApps);
-
-  if (configuration.onlyImportApps) {
-    return {
-      apps: appsToCreate,
-      boards: [],
-      items: [],
-      sections: [],
-    };
-  }
-
-  const { wrappers, categories, wrapperIdsToMerge } = fixSectionIssues(old);
-  const { apps, widgets } = moveWidgetsAndAppsIfMerge(old, wrapperIdsToMerge, configuration);
-
-  const board = prepareBoard(old, configuration);
-
-  const { map: sectionIdMap, sectionsToCreate } = prepareSections(categories, wrappers, board.id);
-
-  const itemsToCreate = prepareItems(widgets, apps, appsMap, sectionIdMap, configuration);
-
-  return {
-    apps: appsToCreate,
-    boards: [board],
-    items: itemsToCreate,
-    sections: sectionsToCreate,
-  };
-};
-/*
 export const importAsync = async (db: Database, old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
-  if (configuration.onlyImportApps) {
-    await db
-      .transaction(async (trasaction) => {
-        await prepareAppsAsync(
-          trasaction,
+  const allApps = getAppsFromOldmarrConfig(old);
+  const distinctHrefs = [...new Set(allApps.map((app) => app.href).filter((href) => href !== null))];
 
-          old.apps,
-          bookmarkApps,
-          configuration.distinctAppsByHref,
-          old.configProperties.name,
-        );
-      })
-      .catch((error) => {
-        throw new OldHomarrImportError(old, error);
-      });
-    return;
-  }
+  const existingApps = await db.query.apps.findMany({
+    where: inArray(apps.href, distinctHrefs),
+  });
+  const preparedImport = prepareImport(old, configuration, existingApps);
 
-  await db
-    .transaction(async (trasaction) => {
-      const { wrappers, categories, wrapperIdsToMerge } = fixSectionIssues(old);
-      const { apps, widgets } = moveWidgetsAndAppsIfMerge(old, wrapperIdsToMerge, configuration);
+  // Transactions don't work with async/await, see https://github.com/WiseLibs/better-sqlite3/issues/1262 and https://github.com/drizzle-team/drizzle-orm/issues/1723
+  db.transaction((transaction) => {
+    if (preparedImport.boards.length >= 1) {
+      transaction.insert(boards).values(preparedImport.boards).run();
+    }
 
-      const boardId = await insertBoardAsync(trasaction, old, configuration);
-      const sectionIdMaps = await prepareSectionsAsync(trasaction, categories, wrappers, boardId);
-      const appsMap = await prepareAppsAsync(
-        trasaction,
-        apps,
-        bookmarkApps,
-        configuration.distinctAppsByHref,
-        old.configProperties.name,
-      );
-      await prepareItemsAsync(trasaction, widgets, apps, appsMap, sectionIdMaps, configuration);
-    })
-    .catch((error) => {
-      if (error instanceof OldHomarrScreenSizeError) {
-        throw error;
-      }
+    if (preparedImport.sections.length >= 1) {
+      transaction.insert(sections).values(preparedImport.sections).run();
+    }
 
-      throw new OldHomarrImportError(old, error);
-    });
+    if (preparedImport.apps.length >= 1) {
+      transaction.insert(apps).values(preparedImport.apps).run();
+    }
+
+    if (preparedImport.items.length >= 1) {
+      transaction.insert(items).values(preparedImport.items).run();
+    }
+  });
+
+  logger.info(
+    `Imported old configuration name='${old.configProperties.name}' boards=${preparedImport.boards.length} sections=${preparedImport.sections.length} apps=${preparedImport.apps.length} items=${preparedImport.items.length}`,
+  );
 };
-*/
