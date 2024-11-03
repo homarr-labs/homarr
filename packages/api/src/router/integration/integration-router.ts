@@ -12,17 +12,17 @@ import {
   integrationSecrets,
   integrationUserPermissions,
 } from "@homarr/db/schema/sqlite";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
   getPermissionsWithParents,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
+  isIntegrationWithSearchSupport,
 } from "@homarr/definitions";
-import { integrationCreator, integrationCreatorFromSecrets } from "@homarr/integrations";
+import { integrationCreatorFromSecrets } from "@homarr/integrations";
 import { validation, z } from "@homarr/validation";
 
-import { ISearchableIntegration } from "../../../../integrations/src/base/searchable-integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { testConnectionAsync } from "./integration-test-connection";
@@ -399,14 +399,14 @@ export const integrationRouter = createTRPCRouter({
         });
       }
 
-      if (!integrationDefs[integration.kind].supportsSearch) {
+      if (!isIntegrationWithSearchSupport(integration)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "The requested integration does not support searching",
         });
       }
 
-      const integrationInstance = integrationCreatorFromSecrets(integration) as ISearchableIntegration;
+      const integrationInstance = integrationCreatorFromSecrets(integration);
       return await integrationInstance.searchAsync(input.query);
     }),
 });

@@ -181,6 +181,22 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
     U
   : never;
 
+/**
+ * Checks if search is supported by the integration
+ * Uses a typescript guard with is to allow only integrations with search support within if statement
+ * @param integration integration with kind
+ * @returns true if the integration supports search
+ */
+export const isIntegrationWithSearchSupport = (integration: {
+  kind: IntegrationKind;
+}): integration is { kind: IntegrationWithSearchSupport } => {
+  return integrationDefs[integration.kind].supportsSearch;
+};
+
+type IntegrationWithSearchSupport = {
+  [Key in keyof typeof integrationDefs]: true extends (typeof integrationDefs)[Key]["supportsSearch"] ? Key : never;
+}[keyof typeof integrationDefs];
+
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
 export type IntegrationKind = keyof typeof integrationDefs;
 export type IntegrationCategory =
