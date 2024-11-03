@@ -1,15 +1,15 @@
 import type { ZodTypeAny } from "zod";
 import { z } from "zod";
 
-import type { SearchEngineTypes } from "@homarr/definitions";
+import type { SearchEngineType } from "@homarr/definitions";
 
 const genericSearchEngine = z.object({
-  type: z.literal("generic" satisfies SearchEngineTypes),
+  type: z.literal("generic" satisfies SearchEngineType),
   urlTemplate: z.string().min(1).startsWith("http").includes("%s"),
 });
 
 const fromIntegrationSearchEngine = z.object({
-  type: z.literal("fromIntegration" satisfies SearchEngineTypes),
+  type: z.literal("fromIntegration" satisfies SearchEngineType),
   integrationId: z.string().optional(),
 });
 

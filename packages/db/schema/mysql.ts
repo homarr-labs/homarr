@@ -25,7 +25,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
-  SearchEngineTypes,
+  SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
@@ -397,7 +397,7 @@ export const searchEngines = mysqlTable("search_engine", {
   short: varchar("short", { length: 8 }).notNull(),
   description: text("description"),
   urlTemplate: text("url_template"),
-  type: varchar("type", { length: 64 }).$type<SearchEngineTypes>().notNull(),
+  type: varchar("type", { length: 64 }).$type<SearchEngineType>().notNull(),
   integrationId: varchar("integration_id", { length: 64 }).references(() => integrations.id, { onDelete: "cascade" }),
 });
 
