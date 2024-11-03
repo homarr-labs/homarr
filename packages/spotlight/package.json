@@ -26,6 +26,7 @@
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/modals-collection": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",

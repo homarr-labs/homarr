@@ -24,6 +24,8 @@ import { validation, z } from "@homarr/validation";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { testConnectionAsync } from "./integration-test-connection";
+import { integrationCreator, integrationCreatorFromSecrets } from "@homarr/integrations";
+import { ISearchableIntegration } from "../../../../integrations/src/base/searchable-integration";
 
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
@@ -380,6 +382,31 @@ export const integrationRouter = createTRPCRouter({
         );
       });
     }),
+  searchInIntegration: protectedProcedure.input(z.object({ integrationId: z.string(), query: z.string() })).query(async ({ ctx, input }) => {
+    const integration = await ctx.db.query.integrations.findFirst({
+      where: eq(integrations.id, input.integrationId),
+      with: {
+        secrets: true
+      }
+    });
+
+    if (!integration) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The requested integration does not exist"
+      });
+    }
+
+    if (!integrationDefs[integration.kind].supportsSearch) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "The requested integration does not support searching"
+      });
+    }
+
+    const integrationInstance = integrationCreatorFromSecrets(integration) as ISearchableIntegration;
+    return await integrationInstance.searchAsync(input.query);
+  }),
 });
 
 interface UpdateSecretInput {

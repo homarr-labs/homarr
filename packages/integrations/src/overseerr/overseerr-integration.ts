@@ -1,13 +1,34 @@
 import { z } from "@homarr/validation";
 
 import { Integration } from "../base/integration";
+import type { ISearchableIntegration } from "../base/searchable-integration";
 import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request";
 import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request";
 
 /**
  * Overseerr Integration. See https://api-docs.overseerr.dev
  */
-export class OverseerrIntegration extends Integration {
+export class OverseerrIntegration extends Integration implements ISearchableIntegration {
+  public async searchAsync(query: string): Promise<{ image?: string; name: string; link: string; text?: string }[]> {
+    const response = await fetch(`${this.integration.url}/api/v1/search?query=${query}`, {
+      headers: {
+        "X-Api-Key": this.getSecretValue("apiKey"),
+      },
+    });
+    const json: object = await response.json();
+    const schemaData = await searchSchema.parseAsync(json);
+
+    if (!schemaData.results) {
+      return [];
+    }
+
+    return schemaData.results.map((result) => ({
+      name: "name" in result ? result.name : result.title,
+      link: `${this.integration.url}/${result.mediaType}/${result.id}`,
+      image: constructSearchResultImage(this.integration.url, result),
+      text: "overview" in result ? result.overview : undefined,
+    }));
+  }
   public async testConnectionAsync(): Promise<void> {
     const response = await fetch(`${this.integration.url}/api/v1/auth/me`, {
       headers: {
@@ -180,6 +201,33 @@ interface MovieInformation {
   releaseDate: string;
 }
 
+const searchSchema = z.object({
+  results: z.array(
+    z.discriminatedUnion("mediaType", [
+      z.object({
+        id: z.number(),
+        mediaType: z.literal("tv"),
+        name: z.string(),
+        posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+        overview: z.string(),
+      }),
+      z.object({
+        id: z.number(),
+        mediaType: z.literal("movie"),
+        title: z.string(),
+        posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+        overview: z.string(),
+      }),
+      z.object({
+        id: z.number(),
+        mediaType: z.literal("person"),
+        name: z.string(),
+        profilePath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+      }),
+    ]),
+  ).optional(),
+});
+
 const getRequestsSchema = z.object({
   results: z
     .array(
@@ -239,3 +287,24 @@ const getUsersSchema = z.object({
       return val;
     }),
 });
+
+const constructSearchResultImage = (appUrl: string, result: z.infer<typeof searchSchema>["results"][number]) => {
+  const path = getResultImagePath(appUrl, result);
+  if (!path) {
+    return null;
+  }
+
+  return `https://image.tmdb.org/t/p/w600_and_h900_bestv2${path}`;
+};
+
+const getResultImagePath = (appUrl: string, result: z.infer<typeof searchSchema>["results"][number]) => {
+  switch (result.mediaType) {
+    case "person":
+      return result.profilePath;
+    case "tv":
+    case "movie":
+      return result.posterPath;
+    default:
+      throw new Error(`Unable to get search result image from media type '${result.mediaType}'`);
+  }
+};
