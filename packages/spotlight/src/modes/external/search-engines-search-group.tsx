@@ -15,7 +15,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
   useActions: (searchEngine, query) => {
     const { data } = clientApi.integration.searchInIntegration.useQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { integrationId: searchEngine.integrationId!, query: query },
+      { integrationId: searchEngine.integrationId!, query },
       {
         enabled: searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && query.length > 0,
       },
