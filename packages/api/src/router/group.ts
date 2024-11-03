@@ -75,6 +75,14 @@ export const groupRouter = createTRPCRouter({
               permission: true,
             },
           },
+          owner: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              email: true,
+            },
+          },
         },
       });
 

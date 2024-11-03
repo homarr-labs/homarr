@@ -6,6 +6,7 @@ import { zfd } from "zod-form-data";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { and, createId, eq, inArray, like, or } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   boardGroupPermissions,
   boards,
@@ -45,6 +46,16 @@ export const boardRouter = createTRPCRouter({
         throw error;
       }
     }),
+  getPublicBoards: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.boards.findMany({
+      columns: {
+        id: true,
+        name: true,
+        logoImageUrl: true,
+      },
+      where: eq(boards.isPublic, true),
+    });
+  }),
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
@@ -220,6 +231,14 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.changeVisibility)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+
+      if (input.visibility !== "public" && boardSettings.defaultBoardId === input.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot make default board private",
+        });
+      }
 
       await ctx.db
         .update(boards)
@@ -244,7 +263,22 @@ export const boardRouter = createTRPCRouter({
         })
       : null;
 
-    const boardWhere = user?.homeBoardId ? eq(boards.id, user.homeBoardId) : eq(boards.name, "home");
+    // 1. user home board, 2. default board, 3. not found
+    let boardWhere: SQL<unknown> | null = null;
+    if (user?.homeBoardId) {
+      boardWhere = eq(boards.id, user.homeBoardId);
+    } else {
+      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+      boardWhere = boardSettings.defaultBoardId ? eq(boards.id, boardSettings.defaultBoardId) : null;
+    }
+
+    if (!boardWhere) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No home board found",
+      });
+    }
+
     await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);

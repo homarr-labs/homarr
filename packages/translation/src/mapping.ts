@@ -1,13 +1,13 @@
 import { supportedLanguages } from "./config";
 
-const _enTranslations = () => import("./lang/en");
+const _enTranslations = () => import("./lang/en.json");
 type EnTranslation = typeof _enTranslations;
 
 export const createLanguageMapping = () => {
   const mapping: Record<string, unknown> = {};
 
   for (const language of supportedLanguages) {
-    mapping[language] = () => import(`./lang/${language}`) as ReturnType<EnTranslation>;
+    mapping[language] = () => import(`./lang/${language}.json`);
   }
 
   return mapping as Record<(typeof supportedLanguages)[number], () => ReturnType<EnTranslation>>;

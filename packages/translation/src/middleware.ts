@@ -1,8 +1,10 @@
 import createMiddleware from "next-intl/middleware";
 
-import { routing } from "./routing";
+import type { SupportedLanguage } from ".";
+import { createRouting } from "./routing";
 
-export const I18nMiddleware = createMiddleware(routing);
+export const createI18nMiddleware = (defaultLocale: SupportedLanguage) =>
+  createMiddleware(createRouting(defaultLocale));
 
 export const config = {
   // Match only internationalized pathnames

@@ -15,7 +15,7 @@ export const DangerZoneRoot = async ({ children }: DangerZoneRootProps) => {
       <Title c="red.8" order={2}>
         {t("common.dangerZone")}
       </Title>
-      <Card withBorder style={{ borderColor: "var(--mantine-color-red-8)" }}>
+      <Card withBorder style={{ borderColor: "var(--mantine-color-red-8)", borderWidth: 3 }}>
         <Stack gap="sm">
           {Array.isArray(children)
             ? children.map((child, index) => (
@@ -43,14 +43,14 @@ interface DangerZoneItemProps {
 
 export const DangerZoneItem = ({ label, description, action }: DangerZoneItemProps) => {
   return (
-    <Group justify="space-between" px="md">
+    <Group justify="space-between" px="md" w={"100%"}>
       <Stack gap={0}>
         <Text fw="bold" size="sm">
           {label}
         </Text>
         <Text size="sm">{description}</Text>
       </Stack>
-      <Group justify="end" w={{ base: "100%", xs: "auto" }}>
+      <Group justify="end" w={{ xs: "100%", sm: "100%", md: "auto" }}>
         {action}
       </Group>
     </Group>

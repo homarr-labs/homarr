@@ -1,4 +1,4 @@
-import { LanguageCombobox } from "~/components/language/language-combobox";
+import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { InitGridColCard } from "./init-card";
 import { ColorSchemeSelect } from "./init-color-scheme";
 
@@ -9,7 +9,7 @@ export const InitPreferencesRow = () => {
         <ColorSchemeSelect />
       </InitGridColCard>
       <InitGridColCard p="xs">
-        <LanguageCombobox variant="unstyled" />
+        <CurrentLanguageCombobox variant="unstyled" />
       </InitGridColCard>
     </>
   );

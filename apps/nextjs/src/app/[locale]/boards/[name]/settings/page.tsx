@@ -14,6 +14,8 @@ import { TRPCError } from "@trpc/server";
 
 import { api } from "@homarr/api/server";
 import { capitalize } from "@homarr/common";
+import { db } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import type { TranslationObject } from "@homarr/translation";
 import { getScopedI18n } from "@homarr/translation/server";
 import type { TablerIcon } from "@homarr/ui";
@@ -63,6 +65,7 @@ const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
 
 export default async function BoardSettingsPage({ params, searchParams }: Props) {
   const { board, permissions } = await getBoardAndPermissionsAsync(params);
+  const boardSettings = await getServerSettingByKeyAsync(db, "board");
   const { hasFullAccess } = await getBoardPermissionsAsync(board);
   const t = await getScopedI18n("board.setting");
 
@@ -92,7 +95,7 @@ export default async function BoardSettingsPage({ params, searchParams }: Props)
                 <BoardAccessSettings board={board} initialPermissions={permissions} />
               </AccordionItemFor>
               <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
-                <DangerZoneSettingsContent />
+                <DangerZoneSettingsContent hideVisibility={boardSettings.defaultBoardId === board.id} />
               </AccordionItemFor>
             </>
           )}
