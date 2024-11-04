@@ -8,16 +8,19 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
+    env:
+      READY_LABEL: e2e-ready
+      SKIP_LABEL: e2e-skip
 
     # This condition ensures the job only runs when the specified label is added
-    if: contains(github.event.pull_request.labels.*.name, 'e2e-ready') || contains(github.event.pull_request.labels.*.name, 'e2e-skip')
+    if: contains(github.event.pull_request.labels.*.name, github.env.READY_LABEL) || contains(github.event.pull_request.labels.*.name, github.env.SKIP_LABEL)
 
     steps:
       - name: Check for e2e-skip label
         id: check_skip
-        if: contains(github.event.pull_request.labels.*.name, 'e2e-skip')
+        if: contains(github.event.pull_request.labels.*.name, github.env.SKIP_LABEL)
         run: |
           echo "E2E tests skipped due to e2e-skip label"
-          exit 0
       - name: Run E2E Tests
+        if: contains(github.event.pull_request.labels.*.name, github.env.SKIP_LABEL) == false
         run: echo "E2E tests would run because the e2e-ready label was added"
