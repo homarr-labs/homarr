@@ -5,10 +5,18 @@ import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 export const GET = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req)).handlers.GET(reqWithTrustedOrigin(req));
+  return await createHandlers(extractProvider(req), useSecureCookies(req)).handlers.GET(reqWithTrustedOrigin(req));
 };
 export const POST = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req)).handlers.POST(reqWithTrustedOrigin(req));
+  return await createHandlers(extractProvider(req), useSecureCookies(req)).handlers.POST(reqWithTrustedOrigin(req));
+};
+
+/**
+ *
+ */
+const useSecureCookies = (req: NextRequest): boolean => {
+  const url = new URL(req.url);
+  return url.protocol === "https:";
 };
 
 /**
