@@ -16,9 +16,9 @@ jobs:
     steps:
       - name: Check for e2e-skip label
         id: check_skip
-        if: contains(github.event.pull_request.labels.*.name, github.env.SKIP_LABEL)
+        if: contains(github.event.pull_request.labels.*.name, env.SKIP_LABEL)
         run: |
           echo "E2E tests skipped due to e2e-skip label"
       - name: Run E2E Tests
-        if: contains(github.event.pull_request.labels.*.name, github.env.SKIP_LABEL) == false
+        if: contains(github.event.pull_request.labels.*.name, env.SKIP_LABEL) == false
         run: echo "E2E tests would run because the e2e-ready label was added"
