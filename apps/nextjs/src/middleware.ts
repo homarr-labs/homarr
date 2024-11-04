@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { createTRPCClient, httpLink } from "@trpc/client";
 import SuperJSON from "superjson";
 
-import { AppRouter } from "@homarr/api";
+import type { AppRouter } from "@homarr/api";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 export async function middleware(request: NextRequest) {
