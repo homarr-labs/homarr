@@ -6,6 +6,9 @@ runs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+    - name: Setup and install
+      uses: ./tooling/github/setup
+
     - name: Build
       id: build-docker-image
       uses: docker/build-push-action@v6
@@ -21,4 +24,4 @@ runs:
     - name: Run E2E Tests
       shell: bash
       run: |
-        echo "Here we would run them with testcontainers"
+        pnpm test:e2e
