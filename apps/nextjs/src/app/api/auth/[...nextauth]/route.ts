@@ -5,10 +5,23 @@ import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 export const GET = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req)).handlers.GET(reqWithTrustedOrigin(req));
+  return await createHandlers(extractProvider(req), isSecureCookieEnabled(req)).handlers.GET(reqWithTrustedOrigin(req));
 };
 export const POST = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req)).handlers.POST(reqWithTrustedOrigin(req));
+  return await createHandlers(extractProvider(req), isSecureCookieEnabled(req)).handlers.POST(
+    reqWithTrustedOrigin(req),
+  );
+};
+
+/**
+ * wheter to use secure cookies or not, is only supported for https.
+ * For http it will not add the cookie as it is not considered secure.
+ * @param req request containing the url
+ * @returns true if the request is https, false otherwise
+ */
+const isSecureCookieEnabled = (req: NextRequest): boolean => {
+  const url = new URL(req.url);
+  return url.protocol === "https:";
 };
 
 /**
