@@ -1,4 +1,3 @@
-import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test } from "vitest";
 
 import { createHomarrContainer } from "./shared/create-homarr-container";
