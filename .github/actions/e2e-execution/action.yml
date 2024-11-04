@@ -19,5 +19,6 @@ runs:
         SKIP_ENV_VALIDATION: true
 
     - name: Run E2E Tests
+    - shell: bash
       run: |
         echo "Here we would run them with testcontainers"
