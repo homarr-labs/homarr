@@ -7,7 +7,7 @@ runs:
       uses: actions/checkout@v2
 
     - name: Build
-      id: build docker image
+      id: build-docker-image
       uses: docker/build-push-action@v6
       with:
         platforms: linux/amd64
