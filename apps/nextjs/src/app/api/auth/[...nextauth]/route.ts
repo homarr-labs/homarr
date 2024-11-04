@@ -5,10 +5,12 @@ import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 export const GET = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req), useSecureCookies(req)).handlers.GET(reqWithTrustedOrigin(req));
+  return await createHandlers(extractProvider(req), isSecureCookieEnabled(req)).handlers.GET(reqWithTrustedOrigin(req));
 };
 export const POST = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req), useSecureCookies(req)).handlers.POST(reqWithTrustedOrigin(req));
+  return await createHandlers(extractProvider(req), isSecureCookieEnabled(req)).handlers.POST(
+    reqWithTrustedOrigin(req),
+  );
 };
 
 /**
@@ -17,7 +19,7 @@ export const POST = async (req: NextRequest) => {
  * @param req request containing the url
  * @returns true if the request is https, false otherwise
  */
-const useSecureCookies = (req: NextRequest): boolean => {
+const isSecureCookieEnabled = (req: NextRequest): boolean => {
   const url = new URL(req.url);
   return url.protocol === "https:";
 };
