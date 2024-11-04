@@ -6,6 +6,7 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 import type { WidgetKind } from "@homarr/definitions";
 
 import * as app from "./app";
+import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
@@ -49,6 +50,7 @@ export const widgetImports = {
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
   rssFeed,
+  bookmarks,
   indexerManager,
   healthMonitoring,
 } satisfies WidgetImportRecord;

@@ -7,7 +7,7 @@ import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { groupMembers, groups, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
-import { everyoneGroup } from "@homarr/definitions";
+import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { createSignInEventHandler } from "../events";
 
@@ -224,7 +224,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
     expect(dbUser?.name).toBe("test-new");
   });
-  test("signInEventHandler should set homarr-color-scheme cookie", async () => {
+  test("signInEventHandler should set color-scheme cookie", async () => {
     // Arrange
     const db = createDb();
     await createUserAsync(db);
@@ -239,7 +239,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
 
     // Assert
     expect(cookies().set).toHaveBeenCalledWith(
-      "homarr-color-scheme",
+      colorSchemeCookieKey,
       "dark",
       expect.objectContaining({
         path: "/",

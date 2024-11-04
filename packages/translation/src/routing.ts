@@ -1,11 +1,18 @@
 import { defineRouting } from "next-intl/routing";
 
-import { defaultLocale, supportedLanguages } from "./config";
+import { localeCookieKey } from "@homarr/definitions";
 
-export const routing = defineRouting({
-  locales: supportedLanguages,
-  defaultLocale,
-  localePrefix: {
-    mode: "never", // Rewrite the URL with locale parameter but without shown in url
-  },
-});
+import type { SupportedLanguage } from "./config";
+import { supportedLanguages } from "./config";
+
+export const createRouting = (defaultLocale: SupportedLanguage) =>
+  defineRouting({
+    locales: supportedLanguages,
+    defaultLocale,
+    localeCookie: {
+      name: localeCookieKey,
+    },
+    localePrefix: {
+      mode: "never", // Rewrite the URL with locale parameter but without shown in url
+    },
+  });

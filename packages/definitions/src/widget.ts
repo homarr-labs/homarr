@@ -15,6 +15,7 @@ export const widgetKinds = [
   "mediaRequests-requestList",
   "mediaRequests-requestStats",
   "rssFeed",
+  "bookmarks",
   "indexerManager",
   "healthMonitoring",
 ] as const;

@@ -9,7 +9,8 @@
     "./client": "./src/client/index.ts",
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",
-    "./request": "./src/request.ts"
+    "./request": "./src/request.ts",
+    "./dayjs": "./src/dayjs.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,7 +28,9 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
+    "deepmerge": "4.3.1",
     "mantine-react-table": "2.0.0-beta.7",
     "next": "^14.2.16",
     "next-intl": "3.24.0",
@@ -37,7 +40,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "typescript": "^5.6.3"
   }
 }

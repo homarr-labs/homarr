@@ -66,6 +66,7 @@ export const widgetKindMapping = {
   "mediaRequests-requestList": "media-requests-list",
   "mediaRequests-requestStats": "media-requests-stats",
   indexerManager: "indexer-manager",
+  bookmarks: "bookmark",
   healthMonitoring: "health-monitoring",
 } satisfies Record<WidgetKind, OldmarrWidgetDefinitions["id"] | null>;
 // Use null for widgets that did not exist in oldmarr

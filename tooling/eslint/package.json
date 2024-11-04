@@ -23,12 +23,12 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "typescript-eslint": "^8.12.2"
+    "typescript-eslint": "^8.13.0"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "typescript": "^5.6.3"
   },
   "prettier": "@homarr/prettier-config"
