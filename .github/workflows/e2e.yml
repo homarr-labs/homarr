@@ -4,15 +4,14 @@ on:
   pull_request:
     types:
       - labeled
-env:
-  SKIP_LABEL: e2e-skip
-  READY_LABEL: e2e-ready
 jobs:
   e2e:
     runs-on: ubuntu-latest
 
     # This condition ensures the job only runs when the specified label is added
-    if: contains(github.event.pull_request.labels.*.name, github.env.READY_LABEL) || contains(github.event.pull_request.labels.*.name, github.env.SKIP_LABEL)
+    if: contains(github.event.pull_request.labels.*.name, 'e2e-ready') || contains(github.event.pull_request.labels.*.name, 'e2e-skip')
+    env:
+      SKIP_LABEL: e2e-skip
 
     steps:
       - name: Check for e2e-skip label
