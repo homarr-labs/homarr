@@ -21,4 +21,4 @@ jobs:
           echo "E2E tests skipped due to e2e-skip label"
       - name: Run E2E Tests
         if: contains(github.event.pull_request.labels.*.name, env.SKIP_LABEL) == false
-        uses: ./.github/actions/e2e-execution
+        uses: homarr-labs/homarr/.github/actions/e2e-execution@e2e
