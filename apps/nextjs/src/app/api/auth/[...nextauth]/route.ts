@@ -12,7 +12,10 @@ export const POST = async (req: NextRequest) => {
 };
 
 /**
- *
+ * wheter to use secure cookies or not, is only supported for https.
+ * For http it will not add the cookie as it is not considered secure.
+ * @param req request containing the url
+ * @returns true if the request is https, false otherwise
  */
 const useSecureCookies = (req: NextRequest): boolean => {
   const url = new URL(req.url);
