@@ -35,7 +35,7 @@
     "cross-env": "^7.0.3",
     "jsdom": "^25.0.1",
     "prettier": "^3.3.3",
-    "testcontainers": "^10.13.2",
+    "testcontainers": "^10.14.0",
     "turbo": "^2.2.3",
     "typescript": "^5.6.3",
     "vite-tsconfig-paths": "^5.1.0",
