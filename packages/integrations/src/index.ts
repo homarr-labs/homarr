@@ -16,6 +16,7 @@ export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegration } from "./pi-hole/pi-hole-integration";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
+export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";

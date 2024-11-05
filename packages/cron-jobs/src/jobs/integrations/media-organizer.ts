@@ -27,7 +27,7 @@ export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).w
 
       //Asserting the integration kind until all of them get implemented
       const integrationInstance = integrationCreatorFromSecrets(
-        integration as Modify<typeof integration, { kind: "sonarr" | "radarr" }>,
+        integration as Modify<typeof integration, { kind: "sonarr" | "radarr" | "lidarr" }>,
       );
 
       const events = await integrationInstance.getCalendarEventsAsync(start, end);
