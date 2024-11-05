@@ -227,8 +227,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       swagger-ui-react:
-        specifier: ^5.18.0
-        version: 5.18.0(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.18.1
+        version: 5.18.1(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@18.3.1)
@@ -7400,8 +7400,8 @@ packages:
   swagger-client@3.30.1:
     resolution: {integrity: sha512-3V/wZ6s6nkIG+rfkODzfO/0pjV3/x0aZxovocvC6seOz/TN2LctS0Cu6oW1zMUgcNbwpdybjWUTikCbhlB7EEw==}
 
-  swagger-ui-react@5.18.0:
-    resolution: {integrity: sha512-8LW8FPpdT8RvR1zz2s3UwO3zvqqJa9C8/howL56BY4vi1UlHkCxZ3AfB5SaxOpqA8fTJCVG8AsY7q5H8ZuHTDA==}
+  swagger-ui-react@5.18.1:
+    resolution: {integrity: sha512-g3RkgvbMav9D173q8GUHa+P9sfEBYIliBuwbRGmC7fnDp0w5WQ2ATM79V2ukyWAj8RSPQro+KADrHwvk3tARbg==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -14349,7 +14349,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  swagger-ui-react@5.18.0(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  swagger-ui-react@5.18.1(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime-corejs3': 7.25.6
       '@braintree/sanitize-url': 7.0.4
