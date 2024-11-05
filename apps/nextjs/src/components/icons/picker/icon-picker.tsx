@@ -1,9 +1,23 @@
 import type { FocusEventHandler } from "react";
-import { useState } from "react";
-import { Badge, Box, Card, Combobox, Image, InputBase, Paper, Skeleton, Stack, Text, useCombobox } from "@mantine/core";
+import { startTransition, useState } from "react";
+import {
+  Box,
+  Card,
+  Combobox,
+  Flex,
+  Image,
+  Indicator,
+  InputBase,
+  Paper,
+  Skeleton,
+  Stack,
+  Text,
+  UnstyledButton,
+  useCombobox,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface IconPickerProps {
   initialValue?: string;
@@ -18,10 +32,9 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const [search, setSearch] = useState(initialValue ?? "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue ?? null);
 
-  const t = useI18n();
   const tCommon = useScopedI18n("common");
 
-  const { data, isFetching } = clientApi.icon.findIcons.useQuery({
+  const [data] = clientApi.icon.findIcons.useSuspenseQuery({
     searchText: search,
   });
 
@@ -29,45 +42,47 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const notNullableData = data?.icons ?? [];
-
-  const totalOptions = notNullableData.reduce((acc, group) => acc + group.icons.length, 0);
-
-  const groups = notNullableData.map((group) => {
+  const totalOptions = data.icons.reduce((acc, group) => acc + group.icons.length, 0);
+  const groups = data.icons.map((group) => {
     const options = group.icons.map((item) => (
-      <Card
+      <UnstyledButton
         onClick={() => {
           const value = item.url;
-          setValue(value);
-          setPreviewUrl(value);
-          setSearch(value);
-          onChange(value);
-          combobox.closeDropdown();
+          startTransition(() => {
+            setValue(value);
+            setPreviewUrl(value);
+            setSearch(value);
+            onChange(value);
+            combobox.closeDropdown();
+          });
         }}
-        key={item.id}
-        p="sm"
-        pos="relative"
-        style={{ overflow: "visible", cursor: "pointer" }}
       >
-        <Box w={50} h={50}>
-          <Image src={item.url} w={50} h={50} radius="md" />
-        </Box>
-        {item.url.endsWith(".svg") && (
-          <Badge pos="absolute" top={0} right={0} style={{ transform: "translate3d(5px, -8px, 0)" }} size="sm">
-            SVG
-          </Badge>
-        )}
-      </Card>
+        <Indicator label="SVG" disabled={item.url.endsWith(".svg")} size={16}>
+          <Card
+            key={item.id}
+            p="sm"
+            pos="relative"
+            style={{
+              overflow: "visible",
+              cursor: "pointer",
+            }}
+          >
+            <Box w={25} h={25}>
+              <Image src={item.url} w={25} h={25} radius="md" />
+            </Box>
+          </Card>
+        </Indicator>
+      </UnstyledButton>
     ));
 
     return (
-      <Paper p="xs" key={group.slug}>
-        <Text mb="sm" size="sm" fw="bold">
+      <Paper p="xs" key={group.slug} pt={2}>
+        <Text mb={8} size="sm" fw="bold">
           {group.slug}
         </Text>
-        <Box display="flex" style={{ gap: 8, flexWrap: "wrap" }}>
+        <Flex gap={8} wrap={"wrap"}>
           {options}
-        </Box>
+        </Flex>
       </Paper>
     );
   });
@@ -103,7 +118,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           withAsterisk
           error={error}
           label={tCommon("iconPicker.label")}
-          placeholder={tCommon("iconPicker.header", { countIcons: data?.countIcons })}
+          placeholder={tCommon("iconPicker.header", { countIcons: data.countIcons })}
         />
       </Combobox.Target>
 
@@ -111,8 +126,6 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
         <Combobox.Options mah={350} style={{ overflowY: "auto" }}>
           {totalOptions > 0 ? (
             <Stack gap={4}>{groups}</Stack>
-          ) : !isFetching ? (
-            <Combobox.Empty>{t("search.nothingFound")}</Combobox.Empty>
           ) : (
             Array(15)
               .fill(0)
