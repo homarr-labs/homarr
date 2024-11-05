@@ -19,8 +19,9 @@
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
-    "test": "cross-env NODE_ENV=development vitest run --coverage.enabled",
-    "test:ui": "cross-env NODE_ENV=development vitest --ui --coverage.enabled",
+    "test": "cross-env NODE_ENV=development vitest run --exclude e2e --coverage.enabled ",
+    "test:e2e": "cross-env NODE_ENV=development vitest e2e",
+    "test:ui": "cross-env NODE_ENV=development vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
   },
