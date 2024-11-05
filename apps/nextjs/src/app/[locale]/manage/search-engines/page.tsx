@@ -97,7 +97,9 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
               </Anchor>
             )}
             {searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && (
-              <Text c="dimmed" size="sm">{t("page.list.interactive")}</Text>
+              <Text c="dimmed" size="sm">
+                {t("page.list.interactive")}
+              </Text>
             )}
           </Stack>
         </Group>

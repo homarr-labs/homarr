@@ -91,7 +91,7 @@ export const searchEngineRouter = createTRPCRouter({
         urlTemplate: "urlTemplate" in input ? input.urlTemplate : null,
         description: input.description,
         integrationId: "integrationId" in input ? input.integrationId : null,
-        type: input.type
+        type: input.type,
       })
       .where(eq(searchEngines.id, input.id));
   }),

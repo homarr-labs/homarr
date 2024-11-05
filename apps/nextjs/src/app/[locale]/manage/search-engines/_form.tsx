@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Button, Fieldset, Grid, Group, SegmentedControl, SegmentedControlItem, Stack, Textarea, TextInput } from "@mantine/core";
+import type { SegmentedControlItem } from "@mantine/core";
+import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
 import { WidgetIntegrationSelect } from "node_modules/@homarr/widgets/src/widget-integration-select";
 
 import { clientApi } from "@homarr/api/client";
@@ -61,7 +62,13 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
 
         <Fieldset legend={t("search.engine.page.edit.configControl")}>
           <SegmentedControl
-            data={searchEngineTypes.map((type) => ({ label: t(`search.engine.page.edit.searchEngineType.${type}`), value: type } satisfies SegmentedControlItem))}
+            data={searchEngineTypes.map(
+              (type) =>
+                ({
+                  label: t(`search.engine.page.edit.searchEngineType.${type}`),
+                  value: type,
+                }) satisfies SegmentedControlItem,
+            )}
             {...form.getInputProps("type")}
             fullWidth
           />
