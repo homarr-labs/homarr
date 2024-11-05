@@ -31,14 +31,15 @@ interface WidgetIntegrationSelectProps {
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   canSelectMultiple?: boolean;
-
   data: IntegrationSelectOption[];
+  withAsterisk?: boolean;
 }
 export const WidgetIntegrationSelect = ({
   data,
   onChange,
   value: valueProp,
   canSelectMultiple = true,
+  withAsterisk = false,
   ...props
 }: WidgetIntegrationSelectProps) => {
   const t = useI18n();
@@ -116,6 +117,7 @@ export const WidgetIntegrationSelect = ({
           }
           pointer
           onClick={() => combobox.toggleDropdown()}
+          withAsterisk={withAsterisk}
           {...props}
         >
           <Pill.Group>
@@ -167,7 +169,7 @@ interface IntegrationPillProps {
 }
 
 const IntegrationPill = ({ option, onRemove, showRemoveButton }: IntegrationPillProps) => (
-  <Group align="center" wrap="nowrap" gap={0} className={classes.pill}>
+  <Group align="center" wrap="nowrap" gap={0} className={classes.pill} mih={24} pr={!showRemoveButton ? 10 : undefined}>
     <Avatar src={getIconUrl(option.kind)} size={14} mr={6} />
     <Text span size="xs" lh={1} fw={500}>
       {option.name}

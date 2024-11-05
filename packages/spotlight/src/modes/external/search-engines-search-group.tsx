@@ -74,7 +74,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
     const tChildren = useScopedI18n("search.mode.external.group.searchEngine.children");
     return (
       <Stack mx="md" my="sm">
-        <Text>{tChildren("detail.title")}</Text>
+        <Text>{options.type === "generic" ? tChildren("detail.title") : tChildren("searchResults.title")}</Text>
         <Group>
           <img height={24} width={24} src={options.iconUrl} alt={options.name} />
           <Text>{options.name}</Text>
