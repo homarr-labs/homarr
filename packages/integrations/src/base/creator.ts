@@ -21,7 +21,6 @@ import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { Integration, IntegrationInput } from "./integration";
-import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },

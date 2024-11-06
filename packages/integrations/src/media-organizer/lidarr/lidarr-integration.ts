@@ -15,6 +15,80 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
     });
   }
 
+  private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
+    const links: CalendarEvent["links"] = [];
+
+    if (event.artist.links.some((link) => link.name === "vgmdb")) {
+      links.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        href: event.artist.links.find((link) => link.name === "vgmdb")!.url,
+        name: "VgmDB",
+        color: "#f5c518",
+        isDark: false,
+        logo: "/images/apps/imdb.png",
+        notificationColor: "cyan",
+      });
+    }
+
+    if (event.artist.links.some((link) => link.name === "imdb")) {
+      links.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        href: event.artist.links.find((link) => link.name === "imdb")!.url,
+        name: "IMDb",
+        color: "#f5c518",
+        isDark: false,
+        logo: "/images/apps/imdb.png",
+        notificationColor: "cyan",
+      });
+    }
+
+    if (event.artist.links.some((link) => link.name === "imvdb")) {
+      links.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        href: event.artist.links.find((link) => link.name === "imvdb")!.url,
+        name: "IMVDb",
+        color: "#BA478F",
+        isDark: false,
+        logo: "/images/apps/imvdb.png",
+        notificationColor: "cyan",
+      });
+    }
+
+    if (event.artist.links.some((link) => link.name === "last")) {
+      links.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        href: event.artist.links.find((link) => link.name === "last")!.url,
+        name: "LastFM",
+        color: "#cf222a",
+        isDark: false,
+        logo: "/images/apps/last.png",
+        notificationColor: "cyan",
+      });
+    }
+
+    return links;
+  };
+
+  private chooseBestImage = (
+    event: z.infer<typeof radarrCalendarEventSchema>,
+  ): z.infer<typeof radarrCalendarEventSchema>["images"][number] | undefined => {
+    const flatImages = [...event.images];
+
+    const sortedImages = flatImages.sort(
+      (imageA, imageB) => this.priorities.indexOf(imageA.coverType) - this.priorities.indexOf(imageB.coverType),
+    );
+    logger.debug(`Sorted images to [${sortedImages.map((image) => image.coverType).join(",")}]`);
+    return sortedImages[0];
+  };
+
+  private chooseBestImageAsURL = (event: z.infer<typeof radarrCalendarEventSchema>): string | undefined => {
+    const bestImage = this.chooseBestImage(event);
+    if (!bestImage) {
+      return undefined;
+    }
+    return bestImage.remoteUrl;
+  };
+
   /**
    * Gets the events in the Lidarr calendar between two dates.
    * @param start The start date
