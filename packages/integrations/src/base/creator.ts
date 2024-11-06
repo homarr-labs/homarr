@@ -12,6 +12,7 @@ import { TransmissionIntegration } from "../download-client/transmission/transmi
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
@@ -20,7 +21,6 @@ import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { Integration, IntegrationInput } from "./integration";
-import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },
@@ -65,5 +65,5 @@ export const integrationCreators = {
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
-  lidarr: LidarrIntegration
+  lidarr: LidarrIntegration,
 } satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;

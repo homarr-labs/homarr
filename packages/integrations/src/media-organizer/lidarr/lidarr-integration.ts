@@ -32,51 +32,51 @@ export class LidarrIntegration extends Integration {
   private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [];
 
-    if (event.artist.links.some(link => link.name === "vgmdb")) {
+    if (event.artist.links.some((link) => link.name === "vgmdb")) {
       links.push({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find(link => link.name === "vgmdb")!.url,
+        href: event.artist.links.find((link) => link.name === "vgmdb")!.url,
         name: "VgmDB",
         color: "#f5c518",
         isDark: false,
         logo: "/images/apps/imdb.png",
-        notificationColor: "cyan"
+        notificationColor: "cyan",
       });
     }
 
-    if (event.artist.links.some(link => link.name === "imdb")) {
+    if (event.artist.links.some((link) => link.name === "imdb")) {
       links.push({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find(link => link.name === "imdb")!.url,
+        href: event.artist.links.find((link) => link.name === "imdb")!.url,
         name: "IMDb",
         color: "#f5c518",
         isDark: false,
         logo: "/images/apps/imdb.png",
-        notificationColor: "cyan"
+        notificationColor: "cyan",
       });
     }
 
-    if (event.artist.links.some(link => link.name === "imvdb")) {
+    if (event.artist.links.some((link) => link.name === "imvdb")) {
       links.push({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find(link => link.name === "imvdb")!.url,
+        href: event.artist.links.find((link) => link.name === "imvdb")!.url,
         name: "IMVDb",
         color: "#BA478F",
         isDark: false,
         logo: "/images/apps/imvdb.png",
-        notificationColor: "cyan"
+        notificationColor: "cyan",
       });
     }
 
-    if (event.artist.links.some(link => link.name === "last")) {
+    if (event.artist.links.some((link) => link.name === "last")) {
       links.push({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find(link => link.name === "last")!.url,
+        href: event.artist.links.find((link) => link.name === "last")!.url,
         name: "LastFM",
         color: "#cf222a",
         isDark: false,
         logo: "/images/apps/last.png",
-        notificationColor: "cyan"
+        notificationColor: "cyan",
       });
     }
 
