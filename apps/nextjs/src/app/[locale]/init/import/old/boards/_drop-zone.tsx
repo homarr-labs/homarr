@@ -10,6 +10,7 @@ import {
   Grid,
   GridCol,
   Group,
+  PasswordInput,
   rem,
   Stack,
   Switch,
@@ -22,6 +23,8 @@ import { IconFileZip, IconPencil, IconUpload, IconX } from "@tabler/icons-react"
 import { clientApi } from "@homarr/api/client";
 import { objectKeys } from "@homarr/common";
 import { useZodForm } from "@homarr/form";
+import { createModal, useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import { SelectWithDescription } from "@homarr/ui";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
@@ -61,6 +64,7 @@ export const ImportBoards = () => {
 
   const { mutateAsync, isPending } = clientApi.board.analyseOldmarrConfigs.useMutation();
   const [selectedBoards, selectedBoardActions] = useListState<SelectedBoard>([]);
+  const { openModal } = useModalAction(ImportTokenModal);
 
   const handleFileSelectionAsync = async (file: File | null) => {
     setFile(file);
@@ -223,7 +227,21 @@ export const ImportBoards = () => {
               configuration={form.values}
             />
 
-            <Button fullWidth>Confirm import and continue</Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                if (checksum) {
+                  openModal({
+                    checksum,
+                    onSuccessfulToken: async (token) => {
+                      console.log(token);
+                    },
+                  });
+                }
+              }}
+            >
+              Confirm import and continue
+            </Button>
           </Stack>
         </Card>
       </GridCol>
@@ -265,8 +283,6 @@ const Summary = ({ data, selectedBoards, configuration, userCount }: SummaryProp
         .flatMap((entry) => entry.old.widgets)
         .filter((widget) => widget.type === "bookmark")
         .reduce((acc, widget) => acc + (widget.properties as OldmarrBookmarkDefinition["options"]).items.length, 0);
-
-    console.log(preparedImports.integrations);
 
     return {
       apps: preparedImports.apps.length,
@@ -442,3 +458,41 @@ const SelectedBoardsCard = ({ data, selectedBoardState }: SelectedBoardCardProps
     </Card>
   );
 };
+
+const ImportTokenModal = createModal<{ checksum: string[]; onSuccessfulToken: (token: string) => Promise<void> }>(
+  ({ actions, innerProps }) => {
+    const { mutateAsync, isPending } = clientApi.onboarding.checkToken.useMutation();
+    const [token, setToken] = useState("");
+    const handleSubmitAsync = async () => {
+      await mutateAsync(
+        { checksum: innerProps.checksum, token },
+        {
+          async onSuccess() {
+            await innerProps.onSuccessfulToken(token);
+            actions.closeModal();
+          },
+          onError() {
+            showErrorNotification({ message: "Invalid token" });
+          },
+        },
+      );
+    };
+
+    return (
+      <Stack>
+        <Text>Enter the encryption token to decrypt the import file</Text>
+        <PasswordInput
+          value={token}
+          onChange={(event) => setToken(event.target.value)}
+          placeholder="Enter the encryption token"
+        />
+        <Button loading={isPending} onClick={handleSubmitAsync}>
+          Confirm
+        </Button>
+      </Stack>
+    );
+  },
+).withOptions({
+  defaultTitle: "Enter encryption token",
+  size: "md",
+});

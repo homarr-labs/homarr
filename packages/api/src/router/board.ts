@@ -586,7 +586,7 @@ export const boardRouter = createTRPCRouter({
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
       await importAsync(ctx.db, oldmarr, input.configuration);
     }),
-  analyseOldmarrConfigs: protectedProcedure
+  analyseOldmarrConfigs: publicProcedure
     .input(
       zfd.formData({
         file: zfd.file().superRefine((value, context) => {
@@ -615,7 +615,6 @@ export const boardRouter = createTRPCRouter({
           if (!entry.entryName.endsWith(".json")) return null;
 
           const content = entry.getData().toString("utf8");
-          console.log(content);
           const result = oldmarrConfigSchema.safeParse(JSON.parse(content));
 
           if (!result.success) {
