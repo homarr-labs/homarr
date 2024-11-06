@@ -1,24 +1,10 @@
 import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
-import { Integration } from "../../base/integration";
 import type { CalendarEvent } from "../../calendar-types";
+import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
-export class LidarrIntegration extends Integration {
-  /**
-   * Priority list that determines the quality of images using their order.
-   * Types at the start of the list are better than those at the end.
-   * We do this to attempt to find the best quality image for the show.
-   */
-  private readonly priorities: z.infer<typeof lidarrCalendarEventSchema>["images"][number]["coverType"][] = [
-    "cover", // Official, perfect aspect ratio
-    "poster", // Official, perfect aspect ratio
-    "banner", // Official, bad aspect ratio
-    "fanart", // Unofficial, possibly bad quality
-    "screenshot", // Bad aspect ratio, possibly bad quality
-    "clearlogo", // Without background, bad aspect ratio
-  ];
-
+export class LidarrIntegration extends MediaOrganizerIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
@@ -30,7 +16,7 @@ export class LidarrIntegration extends Integration {
   }
 
   /**
-   * Gets the events in the Radarr calendar between two dates.
+   * Gets the events in the Lidarr calendar between two dates.
    * @param start The start date
    * @param end The end date
    * @param includeUnmonitored When true results will include unmonitored items of the Tadarr library.
@@ -46,24 +32,24 @@ export class LidarrIntegration extends Integration {
         "X-Api-Key": super.getSecretValue("apiKey"),
       },
     });
-    const radarrCalendarEvents = await z.array(lidarrCalendarEventSchema).parseAsync(await response.json());
+    const lidarrCalendarEvents = await z.array(lidarrCalendarEventSchema).parseAsync(await response.json());
 
-    return radarrCalendarEvents.map((radarrCalendarEvent): CalendarEvent => {
+    return lidarrCalendarEvents.map((lidarrCalendarEvent): CalendarEvent => {
       return {
-        name: radarrCalendarEvent.title,
-        subName: radarrCalendarEvent.artist.artistName,
-        description: radarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
-        date: radarrCalendarEvent.releaseDate,
+        name: lidarrCalendarEvent.title,
+        subName: lidarrCalendarEvent.artist.artistName,
+        description: lidarrCalendarEvent.overview,
+        thumbnail: this.chooseBestImageAsURL(lidarrCalendarEvent),
+        date: lidarrCalendarEvent.releaseDate,
         mediaInformation: {
           type: "audio",
         },
-        links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
+        links: this.getLinksForLidarrCalendarEvent(lidarrCalendarEvent),
       };
     });
   }
 
-  private getLinksForRadarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
+  private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [];
 
     if (event.artist.links.some((link) => link.name === "vgmdb")) {
@@ -73,7 +59,7 @@ export class LidarrIntegration extends Integration {
         name: "VgmDB",
         color: "#f5c518",
         isDark: false,
-        logo: "/images/apps/imdb.png",
+        logo: "/images/apps/vgmdblogo.png",
         notificationColor: "cyan",
       });
     }
@@ -97,7 +83,7 @@ export class LidarrIntegration extends Integration {
         name: "IMVDb",
         color: "#BA478F",
         isDark: false,
-        logo: "/images/apps/imvdb.png",
+        logo: "/images/apps/imvdb.jpg",
         notificationColor: "cyan",
       });
     }
@@ -109,7 +95,7 @@ export class LidarrIntegration extends Integration {
         name: "LastFM",
         color: "#cf222a",
         isDark: false,
-        logo: "/images/apps/last.png",
+        logo: "/images/apps/last.jpg",
         notificationColor: "cyan",
       });
     }

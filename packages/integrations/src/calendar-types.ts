@@ -5,7 +5,7 @@ export interface CalendarEvent {
   name: string;
   subName: string;
   date: Date;
-  dates?: { type?: ReleaseType; date: Date }[];
+  dates?: { type: ReleaseType; date: Date }[];
   description?: string;
   thumbnail?: string;
   mediaInformation?: {
