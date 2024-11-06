@@ -16,7 +16,7 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
   }
 
   /**
-   * Gets the events in the Radarr calendar between two dates.
+   * Gets the events in the Lidarr calendar between two dates.
    * @param start The start date
    * @param end The end date
    * @param includeUnmonitored When true results will include unmonitored items of the Tadarr library.
@@ -32,24 +32,24 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
         "X-Api-Key": super.getSecretValue("apiKey"),
       },
     });
-    const radarrCalendarEvents = await z.array(lidarrCalendarEventSchema).parseAsync(await response.json());
+    const lidarrCalendarEvents = await z.array(lidarrCalendarEventSchema).parseAsync(await response.json());
 
-    return radarrCalendarEvents.map((radarrCalendarEvent): CalendarEvent => {
+    return lidarrCalendarEvents.map((lidarrCalendarEvent): CalendarEvent => {
       return {
-        name: radarrCalendarEvent.title,
-        subName: radarrCalendarEvent.artist.artistName,
-        description: radarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
-        date: radarrCalendarEvent.releaseDate,
+        name: lidarrCalendarEvent.title,
+        subName: lidarrCalendarEvent.artist.artistName,
+        description: lidarrCalendarEvent.overview,
+        thumbnail: this.chooseBestImageAsURL(lidarrCalendarEvent),
+        date: lidarrCalendarEvent.releaseDate,
         mediaInformation: {
           type: "audio",
         },
-        links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
+        links: this.getLinksForLidarrCalendarEvent(lidarrCalendarEvent),
       };
     });
   }
 
-  private getLinksForRadarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
+  private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [];
 
     if (event.artist.links.some((link) => link.name === "vgmdb")) {
