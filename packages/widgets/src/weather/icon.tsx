@@ -15,6 +15,8 @@ import type { TranslationObject } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
+import type { WidgetProps } from "../definition";
+
 interface WeatherIconProps {
   code: number;
   size?: string | number;
@@ -34,7 +36,7 @@ export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
 
 interface WeatherDescriptionProps {
   weatherOnly?: boolean;
-  dateFormat?: "dddd, MMMM D" | "dddd, D MMMM" | "MMM D" | "D MMM" | "DD/MM/YYYY" | "MM/DD/YYYY" | "DD/MM" | "MM/DD";
+  dateFormat?: WidgetProps<"weather">["options"]["dateFormat"];
   time?: string;
   weatherCode: number;
   maxTemp?: string;
