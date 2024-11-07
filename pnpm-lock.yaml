@@ -227,8 +227,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       swagger-ui-react:
-        specifier: ^5.18.1
-        version: 5.18.1(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.18.2
+        version: 5.18.2(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@18.3.1)
@@ -3221,8 +3221,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@scarf/scarf@1.3.0':
-    resolution: {integrity: sha512-lHKK8M5CTcpFj2hZDB3wIjb0KAbEOgDmiJGDv1WBRfQgRm/a8/XMEkG/N1iM01xgbUDsPQwi42D+dFo1XPAKew==}
+  '@scarf/scarf@1.4.0':
+    resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
@@ -7435,11 +7435,11 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  swagger-client@3.30.1:
-    resolution: {integrity: sha512-3V/wZ6s6nkIG+rfkODzfO/0pjV3/x0aZxovocvC6seOz/TN2LctS0Cu6oW1zMUgcNbwpdybjWUTikCbhlB7EEw==}
+  swagger-client@3.31.0:
+    resolution: {integrity: sha512-hVYift5XB8nOgNJVl6cbNtVTVPT2Fdx2wCOcIvuAFcyq0Mwe6+70ezoZ5WfiaIAzzwWfq72jyaLeg8TViGNSmw==}
 
-  swagger-ui-react@5.18.1:
-    resolution: {integrity: sha512-g3RkgvbMav9D173q8GUHa+P9sfEBYIliBuwbRGmC7fnDp0w5WQ2ATM79V2ukyWAj8RSPQro+KADrHwvk3tARbg==}
+  swagger-ui-react@5.18.2:
+    resolution: {integrity: sha512-vpW7AmkRYdz578iq7C5WrPsg6reBgRzj5xL/fIYR6KTfvY3lvBchpzegFaqg09LWDoL3U2MZvIgOS/1Q9kSJ9g==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -9466,7 +9466,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@scarf/scarf@1.3.0': {}
+  '@scarf/scarf@1.4.0': {}
 
   '@socket.io/component-emitter@3.1.2': {}
 
@@ -14410,10 +14410,10 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  swagger-client@3.30.1:
+  swagger-client@3.31.0:
     dependencies:
       '@babel/runtime-corejs3': 7.25.6
-      '@scarf/scarf': 1.3.0
+      '@scarf/scarf': 1.4.0
       '@swagger-api/apidom-core': 1.0.0-alpha.9
       '@swagger-api/apidom-error': 1.0.0-alpha.9
       '@swagger-api/apidom-json-pointer': 1.0.0-alpha.9
@@ -14433,11 +14433,11 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  swagger-ui-react@5.18.1(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  swagger-ui-react@5.18.2(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime-corejs3': 7.25.6
       '@braintree/sanitize-url': 7.0.4
-      '@scarf/scarf': 1.3.0
+      '@scarf/scarf': 1.4.0
       base64-js: 1.5.1
       classnames: 2.5.1
       css.escape: 1.5.1
@@ -14466,7 +14466,7 @@ snapshots:
       reselect: 5.1.1
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.30.1
+      swagger-client: 3.31.0
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
