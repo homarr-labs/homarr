@@ -21,7 +21,8 @@ import { clientApi } from "@homarr/api/client";
 
 import { env } from "~/env.mjs";
 
-const wsProtocol = () => {
+const getWebSocketProtocol = () => {
+  // window is not defined on server side
   if (typeof window === "undefined") {
     return "ws";
   }
@@ -30,7 +31,7 @@ const wsProtocol = () => {
 };
 
 const constructWebsocketUrl = () => {
-  const fallback = `${wsProtocol()}://localhost:3001/websockets`;
+  const fallback = `${getWebSocketProtocol()}://localhost:3001/websockets`;
   if (typeof window === "undefined") {
     return fallback;
   }
@@ -39,7 +40,7 @@ const constructWebsocketUrl = () => {
     return fallback;
   }
 
-  return `${wsProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
+  return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
 };
 
 const wsClient = createWSClient({
