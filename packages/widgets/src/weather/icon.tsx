@@ -34,7 +34,7 @@ export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
 
 interface WeatherDescriptionProps {
   weatherOnly?: boolean;
-  dateFormat: string;
+  dateFormat?: string;
   time?: string;
   weatherCode: number;
   maxTemp?: string;
