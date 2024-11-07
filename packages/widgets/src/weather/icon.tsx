@@ -34,7 +34,7 @@ export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
 
 interface WeatherDescriptionProps {
   weatherOnly?: boolean;
-  dateFormat?: string;
+  dateFormat?: "dddd, MMMM D" | "dddd, D MMMM" | "MMM D" | "D MMM" | "DD/MM/YYYY" | "MM/DD/YYYY" | "DD/MM" | "MM/DD";
   time?: string;
   weatherCode: number;
   maxTemp?: string;
@@ -43,7 +43,7 @@ interface WeatherDescriptionProps {
 
 /**
  * Description Dropdown for a given set of parameters
- * @param dateFormat date format from options
+ * @param dateFormat format of the date that will be displayed on the widget
  * @param time date that can be formatted by dayjs
  * @param weatherCode weather code from api
  * @param maxTemp preformatted string for max temperature
