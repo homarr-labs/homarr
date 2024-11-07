@@ -34,6 +34,7 @@ export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
 
 interface WeatherDescriptionProps {
   weatherOnly?: boolean;
+  dateFormat: string;
   time?: string;
   weatherCode: number;
   maxTemp?: string;
@@ -42,13 +43,21 @@ interface WeatherDescriptionProps {
 
 /**
  * Description Dropdown for a given set of parameters
+ * @param dateFormat date format from options
  * @param time date that can be formatted by dayjs
  * @param weatherCode weather code from api
  * @param maxTemp preformatted string for max temperature
  * @param minTemp preformatted string for min temperature
  * @returns Content for a HoverCard dropdown presenting weather information
  */
-export const WeatherDescription = ({ weatherOnly, time, weatherCode, maxTemp, minTemp }: WeatherDescriptionProps) => {
+export const WeatherDescription = ({
+  weatherOnly,
+  dateFormat,
+  time,
+  weatherCode,
+  maxTemp,
+  minTemp,
+}: WeatherDescriptionProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
 
@@ -60,7 +69,7 @@ export const WeatherDescription = ({ weatherOnly, time, weatherCode, maxTemp, mi
 
   return (
     <Stack align="center" gap="0">
-      <Text fz="24px">{dayjs(time).format("dddd MMMM D YYYY")}</Text>
+      <Text fz="24px">{dayjs(time).format(dateFormat)}</Text>
       <Text fz="16px">{t(`kind.${name}`)}</Text>
       <Text fz="16px">{`${tCommon("information.max")}: ${maxTemp}`}</Text>
       <Text fz="16px">{`${tCommon("information.min")}: ${minTemp}`}</Text>

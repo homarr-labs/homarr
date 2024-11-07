@@ -115,6 +115,7 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
 };
 
 function Forecast({ weather, options }: WeatherProps) {
+  const dateFormat = options.dateFormat;
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="2.5cqmin">
       {weather.daily.slice(0, options.forecastDayCount).map((dayWeather, index) => (
@@ -136,6 +137,7 @@ function Forecast({ weather, options }: WeatherProps) {
           </HoverCard.Target>
           <HoverCard.Dropdown>
             <WeatherDescription
+              dateFormat={dateFormat}
               time={dayWeather.time}
               weatherCode={dayWeather.weatherCode}
               maxTemp={getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit)}
