@@ -14,6 +14,7 @@ import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
+import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
@@ -21,7 +22,6 @@ import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import type { Integration, IntegrationInput } from "./integration";
-import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },
@@ -67,5 +67,5 @@ export const integrationCreators = {
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
   lidarr: LidarrIntegration,
-  readarr: ReadarrIntegration
+  readarr: ReadarrIntegration,
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;

@@ -21,7 +21,12 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
    * @param end The end date
    * @param includeUnmonitored When true results will include unmonitored items of the Tadarr library.
    */
-  async getCalendarEventsAsync(start: Date, end: Date, includeUnmonitored = true, includeAuthor = true): Promise<CalendarEvent[]> {
+  async getCalendarEventsAsync(
+    start: Date,
+    end: Date,
+    includeUnmonitored = true,
+    includeAuthor = true,
+  ): Promise<CalendarEvent[]> {
     const url = new URL(this.integration.url);
     url.pathname = "/api/v1/calendar";
     url.searchParams.append("start", start.toISOString());
@@ -103,7 +108,7 @@ const lidarrCalendarEventSchema = z.object({
   ),
   author: z.object({
     authorName: z.string(),
-    foreignAuthorId: z.string()
+    foreignAuthorId: z.string(),
   }),
   releaseDate: z.string().transform((value) => new Date(value)),
 });
