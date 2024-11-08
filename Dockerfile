@@ -59,8 +59,6 @@ WORKDIR /app
 # gettext is required for envsubst
 RUN apk add --no-cache redis nginx bash gettext
 RUN mkdir /appdata
-RUN mkdir /appdata/db
-RUN mkdir /appdata/redis
 VOLUME /appdata
 RUN mkdir /secrets
 VOLUME /secrets

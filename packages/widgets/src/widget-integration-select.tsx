@@ -30,13 +30,16 @@ interface WidgetIntegrationSelectProps {
   error?: string;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
-
+  canSelectMultiple?: boolean;
   data: IntegrationSelectOption[];
+  withAsterisk?: boolean;
 }
 export const WidgetIntegrationSelect = ({
   data,
   onChange,
   value: valueProp,
+  canSelectMultiple = true,
+  withAsterisk = false,
   ...props
 }: WidgetIntegrationSelectProps) => {
   const t = useI18n();
@@ -47,12 +50,16 @@ export const WidgetIntegrationSelect = ({
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
-  const handleValueSelect = (selectedValue: string) =>
+  const handleValueSelect = (selectedValue: string) => {
     onChange(
       multiSelectValues.includes(selectedValue)
         ? multiSelectValues.filter((value) => value !== selectedValue)
         : [...multiSelectValues, selectedValue],
     );
+    if (!canSelectMultiple) {
+      combobox.closeDropdown();
+    }
+  };
 
   const handleValueRemove = (valueToRemove: string) =>
     onChange(multiSelectValues.filter((value) => value !== valueToRemove));
@@ -63,7 +70,14 @@ export const WidgetIntegrationSelect = ({
       return null;
     }
 
-    return <IntegrationPill key={item} option={option} onRemove={() => handleValueRemove(item)} />;
+    return (
+      <IntegrationPill
+        key={item}
+        option={option}
+        onRemove={() => handleValueRemove(item)}
+        showRemoveButton={canSelectMultiple}
+      />
+    );
   });
 
   const options = data.map((item) => {
@@ -103,6 +117,7 @@ export const WidgetIntegrationSelect = ({
           }
           pointer
           onClick={() => combobox.toggleDropdown()}
+          withAsterisk={withAsterisk}
           {...props}
         >
           <Pill.Group>
@@ -150,14 +165,17 @@ export interface IntegrationSelectOption {
 interface IntegrationPillProps {
   option: IntegrationSelectOption;
   onRemove: () => void;
+  showRemoveButton: boolean;
 }
 
-const IntegrationPill = ({ option, onRemove }: IntegrationPillProps) => (
-  <Group align="center" wrap="nowrap" gap={0} className={classes.pill}>
+const IntegrationPill = ({ option, onRemove, showRemoveButton }: IntegrationPillProps) => (
+  <Group align="center" wrap="nowrap" gap={0} className={classes.pill} mih={24} pr={!showRemoveButton ? 10 : undefined}>
     <Avatar src={getIconUrl(option.kind)} size={14} mr={6} />
     <Text span size="xs" lh={1} fw={500}>
       {option.name}
     </Text>
-    <CloseButton onMouseDown={onRemove} variant="transparent" color="gray" size={22} iconSize={14} tabIndex={-1} />
+    {showRemoveButton && (
+      <CloseButton onMouseDown={onRemove} variant="transparent" color="gray" size={22} iconSize={14} tabIndex={-1} />
+    )}
   </Group>
 );

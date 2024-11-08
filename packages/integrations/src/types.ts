@@ -4,3 +4,4 @@ export * from "./interfaces/health-monitoring/healt-monitoring";
 export * from "./interfaces/indexer-manager/indexer";
 export * from "./interfaces/media-requests/media-request";
 export * from "./pi-hole/pi-hole-types";
+export * from "./base/searchable-integration";

@@ -1134,6 +1134,10 @@
         "forecastDayCount": {
           "label": "Amount of forecast days",
           "description": "When the widget is not wide enough, less days are shown"
+        },
+        "dateFormat": {
+          "label": "Date Format",
+          "description": "How the date should look like"
         }
       },
       "kind": {
@@ -2427,6 +2431,9 @@
               },
               "detail": {
                 "title": "Select an action for the search engine"
+              },
+              "searchResults": {
+                "title": "Select a search result for actions"
               }
             },
             "option": {
@@ -2596,7 +2603,8 @@
           "noResults": {
             "title": "There aren't any search engines",
             "action": "Create your first search engine"
-          }
+          },
+          "interactive": "Interactive, uses an integration"
         },
         "create": {
           "title": "New search engine",
@@ -2622,6 +2630,11 @@
               "title": "Unable to apply changes",
               "message": "The search engine could not be saved"
             }
+          },
+          "configControl": "Configuration",
+          "searchEngineType": {
+            "generic": "Generic",
+            "fromIntegration": "From integration"
           }
         },
         "delete": {

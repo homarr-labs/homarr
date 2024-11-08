@@ -67,11 +67,33 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: 'Report Coverage'
+      - name: "Report Coverage"
         # Set if: always() to also generate the report if tests are failing
         # Only works if you set `reportOnFailure: true` in your vite config as specified above
-        if: always() 
-        uses:  davelosert/vitest-coverage-report-action@v2
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Build docker image
+        id: build-docker-image
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64
+          context: .
+          push: false
+          tags: homarr-e2e
+          network: host
+        env:
+          SKIP_ENV_VALIDATION: true
+      - name: Run E2E Tests
+        shell: bash
+        run: pnpm test:e2e
 
   build:
     runs-on: ubuntu-latest
