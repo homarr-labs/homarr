@@ -72,6 +72,7 @@ const optionMapping: OptionMapping = {
     isFormatFahrenheit: (oldOptions) => oldOptions.displayInFahrenheit,
     location: (oldOptions) => oldOptions.location,
     showCity: (oldOptions) => oldOptions.displayCityName,
+    dateFormat: (oldOptions) => (oldOptions.dateFormat === "hide" ? undefined : oldOptions.dateFormat),
   },
   iframe: {
     embedUrl: (oldOptions) => oldOptions.embedUrl,

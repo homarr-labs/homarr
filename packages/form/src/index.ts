@@ -2,11 +2,14 @@ import { useForm, zodResolver } from "@mantine/form";
 
 import { useI18n } from "@homarr/translation/client";
 import { z } from "@homarr/validation";
-import type { AnyZodObject, ZodEffects, ZodIntersection } from "@homarr/validation";
+import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "@homarr/validation";
 import { zodErrorMap } from "@homarr/validation/form";
 
 export const useZodForm = <
-  TSchema extends AnyZodObject | ZodEffects<AnyZodObject> | ZodIntersection<AnyZodObject, AnyZodObject>,
+  TSchema extends
+    | AnyZodObject
+    | ZodEffects<AnyZodObject>
+    | ZodIntersection<AnyZodObject | ZodDiscriminatedUnion<string, AnyZodObject[]>, AnyZodObject>,
 >(
   schema: TSchema,
   options: Omit<

@@ -14,6 +14,7 @@ interface integrationDefinition {
   iconUrl: string;
   secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
   category: AtLeastOneOf<IntegrationCategory>;
+  supportsSearch: boolean;
 }
 
 export const integrationDefs = {
@@ -22,108 +23,126 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sabnzbd.png",
     category: ["downloadClient", "usenet"],
+    supportsSearch: false,
   },
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nzbget.png",
     category: ["downloadClient", "usenet"],
+    supportsSearch: false,
   },
   deluge: {
     name: "Deluge",
     secretKinds: [["password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/deluge.png",
     category: ["downloadClient", "torrent"],
+    supportsSearch: false,
   },
   transmission: {
     name: "Transmission",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/transmission.png",
     category: ["downloadClient", "torrent"],
+    supportsSearch: false,
   },
   qBittorrent: {
     name: "qBittorrent",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/qbittorrent.png",
     category: ["downloadClient", "torrent"],
+    supportsSearch: false,
   },
   sonarr: {
     name: "Sonarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sonarr.png",
     category: ["calendar"],
+    supportsSearch: false,
   },
   radarr: {
     name: "Radarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/radarr.png",
     category: ["calendar"],
+    supportsSearch: false,
   },
   lidarr: {
     name: "Lidarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/lidarr.png",
     category: ["calendar"],
+    supportsSearch: false,
   },
   readarr: {
     name: "Readarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/readarr.png",
     category: ["calendar"],
+    supportsSearch: false,
   },
   prowlarr: {
     name: "Prowlarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/prowlarr.png",
     category: ["indexerManager"],
+    supportsSearch: false,
   },
   jellyfin: {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyfin.png",
     category: ["mediaService"],
+    supportsSearch: false,
   },
   plex: {
     name: "Plex",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/plex.png",
     category: ["mediaService"],
+    supportsSearch: false,
   },
   jellyseerr: {
     name: "Jellyseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyseerr.png",
     category: ["mediaSearch", "mediaRequest"],
+    supportsSearch: true,
   },
   overseerr: {
     name: "Overseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/overseerr.png",
     category: ["mediaSearch", "mediaRequest"],
+    supportsSearch: true,
   },
   piHole: {
     name: "Pi-hole",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/pi-hole.png",
     category: ["dnsHole"],
+    supportsSearch: false,
   },
   adGuardHome: {
     name: "AdGuard Home",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/adguard-home.png",
     category: ["dnsHole"],
+    supportsSearch: false,
   },
   homeAssistant: {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/home-assistant.png",
     category: ["smartHomeServer"],
+    supportsSearch: false,
   },
   openmediavault: {
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openmediavault.png",
     category: ["healthMonitoring"],
+    supportsSearch: false,
   },
 } as const satisfies Record<string, integrationDefinition>;
 
@@ -161,6 +180,22 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
   ? //Needed to simplify the type when using it
     U
   : never;
+
+/**
+ * Checks if search is supported by the integration
+ * Uses a typescript guard with is to allow only integrations with search support within if statement
+ * @param integration integration with kind
+ * @returns true if the integration supports search
+ */
+export const isIntegrationWithSearchSupport = (integration: {
+  kind: IntegrationKind;
+}): integration is { kind: IntegrationWithSearchSupport } => {
+  return integrationDefs[integration.kind].supportsSearch;
+};
+
+type IntegrationWithSearchSupport = {
+  [Key in keyof typeof integrationDefs]: true extends (typeof integrationDefs)[Key]["supportsSearch"] ? Key : never;
+}[keyof typeof integrationDefs];
 
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
 export type IntegrationKind = keyof typeof integrationDefs;
