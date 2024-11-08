@@ -52,6 +52,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
+      hidden: !session,
     },
     {
       icon: IconPlug,

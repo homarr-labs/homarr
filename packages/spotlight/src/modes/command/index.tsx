@@ -1,17 +1,18 @@
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
 import {
+  IconBox,
   IconCategoryPlus,
   IconFileImport,
   IconLanguage,
   IconMailForward,
   IconMoon,
-  IconPackage,
   IconPlug,
   IconSun,
   IconUserPlus,
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -56,6 +57,7 @@ export const commandMode = {
       useOptions() {
         const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
         const { colorScheme } = useMantineColorScheme();
+        const { data: session } = useSession();
 
         const commands: (Command & { hidden?: boolean })[] = [
           {
@@ -109,9 +111,10 @@ export const commandMode = {
           },
           {
             commandKey: "newApp",
-            icon: IconPackage,
+            icon: IconBox,
             name: tOption("newApp.label"),
             useInteraction: interaction.link(() => ({ href: "/manage/apps/new" })),
+            hidden: !session?.user.permissions.includes("app-create"),
           },
           {
             commandKey: "newIntegration",

@@ -1,6 +1,8 @@
+import { notFound } from "next/navigation";
 import { Container, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -11,6 +13,11 @@ interface AppEditPageProps {
 }
 
 export default async function AppEditPage({ params }: AppEditPageProps) {
+  const session = await auth();
+
+  if (!session?.user.permissions.includes("app-modify-all")) {
+    notFound();
+  }
   const app = await api.app.byId({ id: params.id });
   const t = await getI18n();
 
