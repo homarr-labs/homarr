@@ -42,9 +42,6 @@ export const groupPermissions = {
   integration: ["create", "use-all", "interact-all", "full-all"],
   "search-engine": ["create", "modify-all", "full-all"],
   media: ["upload", "view-all", "full-all"],
-  user: ["create", "view-all", "modify-all", "full-all"],
-  invite: ["create"],
-  group: ["create", "full-all"],
   other: ["view-logs"],
   admin: true,
 } as const;
@@ -64,18 +61,12 @@ const groupPermissionParents = {
   "search-engine-modify-all": ["search-engine-create"],
   "search-engine-full-all": ["search-engine-modify-all"],
   "media-full-all": ["media-upload", "media-view-all"],
-  "user-modify-all": ["user-view-all"],
-  "user-full-all": ["user-modify-all", "user-create"],
-  "group-full-all": ["group-create"],
   admin: [
     "board-full-all",
     "app-full-all",
     "integration-full-all",
     "search-engine-full-all",
     "media-full-all",
-    "user-full-all",
-    "invite-create",
-    "group-full-all",
     "other-view-logs",
   ],
 } satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey[]>>;

@@ -238,19 +238,6 @@
           }
         }
       },
-      "group": {
-        "title": "Groups",
-        "item": {
-          "create": {
-            "label": "Create groups",
-            "description": "Allow members to create groups"
-          },
-          "full-all": {
-            "label": "Full group access",
-            "description": "Allow members to manage, use and delete any group"
-          }
-        }
-      },
       "integration": {
         "title": "Integrations",
         "item": {
@@ -269,15 +256,6 @@
           "full-all": {
             "label": "Full integration access",
             "description": "Allow members to manage, use and interact with any integration"
-          }
-        }
-      },
-      "invite": {
-        "title": "Invites",
-        "item": {
-          "create": {
-            "label": "Create invites",
-            "description": "Allow members to create invites"
           }
         }
       },
@@ -321,27 +299,6 @@
           "full-all": {
             "label": "Full search engine access",
             "description": "Allow members to manage and delete any search engine"
-          }
-        }
-      },
-      "user": {
-        "title": "Users",
-        "item": {
-          "create": {
-            "label": "Create users",
-            "description": "Allow members to create users"
-          },
-          "view-all": {
-            "label": "View all users",
-            "description": "Allow members to view all users"
-          },
-          "modify-all": {
-            "label": "Modify all users",
-            "description": "Allow members to modify all users"
-          },
-          "full-all": {
-            "label": "Full user access",
-            "description": "Allow members to manage and delete any user"
           }
         }
       }
