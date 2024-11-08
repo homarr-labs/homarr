@@ -36,8 +36,16 @@ export type IntegrationPermission = (typeof integrationPermissions)[number];
  * For example "board-create" is a generated key
  */
 export const groupPermissions = {
+  // Order is the same in the UI, inspired from order in navigation here
   board: ["create", "view-all", "modify-all", "full-all"],
+  app: ["create", "use-all", "modify-all", "full-all"],
   integration: ["create", "use-all", "interact-all", "full-all"],
+  "search-engine": ["create", "modify-all", "full-all"],
+  media: ["upload", "view-all", "full-all"],
+  user: ["create", "view-all", "modify-all", "full-all"],
+  invite: ["create"],
+  group: ["create", "full-all"],
+  other: ["view-logs"],
   admin: true,
 } as const;
 
@@ -49,9 +57,27 @@ export const groupPermissions = {
 const groupPermissionParents = {
   "board-modify-all": ["board-view-all"],
   "board-full-all": ["board-modify-all", "board-create"],
+  "app-modify-all": ["app-create"],
+  "app-full-all": ["app-modify-all", "app-use-all"],
   "integration-interact-all": ["integration-use-all"],
   "integration-full-all": ["integration-interact-all", "integration-create"],
-  admin: ["board-full-all", "integration-full-all"],
+  "search-engine-modify-all": ["search-engine-create"],
+  "search-engine-full-all": ["search-engine-modify-all"],
+  "media-full-all": ["media-upload", "media-view-all"],
+  "user-modify-all": ["user-view-all"],
+  "user-full-all": ["user-modify-all", "user-create"],
+  "group-full-all": ["group-create"],
+  admin: [
+    "board-full-all",
+    "app-full-all",
+    "integration-full-all",
+    "search-engine-full-all",
+    "media-full-all",
+    "user-full-all",
+    "invite-create",
+    "group-full-all",
+    "other-view-logs",
+  ],
 } satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey[]>>;
 
 export const getPermissionsWithParents = (permissions: GroupPermissionKey[]): GroupPermissionKey[] => {

@@ -196,6 +196,27 @@
           }
         }
       },
+      "app": {
+        "title": "Apps",
+        "item": {
+          "create": {
+            "label": "Create apps",
+            "description": "Allow members to create apps"
+          },
+          "use-all": {
+            "label": "Use all apps",
+            "description": "Allow members to add any apps to their boards"
+          },
+          "modify-all": {
+            "label": "Modify all apps",
+            "description": "Allow members to modify all apps"
+          },
+          "full-all": {
+            "label": "Full app access",
+            "description": "Allow members to manage, use and delete any app"
+          }
+        }
+      },
       "board": {
         "title": "Boards",
         "item": {
@@ -217,6 +238,19 @@
           }
         }
       },
+      "group": {
+        "title": "Groups",
+        "item": {
+          "create": {
+            "label": "Create groups",
+            "description": "Allow members to create groups"
+          },
+          "full-all": {
+            "label": "Full group access",
+            "description": "Allow members to manage, use and delete any group"
+          }
+        }
+      },
       "integration": {
         "title": "Integrations",
         "item": {
@@ -235,6 +269,79 @@
           "full-all": {
             "label": "Full integration access",
             "description": "Allow members to manage, use and interact with any integration"
+          }
+        }
+      },
+      "invite": {
+        "title": "Invites",
+        "item": {
+          "create": {
+            "label": "Create invites",
+            "description": "Allow members to create invites"
+          }
+        }
+      },
+      "media": {
+        "title": "Medias",
+        "item": {
+          "upload": {
+            "label": "Upload medias",
+            "description": "Allow members to upload medias"
+          },
+          "view-all": {
+            "label": "View all medias",
+            "description": "Allow members to view all medias"
+          },
+          "full-all": {
+            "label": "Full media access",
+            "description": "Allow members to manage and delete any media"
+          }
+        }
+      },
+      "other": {
+        "title": "Other",
+        "item": {
+          "view-logs": {
+            "label": "View logs",
+            "description": "Allow members to view logs"
+          }
+        }
+      },
+      "search-engine": {
+        "title": "Search engines",
+        "item": {
+          "create": {
+            "label": "Create search engines",
+            "description": "Allow members to create search engines"
+          },
+          "modify-all": {
+            "label": "Modify all search engines",
+            "description": "Allow members to modify all search engines"
+          },
+          "full-all": {
+            "label": "Full search engine access",
+            "description": "Allow members to manage and delete any search engine"
+          }
+        }
+      },
+      "user": {
+        "title": "Users",
+        "item": {
+          "create": {
+            "label": "Create users",
+            "description": "Allow members to create users"
+          },
+          "view-all": {
+            "label": "View all users",
+            "description": "Allow members to view all users"
+          },
+          "modify-all": {
+            "label": "Modify all users",
+            "description": "Allow members to modify all users"
+          },
+          "full-all": {
+            "label": "Full user access",
+            "description": "Allow members to manage and delete any user"
           }
         }
       }
