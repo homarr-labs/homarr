@@ -1134,6 +1134,10 @@
         "forecastDayCount": {
           "label": "Amount of forecast days",
           "description": "When the widget is not wide enough, less days are shown"
+        },
+        "dateFormat": {
+          "label": "Date Format",
+          "description": "How the date should look like"
         }
       },
       "kind": {
