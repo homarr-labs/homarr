@@ -4,10 +4,17 @@ import type { PropsWithChildren } from "react";
 import type { MantineColorsTuple } from "@mantine/core";
 import { createTheme, darken, lighten, MantineProvider } from "@mantine/core";
 
+import type { ColorScheme } from "@homarr/definitions";
+
+import { useColorSchemeManager } from "../../_client-providers/mantine";
 import { useRequiredBoard } from "./_context";
 
-export const BoardMantineProvider = ({ children }: PropsWithChildren) => {
+export const BoardMantineProvider = ({
+  children,
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const board = useRequiredBoard();
+  const colorSchemeManager = useColorSchemeManager();
 
   const theme = createTheme({
     colors: {
@@ -18,7 +25,11 @@ export const BoardMantineProvider = ({ children }: PropsWithChildren) => {
     autoContrast: true,
   });
 
-  return <MantineProvider theme={theme}>{children}</MantineProvider>;
+  return (
+    <MantineProvider defaultColorScheme={defaultColorScheme} theme={theme} colorSchemeManager={colorSchemeManager}>
+      {children}
+    </MantineProvider>
+  );
 };
 
 export const generateColors = (hex: string) => {

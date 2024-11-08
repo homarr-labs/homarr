@@ -33,9 +33,6 @@ jobs:
   deploy:
     name: Deploy docker image
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20]
     steps:
       - name: Discord notification
         if: ${{ github.events.inputs.send-notifications != false }}
@@ -57,21 +54,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Semver computed next tag to be ${{ steps.semver.outputs.next }}. Current is ${{ steps.semver.outputs.current }}"
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications != false }}
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Built application artifacts. Building images..."
+          args: "Semver computed next tag to be ${{ steps.semver.outputs.next }}. Current is ${{ steps.semver.outputs.current }}. Building images..."
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -90,9 +73,9 @@ jobs:
           tags: |
             type=raw,value=alpha
             type=raw,value=early-adopters
-#          tags: |
-#            type=raw,value=latest
-#            type=raw,value=${{ steps.semver.outputs.next }}
+      #          tags: |
+      #            type=raw,value=latest
+      #            type=raw,value=${{ steps.semver.outputs.next }}
       - name: Build and push
         id: buildPushAction
         uses: docker/build-push-action@v6

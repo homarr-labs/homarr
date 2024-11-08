@@ -1,0 +1,3 @@
+.card:hover {
+  background-color: var(--mantine-color-primaryColor-light-hover);
+}

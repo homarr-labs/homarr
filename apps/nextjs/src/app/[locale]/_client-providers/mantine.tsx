@@ -8,14 +8,18 @@ import dayjs from "dayjs";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
+import type { ColorScheme } from "@homarr/definitions";
+import { colorSchemeCookieKey } from "@homarr/definitions";
 
-export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
+export const CustomMantineProvider = ({
+  children,
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const manager = useColorSchemeManager();
-
   return (
     <DirectionProvider>
       <MantineProvider
-        defaultColorScheme="dark"
+        defaultColorScheme={defaultColorScheme}
         colorSchemeManager={manager}
         theme={createTheme({
           primaryColor: "red",
@@ -28,12 +32,11 @@ export const CustomMantineProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-function useColorSchemeManager(): MantineColorSchemeManager {
-  const key = "homarr-color-scheme";
+export function useColorSchemeManager(): MantineColorSchemeManager {
   const { data: session } = useSession();
 
   const updateCookieValue = (value: Exclude<MantineColorScheme, "auto">) => {
-    setClientCookie(key, value, { expires: dayjs().add(1, "year").toDate(), path: "/" });
+    setClientCookie(colorSchemeCookieKey, value, { expires: dayjs().add(1, "year").toDate(), path: "/" });
   };
 
   const { mutate: mutateColorScheme } = clientApi.user.changeColorScheme.useMutation({
@@ -50,7 +53,7 @@ function useColorSchemeManager(): MantineColorSchemeManager {
 
       try {
         const cookies = parseCookies(document.cookie);
-        return (cookies[key] as MantineColorScheme | undefined) ?? defaultValue;
+        return (cookies[colorSchemeCookieKey] as MantineColorScheme | undefined) ?? defaultValue;
       } catch {
         return defaultValue;
       }

@@ -30,7 +30,10 @@ const passwordSchema = z
       return passwordRequirements.every((requirement) => requirement.check(value));
     },
     {
-      params: createCustomErrorParams("passwordRequirements"),
+      params: createCustomErrorParams({
+        key: "passwordRequirements",
+        params: {},
+      }),
     },
   );
 
@@ -38,7 +41,10 @@ const confirmPasswordRefine = [
   (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
   {
     path: ["confirmPassword"],
-    params: createCustomErrorParams("passwordsDoNotMatch"),
+    params: createCustomErrorParams({
+      key: "passwordsDoNotMatch",
+      params: {},
+    }),
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ] satisfies [(args: any) => boolean, unknown];

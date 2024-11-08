@@ -27,15 +27,15 @@
   "dependencies": {
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "next": "^14.2.16",
+    "next": "^14.2.17",
     "react": "^18.3.1",
-    "tldts": "^6.1.54"
+    "tldts": "^6.1.59"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "typescript": "^5.6.3"
   }
 }

@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@mantine/core";
+import { Button, useMatches } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -61,8 +61,14 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
     });
   }, [tDelete, tRoot, openConfirmModal, group.id, group.name, mutateAsync, router]);
 
+  const fullWidth = useMatches({
+    xs: true,
+    sm: true,
+    md: false,
+  });
+
   return (
-    <Button variant="subtle" color="red" onClick={handleDeletion}>
+    <Button variant="subtle" color="red" onClick={handleDeletion} fullWidth={fullWidth}>
       {tDelete("label")}
     </Button>
   );

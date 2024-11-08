@@ -2,7 +2,18 @@ import type { AdapterAccount } from "@auth/core/adapters";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
 import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
-import { boolean, index, int, mysqlTable, primaryKey, text, timestamp, tinyint, varchar } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  customType,
+  index,
+  int,
+  mysqlTable,
+  primaryKey,
+  text,
+  timestamp,
+  tinyint,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 import type {
   BackgroundImageAttachment,
@@ -19,6 +30,12 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
+
+const customBlob = customType<{ data: Buffer }>({
+  dataType() {
+    return "BLOB";
+  },
+});
 
 export const apiKeys = mysqlTable("apiKey", {
   id: varchar("id", { length: 64 }).notNull().primaryKey(),
@@ -141,6 +158,16 @@ export const invites = mysqlTable("invite", {
   creatorId: varchar("creator_id", { length: 64 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const medias = mysqlTable("media", {
+  id: varchar("id", { length: 64 }).notNull().primaryKey(),
+  name: varchar("name", { length: 512 }).notNull(),
+  content: customBlob("content").notNull(),
+  contentType: text("content_type").notNull(),
+  size: int("size").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  creatorId: varchar("creator_id", { length: 64 }).references(() => users.id, { onDelete: "set null" }),
 });
 
 export const integrations = mysqlTable(
@@ -386,6 +413,13 @@ export const userRelations = relations(users, ({ many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+}));
+
+export const mediaRelations = relations(medias, ({ one }) => ({
+  creator: one(users, {
+    fields: [medias.creatorId],
+    references: [users.id],
+  }),
 }));
 
 export const iconRelations = relations(icons, ({ one }) => ({

@@ -1,28 +1,28 @@
-import SuperJSON from "superjson";
-
-import { db, eq } from "@homarr/db";
-import { serverSettings } from "@homarr/db/schema/sqlite";
-import type { defaultServerSettings } from "@homarr/server-settings";
+import { db } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 
 export const SearchEngineOptimization = async () => {
-  const crawlingAndIndexingSetting = await db.query.serverSettings.findFirst({
-    where: eq(serverSettings.settingKey, "crawlingAndIndexing"),
-  });
+  const crawlingAndIndexingSetting = await getServerSettingByKeyAsync(db, "crawlingAndIndexing");
 
-  if (!crawlingAndIndexingSetting) {
-    return null;
+  const robotsAttributes: string[] = [];
+
+  if (crawlingAndIndexingSetting.noIndex) {
+    robotsAttributes.push("noindex");
   }
 
-  const value = SuperJSON.parse<(typeof defaultServerSettings)["crawlingAndIndexing"]>(
-    crawlingAndIndexingSetting.value,
-  );
+  if (crawlingAndIndexingSetting.noFollow) {
+    robotsAttributes.push("nofollow");
+  }
 
-  const robotsAttributes = [...(value.noIndex ? ["noindex"] : []), ...(value.noIndex ? ["nofollow"] : [])];
+  const googleAttributes: string[] = [];
 
-  const googleAttributes = [
-    ...(value.noSiteLinksSearchBox ? ["nositelinkssearchbox"] : []),
-    ...(value.noTranslate ? ["notranslate"] : []),
-  ];
+  if (crawlingAndIndexingSetting.noSiteLinksSearchBox) {
+    googleAttributes.push("nositelinkssearchbox");
+  }
+
+  if (crawlingAndIndexingSetting.noTranslate) {
+    googleAttributes.push("notranslate");
+  }
 
   return (
     <>

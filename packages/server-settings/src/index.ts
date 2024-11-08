@@ -1,8 +1,15 @@
-export const defaultServerSettingsKeys = ["analytics", "crawlingAndIndexing"] as const;
+import type { ColorScheme } from "@homarr/definitions";
+import type { SupportedLanguage } from "@homarr/translation";
 
-export type ServerSettingsRecord = {
-  [key in (typeof defaultServerSettingsKeys)[number]]: Record<string, unknown>;
-};
+export const defaultServerSettingsKeys = [
+  "analytics",
+  "crawlingAndIndexing",
+  "board",
+  "appearance",
+  "culture",
+] as const;
+
+export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
 
 export const defaultServerSettings = {
   analytics: {
@@ -16,6 +23,15 @@ export const defaultServerSettings = {
     noFollow: true,
     noTranslate: true,
     noSiteLinksSearchBox: false,
+  },
+  board: {
+    defaultBoardId: null as string | null,
+  },
+  appearance: {
+    defaultColorScheme: "light" as ColorScheme,
+  },
+  culture: {
+    defaultLocale: "en" as SupportedLanguage,
   },
 } satisfies ServerSettingsRecord;
 

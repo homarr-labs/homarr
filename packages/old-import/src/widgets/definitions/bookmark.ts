@@ -16,3 +16,5 @@ export type OldmarrBookmarkDefinition = CommonOldmarrWidgetDefinition<
     layout: "autoGrid" | "horizontal" | "vertical";
   }
 >;
+
+export type BookmarkApp = OldmarrBookmarkDefinition["options"]["items"][number];

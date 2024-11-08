@@ -45,9 +45,7 @@ export const PermissionForm = ({ children, initialPermissions }: PropsWithChildr
   );
 };
 
-type FormType = {
-  [key in GroupPermissionKey]: boolean;
-};
+type FormType = Record<GroupPermissionKey, boolean>;
 
 export const PermissionSwitch = ({ name }: { name: GroupPermissionKey }) => {
   const form = useFormContext();
