@@ -63,6 +63,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconSearch,
       href: "/manage/search-engines",
       label: t("items.searchEngies"),
+      hidden: !session,
     },
     {
       icon: IconPhoto,
