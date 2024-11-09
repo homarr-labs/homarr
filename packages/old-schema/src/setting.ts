@@ -40,7 +40,7 @@ const gridstackSettingsSchema = z
     columnCountMedium: z.number().default(6),
     columnCountLarge: z.number().default(12),
   })
-  .catch({ columnCountLarge: 3, columnCountMedium: 6, columnCountSmall: 12 });
+  .catch({ columnCountLarge: 12, columnCountMedium: 6, columnCountSmall: 3 });
 
 const layoutSettingsSchema = z.object({
   enabledLeftSidebar: z.boolean(),

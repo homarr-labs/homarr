@@ -1,5 +1,4 @@
 import type { InferSelectModel } from "@homarr/db";
-import { createId } from "@homarr/db/client";
 import type { apps } from "@homarr/db/schema/sqlite";
 import type { OldmarrApp, OldmarrConfig } from "@homarr/old-schema";
 
@@ -21,7 +20,7 @@ export const getAppsFromOldmarrConfig = (oldmarrConfig: OldmarrConfig): InferSel
  * @returns new app
  */
 const convertApp = (app: OldmarrApp): InferSelectModel<typeof apps> => ({
-  id: createId(),
+  id: app.id,
   name: app.name,
   href: app.behaviour.externalUrl === "" ? app.url : app.behaviour.externalUrl,
   iconUrl: app.appearance.iconUrl,
@@ -35,6 +34,5 @@ const convertApp = (app: OldmarrApp): InferSelectModel<typeof apps> => ({
  */
 const convertBookmarkApp = (app: BookmarkApp): InferSelectModel<typeof apps> => ({
   ...app,
-  id: createId(),
   description: null,
 });

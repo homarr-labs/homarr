@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import type { InferInsertModel } from "@homarr/db";
+import type { InferInsertModel, InferSelectModel } from "@homarr/db";
 import type { apps } from "@homarr/db/schema/sqlite";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
@@ -14,10 +14,11 @@ type ImportSpecificConfigurationFields = keyof Pick<OldmarrImportConfiguration, 
 export const prepareMultipleImports = (
   imports: { configuration: Pick<OldmarrImportConfiguration, ImportSpecificConfigurationFields>; old: OldmarrConfig }[],
   configuration: Omit<OldmarrImportConfiguration, ImportSpecificConfigurationFields>,
+  existingApps: InferSelectModel<typeof apps>[] = [],
 ) => {
   const preparedImports = imports.map(({ configuration: { name, screenSize }, old }) => {
     try {
-      return prepareImport(old, { ...configuration, name, screenSize });
+      return prepareImport(old, { ...configuration, name, screenSize }, existingApps);
     } catch (error) {
       console.log(error);
       return {

@@ -24,12 +24,13 @@ import { clientApi } from "@homarr/api/client";
 import { objectKeys } from "@homarr/common";
 import { useZodForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import { showErrorNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import { SelectWithDescription } from "@homarr/ui";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 import { oldmarrImportConfigurationSchema, z } from "@homarr/validation";
 
+import { mapColumnCount } from "../../../../../../../../../packages/old-import/src/mappers/map-column-count";
 import { prepareMultipleImports } from "../../../../../../../../../packages/old-import/src/prepare/multiple";
 import type { OldmarrBookmarkDefinition } from "../../../../../../../../../packages/old-import/src/widgets/definitions/bookmark";
 import classes from "../../../init.module.css";
@@ -58,11 +59,21 @@ export const ImportBoards = () => {
   );
 
   const [data, setData] = useState<OldmarrConfig[] | null>(null);
-  // TODO: Add modal to enter encryption token
   const [checksum, setChecksum] = useState<string[] | null>(null);
   const [userCount, setUserCount] = useState<number>(0);
 
-  const { mutateAsync, isPending } = clientApi.board.analyseOldmarrConfigs.useMutation();
+  const { mutateAsync: analyseAsync, isPending: isAnalysePending } =
+    clientApi.onboarding.analyseOldmarrImport.useMutation();
+  const { mutateAsync: importAsync, isPending: isImportPending } = clientApi.onboarding.importOldmarr.useMutation({
+    onSuccess() {
+      showSuccessNotification({
+        title: "Import successful",
+        message: "Imported boards of homarr before 1.0 successfully",
+      });
+
+      console.log("Now next page would be opened");
+    },
+  });
   const [selectedBoards, selectedBoardActions] = useListState<SelectedBoard>([]);
   const { openModal } = useModalAction(ImportTokenModal);
 
@@ -75,7 +86,7 @@ export const ImportBoards = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    await mutateAsync(formData, {
+    await analyseAsync(formData, {
       onSuccess({ configurations, checksum, userCount }) {
         // TODO: Check that names are distinct
         startTransition(() => {
@@ -90,12 +101,55 @@ export const ImportBoards = () => {
     });
   };
 
-  if (file === null || isPending) {
+  const handleImportAsync = async () => {
+    if (!file || !data) return;
+    const formData = new FormData();
+    formData.set("file", file);
+    formData.set(
+      "importConfiguration",
+      JSON.stringify({
+        common: form.values,
+        boardSpecific: selectedBoards
+          .map((selected) => {
+            const old = data.find((board) => board.configProperties.name === selected.id);
+            if (!old) {
+              return [];
+            }
+
+            const screenSizes = objectKeys(selected).filter((key) => key !== "id");
+
+            return screenSizes
+              .filter((screenSize) => selected[screenSize])
+              .map((screenSize) => ({
+                name: `${old.configProperties.name}-${screenSize}`,
+                configName: old.configProperties.name,
+                screenSize,
+              }));
+          })
+          .flatMap((entry) => entry),
+      }),
+    );
+    if (checksum) {
+      openModal({
+        checksum,
+        onSuccessfulTokenAsync: async (token) => {
+          formData.set("token", token);
+
+          await importAsync(formData);
+        },
+      });
+      return;
+    }
+
+    await importAsync(formData);
+  };
+
+  if (file === null || isAnalysePending) {
     return (
       <GridCol span={12}>
         <Card className={classes.card} w="100%">
           <Dropzone
-            loading={isPending && Boolean(file)}
+            loading={isAnalysePending && Boolean(file)}
             onDrop={async (files) => {
               const firstFile = files[0];
               if (firstFile) {
@@ -227,19 +281,7 @@ export const ImportBoards = () => {
               configuration={form.values}
             />
 
-            <Button
-              fullWidth
-              onClick={() => {
-                if (checksum) {
-                  openModal({
-                    checksum,
-                    onSuccessfulToken: async (token) => {
-                      console.log(token);
-                    },
-                  });
-                }
-              }}
-            >
+            <Button fullWidth loading={isImportPending} onClick={handleImportAsync}>
               Confirm import and continue
             </Button>
           </Stack>
@@ -270,7 +312,10 @@ const Summary = ({ data, selectedBoards, configuration, userCount }: SummaryProp
         return screenSizes
           .filter((screenSize) => selected[screenSize])
           .map((screenSize) => ({
-            configuration: { name: `${old.configProperties.name}-${screenSize}`, screenSize },
+            configuration: {
+              name: `${old.configProperties.name}-${screenSize}`,
+              screenSize,
+            },
             old: structuredClone(old), // Creates a deep copy without references
           }));
       })
@@ -459,7 +504,7 @@ const SelectedBoardsCard = ({ data, selectedBoardState }: SelectedBoardCardProps
   );
 };
 
-const ImportTokenModal = createModal<{ checksum: string[]; onSuccessfulToken: (token: string) => Promise<void> }>(
+const ImportTokenModal = createModal<{ checksum: string[]; onSuccessfulTokenAsync: (token: string) => Promise<void> }>(
   ({ actions, innerProps }) => {
     const { mutateAsync, isPending } = clientApi.onboarding.checkToken.useMutation();
     const [token, setToken] = useState("");
@@ -468,7 +513,7 @@ const ImportTokenModal = createModal<{ checksum: string[]; onSuccessfulToken: (t
         { checksum: innerProps.checksum, token },
         {
           async onSuccess() {
-            await innerProps.onSuccessfulToken(token);
+            await innerProps.onSuccessfulTokenAsync(token);
             actions.closeModal();
           },
           onError() {

@@ -1,5 +1,5 @@
 import type { InferInsertModel, InferSelectModel } from "@homarr/db";
-import { apps, boards, integrations, integrationSecrets, sections } from "@homarr/db/schema/sqlite";
+import type { apps, boards, integrations, integrationSecrets, sections } from "@homarr/db/schema/sqlite";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
