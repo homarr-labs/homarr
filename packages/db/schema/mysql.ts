@@ -25,6 +25,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
@@ -395,7 +396,9 @@ export const searchEngines = mysqlTable("search_engine", {
   name: varchar("name", { length: 64 }).notNull(),
   short: varchar("short", { length: 8 }).notNull(),
   description: text("description"),
-  urlTemplate: text("url_template").notNull(),
+  urlTemplate: text("url_template"),
+  type: varchar("type", { length: 64 }).$type<SearchEngineType>().notNull().default("generic"),
+  integrationId: varchar("integration_id", { length: 64 }).references(() => integrations.id, { onDelete: "cascade" }),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
@@ -566,5 +569,12 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   item: one(items, {
     fields: [integrationItems.itemId],
     references: [items.id],
+  }),
+}));
+
+export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [searchEngines.integrationId],
+    references: [integrations.id],
   }),
 }));

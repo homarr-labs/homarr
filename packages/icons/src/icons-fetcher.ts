@@ -1,5 +1,6 @@
 import { GitHubIconRepository } from "./repositories/github.icon-repository";
 import { JsdelivrIconRepository } from "./repositories/jsdelivr.icon-repository";
+import { LocalIconRepository } from "./repositories/local.icon-repository";
 import type { RepositoryIconGroup } from "./types";
 
 const repositories = [
@@ -43,6 +44,7 @@ const repositories = [
     new URL("https://data.jsdelivr.com/v1/packages/gh/loganmarchione/homelab-svg-assets@main?structure=flat"),
     "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/{0}",
   ),
+  new LocalIconRepository(),
 ];
 
 export const fetchIconsAsync = async (): Promise<RepositoryIconGroup[]> => {

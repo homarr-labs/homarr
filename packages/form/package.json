@@ -24,7 +24,7 @@
   "dependencies": {
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/form": "^7.13.4"
+    "@mantine/form": "^7.13.5"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

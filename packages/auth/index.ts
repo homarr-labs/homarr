@@ -20,6 +20,7 @@ declare module "next-auth" {
 export * from "./security";
 
 // See why it's unknown in the [...nextauth]/route.ts file
-export const createHandlers = (provider: SupportedAuthProvider | "unknown") => createConfiguration(provider, headers());
+export const createHandlers = (provider: SupportedAuthProvider | "unknown", useSecureCookies: boolean) =>
+  createConfiguration(provider, headers(), useSecureCookies);
 
 export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

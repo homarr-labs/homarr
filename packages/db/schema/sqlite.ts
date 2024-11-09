@@ -16,6 +16,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
@@ -382,7 +383,9 @@ export const searchEngines = sqliteTable("search_engine", {
   name: text("name").notNull(),
   short: text("short").notNull(),
   description: text("description"),
-  urlTemplate: text("url_template").notNull(),
+  urlTemplate: text("url_template"),
+  type: text("type").$type<SearchEngineType>().notNull().default("generic"),
+  integrationId: text("integration_id").references(() => integrations.id, { onDelete: "cascade" }),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
@@ -554,6 +557,13 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   item: one(items, {
     fields: [integrationItems.itemId],
     references: [items.id],
+  }),
+}));
+
+export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [searchEngines.integrationId],
+    references: [integrations.id],
   }),
 }));
 

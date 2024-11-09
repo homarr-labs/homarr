@@ -18,7 +18,11 @@ import { createRedirectUri } from "./redirect";
 import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
 
 // See why it's unknown in the [...nextauth]/route.ts file
-export const createConfiguration = (provider: SupportedAuthProvider | "unknown", headers: ReadonlyHeaders | null) => {
+export const createConfiguration = (
+  provider: SupportedAuthProvider | "unknown",
+  headers: ReadonlyHeaders | null,
+  useSecureCookies: boolean,
+) => {
   const adapter = createAdapter(db, provider);
   return NextAuth({
     logger: {
@@ -37,12 +41,6 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
     cookies: {
       sessionToken: {
         name: sessionTokenCookieName,
-        options: {
-          httpOnly: true,
-          sameSite: "lax",
-          path: "/",
-          secure: true,
-        },
       },
     },
     adapter,
@@ -81,7 +79,7 @@ export const createConfiguration = (provider: SupportedAuthProvider | "unknown",
           expires: expires,
           httpOnly: true,
           sameSite: "lax",
-          secure: true,
+          secure: useSecureCookies,
         });
 
         return true;

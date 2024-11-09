@@ -12,6 +12,7 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -56,6 +57,7 @@ export const commandMode = {
       useOptions() {
         const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
         const { colorScheme } = useMantineColorScheme();
+        const { data: session } = useSession();
 
         const commands: (Command & { hidden?: boolean })[] = [
           {
@@ -91,6 +93,7 @@ export const commandMode = {
                 },
               };
             },
+            hidden: !session?.user.permissions.includes("board-create"),
           },
           {
             commandKey: "importBoard",
@@ -106,6 +109,7 @@ export const commandMode = {
                 },
               };
             },
+            hidden: !session?.user.permissions.includes("board-create"),
           },
           {
             commandKey: "newApp",
@@ -118,12 +122,14 @@ export const commandMode = {
             icon: IconPlug,
             name: tOption("newIntegration.label"),
             useInteraction: interaction.children(newIntegrationChildrenOptions),
+            hidden: !session?.user.permissions.includes("integration-create"),
           },
           {
             commandKey: "newUser",
             icon: IconUserPlus,
             name: tOption("newUser.label"),
             useInteraction: interaction.link(() => ({ href: "/manage/users/new" })),
+            hidden: !session?.user.permissions.includes("admin"),
           },
           {
             commandKey: "newInvite",
@@ -139,6 +145,7 @@ export const commandMode = {
                 },
               };
             },
+            hidden: !session?.user.permissions.includes("admin"),
           },
           {
             commandKey: "newGroup",
@@ -154,6 +161,7 @@ export const commandMode = {
                 },
               };
             },
+            hidden: !session?.user.permissions.includes("admin"),
           },
         ];
 
