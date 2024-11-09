@@ -58,6 +58,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconPlug,
       href: "/manage/integrations",
       label: t("items.integrations"),
+      hidden: !session,
     },
     {
       icon: IconSearch,
