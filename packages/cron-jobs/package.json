@@ -23,11 +23,13 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@extractus/feed-extractor": "^7.1.3",
+    "@homarr/auth": "workspace:^0.1.0",
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/cron-jobs-core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/icons": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
