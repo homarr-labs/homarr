@@ -11,12 +11,12 @@ export const appIntegrationBoardMode = {
   character: "#",
   useGroups() {
     const { data: session } = useSession();
-    const groups: SearchGroup[] = [integrationsSearchGroup, boardsSearchGroup];
+    const groups: SearchGroup[] = [boardsSearchGroup];
 
     if (!session?.user) {
       return groups;
     }
 
-    return groups.concat([appsSearchGroup]);
+    return groups.concat([appsSearchGroup, integrationsSearchGroup]);
   },
 } satisfies SearchMode;
