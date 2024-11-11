@@ -6,7 +6,8 @@
   "exports": {
     ".": "./index.ts",
     "./prepare/multiple": "./src/prepare/multiple.ts",
-    "./prepare": "./src/prepare/index.ts"
+    "./prepare": "./src/prepare/index.ts",
+    "./migration": "./src/migration/index.ts"
   },
   "typesVersions": {
     "*": {

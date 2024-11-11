@@ -12,7 +12,10 @@ import { doAppsMatch } from "../compare/apps";
 type ImportSpecificConfigurationFields = keyof Pick<OldmarrImportConfiguration, "name" | "screenSize">;
 
 export const prepareMultipleImports = (
-  imports: { configuration: Pick<OldmarrImportConfiguration, ImportSpecificConfigurationFields>; old: OldmarrConfig }[],
+  imports: {
+    configuration: Pick<OldmarrImportConfiguration, ImportSpecificConfigurationFields | "distinctAppsByHref">;
+    old: OldmarrConfig;
+  }[],
   configuration: Omit<OldmarrImportConfiguration, ImportSpecificConfigurationFields>,
   existingApps: InferSelectModel<typeof apps>[] = [],
 ) => {

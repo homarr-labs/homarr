@@ -30,7 +30,6 @@ import { SelectWithDescription } from "@homarr/ui";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 import { oldmarrImportConfigurationSchema, z } from "@homarr/validation";
 
-import { mapColumnCount } from "../../../../../../../../../packages/old-import/src/mappers/map-column-count";
 import { prepareMultipleImports } from "../../../../../../../../../packages/old-import/src/prepare/multiple";
 import type { OldmarrBookmarkDefinition } from "../../../../../../../../../packages/old-import/src/widgets/definitions/bookmark";
 import classes from "../../../init.module.css";
@@ -46,14 +45,12 @@ export const ImportBoards = () => {
   const [file, setFile] = useState<File | null>(null);
   const form = useZodForm(
     oldmarrImportConfigurationSchema
-      .omit({ name: true, screenSize: true })
+      .omit({ name: true, screenSize: true, distinctAppsByHref: true })
       .extend({ encryptionToken: z.string().optional() }),
     {
       initialValues: {
-        distinctAppsByHref: true,
         onlyImportApps: false,
         sidebarBehaviour: "last-section",
-        encryptionToken: "",
       },
     },
   );
@@ -223,13 +220,6 @@ export const ImportBoards = () => {
 
             <Fieldset legend="Apps" bg="transparent">
               <Grid>
-                <GridCol span={{ base: 12, sm: 6 }}>
-                  <Switch
-                    label="Avoid duplicates"
-                    description="Ignore apps where an app with the same properties already exists"
-                    {...form.getInputProps("distinctAppsByHref", { type: "checkbox" })}
-                  />
-                </GridCol>
                 <Grid.Col span={{ base: 12, sm: 6 }}>
                   <Switch
                     label="Only import apps"
@@ -294,7 +284,7 @@ export const ImportBoards = () => {
 interface SummaryProps {
   data: OldmarrConfig[];
   selectedBoards: SelectedBoard[];
-  configuration: Omit<OldmarrImportConfiguration, "name" | "screenSize">;
+  configuration: Omit<OldmarrImportConfiguration, "name" | "screenSize" | "distinctAppsByHref">;
   userCount: number;
 }
 
@@ -322,18 +312,11 @@ const Summary = ({ data, selectedBoards, configuration, userCount }: SummaryProp
       .flatMap((entry) => entry);
 
     const preparedImports = prepareMultipleImports(imports, configuration);
-    const appsWithDuplicates =
-      imports.flatMap((entry) => entry.old.apps).length +
-      imports
-        .flatMap((entry) => entry.old.widgets)
-        .filter((widget) => widget.type === "bookmark")
-        .reduce((acc, widget) => acc + (widget.properties as OldmarrBookmarkDefinition["options"]).items.length, 0);
 
     return {
       apps: preparedImports.apps.length,
       boards: preparedImports.boards.length,
       integrations: preparedImports.integrations.length,
-      appsWithDuplicates,
     };
   }, [data, selectedBoards, configuration]);
 
@@ -358,9 +341,6 @@ const Summary = ({ data, selectedBoards, configuration, userCount }: SummaryProp
 
             <Text size="sm">{summary.apps}</Text>
           </Group>
-          <Text size="xs" c="gray.6">
-            This will remove {summary.appsWithDuplicates - summary.apps} duplicates.
-          </Text>
         </Stack>
       </Card>
       <Card withBorder bg="transparent">
