@@ -11,13 +11,15 @@ import {
   Center,
   Flex,
   Group,
+  Kbd,
   List,
   ListItem,
   Stack,
+  Table,
   Text,
   Title,
 } from "@mantine/core";
-import { IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
+import { IconKeyboard, IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
 
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -147,6 +149,47 @@ export default async function AboutPage() {
                   </ListItem>
                 ))}
             </List>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="hotkeys">
+          <AccordionControl icon={<IconKeyboard size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.hotkeys.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.hotkeys.subtitle")}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Shortcut</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><Kbd>mod+j</Kbd></td>
+                  <td>{t("accordion.hotkeys.keys.toggleTheme")}</td>
+                </tr>
+                <tr>
+                  <td><Kbd>mod+k</Kbd></td>
+                  <td>{t("accordion.hotkeys.keys.focusSearchBar")}</td>
+                </tr>
+                <tr>
+                  <td><Kbd>mod+b</Kbd></td>
+                  <td>{t("accordion.hotkeys.keys.openDocker")}</td>
+                </tr>
+                <tr>
+                  <td><Kbd>mod+e</Kbd></td>
+                  <td>{t("accordion.hotkeys.keys.toggleEdit")}</td>
+                </tr>
+              </tbody>
+            </Table>
+            <Text mt="sm" size="sm" c="dimmed">
+              {t("accordion.hotkeys.tip")}
+            </Text>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>

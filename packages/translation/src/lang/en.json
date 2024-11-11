@@ -2120,6 +2120,17 @@
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"
+          },
+          "hotkeys": {
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
+            "keys": {
+              "toggleTheme": "Toggle light/dark mode",
+              "focusSearchBar": "Focus on search bar",
+              "openDocker": "Open docker widget",
+              "toggleEdit": "Toggle edit mode"
+            },
+            "tip": "Mod refers to your modifier key, it is Ctrl and Command/Super/Windows key"
           }
         }
       }
