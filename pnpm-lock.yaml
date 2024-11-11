@@ -984,8 +984,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       '@ctrl/transmission':
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1978,12 +1978,16 @@ packages:
     resolution: {integrity: sha512-BZAPDv8syFArFTAAeb560JSBNTajFtP3G/5eYiUMsg0upGAQs6NWGiHYbyjvAt8uHCSzxXsiji/Wvq1b7CvXSQ==}
     engines: {node: '>=18'}
 
+  '@ctrl/shared-torrent@6.1.0':
+    resolution: {integrity: sha512-LWhAH6C5Ekp3co8tyRVxAOZhlhHqQmuvc5GXoHcAetIFYbPaKhsqdGEACHtGl549cVO676gQjmvLEgzQnsn56g==}
+    engines: {node: '>=18'}
+
   '@ctrl/torrent-file@4.1.0':
     resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
     engines: {node: '>=18'}
 
-  '@ctrl/transmission@7.0.0':
-    resolution: {integrity: sha512-D5Sei25y2Ji5BJTPOKZCDnuCEtD9Jcz6+D/y+1hY8O8vwFyDvAu30DzWYTDahP5wqj2024vO3B0Xkt/CKUpZHw==}
+  '@ctrl/transmission@7.1.0':
+    resolution: {integrity: sha512-jABXDuyfPWXkX4unhAQRW0cExvcWrI52YsxxO0BseFZHfDwsoOUmHGVln2ODbjqAaTqyKK0Wm+BFfwTOpI5K/w==}
     engines: {node: '>=18'}
 
   '@dabh/diagnostics@2.0.3':
@@ -6605,6 +6609,9 @@ packages:
   ofetch@1.3.4:
     resolution: {integrity: sha512-KLIET85ik3vhEfS+3fDlc/BAZiAp+43QEC/yCo5zkNoY2YaKvNkOaFr/6wCFgFH1kuYQM5pMNi0Tg8koiIemtw==}
 
+  ofetch@1.4.1:
+    resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
+
   on-exit-leak-free@2.1.2:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
     engines: {node: '>=14.0.0'}
@@ -8845,15 +8852,17 @@ snapshots:
 
   '@ctrl/shared-torrent@6.0.0': {}
 
+  '@ctrl/shared-torrent@6.1.0': {}
+
   '@ctrl/torrent-file@4.1.0':
     dependencies:
       uint8array-extras: 1.4.0
 
-  '@ctrl/transmission@7.0.0':
+  '@ctrl/transmission@7.1.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.0.0
-      ofetch: 1.3.4
+      '@ctrl/shared-torrent': 6.1.0
+      ofetch: 1.4.1
       ufo: 1.5.4
       uint8array-extras: 1.4.0
 
@@ -13891,6 +13900,12 @@ snapshots:
       es-object-atoms: 1.0.0
 
   ofetch@1.3.4:
+    dependencies:
+      destr: 2.0.3
+      node-fetch-native: 1.6.4
+      ufo: 1.5.4
+
+  ofetch@1.4.1:
     dependencies:
       destr: 2.0.3
       node-fetch-native: 1.6.4
