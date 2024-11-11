@@ -170,20 +170,16 @@ export default async function AboutPage() {
               </thead>
               <tbody>
                 <tr>
+                  <td><Kbd>mod+e</Kbd></td>
+                  <td>{t("accordion.hotkeys.keys.toggleEdit")}</td>
+                </tr>
+                <tr>
                   <td><Kbd>mod+j</Kbd></td>
                   <td>{t("accordion.hotkeys.keys.toggleTheme")}</td>
                 </tr>
                 <tr>
-                  <td><Kbd>mod+k</Kbd></td>
-                  <td>{t("accordion.hotkeys.keys.focusSearchBar")}</td>
-                </tr>
-                <tr>
-                  <td><Kbd>mod+b</Kbd></td>
-                  <td>{t("accordion.hotkeys.keys.openDocker")}</td>
-                </tr>
-                <tr>
-                  <td><Kbd>mod+e</Kbd></td>
-                  <td>{t("accordion.hotkeys.keys.toggleEdit")}</td>
+                  <td><Kbd>mod+s</Kbd></td>
+                  <td>{t("accordion.hotkeys.keys.saveNotebook")}</td>
                 </tr>
               </tbody>
             </Table>

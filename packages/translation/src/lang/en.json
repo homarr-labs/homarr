@@ -2126,9 +2126,8 @@
             "subtitle": "Keyboard shortcuts to enhance your workflow",
             "keys": {
               "toggleTheme": "Toggle light/dark mode",
-              "focusSearchBar": "Focus on search bar",
-              "openDocker": "Open docker widget",
-              "toggleEdit": "Toggle edit mode"
+              "toggleEdit": "Toggle edit mode",
+              "saveNotebook": "Save notebook (only inside notebook widget)"
             },
             "tip": "Mod refers to your modifier key, it is Ctrl and Command/Super/Windows key"
           }
