@@ -27,9 +27,13 @@
     "Umami"
   ],
   "i18n-ally.dirStructure": "auto",
-  "i18n-ally.enabledFrameworks": ["next-intl"],
-  "i18n-ally.localesPaths": ["./packages/translation/src/lang/"],
-  "i18n-ally.enabledParsers": ["ts"],
-  "i18n-ally.extract.keyMaxLength": 0,
-  "i18n-ally.keystyle": "flat"
+  "i18n-ally.displayLanguage": "en",
+  "i18n-ally.enabledFrameworks": [
+    "custom"
+  ],
+  "i18n-ally.localesPaths": [
+    "packages/translation/src/lang",
+    "apps/nextjs/src/components/language"
+  ],
+  "i18n-ally.keystyle": "auto",
 }
