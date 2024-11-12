@@ -33,7 +33,6 @@
   ],
   "i18n-ally.localesPaths": [
     "packages/translation/src/lang",
-    "apps/nextjs/src/components/language"
   ],
   "i18n-ally.keystyle": "auto",
 }

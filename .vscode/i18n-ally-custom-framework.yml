@@ -22,7 +22,7 @@ usageMatchRegex:
 # useTranslation() hook.
 # You should unescape RegEx strings in order to fit in the YAML file
 # To help with this, you can use https://www.freeformatter.com/json-escape.html
-scopeRangeRegex: "getScopedI18n\\(\\s*['\"](.*?)['\"]\\)"
+scopeRangeRegex: "(getScopedI18n|useScopedI18n)\\(\\s*['\"](.*?)['\"]\\)"
 
 # An array of strings containing refactor templates.
 # The "$1" will be replaced by the keypath specified.
