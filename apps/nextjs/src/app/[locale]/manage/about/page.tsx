@@ -17,12 +17,19 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
+import { IconKeyboard, IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
 
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { Table } from "@mantine/core";
+
+const HOMARR_HOTKEYS = [
+  { key: "Mod + E", description: "Toggle edit mode" },
+  { key: "Mod + J", description: "Toggle command palette" },
+] as const;
+
 import { createMetaTitle } from "~/metadata";
 import { getPackageAttributesAsync } from "~/versions/package-reader";
 import type githubContributorsJson from "../../../../../../../static-data/contributors.json";
@@ -147,6 +154,36 @@ export default async function AboutPage() {
                   </ListItem>
                 ))}
             </List>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="hotkeys">
+          <AccordionControl icon={<IconKeyboard size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.hotkeys.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.hotkeys.subtitle")}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>{t("accordion.hotkeys.table.shortcut")}</Table.Th>
+                  <Table.Th>{t("accordion.hotkeys.table.description")}</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {HOMARR_HOTKEYS.map((hotkey) => (
+                  <Table.Tr key={hotkey.key}>
+                    <Table.Td>
+                      <code>{hotkey.key}</code>
+                    </Table.Td>
+                    <Table.Td>{t(`accordion.hotkeys.shortcuts.${hotkey.key}`)}</Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
