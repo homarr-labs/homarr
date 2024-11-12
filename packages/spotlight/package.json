@@ -34,7 +34,7 @@
     "@mantine/core": "^7.14.0",
     "@mantine/hooks": "^7.14.0",
     "@mantine/spotlight": "^7.14.0",
-    "@tabler/icons-react": "^3.21.0",
+    "@tabler/icons-react": "^3.22.0",
     "jotai": "^2.10.2",
     "next": "^14.2.17",
     "react": "^18.3.1",
