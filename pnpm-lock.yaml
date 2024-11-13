@@ -267,8 +267,8 @@ importers:
         specifier: ^9.14.0
         version: 9.14.0
       node-loader:
-        specifier: ^2.0.0
-        version: 2.0.0(webpack@5.94.0)
+        specifier: ^2.1.0
+        version: 2.1.0(webpack@5.94.0)
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -6531,8 +6531,8 @@ packages:
     resolution: {integrity: sha512-IRUxE4BVsHWXkV/SFOut4qTlagw2aM8T5/vnTsmrHJvVoKueJHRc/JaFND7QDDc61kLYUJ6qlZM3sqTSyx2dTw==}
     hasBin: true
 
-  node-loader@2.0.0:
-    resolution: {integrity: sha512-I5VN34NO4/5UYJaUBtkrODPWxbobrE4hgDqPrjB25yPkonFhCmZ146vTH+Zg417E9Iwoh1l/MbRs1apc5J295Q==}
+  node-loader@2.1.0:
+    resolution: {integrity: sha512-OwjPkyh8+7jW8DMd/iq71uU1Sspufr/C2+c3t0p08J3CrM9ApZ4U53xuisNrDXOHyGi5OYHgtfmmh+aK9zJA6g==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       webpack: ^5.0.0
@@ -13802,7 +13802,7 @@ snapshots:
   node-gyp-build@4.8.2:
     optional: true
 
-  node-loader@2.0.0(webpack@5.94.0):
+  node-loader@2.1.0(webpack@5.94.0):
     dependencies:
       loader-utils: 2.0.4
       webpack: 5.94.0
