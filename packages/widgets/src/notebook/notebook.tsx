@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   ActionIcon,
+  Box,
   Button,
   ColorPicker,
   ColorSwatch,
@@ -65,12 +66,12 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 
 const iconProps = {
-  size: "1.25rem",
+  size: "5cqmin",
   stroke: 1.5,
 };
 
 const controlIconProps = {
-  size: "1rem",
+  size: "5cqmin",
   stroke: 1.5,
 };
 
@@ -232,7 +233,7 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
   }, [setIsEditing, handleEditToggleCallback]);
 
   return (
-    <>
+    <Box>
       <RichTextEditor
         p={0}
         mt={0}
@@ -394,7 +395,7 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
           )}
         </>
       )}
-    </>
+    </Box>
   );
 }
 

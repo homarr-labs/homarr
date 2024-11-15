@@ -28,12 +28,12 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.13.5",
-    "@mantine/dates": "^7.13.5",
-    "@mantine/hooks": "^7.13.5",
-    "@tabler/icons-react": "^3.21.0",
+    "@mantine/core": "^7.14.0",
+    "@mantine/dates": "^7.14.0",
+    "@mantine/hooks": "^7.14.0",
+    "@tabler/icons-react": "^3.22.0",
     "mantine-react-table": "2.0.0-beta.7",
-    "next": "^14.2.17",
+    "next": "^14.2.18",
     "react": "^18.3.1"
   },
   "devDependencies": {
