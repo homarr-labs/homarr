@@ -30,5 +30,9 @@ export const sessionCleanupJob = createCronJob("sessionCleanup", NEVER, {
   const userIds = sessionsWithInactiveProviders.map(({ userId }) => userId).filter((value) => value !== null);
   await db.delete(sessions).where(inArray(sessions.userId, userIds));
 
-  logger.info(`Deleted sessions for inactive providers count=${userIds.length}`);
+  if (sessionsWithInactiveProviders.length > 0) {
+    logger.info(`Deleted sessions for inactive providers count=${userIds.length}`);
+  } else {
+    logger.debug("No sessions to delete");
+  }
 });
