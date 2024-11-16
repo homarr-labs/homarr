@@ -30,10 +30,10 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.13.5",
-    "@tabler/icons-react": "^3.21.0",
+    "@mantine/core": "^7.14.0",
+    "@tabler/icons-react": "^3.22.0",
     "dayjs": "^1.11.13",
-    "next": "^14.2.17",
+    "next": "^14.2.18",
     "react": "^18.3.1"
   },
   "devDependencies": {
