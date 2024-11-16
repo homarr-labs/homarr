@@ -98,7 +98,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       label: t("items.tools.label"),
       icon: IconTool,
-      // As permissions always include there children permissions, we can check for the lowest permission
+      // As permissions always include there children permissions, we can check other-view-logs as admin includes it
       hidden: !session?.user.permissions.includes("other-view-logs"),
       items: [
         {

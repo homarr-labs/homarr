@@ -45,6 +45,6 @@ const getAllAppIdsOnPublicBoardsAsync = async () => {
         return parsedOptions.items;
       }
 
-      throw new Error("Invalid item kind");
+      throw new Error("Failed to get app ids from board. Invalid item kind: 'test'");
     });
 };
