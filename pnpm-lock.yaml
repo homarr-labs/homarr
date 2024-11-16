@@ -978,8 +978,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^6.1.0
-        version: 6.1.0
+        specifier: ^7.0.0
+        version: 7.0.0
       '@ctrl/qbittorrent':
         specifier: ^9.1.0
         version: 9.1.0
@@ -1962,8 +1962,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@ctrl/deluge@6.1.0':
-    resolution: {integrity: sha512-n8237DbSHlANTLBS3rxIKsnC3peltifJhV2h6fWp5lb7BNZuA3LFz0gVS02aAhj351G3A0ScSYLmuAAL2ld/Nw==}
+  '@ctrl/deluge@7.0.0':
+    resolution: {integrity: sha512-9vnBa2UdYKKC8BXMjLB349LiXL98oyhr8lVGmQq/QhT8RtuB9qzVXHsHPnWjZH1nD24dZM/vOvoG46VWRtRghA==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
@@ -1972,10 +1972,6 @@ packages:
 
   '@ctrl/qbittorrent@9.1.0':
     resolution: {integrity: sha512-mqro5vP94m/evgGSv6fa7Hrip2fhI0F/dMgsTisvi9gChtfXpX1Cj1EwJNzBOiT6yYamEtLJuEe41XLQiXEo/Q==}
-    engines: {node: '>=18'}
-
-  '@ctrl/shared-torrent@6.0.0':
-    resolution: {integrity: sha512-BZAPDv8syFArFTAAeb560JSBNTajFtP3G/5eYiUMsg0upGAQs6NWGiHYbyjvAt8uHCSzxXsiji/Wvq1b7CvXSQ==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.1.0':
@@ -6588,9 +6584,6 @@ packages:
     resolution: {integrity: sha512-yBYjY9QX2hnRmZHAjG/f13MzmBzxzYgQhFrke06TTyKY5zSTEqkOeukBzIdVA3j3ulu8Qa3MbVFShV7T2RmGtQ==}
     engines: {node: '>= 0.4'}
 
-  ofetch@1.3.4:
-    resolution: {integrity: sha512-KLIET85ik3vhEfS+3fDlc/BAZiAp+43QEC/yCo5zkNoY2YaKvNkOaFr/6wCFgFH1kuYQM5pMNi0Tg8koiIemtw==}
-
   ofetch@1.4.1:
     resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
 
@@ -6950,9 +6943,6 @@ packages:
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
-
-  psl@1.9.0:
-    resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
 
   pump@3.0.2:
     resolution: {integrity: sha512-tUPXtzlGM8FE3P0ZL6DVs/3P58k9nk8/jZeQCurTJylQA8qFYzHFfhBJkuqyE0FifOsQ0uKWekiZ5g8wtr28cw==}
@@ -7825,10 +7815,6 @@ packages:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
 
-  tough-cookie@4.1.4:
-    resolution: {integrity: sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==}
-    engines: {node: '>=6'}
-
   tough-cookie@5.0.0:
     resolution: {integrity: sha512-FRKsF7cz96xIIeMZ82ehjC3xW2E+O2+v11udrDYewUbszngYhsGa8z6YUMMzO9QJZzzyd0nGGXnML/TReX6W8Q==}
     engines: {node: '>=16'}
@@ -8049,10 +8035,6 @@ packages:
   unique-string@2.0.0:
     resolution: {integrity: sha512-uNaeirEPvpZWSgzwsPGtU2zVSTrn/8L5q/IexZmH0eH6SA73CmAA5U4GwORTxQAZs95TAXLNqeLoPPNO5gZfWg==}
     engines: {node: '>=8'}
-
-  universalify@0.2.0:
-    resolution: {integrity: sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==}
-    engines: {node: '>= 4.0.0'}
 
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
@@ -8810,13 +8792,13 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@ctrl/deluge@6.1.0':
+  '@ctrl/deluge@7.0.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.0.0
+      '@ctrl/shared-torrent': 6.1.0
       node-fetch-native: 1.6.4
-      ofetch: 1.3.4
-      tough-cookie: 4.1.4
+      ofetch: 1.4.1
+      tough-cookie: 5.0.0
       ufo: 1.5.4
       uint8array-extras: 1.4.0
 
@@ -8835,8 +8817,6 @@ snapshots:
       ofetch: 1.4.1
       ufo: 1.5.4
       uint8array-extras: 1.4.0
-
-  '@ctrl/shared-torrent@6.0.0': {}
 
   '@ctrl/shared-torrent@6.1.0': {}
 
@@ -13873,12 +13853,6 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.0.0
 
-  ofetch@1.3.4:
-    dependencies:
-      destr: 2.0.3
-      node-fetch-native: 1.6.4
-      ufo: 1.5.4
-
   ofetch@1.4.1:
     dependencies:
       destr: 2.0.3
@@ -14327,8 +14301,6 @@ snapshots:
       - supports-color
 
   proxy-from-env@1.1.0: {}
-
-  psl@1.9.0: {}
 
   pump@3.0.2:
     dependencies:
@@ -15363,13 +15335,6 @@ snapshots:
 
   totalist@3.0.1: {}
 
-  tough-cookie@4.1.4:
-    dependencies:
-      psl: 1.9.0
-      punycode: 2.3.1
-      universalify: 0.2.0
-      url-parse: 1.5.10
-
   tough-cookie@5.0.0:
     dependencies:
       tldts: 6.1.61
@@ -15592,8 +15557,6 @@ snapshots:
   unique-string@2.0.0:
     dependencies:
       crypto-random-string: 2.0.0
-
-  universalify@0.2.0: {}
 
   universalify@2.0.1: {}
 
