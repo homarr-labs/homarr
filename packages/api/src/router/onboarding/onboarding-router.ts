@@ -4,7 +4,7 @@ import { zfd } from "zod-form-data";
 import { env } from "@homarr/auth/env.mjs";
 import { decryptSecretWithKey } from "@homarr/common/server";
 import { createId } from "@homarr/db";
-import { createDefaultAdminGroupIfNotExistsAsync } from "@homarr/db/queries";
+import { createDefaultAdminGroupIfNotExistsAsync, createGroupAsync } from "@homarr/db/queries";
 import { groupMembers, users } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import { importMultiple } from "@homarr/old-import";
@@ -13,10 +13,14 @@ import {
   extractOldmarrMigrationZipAsync,
   oldmarrChecksumSchema,
 } from "@homarr/old-import/migration";
-import { oldmarrImportConfigurationSchema, z } from "@homarr/validation";
+import { oldmarrImportConfigurationSchema, validation, z } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { checkSimilarNameAndThrowAsync, throwIfGroupNameIsReservedAsync } from "../group";
+import { throwIfCredentialsDisabled } from "../invite/checks";
+import { createUserAsync } from "../user";
+import { throwIfOnboardingStepDoneAsync } from "./checks";
 
 const oldmarrImportFileSchema = zfd.file().superRefine((value, context) => {
   if (value.type !== "application/zip") {
@@ -40,7 +44,8 @@ export const onboardingRouter = createTRPCRouter({
         token: z.string(),
       }),
     )
-    .mutation(({ input }) => {
+    .mutation(async ({ input }) => {
+      await throwIfOnboardingStepDoneAsync();
       const isValid = checkTokenWithChecksum(input.checksum, input.token);
       if (!isValid) {
         throw new TRPCError({
@@ -56,6 +61,7 @@ export const onboardingRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
+      await throwIfOnboardingStepDoneAsync();
       const { configurations, checksum, credentialUsers, exportSettings } = await extractOldmarrMigrationZipAsync(
         input.file,
       );
@@ -85,6 +91,7 @@ export const onboardingRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await throwIfOnboardingStepDoneAsync();
       const { configurations, checksum, credentialUsers, exportSettings } = await extractOldmarrMigrationZipAsync(
         input.file,
       );
@@ -192,4 +199,28 @@ export const onboardingRouter = createTRPCRouter({
         }
       });
     }),
+  initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
+    throwIfCredentialsDisabled();
+    await throwIfOnboardingStepDoneAsync();
+
+    const userId = await createUserAsync(ctx.db, input);
+    const groupId = await createDefaultAdminGroupIfNotExistsAsync(ctx.db);
+    await ctx.db.insert(groupMembers).values({
+      groupId,
+      userId,
+    });
+  }),
+  initExternalAdminGroup: publicProcedure.input(validation.group.init).mutation(async ({ ctx, input }) => {
+    await throwIfOnboardingStepDoneAsync();
+    if (!env.AUTH_PROVIDERS.includes("ldap") && !env.AUTH_PROVIDERS.includes("oidc")) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "External providers are disabled",
+      });
+    }
+    await throwIfGroupNameIsReservedAsync(ctx.db, input.name);
+    await checkSimilarNameAndThrowAsync(ctx.db, input.name);
+
+    await createGroupAsync(ctx.db, input.name);
+  }),
 });

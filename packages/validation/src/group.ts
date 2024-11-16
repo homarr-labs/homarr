@@ -5,15 +5,21 @@ import { everyoneGroup, groupPermissionKeys } from "@homarr/definitions";
 import { byIdSchema } from "./common";
 import { zodEnumFromArray } from "./enums";
 
+const nameSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(64)
+  .refine((value) => value !== everyoneGroup, {
+    message: "'everyone' is a reserved group name",
+  });
+
 const createSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1)
-    .max(64)
-    .refine((value) => value !== everyoneGroup, {
-      message: "'everyone' is a reserved group name",
-    }),
+  name: nameSchema,
+});
+
+const initSchema = z.object({
+  name: nameSchema,
 });
 
 const updateSchema = createSchema.merge(byIdSchema);
@@ -30,4 +36,5 @@ export const groupSchemas = {
   update: updateSchema,
   savePermissions: savePermissionsSchema,
   groupUser: groupUserSchema,
+  init: initSchema,
 };
