@@ -1,18 +1,13 @@
-import type { Database } from "@homarr/db";
-import { createId } from "@homarr/db";
-import { boards } from "@homarr/db/schema/sqlite";
-import { logger } from "@homarr/log";
+import { createId } from "@homarr/db/client";
 import type { OldmarrConfig } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import { mapColor } from "./mappers/map-colors";
-import { mapColumnCount } from "./mappers/map-column-count";
+import { mapColor } from "../mappers/map-colors";
+import { mapColumnCount } from "../mappers/map-column-count";
 
-export const insertBoardAsync = async (db: Database, old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
-  logger.info(`Importing old homarr board configuration=${old.configProperties.name}`);
-  const boardId = createId();
-  await db.insert(boards).values({
-    id: boardId,
+export const prepareBoard = (old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
+  return {
+    id: createId(),
     name: configuration.name,
     backgroundImageAttachment: old.settings.customization.backgroundImageAttachment,
     backgroundImageUrl: old.settings.customization.backgroundImageUrl,
@@ -27,9 +22,5 @@ export const insertBoardAsync = async (db: Database, old: OldmarrConfig, configu
     opacity: old.settings.customization.appOpacity,
     primaryColor: mapColor(old.settings.customization.colors.primary, "#fa5252"),
     secondaryColor: mapColor(old.settings.customization.colors.secondary, "#fd7e14"),
-  });
-
-  logger.info(`Imported board id=${boardId}`);
-
-  return boardId;
+  };
 };

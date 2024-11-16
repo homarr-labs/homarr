@@ -15,8 +15,18 @@ const searchSchema = z.object({
   limit: z.number().int().positive().default(10),
 });
 
+export const encryptedValueSchema = z.custom<`${string}.${string}`>(
+  (value) =>
+    z
+      .string()
+      .min(3)
+      .regex(/[^\\.]+\.[^\\.]+/)
+      .safeParse(value).success,
+);
+
 export const commonSchemas = {
   paginated: paginatedSchema,
   byId: byIdSchema,
   search: searchSchema,
+  encryptedValue: encryptedValueSchema,
 };

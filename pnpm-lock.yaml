@@ -127,6 +127,9 @@ importers:
       '@mantine/core':
         specifier: ^7.14.0
         version: 7.14.0(@mantine/hooks@7.14.0(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/dropzone':
+        specifier: ^7.14.0
+        version: 7.14.0(@mantine/core@7.14.0(@mantine/hooks@7.14.0(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.14.0
         version: 7.14.0(react@18.3.1)
@@ -512,6 +515,9 @@ importers:
       '@trpc/server':
         specifier: next
         version: 11.0.0-rc.638(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0)
+      adm-zip:
+        specifier: ^0.5.16
+        version: 0.5.16
       dockerode:
         specifier: ^4.0.2
         version: 4.0.2
@@ -537,6 +543,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/adm-zip':
+        specifier: ^0.5.5
+        version: 0.5.5
       '@types/dockerode':
         specifier: ^3.3.31
         version: 3.3.31
@@ -2919,6 +2928,14 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
+  '@mantine/dropzone@7.14.0':
+    resolution: {integrity: sha512-tKliuCx4CfSmGtojg5uK3iOIGBNBpqdWq8URPMaPvAeWVnuWTDsHy27ktWQAcr0pfFgBDA3GUsKpt2EWIdQIEA==}
+    peerDependencies:
+      '@mantine/core': 7.14.0
+      '@mantine/hooks': 7.14.0
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
+
   '@mantine/form@7.14.0':
     resolution: {integrity: sha512-oZQuSiREcZLALTILUwovIc1GuNSQAZfFyhUCQE2MqF5tmjcy51HdeQ0kBtkjCylrc50v165KVtANuWhFwA/2dg==}
     peerDependencies:
@@ -3685,6 +3702,9 @@ packages:
     resolution: {integrity: sha512-j7iexvpBIRK0J9TAVl8g0EcY2Ph5HjzKa0cWKGuGbrYUJ0Ow2X0l6M42uh6CzXwLKTQLw/i+wDAc3f2qBEU5xw==}
     hasBin: true
 
+  '@types/adm-zip@0.5.5':
+    resolution: {integrity: sha512-YCGstVMjc4LTY5uK9/obvxBya93axZOVOyf2GSUulADzmLhYE45u2nAssCs/fWBs1Ifq5Vat75JTPwd5XZoPJw==}
+
   '@types/asn1@0.2.4':
     resolution: {integrity: sha512-V91DSJ2l0h0gRhVP4oBfBzRBN9lAbPUkGDMCnwedqPKX2d84aAMc9CulOvxdw1f7DfEYx99afab+Rsm3e52jhA==}
 
@@ -4079,6 +4099,10 @@ packages:
     resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  adm-zip@0.5.16:
+    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
+    engines: {node: '>=12.0'}
 
   aes-decrypter@4.0.2:
     resolution: {integrity: sha512-lc+/9s6iJvuaRe5qDlMTpCFjnwpkeOXp8qP3oiZ5jsj1MRg+SBVUmmICrhxHvc8OELSmc+fEyyxAuppY6hrWzw==}
@@ -7032,6 +7056,12 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-dropzone-esm@15.0.1:
+    resolution: {integrity: sha512-RdeGpqwHnoV/IlDFpQji7t7pTtlC2O1i/Br0LWkRZ9hYtLyce814S71h5NolnCZXsIN5wrZId6+8eQj2EBnEzg==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+
   react-error-boundary@4.1.2:
     resolution: {integrity: sha512-GQDxZ5Jd+Aq/qUxbCm1UtzmL/s++V7zKgE8yMktJiCQXCCFZnMZh9ng+6/Ne6PjNSXH0L9CjeOEREfRnq6Duag==}
     peerDependencies:
@@ -9481,6 +9511,14 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  '@mantine/dropzone@7.14.0(@mantine/core@7.14.0(@mantine/hooks@7.14.0(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@mantine/core': 7.14.0(@mantine/hooks@7.14.0(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks': 7.14.0(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-dropzone-esm: 15.0.1(react@18.3.1)
+
   '@mantine/form@7.14.0(react@18.3.1)':
     dependencies:
       fast-deep-equal: 3.1.3
@@ -10523,6 +10561,10 @@ snapshots:
       semver: 7.6.2
       update-check: 1.5.4
 
+  '@types/adm-zip@0.5.5':
+    dependencies:
+      '@types/node': 22.9.0
+
   '@types/asn1@0.2.4':
     dependencies:
       '@types/node': 22.9.0
@@ -11033,6 +11075,8 @@ snapshots:
       acorn: 8.14.0
 
   acorn@8.14.0: {}
+
+  adm-zip@0.5.16: {}
 
   aes-decrypter@4.0.2:
     dependencies:
@@ -14411,6 +14455,11 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-dropzone-esm@15.0.1(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
 
   react-error-boundary@4.1.2(react@18.3.1):
     dependencies:

@@ -1,10 +1,9 @@
-import { notFound } from "next/navigation";
-import { Card, Center, Stack, Text, Title } from "@mantine/core";
+import { Card } from "@mantine/core";
 
 import { db } from "@homarr/db";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
+import { InitTitle } from "../_components/init-title";
 import { InitUserForm } from "./_init-user-form";
 
 export default async function InitUser() {
@@ -15,27 +14,17 @@ export default async function InitUser() {
   });
 
   if (firstUser) {
-    notFound();
+    //notFound();
   }
 
   const t = await getScopedI18n("user.page.init");
 
   return (
-    <Center>
-      <Stack align="center" mt="xl">
-        <HomarrLogoWithTitle size="lg" />
-        <Stack gap={6} align="center">
-          <Title order={3} fw={400} ta="center">
-            {t("title")}
-          </Title>
-          <Text size="sm" c="gray.5" ta="center">
-            {t("subtitle")}
-          </Text>
-        </Stack>
-        <Card bg="dark.8" w={64 * 6} maw="90vw">
-          <InitUserForm />
-        </Card>
-      </Stack>
-    </Center>
+    <>
+      <InitTitle title={t("title")} description={t("subtitle")} />
+      <Card bg="dark.8" w={64 * 6} maw="90vw">
+        <InitUserForm />
+      </Card>
+    </>
   );
 }

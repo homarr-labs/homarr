@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like, schema } from "@homarr/db";
-import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
+import { invites, users } from "@homarr/db/schema/sqlite";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { validation, z } from "@homarr/validation";
@@ -12,38 +12,6 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const userRouter = createTRPCRouter({
-  initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
-    throwIfCredentialsDisabled();
-
-    const firstUser = await ctx.db.query.users.findFirst({
-      columns: {
-        id: true,
-      },
-    });
-
-    if (firstUser) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "User already exists",
-      });
-    }
-
-    const userId = await createUserAsync(ctx.db, input);
-    const groupId = createId();
-    await ctx.db.insert(groups).values({
-      id: groupId,
-      name: "admin",
-      ownerId: userId,
-    });
-    await ctx.db.insert(groupPermissions).values({
-      groupId,
-      permission: "admin",
-    });
-    await ctx.db.insert(groupMembers).values({
-      groupId,
-      userId,
-    });
-  }),
   register: publicProcedure.input(validation.user.registrationApi).mutation(async ({ ctx, input }) => {
     throwIfCredentialsDisabled();
     const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
@@ -459,7 +427,7 @@ export const userRouter = createTRPCRouter({
     }),
 });
 
-const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {
+export const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {
   const salt = await createSaltAsync();
   const hashedPassword = await hashPasswordAsync(input.password, salt);
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { InputBaseProps } from "@mantine/core";
 import { Combobox, Group, InputBase, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -14,9 +15,10 @@ interface LanguageComboboxProps {
   value: SupportedLanguage;
   onChange: (value: SupportedLanguage) => void;
   isPending?: boolean;
+  variant?: InputBaseProps["variant"];
 }
 
-export const LanguageCombobox = ({ label, value, onChange, isPending }: LanguageComboboxProps) => {
+export const LanguageCombobox = ({ label, value, onChange, isPending, variant }: LanguageComboboxProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -48,7 +50,7 @@ export const LanguageCombobox = ({ label, value, onChange, isPending }: Language
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
           onClick={handleOnClick}
-          variant="filled"
+          variant={variant ?? "filled"}
         >
           <OptionItem currentLocale={value} localeKey={value} />
         </InputBase>

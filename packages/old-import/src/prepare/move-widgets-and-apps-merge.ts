@@ -1,10 +1,8 @@
-import { objectEntries } from "@homarr/common";
-import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 
-import { OldHomarrScreenSizeError } from "./import-error";
-import { mapColumnCount } from "./mappers/map-column-count";
+import { OldHomarrScreenSizeError } from "../import-error";
+import { mapColumnCount } from "../mappers/map-column-count";
 
 export const moveWidgetsAndAppsIfMerge = (
   old: OldmarrConfig,
@@ -25,8 +23,6 @@ export const moveWidgetsAndAppsIfMerge = (
       },
     ]),
   );
-
-  logger.debug(`Merging wrappers at the end of the board count=${wrapperIdsToMerge.length}`);
 
   let offset = 0;
   for (const id of wrapperIdsToMerge) {
@@ -242,32 +238,6 @@ const moveWidgetsAndAppsInRightSidebar = (
   });
 };
 
-const createItemSnapshot = (
-  item: OldmarrApp | OldmarrWidget,
-  screenSize: OldmarrImportConfiguration["screenSize"],
-) => ({
-  x: item.shape[screenSize]?.location.x,
-  y: item.shape[screenSize]?.location.y,
-  height: item.shape[screenSize]?.size.height,
-  width: item.shape[screenSize]?.size.width,
-  section:
-    item.area.type === "sidebar"
-      ? {
-          type: "sidebar",
-          location: item.area.properties.location,
-        }
-      : {
-          type: item.area.type,
-          id: item.area.properties.id,
-        },
-  toString(): string {
-    return objectEntries(this)
-      .filter(([key]) => key !== "toString")
-      .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
-      .join(" ");
-  },
-});
-
 const updateItems = (options: {
   items: (OldmarrApp | OldmarrWidget)[];
   filter: (item: OldmarrApp | OldmarrWidget) => boolean;
@@ -277,8 +247,6 @@ const updateItems = (options: {
   const items = options.items.filter(options.filter);
   let requiredHeight = 0;
   for (const item of items) {
-    const before = createItemSnapshot(item, options.screenSize);
-
     const screenSizeShape = item.shape[options.screenSize];
     if (!screenSizeShape) {
       throw new OldHomarrScreenSizeError("kind" in item ? "widget" : "app", item.id, options.screenSize);
@@ -289,11 +257,6 @@ const updateItems = (options: {
     }
 
     options.update(item);
-    const after = createItemSnapshot(item, options.screenSize);
-
-    logger.debug(
-      `Moved item ${item.id}\n [snapshot before]: ${before.toString()}\n [snapshot after]: ${after.toString()}`,
-    );
   }
 
   return requiredHeight;

@@ -233,7 +233,7 @@ export const groupRouter = createTRPCRouter({
     }),
 });
 
-const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreId?: string) => {
+export const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreId?: string) => {
   const similar = await db.query.groups.findFirst({
     where: and(like(groups.name, `${name}`), not(eq(groups.id, ignoreId ?? ""))),
   });
@@ -246,7 +246,7 @@ const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreI
   }
 };
 
-const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
+export const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
   const count = await db.$count(groups, and(eq(groups.id, id), eq(groups.name, everyoneGroup)));
 
   if (count > 0) {
