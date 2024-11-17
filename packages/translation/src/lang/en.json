@@ -244,7 +244,7 @@
       "external": "All members are from external providers and cannot be managed here"
     },
     "reservedNotice": {
-      "message": "This group is reserved for system use and restricts some actions. {checkoutDocs}"
+      "message": "This group is reserved for system use and restricts some actions. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
