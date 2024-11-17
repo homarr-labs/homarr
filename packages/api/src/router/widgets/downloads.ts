@@ -7,6 +7,8 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { downloadClientItemSchema, integrationCreator } from "@homarr/integrations";
 import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
+import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 import { z } from "@homarr/validation";
 
 import type { IntegrationAction } from "../../middlewares/integration";
@@ -43,7 +45,8 @@ export const downloadsRouter = createTRPCRouter({
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
+          const channel = downloadClientRequestHandler.createCacheChannel(integration.id, {});
+
           const unsubscribe = channel.subscribe((data) => {
             emit.next({
               integration,

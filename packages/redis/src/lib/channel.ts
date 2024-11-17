@@ -1,5 +1,6 @@
 import superjson from "superjson";
 
+import { hashObjectBase64 } from "@homarr/common";
 import { createId } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
@@ -169,6 +170,17 @@ export const createCacheChannel = <TData>(name: string, cacheDurationMs: number 
 
 export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integrationId: string) => {
   const channelName = `item:${kind}:integration:${integrationId}`;
+  return createChannelWithLatestAndEvents<TData>(channelName);
+};
+
+export const createIntegrationOptionsChannel = <TData>(
+  integrationId: string,
+  queryKey: string,
+  options: Record<string, unknown>,
+) => {
+  const optionsKey = hashObjectBase64(options);
+  const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
+  logger.warn(channelName);
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 
