@@ -749,6 +749,9 @@ importers:
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../analytics
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../auth
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -761,6 +764,9 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@homarr/icons':
         specifier: workspace:^0.1.0
         version: link:../icons
