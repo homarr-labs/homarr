@@ -5,7 +5,8 @@ import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } f
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { WidgetEditModal, widgetImports } from "@homarr/widgets";
+import { widgetImports } from "@homarr/widgets";
+import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";

@@ -11,13 +11,9 @@ import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
-import {
-  loadWidgetDynamic,
-  reduceWidgetOptionsWithDefaultValues,
-  WidgetEditModal,
-  widgetImports,
-} from "@homarr/widgets";
+import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
+import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { Dimensions } from "./_dimension-modal";
 import { PreviewDimensionsModal } from "./_dimension-modal";

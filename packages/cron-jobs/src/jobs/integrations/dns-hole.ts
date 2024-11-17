@@ -1,28 +1,15 @@
 import { EVERY_5_SECONDS } from "@homarr/cron-jobs-core/expressions";
-import { db } from "@homarr/db";
-import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
-import { integrationCreatorFromSecrets } from "@homarr/integrations";
-import type { DnsHoleSummary } from "@homarr/integrations/types";
-import { logger } from "@homarr/log";
-import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
+import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/cached-request-integration-job-handler";
 
 import { createCronJob } from "../../lib";
 
-export const dnsHoleJob = createCronJob("dnsHole", EVERY_5_SECONDS).withCallback(async () => {
-  const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {
-    kinds: ["dnsHoleSummary", "dnsHoleControls"],
-  });
-
-  for (const itemForIntegration of itemsForIntegration) {
-    for (const { integration } of itemForIntegration.integrations) {
-      const integrationInstance = integrationCreatorFromSecrets(integration);
-      await integrationInstance
-        .getSummaryAsync()
-        .then(async (data) => {
-          const channel = createItemAndIntegrationChannel<DnsHoleSummary>(itemForIntegration.kind, integration.id);
-          await channel.publishAndUpdateLastStateAsync(data);
-        })
-        .catch((error) => logger.error(`Could not retrieve data for ${integration.name}: "${error}"`));
-    }
-  }
-});
+export const dnsHoleJob = createCronJob("dnsHole", EVERY_5_SECONDS).withCallback(
+  createRequestIntegrationJobHandler(dnsHoleRequestHandler.handler, {
+    widgetKinds: ["dnsHoleSummary", "dnsHoleControls"],
+    getInput: {
+      dnsHoleSummary: () => ({}),
+      dnsHoleControls: () => ({}),
+    },
+  }),
+);

@@ -45,7 +45,7 @@ export const downloadClientItemSchema = z.object({
 export type DownloadClientItem = z.infer<typeof downloadClientItemSchema>;
 
 export type ExtendedDownloadClientItem = {
-  integration: Integration;
+  integration: Pick<Integration, "id" | "name" | "kind">;
   received: number;
   ratio?: number;
   actions?: {

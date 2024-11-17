@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
-    "./errors": "./src/errors/component.tsx"
+    "./errors": "./src/errors/component.tsx",
+    "./modals": "./src/modals/index.ts"
   },
   "typesVersions": {
     "*": {
