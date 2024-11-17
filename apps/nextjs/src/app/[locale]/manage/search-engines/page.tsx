@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination } from "@homarr/ui";
 import { z } from "@homarr/validation";
@@ -28,6 +30,12 @@ interface SearchEnginesPageProps {
 }
 
 export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
   const searchParams = searchParamsSchema.parse(props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
 
@@ -40,9 +48,11 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
         <Title>{tEngine("page.list.title")}</Title>
         <Group justify="space-between" align="center">
           <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} />
-          <MobileAffixButton component={Link} href="/manage/search-engines/new">
-            {tEngine("page.create.title")}
-          </MobileAffixButton>
+          {session.user.permissions.includes("search-engine-create") && (
+            <MobileAffixButton component={Link} href="/manage/search-engines/new">
+              {tEngine("page.create.title")}
+            </MobileAffixButton>
+          )}
         </Group>
         {searchEngines.length === 0 && <SearchEngineNoResults />}
         {searchEngines.length > 0 && (
@@ -67,6 +77,7 @@ interface SearchEngineCardProps {
 
 const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
   const t = await getScopedI18n("search.engine");
+  const session = await auth();
 
   return (
     <Card>
@@ -105,16 +116,20 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
         </Group>
         <Group>
           <ActionIconGroup>
-            <ActionIcon
-              component={Link}
-              href={`/manage/search-engines/edit/${searchEngine.id}`}
-              variant="subtle"
-              color="gray"
-              aria-label={t("page.edit.title")}
-            >
-              <IconPencil size={16} stroke={1.5} />
-            </ActionIcon>
-            <SearchEngineDeleteButton searchEngine={searchEngine} />
+            {session?.user.permissions.includes("search-engine-modify-all") && (
+              <ActionIcon
+                component={Link}
+                href={`/manage/search-engines/edit/${searchEngine.id}`}
+                variant="subtle"
+                color="gray"
+                aria-label={t("page.edit.title")}
+              >
+                <IconPencil size={16} stroke={1.5} />
+              </ActionIcon>
+            )}
+            {session?.user.permissions.includes("search-engine-full-all") && (
+              <SearchEngineDeleteButton searchEngine={searchEngine} />
+            )}
           </ActionIconGroup>
         </Group>
       </Group>
@@ -124,6 +139,7 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
 
 const SearchEngineNoResults = async () => {
   const t = await getI18n();
+  const session = await auth();
 
   return (
     <Card withBorder bg="transparent">
@@ -132,7 +148,9 @@ const SearchEngineNoResults = async () => {
         <Text fw={500} size="lg">
           {t("search.engine.page.list.noResults.title")}
         </Text>
-        <Anchor href="/manage/search-engines/new">{t("search.engine.page.list.noResults.action")}</Anchor>
+        {session?.user.permissions.includes("search-engine-create") && (
+          <Anchor href="/manage/search-engines/new">{t("search.engine.page.list.noResults.action")}</Anchor>
+        )}
       </Stack>
     </Card>
   );

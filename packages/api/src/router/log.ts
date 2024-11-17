@@ -7,7 +7,7 @@ import { loggingChannel } from "@homarr/redis";
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 
 export const logRouter = createTRPCRouter({
-  subscribe: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
+  subscribe: permissionRequiredProcedure.requiresPermission("other-view-logs").subscription(() => {
     return observable<LoggerMessage>((emit) => {
       const unsubscribe = loggingChannel.subscribe((data) => {
         emit.next(data);

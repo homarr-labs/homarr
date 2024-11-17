@@ -52,16 +52,19 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
+      hidden: !session,
     },
     {
       icon: IconPlug,
       href: "/manage/integrations",
       label: t("items.integrations"),
+      hidden: !session,
     },
     {
       icon: IconSearch,
       href: "/manage/search-engines",
       label: t("items.searchEngies"),
+      hidden: !session,
     },
     {
       icon: IconPhoto,
@@ -95,27 +98,32 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       label: t("items.tools.label"),
       icon: IconTool,
-      hidden: !session?.user.permissions.includes("admin"),
+      // As permissions always include there children permissions, we can check other-view-logs as admin includes it
+      hidden: !session?.user.permissions.includes("other-view-logs"),
       items: [
         {
           label: t("items.tools.items.docker"),
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
+          hidden: !session?.user.permissions.includes("admin"),
         },
         {
           label: t("items.tools.items.api"),
           icon: IconPlug,
           href: "/manage/tools/api",
+          hidden: !session?.user.permissions.includes("admin"),
         },
         {
           label: t("items.tools.items.logs"),
           icon: IconLogs,
           href: "/manage/tools/logs",
+          hidden: !session?.user.permissions.includes("other-view-logs"),
         },
         {
           label: t("items.tools.items.tasks"),
           icon: IconReport,
           href: "/manage/tools/tasks",
+          hidden: !session?.user.permissions.includes("admin"),
         },
       ],
     },

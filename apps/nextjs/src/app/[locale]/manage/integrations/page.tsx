@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   AccordionControl,
   AccordionItem,
@@ -50,11 +51,16 @@ interface IntegrationsPageProps {
 }
 
 export default async function IntegrationsPage({ searchParams }: IntegrationsPageProps) {
-  const integrations = await api.integration.all();
   const session = await auth();
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
+  const integrations = await api.integration.all();
   const t = await getScopedI18n("integration");
 
-  const canCreateIntegrations = session?.user.permissions.includes("integration-create") ?? false;
+  const canCreateIntegrations = session.user.permissions.includes("integration-create");
 
   return (
     <ManageContainer>

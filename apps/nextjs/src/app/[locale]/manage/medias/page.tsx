@@ -47,7 +47,6 @@ export default async function GroupsListPage(props: MediaListPageProps) {
   const t = await getI18n();
   const searchParams = searchParamsSchema.parse(props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
-  const isAdmin = session.user.permissions.includes("admin");
 
   return (
     <ManageContainer size="xl">
@@ -57,10 +56,12 @@ export default async function GroupsListPage(props: MediaListPageProps) {
         <Group justify="space-between">
           <Group>
             <SearchInput placeholder={`${t("media.search")}...`} defaultValue={searchParams.search} />
-            {isAdmin && <IncludeFromAllUsersSwitch defaultChecked={searchParams.includeFromAllUsers} />}
+            {session.user.permissions.includes("media-view-all") && (
+              <IncludeFromAllUsersSwitch defaultChecked={searchParams.includeFromAllUsers} />
+            )}
           </Group>
 
-          <UploadMedia />
+          {session.user.permissions.includes("media-upload") && <UploadMedia />}
         </Group>
         <Table striped highlightOnHover>
           <TableThead>
@@ -91,7 +92,10 @@ interface RowProps {
   media: RouterOutputs["media"]["getPaginated"]["items"][number];
 }
 
-const Row = ({ media }: RowProps) => {
+const Row = async ({ media }: RowProps) => {
+  const session = await auth();
+  const canDelete = media.creatorId === session?.user.id || session?.user.permissions.includes("media-full-all");
+
   return (
     <TableTr>
       <TableTd w={64}>
@@ -120,7 +124,7 @@ const Row = ({ media }: RowProps) => {
       <TableTd w={64}>
         <Group wrap="nowrap" gap="xs">
           <CopyMedia media={media} />
-          <DeleteMedia media={media} />
+          {canDelete && <DeleteMedia media={media} />}
         </Group>
       </TableTd>
     </TableTr>

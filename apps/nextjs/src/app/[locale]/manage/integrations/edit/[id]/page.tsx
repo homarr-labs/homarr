@@ -6,7 +6,7 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { catchTrpcNotFound } from "~/errors/trpc-not-found";
+import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { IntegrationAccessSettings } from "../../_components/integration-access-settings";
 import { EditIntegrationForm } from "./_integration-edit-form";
 

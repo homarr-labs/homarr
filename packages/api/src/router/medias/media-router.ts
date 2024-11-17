@@ -4,7 +4,7 @@ import { and, createId, desc, eq, like } from "@homarr/db";
 import { medias } from "@homarr/db/schema/sqlite";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 
 export const mediaRouter = createTRPCRouter({
   getPaginated: protectedProcedure
@@ -14,7 +14,7 @@ export const mediaRouter = createTRPCRouter({
       ),
     )
     .query(async ({ ctx, input }) => {
-      const includeFromAllUsers = ctx.session.user.permissions.includes("admin") && input.includeFromAllUsers;
+      const includeFromAllUsers = ctx.session.user.permissions.includes("media-view-all") && input.includeFromAllUsers;
 
       const where = and(
         input.search.length >= 1 ? like(medias.name, `%${input.search}%`) : undefined,
@@ -46,20 +46,23 @@ export const mediaRouter = createTRPCRouter({
         totalCount,
       };
     }),
-  uploadMedia: protectedProcedure.input(validation.media.uploadMedia).mutation(async ({ ctx, input }) => {
-    const content = Buffer.from(await input.file.arrayBuffer());
-    const id = createId();
-    await ctx.db.insert(medias).values({
-      id,
-      creatorId: ctx.session.user.id,
-      content,
-      size: input.file.size,
-      contentType: input.file.type,
-      name: input.file.name,
-    });
+  uploadMedia: permissionRequiredProcedure
+    .requiresPermission("media-upload")
+    .input(validation.media.uploadMedia)
+    .mutation(async ({ ctx, input }) => {
+      const content = Buffer.from(await input.file.arrayBuffer());
+      const id = createId();
+      await ctx.db.insert(medias).values({
+        id,
+        creatorId: ctx.session.user.id,
+        content,
+        size: input.file.size,
+        contentType: input.file.type,
+        name: input.file.name,
+      });
 
-    return id;
-  }),
+      return id;
+    }),
   deleteMedia: protectedProcedure.input(validation.common.byId).mutation(async ({ ctx, input }) => {
     const dbMedia = await ctx.db.query.medias.findFirst({
       where: eq(medias.id, input.id),
@@ -75,8 +78,8 @@ export const mediaRouter = createTRPCRouter({
       });
     }
 
-    // Only allow admins and the creator of the media to delete it
-    if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== dbMedia.creatorId) {
+    // Only allow users with media-full-all permission and the creator of the media to delete it
+    if (!ctx.session.user.permissions.includes("media-full-all") && ctx.session.user.id !== dbMedia.creatorId) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "You don't have permission to delete this media",

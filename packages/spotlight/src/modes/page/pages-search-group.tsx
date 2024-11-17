@@ -130,7 +130,7 @@ export const pagesSearchGroup = createGroup<{
         icon: IconLogs,
         path: "/manage/tools/logs",
         name: t("manageLog.label"),
-        hidden: !session?.user.permissions.includes("admin"),
+        hidden: !session?.user.permissions.includes("other-view-logs"),
       },
       {
         icon: IconReport,

@@ -1,11 +1,11 @@
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
 import {
+  IconBox,
   IconCategoryPlus,
   IconFileImport,
   IconLanguage,
   IconMailForward,
   IconMoon,
-  IconPackage,
   IconPlug,
   IconSun,
   IconUserPlus,
@@ -113,9 +113,10 @@ export const commandMode = {
           },
           {
             commandKey: "newApp",
-            icon: IconPackage,
+            icon: IconBox,
             name: tOption("newApp.label"),
             useInteraction: interaction.link(() => ({ href: "/manage/apps/new" })),
+            hidden: !session?.user.permissions.includes("app-create"),
           },
           {
             commandKey: "newIntegration",
