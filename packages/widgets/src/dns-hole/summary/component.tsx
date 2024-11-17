@@ -5,7 +5,6 @@ import type { BoxProps } from "@mantine/core";
 import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
@@ -16,14 +15,13 @@ import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
-import { widgetKind } from ".";
+import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 
 export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
   const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
-      widgetKind,
       integrationIds,
     },
     {
@@ -39,14 +37,12 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
 
   clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
     {
-      widgetKind,
       integrationIds,
     },
     {
       onData: (data) => {
         utils.widget.dnsHole.summary.setData(
           {
-            widgetKind,
             integrationIds,
           },
           (prevData) => {
@@ -67,9 +63,9 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   const data = useMemo(
     () =>
       summaries
-        .filter((pair) => Math.abs(dayjs(pair.timestamp).diff()) < 30000)
-        .flatMap(({ summary }) => summary)
-        .filter((summary) => summary !== null),
+        //.filter((pair) => Math.abs(dayjs(pair.timestamp).diff()) < 30000)
+        .flatMap(({ summary }) => summary),
+    //.filter((summary) => summary !== null),
     [summaries],
   );
 

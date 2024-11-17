@@ -2,7 +2,7 @@ import { observable } from "@trpc/server/observable";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
-import { homeAssistantEntityState } from "@homarr/redis";
+import { smartHomeEntityStateRequestHandler } from "@homarr/request-handler/smart-home-entity-state";
 import { z } from "@homarr/validation";
 
 import type { IntegrationAction } from "../../middlewares/integration";
@@ -13,16 +13,23 @@ const createSmartHomeIntegrationMiddleware = (action: IntegrationAction) =>
   createOneIntegrationMiddleware(action, ...getIntegrationKindsByCategory("smartHomeServer"));
 
 export const smartHomeRouter = createTRPCRouter({
+  entityState: publicProcedure
+    .input(z.object({ entityId: z.string() }))
+    .unstable_concat(createSmartHomeIntegrationMiddleware("query"))
+    .query(async ({ ctx: { integration }, input }) => {
+      const innerHandler = smartHomeEntityStateRequestHandler.handler(integration.id, { entityId: input.entityId });
+      return await innerHandler.getCachedOrUpdatedDataAsync(integration, {});
+    }),
   subscribeEntityState: publicProcedure.input(z.object({ entityId: z.string() })).subscription(({ input }) => {
     return observable<{
       entityId: string;
       state: string;
     }>((emit) => {
-      const unsubscribe = homeAssistantEntityState.subscribe((message) => {
-        if (message.entityId !== input.entityId) {
-          return;
-        }
-        emit.next(message);
+      const channel = smartHomeEntityStateRequestHandler.createCacheChannel("homeAssistant", {
+        entityId: input.entityId,
+      });
+      const unsubscribe = channel.subscribe((state) => {
+        emit.next({ state, entityId: input.entityId });
       });
 
       return () => {

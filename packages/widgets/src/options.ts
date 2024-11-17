@@ -2,12 +2,10 @@ import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
 import type { ActionIconProps } from "@mantine/core";
 
-import { objectEntries } from "@homarr/common";
-import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import type { ZodType } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
-import { widgetImports } from ".";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 
 interface CommonInput<TType> {
@@ -187,16 +185,4 @@ export type OptionsBuilderResult = ReturnType<OptionsBuilder>;
 
 export const optionsBuilder = {
   from: createOptions,
-};
-
-export const reduceWidgetOptionsWithDefaultValues = (kind: WidgetKind, currentValue: Record<string, unknown> = {}) => {
-  const definition = widgetImports[kind].definition;
-  const options = definition.options as Record<string, WidgetOptionDefinition>;
-  return objectEntries(options).reduce(
-    (prev, [key, value]) => ({
-      ...prev,
-      [key]: currentValue[key] ?? value.defaultValue,
-    }),
-    {} as Record<string, unknown>,
-  );
 };

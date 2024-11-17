@@ -1,6 +1,12 @@
 import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
 
-export { createCacheChannel, createItemAndIntegrationChannel, createItemChannel, handshakeAsync } from "./lib/channel";
+export {
+  createCacheChannel,
+  createItemAndIntegrationChannel,
+  createItemChannel,
+  createIntegrationOptionsChannel,
+  handshakeAsync,
+} from "./lib/channel";
 
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");
 export const pingChannel = createSubPubChannel<{ url: string; statusCode: number } | { url: string; error: string }>(

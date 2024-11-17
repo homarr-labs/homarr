@@ -18,7 +18,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -27,7 +26,7 @@ import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
-import { widgetKind } from ".";
+import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
 import TimerModal from "./TimerModal";
@@ -47,7 +46,6 @@ export default function DnsHoleControlsWidget({
 
   const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
     {
-      widgetKind: "dnsHoleControls",
       integrationIds,
     },
     {
@@ -61,14 +59,12 @@ export default function DnsHoleControlsWidget({
   // Subscribe to summary updates
   clientApi.widget.dnsHole.subscribeToSummary.useSubscription(
     {
-      widgetKind,
       integrationIds,
     },
     {
       onData: (data) => {
         utils.widget.dnsHole.summary.setData(
           {
-            widgetKind: "dnsHoleControls",
             integrationIds,
           },
           (prevData) => {
@@ -90,14 +86,13 @@ export default function DnsHoleControlsWidget({
     onSettled: (_, error, { integrationId }) => {
       utils.widget.dnsHole.summary.setData(
         {
-          widgetKind: "dnsHoleControls",
           integrationIds,
         },
         (prevData) => {
           if (!prevData) return [];
 
           return prevData.map((item) =>
-            item.integration.id === integrationId && item.summary
+            item.integration.id === integrationId
               ? {
                   ...item,
                   summary: {
@@ -115,14 +110,13 @@ export default function DnsHoleControlsWidget({
     onSettled: (_, error, { integrationId }) => {
       utils.widget.dnsHole.summary.setData(
         {
-          widgetKind: "dnsHoleControls",
           integrationIds,
         },
         (prevData) => {
           if (!prevData) return [];
 
           return prevData.map((item) =>
-            item.integration.id === integrationId && item.summary
+            item.integration.id === integrationId
               ? {
                   ...item,
                   summary: {
@@ -138,17 +132,16 @@ export default function DnsHoleControlsWidget({
   });
   const toggleDns = (integrationId: string) => {
     const integrationStatus = summaries.find(({ integration }) => integration.id === integrationId);
-    if (!integrationStatus?.summary?.status) return;
+    if (!integrationStatus?.summary.status) return;
     utils.widget.dnsHole.summary.setData(
       {
-        widgetKind: "dnsHoleControls",
         integrationIds,
       },
       (prevData) => {
         if (!prevData) return [];
 
         return prevData.map((item) =>
-          item.integration.id === integrationId && item.summary
+          item.integration.id === integrationId
             ? {
                 ...item,
                 summary: {
@@ -170,7 +163,7 @@ export default function DnsHoleControlsWidget({
   // make lists of enabled and disabled interactable integrations (with permissions, not disconnected and not processing)
   const integrationsSummaries = summaries.reduce(
     (acc, { summary, integration: { id } }) =>
-      integrationsWithInteractions.includes(id) && summary?.status != null ? (acc[summary.status].push(id), acc) : acc,
+      integrationsWithInteractions.includes(id) && summary.status != null ? (acc[summary.status].push(id), acc) : acc,
     { enabled: [] as string[], disabled: [] as string[] },
   );
 
@@ -311,8 +304,8 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   t,
 }) => {
   // Independently determine connection status, current state and permissions
-  const isConnected = data.summary !== null && Math.abs(dayjs(data.timestamp).diff()) < 30000;
-  const isEnabled = data.summary?.status ? data.summary.status === "enabled" : undefined;
+  const isConnected = true as boolean; // Math.abs(dayjs(data.timestamp).diff()) < 30000;
+  const isEnabled = data.summary.status ? data.summary.status === "enabled" : undefined;
   const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
   // Use all factors to infer the state of the action buttons
   const controlEnabled = isInteractPermitted && isEnabled !== undefined && isConnected;

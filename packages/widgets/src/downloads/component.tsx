@@ -21,7 +21,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useTimeout } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import type { IconProps } from "@tabler/icons-react";
 import {
   IconAlertTriangle,
@@ -41,11 +41,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { humanFileSize } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
-import type {
-  DownloadClientJobsAndStatus,
-  ExtendedClientStatus,
-  ExtendedDownloadClientItem,
-} from "@homarr/integrations";
+import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -82,8 +78,6 @@ const standardIconStyle: IconProps["style"] = {
   width: "var(--icon-size)",
 };
 
-const invalidateTime = 30000;
-
 export default function DownloadClientsWidget({
   isEditMode,
   integrationIds,
@@ -103,25 +97,9 @@ export default function DownloadClientsWidget({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
-      select(data) {
-        return data.map((item) =>
-          dayjs().diff(item.timestamp) < invalidateTime ? item : { ...item, timestamp: new Date(0), data: null },
-        );
-      },
     },
   );
   const utils = clientApi.useUtils();
-
-  //Invalidate all data after no update for 30 seconds using timer
-  const invalidationTimer = useTimeout(
-    () => {
-      utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) =>
-        prevData?.map((item) => ({ ...item, timestamp: new Date(0), data: null })),
-      );
-    },
-    invalidateTime,
-    { autoInvoke: true },
-  );
 
   //Translations
   const t = useScopedI18n("widget.downloads");
@@ -143,16 +121,6 @@ export default function DownloadClientsWidget({
     },
     {
       onData: (data) => {
-        //Use cyclical update to invalidate data older than 30 seconds from unresponsive integrations
-        const invalidIndexes = currentItems
-          //Don't update already invalid data (new Date (0))
-          .filter(({ timestamp }) => dayjs().diff(timestamp) > invalidateTime && timestamp > new Date(0))
-          .map(({ integration }) => integration.id);
-        utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) =>
-          prevData?.map((item) =>
-            invalidIndexes.includes(item.integration.id) ? item : { ...item, timestamp: new Date(0), data: null },
-          ),
-        );
         utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) => {
           const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
           if (updateIndex >= 0) {
@@ -165,10 +133,6 @@ export default function DownloadClientsWidget({
 
           return undefined;
         });
-
-        //Reset no update timer
-        invalidationTimer.clear();
-        invalidationTimer.start();
       },
     },
   );
@@ -179,16 +143,6 @@ export default function DownloadClientsWidget({
       currentItems
         //Insure it is only using selected integrations
         .filter(({ integration }) => integrationIds.includes(integration.id))
-        //Removing any integration with no data associated
-        .filter(
-          (
-            pair,
-          ): pair is {
-            integration: typeof pair.integration;
-            timestamp: typeof pair.timestamp;
-            data: DownloadClientJobsAndStatus;
-          } => pair.data != null,
-        )
         //Construct normalized items list
         .flatMap((pair) =>
           //Apply user white/black list
@@ -255,7 +209,6 @@ export default function DownloadClientsWidget({
         .filter(({ integration }) => integrationIds.includes(integration.id))
         .flatMap(({ integration, data }): ExtendedClientStatus => {
           const interact = integrationsWithInteractions.includes(integration.id);
-          if (!data) return { integration, interact };
           const isTorrent = getIntegrationKindsByCategory("torrent").some((kind) => kind === integration.kind);
           /** Derived from current items */
           const { totalUp, totalDown } = data.items
