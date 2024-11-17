@@ -1311,6 +1311,24 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3
 
+  packages/request-handler:
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.10.0
+        version: 9.14.0
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.3
+
   packages/server-settings:
     dependencies:
       '@homarr/definitions':
