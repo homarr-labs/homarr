@@ -91,7 +91,6 @@ export type inferSupportedIntegrationsStrict<TKind extends WidgetKind> = (Widget
   : never[])[number];
 
 export const reduceWidgetOptionsWithDefaultValues = (kind: WidgetKind, currentValue: Record<string, unknown> = {}) => {
-  console.log("kind", kind, "currentValue", currentValue);
   const definition = widgetImports[kind].definition;
   const options = definition.options as Record<string, WidgetOptionDefinition>;
   return objectEntries(options).reduce(

@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";

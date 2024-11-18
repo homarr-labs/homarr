@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ActionIcon, Center, LoadingOverlay, Overlay, Stack, Text, UnstyledButton } from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
