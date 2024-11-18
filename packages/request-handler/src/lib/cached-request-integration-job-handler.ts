@@ -1,5 +1,6 @@
 import SuperJSON from "superjson";
 
+import { decryptSecret } from "@homarr/common/server";
 import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
@@ -64,8 +65,20 @@ export const createRequestIntegrationJobHandler = <
 
     for (const { integrationId, integration, input } of distinctIntegrations) {
       try {
+        const decryptedSecrets = integration.secrets.map((secret) => ({
+          ...secret,
+          value: decryptSecret(secret.value),
+        }));
+
         const innerHandler = handler(integrationId, input);
-        await innerHandler.getCachedOrUpdatedDataAsync(integration, { forceUpdate: true });
+        await innerHandler.getCachedOrUpdatedDataAsync(
+          {
+            ...integration,
+            kind: integration.kind as TIntegrationKind,
+            decryptedSecrets,
+          },
+          { forceUpdate: true },
+        );
       } catch (error) {
         logger.error(`Failed to run integration job integration=${integrationId} error=${error as string}`);
       }

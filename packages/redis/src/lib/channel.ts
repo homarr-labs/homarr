@@ -180,7 +180,6 @@ export const createIntegrationOptionsChannel = <TData>(
 ) => {
   const optionsKey = hashObjectBase64(options);
   const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
-  logger.warn(channelName);
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 

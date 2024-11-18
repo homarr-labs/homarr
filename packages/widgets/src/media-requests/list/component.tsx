@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";

@@ -23,7 +23,7 @@ interface MultiSelectInput<TOptions extends SelectOption[]>
   searchable?: boolean;
 }
 
-interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier>
+export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier>
   extends Omit<CommonInput<TOptionValue[]>, "withDescription"> {
   AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
   ItemComponent: (props: {

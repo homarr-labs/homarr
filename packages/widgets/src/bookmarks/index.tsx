@@ -1,14 +1,12 @@
-import { ActionIcon, Avatar, Button, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
 import { IconClock, IconX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useModalAction } from "@homarr/modals";
-import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
-import { AppSelectModal } from "./app-select-modal";
+import { BookmarkAddButton } from "./add-button";
 
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
   icon: IconClock,
@@ -42,16 +40,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
           </Group>
         );
       },
-      AddButton({ addItem, values }) {
-        const { openModal } = useModalAction(AppSelectModal);
-        const t = useI18n();
-
-        return (
-          <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>
-            {t("widget.bookmarks.option.items.add")}
-          </Button>
-        );
-      },
+      AddButton: BookmarkAddButton,
       uniqueIdentifier: (item) => item.id,
       useData: (initialIds) => {
         const { data, error, isLoading } = clientApi.app.byIds.useQuery(initialIds);

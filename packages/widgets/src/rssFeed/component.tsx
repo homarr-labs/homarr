@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";

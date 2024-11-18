@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Group, HoverCard, Space, Stack, Text } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconMapPin } from "@tabler/icons-react";
 import combineClasses from "clsx";
