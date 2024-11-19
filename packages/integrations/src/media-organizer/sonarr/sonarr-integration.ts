@@ -75,7 +75,7 @@ export class SonarrIntegration extends Integration {
         name: "IMDb",
         color: "#f5c518",
         isDark: false,
-        logo: "/images/apps/imdb.png",
+        logo: "/images/apps/imdb.svg",
       });
     }
 

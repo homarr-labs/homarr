@@ -56,10 +56,10 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
             combobox.closeDropdown();
           });
         }}
+        key={item.id}
       >
-        <Indicator label="SVG" disabled={item.url.endsWith(".svg")} size={16}>
+        <Indicator label="SVG" disabled={!item.url.endsWith(".svg")} size={16}>
           <Card
-            key={item.id}
             p="sm"
             pos="relative"
             style={{
