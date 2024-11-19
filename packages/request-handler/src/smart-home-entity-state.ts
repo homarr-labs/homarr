@@ -2,9 +2,9 @@ import dayjs from "dayjs";
 
 import { integrationCreator } from "@homarr/integrations";
 
-import { createCachedRequestHandler } from "./lib/cached-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const smartHomeEntityStateRequestHandler = createCachedRequestHandler<
+export const smartHomeEntityStateRequestHandler = createCachedIntegrationRequestHandler<
   string,
   "homeAssistant",
   { entityId: string }

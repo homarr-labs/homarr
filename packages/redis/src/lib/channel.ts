@@ -187,7 +187,7 @@ export const createItemChannel = <TData>(itemId: string) => {
   return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
 };
 
-const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
+export const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
   return {
     subscribe: (callback: (data: TData) => void) => {
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {

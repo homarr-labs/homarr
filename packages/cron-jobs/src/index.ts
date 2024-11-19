@@ -6,7 +6,7 @@ import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
-import { mediaRequestsJob } from "./jobs/integrations/media-requests";
+import { mediaRequestListJob, mediaRequestStatsJob } from "./jobs/integrations/media-requests";
 import { mediaServerJob } from "./jobs/integrations/media-server";
 import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
@@ -23,7 +23,8 @@ export const jobGroup = createCronJobGroup({
   mediaOrganizer: mediaOrganizerJob,
   downloads: downloadsJob,
   dnsHole: dnsHoleJob,
-  mediaRequests: mediaRequestsJob,
+  mediaRequestStats: mediaRequestStatsJob,
+  mediaRequestList: mediaRequestListJob,
   rssFeeds: rssFeedsJob,
   indexerManager: indexerManagerJob,
   healthMonitoring: healthMonitoringJob,

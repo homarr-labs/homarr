@@ -1,39 +1,35 @@
 import dayjs from "dayjs";
-import SuperJSON from "superjson";
 
-import type { Modify } from "@homarr/common/types";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
-import { db } from "@homarr/db";
-import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
-import { integrationCreatorFromSecrets } from "@homarr/integrations";
-import type { CalendarEvent } from "@homarr/integrations/types";
-import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
+import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/cached-request-integration-job-handler";
 
-// This import is done that way to avoid circular dependencies.
-import type { WidgetComponentProps } from "../../../../widgets";
 import { createCronJob } from "../../lib";
 
-export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).withCallback(async () => {
-  const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {
-    kinds: ["calendar"],
-  });
+export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).withCallback(
+  createRequestIntegrationJobHandler(calendarMonthRequestHandler.handler, {
+    widgetKinds: ["calendar"],
+    getInput: {
+      // Request handler will run for all specified months
+      calendar: (options) => {
+        const inputs = [];
 
-  for (const itemForIntegration of itemsForIntegration) {
-    for (const { integration } of itemForIntegration.integrations) {
-      const options = SuperJSON.parse<WidgetComponentProps<"calendar">["options"]>(itemForIntegration.options);
+        const startOffset = -Number(options.filterPastMonths);
+        const endOffset = Number(options.filterFutureMonths);
 
-      const start = dayjs().subtract(Number(options.filterPastMonths), "months").toDate();
-      const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();
+        for (let offsetMonths = startOffset; offsetMonths <= endOffset; offsetMonths++) {
+          const year = dayjs().subtract(offsetMonths, "months").year();
+          const month = dayjs().subtract(offsetMonths, "months").month();
 
-      //Asserting the integration kind until all of them get implemented
-      const integrationInstance = integrationCreatorFromSecrets(
-        integration as Modify<typeof integration, { kind: "sonarr" | "radarr" | "lidarr" }>,
-      );
+          inputs.push({
+            year,
+            month,
+            releaseType: options.releaseType,
+          });
+        }
 
-      const events = await integrationInstance.getCalendarEventsAsync(start, end);
-
-      const cache = createItemAndIntegrationChannel<CalendarEvent[]>("calendar", integration.id);
-      await cache.setAsync(events);
-    }
-  }
-});
+        return inputs;
+      },
+    },
+  }),
+);

@@ -3,9 +3,9 @@ import dayjs from "dayjs";
 import { integrationCreator } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 
-import { createCachedRequestHandler } from "./lib/cached-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const dnsHoleRequestHandler = createCachedRequestHandler<
+export const dnsHoleRequestHandler = createCachedIntegrationRequestHandler<
   DnsHoleSummary,
   "piHole" | "adGuardHome",
   Record<string, never>

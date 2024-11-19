@@ -2123,8 +2123,11 @@
             "downloads": {
               "label": "Downloads"
             },
-            "mediaRequests": {
-              "label": "Media Requests"
+            "mediaRequestStats": {
+              "label": "Media Request Stats"
+            },
+            "mediaRequestList": {
+              "label": "Media Request List"
             },
             "rssFeeds": {
               "label": "RSS feeds"

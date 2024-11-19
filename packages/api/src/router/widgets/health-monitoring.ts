@@ -12,14 +12,13 @@ export const healthMonitoringRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const channel = systemInfoRequestHandler.createCacheChannel(integration.id, {});
-          const { data: healthInfo, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
+          const innerHandler = systemInfoRequestHandler.handler(integration, {});
+          const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integrationId: integration.id,
             integrationName: integration.name,
-            healthInfo,
-            timestamp,
+            healthInfo: data,
           };
         }),
       );
@@ -31,8 +30,8 @@ export const healthMonitoringRouter = createTRPCRouter({
       return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
-          const channel = systemInfoRequestHandler.createCacheChannel(integration.id, {});
-          const unsubscribe = channel.subscribe((healthInfo) => {
+          const innerHandler = systemInfoRequestHandler.handler(integration, {});
+          const unsubscribe = innerHandler.subscribe((healthInfo) => {
             emit.next({
               integrationId: integration.id,
               healthInfo,

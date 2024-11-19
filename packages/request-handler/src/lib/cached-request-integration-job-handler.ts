@@ -1,6 +1,7 @@
 import SuperJSON from "superjson";
 
 import { decryptSecret } from "@homarr/common/server";
+import type { MaybeArray } from "@homarr/common/types";
 import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
@@ -10,13 +11,13 @@ import { hashObjectBase64 } from "../../../common/src";
 import type { inferSupportedIntegrationsStrict } from "../../../widgets/src";
 import { reduceWidgetOptionsWithDefaultValues } from "../../../widgets/src";
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
-import type { createCachedRequestHandler } from "./cached-request-handler";
+import type { createCachedIntegrationRequestHandler } from "./cached-integration-request-handler";
 
 export const createRequestIntegrationJobHandler = <
   TWidgetKind extends WidgetKind,
   TIntegrationKind extends inferSupportedIntegrationsStrict<TWidgetKind>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  THandler extends ReturnType<typeof createCachedRequestHandler<any, TIntegrationKind, any>>["handler"],
+  THandler extends ReturnType<typeof createCachedIntegrationRequestHandler<any, TIntegrationKind, any>>["handler"],
 >(
   handler: THandler,
   {
@@ -25,7 +26,7 @@ export const createRequestIntegrationJobHandler = <
   }: {
     widgetKinds: TWidgetKind[];
     getInput: {
-      [key in TWidgetKind]: (options: WidgetComponentProps<key>["options"]) => Parameters<THandler>[1];
+      [key in TWidgetKind]: (options: WidgetComponentProps<key>["options"]) => MaybeArray<Parameters<THandler>[1]>;
     };
   },
 ) => {
@@ -42,24 +43,28 @@ export const createRequestIntegrationJobHandler = <
     }[] = [];
 
     for (const itemForIntegration of itemsForIntegration) {
-      const input = getInput[itemForIntegration.kind](
+      const oneOrMultipleInputs = getInput[itemForIntegration.kind](
         reduceWidgetOptionsWithDefaultValues(
           itemForIntegration.kind,
           SuperJSON.parse(itemForIntegration.options),
         ) as never,
       );
       for (const { integration } of itemForIntegration.integrations) {
-        const inputHash = hashObjectBase64(input);
-        if (
-          distinctIntegrations.some(
-            (distinctIntegration) =>
-              distinctIntegration.integrationId === integration.id && distinctIntegration.inputHash === inputHash,
-          )
-        ) {
-          continue;
-        }
+        const inputArray = Array.isArray(oneOrMultipleInputs) ? oneOrMultipleInputs : [oneOrMultipleInputs];
 
-        distinctIntegrations.push({ integrationId: integration.id, inputHash, integration, input });
+        for (const input of inputArray) {
+          const inputHash = hashObjectBase64(input);
+          if (
+            distinctIntegrations.some(
+              (distinctIntegration) =>
+                distinctIntegration.integrationId === integration.id && distinctIntegration.inputHash === inputHash,
+            )
+          ) {
+            continue;
+          }
+
+          distinctIntegrations.push({ integrationId: integration.id, inputHash, integration, input });
+        }
       }
     }
 
@@ -70,15 +75,15 @@ export const createRequestIntegrationJobHandler = <
           value: decryptSecret(secret.value),
         }));
 
-        const innerHandler = handler(integrationId, input);
-        await innerHandler.getCachedOrUpdatedDataAsync(
+        const innerHandler = handler(
           {
             ...integration,
             kind: integration.kind as TIntegrationKind,
             decryptedSecrets,
           },
-          { forceUpdate: true },
+          input,
         );
+        await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
       } catch (error) {
         logger.error(`Failed to run integration job integration=${integrationId} error=${error as string}`);
       }

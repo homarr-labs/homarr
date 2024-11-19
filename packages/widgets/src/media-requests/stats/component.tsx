@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import type { Icon } from "@tabler/icons-react";
@@ -29,14 +28,11 @@ import classes from "./component.module.css";
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
-  itemId,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
     {
       integrationIds,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      itemId: itemId!,
     },
     {
       refetchOnMount: false,
@@ -47,67 +43,51 @@ export default function MediaServerWidget({
 
   const { width, height, ref } = useElementSize();
 
-  const baseData = useMemo(
-    () => requestStats.filter((group) => group != null).flatMap((group) => group.data),
-    [requestStats],
-  );
-
-  const stats = useMemo(() => baseData.flatMap(({ stats }) => stats), [baseData]);
-  const users = useMemo(
-    () =>
-      baseData
-        .flatMap(({ integration, users }) =>
-          users.flatMap((user) => ({ ...user, appKind: integration.kind, appName: integration.name })),
-        )
-        .sort(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
-    [baseData],
-  );
-
   if (integrationIds.length === 0) throw new NoIntegrationSelectedError();
 
-  if (users.length === 0 || stats.length === 0) throw new NoIntegrationDataError();
+  if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 
   //Add processing and available
   const data = [
     {
       name: "approved",
       icon: IconThumbUp,
-      number: stats.reduce((count, { approved }) => count + approved, 0),
+      number: requestStats.stats.reduce((count, { approved }) => count + approved, 0),
     },
     {
       name: "pending",
       icon: IconHourglass,
-      number: stats.reduce((count, { pending }) => count + pending, 0),
+      number: requestStats.stats.reduce((count, { pending }) => count + pending, 0),
     },
     {
       name: "processing",
       icon: IconLoaderQuarter,
-      number: stats.reduce((count, { processing }) => count + processing, 0),
+      number: requestStats.stats.reduce((count, { processing }) => count + processing, 0),
     },
     {
       name: "declined",
       icon: IconThumbDown,
-      number: stats.reduce((count, { declined }) => count + declined, 0),
+      number: requestStats.stats.reduce((count, { declined }) => count + declined, 0),
     },
     {
       name: "available",
       icon: IconPlayerPlay,
-      number: stats.reduce((count, { available }) => count + available, 0),
+      number: requestStats.stats.reduce((count, { available }) => count + available, 0),
     },
     {
       name: "tv",
       icon: IconDeviceTv,
-      number: stats.reduce((count, { tv }) => count + tv, 0),
+      number: requestStats.stats.reduce((count, { tv }) => count + tv, 0),
     },
     {
       name: "movie",
       icon: IconMovie,
-      number: stats.reduce((count, { movie }) => count + movie, 0),
+      number: requestStats.stats.reduce((count, { movie }) => count + movie, 0),
     },
     {
       name: "total",
       icon: IconReceipt,
-      number: stats.reduce((count, { total }) => count + total, 0),
+      number: requestStats.stats.reduce((count, { total }) => count + total, 0),
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
@@ -158,7 +138,7 @@ export default function MediaServerWidget({
         gap="2cqmin"
         style={{ overflow: "hidden" }}
       >
-        {users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
+        {requestStats.users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
           <Card
             className={combineClasses(
               "mediaRequests-stats-users-user-wrapper",
@@ -172,12 +152,12 @@ export default function MediaServerWidget({
             radius="2.5cqmin"
           >
             <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="2cqmin" display="flex">
-              <Tooltip label={user.appName}>
+              <Tooltip label={user.integration.name}>
                 <Avatar
                   className="mediaRequests-stats-users-user-avatar"
                   size="12.5cqmin"
                   src={user.avatar}
-                  bd={`0.5cqmin solid ${user.appKind === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                  bd={`0.5cqmin solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
                 />
               </Tooltip>
               <Stack className="mediaRequests-stats-users-user-infos" gap="2cqmin">

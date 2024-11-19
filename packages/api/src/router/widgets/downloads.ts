@@ -22,9 +22,9 @@ export const downloadsRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const innerHandler = downloadClientRequestHandler.handler(integration.id, {});
+          const innerHandler = downloadClientRequestHandler.handler(integration, {});
 
-          const data = await innerHandler.getCachedOrUpdatedDataAsync(integration, {});
+          const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integration: {
@@ -47,7 +47,7 @@ export const downloadsRouter = createTRPCRouter({
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = downloadClientRequestHandler.handler(integration.id, {});
+          const innerHandler = downloadClientRequestHandler.handler(integrationWithSecrets, {});
           const unsubscribe = innerHandler.subscribe((data) => {
             emit.next({
               integration,

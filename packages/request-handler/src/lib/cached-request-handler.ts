@@ -1,41 +1,28 @@
 import dayjs from "dayjs";
 import type { Duration } from "dayjs/plugin/duration";
 
-import type { Modify } from "@homarr/common/types";
-import type { Integration, IntegrationSecret } from "@homarr/db/schema/sqlite";
-import type { IntegrationKind } from "@homarr/definitions";
-import { createIntegrationOptionsChannel } from "@homarr/redis";
+import type { createChannelWithLatestAndEvents } from "@homarr/redis";
 
-type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"> & {
-  kind: TKind;
-  decryptedSecrets: Modify<Pick<IntegrationSecret, "kind" | "value">, { value: string }>[];
-};
-
-interface Options<TData, TKind extends IntegrationKind, TInput extends Record<string, unknown>> {
+interface Options<TData, TInput extends Record<string, unknown>> {
   // Unique key for this request handler
   queryKey: string;
-  requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
+  requestAsync: (input: TInput) => Promise<TData>;
+  createRedisChannel: (
+    input: TInput,
+    options: Options<TData, TInput>,
+  ) => ReturnType<typeof createChannelWithLatestAndEvents<TData>>;
   cacheDuration: Duration;
 }
 
-export const createCachedRequestHandler = <
-  TData,
-  TKind extends IntegrationKind,
-  TInput extends Record<string, unknown>,
->(
-  options: Options<TData, TKind, TInput>,
+export const createCachedRequestHandler = <TData, TInput extends Record<string, unknown>>(
+  options: Options<TData, TInput>,
 ) => {
-  const createCacheChannel = (integrationId: string, input: TInput) => {
-    return createIntegrationOptionsChannel<TData>(integrationId, options.queryKey, input);
-  };
-
   return {
-    createCacheChannel,
-    handler: (integrationId: string, input: TInput) => {
-      const channel = createCacheChannel(integrationId, input);
+    handler: (input: TInput) => {
+      const channel = options.createRedisChannel(input, options);
 
       return {
-        async getCachedOrUpdatedDataAsync(integration: IntegrationOfKind<TKind>, { forceUpdate = false }) {
+        async getCachedOrUpdatedDataAsync({ forceUpdate = false }) {
           const channelData = await channel.getAsync();
 
           const shouldRequestNewData =
@@ -44,7 +31,7 @@ export const createCachedRequestHandler = <
             dayjs().diff(channelData.timestamp, "milliseconds") > options.cacheDuration.asMilliseconds();
 
           if (shouldRequestNewData) {
-            const data = await options.requestAsync(integration, input);
+            const data = await options.requestAsync(input);
             await channel.publishAndUpdateLastStateAsync(data);
             return data;
           }
