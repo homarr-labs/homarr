@@ -52,7 +52,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/better-sqlite3": "7.6.11",
+    "@types/better-sqlite3": "7.6.12",
     "dotenv-cli": "^7.4.3",
     "eslint": "^9.15.0",
     "prettier": "^3.3.3",

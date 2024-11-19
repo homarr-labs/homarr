@@ -870,7 +870,7 @@ importers:
         version: 0.28.1
       drizzle-orm:
         specifier: ^0.36.3
-        version: 0.36.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.11)(@types/react@18.3.12)(better-sqlite3@11.5.0)(mysql2@3.11.4)(react@18.3.1)
+        version: 0.36.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.5.0)(mysql2@3.11.4)(react@18.3.1)
       mysql2:
         specifier: 3.11.4
         version: 3.11.4
@@ -885,8 +885,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/better-sqlite3':
-        specifier: 7.6.11
-        version: 7.6.11
+        specifier: 7.6.12
+        version: 7.6.12
       dotenv-cli:
         specifier: ^7.4.3
         version: 7.4.3
@@ -3708,8 +3708,8 @@ packages:
   '@types/bcrypt@5.0.2':
     resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
 
-  '@types/better-sqlite3@7.6.11':
-    resolution: {integrity: sha512-i8KcD3PgGtGBLl3+mMYA8PdKkButvPyARxA7IQAd6qeslht13qxb1zzO8dRCtE7U3IoJS782zDBAeoKiM695kg==}
+  '@types/better-sqlite3@7.6.12':
+    resolution: {integrity: sha512-fnQmj8lELIj7BSrZQAdBMHEHX8OZLYIHXqAKT1O7tDfLxaINzf00PMjw22r3N/xXh0w/sGHlO6SVaCQ2mj78lg==}
 
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
@@ -10543,7 +10543,7 @@ snapshots:
     dependencies:
       '@types/node': 22.9.1
 
-  '@types/better-sqlite3@7.6.11':
+  '@types/better-sqlite3@7.6.12':
     dependencies:
       '@types/node': 22.9.1
 
@@ -11924,10 +11924,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.36.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.11)(@types/react@18.3.12)(better-sqlite3@11.5.0)(mysql2@3.11.4)(react@18.3.1):
+  drizzle-orm@0.36.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.5.0)(mysql2@3.11.4)(react@18.3.1):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
-      '@types/better-sqlite3': 7.6.11
+      '@types/better-sqlite3': 7.6.12
       '@types/react': 18.3.12
       better-sqlite3: 11.5.0
       mysql2: 3.11.4
