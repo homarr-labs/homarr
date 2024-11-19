@@ -52,52 +52,39 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
   private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [];
 
-    if (event.artist.links.some((link) => link.name === "vgmdb")) {
-      links.push({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find((link) => link.name === "vgmdb")!.url,
-        name: "VgmDB",
-        color: "#f5c518",
-        isDark: false,
-        logo: "/images/apps/vgmdblogo.png",
-        notificationColor: "cyan",
-      });
-    }
-
-    if (event.artist.links.some((link) => link.name === "imdb")) {
-      links.push({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find((link) => link.name === "imdb")!.url,
-        name: "IMDb",
-        color: "#f5c518",
-        isDark: false,
-        logo: "/images/apps/imdb.png",
-        notificationColor: "cyan",
-      });
-    }
-
-    if (event.artist.links.some((link) => link.name === "imvdb")) {
-      links.push({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find((link) => link.name === "imvdb")!.url,
-        name: "IMVDb",
-        color: "#BA478F",
-        isDark: false,
-        logo: "/images/apps/imvdb.jpg",
-        notificationColor: "cyan",
-      });
-    }
-
-    if (event.artist.links.some((link) => link.name === "last")) {
-      links.push({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        href: event.artist.links.find((link) => link.name === "last")!.url,
-        name: "LastFM",
-        color: "#cf222a",
-        isDark: false,
-        logo: "/images/apps/last.jpg",
-        notificationColor: "cyan",
-      });
+    for (const link of event.artist.links) {
+      switch (link.name) {
+        case "vgmdb":
+          links.push({
+            href: link.url,
+            name: "VgmDB",
+            color: "#f5c518",
+            isDark: false,
+            logo: "/images/apps/vgmdb.svg",
+            notificationColor: "cyan",
+          });
+          break;
+        case "imdb":
+          links.push({
+            href: link.url,
+            name: "IMDb",
+            color: "#f5c518",
+            isDark: false,
+            logo: "/images/apps/imdb.png",
+            notificationColor: "cyan",
+          });
+          break;
+        case "last":
+          links.push({
+            href: link.url,
+            name: "LastFM",
+            color: "#cf222a",
+            isDark: false,
+            logo: "/images/apps/lastfm.svg",
+            notificationColor: "cyan",
+          });
+          break;
+      }
     }
 
     return links;
