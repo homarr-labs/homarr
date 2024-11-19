@@ -1,5 +1,4 @@
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
-// This import is done that way to avoid circular dependencies.
 import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/cached-request-integration-job-handler";
 import { smartHomeEntityStateRequestHandler } from "@homarr/request-handler/smart-home-entity-state";
 

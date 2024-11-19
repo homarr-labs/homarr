@@ -17,26 +17,29 @@ export const smartHomeRouter = createTRPCRouter({
     .input(z.object({ entityId: z.string() }))
     .unstable_concat(createSmartHomeIntegrationMiddleware("query"))
     .query(async ({ ctx: { integration }, input }) => {
-      const innerHandler = smartHomeEntityStateRequestHandler.handler(integration.id, { entityId: input.entityId });
-      return await innerHandler.getCachedOrUpdatedDataAsync(integration, {});
+      const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
+      return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
     }),
-  subscribeEntityState: publicProcedure.input(z.object({ entityId: z.string() })).subscription(({ input }) => {
-    return observable<{
-      entityId: string;
-      state: string;
-    }>((emit) => {
-      const channel = smartHomeEntityStateRequestHandler.createCacheChannel("homeAssistant", {
-        entityId: input.entityId,
-      });
-      const unsubscribe = channel.subscribe((state) => {
-        emit.next({ state, entityId: input.entityId });
-      });
+  subscribeEntityState: publicProcedure
+    .unstable_concat(createSmartHomeIntegrationMiddleware("query"))
+    .input(z.object({ entityId: z.string() }))
+    .subscription(({ input, ctx }) => {
+      return observable<{
+        entityId: string;
+        state: string;
+      }>((emit) => {
+        const innerHandler = smartHomeEntityStateRequestHandler.handler(ctx.integration, {
+          entityId: input.entityId,
+        });
+        const unsubscribe = innerHandler.subscribe((state) => {
+          emit.next({ state, entityId: input.entityId });
+        });
 
-      return () => {
-        unsubscribe();
-      };
-    });
-  }),
+        return () => {
+          unsubscribe();
+        };
+      });
+    }),
   switchEntity: publicProcedure
     .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ entityId: z.string() }))

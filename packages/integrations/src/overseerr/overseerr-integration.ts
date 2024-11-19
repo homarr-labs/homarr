@@ -1,3 +1,4 @@
+import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
 import { Integration } from "../base/integration";
@@ -125,20 +126,38 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   public async approveRequestAsync(requestId: number): Promise<void> {
+    logger.info(`Approving media request id='${requestId}' integration='${this.integration.name}'`);
     await fetch(`${this.integration.url}/api/v1/request/${requestId}/approve`, {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
+    }).then((response) => {
+      if (!response.ok) {
+        logger.error(
+          `Failed to approve media request id='${requestId}' integration='${this.integration.name}' reason='${response.status} ${response.statusText}' url='${response.url}'`,
+        );
+      }
+
+      logger.info(`Successfully approved media request id='${requestId}' integration='${this.integration.name}'`);
     });
   }
 
   public async declineRequestAsync(requestId: number): Promise<void> {
+    logger.info(`Declining media request id='${requestId}' integration='${this.integration.name}'`);
     await fetch(`${this.integration.url}/api/v1/request/${requestId}/decline`, {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
+    }).then((response) => {
+      if (!response.ok) {
+        logger.error(
+          `Failed to decline media request id='${requestId}' integration='${this.integration.name}' reason='${response.status} ${response.statusText}' url='${response.url}'`,
+        );
+      }
+
+      logger.info(`Successfully declined media request id='${requestId}' integration='${this.integration.name}'`);
     });
   }
 

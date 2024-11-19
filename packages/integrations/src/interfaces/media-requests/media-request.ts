@@ -39,10 +39,6 @@ export interface RequestUser {
 }
 
 export interface MediaRequestStats {
-  integration: {
-    kind: string;
-    name: string;
-  };
   stats: RequestStats;
   users: RequestUser[];
 }

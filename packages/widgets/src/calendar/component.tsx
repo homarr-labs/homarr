@@ -12,17 +12,14 @@ import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 
-export default function CalendarWidget({
-  isEditMode,
-  integrationIds,
-  itemId,
-  options,
-}: WidgetComponentProps<"calendar">) {
+export default function CalendarWidget({ isEditMode, integrationIds, options }: WidgetComponentProps<"calendar">) {
+  const [month, setMonth] = useState(new Date());
   const [events] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(
     {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      itemId: itemId!,
       integrationIds,
+      month: month.getMonth(),
+      year: month.getFullYear(),
+      releaseType: options.releaseType,
     },
     {
       refetchOnMount: false,
@@ -31,7 +28,6 @@ export default function CalendarWidget({
       retry: false,
     },
   );
-  const [month, setMonth] = useState(new Date());
   const params = useParams();
   const locale = params.locale as string;
   const [firstDayOfWeek] = clientApi.user.getFirstDayOfWeekForUserOrDefault.useSuspenseQuery();

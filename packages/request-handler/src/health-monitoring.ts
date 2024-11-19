@@ -3,9 +3,9 @@ import dayjs from "dayjs";
 import { integrationCreator } from "@homarr/integrations";
 import type { HealthMonitoring } from "@homarr/integrations/types";
 
-import { createCachedRequestHandler } from "./lib/cached-request-handler";
+import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
-export const systemInfoRequestHandler = createCachedRequestHandler<
+export const systemInfoRequestHandler = createCachedIntegrationRequestHandler<
   HealthMonitoring,
   "openmediavault",
   Record<string, never>

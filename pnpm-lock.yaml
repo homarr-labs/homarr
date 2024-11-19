@@ -1355,7 +1355,7 @@ importers:
         version: link:../../tooling/typescript
       eslint:
         specifier: ^9.10.0
-        version: 9.14.0
+        version: 9.15.0
       typescript:
         specifier: ^5.6.2
         version: 5.6.3
