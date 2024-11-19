@@ -17,7 +17,7 @@ import {
 import superjson from "superjson";
 
 import type { AppRouter } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
+import { clientApi, createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/client";
 
 import { env } from "~/env.mjs";
 
@@ -86,16 +86,13 @@ export function TRPCReactProvider(props: PropsWithChildren) {
                   return data;
                 },
               },
-              url: `${getBaseUrl()}/api/trpc`,
+              url: getTrpcUrl(),
+              headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
             }),
             false: unstable_httpBatchStreamLink({
               transformer: superjson,
-              url: `${getBaseUrl()}/api/trpc`,
-              headers() {
-                const headers = new Headers();
-                headers.set("x-trpc-source", "nextjs-react");
-                return headers;
-              },
+              url: getTrpcUrl(),
+              headers: createHeadersCallbackForSource("nextjs-react (json)"),
             }),
           }),
         }),
@@ -111,10 +108,4 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       </QueryClientProvider>
     </clientApi.Provider>
   );
-}
-
-function getBaseUrl() {
-  if (typeof window !== "undefined") return window.location.origin;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return `http://localhost:${process.env.PORT ?? 3000}`;
 }
