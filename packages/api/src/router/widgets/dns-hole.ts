@@ -66,6 +66,12 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration } }) => {
       const client = integrationCreator(integration);
       await client.enableAsync();
+
+      const innerHandler = dnsHoleRequestHandler.handler(integration, {});
+      // We need to wait for the integration to be enabled before invalidating the cache
+      await new Promise<void>((resolve) => {
+        setTimeout(() => void innerHandler.invalidateAsync().then(resolve), 1000);
+      });
     }),
 
   disable: publicProcedure
@@ -74,5 +80,11 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = integrationCreator(integration);
       await client.disableAsync(input.duration);
+
+      const innerHandler = dnsHoleRequestHandler.handler(integration, {});
+      // We need to wait for the integration to be disabled before invalidating the cache
+      await new Promise<void>((resolve) => {
+        setTimeout(() => void innerHandler.invalidateAsync().then(resolve), 1000);
+      });
     }),
 });

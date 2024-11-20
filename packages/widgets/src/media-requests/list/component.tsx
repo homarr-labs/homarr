@@ -28,6 +28,33 @@ export default function MediaServerWidget({
       refetchOnReconnect: false,
     },
   );
+  const utils = clientApi.useUtils();
+  clientApi.widget.mediaRequests.subscribeToLatestRequests.useSubscription(
+    {
+      integrationIds,
+    },
+    {
+      onData(data) {
+        utils.widget.mediaRequests.getLatestRequests.setData({ integrationIds }, (prevData) => {
+          if (!prevData) return [];
+
+          const filteredData = prevData.filter(({ integrationId }) => integrationId !== data.integrationId);
+          const newData = filteredData.concat(
+            data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
+          );
+          return newData.sort(({ status: statusA }, { status: statusB }) => {
+            if (statusA === MediaRequestStatus.PendingApproval) {
+              return -1;
+            }
+            if (statusB === MediaRequestStatus.PendingApproval) {
+              return 1;
+            }
+            return 0;
+          });
+        });
+      },
+    },
+  );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 
