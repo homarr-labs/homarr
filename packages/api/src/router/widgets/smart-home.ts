@@ -45,7 +45,12 @@ export const smartHomeRouter = createTRPCRouter({
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = integrationCreator(integration);
-      return await client.triggerToggleAsync(input.entityId);
+      const success = await client.triggerToggleAsync(input.entityId);
+
+      const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
+      await innerHandler.invalidateAsync();
+
+      return success;
     }),
   executeAutomation: publicProcedure
     .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
