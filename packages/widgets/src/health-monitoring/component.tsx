@@ -33,7 +33,6 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
-import type { HealthMonitoring } from "@homarr/integrations";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -53,17 +52,6 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
-      select: (data) =>
-        data.filter(
-          (
-            health,
-          ): health is {
-            integrationId: string;
-            integrationName: string;
-            healthInfo: HealthMonitoring;
-            timestamp: Date;
-          } => health.healthInfo !== null,
-        ),
     },
   );
   const [opened, { open, close }] = useDisclosure(false);
@@ -82,16 +70,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
               ? { ...item, healthInfo: data.healthInfo, timestamp: data.timestamp }
               : item,
           );
-          return newData.filter(
-            (
-              health,
-            ): health is {
-              integrationId: string;
-              integrationName: string;
-              healthInfo: HealthMonitoring;
-              timestamp: Date;
-            } => health.healthInfo !== null,
-          );
+          return newData;
         });
       },
     },
@@ -102,7 +81,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
   }
   return (
     <Stack h="100%" gap="2.5cqmin" className="health-monitoring">
-      {healthData.map(({ integrationId, integrationName, healthInfo, timestamp }) => {
+      {healthData.map(({ integrationId, integrationName, healthInfo }) => {
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
         const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
         return (
@@ -211,7 +190,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                 )}
                 {options.memory && <MemoryRing available={healthInfo.memAvailable} used={healthInfo.memUsed} />}
               </Flex>
-              <Text
+              {/*<Text
                 className="health-monitoring-status-update-time"
                 c="dimmed"
                 size="3.5cqmin"
@@ -219,7 +198,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                 mb="2.5cqmin"
               >
                 {t("widget.healthMonitoring.popover.lastSeen", { lastSeen: dayjs(timestamp).fromNow() })}
-              </Text>
+              </Text>*/}
             </Card>
             {options.fileSystem &&
               disksData.map((disk) => {
