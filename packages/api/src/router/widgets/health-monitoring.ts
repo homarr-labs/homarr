@@ -13,12 +13,13 @@ export const healthMonitoringRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = systemInfoRequestHandler.handler(integration, {});
-          const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integrationId: integration.id,
             integrationName: integration.name,
             healthInfo: data,
+            updatedAt: timestamp,
           };
         }),
       );

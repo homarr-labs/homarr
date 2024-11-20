@@ -21,3 +21,20 @@ export const useTimeAgo = (timestamp: Date) => {
 
   return timeAgo;
 };
+
+export const useIntegrationConnected = (updatedAt: Date, { timeout = 30000 }) => {
+  const [connected, setConnected] = useState(Math.abs(dayjs(updatedAt).diff()) < timeout);
+
+  useEffect(() => {
+    setConnected(Math.abs(dayjs(updatedAt).diff()) < timeout);
+
+    const delayUntilTimeout = timeout - Math.abs(dayjs(updatedAt).diff());
+    const timeoutRef = setTimeout(() => {
+      setConnected(false);
+    }, delayUntilTimeout);
+
+    return () => clearTimeout(timeoutRef);
+  }, [updatedAt, timeout]);
+
+  return connected;
+};

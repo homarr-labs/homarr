@@ -19,15 +19,16 @@ export const dnsHoleRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-          const summary = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integration: {
               id: integration.id,
               name: integration.name,
               kind: integration.kind,
+              updatedAt: timestamp,
             },
-            summary,
+            summary: data,
           };
         }),
       );

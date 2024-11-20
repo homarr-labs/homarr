@@ -39,7 +39,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
-import { humanFileSize } from "@homarr/common";
+import { humanFileSize, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -122,16 +122,17 @@ export default function DownloadClientsWidget({
     {
       onData: (data) => {
         utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) => {
-          const updateIndex = currentItems.findIndex((pair) => pair.integration.id === data.integration.id);
-          if (updateIndex >= 0) {
-            //Update found index
-            return prevData?.map((pair, index) => (index === updateIndex ? data : pair));
-          } else if (integrationIds.includes(data.integration.id)) {
-            //Append index not found (new integration)
-            return [...(prevData ?? []), data];
-          }
+          return prevData?.map((item) => {
+            if (item.integration.id !== data.integration.id) return item;
 
-          return undefined;
+            return {
+              data: data.data,
+              integration: {
+                ...data.integration,
+                updatedAt: new Date(),
+              },
+            };
+          });
         });
       },
     },
@@ -774,12 +775,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
     <Group gap="var(--space-size)" style={style}>
       <AvatarGroup spacing="calc(var(--space-size)*2)">
         {clients.map((client) => (
-          <Avatar
-            key={client.integration.id}
-            src={getIconUrl(client.integration.kind)}
-            size="var(--image-size)"
-            bd={client.status ? 0 : "calc(var(--space-size)*0.5) solid var(--mantine-color-red-filled)"}
-          />
+          <ClientAvatar key={client.integration.id} client={client} />
         ))}
       </AvatarGroup>
       {someInteract && (
@@ -890,5 +886,23 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
         </Stack>
       </Modal>
     </Group>
+  );
+};
+
+interface ClientAvatarProps {
+  client: ExtendedClientStatus;
+}
+
+const ClientAvatar = ({ client }: ClientAvatarProps) => {
+  const isConnected = useIntegrationConnected(client.integration.updatedAt, { timeout: 30000 });
+
+  return (
+    <Avatar
+      key={client.integration.id}
+      src={getIconUrl(client.integration.kind)}
+      style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
+      size="var(--image-size)"
+      bd={client.status ? 0 : "calc(var(--space-size)*0.5) solid var(--mantine-color-red-filled)"}
+    />
   );
 };

@@ -11,7 +11,7 @@ export interface DownloadClientStatus {
   type: "usenet" | "torrent";
 }
 export interface ExtendedClientStatus {
-  integration: Pick<Integration, "id" | "name" | "kind">;
+  integration: Pick<Integration, "id" | "name" | "kind"> & { updatedAt: Date };
   interact: boolean;
   status?: {
     /** To derive from current items */

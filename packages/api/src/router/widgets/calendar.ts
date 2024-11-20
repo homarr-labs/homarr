@@ -14,9 +14,9 @@ export const calendarRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = calendarMonthRequestHandler.handler(integration, input);
-          const events = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
-          return events;
+          return data;
         }),
       );
       return results.flat();
