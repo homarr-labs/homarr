@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { Duration } from "dayjs/plugin/duration";
 
+import { logger } from "@homarr/log";
 import type { createChannelWithLatestAndEvents } from "@homarr/redis";
 
 interface Options<TData, TInput extends Record<string, unknown>> {
@@ -23,20 +24,34 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
 
       return {
         async getCachedOrUpdatedDataAsync({ forceUpdate = false }) {
+          const requestNewDataAsync = async () => {
+            const data = await options.requestAsync(input);
+            await channel.publishAndUpdateLastStateAsync(data);
+            return data;
+          };
+
+          if (forceUpdate) {
+            logger.info(`Forcing update for ${options.queryKey}`);
+            return await requestNewDataAsync();
+          }
+
           const channelData = await channel.getAsync();
 
           const shouldRequestNewData =
-            forceUpdate ||
             !channelData ||
             dayjs().diff(channelData.timestamp, "milliseconds") > options.cacheDuration.asMilliseconds();
 
           if (shouldRequestNewData) {
-            const data = await options.requestAsync(input);
-            await channel.publishAndUpdateLastStateAsync(data);
-            return data;
+            return await requestNewDataAsync();
           }
 
+          logger.info(`Cache hit for ${options.queryKey}`);
+
           return channelData.data;
+        },
+        async invalidateAsync() {
+          logger.info(`Invalidating cache for ${options.queryKey}`);
+          await this.getCachedOrUpdatedDataAsync({ forceUpdate: true });
         },
         subscribe(callback: (data: TData) => void) {
           return channel.subscribe(callback);

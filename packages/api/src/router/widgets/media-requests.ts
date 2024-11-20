@@ -1,5 +1,8 @@
+import { observable } from "@trpc/server/observable";
+
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator, MediaRequestStatus } from "@homarr/integrations";
+import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { z } from "@homarr/validation";
@@ -36,6 +39,32 @@ export const mediaRequestsRouter = createTRPCRouter({
           return 0;
         });
     }),
+  subscribeToLatestRequests: publicProcedure
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .subscription(({ ctx }) => {
+      return observable<{
+        integrationId: string;
+        requests: MediaRequest[];
+      }>((emit) => {
+        const unsubscribes: (() => void)[] = [];
+        for (const integrationWithSecrets of ctx.integrations) {
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+          const innerHandler = mediaRequestListRequestHandler.handler(integrationWithSecrets, {});
+          const unsubscribe = innerHandler.subscribe((requests) => {
+            emit.next({
+              integrationId: integration.id,
+              requests,
+            });
+          });
+          unsubscribes.push(unsubscribe);
+        }
+        return () => {
+          unsubscribes.forEach((unsubscribe) => {
+            unsubscribe();
+          });
+        };
+      });
+    }),
   getStats: publicProcedure
     .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
@@ -66,11 +95,14 @@ export const mediaRequestsRouter = createTRPCRouter({
     .input(z.object({ requestId: z.number(), answer: z.enum(["approve", "decline"]) }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const integrationInstance = integrationCreator(integration);
+      const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
 
       if (input.answer === "approve") {
         await integrationInstance.approveRequestAsync(input.requestId);
+        await innerHandler.invalidateAsync();
         return;
       }
       await integrationInstance.declineRequestAsync(input.requestId);
+      await innerHandler.invalidateAsync();
     }),
 });
