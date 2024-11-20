@@ -71,15 +71,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       ? section.width
       : board.columnCount;
 
-  useCssVariableConfiguration({
-    columnCount,
-    gridRef,
-    wrapperRef,
-    width,
-    height,
-    isDynamic: section.kind === "dynamic",
-  });
-
   const itemRefKeys = Object.keys(itemRefs.current);
   // define items in itemRefs for easy access and reference to items
   if (itemRefKeys.length !== itemIds.length) {
@@ -94,11 +85,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       itemRefs.current[id] = itemRefs.current[id] ?? createRef();
     });
   }
-
-  // Toggle the gridstack to be static or not based on the edit mode
-  useEffect(() => {
-    gridRef.current?.setStatic(!isEditMode);
-  }, [isEditMode]);
 
   const onChange = useCallback(
     (changedNode: GridStackNode) => {
@@ -258,6 +244,11 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     };
   }, [isEditMode, onAdd, onChange]);
 
+  // Toggle the gridstack to be static or not based on the edit mode
+  useEffect(() => {
+    gridRef.current?.setStatic(!isEditMode);
+  }, [isEditMode]);
+
   const sectionHeight = section.kind === "dynamic" && "height" in section ? (section.height as number) : null;
 
   // We want the amount of rows in a dynamic section to be the height of the section in the outer gridstack
@@ -265,6 +256,15 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     if (!sectionHeight) return;
     gridRef.current?.row(sectionHeight);
   }, [sectionHeight]);
+
+  useCssVariableConfiguration({
+    columnCount,
+    gridRef,
+    wrapperRef,
+    width,
+    height,
+    isDynamic: section.kind === "dynamic",
+  });
 
   return {
     refs: {
