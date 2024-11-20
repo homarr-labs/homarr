@@ -1,5 +1,6 @@
 import SuperJSON from "superjson";
 
+import { hashObjectBase64 } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { MaybeArray } from "@homarr/common/types";
 import { db } from "@homarr/db";
@@ -7,7 +8,7 @@ import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
-import { hashObjectBase64 } from "../../../common/src";
+// This imports are done that way to avoid circular dependencies.
 import type { inferSupportedIntegrationsStrict } from "../../../widgets/src";
 import { reduceWidgetOptionsWithDefaultValues } from "../../../widgets/src";
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
