@@ -31,7 +31,9 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
           };
 
           if (forceUpdate) {
-            logger.info(`Forcing update for ${options.queryKey}`);
+            logger.debug(
+              `Cached request handler forced update for channel='${channel.name}' queryKey='${options.queryKey}'`,
+            );
             return await requestNewDataAsync();
           }
 
@@ -42,15 +44,22 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
             dayjs().diff(channelData.timestamp, "milliseconds") > options.cacheDuration.asMilliseconds();
 
           if (shouldRequestNewData) {
+            logger.debug(
+              `Cached request handler cache miss for channel='${channel.name}' queryKey='${options.queryKey}' reason='${!channelData ? "no data" : "cache expired"}'`,
+            );
             return await requestNewDataAsync();
           }
 
-          logger.info(`Cache hit for ${options.queryKey}`);
+          logger.debug(
+            `Cached request handler cache hit for channel='${channel.name}' queryKey='${options.queryKey}' expiresAt='${dayjs(channelData.timestamp).add(options.cacheDuration).toISOString()}'`,
+          );
 
           return channelData.data;
         },
         async invalidateAsync() {
-          logger.info(`Invalidating cache for ${options.queryKey}`);
+          logger.debug(
+            `Cached request handler invalidating cache channel='${channel.name}' queryKey='${options.queryKey}'`,
+          );
           await this.getCachedOrUpdatedDataAsync({ forceUpdate: true });
         },
         subscribe(callback: (data: TData) => void) {

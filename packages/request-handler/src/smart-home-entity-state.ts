@@ -15,7 +15,7 @@ export const smartHomeEntityStateRequestHandler = createCachedIntegrationRequest
     const result = await integrationInstance.getEntityStateAsync(input.entityId);
 
     if (!result.success) {
-      throw new Error("Unable to fetch data from Home Assistant");
+      throw new Error(`Unable to fetch data from Home Assistant error='${result.error as string}'`);
     }
 
     return result.data.state;
