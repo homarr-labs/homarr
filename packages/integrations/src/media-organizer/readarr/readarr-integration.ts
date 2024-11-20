@@ -31,14 +31,14 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     url.pathname = "/api/v1/calendar";
     url.searchParams.append("start", start.toISOString());
     url.searchParams.append("end", end.toISOString());
-    url.searchParams.append("unmonitored", includeUnmonitored ? "true" : "false");
-    url.searchParams.append("includeAuthor", includeAuthor ? "true" : "false");
+    url.searchParams.append("unmonitored", includeUnmonitored.toString());
+    url.searchParams.append("includeAuthor", includeAuthor.toString());
     const response = await fetch(url, {
       headers: {
         "X-Api-Key": super.getSecretValue("apiKey"),
       },
     });
-    const readarrCalendarEvents = await z.array(lidarrCalendarEventSchema).parseAsync(await response.json());
+    const readarrCalendarEvents = await z.array(readarrCalendarEventSchema).parseAsync(await response.json());
 
     return readarrCalendarEvents.map((readarrCalendarEvent): CalendarEvent => {
       return {
@@ -50,12 +50,12 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
         mediaInformation: {
           type: "audio",
         },
-        links: this.getLinksForLidarrCalendarEvent(readarrCalendarEvent),
+        links: this.getLinksForReadarrCalendarEvent(readarrCalendarEvent),
       };
     });
   }
 
-  private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
+  private getLinksForReadarrCalendarEvent = (event: z.infer<typeof readarrCalendarEventSchema>) => {
     return [
       {
         href: `${this.integration.url}/author/${event.author.foreignAuthorId}`,
@@ -69,8 +69,8 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
   };
 
   private chooseBestImage = (
-    event: z.infer<typeof lidarrCalendarEventSchema>,
-  ): z.infer<typeof lidarrCalendarEventSchema>["images"][number] | undefined => {
+    event: z.infer<typeof readarrCalendarEventSchema>,
+  ): z.infer<typeof readarrCalendarEventSchema>["images"][number] | undefined => {
     const flatImages = [...event.images];
 
     const sortedImages = flatImages.sort(
@@ -80,7 +80,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     return sortedImages[0];
   };
 
-  private chooseBestImageAsURL = (event: z.infer<typeof lidarrCalendarEventSchema>): string | undefined => {
+  private chooseBestImageAsURL = (event: z.infer<typeof readarrCalendarEventSchema>): string | undefined => {
     const bestImage = this.chooseBestImage(event);
     if (!bestImage) {
       return undefined;
@@ -89,17 +89,17 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
   };
 }
 
-const lidarrCalendarEventImageSchema = z.array(
+const readarrCalendarEventImageSchema = z.array(
   z.object({
     coverType: z.enum(["screenshot", "poster", "banner", "fanart", "clearlogo", "cover"]),
     url: z.string().transform((url) => url.replace(/\?lastWrite=[0-9]+/, "")), // returns a random string, needs to be removed for loading the image
   }),
 );
 
-const lidarrCalendarEventSchema = z.object({
+const readarrCalendarEventSchema = z.object({
   title: z.string(),
   overview: z.string().optional(),
-  images: lidarrCalendarEventImageSchema,
+  images: readarrCalendarEventImageSchema,
   links: z.array(
     z.object({
       name: z.string(),

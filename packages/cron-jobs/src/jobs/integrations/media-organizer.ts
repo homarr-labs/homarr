@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import SuperJSON from "superjson";
 
-import type { Modify } from "@homarr/common/types";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
@@ -26,9 +25,7 @@ export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).w
       const end = dayjs().add(Number(options.filterFutureMonths), "months").toDate();
 
       //Asserting the integration kind until all of them get implemented
-      const integrationInstance = integrationCreatorFromSecrets(
-        integration as Modify<typeof integration, { kind: "sonarr" | "radarr" | "lidarr" | "readarr" }>,
-      );
+      const integrationInstance = integrationCreatorFromSecrets(integration);
 
       const events = await integrationInstance.getCalendarEventsAsync(start, end);
 
