@@ -35,16 +35,11 @@ const InnerComponent = ({ options, integrationId, isEditMode }: InnerComponentPr
 
   const utils = clientApi.useUtils();
 
-  clientApi.widget.smartHome.subscribeEntityState.useSubscription(
-    {
-      entityId: options.entityId,
+  clientApi.widget.smartHome.subscribeEntityState.useSubscription(input, {
+    onData(data) {
+      utils.widget.smartHome.entityState.setData(input, data.state);
     },
-    {
-      onData(data) {
-        utils.widget.smartHome.entityState.setData(input, data.state);
-      },
-    },
-  );
+  });
 
   const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation();
 
