@@ -23,7 +23,7 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
   const { mutate, isPending } = clientApi.apiKeys.create.useMutation({
     async onSuccess(data) {
       openModal({
-        apiKey: data.randomToken,
+        apiKey: data.apiKey,
       });
       await revalidatePathActionAsync("/manage/tools/api");
     },

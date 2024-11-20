@@ -1,6 +1,7 @@
 import { createOpenApiFetchHandler } from "trpc-swagger/build/index.mjs";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
+import { hashPasswordAsync } from "@homarr/auth";
 import type { Session } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
 import { db, eq } from "@homarr/db";
@@ -28,12 +29,19 @@ const getSessionOrDefaultFromHeadersAsync = async (apiKeyHeaderValue: string | n
     return null;
   }
 
+  const [apiKeyId, apiKey] = apiKeyHeaderValue.split(".");
+
+  if (!apiKeyId || !apiKey) {
+    logger.warn("An attempt to authenticate over API has failed due to invalid API key format");
+    return null;
+  }
+
   const apiKeyFromDb = await db.query.apiKeys.findFirst({
-    where: eq(apiKeys.apiKey, apiKeyHeaderValue),
+    where: eq(apiKeys.id, apiKeyId),
     columns: {
       id: true,
-      apiKey: false,
-      salt: false,
+      apiKey: true,
+      salt: true,
     },
     with: {
       user: {
@@ -47,7 +55,14 @@ const getSessionOrDefaultFromHeadersAsync = async (apiKeyHeaderValue: string | n
     },
   });
 
-  if (apiKeyFromDb === undefined) {
+  if (!apiKeyFromDb) {
+    logger.warn("An attempt to authenticate over API has failed");
+    return null;
+  }
+
+  const hashedApiKey = await hashPasswordAsync(apiKey, apiKeyFromDb.salt);
+
+  if (apiKeyFromDb.apiKey !== hashedApiKey) {
     logger.warn("An attempt to authenticate over API has failed");
     return null;
   }
