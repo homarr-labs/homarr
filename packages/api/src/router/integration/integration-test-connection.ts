@@ -52,7 +52,6 @@ export const testConnectionAsync = async (
 
   const { secrets: _, ...baseIntegration } = integration;
 
-  // @ts-expect-error - For now we expect an error here as not all integrations have been implemented
   const integrationInstance = integrationCreator({
     ...baseIntegration,
     decryptedSecrets,
