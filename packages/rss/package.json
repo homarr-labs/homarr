@@ -1,10 +1,10 @@
 {
-  "name": "@homarr/request-handler",
+  "name": "@homarr/rss",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    "./*": "./src/*.ts"
+    ".": "./index.ts"
   },
   "typesVersions": {
     "*": {
@@ -21,15 +21,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@homarr/common": "workspace:^0.1.0",
-    "@homarr/db": "workspace:^0.1.0",
-    "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/integrations": "workspace:^0.1.0",
-    "@homarr/rss": "workspace:^0.1.0",
+    "@extractus/feed-extractor": "^7.1.3",
     "@homarr/log": "workspace:^0.1.0",
-    "@homarr/redis": "workspace:^0.1.0",
-    "dayjs": "1.11.13",
-    "superjson": "2.2.1"
+    "@homarr/common": "workspace:^0.1.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

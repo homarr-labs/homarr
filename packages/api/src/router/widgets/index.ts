@@ -8,7 +8,7 @@ import { indexerManagerRouter } from "./indexer-manager";
 import { mediaRequestsRouter } from "./media-requests";
 import { mediaServerRouter } from "./media-server";
 import { notebookRouter } from "./notebook";
-import { rssFeedRouter } from "./rssFeed";
+import { rssFeedRouter } from "./rss-feed";
 import { smartHomeRouter } from "./smart-home";
 import { weatherRouter } from "./weather";
 

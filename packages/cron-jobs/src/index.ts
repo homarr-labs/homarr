@@ -9,7 +9,6 @@ import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { mediaRequestListJob, mediaRequestStatsJob } from "./jobs/integrations/media-requests";
 import { mediaServerJob } from "./jobs/integrations/media-server";
 import { pingJob } from "./jobs/ping";
-import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { sessionCleanupJob } from "./jobs/session-cleanup";
 import { createCronJobGroup } from "./lib";
@@ -32,4 +31,3 @@ export const jobGroup = createCronJobGroup({
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
-export type { RssFeed };

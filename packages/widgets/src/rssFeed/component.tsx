@@ -9,20 +9,16 @@ import { clientApi } from "@homarr/api/client";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
-export default function RssFeed({ options, itemId }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
   const [rssFeeds] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(
     {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      itemId: itemId!,
+      feedUrls: options.feedUrls,
     },
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
-      select(data) {
-        return data?.data ?? [];
-      },
     },
   );
 
