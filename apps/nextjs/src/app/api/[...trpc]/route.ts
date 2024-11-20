@@ -1,15 +1,21 @@
+import { headers } from "next/headers";
+import { userAgent } from "next/server";
+import type { NextRequest } from "next/server";
 import { createOpenApiFetchHandler } from "trpc-swagger/build/index.mjs";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
+import { hashPasswordAsync } from "@homarr/auth";
 import type { Session } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
 import { db, eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 
-const handlerAsync = async (req: Request) => {
+const handlerAsync = async (req: NextRequest) => {
   const apiKeyHeaderValue = req.headers.get("ApiKey");
-  const session: Session | null = await getSessionOrDefaultFromHeadersAsync(apiKeyHeaderValue);
+  const ipAddress = req.ip ?? headers().get("x-forwarded-for");
+  const { ua } = userAgent(req);
+  const session: Session | null = await getSessionOrDefaultFromHeadersAsync(apiKeyHeaderValue, ipAddress, ua);
 
   return createOpenApiFetchHandler({
     req,
@@ -19,7 +25,11 @@ const handlerAsync = async (req: Request) => {
   });
 };
 
-const getSessionOrDefaultFromHeadersAsync = async (apiKeyHeaderValue: string | null): Promise<Session | null> => {
+const getSessionOrDefaultFromHeadersAsync = async (
+  apiKeyHeaderValue: string | null,
+  ipAdress: string | null,
+  userAgent: string,
+): Promise<Session | null> => {
   logger.info(
     `Creating OpenAPI fetch handler for user ${apiKeyHeaderValue ? "with an api key" : "without an api key"}`,
   );
@@ -28,12 +38,21 @@ const getSessionOrDefaultFromHeadersAsync = async (apiKeyHeaderValue: string | n
     return null;
   }
 
+  const [apiKeyId, apiKey] = apiKeyHeaderValue.split(".");
+
+  if (!apiKeyId || !apiKey) {
+    logger.warn(
+      `An attempt to authenticate over API has failed due to invalid API key format ip='${ipAdress}' userAgent='${userAgent}'`,
+    );
+    return null;
+  }
+
   const apiKeyFromDb = await db.query.apiKeys.findFirst({
-    where: eq(apiKeys.apiKey, apiKeyHeaderValue),
+    where: eq(apiKeys.id, apiKeyId),
     columns: {
       id: true,
-      apiKey: false,
-      salt: false,
+      apiKey: true,
+      salt: true,
     },
     with: {
       user: {
@@ -47,8 +66,15 @@ const getSessionOrDefaultFromHeadersAsync = async (apiKeyHeaderValue: string | n
     },
   });
 
-  if (apiKeyFromDb === undefined) {
-    logger.warn("An attempt to authenticate over API has failed");
+  if (!apiKeyFromDb) {
+    logger.warn(`An attempt to authenticate over API has failed ip='${ipAdress}' userAgent='${userAgent}'`);
+    return null;
+  }
+
+  const hashedApiKey = await hashPasswordAsync(apiKey, apiKeyFromDb.salt);
+
+  if (apiKeyFromDb.apiKey !== hashedApiKey) {
+    logger.warn(`An attempt to authenticate over API has failed ip='${ipAdress}' userAgent='${userAgent}'`);
     return null;
   }
 
