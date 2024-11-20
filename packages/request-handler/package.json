@@ -27,15 +27,15 @@
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
-    "dayjs": "1.11.13",
+    "dayjs": "^1.11.13",
     "superjson": "2.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.10.0",
-    "typescript": "^5.6.2"
+    "eslint": "^9.15.0",
+    "typescript": "^5.6.3"
   },
   "prettier": "@homarr/prettier-config"
 }

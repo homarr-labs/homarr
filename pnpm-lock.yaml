@@ -1338,7 +1338,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../redis
       dayjs:
-        specifier: 1.11.13
+        specifier: ^1.11.13
         version: 1.11.13
       superjson:
         specifier: 2.2.1
@@ -1354,10 +1354,10 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.10.0
+        specifier: ^9.15.0
         version: 9.15.0
       typescript:
-        specifier: ^5.6.2
+        specifier: ^5.6.3
         version: 5.6.3
 
   packages/server-settings:
