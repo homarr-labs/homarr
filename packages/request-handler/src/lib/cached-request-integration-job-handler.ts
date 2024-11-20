@@ -36,6 +36,10 @@ export const createRequestIntegrationJobHandler = <
       kinds: widgetKinds,
     });
 
+    logger.debug(
+      `Found items for integration widgetKinds='${widgetKinds.join(",")}' count=${itemsForIntegration.length}`,
+    );
+
     const distinctIntegrations: {
       integrationId: string;
       inputHash: string;
@@ -69,7 +73,7 @@ export const createRequestIntegrationJobHandler = <
       }
     }
 
-    for (const { integrationId, integration, input } of distinctIntegrations) {
+    for (const { integrationId, integration, input, inputHash } of distinctIntegrations) {
       try {
         const decryptedSecrets = integration.secrets.map((secret) => ({
           ...secret,
@@ -85,8 +89,11 @@ export const createRequestIntegrationJobHandler = <
           input,
         );
         await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
+        logger.debug(`Ran integration job integration=${integrationId} inputHash='${inputHash}'`);
       } catch (error) {
-        logger.error(`Failed to run integration job integration=${integrationId} error=${error as string}`);
+        logger.error(
+          `Failed to run integration job integration=${integrationId} inputHash='${inputHash}' error=${error as string}`,
+        );
       }
     }
   };

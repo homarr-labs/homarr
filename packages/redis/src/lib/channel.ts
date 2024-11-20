@@ -207,6 +207,7 @@ export const createChannelWithLatestAndEvents = <TData>(channelName: string) => 
 
       return superjson.parse<{ data: TData; timestamp: Date }>(data);
     },
+    name: channelName,
   };
 };
 
