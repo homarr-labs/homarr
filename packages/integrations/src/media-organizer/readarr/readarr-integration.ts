@@ -61,7 +61,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
         href: `${this.integration.url}/author/${event.author.foreignAuthorId}`,
         color: "#f5c518",
         isDark: false,
-        logo: "/images/apps/readarr.png",
+        logo: "/images/apps/readarr.svg",
         name: "Readarr",
         notificationColor: "#f5c518",
       },
