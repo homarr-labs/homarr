@@ -17,13 +17,14 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
           return {
             integration: {
               id: integration.id,
               name: integration.name,
               kind: integration.kind,
             },
-            data: await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false }),
+            data,
           };
         }),
       );
@@ -71,13 +72,14 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaRequestStatsRequestHandler.handler(integration, {});
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
           return {
             integration: {
               id: integration.id,
               name: integration.name,
               kind: integration.kind,
             },
-            data: await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false }),
+            data,
           };
         }),
       );

@@ -24,13 +24,14 @@ export const downloadsRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const innerHandler = downloadClientRequestHandler.handler(integration, {});
 
-          const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integration: {
               id: integration.id,
               name: integration.name,
               kind: integration.kind,
+              updatedAt: timestamp,
             },
             data,
           };

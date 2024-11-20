@@ -21,7 +21,7 @@ export const indexerManagerRouter = createTRPCRouter({
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = indexerManagerRequestHandler.handler(integration, {});
-          const indexers = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data: indexers } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integrationId: integration.id,

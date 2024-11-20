@@ -18,7 +18,7 @@ export const mediaServerRouter = createTRPCRouter({
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
           const innerHandler = mediaServerRequestHandler.handler(integration, {});
-          const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
           return {
             integrationId: integration.id,
             sessions: data,

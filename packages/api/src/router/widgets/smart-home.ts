@@ -18,7 +18,8 @@ export const smartHomeRouter = createTRPCRouter({
     .unstable_concat(createSmartHomeIntegrationMiddleware("query"))
     .query(async ({ ctx: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
-      return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data;
     }),
   subscribeEntityState: publicProcedure
     .unstable_concat(createSmartHomeIntegrationMiddleware("query"))

@@ -27,7 +27,10 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
           const requestNewDataAsync = async () => {
             const data = await options.requestAsync(input);
             await channel.publishAndUpdateLastStateAsync(data);
-            return data;
+            return {
+              data,
+              timestamp: new Date(),
+            };
           };
 
           if (forceUpdate) {
@@ -54,7 +57,7 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
             `Cached request handler cache hit for channel='${channel.name}' queryKey='${options.queryKey}' expiresAt='${dayjs(channelData.timestamp).add(options.cacheDuration).toISOString()}'`,
           );
 
-          return channelData.data;
+          return channelData;
         },
         async invalidateAsync() {
           logger.debug(

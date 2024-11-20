@@ -22,6 +22,7 @@ import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -71,7 +72,15 @@ export default function DnsHoleControlsWidget({
             if (!prevData) return undefined;
 
             const newData = prevData.map((summary) =>
-              summary.integration.id === data.integration.id ? { ...summary, summary: data.summary } : summary,
+              summary.integration.id === data.integration.id
+                ? {
+                    integration: {
+                      ...summary.integration,
+                      updatedAt: new Date(),
+                    },
+                    summary: data.summary,
+                  }
+                : summary,
             );
 
             return newData;
@@ -303,8 +312,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   open,
   t,
 }) => {
-  // Independently determine connection status, current state and permissions
-  const isConnected = true as boolean; // Math.abs(dayjs(data.timestamp).diff()) < 30000;
+  const isConnected = useIntegrationConnected(data.integration.updatedAt, { timeout: 30000 });
   const isEnabled = data.summary.status ? data.summary.status === "enabled" : undefined;
   const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
   // Use all factors to infer the state of the action buttons
@@ -348,7 +356,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                 lts="0.1cqmin"
                 color="var(--background-color)"
                 c="var(--mantine-color-text)"
-                styles={{ section: { marginInlineEnd: "2.5cqmin" } }}
+                styles={{ section: { marginInlineEnd: "2.5cqmin" }, root: { cursor: "inherit" } }}
                 leftSection={
                   isConnected && (
                     <IconCircleFilled
