@@ -3,7 +3,7 @@ import { Agent, setGlobalDispatcher } from "undici";
 
 import { logger } from "@homarr/log";
 
-class LoggingAgent extends Agent {
+export class LoggingAgent extends Agent {
   constructor(...props: ConstructorParameters<typeof Agent>) {
     super(...props);
   }
@@ -25,7 +25,7 @@ class LoggingAgent extends Agent {
     });
 
     logger.info(
-      `Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers as object).length} headers)`,
+      `Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers ?? {}).length} headers)`,
     );
     return super.dispatch(options, handler);
   }
