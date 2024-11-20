@@ -66,7 +66,7 @@ describe("LoggingAgent should log all requests", () => {
     ["/?one=a1&two=b2&three=c3", `/?one=${REDACTED}&two=${REDACTED}&three=${REDACTED}`],
     ["/?numberWith13Chars=1234567890123", `/?numberWith13Chars=${REDACTED}`],
     [`/?stringWith13Chars=${"a".repeat(13)}`, `/?stringWith13Chars=${REDACTED}`],
-  ])(`should redact sensitive data in url https://homarr.dev%s`, (path, expected) => {
+  ])("should redact sensitive data in url https://homarr.dev%s", (path, expected) => {
     // Arrange
     const infoLogSpy = vi.spyOn(logger, "info");
     const agent = new LoggingAgent();
