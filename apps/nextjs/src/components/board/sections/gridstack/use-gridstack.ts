@@ -244,19 +244,31 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     };
   }, [isEditMode, onAdd, onChange]);
 
-  // Toggle the gridstack to be static or not based on the edit mode
+  /**
+   * IMPORTANT: This effect has to be placed after the effect to initialize the gridstack
+   * because we need the gridstack object to add the listeners
+   * Toggle the gridstack to be static or not based on the edit mode
+   */
   useEffect(() => {
     gridRef.current?.setStatic(!isEditMode);
   }, [isEditMode]);
 
   const sectionHeight = section.kind === "dynamic" && "height" in section ? (section.height as number) : null;
 
-  // We want the amount of rows in a dynamic section to be the height of the section in the outer gridstack
+  /**
+   * IMPORTANT: This effect has to be placed after the effect to initialize the gridstack
+   * because we need the gridstack object to add the listeners
+   * We want the amount of rows in a dynamic section to be the height of the section in the outer gridstack
+   */
   useEffect(() => {
     if (!sectionHeight) return;
     gridRef.current?.row(sectionHeight);
   }, [sectionHeight]);
 
+  /**
+   * IMPORTANT: This effect has to be placed after the effect to initialize the gridstack
+   * because we need the gridstack object to add the listeners
+   */
   useCssVariableConfiguration({
     columnCount,
     gridRef,
