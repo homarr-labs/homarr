@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 
-import type { Modify } from "@homarr/common/types";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
 import type { CalendarEvent, RadarrReleaseType } from "@homarr/integrations/types";
@@ -13,10 +12,7 @@ export const calendarMonthRequestHandler = createCachedIntegrationRequestHandler
   { year: number; month: number; releaseType: RadarrReleaseType[] }
 >({
   async requestAsync(integration, input) {
-    // TODO: remove conversion when missing integrations are added
-    const integrationInstance = integrationCreator(
-      integration as Modify<typeof integration, { kind: "radarr" | "sonarr" | "lidarr" }>,
-    );
+    const integrationInstance = integrationCreator(integration);
     const startDate = dayjs().year(input.year).month(input.month).startOf("month");
     const endDate = startDate.clone().endOf("month");
     return await integrationInstance.getCalendarEventsAsync(startDate.toDate(), endDate.toDate());
