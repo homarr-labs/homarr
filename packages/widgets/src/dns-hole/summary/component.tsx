@@ -60,14 +60,7 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
     },
   );
 
-  const data = useMemo(
-    () =>
-      summaries
-        //.filter((pair) => Math.abs(dayjs(pair.timestamp).diff()) < 30000)
-        .flatMap(({ summary }) => summary),
-    //.filter((summary) => summary !== null),
-    [summaries],
-  );
+  const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();

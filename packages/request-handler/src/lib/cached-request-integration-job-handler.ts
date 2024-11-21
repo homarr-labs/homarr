@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import { hashObjectBase64 } from "@homarr/common";
+import { hashObjectBase64, Stopwatch } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { MaybeArray } from "@homarr/common/types";
 import { db } from "@homarr/db";
@@ -88,8 +88,11 @@ export const createRequestIntegrationJobHandler = <
           },
           input,
         );
+        const stopWatch = new Stopwatch();
         await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
-        logger.debug(`Ran integration job integration=${integrationId} inputHash='${inputHash}'`);
+        logger.debug(
+          `Ran integration job integration=${integrationId} inputHash='${inputHash}' elapsed=${stopWatch.getElapsedInHumanWords()}`,
+        );
       } catch (error) {
         logger.error(
           `Failed to run integration job integration=${integrationId} inputHash='${inputHash}' error=${error as string}`,

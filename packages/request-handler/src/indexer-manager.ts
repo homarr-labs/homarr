@@ -15,6 +15,6 @@ export const indexerManagerRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = integrationCreator(integration);
     return await integrationInstance.getIndexersAsync();
   },
-  cacheDuration: dayjs.duration(1, "minute"),
+  cacheDuration: dayjs.duration(5, "minutes"),
   queryKey: "indexerManager",
 });
