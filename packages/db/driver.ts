@@ -40,6 +40,7 @@ const initBetterSqlite = () => {
   database = drizzleSqlite(connection, {
     schema: sqliteSchema,
     logger: new WinstonDrizzleLogger(),
+    casing: "snake_case",
   }) as unknown as never;
 };
 
@@ -61,6 +62,7 @@ const initMySQL2 = () => {
     schema: mysqlSchema,
     mode: "default",
     logger: new WinstonDrizzleLogger(),
+    casing: "snake_case",
   }) as unknown as HomarrDatabase;
 };
 
