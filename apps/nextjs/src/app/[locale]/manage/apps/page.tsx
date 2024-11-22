@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconApps, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { parseAppHrefWithVariablesServer } from "@homarr/common/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
@@ -13,6 +15,12 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AppDeleteButton } from "./_app-delete-button";
 
 export default async function AppsPage() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
   const apps = await api.app.all();
   const t = await getScopedI18n("app");
 
@@ -22,9 +30,11 @@ export default async function AppsPage() {
       <Stack>
         <Group justify="space-between" align="center">
           <Title>{t("page.list.title")}</Title>
-          <MobileAffixButton component={Link} href="/manage/apps/new">
-            {t("page.create.title")}
-          </MobileAffixButton>
+          {session.user.permissions.includes("app-create") && (
+            <MobileAffixButton component={Link} href="/manage/apps/new">
+              {t("page.create.title")}
+            </MobileAffixButton>
+          )}
         </Group>
         {apps.length === 0 && <AppNoResults />}
         {apps.length > 0 && (
@@ -45,6 +55,7 @@ interface AppCardProps {
 
 const AppCard = async ({ app }: AppCardProps) => {
   const t = await getScopedI18n("app");
+  const session = await auth();
 
   return (
     <Card>
@@ -78,16 +89,18 @@ const AppCard = async ({ app }: AppCardProps) => {
         </Group>
         <Group>
           <ActionIconGroup>
-            <ActionIcon
-              component={Link}
-              href={`/manage/apps/edit/${app.id}`}
-              variant="subtle"
-              color="gray"
-              aria-label={t("page.edit.title")}
-            >
-              <IconPencil size={16} stroke={1.5} />
-            </ActionIcon>
-            <AppDeleteButton app={app} />
+            {session?.user.permissions.includes("app-modify-all") && (
+              <ActionIcon
+                component={Link}
+                href={`/manage/apps/edit/${app.id}`}
+                variant="subtle"
+                color="gray"
+                aria-label={t("page.edit.title")}
+              >
+                <IconPencil size={16} stroke={1.5} />
+              </ActionIcon>
+            )}
+            {session?.user.permissions.includes("app-full-all") && <AppDeleteButton app={app} />}
           </ActionIconGroup>
         </Group>
       </Group>
@@ -97,6 +110,7 @@ const AppCard = async ({ app }: AppCardProps) => {
 
 const AppNoResults = async () => {
   const t = await getI18n();
+  const session = await auth();
 
   return (
     <Card withBorder bg="transparent">
@@ -105,7 +119,9 @@ const AppNoResults = async () => {
         <Text fw={500} size="lg">
           {t("app.page.list.noResults.title")}
         </Text>
-        <Anchor href="/manage/apps/new">{t("app.page.list.noResults.action")}</Anchor>
+        {session?.user.permissions.includes("app-create") && (
+          <Anchor href="/manage/apps/new">{t("app.page.list.noResults.action")}</Anchor>
+        )}
       </Stack>
     </Card>
   );

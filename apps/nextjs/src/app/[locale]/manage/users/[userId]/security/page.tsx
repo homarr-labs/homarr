@@ -5,7 +5,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { catchTrpcNotFound } from "~/errors/trpc-not-found";
+import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { canAccessUserEditPage } from "../access";
 import { ChangePasswordForm } from "./_components/_change-password-form";
 

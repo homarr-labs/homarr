@@ -10,7 +10,7 @@ import { UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { catchTrpcNotFound } from "~/errors/trpc-not-found";
+import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { NavigationLink } from "../groups/[id]/_navigation";
 import { canAccessUserEditPage } from "./access";
 

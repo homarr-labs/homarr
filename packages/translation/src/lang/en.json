@@ -196,6 +196,27 @@
           }
         }
       },
+      "app": {
+        "title": "Apps",
+        "item": {
+          "create": {
+            "label": "Create apps",
+            "description": "Allow members to create apps"
+          },
+          "use-all": {
+            "label": "Use all apps",
+            "description": "Allow members to add any apps to their boards"
+          },
+          "modify-all": {
+            "label": "Modify all apps",
+            "description": "Allow members to modify all apps"
+          },
+          "full-all": {
+            "label": "Full app access",
+            "description": "Allow members to manage, use and delete any app"
+          }
+        }
+      },
       "board": {
         "title": "Boards",
         "item": {
@@ -237,6 +258,49 @@
             "description": "Allow members to manage, use and interact with any integration"
           }
         }
+      },
+      "media": {
+        "title": "Medias",
+        "item": {
+          "upload": {
+            "label": "Upload medias",
+            "description": "Allow members to upload medias"
+          },
+          "view-all": {
+            "label": "View all medias",
+            "description": "Allow members to view all medias"
+          },
+          "full-all": {
+            "label": "Full media access",
+            "description": "Allow members to manage and delete any media"
+          }
+        }
+      },
+      "other": {
+        "title": "Other",
+        "item": {
+          "view-logs": {
+            "label": "View logs",
+            "description": "Allow members to view logs"
+          }
+        }
+      },
+      "search-engine": {
+        "title": "Search engines",
+        "item": {
+          "create": {
+            "label": "Create search engines",
+            "description": "Allow members to create search engines"
+          },
+          "modify-all": {
+            "label": "Modify all search engines",
+            "description": "Allow members to modify all search engines"
+          },
+          "full-all": {
+            "label": "Full search engine access",
+            "description": "Allow members to manage and delete any search engine"
+          }
+        }
       }
     },
     "memberNotice": {
@@ -244,7 +308,7 @@
       "external": "All members are from external providers and cannot be managed here"
     },
     "reservedNotice": {
-      "message": "This group is reserved for system use and restricts some actions. {checkoutDocs}"
+      "message": "This group is reserved for system use and restricts some actions. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
@@ -2073,6 +2137,9 @@
             },
             "dnsHole": {
               "label": "DNS Hole Data"
+            },
+            "sessionCleanup": {
+              "label": "Session Cleanup"
             }
           }
         },

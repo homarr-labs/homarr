@@ -12,7 +12,9 @@ import { TransmissionIntegration } from "../download-client/transmission/transmi
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
+import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
@@ -64,4 +66,6 @@ export const integrationCreators = {
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
-} satisfies Partial<Record<IntegrationKind, new (integration: IntegrationInput) => Integration>>;
+  lidarr: LidarrIntegration,
+  readarr: ReadarrIntegration,
+} satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;

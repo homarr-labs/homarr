@@ -1,12 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Alert, Anchor } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { createDocumentationLink } from "@homarr/definitions";
-import { getI18n } from "@homarr/translation/server";
+import { useI18n } from "@homarr/translation/client";
 
-export const ReservedGroupAlert = async () => {
-  const t = await getI18n();
+export const ReservedGroupAlert = () => {
+  const t = useI18n();
 
   return (
     <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>

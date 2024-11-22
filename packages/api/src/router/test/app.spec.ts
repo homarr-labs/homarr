@@ -5,23 +5,26 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/db";
 import { apps } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
+import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { appRouter } from "../app";
+import * as appAccessControl from "../app/app-access-control";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
-const defaultSession: Session = {
-  user: { id: createId(), permissions: [], colorScheme: "light" },
+const createDefaultSession = (permissions: GroupPermissionKey[] = []): Session => ({
+  user: { id: createId(), permissions, colorScheme: "light" },
   expires: new Date().toISOString(),
-};
+});
 
 describe("all should return all apps", () => {
-  test("should return all apps", async () => {
+  test("should return all apps with session", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: null,
+      session: createDefaultSession(),
     });
 
     await db.insert(apps).values([
@@ -48,15 +51,30 @@ describe("all should return all apps", () => {
     expect(result[1]!.href).toBeNull();
     expect(result[1]!.description).toBeNull();
   });
+  test("should throw UNAUTHORIZED if the user is not authenticated", async () => {
+    // Arrange
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      session: null,
+    });
+
+    // Act
+    const actAsync = async () => await caller.all();
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("UNAUTHORIZED");
+  });
 });
 
 describe("byId should return an app by id", () => {
-  test("should return an app by id", async () => {
+  test("should return an app by id when canUserSeeAppAsync returns true", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
       session: null,
     });
+    vi.spyOn(appAccessControl, "canUserSeeAppAsync").mockReturnValue(Promise.resolve(true));
 
     await db.insert(apps).values([
       {
@@ -73,28 +91,61 @@ describe("byId should return an app by id", () => {
       },
     ]);
 
+    // Act
     const result = await caller.byId({ id: "2" });
+
+    // Assert
     expect(result.name).toBe("Mantine");
   });
 
+  test("should throw NOT_FOUND error when canUserSeeAppAsync returns false", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = appRouter.createCaller({
+      db,
+      session: null,
+    });
+    await db.insert(apps).values([
+      {
+        id: "2",
+        name: "Mantine",
+        description: "React components and hooks library",
+        iconUrl: "https://mantine.dev/favicon.svg",
+        href: "https://mantine.dev",
+      },
+    ]);
+    vi.spyOn(appAccessControl, "canUserSeeAppAsync").mockReturnValue(Promise.resolve(false));
+
+    // Act
+    const actAsync = async () => await caller.byId({ id: "2" });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("App not found");
+  });
+
   test("should throw an error if the app does not exist", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
       session: null,
     });
 
+    // Act
     const actAsync = async () => await caller.byId({ id: "2" });
+
+    // Assert
     await expect(actAsync()).rejects.toThrow("App not found");
   });
 });
 
 describe("create should create a new app with all arguments", () => {
   test("should create a new app", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: defaultSession,
+      session: createDefaultSession(["app-create"]),
     });
     const input = {
       name: "Mantine",
@@ -103,8 +154,10 @@ describe("create should create a new app with all arguments", () => {
       href: "https://mantine.dev",
     };
 
+    // Act
     await caller.create(input);
 
+    // Assert
     const dbApp = await db.query.apps.findFirst();
     expect(dbApp).toBeDefined();
     expect(dbApp!.name).toBe(input.name);
@@ -114,10 +167,11 @@ describe("create should create a new app with all arguments", () => {
   });
 
   test("should create a new app only with required arguments", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: defaultSession,
+      session: createDefaultSession(["app-create"]),
     });
     const input = {
       name: "Mantine",
@@ -126,8 +180,10 @@ describe("create should create a new app with all arguments", () => {
       href: null,
     };
 
+    // Act
     await caller.create(input);
 
+    // Assert
     const dbApp = await db.query.apps.findFirst();
     expect(dbApp).toBeDefined();
     expect(dbApp!.name).toBe(input.name);
@@ -139,10 +195,11 @@ describe("create should create a new app with all arguments", () => {
 
 describe("update should update an app", () => {
   test("should update an app", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: defaultSession,
+      session: createDefaultSession(["app-modify-all"]),
     });
 
     const appId = createId();
@@ -162,8 +219,10 @@ describe("update should update an app", () => {
       href: "https://mantine.dev",
     };
 
+    // Act
     await caller.update(input);
 
+    // Assert
     const dbApp = await db.query.apps.findFirst();
 
     expect(dbApp).toBeDefined();
@@ -174,12 +233,14 @@ describe("update should update an app", () => {
   });
 
   test("should throw an error if the app does not exist", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: defaultSession,
+      session: createDefaultSession(["app-modify-all"]),
     });
 
+    // Act
     const actAsync = async () =>
       await caller.update({
         id: createId(),
@@ -188,16 +249,19 @@ describe("update should update an app", () => {
         description: null,
         href: null,
       });
+
+    // Assert
     await expect(actAsync()).rejects.toThrow("App not found");
   });
 });
 
 describe("delete should delete an app", () => {
   test("should delete an app", async () => {
+    // Arrange
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
-      session: defaultSession,
+      session: createDefaultSession(["app-full-all"]),
     });
 
     const appId = createId();
@@ -207,8 +271,10 @@ describe("delete should delete an app", () => {
       iconUrl: "https://mantine.dev/favicon.svg",
     });
 
+    // Act
     await caller.delete({ id: appId });
 
+    // Assert
     const dbApp = await db.query.apps.findFirst();
     expect(dbApp).toBeUndefined();
   });

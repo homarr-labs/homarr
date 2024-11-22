@@ -18,17 +18,17 @@
   "dependencies": {
     "@next/eslint-plugin-next": "^14.2.18",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.3.0",
+    "eslint-config-turbo": "^2.3.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "typescript-eslint": "^8.14.0"
+    "typescript-eslint": "^8.15.0"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.14.0",
+    "eslint": "^9.15.0",
     "typescript": "^5.6.3"
   },
   "prettier": "@homarr/prettier-config"

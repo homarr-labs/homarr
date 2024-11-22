@@ -64,6 +64,7 @@ export default async function ManagementPage() {
       href: "/manage/apps",
       subtitle: t("statisticLabel.resources"),
       title: t("statistic.app"),
+      hidden: !session?.user,
     },
     {
       count: statistics.countGroups,

@@ -1,6 +1,8 @@
+import { notFound } from "next/navigation";
 import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { ManageContainer } from "~/components/manage/manage-container";
@@ -12,6 +14,12 @@ interface SearchEngineEditPageProps {
 }
 
 export default async function SearchEngineEditPage({ params }: SearchEngineEditPageProps) {
+  const session = await auth();
+
+  if (!session?.user.permissions.includes("search-engine-modify-all")) {
+    notFound();
+  }
+
   const searchEngine = await api.searchEngine.byId({ id: params.id });
   const t = await getI18n();
 

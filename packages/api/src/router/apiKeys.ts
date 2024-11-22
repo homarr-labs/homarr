@@ -28,14 +28,15 @@ export const apiKeysRouter = createTRPCRouter({
     const salt = await createSaltAsync();
     const randomToken = generateSecureRandomToken(64);
     const hashedRandomToken = await hashPasswordAsync(randomToken, salt);
+    const id = createId();
     await db.insert(apiKeys).values({
-      id: createId(),
+      id,
       apiKey: hashedRandomToken,
       salt,
       userId: ctx.session.user.id,
     });
     return {
-      randomToken,
+      apiKey: `${id}.${randomToken}`,
     };
   }),
 });

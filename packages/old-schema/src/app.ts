@@ -4,27 +4,24 @@ import { tileBaseSchema } from "./tile";
 
 const appBehaviourSchema = z.object({
   externalUrl: z.string(),
-  isOpeningNewTab: z.boolean(),
-  tooltipDescription: z.string().optional(),
+  isOpeningNewTab: z.boolean().catch(true),
+  tooltipDescription: z.string().optional().catch(undefined),
 });
 
 const appNetworkSchema = z.object({
-  enabledStatusChecker: z.boolean(),
-  okStatus: z.array(z.number()).optional(),
-  statusCodes: z.array(z.string()),
+  enabledStatusChecker: z.boolean().catch(true),
+  okStatus: z.array(z.number()).optional().catch([]),
+  statusCodes: z.array(z.string()).catch([]),
 });
 
 const appAppearanceSchema = z.object({
   iconUrl: z.string(),
-  appNameStatus: z.union([z.literal("normal"), z.literal("hover"), z.literal("hidden")]),
-  positionAppName: z.union([
-    z.literal("row"),
-    z.literal("column"),
-    z.literal("row-reverse"),
-    z.literal("column-reverse"),
-  ]),
-  appNameFontSize: z.number(),
-  lineClampAppName: z.number(),
+  appNameStatus: z.union([z.literal("normal"), z.literal("hover"), z.literal("hidden")]).catch("normal"),
+  positionAppName: z
+    .union([z.literal("row"), z.literal("column"), z.literal("row-reverse"), z.literal("column-reverse")])
+    .catch("column"),
+  appNameFontSize: z.number().catch(16),
+  lineClampAppName: z.number().catch(1),
 });
 
 const integrationSchema = z.enum([

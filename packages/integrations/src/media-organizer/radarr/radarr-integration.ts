@@ -2,24 +2,11 @@ import type { AtLeastOneOf } from "@homarr/common/types";
 import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
-import { Integration } from "../../base/integration";
 import type { CalendarEvent } from "../../calendar-types";
 import { radarrReleaseTypes } from "../../calendar-types";
+import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
-export class RadarrIntegration extends Integration {
-  /**
-   * Priority list that determines the quality of images using their order.
-   * Types at the start of the list are better than those at the end.
-   * We do this to attempt to find the best quality image for the show.
-   */
-  private readonly priorities: z.infer<typeof radarrCalendarEventSchema>["images"][number]["coverType"][] = [
-    "poster", // Official, perfect aspect ratio
-    "banner", // Official, bad aspect ratio
-    "fanart", // Unofficial, possibly bad quality
-    "screenshot", // Bad aspect ratio, possibly bad quality
-    "clearlogo", // Without background, bad aspect ratio
-  ];
-
+export class RadarrIntegration extends MediaOrganizerIntegration {
   /**
    * Gets the events in the Radarr calendar between two dates.
    * @param start The start date
@@ -76,7 +63,7 @@ export class RadarrIntegration extends Integration {
         name: "IMDb",
         color: "#f5c518",
         isDark: false,
-        logo: "/images/apps/imdb.png",
+        logo: "/images/apps/imdb.svg",
       });
     }
 

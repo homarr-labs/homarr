@@ -8,7 +8,7 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
-import { catchTrpcNotFound } from "~/errors/trpc-not-found";
+import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { ChangeHomeBoardForm } from "./_components/_change-home-board";
