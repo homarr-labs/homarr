@@ -672,8 +672,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       tldts:
-        specifier: ^6.1.62
-        version: 6.1.62
+        specifier: ^6.1.63
+        version: 6.1.63
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -7802,11 +7802,11 @@ packages:
   title-case@2.1.1:
     resolution: {integrity: sha512-EkJoZ2O3zdCz3zJsYCsxyq2OC5hrxR9mfdd5I+w8h/tmFfeOxJ+vvkxsKxdmN0WtS9zLdHEgfgVOiMVgv+Po4Q==}
 
-  tldts-core@6.1.62:
-    resolution: {integrity: sha512-ohONqbfobpuaylhqFbtCzc0dFFeNz85FVKSesgT8DS9OV3a25Yj730pTj7/dDtCqmgoCgEj6gDiU9XxgHKQlBw==}
+  tldts-core@6.1.63:
+    resolution: {integrity: sha512-H1XCt54xY+QPbwhTgmxLkepX0MVHu3USfMmejiCOdkMbRcP22Pn2FVF127r/GWXVDmXTRezyF3Ckvhn4Fs6j7Q==}
 
-  tldts@6.1.62:
-    resolution: {integrity: sha512-TF+wo3MgTLbf37keEwQD0IxvOZO8UZxnpPJDg5iFGAASGxYzbX/Q0y944ATEjrfxG/pF1TWRHCPbFp49Mz1Y1w==}
+  tldts@6.1.63:
+    resolution: {integrity: sha512-YWwhsjyn9sB/1rOkSRYxvkN/wl5LFM1QDv6F2pVR+pb/jFne4EOBxHfkKVWvDIBEAw9iGOwwubHtQTm0WRT5sQ==}
     hasBin: true
 
   tmp@0.0.33:
@@ -15354,11 +15354,11 @@ snapshots:
       no-case: 2.3.2
       upper-case: 1.1.3
 
-  tldts-core@6.1.62: {}
+  tldts-core@6.1.63: {}
 
-  tldts@6.1.62:
+  tldts@6.1.63:
     dependencies:
-      tldts-core: 6.1.62
+      tldts-core: 6.1.63
 
   tmp@0.0.33:
     dependencies:
@@ -15383,7 +15383,7 @@ snapshots:
 
   tough-cookie@5.0.0:
     dependencies:
-      tldts: 6.1.62
+      tldts: 6.1.63
 
   tr46@0.0.3: {}
 
