@@ -1943,9 +1943,10 @@
             "security": {
               "label": "Security"
             },
-            "permissions": {
-              "label": "Permissions",
-              "description": "Coming soon"
+            "groups": {
+              "label": "Groups",
+              "title": "Select all groups user should be member of",
+              "description": "The {everyoneGroup} group is assigned to all users and can not be removed."
             },
             "review": {
               "label": "Review"

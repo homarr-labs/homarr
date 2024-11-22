@@ -100,14 +100,33 @@ export const groupRouter = createTRPCRouter({
       };
     }),
   // Is protected because also used in board access / integration access forms
-  selectable: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.groups.findMany({
-      columns: {
-        id: true,
-        name: true,
-      },
-    });
-  }),
+  selectable: protectedProcedure
+    .input(z.object({ withPermissions: z.boolean().default(false) }).optional())
+    .query(async ({ ctx, input }) => {
+      const withPermissions = input?.withPermissions && ctx.session.user.permissions.includes("admin");
+
+      if (!withPermissions) {
+        return await ctx.db.query.groups.findMany({
+          columns: {
+            id: true,
+            name: true,
+          },
+        });
+      }
+
+      const groups = await ctx.db.query.groups.findMany({
+        columns: {
+          id: true,
+          name: true,
+        },
+        with: { permissions: { columns: { permission: true } } },
+      });
+
+      return groups.map((group) => ({
+        ...group,
+        permissions: group.permissions.map((permission) => permission.permission),
+      }));
+    }),
   search: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(
