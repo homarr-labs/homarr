@@ -300,7 +300,9 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
                           : [{ key, value: key }],
                       )
                       .filter(({ key, value }) =>
-                        group.permissions.some((permission) => permission == (key === value ? key : `${key}-${value}`)),
+                        group.permissions.some(
+                          (permission) => permission === (key === value ? key : `${key}-${value}`),
+                        ),
                       )
                       .map(({ key, value }) => (
                         <PermissionBadge key={`${key}-${value}`} category={key} value={value} />
