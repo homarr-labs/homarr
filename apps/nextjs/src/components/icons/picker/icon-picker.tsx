@@ -38,7 +38,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const [debouncedSearch] = useDebouncedValue(search, 100);
 
   // We use not useSuspenseQuery as it would cause an above Suspense boundary to trigger and so searching for something is bad UX.
-  const { data, isLoading } = clientApi.icon.findIcons.useQuery({
+  const { data } = clientApi.icon.findIcons.useQuery({
     searchText: debouncedSearch,
   });
 
