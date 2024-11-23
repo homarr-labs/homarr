@@ -15,6 +15,7 @@ import {
   UnstyledButton,
   useCombobox,
 } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -34,16 +35,19 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
 
   const tCommon = useScopedI18n("common");
 
-  const [data] = clientApi.icon.findIcons.useSuspenseQuery({
-    searchText: search,
+  const [debouncedSearch] = useDebouncedValue(search, 100);
+
+  // We use not useSuspenseQuery as it would cause an above Suspense boundary to trigger and so searching for something is bad UX.
+  const { data, isLoading } = clientApi.icon.findIcons.useQuery({
+    searchText: debouncedSearch,
   });
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const totalOptions = data.icons.reduce((acc, group) => acc + group.icons.length, 0);
-  const groups = data.icons.map((group) => {
+  const totalOptions = data?.icons.reduce((acc, group) => acc + group.icons.length, 0) ?? 0;
+  const groups = data?.icons.map((group) => {
     const options = group.icons.map((item) => (
       <UnstyledButton
         onClick={() => {
@@ -92,8 +96,12 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
       <Combobox.Target>
         <InputBase
           rightSection={<Combobox.Chevron />}
-          // eslint-disable-next-line @next/next/no-img-element
-          leftSection={previewUrl ? <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} /> : null}
+          leftSection={
+            previewUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} />
+            ) : null
+          }
           value={search}
           onChange={(event) => {
             combobox.openDropdown();
@@ -118,7 +126,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           withAsterisk
           error={error}
           label={tCommon("iconPicker.label")}
-          placeholder={tCommon("iconPicker.header", { countIcons: data.countIcons })}
+          placeholder={tCommon("iconPicker.header", { countIcons: data?.countIcons ?? 0 })}
         />
       </Combobox.Target>
 
