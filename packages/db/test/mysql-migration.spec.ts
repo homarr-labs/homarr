@@ -22,6 +22,7 @@ describe("Mysql Migration", () => {
     const database = drizzle(connection, {
       schema: mysqlSchema,
       mode: "default",
+      casing: "snake_case",
     });
 
     // Run migrations and check if it works

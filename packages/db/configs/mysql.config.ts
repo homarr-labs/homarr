@@ -7,6 +7,7 @@ dotenv.config({ path: "../../.env" });
 export default {
   dialect: "mysql",
   schema: "./schema",
+  casing: "snake_case",
   dbCredentials: {
     host: process.env.DB_HOST!,
     user: process.env.DB_USER!,

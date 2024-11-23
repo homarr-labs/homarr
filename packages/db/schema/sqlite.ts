@@ -3,7 +3,7 @@ import type { DayOfWeek } from "@mantine/dates";
 import type { InferSelectModel } from "drizzle-orm";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { blob, index, int, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import type {
@@ -23,10 +23,10 @@ import type {
 } from "@homarr/definitions";
 
 export const apiKeys = sqliteTable("apiKey", {
-  id: text("id").notNull().primaryKey(),
-  apiKey: text("apiKey").notNull(),
-  salt: text("salt").notNull(),
-  userId: text("userId")
+  id: text().notNull().primaryKey(),
+  apiKey: text().notNull(),
+  salt: text().notNull(),
+  userId: text()
     .notNull()
     .references((): AnySQLiteColumn => users.id, {
       onDelete: "cascade",
@@ -34,38 +34,38 @@ export const apiKeys = sqliteTable("apiKey", {
 });
 
 export const users = sqliteTable("user", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name"),
-  email: text("email"),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
-  image: text("image"),
-  password: text("password"),
-  salt: text("salt"),
-  provider: text("provider").$type<SupportedAuthProvider>().default("credentials").notNull(),
-  homeBoardId: text("homeBoardId").references((): AnySQLiteColumn => boards.id, {
+  id: text().notNull().primaryKey(),
+  name: text(),
+  email: text(),
+  emailVerified: int({ mode: "timestamp_ms" }),
+  image: text(),
+  password: text(),
+  salt: text(),
+  provider: text().$type<SupportedAuthProvider>().default("credentials").notNull(),
+  homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
-  colorScheme: text("colorScheme").$type<ColorScheme>().default("dark").notNull(),
-  firstDayOfWeek: int("firstDayOfWeek").$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
-  pingIconsEnabled: int("pingIconsEnabled", { mode: "boolean" }).default(false).notNull(),
+  colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
+  firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
 });
 
 export const accounts = sqliteTable(
   "account",
   {
-    userId: text("userId")
+    userId: text()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
+    type: text().$type<AdapterAccount["type"]>().notNull(),
+    provider: text().notNull(),
+    providerAccountId: text().notNull(),
+    refresh_token: text(),
+    access_token: text(),
+    expires_at: int(),
+    token_type: text(),
+    scope: text(),
+    id_token: text(),
+    session_state: text(),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -78,11 +78,11 @@ export const accounts = sqliteTable(
 export const sessions = sqliteTable(
   "session",
   {
-    sessionToken: text("sessionToken").notNull().primaryKey(),
-    userId: text("userId")
+    sessionToken: text().notNull().primaryKey(),
+    userId: text()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    expires: int({ mode: "timestamp_ms" }).notNull(),
   },
   (session) => ({
     userIdIdx: index("user_id_idx").on(session.userId),
@@ -92,9 +92,9 @@ export const sessions = sqliteTable(
 export const verificationTokens = sqliteTable(
   "verificationToken",
   {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    identifier: text().notNull(),
+    token: text().notNull(),
+    expires: int({ mode: "timestamp_ms" }).notNull(),
   },
   (verificationToken) => ({
     compoundKey: primaryKey({
@@ -106,10 +106,10 @@ export const verificationTokens = sqliteTable(
 export const groupMembers = sqliteTable(
   "groupMember",
   {
-    groupId: text("groupId")
+    groupId: text()
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    userId: text("userId")
+    userId: text()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -121,50 +121,50 @@ export const groupMembers = sqliteTable(
 );
 
 export const groups = sqliteTable("group", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name").unique().notNull(),
-  ownerId: text("owner_id").references(() => users.id, {
+  id: text().notNull().primaryKey(),
+  name: text().unique().notNull(),
+  ownerId: text().references(() => users.id, {
     onDelete: "set null",
   }),
 });
 
 export const groupPermissions = sqliteTable("groupPermission", {
-  groupId: text("groupId")
+  groupId: text()
     .notNull()
     .references(() => groups.id, { onDelete: "cascade" }),
-  permission: text("permission").$type<GroupPermissionKey>().notNull(),
+  permission: text().$type<GroupPermissionKey>().notNull(),
 });
 
 export const invites = sqliteTable("invite", {
-  id: text("id").notNull().primaryKey(),
-  token: text("token").notNull().unique(),
-  expirationDate: int("expiration_date", {
+  id: text().notNull().primaryKey(),
+  token: text().notNull().unique(),
+  expirationDate: int({
     mode: "timestamp",
   }).notNull(),
-  creatorId: text("creator_id")
+  creatorId: text()
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
 export const medias = sqliteTable("media", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
-  content: blob("content", { mode: "buffer" }).$type<Buffer>().notNull(),
-  contentType: text("content_type").notNull(),
-  size: int("size").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  content: blob({ mode: "buffer" }).$type<Buffer>().notNull(),
+  contentType: text().notNull(),
+  size: int().notNull(),
+  createdAt: int({ mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),
-  creatorId: text("creator_id").references(() => users.id, { onDelete: "set null" }),
+  creatorId: text().references(() => users.id, { onDelete: "set null" }),
 });
 
 export const integrations = sqliteTable(
   "integration",
   {
-    id: text("id").notNull().primaryKey(),
-    name: text("name").notNull(),
-    url: text("url").notNull(),
-    kind: text("kind").$type<IntegrationKind>().notNull(),
+    id: text().notNull().primaryKey(),
+    name: text().notNull(),
+    url: text().notNull(),
+    kind: text().$type<IntegrationKind>().notNull(),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -174,12 +174,12 @@ export const integrations = sqliteTable(
 export const integrationSecrets = sqliteTable(
   "integrationSecret",
   {
-    kind: text("kind").$type<IntegrationSecretKind>().notNull(),
-    value: text("value").$type<`${string}.${string}`>().notNull(),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
+    kind: text().$type<IntegrationSecretKind>().notNull(),
+    value: text().$type<`${string}.${string}`>().notNull(),
+    updatedAt: int({ mode: "timestamp" })
       .$onUpdateFn(() => new Date())
       .notNull(),
-    integrationId: text("integration_id")
+    integrationId: text()
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
   },
@@ -195,13 +195,13 @@ export const integrationSecrets = sqliteTable(
 export const integrationUserPermissions = sqliteTable(
   "integrationUserPermission",
   {
-    integrationId: text("integration_id")
+    integrationId: text()
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
-    userId: text("user_id")
+    userId: text()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<IntegrationPermission>().notNull(),
+    permission: text().$type<IntegrationPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -213,13 +213,13 @@ export const integrationUserPermissions = sqliteTable(
 export const integrationGroupPermissions = sqliteTable(
   "integrationGroupPermissions",
   {
-    integrationId: text("integration_id")
+    integrationId: text()
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
-    groupId: text("group_id")
+    groupId: text()
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<IntegrationPermission>().notNull(),
+    permission: text().$type<IntegrationPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -229,46 +229,40 @@ export const integrationGroupPermissions = sqliteTable(
 );
 
 export const boards = sqliteTable("board", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name").unique().notNull(),
-  isPublic: int("is_public", { mode: "boolean" }).default(false).notNull(),
-  creatorId: text("creator_id").references(() => users.id, {
+  id: text().notNull().primaryKey(),
+  name: text().unique().notNull(),
+  isPublic: int({ mode: "boolean" }).default(false).notNull(),
+  creatorId: text().references(() => users.id, {
     onDelete: "set null",
   }),
-  pageTitle: text("page_title"),
-  metaTitle: text("meta_title"),
-  logoImageUrl: text("logo_image_url"),
-  faviconImageUrl: text("favicon_image_url"),
-  backgroundImageUrl: text("background_image_url"),
-  backgroundImageAttachment: text("background_image_attachment")
+  pageTitle: text(),
+  metaTitle: text(),
+  logoImageUrl: text(),
+  faviconImageUrl: text(),
+  backgroundImageUrl: text(),
+  backgroundImageAttachment: text()
     .$type<BackgroundImageAttachment>()
     .default(backgroundImageAttachments.defaultValue)
     .notNull(),
-  backgroundImageRepeat: text("background_image_repeat")
-    .$type<BackgroundImageRepeat>()
-    .default(backgroundImageRepeats.defaultValue)
-    .notNull(),
-  backgroundImageSize: text("background_image_size")
-    .$type<BackgroundImageSize>()
-    .default(backgroundImageSizes.defaultValue)
-    .notNull(),
-  primaryColor: text("primary_color").default("#fa5252").notNull(),
-  secondaryColor: text("secondary_color").default("#fd7e14").notNull(),
-  opacity: int("opacity").default(100).notNull(),
-  customCss: text("custom_css"),
-  columnCount: int("column_count").default(10).notNull(),
+  backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
+  backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
+  primaryColor: text().default("#fa5252").notNull(),
+  secondaryColor: text().default("#fd7e14").notNull(),
+  opacity: int().default(100).notNull(),
+  customCss: text(),
+  columnCount: int().default(10).notNull(),
 });
 
 export const boardUserPermissions = sqliteTable(
   "boardUserPermission",
   {
-    boardId: text("board_id")
+    boardId: text()
       .notNull()
       .references(() => boards.id, { onDelete: "cascade" }),
-    userId: text("user_id")
+    userId: text()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<BoardPermission>().notNull(),
+    permission: text().$type<BoardPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -280,13 +274,13 @@ export const boardUserPermissions = sqliteTable(
 export const boardGroupPermissions = sqliteTable(
   "boardGroupPermission",
   {
-    boardId: text("board_id")
+    boardId: text()
       .notNull()
       .references(() => boards.id, { onDelete: "cascade" }),
-    groupId: text("group_id")
+    groupId: text()
       .notNull()
       .references(() => groups.id, { onDelete: "cascade" }),
-    permission: text("permission").$type<BoardPermission>().notNull(),
+    permission: text().$type<BoardPermission>().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -296,50 +290,50 @@ export const boardGroupPermissions = sqliteTable(
 );
 
 export const sections = sqliteTable("section", {
-  id: text("id").notNull().primaryKey(),
-  boardId: text("board_id")
+  id: text().notNull().primaryKey(),
+  boardId: text()
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
-  kind: text("kind").$type<SectionKind>().notNull(),
-  xOffset: int("x_offset").notNull(),
-  yOffset: int("y_offset").notNull(),
-  width: int("width"),
-  height: int("height"),
-  name: text("name"),
-  parentSectionId: text("parent_section_id").references((): AnySQLiteColumn => sections.id, {
+  kind: text().$type<SectionKind>().notNull(),
+  xOffset: int().notNull(),
+  yOffset: int().notNull(),
+  width: int(),
+  height: int(),
+  name: text(),
+  parentSectionId: text().references((): AnySQLiteColumn => sections.id, {
     onDelete: "cascade",
   }),
 });
 
 export const items = sqliteTable("item", {
-  id: text("id").notNull().primaryKey(),
-  sectionId: text("section_id")
+  id: text().notNull().primaryKey(),
+  sectionId: text()
     .notNull()
     .references(() => sections.id, { onDelete: "cascade" }),
-  kind: text("kind").$type<WidgetKind>().notNull(),
-  xOffset: int("x_offset").notNull(),
-  yOffset: int("y_offset").notNull(),
-  width: int("width").notNull(),
-  height: int("height").notNull(),
-  options: text("options").default('{"json": {}}').notNull(), // empty superjson object
-  advancedOptions: text("advanced_options").default('{"json": {}}').notNull(), // empty superjson object
+  kind: text().$type<WidgetKind>().notNull(),
+  xOffset: int().notNull(),
+  yOffset: int().notNull(),
+  width: int().notNull(),
+  height: int().notNull(),
+  options: text().default('{"json": {}}').notNull(), // empty superjson object
+  advancedOptions: text().default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const apps = sqliteTable("app", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  iconUrl: text("icon_url").notNull(),
-  href: text("href"),
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  description: text(),
+  iconUrl: text().notNull(),
+  href: text(),
 });
 
 export const integrationItems = sqliteTable(
   "integration_item",
   {
-    itemId: text("item_id")
+    itemId: text()
       .notNull()
       .references(() => items.id, { onDelete: "cascade" }),
-    integrationId: text("integration_id")
+    integrationId: text()
       .notNull()
       .references(() => integrations.id, { onDelete: "cascade" }),
   },
@@ -351,23 +345,23 @@ export const integrationItems = sqliteTable(
 );
 
 export const icons = sqliteTable("icon", {
-  id: text("icon_id").notNull().primaryKey(),
-  name: text("icon_name").notNull(),
-  url: text("icon_url").notNull(),
-  checksum: text("icon_checksum").notNull(),
-  iconRepositoryId: text("iconRepository_id")
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  url: text().notNull(),
+  checksum: text().notNull(),
+  iconRepositoryId: text()
     .notNull()
     .references(() => iconRepositories.id, { onDelete: "cascade" }),
 });
 
 export const iconRepositories = sqliteTable("iconRepository", {
-  id: text("iconRepository_id").notNull().primaryKey(),
-  slug: text("iconRepository_slug").notNull(),
+  id: text().notNull().primaryKey(),
+  slug: text().notNull(),
 });
 
 export const serverSettings = sqliteTable("serverSetting", {
-  settingKey: text("key").notNull().unique().primaryKey(),
-  value: text("value").default('{"json": {}}').notNull(), // empty superjson object
+  settingKey: text().notNull().unique().primaryKey(),
+  value: text().default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
@@ -378,14 +372,14 @@ export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
 }));
 
 export const searchEngines = sqliteTable("search_engine", {
-  id: text("id").notNull().primaryKey(),
-  iconUrl: text("icon_url").notNull(),
-  name: text("name").notNull(),
-  short: text("short").notNull(),
-  description: text("description"),
-  urlTemplate: text("url_template"),
-  type: text("type").$type<SearchEngineType>().notNull().default("generic"),
-  integrationId: text("integration_id").references(() => integrations.id, { onDelete: "cascade" }),
+  id: text().notNull().primaryKey(),
+  iconUrl: text().notNull(),
+  name: text().notNull(),
+  short: text().notNull(),
+  description: text(),
+  urlTemplate: text(),
+  type: text().$type<SearchEngineType>().notNull().default("generic"),
+  integrationId: text().references(() => integrations.id, { onDelete: "cascade" }),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
