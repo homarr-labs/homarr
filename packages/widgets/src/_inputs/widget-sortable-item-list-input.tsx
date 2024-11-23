@@ -112,7 +112,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
         >
           <SortableContext items={values} strategy={verticalListSortingStrategy}>
             <Stack gap="xs">
-              <>
+              <React.Fragment>
                 {values.map((value, index) => {
                   const item = getItem(value);
                   const removeItem = () => {
@@ -148,8 +148,8 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
                     <Loader />
                   </Center>
                 )}
-                {error && <Center h={256}>{JSON.stringify(error)}</Center>}
-              </>
+                {error ? <Center h={256}>{JSON.stringify(error)}</Center> : null}
+              </React.Fragment>
             </Stack>
           </SortableContext>
         </DndContext>
