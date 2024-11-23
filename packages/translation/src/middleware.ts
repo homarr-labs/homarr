@@ -1,6 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 
 import type { SupportedLanguage } from ".";
+import { supportedLanguages } from "./config";
 import { createRouting } from "./routing";
 
 export const createI18nMiddleware = (defaultLocale: SupportedLanguage) =>
@@ -8,5 +9,5 @@ export const createI18nMiddleware = (defaultLocale: SupportedLanguage) =>
 
 export const config = {
   // Match only internationalized pathnames
-  matcher: ["/", "/(de|en)/:path*"],
+  matcher: ["/", `/(${supportedLanguages.join("|")})/:path*`],
 };
