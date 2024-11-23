@@ -1,5 +1,6 @@
 import superjson from "superjson";
 
+import { hashObjectBase64 } from "@homarr/common";
 import { createId } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
@@ -172,11 +173,21 @@ export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integra
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 
+export const createIntegrationOptionsChannel = <TData>(
+  integrationId: string,
+  queryKey: string,
+  options: Record<string, unknown>,
+) => {
+  const optionsKey = hashObjectBase64(options);
+  const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
+  return createChannelWithLatestAndEvents<TData>(channelName);
+};
+
 export const createItemChannel = <TData>(itemId: string) => {
   return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
 };
 
-const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
+export const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
   return {
     subscribe: (callback: (data: TData) => void) => {
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
@@ -196,6 +207,7 @@ const createChannelWithLatestAndEvents = <TData>(channelName: string) => {
 
       return superjson.parse<{ data: TData; timestamp: Date }>(data);
     },
+    name: channelName,
   };
 };
 

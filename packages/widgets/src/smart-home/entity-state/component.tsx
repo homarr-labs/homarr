@@ -1,40 +1,47 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Center, Stack, Text, UnstyledButton } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { NoIntegrationSelectedError } from "../../errors";
 
 export default function SmartHomeEntityStateWidget({
   options,
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<"smartHome-entityState">) {
-  const [lastState, setLastState] = useState<{
-    entityId: string;
-    state: string;
-  }>();
+  const integrationId = integrationIds[0];
+
+  if (!integrationId) {
+    throw new NoIntegrationSelectedError();
+  }
+
+  return <InnerComponent options={options} integrationId={integrationId} isEditMode={isEditMode} />;
+}
+
+type InnerComponentProps = Pick<WidgetComponentProps<"smartHome-entityState">, "options" | "isEditMode"> & {
+  integrationId: string;
+};
+
+const InnerComponent = ({ options, integrationId, isEditMode }: InnerComponentProps) => {
+  const input = {
+    entityId: options.entityId,
+    integrationId,
+  };
+  const [entityState] = clientApi.widget.smartHome.entityState.useSuspenseQuery(input);
 
   const utils = clientApi.useUtils();
 
-  clientApi.widget.smartHome.subscribeEntityState.useSubscription(
-    {
-      entityId: options.entityId,
-    },
-    {
-      onData(data) {
-        setLastState(data);
-      },
-    },
-  );
-
-  const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation({
-    onSettled: () => {
-      void utils.widget.smartHome.invalidate();
+  clientApi.widget.smartHome.subscribeEntityState.useSubscription(input, {
+    onData(data) {
+      utils.widget.smartHome.entityState.setData(input, data.state);
     },
   });
+
+  const { mutate } = clientApi.widget.smartHome.switchEntity.useMutation();
 
   const attribute = options.entityUnit.length > 0 ? " " + options.entityUnit : "";
 
@@ -49,9 +56,9 @@ export default function SmartHomeEntityStateWidget({
 
     mutate({
       entityId: options.entityId,
-      integrationId: integrationIds[0] ?? "",
+      integrationId,
     });
-  }, [integrationIds, isEditMode, mutate, options.clickable, options.entityId]);
+  }, [integrationId, isEditMode, mutate, options.clickable, options.entityId]);
 
   return (
     <UnstyledButton
@@ -66,11 +73,11 @@ export default function SmartHomeEntityStateWidget({
             {options.displayName}
           </Text>
           <Text ta="center">
-            {lastState?.state}
+            {entityState}
             {attribute}
           </Text>
         </Stack>
       </Center>
     </UnstyledButton>
   );
-}
+};

@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+"use client";
+
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
@@ -15,14 +16,11 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   options,
-  itemId,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
     {
       integrationIds,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      itemId: itemId!,
     },
     {
       refetchOnMount: false,
@@ -30,30 +28,39 @@ export default function MediaServerWidget({
       refetchOnReconnect: false,
     },
   );
+  const utils = clientApi.useUtils();
+  clientApi.widget.mediaRequests.subscribeToLatestRequests.useSubscription(
+    {
+      integrationIds,
+    },
+    {
+      onData(data) {
+        utils.widget.mediaRequests.getLatestRequests.setData({ integrationIds }, (prevData) => {
+          if (!prevData) return [];
 
-  const sortedMediaRequests = useMemo(
-    () =>
-      mediaRequests
-        .filter((group) => group != null)
-        .flatMap((group) => group.data)
-        .flatMap(({ medias, integration }) => medias.map((media) => ({ ...media, integrationId: integration.id })))
-        .sort(({ status: statusA }, { status: statusB }) => {
-          if (statusA === MediaRequestStatus.PendingApproval) {
-            return -1;
-          }
-          if (statusB === MediaRequestStatus.PendingApproval) {
-            return 1;
-          }
-          return 0;
-        }),
-    [mediaRequests],
+          const filteredData = prevData.filter(({ integrationId }) => integrationId !== data.integrationId);
+          const newData = filteredData.concat(
+            data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
+          );
+          return newData.sort(({ status: statusA }, { status: statusB }) => {
+            if (statusA === MediaRequestStatus.PendingApproval) {
+              return -1;
+            }
+            if (statusB === MediaRequestStatus.PendingApproval) {
+              return 1;
+            }
+            return 0;
+          });
+        });
+      },
+    },
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
 
   if (integrationIds.length === 0) throw new NoIntegrationSelectedError();
 
-  if (sortedMediaRequests.length === 0) throw new NoIntegrationDataError();
+  if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (
     <ScrollArea
@@ -62,7 +69,7 @@ export default function MediaServerWidget({
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
       <Stack className="mediaRequests-list-list" gap="2cqmin" p="2cqmin">
-        {sortedMediaRequests.map((mediaRequest) => (
+        {mediaRequests.map((mediaRequest) => (
           <Card
             className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${mediaRequest.type} mediaRequests-list-item-${mediaRequest.status}`}
             key={mediaRequest.id}

@@ -497,6 +497,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
+      '@homarr/request-handler':
+        specifier: workspace:^0.1.0
+        version: link:../request-handler
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
@@ -782,6 +785,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
+      '@homarr/request-handler':
+        specifier: workspace:^0.1.0
+        version: link:../request-handler
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
@@ -1291,6 +1297,49 @@ importers:
       ioredis:
         specifier: 5.4.1
         version: 5.4.1
+      superjson:
+        specifier: 2.2.1
+        version: 2.2.1
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.15.0
+        version: 9.15.0
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
+
+  packages/request-handler:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
+      '@homarr/integrations':
+        specifier: workspace:^0.1.0
+        version: link:../integrations
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
+      '@homarr/redis':
+        specifier: workspace:^0.1.0
+        version: link:../redis
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       superjson:
         specifier: 2.2.1
         version: 2.2.1

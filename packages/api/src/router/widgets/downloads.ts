@@ -6,7 +6,7 @@ import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { downloadClientItemSchema, integrationCreator } from "@homarr/integrations";
-import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 import { z } from "@homarr/validation";
 
 import type { IntegrationAction } from "../../middlewares/integration";
@@ -21,12 +21,18 @@ export const downloadsRouter = createTRPCRouter({
     .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
       return await Promise.all(
-        ctx.integrations.map(async ({ decryptedSecrets: _, ...integration }) => {
-          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const { data, timestamp } = (await channel.getAsync()) ?? { data: null, timestamp: new Date(0) };
+        ctx.integrations.map(async (integration) => {
+          const innerHandler = downloadClientRequestHandler.handler(integration, {});
+
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+
           return {
-            integration,
-            timestamp,
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: timestamp,
+            },
             data,
           };
         }),
@@ -37,17 +43,15 @@ export const downloadsRouter = createTRPCRouter({
     .subscription(({ ctx }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
-        timestamp: Date;
         data: DownloadClientJobsAndStatus;
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const channel = createItemAndIntegrationChannel<DownloadClientJobsAndStatus>("downloads", integration.id);
-          const unsubscribe = channel.subscribe((data) => {
+          const innerHandler = downloadClientRequestHandler.handler(integrationWithSecrets, {});
+          const unsubscribe = innerHandler.subscribe((data) => {
             emit.next({
               integration,
-              timestamp: new Date(),
               data,
             });
           });

@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Stack, Text, Title } from "@mantine/core";
 import { IconBrowserOff } from "@tabler/icons-react";
 
