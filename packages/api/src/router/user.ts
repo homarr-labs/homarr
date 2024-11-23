@@ -78,7 +78,11 @@ export const userRouter = createTRPCRouter({
       throwIfCredentialsDisabled();
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-      await createUserAsync(ctx.db, input);
+      const userId = await createUserAsync(ctx.db, input);
+
+      if (input.groupIds.length >= 1) {
+        await ctx.db.insert(groupMembers).values(input.groupIds.map((groupId) => ({ groupId, userId })));
+      }
     }),
   setProfileImage: protectedProcedure
     .input(
@@ -459,7 +463,7 @@ export const userRouter = createTRPCRouter({
     }),
 });
 
-const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.create>) => {
+const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.baseCreate>) => {
   const salt = await createSaltAsync();
   const hashedPassword = await hashPasswordAsync(input.password, salt);
 

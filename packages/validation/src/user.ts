@@ -49,7 +49,7 @@ const confirmPasswordRefine = [
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ] satisfies [(args: any) => boolean, unknown];
 
-const createUserSchema = z
+const baseCreateUserSchema = z
   .object({
     username: usernameSchema,
     password: passwordSchema,
@@ -58,7 +58,9 @@ const createUserSchema = z
   })
   .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
 
-const initUserSchema = createUserSchema;
+const createUserSchema = baseCreateUserSchema.and(z.object({ groupIds: z.array(z.string()) }));
+
+const initUserSchema = baseCreateUserSchema;
 
 const signInSchema = z.object({
   name: z.string().min(1),
@@ -124,6 +126,7 @@ export const userSchemas = {
   registrationApi: registrationSchemaApi,
   init: initUserSchema,
   create: createUserSchema,
+  baseCreate: baseCreateUserSchema,
   password: passwordSchema,
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,
