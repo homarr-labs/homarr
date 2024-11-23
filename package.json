@@ -45,10 +45,5 @@
   "packageManager": "pnpm@9.14.2",
   "engines": {
     "node": ">=22.11.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "trpc-swagger@1.2.6": "patches/trpc-swagger@1.2.6.patch"
-    }
   }
 }

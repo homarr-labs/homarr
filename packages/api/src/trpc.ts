@@ -8,7 +8,7 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import type { OpenApiMeta } from "trpc-swagger";
+import type { OpenApiMeta } from "trpc-to-openapi";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";

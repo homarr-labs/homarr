@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import type { NextRequest } from "next/server";
-import { createOpenApiFetchHandler } from "trpc-swagger/build/index.mjs";
+import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
 import { hashPasswordAsync } from "@homarr/auth";

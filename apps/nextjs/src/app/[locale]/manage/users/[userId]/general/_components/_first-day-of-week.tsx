@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Group, Radio, Stack } from "@mantine/core";
+import type { DayOfWeek } from "@mantine/dates";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 
@@ -43,7 +44,7 @@ export const FirstDayOfWeek = ({ user }: FirstDayOfWeekProps) => {
   });
   const form = useZodForm(validation.user.firstDayOfWeek, {
     initialValues: {
-      firstDayOfWeek: user.firstDayOfWeek,
+      firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
     },
   });
 
