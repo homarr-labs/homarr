@@ -2075,8 +2075,8 @@
           },
           "board": {
             "title": "Boards",
-            "defaultBoard": {
-              "label": "Global default board",
+            "homeBoard": {
+              "label": "Global home board",
               "description": "Only public boards are available for selection"
             }
           },

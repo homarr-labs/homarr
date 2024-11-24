@@ -507,7 +507,7 @@ describe("getHomeBoard should return home board", () => {
     const fullBoardProps = await createFullBoardAsync(db, "home");
     await db.insert(serverSettings).values({
       settingKey: "board",
-      value: SuperJSON.stringify({ defaultBoardId: fullBoardProps.boardId }),
+      value: SuperJSON.stringify({ homeBoardId: fullBoardProps.boardId }),
     });
 
     // Act
