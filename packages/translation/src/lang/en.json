@@ -1563,6 +1563,10 @@
             "title": "Unable to apply changes",
             "message": "The board could not be saved"
           }
+        },
+        "confirmLeave": {
+          "title": "Unsaved changes",
+          "message": "You have unsaved changes, are you sure you want to leave?"
         }
       },
       "oldImport": {

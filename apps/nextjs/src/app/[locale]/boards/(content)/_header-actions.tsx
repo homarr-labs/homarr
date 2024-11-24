@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import type { MouseEvent } from "react";
+import { useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Group, Menu } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
@@ -16,7 +18,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useModalAction } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
@@ -26,6 +28,7 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
+import { env } from "~/env.mjs";
 import { useEditMode, useRequiredBoard } from "./_context";
 
 export const BoardContentHeaderActions = () => {
@@ -139,10 +142,71 @@ const EditModeMenu = () => {
   }, [board, isEditMode, saveBoard, setEditMode]);
 
   useHotkeys([["mod+e", toggle]]);
+  usePreventLeaveWithDirty(isEditMode);
 
   return (
     <HeaderButton onClick={toggle} loading={isPending}>
       {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
     </HeaderButton>
   );
+};
+
+const usePreventLeaveWithDirty = (isDirty: boolean) => {
+  const t = useI18n();
+  const { openConfirmModal } = useConfirmModal();
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent<HTMLElement>) => {
+      const target = (event.target as HTMLElement).closest("a");
+
+      if (!target) return;
+      if (!isDirty) return;
+
+      event.preventDefault();
+
+      openConfirmModal({
+        title: t("board.action.edit.confirmLeave.title"),
+        children: t("board.action.edit.confirmLeave.message"),
+        onConfirm() {
+          router.push(target.href);
+        },
+        confirmProps: {
+          children: t("common.action.discard"),
+        },
+      });
+    };
+
+    const handlePopState = (event: Event) => {
+      if (isDirty) {
+        window.history.pushState(null, document.title, window.location.href);
+        event.preventDefault();
+      } else {
+        window.history.back();
+      }
+    };
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isDirty) return;
+      if (env.NODE_ENV === "development") return; // Allow to reload in development
+
+      event.preventDefault();
+      event.returnValue = true;
+    };
+
+    document.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", handleClick as never);
+    });
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      document.querySelectorAll("a").forEach((link) => {
+        link.removeEventListener("click", handleClick as never);
+        window.removeEventListener("popstate", handlePopState);
+      });
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDirty]);
 };
