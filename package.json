@@ -49,6 +49,7 @@
   "pnpm": {
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"
-    }
+    },
+    "allowNonAppliedPatches": true
   }
 }
