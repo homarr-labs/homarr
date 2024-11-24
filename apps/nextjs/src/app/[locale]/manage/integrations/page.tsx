@@ -27,7 +27,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconChevronDown, IconChevronUp, IconPencil } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconPencil, IconPlugX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -40,6 +40,7 @@ import { CountBadge, IntegrationAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { NoResults } from "~/components/no-results";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
@@ -119,8 +120,8 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
   const session = await auth();
   const hasFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
 
-  if (integrations.length === 0) {
-    return <div>{t("page.list.empty")}</div>;
+  if (integrations.length == 0) {
+    return <NoResults icon={IconPlugX} title={t("page.list.noResults.title")} />;
   }
 
   const grouppedIntegrations = integrations.reduce(

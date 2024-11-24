@@ -388,7 +388,7 @@
       "list": {
         "title": "Apps",
         "noResults": {
-          "title": "There aren't any apps",
+          "title": "There are no apps yet",
           "action": "Create your first app"
         }
       },
@@ -456,7 +456,9 @@
       "list": {
         "title": "Integrations",
         "search": "Search integrations",
-        "empty": "No integrations found"
+        "noResults": {
+          "title": "There are no integrations yet"
+        }
       },
       "create": {
         "title": "New {name} integration",
@@ -2676,7 +2678,7 @@
         "list": {
           "title": "Search engines",
           "noResults": {
-            "title": "There aren't any search engines",
+            "title": "There are no search engines yet",
             "action": "Create your first search engine"
           },
           "interactive": "Interactive, uses an integration"
