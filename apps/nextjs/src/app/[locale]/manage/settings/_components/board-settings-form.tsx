@@ -19,8 +19,8 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
       {(form) => (
         <>
           <SelectWithCustomItems
-            label={tBoard("defaultBoard.label")}
-            description={tBoard("defaultBoard.description")}
+            label={tBoard("homeBoard.label")}
+            description={tBoard("homeBoard.description")}
             data={selectableBoards.map((board) => ({
               value: board.id,
               label: board.name,
@@ -35,7 +35,7 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
                 </Text>
               </Group>
             )}
-            {...form.getInputProps("defaultBoardId")}
+            {...form.getInputProps("homeBoardId")}
           />
         </>
       )}
