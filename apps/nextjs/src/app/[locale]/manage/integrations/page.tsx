@@ -120,7 +120,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
   const session = await auth();
   const hasFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
 
-  if (integrations.length == 0) {
+  if (integrations.length === 0) {
     return <NoResults icon={IconPlugX} title={t("page.list.noResults.title")} />;
   }
 
