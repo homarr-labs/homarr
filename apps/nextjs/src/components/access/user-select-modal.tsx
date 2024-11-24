@@ -12,6 +12,7 @@ import { UserAvatar } from "@homarr/ui";
 
 interface InnerProps {
   presentUserIds: string[];
+  excludeExternalProviders?: boolean;
   onSelect: (props: { id: string; name: string; image: string }) => void | Promise<void>;
   confirmLabel?: string;
 }
@@ -22,7 +23,9 @@ interface UserSelectFormType {
 
 export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const t = useI18n();
-  const { data: users, isPending } = clientApi.user.selectable.useQuery();
+  const { data: users, isPending } = clientApi.user.selectable.useQuery({
+    excludeExternalProviders: innerProps.excludeExternalProviders,
+  });
   const [loading, setLoading] = useState(false);
   const form = useForm<UserSelectFormType>();
   const handleSubmitAsync = async (values: UserSelectFormType) => {
