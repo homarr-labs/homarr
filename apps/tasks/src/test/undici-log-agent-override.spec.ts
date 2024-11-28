@@ -8,7 +8,7 @@ import { LoggingAgent } from "~/undici-log-agent-override";
 vi.mock("undici", () => {
   return {
     Agent: class Agent {
-      dispatch(_options: Dispatcher.DispatchOptions, _handler: Dispatcher.DispatchHandlers): boolean {
+      dispatch(_options: Dispatcher.DispatchOptions, _handler: Dispatcher.DispatchHandler): boolean {
         return true;
       }
     },
