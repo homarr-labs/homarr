@@ -503,7 +503,7 @@ export const userRouter = createTRPCRouter({
     }),
 });
 
-const createUserAsync = async (db: Database, input: z.infer<typeof validation.user.baseCreate>) => {
+const createUserAsync = async (db: Database, input: Omit<z.infer<typeof validation.user.baseCreate>, "groupIds">) => {
   const salt = await createSaltAsync();
   const hashedPassword = await hashPasswordAsync(input.password, salt);
 
