@@ -17,6 +17,11 @@ const handlerAsync = async (req: NextRequest) => {
   const { ua } = userAgent(req);
   const session: Session | null = await getSessionOrDefaultFromHeadersAsync(apiKeyHeaderValue, ipAddress, ua);
 
+  // Fallback to JSON if no content type is set
+  if (!req.headers.has("Content-Type")) {
+    req.headers.set("Content-Type", "application/json");
+  }
+
   return createOpenApiFetchHandler({
     req,
     endpoint: "/",
@@ -82,4 +87,10 @@ const getSessionOrDefaultFromHeadersAsync = async (
   return await createSessionAsync(db, apiKeyFromDb.user);
 };
 
-export { handlerAsync as GET, handlerAsync as POST };
+export {
+  handlerAsync as GET,
+  handlerAsync as POST,
+  handlerAsync as PUT,
+  handlerAsync as DELETE,
+  handlerAsync as PATCH,
+};
