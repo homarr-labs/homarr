@@ -2654,7 +2654,8 @@
             }
           }
         }
-      }
+      },
+      "home": {}
     },
     "engine": {
       "search": "Find a search engine",
