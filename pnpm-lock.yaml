@@ -871,13 +871,13 @@ importers:
         version: 0.28.1
       drizzle-orm:
         specifier: ^0.36.4
-        version: 0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.4)(react@18.3.1)
+        version: 0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.5)(react@18.3.1)
       drizzle-zod:
         specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.4)(react@18.3.1))(zod@3.23.8)
+        version: 0.5.1(drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.5)(react@18.3.1))(zod@3.23.8)
       mysql2:
-        specifier: 3.11.4
-        version: 3.11.4
+        specifier: 3.11.5
+        version: 3.11.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -6304,8 +6304,8 @@ packages:
     engines: {node: '>=8', npm: '>=5'}
     hasBin: true
 
-  mysql2@3.11.4:
-    resolution: {integrity: sha512-Z2o3tY4Z8EvSRDwknaC40MdZ3+m0sKbpnXrShQLdxPrAvcNli7jLrD2Zd2IzsRMw4eK9Yle500FDmlkIqp+krg==}
+  mysql2@3.11.5:
+    resolution: {integrity: sha512-0XFu8rUmFN9vC0ME36iBvCUObftiMHItrYFhlCRvFWbLgpNqtC4Br/NmZX1HNCszxT0GGy5QtP+k3Q3eCJPaYA==}
     engines: {node: '>= 8.0'}
 
   named-placeholders@1.1.3:
@@ -11581,18 +11581,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.4)(react@18.3.1):
+  drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.5)(react@18.3.1):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.12
       '@types/react': 18.3.12
       better-sqlite3: 11.6.0
-      mysql2: 3.11.4
+      mysql2: 3.11.5
       react: 18.3.1
 
-  drizzle-zod@0.5.1(drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.4)(react@18.3.1))(zod@3.23.8):
+  drizzle-zod@0.5.1(drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.5)(react@18.3.1))(zod@3.23.8):
     dependencies:
-      drizzle-orm: 0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.4)(react@18.3.1)
+      drizzle-orm: 0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.12)(better-sqlite3@11.6.0)(mysql2@3.11.5)(react@18.3.1)
       zod: 3.23.8
 
   eastasianwidth@0.2.0: {}
@@ -13189,7 +13189,7 @@ snapshots:
       '@babel/runtime': 7.25.6
       global: 4.4.0
 
-  mysql2@3.11.4:
+  mysql2@3.11.5:
     dependencies:
       aws-ssl-profiles: 1.1.2
       denque: 2.1.0
