@@ -8,7 +8,7 @@ export class LoggingAgent extends Agent {
     super(...props);
   }
 
-  dispatch(options: Dispatcher.DispatchOptions, handler: Dispatcher.DispatchHandlers): boolean {
+  dispatch(options: Dispatcher.DispatchOptions, handler: Dispatcher.DispatchHandler): boolean {
     const url = new URL(`${options.origin as string}${options.path}`);
 
     // The below code should prevent sensitive data from being logged as
