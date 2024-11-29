@@ -1,5 +1,5 @@
 import type { DependencyList, PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import type { TablerIcon } from "@homarr/ui";
 
@@ -25,38 +25,34 @@ const createSpotlightContext = (displayName: string) => {
   SpotlightContext.displayName = displayName;
 
   const Provider = ({ children }: PropsWithChildren) => {
-    const registrationsRef = useRef<Map<string, number>>(new Map());
-    const [itemsMap, setItemsMap] = useState<Map<string, ContextSpecificItem[]>>(new Map());
+    const [itemsMap, setItemsMap] = useState<Map<string, { items: ContextSpecificItem[]; count: number }>>(new Map());
 
     const registerItems = useCallback((key: string, newItems: ContextSpecificItem[]) => {
       setItemsMap((prevItems) => {
         const newItemsMap = new Map(prevItems);
-        newItemsMap.set(key, newItems);
-        registrationsRef.current.set(key, (registrationsRef.current.get(key) ?? 0) + 1);
-
+        newItemsMap.set(key, { items: newItems, count: (newItemsMap.get(key)?.count ?? 0) + 1 });
         return newItemsMap;
       });
     }, []);
 
     const unregisterItems = useCallback((key: string) => {
       setItemsMap((prevItems) => {
-        const registrationCount = registrationsRef.current.get(key) ?? 0;
+        const registrationCount = prevItems.get(key)?.count ?? 0;
 
         if (registrationCount <= 1) {
           const newItemsMap = new Map(prevItems);
           newItemsMap.delete(key);
-          registrationsRef.current.delete(key);
-
           return newItemsMap;
         }
 
-        registrationsRef.current.set(key, registrationCount - 1);
+        const newItemsMap = new Map(prevItems);
+        newItemsMap.set(key, { items: newItemsMap.get(key)?.items ?? [], count: registrationCount - 1 });
 
         return prevItems;
       });
     }, []);
 
-    const items = useMemo(() => Array.from(itemsMap.values()).flat(), [itemsMap]);
+    const items = useMemo(() => Array.from(itemsMap.values()).flatMap(({ items }) => items), [itemsMap]);
 
     return (
       <SpotlightContext.Provider value={{ items, registerItems, unregisterItems }}>
@@ -99,7 +95,7 @@ const createSpotlightContext = (displayName: string) => {
       };
       // We ignore the results
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, dependencyArray);
+    }, [...dependencyArray, key]);
   };
 
   return [SpotlightContext, Provider, useSpotlightContextItems, useRegisterSpotlightContextItems] as const;
@@ -111,10 +107,10 @@ const [_ActionContext, ActionProvider, useSpotlightContextActions, useRegisterSp
   createSpotlightContext("SpotlightContextSpecificActions");
 
 export {
-  useSpotlightContextResults,
+  useRegisterSpotlightContextActions,
   useRegisterSpotlightContextResults,
   useSpotlightContextActions,
-  useRegisterSpotlightContextActions,
+  useSpotlightContextResults,
 };
 
 export const SpotlightProvider = ({ children }: PropsWithChildren) => {
