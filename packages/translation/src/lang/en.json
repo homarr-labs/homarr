@@ -2448,6 +2448,9 @@
       "command": {
         "help": "Activate command mode",
         "group": {
+          "localCommand": {
+            "title": "Local commands"
+          },
           "globalCommand": {
             "title": "Global commands",
             "option": {
@@ -2557,6 +2560,13 @@
           }
         }
       },
+      "home": {
+        "group": {
+          "local": {
+            "title": "Local results"
+          }
+        }
+      },
       "page": {
         "help": "Search for pages",
         "group": {
@@ -2654,8 +2664,7 @@
             }
           }
         }
-      },
-      "home": {}
+      }
     },
     "engine": {
       "search": "Find a search engine",

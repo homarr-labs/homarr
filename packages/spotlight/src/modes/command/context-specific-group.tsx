@@ -5,7 +5,7 @@ import type { ContextSpecificItem } from "../home/context";
 import { useSpotlightContextActions } from "../home/context";
 
 export const contextSpecificActionsSearchGroups = createGroup<ContextSpecificItem>({
-  title: "Context Specific Actions",
+  title: (t) => t("search.mode.command.group.localCommand.title"),
   keyPath: "id",
   Component(option) {
     const icon =
