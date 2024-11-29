@@ -2,7 +2,7 @@ import { observable } from "@trpc/server/observable";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
-import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { mediaServerRequestHandler } from "@homarr/request-handler/media-server";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -17,11 +17,11 @@ export const mediaServerRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const channel = createItemAndIntegrationChannel<StreamSession[]>("mediaServer", integration.id);
-          const data = await channel.getAsync();
+          const innerHandler = mediaServerRequestHandler.handler(integration, {});
+          const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
           return {
             integrationId: integration.id,
-            sessions: data?.data ?? [],
+            sessions: data,
           };
         }),
       );
@@ -32,8 +32,9 @@ export const mediaServerRouter = createTRPCRouter({
       return observable<{ integrationId: string; data: StreamSession[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
-          const channel = createItemAndIntegrationChannel<StreamSession[]>("mediaServer", integration.id);
-          const unsubscribe = channel.subscribe((sessions) => {
+          const innerHandler = mediaServerRequestHandler.handler(integration, {});
+
+          const unsubscribe = innerHandler.subscribe((sessions) => {
             emit.next({
               integrationId: integration.id,
               data: sessions,

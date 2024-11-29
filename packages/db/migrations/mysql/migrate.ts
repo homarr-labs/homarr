@@ -25,6 +25,7 @@ const migrateAsync = async () => {
   const db = drizzle(mysql2, {
     mode: "default",
     schema: mysqlSchema,
+    casing: "snake_case",
   });
 
   await migrate(db, { migrationsFolder });

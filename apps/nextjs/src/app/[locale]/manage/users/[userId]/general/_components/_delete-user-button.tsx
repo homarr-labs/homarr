@@ -31,7 +31,9 @@ export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
         children: t("user.action.delete.confirm", { username: user.name }),
         // eslint-disable-next-line no-restricted-syntax
         async onConfirm() {
-          await mutateUserDeletionAsync(user.id);
+          await mutateUserDeletionAsync({
+            userId: user.id,
+          });
         },
       }),
     [user, mutateUserDeletionAsync, openConfirmModal, t],

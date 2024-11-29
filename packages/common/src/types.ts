@@ -9,3 +9,5 @@ export type Modify<T, R extends Partial<Record<keyof T, unknown>>> = {
 export type RemoveReadonly<T> = {
   -readonly [P in keyof T]: T[P] extends Record<string, unknown> ? RemoveReadonly<T[P]> : T[P];
 };
+
+export type MaybeArray<T> = T | T[];

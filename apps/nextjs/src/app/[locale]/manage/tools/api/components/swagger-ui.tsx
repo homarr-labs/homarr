@@ -1,6 +1,6 @@
 "use client";
 
-import type { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIObject } from "openapi3-ts/oas31";
 import SwaggerUI from "swagger-ui-react";
 
 // workaround for CSS that cannot be processed by next.js, https://github.com/swagger-api/swagger-ui/issues/10045
@@ -9,7 +9,7 @@ import "../swagger-ui-overrides.css";
 import "../swagger-ui.css";
 
 interface SwaggerUIClientProps {
-  document: OpenAPIV3.Document;
+  document: OpenAPIObject;
 }
 
 export const SwaggerUIClient = ({ document }: SwaggerUIClientProps) => {

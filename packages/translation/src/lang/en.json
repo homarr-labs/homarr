@@ -388,7 +388,7 @@
       "list": {
         "title": "Apps",
         "noResults": {
-          "title": "There aren't any apps",
+          "title": "There are no apps yet",
           "action": "Create your first app"
         }
       },
@@ -456,7 +456,9 @@
       "list": {
         "title": "Integrations",
         "search": "Search integrations",
-        "empty": "No integrations found"
+        "noResults": {
+          "title": "There are no integrations yet"
+        }
       },
       "create": {
         "title": "New {name} integration",
@@ -1563,6 +1565,10 @@
             "title": "Unable to apply changes",
             "message": "The board could not be saved"
           }
+        },
+        "confirmLeave": {
+          "title": "Unsaved changes",
+          "message": "You have unsaved changes, are you sure you want to leave?"
         }
       },
       "oldImport": {
@@ -1943,9 +1949,10 @@
             "security": {
               "label": "Security"
             },
-            "permissions": {
-              "label": "Permissions",
-              "description": "Coming soon"
+            "groups": {
+              "label": "Groups",
+              "title": "Select all groups user should be member of",
+              "description": "The {everyoneGroup} group is assigned to all users and can not be removed."
             },
             "review": {
               "label": "Review"
@@ -2070,8 +2077,8 @@
           },
           "board": {
             "title": "Boards",
-            "defaultBoard": {
-              "label": "Global default board",
+            "homeBoard": {
+              "label": "Global home board",
               "description": "Only public boards are available for selection"
             }
           },
@@ -2123,8 +2130,11 @@
             "downloads": {
               "label": "Downloads"
             },
-            "mediaRequests": {
-              "label": "Media Requests"
+            "mediaRequestStats": {
+              "label": "Media Request Stats"
+            },
+            "mediaRequestList": {
+              "label": "Media Request List"
             },
             "rssFeeds": {
               "label": "RSS feeds"
@@ -2668,7 +2678,7 @@
         "list": {
           "title": "Search engines",
           "noResults": {
-            "title": "There aren't any search engines",
+            "title": "There are no search engines yet",
             "action": "Create your first search engine"
           },
           "interactive": "Interactive, uses an integration"

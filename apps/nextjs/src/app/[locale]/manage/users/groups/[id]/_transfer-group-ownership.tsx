@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { Button, useMatches } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -46,7 +47,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
                   userId: id,
                 },
                 {
-                  onSuccess() {
+                  async onSuccess() {
                     setInnerOwnerId(id);
                     showSuccessNotification({
                       title: tRoot("common.notification.transfer.success"),
@@ -55,6 +56,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
                         user: name,
                       }),
                     });
+                    await revalidatePathActionAsync(`/manage/users/groups/${group.id}`);
                   },
                   onError() {
                     showErrorNotification({

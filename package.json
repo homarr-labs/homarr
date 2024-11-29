@@ -19,6 +19,7 @@
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
+    "package:new": "turbo gen init",
     "test": "cross-env NODE_ENV=development vitest run --exclude e2e --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development vitest e2e",
     "test:ui": "cross-env NODE_ENV=development vitest --exclude e2e --ui --coverage.enabled",
@@ -28,26 +29,21 @@
   "prettier": "@homarr/prettier-config",
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^2.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "@vitest/coverage-v8": "^2.1.5",
-    "@vitest/ui": "^2.1.5",
+    "@turbo/gen": "^2.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.6",
+    "@vitest/ui": "^2.1.6",
     "cross-env": "^7.0.3",
     "jsdom": "^25.0.1",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "testcontainers": "^10.15.0",
-    "turbo": "^2.3.1",
-    "typescript": "^5.6.3",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
     "vite-tsconfig-paths": "^5.1.3",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.6"
   },
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@9.14.4",
   "engines": {
     "node": ">=22.11.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "trpc-swagger@1.2.6": "patches/trpc-swagger@1.2.6.patch"
-    }
   }
 }

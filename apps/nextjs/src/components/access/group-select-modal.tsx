@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Button, Group, Loader, Select, Stack } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import type { GroupPermissionKey } from "@homarr/definitions";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 interface InnerProps {
+  withPermissions?: boolean;
   presentGroupIds: string[];
-  onSelect: (props: { id: string; name: string }) => void | Promise<void>;
+  onSelect: (props: { id: string; name: string; permissions?: GroupPermissionKey[] }) => void | Promise<void>;
   confirmLabel?: string;
 }
 
@@ -18,7 +20,9 @@ interface GroupSelectFormType {
 
 export const GroupSelectModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const t = useI18n();
-  const { data: groups, isPending } = clientApi.group.selectable.useQuery();
+  const { data: groups, isPending } = clientApi.group.selectable.useQuery({
+    withPermissions: innerProps.withPermissions,
+  });
   const [loading, setLoading] = useState(false);
   const form = useForm<GroupSelectFormType>();
   const handleSubmitAsync = async (values: GroupSelectFormType) => {
@@ -28,6 +32,7 @@ export const GroupSelectModal = createModal<InnerProps>(({ actions, innerProps }
     await innerProps.onSelect({
       id: currentGroup.id,
       name: currentGroup.name,
+      permissions: "permissions" in currentGroup ? (currentGroup.permissions as GroupPermissionKey[]) : undefined,
     });
 
     setLoading(false);

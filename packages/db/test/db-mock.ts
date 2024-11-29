@@ -6,7 +6,7 @@ import { schema } from "..";
 
 export const createDb = (debug?: boolean) => {
   const sqlite = new Database(":memory:");
-  const db = drizzle(sqlite, { schema, logger: debug });
+  const db = drizzle(sqlite, { schema, logger: debug, casing: "snake_case" });
   migrate(db, {
     migrationsFolder: "./packages/db/migrations/sqlite",
   });

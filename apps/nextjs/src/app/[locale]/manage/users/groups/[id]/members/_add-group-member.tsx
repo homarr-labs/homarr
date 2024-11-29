@@ -32,6 +32,7 @@ export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps)
           await revalidatePathActionAsync(`/manage/users/groups/${groupId}}/members`);
         },
         presentUserIds,
+        excludeExternalProviders: true,
       },
       {
         title: tMembersAdd("label"),

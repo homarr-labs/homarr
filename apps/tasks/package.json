@@ -10,7 +10,7 @@
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --outfile=tasks.cjs",
+    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:@opentelemetry/api --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -38,17 +38,17 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "superjson": "2.2.1",
-    "undici": "6.21.0"
+    "undici": "7.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.9.1",
+    "@types/node": "^22.10.1",
     "dotenv-cli": "^7.4.4",
     "eslint": "^9.15.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "tsx": "4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }

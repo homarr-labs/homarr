@@ -316,7 +316,7 @@ describe("delete should delete user", () => {
 
     await db.insert(schema.users).values(initialUsers);
 
-    await caller.delete(defaultOwnerId);
+    await caller.delete({ userId: defaultOwnerId });
 
     const usersInDb = await db.select().from(schema.users);
     expect(usersInDb).toHaveLength(2);

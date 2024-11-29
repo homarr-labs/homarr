@@ -5,7 +5,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
 import type { Indexer } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
-import { createItemAndIntegrationChannel } from "@homarr/redis";
+import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -20,14 +20,8 @@ export const indexerManagerRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const client = integrationCreator(integration);
-          const indexers = await client.getIndexersAsync().catch((err) => {
-            logger.error("indexer-manager router - ", err);
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: `Failed to fetch indexers for ${integration.name} (${integration.id})`,
-            });
-          });
+          const innerHandler = indexerManagerRequestHandler.handler(integration, {});
+          const { data: indexers } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {
             integrationId: integration.id,
@@ -43,11 +37,11 @@ export const indexerManagerRouter = createTRPCRouter({
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; indexers: Indexer[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];
-        for (const integration of ctx.integrations) {
-          const channel = createItemAndIntegrationChannel<Indexer[]>("indexerManager", integration.id);
-          const unsubscribe = channel.subscribe((indexers) => {
+        for (const integrationWithSecrets of ctx.integrations) {
+          const innerHandler = indexerManagerRequestHandler.handler(integrationWithSecrets, {});
+          const unsubscribe = innerHandler.subscribe((indexers) => {
             emit.next({
-              integrationId: integration.id,
+              integrationId: integrationWithSecrets.id,
               indexers,
             });
           });
@@ -60,7 +54,6 @@ export const indexerManagerRouter = createTRPCRouter({
         };
       });
     }),
-
   testAllIndexers: publicProcedure
     .unstable_concat(createIndexerManagerIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {

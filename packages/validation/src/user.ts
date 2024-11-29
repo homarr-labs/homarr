@@ -37,41 +37,43 @@ const passwordSchema = z
     },
   );
 
-const confirmPasswordRefine = [
-  (data: { password: string; confirmPassword: string }) => data.password === data.confirmPassword,
-  {
+const addConfirmPasswordRefinement = <TObj extends { password: string; confirmPassword: string }>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: z.ZodObject<any, "strip", z.ZodTypeAny, TObj>,
+) => {
+  return schema.refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
     params: createCustomErrorParams({
       key: "passwordsDoNotMatch",
       params: {},
     }),
-  },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-] satisfies [(args: any) => boolean, unknown];
+  });
+};
 
-const createUserSchema = z
-  .object({
-    username: usernameSchema,
-    password: passwordSchema,
-    confirmPassword: z.string(),
-    email: z.string().email().or(z.string().length(0).optional()),
-  })
-  .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
+const baseCreateUserSchema = z.object({
+  username: usernameSchema,
+  password: passwordSchema,
+  confirmPassword: z.string(),
+  email: z.string().email().or(z.string().length(0).optional()),
+  groupIds: z.array(z.string()),
+});
 
-const initUserSchema = createUserSchema;
+const createUserSchema = addConfirmPasswordRefinement(baseCreateUserSchema);
+
+const initUserSchema = addConfirmPasswordRefinement(baseCreateUserSchema.omit({ groupIds: true }));
 
 const signInSchema = z.object({
   name: z.string().min(1),
   password: z.string().min(1),
 });
 
-const registrationSchema = z
-  .object({
+const registrationSchema = addConfirmPasswordRefinement(
+  z.object({
     username: usernameSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
-  })
-  .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
+  }),
+);
 
 const registrationSchemaApi = registrationSchema.and(
   z.object({
@@ -92,15 +94,16 @@ const editProfileSchema = z.object({
     .nullable(),
 });
 
-const changePasswordSchema = z
-  .object({
-    previousPassword: z.string().min(1),
-    password: passwordSchema,
-    confirmPassword: z.string(),
-  })
-  .refine(confirmPasswordRefine[0], confirmPasswordRefine[1]);
+const baseChangePasswordSchema = z.object({
+  previousPassword: z.string().min(1),
+  password: passwordSchema,
+  confirmPassword: z.string(),
+  userId: z.string(),
+});
 
-const changePasswordApiSchema = changePasswordSchema.and(z.object({ userId: z.string() }));
+const changePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema.omit({ userId: true }));
+
+const changePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
 
 const changeHomeBoardSchema = z.object({
   homeBoardId: z.string().min(1),
@@ -124,6 +127,7 @@ export const userSchemas = {
   registrationApi: registrationSchemaApi,
   init: initUserSchema,
   create: createUserSchema,
+  baseCreate: baseCreateUserSchema,
   password: passwordSchema,
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,

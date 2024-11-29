@@ -13,6 +13,7 @@ import { z } from "@homarr/validation";
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { NoResults } from "~/components/no-results";
 import { SearchEngineDeleteButton } from "./_search-engine-delete-button";
 
 const searchParamsSchema = z.object({
@@ -142,16 +143,14 @@ const SearchEngineNoResults = async () => {
   const session = await auth();
 
   return (
-    <Card withBorder bg="transparent">
-      <Stack align="center" gap="sm">
-        <IconSearch size="2rem" />
-        <Text fw={500} size="lg">
-          {t("search.engine.page.list.noResults.title")}
-        </Text>
-        {session?.user.permissions.includes("search-engine-create") && (
-          <Anchor href="/manage/search-engines/new">{t("search.engine.page.list.noResults.action")}</Anchor>
-        )}
-      </Stack>
-    </Card>
+    <NoResults
+      icon={IconSearch}
+      title={t("search.engine.page.list.noResults.title")}
+      action={{
+        label: t("search.engine.page.list.noResults.action"),
+        href: "/manage/search-engines/new",
+        hidden: !session?.user.permissions.includes("search-engine-create"),
+      }}
+    />
   );
 };

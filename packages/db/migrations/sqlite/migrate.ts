@@ -10,7 +10,7 @@ const migrationsFolder = process.argv[2] ?? ".";
 const migrateAsync = async () => {
   const sqlite = new Database(process.env.DB_URL?.replace("file:", ""));
 
-  const db = drizzle(sqlite, { schema });
+  const db = drizzle(sqlite, { schema, casing: "snake_case" });
 
   migrate(db, { migrationsFolder });
 

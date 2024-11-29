@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import type { NextRequest } from "next/server";
-import { createOpenApiFetchHandler } from "trpc-swagger/build/index.mjs";
+import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
 import { hashPasswordAsync } from "@homarr/auth";
@@ -16,6 +16,11 @@ const handlerAsync = async (req: NextRequest) => {
   const ipAddress = req.ip ?? headers().get("x-forwarded-for");
   const { ua } = userAgent(req);
   const session: Session | null = await getSessionOrDefaultFromHeadersAsync(apiKeyHeaderValue, ipAddress, ua);
+
+  // Fallback to JSON if no content type is set
+  if (!req.headers.has("Content-Type")) {
+    req.headers.set("Content-Type", "application/json");
+  }
 
   return createOpenApiFetchHandler({
     req,
@@ -82,4 +87,10 @@ const getSessionOrDefaultFromHeadersAsync = async (
   return await createSessionAsync(db, apiKeyFromDb.user);
 };
 
-export { handlerAsync as GET, handlerAsync as POST };
+export {
+  handlerAsync as GET,
+  handlerAsync as POST,
+  handlerAsync as PUT,
+  handlerAsync as DELETE,
+  handlerAsync as PATCH,
+};

@@ -3,36 +3,51 @@ import { TRPCError } from "@trpc/server";
 
 import { asc, createId, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema/sqlite";
+import { selectInviteSchema } from "@homarr/db/validationSchemas";
 import { z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const inviteRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    throwIfCredentialsDisabled();
-    const dbInvites = await ctx.db.query.invites.findMany({
-      orderBy: asc(invites.expirationDate),
-      columns: {
-        token: false,
-      },
-      with: {
-        creator: {
-          columns: {
+  getAll: protectedProcedure
+    .output(
+      z.array(
+        selectInviteSchema
+          .pick({
             id: true,
-            name: true,
+            expirationDate: true,
+          })
+          .extend({ creator: z.object({ name: z.string().nullable(), id: z.string() }) }),
+      ),
+    )
+    .input(z.undefined())
+    .meta({ openapi: { method: "GET", path: "/api/invites", tags: ["invites"], protect: true } })
+    .query(async ({ ctx }) => {
+      throwIfCredentialsDisabled();
+      return await ctx.db.query.invites.findMany({
+        orderBy: asc(invites.expirationDate),
+        columns: {
+          token: false,
+        },
+        with: {
+          creator: {
+            columns: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
-    return dbInvites;
-  }),
+      });
+    }),
   createInvite: protectedProcedure
     .input(
       z.object({
         expirationDate: z.date(),
       }),
     )
+    .output(z.object({ id: z.string(), token: z.string() }))
+    .meta({ openapi: { method: "POST", path: "/api/invites", tags: ["invites"], protect: true } })
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
       const id = createId();
@@ -56,6 +71,8 @@ export const inviteRouter = createTRPCRouter({
         id: z.string(),
       }),
     )
+    .output(z.undefined())
+    .meta({ openapi: { method: "DELETE", path: "/api/invites/{id}", tags: ["invites"], protect: true } })
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
       const dbInvite = await ctx.db.query.invites.findFirst({

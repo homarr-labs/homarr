@@ -7,7 +7,7 @@
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
+    "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --external:@opentelemetry/api --external:cpu-features --loader:.html=text --loader:.scss=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -35,7 +35,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.5.13",
     "eslint": "^9.15.0",
-    "prettier": "^3.3.3",
-    "typescript": "^5.6.3"
+    "prettier": "^3.4.1",
+    "typescript": "^5.7.2"
   }
 }

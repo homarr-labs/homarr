@@ -2,25 +2,17 @@ import { TRPCError } from "@trpc/server";
 
 import { asc, createId, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema/sqlite";
+import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { validation, z } from "@homarr/validation";
 
+import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { canUserSeeAppAsync } from "./app/app-access-control";
 
 export const appRouter = createTRPCRouter({
   all: protectedProcedure
     .input(z.void())
-    .output(
-      z.array(
-        z.object({
-          name: z.string(),
-          id: z.string(),
-          description: z.string().nullable(),
-          iconUrl: z.string(),
-          href: z.string().nullable(),
-        }),
-      ),
-    )
+    .output(z.array(selectAppSchema))
     .meta({ openapi: { method: "GET", path: "/api/apps", tags: ["apps"], protect: true } })
     .query(({ ctx }) => {
       return ctx.db.query.apps.findMany({
@@ -29,17 +21,7 @@ export const appRouter = createTRPCRouter({
     }),
   search: protectedProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
-    .output(
-      z.array(
-        z.object({
-          name: z.string(),
-          id: z.string(),
-          description: z.string().nullable(),
-          iconUrl: z.string(),
-          href: z.string().nullable(),
-        }),
-      ),
-    )
+    .output(z.array(selectAppSchema))
     .meta({ openapi: { method: "GET", path: "/api/apps/search", tags: ["apps"], protect: true } })
     .query(({ ctx, input }) => {
       return ctx.db.query.apps.findMany({
@@ -50,17 +32,7 @@ export const appRouter = createTRPCRouter({
     }),
   selectable: protectedProcedure
     .input(z.void())
-    .output(
-      z.array(
-        z.object({
-          name: z.string(),
-          id: z.string(),
-          iconUrl: z.string(),
-          description: z.string().nullable(),
-          href: z.string().nullable(),
-        }),
-      ),
-    )
+    .output(z.array(selectAppSchema.pick({ id: true, name: true, iconUrl: true, href: true, description: true })))
     .meta({
       openapi: {
         method: "GET",
@@ -83,15 +55,7 @@ export const appRouter = createTRPCRouter({
     }),
   byId: publicProcedure
     .input(validation.common.byId)
-    .output(
-      z.object({
-        name: z.string(),
-        id: z.string(),
-        description: z.string().nullable(),
-        iconUrl: z.string(),
-        href: z.string().nullable(),
-      }),
-    )
+    .output(selectAppSchema)
     .meta({ openapi: { method: "GET", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .query(async ({ ctx, input }) => {
       const app = await ctx.db.query.apps.findFirst({
@@ -136,7 +100,9 @@ export const appRouter = createTRPCRouter({
     }),
   update: permissionRequiredProcedure
     .requiresPermission("app-modify-all")
-    .input(validation.app.edit)
+    .input(convertIntersectionToZodObject(validation.app.edit))
+    .output(z.void())
+    .meta({ openapi: { method: "PATCH", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .mutation(async ({ ctx, input }) => {
       const app = await ctx.db.query.apps.findFirst({
         where: eq(apps.id, input.id),

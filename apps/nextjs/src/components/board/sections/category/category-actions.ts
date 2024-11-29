@@ -4,6 +4,8 @@ import { createId } from "@homarr/db/client";
 
 import type { CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
+import type { MoveCategoryInput } from "./actions/move-category";
+import { moveCategoryCallback } from "./actions/move-category";
 
 interface AddCategory {
   name: string;
@@ -13,11 +15,6 @@ interface AddCategory {
 interface RenameCategory {
   id: string;
   name: string;
-}
-
-interface MoveCategory {
-  id: string;
-  direction: "up" | "down";
 }
 
 interface RemoveCategory {
@@ -128,52 +125,8 @@ export const useCategoryActions = () => {
   );
 
   const moveCategory = useCallback(
-    ({ id, direction }: MoveCategory) => {
-      updateBoard((previous) => {
-        const currentCategory = previous.sections.find(
-          (section): section is CategorySection => section.kind === "category" && section.id === id,
-        );
-        if (!currentCategory) return previous;
-        if (currentCategory.yOffset === 1 && direction === "up") return previous;
-        if (currentCategory.yOffset === previous.sections.length - 2 && direction === "down") return previous;
-
-        return {
-          ...previous,
-          sections: previous.sections.map((section) => {
-            if (section.kind !== "category" && section.kind !== "empty") return section;
-            const offset = direction === "up" ? -2 : 2;
-            // Move category and empty section
-            if (section.yOffset === currentCategory.yOffset || section.yOffset - 1 === currentCategory.yOffset) {
-              return {
-                ...section,
-                yOffset: section.yOffset + offset,
-              };
-            }
-
-            if (
-              direction === "up" &&
-              (section.yOffset === currentCategory.yOffset - 2 || section.yOffset === currentCategory.yOffset - 1)
-            ) {
-              return {
-                ...section,
-                position: section.yOffset + 2,
-              };
-            }
-
-            if (
-              direction === "down" &&
-              (section.yOffset === currentCategory.yOffset + 2 || section.yOffset === currentCategory.yOffset + 3)
-            ) {
-              return {
-                ...section,
-                position: section.yOffset - 2,
-              };
-            }
-
-            return section;
-          }),
-        };
-      });
+    (input: MoveCategoryInput) => {
+      updateBoard(moveCategoryCallback(input));
     },
     [updateBoard],
   );

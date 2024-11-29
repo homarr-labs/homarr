@@ -25,7 +25,7 @@ export const defaultServerSettings = {
     noSiteLinksSearchBox: false,
   },
   board: {
-    defaultBoardId: null as string | null,
+    homeBoardId: null as string | null,
   },
   appearance: {
     defaultColorScheme: "light" as ColorScheme,

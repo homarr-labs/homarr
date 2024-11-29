@@ -61,7 +61,8 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
   }, [logoutUrl, openModal, router]);
 
   return (
-    <Menu width={300} withArrow withinPortal>
+    // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
+    <Menu width={300} withArrow withinPortal keepMounted>
       <Menu.Dropdown>
         <Menu.Item onClick={toggleColorScheme} leftSection={<ColorSchemeIcon size="1rem" />}>
           {colorSchemeText}
