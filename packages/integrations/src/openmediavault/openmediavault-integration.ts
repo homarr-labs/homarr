@@ -117,7 +117,7 @@ export class OpenMediaVaultIntegration extends Integration {
     params: Record<string, unknown>,
     headers: Record<string, string> = {},
   ): Promise<Response> {
-    return await fetch(`${this.integration.url}/rpc.php`, {
+    return await fetch(this.url("/rpc.php"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

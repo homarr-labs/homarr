@@ -11,7 +11,7 @@ import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-reque
  */
 export class OverseerrIntegration extends Integration implements ISearchableIntegration {
   public async searchAsync(query: string): Promise<{ image?: string; name: string; link: string; text?: string }[]> {
-    const response = await fetch(`${this.integration.url}/api/v1/search?query=${query}`, {
+    const response = await fetch(this.url(`/api/v1/search`, { query }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -24,13 +24,14 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
     return schemaData.results.map((result) => ({
       name: "name" in result ? result.name : result.title,
-      link: `${this.integration.url}/${result.mediaType}/${result.id}`,
-      image: constructSearchResultImage(this.integration.url, result),
+      link: this.url(`/${result.mediaType}/${result.id}`).toString(),
+      image: constructSearchResultImage(result),
       text: "overview" in result ? result.overview : undefined,
     }));
   }
+
   public async testConnectionAsync(): Promise<void> {
-    const response = await fetch(`${this.integration.url}/api/v1/auth/me`, {
+    const response = await fetch(this.url("/api/v1/auth/me"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -46,14 +47,14 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {
     //Ensure to get all pending request first
-    const pendingRequests = await fetch(`${this.integration.url}/api/v1/request?take=-1&filter=pending`, {
+    const pendingRequests = await fetch(this.url("/api/v1/request", { take: -1, filter: "pending" }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
 
     //Change 20 to integration setting (set to -1 for all)
-    const allRequests = await fetch(`${this.integration.url}/api/v1/request?take=20`, {
+    const allRequests = await fetch(this.url("/api/v1/request", { take: 20 }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -83,7 +84,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
           availability: request.media.status,
           backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
           posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
-          href: `${this.integration.url}/${request.type}/${request.media.tmdbId}`,
+          href: this.url(`/${request.type}/${request.media.tmdbId}`).toString(),
           type: request.type,
           createdAt: request.createdAt,
           airDate: new Date(information.airDate),
@@ -91,8 +92,8 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
             ? ({
                 ...request.requestedBy,
                 displayName: request.requestedBy.displayName,
-                link: `${this.integration.url}/users/${request.requestedBy.id}`,
-                avatar: constructAvatarUrl(this.integration.url, request.requestedBy.avatar),
+                link: this.url(`/users/${request.requestedBy.id}`).toString(),
+                avatar: this.constructAvatarUrl(request.requestedBy.avatar).toString(),
               } satisfies Omit<RequestUser, "requestCount">)
             : undefined,
         };
@@ -101,7 +102,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   public async getStatsAsync(): Promise<RequestStats> {
-    const response = await fetch(`${this.integration.url}/api/v1/request/count`, {
+    const response = await fetch(this.url("/api/v1/request/count"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -110,7 +111,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   public async getUsersAsync(): Promise<RequestUser[]> {
-    const response = await fetch(`${this.integration.url}/api/v1/user?take=-1`, {
+    const response = await fetch(this.url("/api/v1/user", { take: -1 }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -119,15 +120,15 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
     return users.map((user): RequestUser => {
       return {
         ...user,
-        link: `${this.integration.url}/users/${user.id}`,
-        avatar: constructAvatarUrl(this.integration.url, user.avatar),
+        link: this.url(`/users/${user.id}`).toString(),
+        avatar: this.constructAvatarUrl(user.avatar).toString(),
       };
     });
   }
 
   public async approveRequestAsync(requestId: number): Promise<void> {
     logger.info(`Approving media request id='${requestId}' integration='${this.integration.name}'`);
-    await fetch(`${this.integration.url}/api/v1/request/${requestId}/approve`, {
+    await fetch(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -145,7 +146,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async declineRequestAsync(requestId: number): Promise<void> {
     logger.info(`Declining media request id='${requestId}' integration='${this.integration.name}'`);
-    await fetch(`${this.integration.url}/api/v1/request/${requestId}/decline`, {
+    await fetch(this.url(`/api/v1/request/${requestId}/decline`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -162,7 +163,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   private async getItemInformationAsync(id: number, type: MediaRequest["type"]): Promise<MediaInformation> {
-    const response = await fetch(`${this.integration.url}/api/v1/${type}/${id}`, {
+    const response = await fetch(this.url(`/api/v1/${type}/${id}`), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -186,17 +187,17 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
       airDate: movie.releaseDate,
     } satisfies MediaInformation;
   }
-}
 
-const constructAvatarUrl = (appUrl: string, avatar: string) => {
-  const isAbsolute = avatar.startsWith("http://") || avatar.startsWith("https://");
+  private constructAvatarUrl(avatar: string) {
+    const isAbsolute = avatar.startsWith("http://") || avatar.startsWith("https://");
 
-  if (isAbsolute) {
-    return avatar;
+    if (isAbsolute) {
+      return avatar;
+    }
+
+    return this.url(`/${avatar}`);
   }
-
-  return `${appUrl}/${avatar}`;
-};
+}
 
 interface MediaInformation {
   name: string;
@@ -308,11 +309,8 @@ const getUsersSchema = z.object({
     }),
 });
 
-const constructSearchResultImage = (
-  appUrl: string,
-  result: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number],
-) => {
-  const path = getResultImagePath(appUrl, result);
+const constructSearchResultImage = (result: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number]) => {
+  const path = getResultImagePath(result);
   if (!path) {
     return undefined;
   }
@@ -320,10 +318,7 @@ const constructSearchResultImage = (
   return `https://image.tmdb.org/t/p/w600_and_h900_bestv2${path}`;
 };
 
-const getResultImagePath = (
-  appUrl: string,
-  result: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number],
-) => {
+const getResultImagePath = (result: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number]) => {
   switch (result.mediaType) {
     case "person":
       return result.profilePath;
