@@ -19,7 +19,7 @@ import { SpotlightActionGroups } from "./actions/groups/action-group";
 type SearchModeKey = keyof TranslationObject["search"]["mode"];
 
 export const Spotlight = () => {
-  const searchModeState = useState<SearchModeKey>("help");
+  const searchModeState = useState<SearchModeKey>("home");
   const mode = searchModeState[0];
   const activeMode = useMemo(() => searchModes.find((searchMode) => searchMode.modeKey === mode), [mode]);
 
@@ -50,12 +50,12 @@ const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveM
     <MantineSpotlight.Root
       yOffset={8}
       onSpotlightClose={() => {
-        setMode("help");
+        setMode("home");
         setChildrenOptions(null);
       }}
       query={query}
       onQueryChange={(query) => {
-        if (mode !== "help" || query.length !== 1) {
+        if ((mode !== "help" && mode !== "home") || query.length !== 1) {
           setQuery(query);
         }
 
@@ -73,13 +73,13 @@ const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveM
       <MantineSpotlight.Search
         placeholder={`${t("search.placeholder")}...`}
         ref={inputRef}
-        leftSectionWidth={activeMode.modeKey !== "help" ? 80 : 48}
+        leftSectionWidth={activeMode.modeKey !== "home" ? 80 : 48}
         leftSection={
           <Group align="center" wrap="nowrap" gap="xs" w="100%" h="100%">
             <Center w={48} h="100%">
               <IconSearch stroke={1.5} />
             </Center>
-            {activeMode.modeKey !== "help" ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
+            {activeMode.modeKey !== "home" ? <Kbd size="sm">{activeMode.character}</Kbd> : null}
           </Group>
         }
         styles={{
@@ -88,10 +88,10 @@ const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveM
           },
         }}
         rightSection={
-          mode === "help" ? undefined : (
+          mode === "home" ? undefined : (
             <ActionIcon
               onClick={() => {
-                setMode("help");
+                setMode("home");
                 setChildrenOptions(null);
                 inputRef.current?.focus();
               }}
@@ -103,8 +103,8 @@ const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveM
         }
         value={query}
         onKeyDown={(event) => {
-          if (query.length === 0 && mode !== "help" && event.key === "Backspace") {
-            setMode("help");
+          if (query.length === 0 && mode !== "home" && event.key === "Backspace") {
+            setMode("home");
             setChildrenOptions(null);
           }
         }}

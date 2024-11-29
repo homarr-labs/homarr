@@ -1,11 +1,11 @@
 import { Group, Text } from "@mantine/core";
 
 import { createGroup } from "../../lib/group";
-import type { ContextSpecificItem } from "./context";
-import { useSpotlightContextResults } from "./context";
+import type { ContextSpecificItem } from "../home/context";
+import { useSpotlightContextActions } from "../home/context";
 
-export const contextSpecificSearchGroups = createGroup<ContextSpecificItem>({
-  title: "Context Specific Results",
+export const contextSpecificActionsSearchGroups = createGroup<ContextSpecificItem>({
+  title: "Context Specific Actions",
   keyPath: "id",
   Component(option) {
     const icon =
@@ -29,6 +29,6 @@ export const contextSpecificSearchGroups = createGroup<ContextSpecificItem>({
     return option.name.toLowerCase().includes(query.toLowerCase());
   },
   useOptions() {
-    return useSpotlightContextResults();
+    return useSpotlightContextActions();
   },
 });
