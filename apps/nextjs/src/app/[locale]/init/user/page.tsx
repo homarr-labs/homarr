@@ -15,7 +15,7 @@ export default async function InitUser() {
   });
 
   if (firstUser) {
-    notFound();
+    //notFound();
   }
 
   const t = await getScopedI18n("user.page.init");

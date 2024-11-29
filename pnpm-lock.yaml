@@ -122,6 +122,9 @@ importers:
       '@mantine/core':
         specifier: ^7.14.3
         version: 7.14.3(@mantine/hooks@7.14.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/dropzone':
+        specifier: ^7.14.3
+        version: 7.14.3(@mantine/core@7.14.3(@mantine/hooks@7.14.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.3(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.14.3
         version: 7.14.3(react@18.3.1)
@@ -2893,6 +2896,14 @@ packages:
       '@mantine/core': 7.14.3
       '@mantine/hooks': 7.14.3
       dayjs: '>=1.0.0'
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
+
+  '@mantine/dropzone@7.14.3':
+    resolution: {integrity: sha512-9ExiWRod5/gBHBd4hsUnPk7Rles0BiJr5FE2Kuq7lqeEXbtYfuSognJD/f5atMgu/5mMEkkyK/Bq5XesZBumBQ==}
+    peerDependencies:
+      '@mantine/core': 7.14.3
+      '@mantine/hooks': 7.14.3
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
@@ -6940,6 +6951,12 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-dropzone-esm@15.2.0:
+    resolution: {integrity: sha512-pPwR8xWVL+tFLnbAb8KVH5f6Vtl397tck8dINkZ1cPMxHWH+l9dFmIgRWgbh7V7jbjIcuKXCsVrXbhQz68+dVA==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+
   react-error-boundary@4.1.2:
     resolution: {integrity: sha512-GQDxZ5Jd+Aq/qUxbCm1UtzmL/s++V7zKgE8yMktJiCQXCCFZnMZh9ng+6/Ne6PjNSXH0L9CjeOEREfRnq6Duag==}
     peerDependencies:
@@ -9206,6 +9223,14 @@ snapshots:
       dayjs: 1.11.13
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@mantine/dropzone@7.14.3(@mantine/core@7.14.3(@mantine/hooks@7.14.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.3(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@mantine/core': 7.14.3(@mantine/hooks@7.14.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks': 7.14.3(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-dropzone-esm: 15.2.0(react@18.3.1)
 
   '@mantine/form@7.14.3(react@18.3.1)':
     dependencies:
@@ -13898,6 +13923,11 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-dropzone-esm@15.2.0(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
 
   react-error-boundary@4.1.2(react@18.3.1):
     dependencies:

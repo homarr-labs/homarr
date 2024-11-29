@@ -1,4 +1,40 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "Welcome to Homarr",
+        "subtitle": "Let's get started with setting up your Homarr instance."
+      },
+      "import": {
+        "title": "Import data",
+        "subtitle": "You can import data from an existing Homarr instance."
+      },
+      "user": {
+        "title": "Admin user",
+        "subtitle": "Specify the credentials for your administrator user."
+      },
+      "group": {
+        "title": "External group",
+        "subtitle": "Specify the group that should be used for external users."
+      },
+      "settings": {
+        "title": "Settings",
+        "subtitle": "Configure server settings."
+      },
+      "searchEngines": {
+        "title": "Search engines",
+        "subtitle": "Select the search engines you want to use."
+      },
+      "board": {
+        "title": "Initial board",
+        "subtitle": "Create your first board."
+      },
+      "finish": {
+        "title": "Finish setup",
+        "subtitle": "You are ready to go!"
+      }
+    }
+  },
   "user": {
     "title": "Users",
     "name": "User",
