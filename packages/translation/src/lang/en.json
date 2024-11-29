@@ -1157,6 +1157,9 @@
         "automationId": {
           "label": "Automation ID"
         }
+      },
+      "spotlightAction": {
+        "run": "Run {name}"
       }
     },
     "calendar": {
