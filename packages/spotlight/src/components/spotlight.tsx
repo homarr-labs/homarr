@@ -1,7 +1,7 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
 import { IconSearch, IconX } from "@tabler/icons-react";
@@ -26,6 +26,21 @@ export const Spotlight = () => {
   const searchModeState = useState<SearchModeKey>(defaultMode);
   const mode = searchModeState[0];
   const activeMode = useMemo(() => searchModes.find((searchMode) => searchMode.modeKey === mode), [mode]);
+
+  /**
+   * The below logic is used to switch to home page if any context results are registered
+   * or to help page if context results are unregistered
+   */
+  const previousLengthRef = useRef(items.length);
+  useEffect(() => {
+    if (items.length >= 1 && previousLengthRef.current === 0) {
+      searchModeState[1]("home");
+    } else if (items.length === 0 && previousLengthRef.current >= 1) {
+      searchModeState[1]("help");
+    }
+
+    previousLengthRef.current = items.length;
+  }, [items.length, searchModeState]);
 
   if (!activeMode) {
     return null;
