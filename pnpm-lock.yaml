@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  pretty-print-error:
+    hash: 4arrfgbz7em6s4gqywse7esg4u
+    path: patches/pretty-print-error.patch
+
 importers:
 
   .:
@@ -1341,6 +1346,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      pretty-print-error:
+        specifier: ^1.1.2
+        version: 1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u)
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -6767,6 +6775,9 @@ packages:
   pretty-ms@8.0.0:
     resolution: {integrity: sha512-ASJqOugUF1bbzI35STMBUpZqdfYKlJugy6JBziGi2EE+AL5JPJGSzvpeVXojxrr0ViUYoToUjb5kjSEGf7Y83Q==}
     engines: {node: '>=14.16'}
+
+  pretty-print-error@1.1.2:
+    resolution: {integrity: sha512-XkKN3W8aeRYApO17WpzuaJZmqH3WNSFeqR4Sxt7vu+C7pcWB+3+JDJ2dnnhzSCqvC1IaYR36CVh4VsFZyBicQA==}
 
   prismjs@1.27.0:
     resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
@@ -13666,6 +13677,10 @@ snapshots:
   pretty-ms@8.0.0:
     dependencies:
       parse-ms: 3.0.0
+
+  pretty-print-error@1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u):
+    dependencies:
+      kleur: 4.1.5
 
   prismjs@1.27.0: {}
 
