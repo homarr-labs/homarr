@@ -11,7 +11,7 @@ import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-reque
  */
 export class OverseerrIntegration extends Integration implements ISearchableIntegration {
   public async searchAsync(query: string): Promise<{ image?: string; name: string; link: string; text?: string }[]> {
-    const response = await fetch(this.url(`/api/v1/search`, { query }), {
+    const response = await fetch(this.url("/api/v1/search", { query }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
