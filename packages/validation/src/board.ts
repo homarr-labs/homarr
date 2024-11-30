@@ -72,12 +72,18 @@ const permissionsSchema = z.object({
 export const oldmarrImportConfigurationSchema = z.object({
   name: boardNameSchema,
   onlyImportApps: z.boolean().default(false),
-  distinctAppsByHref: z.boolean().default(true),
   screenSize: z.enum(["lg", "md", "sm"]).default("lg"),
   sidebarBehaviour: z.enum(["remove-items", "last-section"]).default("last-section"),
 });
 
 export type OldmarrImportConfiguration = z.infer<typeof oldmarrImportConfigurationSchema>;
+
+export const initialOldmarrImportSettings = oldmarrImportConfigurationSchema.pick({
+  onlyImportApps: true,
+  sidebarBehaviour: true,
+});
+
+export type InitialOldmarrImportSettings = z.infer<typeof initialOldmarrImportSettings>;
 
 export const superRefineJsonImportFile = (value: File | null, context: z.RefinementCtx) => {
   if (!value) {
@@ -129,6 +135,7 @@ z.object({
 });
 
 export const boardSchemas = {
+  name: boardNameSchema,
   byName: byNameSchema,
   savePartialSettings: savePartialSettingsSchema,
   save: saveSchema,

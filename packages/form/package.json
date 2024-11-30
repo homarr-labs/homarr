@@ -5,7 +5,8 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./types": "./src/types.ts"
   },
   "typesVersions": {
     "*": {
@@ -22,6 +23,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/form": "^7.14.3"

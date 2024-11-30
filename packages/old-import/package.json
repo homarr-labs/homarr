@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./components": "./src/components/index.ts"
   },
   "typesVersions": {
     "*": {
@@ -21,13 +22,22 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@homarr/api": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/form": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/old-schema": "workspace:^0.1.0",
+    "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "superjson": "2.2.1"
+    "@homarr/translation": "workspace:^0.1.0",
+    "@mantine/core": "7.14.3",
+    "@mantine/hooks": "7.14.3",
+    "react": "18.3.1",
+    "next": "15.0.3",
+    "superjson": "2.2.1",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
