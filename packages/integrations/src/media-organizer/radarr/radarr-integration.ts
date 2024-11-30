@@ -14,11 +14,12 @@ export class RadarrIntegration extends MediaOrganizerIntegration {
    * @param includeUnmonitored When true results will include unmonitored items of the Tadarr library.
    */
   async getCalendarEventsAsync(start: Date, end: Date, includeUnmonitored = true): Promise<CalendarEvent[]> {
-    const url = new URL(this.integration.url);
-    url.pathname = "/api/v3/calendar";
-    url.searchParams.append("start", start.toISOString());
-    url.searchParams.append("end", end.toISOString());
-    url.searchParams.append("unmonitored", includeUnmonitored ? "true" : "false");
+    const url = this.url("/api/v3/calendar", {
+      start,
+      end,
+      unmonitored: includeUnmonitored,
+    });
+
     const response = await fetch(url, {
       headers: {
         "X-Api-Key": super.getSecretValue("apiKey"),
@@ -48,7 +49,7 @@ export class RadarrIntegration extends MediaOrganizerIntegration {
   private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [
       {
-        href: `${this.integration.url}/movie/${event.titleSlug}`,
+        href: this.url(`/movie/${event.titleSlug}`).toString(),
         name: "Radarr",
         logo: "/images/apps/radarr.svg",
         color: undefined,
@@ -93,7 +94,7 @@ export class RadarrIntegration extends MediaOrganizerIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api`, {
+        return await fetch(this.url("/api"), {
           headers: { "X-Api-Key": super.getSecretValue("apiKey") },
         });
       },

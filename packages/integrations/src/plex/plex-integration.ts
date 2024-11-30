@@ -11,7 +11,7 @@ export class PlexIntegration extends Integration {
   public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 
-    const response = await fetch(`${this.integration.url}/status/sessions`, {
+    const response = await fetch(this.url("/status/sessions"), {
       headers: {
         "X-Plex-Token": token,
       },
@@ -66,7 +66,7 @@ export class PlexIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(this.integration.url, {
+        return await fetch(this.url("/"), {
           headers: {
             "X-Plex-Token": token,
           },

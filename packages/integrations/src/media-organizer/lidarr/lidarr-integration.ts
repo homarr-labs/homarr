@@ -8,7 +8,7 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api`, {
+        return await fetch(this.url("/api"), {
           headers: { "X-Api-Key": super.getSecretValue("apiKey") },
         });
       },
@@ -22,11 +22,12 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
    * @param includeUnmonitored When true results will include unmonitored items of the Tadarr library.
    */
   async getCalendarEventsAsync(start: Date, end: Date, includeUnmonitored = true): Promise<CalendarEvent[]> {
-    const url = new URL(this.integration.url);
-    url.pathname = "/api/v1/calendar";
-    url.searchParams.append("start", start.toISOString());
-    url.searchParams.append("end", end.toISOString());
-    url.searchParams.append("unmonitored", includeUnmonitored ? "true" : "false");
+    const url = this.url("/api/v1/calendar", {
+      start,
+      end,
+      unmonitored: includeUnmonitored,
+    });
+
     const response = await fetch(url, {
       headers: {
         "X-Api-Key": super.getSecretValue("apiKey"),

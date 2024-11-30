@@ -12,7 +12,7 @@ dayjs.extend(duration);
 export class SabnzbdIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
     //This is the one call that uses the least amount of data while requiring the api key
-    await this.sabNzbApiCallAsync("translate", new URLSearchParams({ value: "ping" }));
+    await this.sabNzbApiCallAsync("translate", { value: "ping" });
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
@@ -75,7 +75,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
   }
 
   public async pauseItemAsync({ id }: DownloadClientItem) {
-    await this.sabNzbApiCallAsync("queue", new URLSearchParams({ name: "pause", value: id }));
+    await this.sabNzbApiCallAsync("queue", { name: "pause", value: id });
   }
 
   public async resumeQueueAsync() {
@@ -83,32 +83,29 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
   }
 
   public async resumeItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.sabNzbApiCallAsync("queue", new URLSearchParams({ name: "resume", value: id }));
+    await this.sabNzbApiCallAsync("queue", { name: "resume", value: id });
   }
 
   //Delete files prevented on completed files. https://github.com/sabnzbd/sabnzbd/issues/2754
   //Works on all other in downloading and post-processing.
   //Will stop working as soon as the finished files is moved to completed folder.
   public async deleteItemAsync({ id, progress }: DownloadClientItem, fromDisk: boolean): Promise<void> {
-    await this.sabNzbApiCallAsync(
-      progress !== 1 ? "queue" : "history",
-      new URLSearchParams({
-        name: "delete",
-        archive: fromDisk ? "0" : "1",
-        value: id,
-        del_files: fromDisk ? "1" : "0",
-      }),
-    );
+    await this.sabNzbApiCallAsync(progress !== 1 ? "queue" : "history", {
+      name: "delete",
+      archive: fromDisk ? "0" : "1",
+      value: id,
+      del_files: fromDisk ? "1" : "0",
+    });
   }
 
-  private async sabNzbApiCallAsync(mode: string, searchParams?: URLSearchParams): Promise<unknown> {
-    const url = new URL("api", this.integration.url);
-    url.searchParams.append("output", "json");
-    url.searchParams.append("mode", mode);
-    searchParams?.forEach((value, key) => {
-      url.searchParams.append(key, value);
+  private async sabNzbApiCallAsync(mode: string, searchParams?: Record<string, string>): Promise<unknown> {
+    const url = this.url("/api", {
+      ...searchParams,
+      output: "json",
+      mode,
+      apikey: this.getSecretValue("apiKey"),
     });
-    url.searchParams.append("apikey", this.getSecretValue("apiKey"));
+
     return await fetch(url)
       .then((response) => {
         if (!response.ok) {

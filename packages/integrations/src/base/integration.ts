@@ -1,4 +1,4 @@
-import { extractErrorMessage } from "@homarr/common";
+import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import type { TranslationObject } from "@homarr/translation";
@@ -27,6 +27,19 @@ export abstract class Integration {
       throw new Error(`No secret of kind ${kind} was found`);
     }
     return secret.value;
+  }
+
+  protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+    const baseUrl = removeTrailingSlash(this.integration.url);
+    const url = new URL(`${baseUrl}${path}`);
+
+    if (queryParams) {
+      for (const [key, value] of Object.entries(queryParams)) {
+        url.searchParams.set(key, value instanceof Date ? value.toISOString() : value.toString());
+      }
+    }
+
+    return url;
   }
 
   /**
