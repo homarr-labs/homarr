@@ -43,7 +43,7 @@
     "next": "^14.2.18",
     "react": "^18.3.1",
     "superjson": "2.2.1",
-    "trpc-to-openapi": "^2.0.2"
+    "trpc-to-openapi": "^2.0.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
