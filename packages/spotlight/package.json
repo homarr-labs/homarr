@@ -21,6 +21,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
@@ -46,6 +47,5 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.16.0",
     "typescript": "^5.7.2"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }
