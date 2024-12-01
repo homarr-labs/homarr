@@ -523,8 +523,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       trpc-to-openapi:
-        specifier: ^2.0.2
-        version: 2.0.2(@trpc/server@11.0.0-rc.648(typescript@5.7.2))(@types/express@4.17.21)(@types/node@22.10.1)(zod@3.23.8)
+        specifier: ^2.0.3
+        version: 2.0.3(@trpc/server@11.0.0-rc.648(typescript@5.7.2))(@types/express@4.17.21)(@types/node@22.10.1)(zod@3.23.8)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -3206,6 +3206,11 @@ packages:
 
   '@rollup/rollup-linux-x64-gnu@4.21.3':
     resolution: {integrity: sha512-kZPbX/NOPh0vhS5sI+dR8L1bU2cSO9FgxwM8r7wHzGydzfSjLRCFAT87GR5U9scj2rhzN3JPYVC7NoBbl4FZ0g==}
+    cpu: [x64]
+    os: [linux]
+
+  '@rollup/rollup-linux-x64-gnu@4.6.1':
+    resolution: {integrity: sha512-DNGZvZDO5YF7jN5fX8ZqmGLjZEXIJRdJEdTFMhiyXqyXubBa0WVLDWSNlQ5JR2PNgDbEV1VQowhVRUh+74D+RA==}
     cpu: [x64]
     os: [linux]
 
@@ -7719,8 +7724,8 @@ packages:
     resolution: {integrity: sha512-aZbgViZrg1QNcG+LULa7nhZpJTZSLm/mXnHXnbAbjmN5aSa0y7V+wvv6+4WaBtpISJzThKy+PIPxc1Nq1EJ9mg==}
     engines: {node: '>= 14.0.0'}
 
-  trpc-to-openapi@2.0.2:
-    resolution: {integrity: sha512-uuBkemnf9SY0mRv/wo0BBogdaoReOEg4zk8CSu95yUVgl/DxtDs+Ie02XGcGr1fCYKiyrfJbhRAo2wBbWV0POg==}
+  trpc-to-openapi@2.0.3:
+    resolution: {integrity: sha512-XU0keKKgd7iRrqEC19AORVSa43kJlqfzN96qrQSQAhyGJ6vtcVN1IAeekAW0F3e2w27Mtdt21LjDzt9LhjgtdQ==}
     peerDependencies:
       '@trpc/server': ^11.0.0-rc.566
       zod: ^3.23.8
@@ -9491,6 +9496,9 @@ snapshots:
     optional: true
 
   '@rollup/rollup-linux-x64-gnu@4.21.3':
+    optional: true
+
+  '@rollup/rollup-linux-x64-gnu@4.6.1':
     optional: true
 
   '@rollup/rollup-linux-x64-musl@4.21.3':
@@ -14829,7 +14837,7 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-to-openapi@2.0.2(@trpc/server@11.0.0-rc.648(typescript@5.7.2))(@types/express@4.17.21)(@types/node@22.10.1)(zod@3.23.8):
+  trpc-to-openapi@2.0.3(@trpc/server@11.0.0-rc.648(typescript@5.7.2))(@types/express@4.17.21)(@types/node@22.10.1)(zod@3.23.8):
     dependencies:
       '@trpc/server': 11.0.0-rc.648(typescript@5.7.2)
       co-body: 6.2.0
@@ -14839,6 +14847,8 @@ snapshots:
       openapi3-ts: 4.3.3
       zod: 3.23.8
       zod-openapi: 2.19.0(zod@3.23.8)
+    optionalDependencies:
+      '@rollup/rollup-linux-x64-gnu': 4.6.1
     transitivePeerDependencies:
       - '@types/express'
       - '@types/node'
