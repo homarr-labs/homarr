@@ -1,12 +1,15 @@
 import { Button, Card, Group, Stack, Text } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
+import type { MaybePromise } from "@homarr/common/types";
 
 interface ImportSummaryCardProps {
   counts: { apps: number; boards: number; integrations: number; users: number };
+  loading: boolean;
+  onSubmit: () => MaybePromise<void>;
 }
 
-export const ImportSummaryCard = ({ counts }: ImportSummaryCardProps) => {
+export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCardProps) => {
   return (
     <Card w={64 * 12 + 8} maw="90vw">
       <Stack gap="sm">
@@ -30,7 +33,9 @@ export const ImportSummaryCard = ({ counts }: ImportSummaryCardProps) => {
           ))}
         </Stack>
 
-        <Button>Confirm import and continue</Button>
+        <Button onClick={onSubmit} loading={loading}>
+          Confirm import and continue
+        </Button>
       </Stack>
     </Card>
   );

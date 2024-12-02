@@ -1211,9 +1211,6 @@ importers:
 
   packages/old-import:
     dependencies:
-      '@homarr/api':
-        specifier: workspace:^0.1.0
-        version: link:../api
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1247,6 +1244,9 @@ importers:
       '@mantine/hooks':
         specifier: 7.14.3
         version: 7.14.3(react@18.3.1)
+      adm-zip:
+        specifier: 0.5.16
+        version: 0.5.16
       next:
         specifier: 15.0.3
         version: 15.0.3(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0)
@@ -1259,6 +1259,9 @@ importers:
       zod:
         specifier: 3.23.8
         version: 3.23.8
+      zod-form-data:
+        specifier: 2.0.2
+        version: 2.0.2(zod@3.23.8)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1269,6 +1272,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/adm-zip':
+        specifier: 0.5.7
+        version: 0.5.7
       eslint:
         specifier: ^9.15.0
         version: 9.15.0

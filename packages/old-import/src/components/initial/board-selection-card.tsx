@@ -12,7 +12,7 @@ const trans = {
 
 type BoardSize = (typeof boardSizes)[number];
 
-export type BoardSizeRecord = Record<BoardSize, boolean | undefined>;
+export type BoardSizeRecord = Record<BoardSize, boolean | null>;
 export type BoardSelectionMap = Map<string, BoardSizeRecord>;
 
 interface BoardSelectionCardProps {
@@ -25,7 +25,7 @@ const allChecked = (map: BoardSelectionMap) => {
 };
 
 const groupChecked = (selection: BoardSizeRecord) =>
-  objectEntries(selection).every(([_, value]) => value === true || value === undefined);
+  objectEntries(selection).every(([_, value]) => value === true || value === null);
 
 export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelectionCardProps) => {
   const areAllChecked = allChecked(selections);
@@ -36,7 +36,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
 
       [...selections.entries()].forEach(([name, selection]) => {
         objectKeys(selection).forEach((size) => {
-          if (selection[size] === undefined) return;
+          if (selection[size] === null) return;
           selection[size] = !areAllChecked;
         });
 
@@ -55,7 +55,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
       if (!selection) return updated;
 
       objectKeys(selection).forEach((size) => {
-        if (selection[size] === undefined) return;
+        if (selection[size] === null) return;
         selection[size] = event.target.checked;
       });
 
@@ -89,7 +89,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
       <Stack gap="sm">
         <Stack gap={0}>
           <Group justify="space-between" align="center">
-            <Text fw={500}>Found 10 boards</Text>
+            <Text fw={500}>Found {selections.size} boards</Text>
             <Anchor component="button" onClick={handleToggleAll}>
               {areAllChecked ? "Unselect all" : "Select all"}
             </Anchor>
@@ -116,8 +116,8 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
                   {boardSizes.map((size) => (
                     <Checkbox
                       key={size}
-                      disabled={selection[size] === undefined}
-                      checked={selection[size]}
+                      disabled={selection[size] === null}
+                      checked={selection[size] ?? undefined}
                       onChange={registerToggle(name, size)}
                       label={trans[size]}
                     />
@@ -136,9 +136,14 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
                 />
                 <Stack gap="sm" ps="sm">
                   {objectEntries(selection)
-                    .filter(([_, value]) => value !== undefined)
+                    .filter(([_, value]) => value !== null)
                     .map(([size, value]) => (
-                      <Checkbox key={size} checked={value} onChange={registerToggle(name, size)} label={trans[size]} />
+                      <Checkbox
+                        key={size}
+                        checked={value ?? undefined}
+                        onChange={registerToggle(name, size)}
+                        label={trans[size]}
+                      />
                     ))}
                 </Stack>
               </Stack>

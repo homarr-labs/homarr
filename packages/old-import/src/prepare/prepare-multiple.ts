@@ -1,4 +1,3 @@
-import type { RouterOutputs } from "@homarr/api";
 import { objectEntries } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
 import type { InferSelectModel } from "@homarr/db";
@@ -6,16 +5,16 @@ import type { apps } from "@homarr/db/schema/sqlite";
 import type { OldmarrApp, OldmarrConfig } from "@homarr/old-schema";
 import type { InitialOldmarrImportSettings } from "@homarr/validation";
 
+import type { AnalyseResult } from "../analyse/analyse-oldmarr-import";
 import type { BoardSelectionMap } from "../components/initial/board-selection-card";
 import type { OldmarrBookmarkDefinition } from "../widgets/definitions/bookmark";
 
-type PreparedApp = Omit<InferSelectModel<typeof apps>, "id"> & { ids: string[] };
+export type PreparedApp = Omit<InferSelectModel<typeof apps>, "id"> & { ids: string[] };
+export type PreparedIntegration = ReturnType<typeof prepareIntegrations>[number];
 
-type AnalyseConfig = RouterOutputs["import"]["analyseOldmarrImport"]["configs"][number];
+type AnalyseConfig = AnalyseResult["configs"][number];
 
 type ValidAnalyseConfig = Modify<AnalyseConfig, { config: OldmarrConfig }>;
-
-type OldmarrIntegration = Exclude<OldmarrApp["integration"], undefined>;
 
 export const prepareMultipleImports = (
   analyseConfigs: AnalyseConfig[],
@@ -39,13 +38,16 @@ export const prepareMultipleImports = (
 const prepareIntegrations = (analyseConfigs: ValidAnalyseConfig[]) => {
   return analyseConfigs.flatMap(({ config }) => {
     return config.apps
-      .map((app) => app.integration)
-      .filter(
-        (
-          integration,
-        ): integration is Modify<OldmarrIntegration, { type: Exclude<OldmarrIntegration["type"], undefined | null> }> =>
-          Boolean(integration) && Boolean(integration?.type),
-      );
+      .map((app) =>
+        app.integration?.type
+          ? {
+              ...app.integration,
+              name: app.name,
+              url: app.url,
+            }
+          : null,
+      )
+      .filter((integration) => integration !== null);
   });
 };
 

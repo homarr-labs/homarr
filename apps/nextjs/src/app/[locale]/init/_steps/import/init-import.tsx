@@ -13,8 +13,10 @@ import { ImportDropZone } from "./import-dropzone";
 
 export const InitImport = () => {
   const [file, setFile] = useState<FileWithPath | null>(null);
-  const { isPending, mutate } = clientApi.import.analyseOldmarrImport.useMutation();
-  const [analyseResult, setAnalyseResult] = useState<RouterOutputs["import"]["analyseOldmarrImport"] | null>(null);
+  const { isPending, mutate } = clientApi.import.analyseInitialOldmarrImport.useMutation();
+  const [analyseResult, setAnalyseResult] = useState<RouterOutputs["import"]["analyseInitialOldmarrImport"] | null>(
+    null,
+  );
 
   if (!file) {
     return (
@@ -45,7 +47,7 @@ export const InitImport = () => {
   return (
     <Stack mb="sm">
       <FileInfoCard file={file} onRemove={() => setFile(null)} />
-      {analyseResult !== null && <InitialOldmarrImport analyseResult={analyseResult} />}
+      {analyseResult !== null && <InitialOldmarrImport file={file} analyseResult={analyseResult} />}
     </Stack>
   );
 };
