@@ -29,6 +29,7 @@ COPY --from=builder /app/migration-out/json/ .
 COPY --from=builder /app/cli-out/json/ .
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/patches ./patches
 
 # Is used for postinstall of docs definitions
 COPY --from=builder /app/packages/definitions/src/docs ./packages/definitions/src/docs
