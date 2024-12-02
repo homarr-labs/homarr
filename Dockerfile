@@ -29,13 +29,15 @@ COPY --from=builder /app/migration-out/json/ .
 COPY --from=builder /app/cli-out/json/ .
 COPY --from=builder /app/next-out/json/ .
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/patches ./patches
 
 # Is used for postinstall of docs definitions
 COPY --from=builder /app/packages/definitions/src/docs ./packages/definitions/src/docs
 
 # Uses the lockfile to install the dependencies
-RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
+COPY --from=builder /app/patches ./patches
+RUN corepack enable pnpm && pnpm install --recursive
+RUN cat ./pnpm-lock.yaml
+RUN exit 0
 
 # Install sharp for image optimization
 RUN corepack enable pnpm && pnpm install sharp -w
