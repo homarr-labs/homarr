@@ -180,8 +180,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.6
+        version: 16.4.6
       flag-icons:
         specifier: ^7.2.3
         version: 7.2.3
@@ -322,8 +322,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.6
+        version: 16.4.6
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -386,8 +386,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
       dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.6
+        version: 16.4.6
       tsx:
         specifier: 4.19.2
         version: 4.19.2
@@ -636,8 +636,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../db
       dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.6
+        version: 16.4.6
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -864,8 +864,8 @@ importers:
         specifier: ^11.6.0
         version: 11.6.0
       dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.6
+        version: 16.4.6
       drizzle-kit:
         specifier: ^0.28.1
         version: 0.28.1
@@ -4866,8 +4866,8 @@ packages:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
 
-  dotenv@16.4.5:
-    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+  dotenv@16.4.6:
+    resolution: {integrity: sha512-JhcR/+KIjkkjiU8yEpaB/USlzVi3i5whwOjpIRNGi9svKEXZSe+Qp6IWAjFjv+2GViAoDRCUv/QLNziQxsLqDg==}
     engines: {node: '>=12'}
 
   drange@1.1.1:
@@ -11563,7 +11563,7 @@ snapshots:
   dotenv-cli@7.4.4:
     dependencies:
       cross-spawn: 7.0.6
-      dotenv: 16.4.5
+      dotenv: 16.4.6
       dotenv-expand: 10.0.0
       minimist: 1.2.8
 
@@ -11571,7 +11571,7 @@ snapshots:
 
   dotenv@16.0.3: {}
 
-  dotenv@16.4.5: {}
+  dotenv@16.4.6: {}
 
   drange@1.1.1: {}
 
