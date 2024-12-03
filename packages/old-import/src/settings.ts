@@ -12,7 +12,6 @@ export type SidebarBehaviour = (typeof sidebarBehaviours)[number];
 export const oldmarrImportConfigurationSchema = z.object({
   name: validation.board.name,
   onlyImportApps: z.boolean().default(false),
-  distinctAppsByHref: z.boolean().default(true),
   screenSize: zodEnumFromArray(boardSizes).default("lg"),
   sidebarBehaviour: z.enum(sidebarBehaviours).default(defaultSidebarBehaviour),
 });

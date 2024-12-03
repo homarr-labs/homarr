@@ -516,9 +516,6 @@ importers:
       '@trpc/server':
         specifier: next
         version: 11.0.0-rc.648(typescript@5.7.2)
-      adm-zip:
-        specifier: 0.5.16
-        version: 0.5.16
       dockerode:
         specifier: ^4.0.2
         version: 4.0.2
@@ -544,9 +541,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      '@types/adm-zip':
-        specifier: 0.5.7
-        version: 0.5.7
       '@types/dockerode':
         specifier: ^3.3.32
         version: 3.3.32
