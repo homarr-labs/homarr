@@ -36,7 +36,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.4.6",
+    "dotenv": "^16.4.7",
     "superjson": "2.2.1",
     "undici": "7.1.0"
   },
