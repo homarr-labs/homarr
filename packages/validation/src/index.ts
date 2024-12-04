@@ -24,8 +24,8 @@ export const validation = {
   common: commonSchemas,
 };
 
-export { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "./board";
-export type { OldmarrImportConfiguration } from "./board";
+export { oldmarrImportConfigurationSchema, initialOldmarrImportSettings, superRefineJsonImportFile } from "./board";
+export type { OldmarrImportConfiguration, InitialOldmarrImportSettings } from "./board";
 export {
   createSectionSchema,
   itemAdvancedOptionsSchema,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Fieldset, FileInput, Grid, Group, Radio, Stack, Switch, TextInput } from "@mantine/core";
+import { Button, FileInput, Group, Radio, Stack, TextInput } from "@mantine/core";
 import { IconFileUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -7,9 +7,9 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { OldmarrImportAppsSettings, SidebarBehaviourSelect } from "@homarr/old-import/components";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { useScopedI18n } from "@homarr/translation/client";
-import { SelectWithDescription } from "@homarr/ui";
 import type { OldmarrImportConfiguration } from "@homarr/validation";
 import { oldmarrImportConfigurationSchema, superRefineJsonImportFile, z } from "@homarr/validation";
 
@@ -30,7 +30,6 @@ export const ImportBoardModal = createModal(({ actions }) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         file: null!,
         configuration: {
-          distinctAppsByHref: true,
           onlyImportApps: false,
           screenSize: "lg",
           sidebarBehaviour: "last-section",
@@ -119,24 +118,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
           label={tOldImport("form.file.label")}
         />
 
-        <Fieldset legend={tOldImport("form.apps.label")}>
-          <Grid>
-            <Grid.Col span={{ base: 12, sm: 6 }}>
-              <Switch
-                label={tOldImport("form.apps.avoidDuplicates.label")}
-                description={tOldImport("form.apps.avoidDuplicates.description")}
-                {...form.getInputProps("configuration.distinctAppsByHref", { type: "checkbox" })}
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 6 }}>
-              <Switch
-                label={tOldImport("form.apps.onlyImportApps.label")}
-                description={tOldImport("form.apps.onlyImportApps.description")}
-                {...form.getInputProps("configuration.onlyImportApps", { type: "checkbox" })}
-              />
-            </Grid.Col>
-          </Grid>
-        </Fieldset>
+        <OldmarrImportAppsSettings onlyImportApps={form.getInputProps("configuration.onlyImportApps")} />
 
         <TextInput
           withAsterisk
@@ -164,24 +146,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
           </Group>
         </Radio.Group>
 
-        <SelectWithDescription
-          withAsterisk
-          label={tOldImport("form.sidebarBehavior.label")}
-          description={tOldImport("form.sidebarBehavior.description")}
-          data={[
-            {
-              value: "last-section",
-              label: tOldImport("form.sidebarBehavior.option.lastSection.label"),
-              description: tOldImport("form.sidebarBehavior.option.lastSection.description"),
-            },
-            {
-              value: "remove-items",
-              label: tOldImport("form.sidebarBehavior.option.removeItems.label"),
-              description: tOldImport("form.sidebarBehavior.option.removeItems.description"),
-            },
-          ]}
-          {...form.getInputProps("configuration.sidebarBehaviour")}
-        />
+        <SidebarBehaviourSelect {...form.getInputProps("configuration.sidebarBehaviour")} />
 
         <Group justify="end">
           <Button variant="subtle" color="gray" onClick={actions.closeModal}>

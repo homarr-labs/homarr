@@ -6,6 +6,7 @@ import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
 import { homeRouter } from "./router/home";
 import { iconsRouter } from "./router/icons";
+import { importRouter } from "./router/import/import-router";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
@@ -29,6 +30,7 @@ export const appRouter = createTRPCRouter({
   location: locationRouter,
   log: logRouter,
   icon: iconsRouter,
+  import: importRouter,
   home: homeRouter,
   docker: dockerRouter,
   serverSettings: serverSettingsRouter,
