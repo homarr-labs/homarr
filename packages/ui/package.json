@@ -22,6 +22,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
@@ -31,9 +32,9 @@
     "@mantine/core": "^7.14.3",
     "@mantine/dates": "^7.14.3",
     "@mantine/hooks": "^7.14.3",
-    "@tabler/icons-react": "^3.22.0",
+    "@tabler/icons-react": "^3.24.0",
     "mantine-react-table": "2.0.0-beta.7",
-    "next": "^14.2.18",
+    "next": "^14.2.19",
     "react": "^18.3.1"
   },
   "devDependencies": {
@@ -41,8 +42,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "typescript": "^5.7.2"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }

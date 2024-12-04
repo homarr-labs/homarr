@@ -89,9 +89,8 @@ export class DelugeIntegration extends DownloadClientIntegration {
   }
 
   private getClient() {
-    const baseUrl = new URL(this.integration.url).href;
     return new Deluge({
-      baseUrl,
+      baseUrl: this.url("/").toString(),
       password: this.getSecretValue("password"),
     });
   }

@@ -36,9 +36,9 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "superjson": "2.2.1",
-    "undici": "7.0.0"
+    "undici": "7.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -46,8 +46,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node": "^22.10.1",
     "dotenv-cli": "^7.4.4",
-    "eslint": "^9.15.0",
-    "prettier": "^3.4.1",
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.2",
     "tsx": "4.19.2",
     "typescript": "^5.7.2"
   }

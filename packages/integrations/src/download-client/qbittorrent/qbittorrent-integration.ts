@@ -70,9 +70,8 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
   }
 
   private getClient() {
-    const baseUrl = new URL(this.integration.url).href;
     return new QBittorrent({
-      baseUrl,
+      baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
     });

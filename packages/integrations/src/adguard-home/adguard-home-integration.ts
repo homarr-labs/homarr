@@ -6,7 +6,7 @@ import { filteringStatusSchema, statsResponseSchema, statusResponseSchema } from
 
 export class AdGuardHomeIntegration extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
-    const statsResponse = await fetch(`${this.integration.url}/control/stats`, {
+    const statsResponse = await fetch(this.url("/control/stats"), {
       headers: {
         Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
@@ -18,7 +18,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       );
     }
 
-    const statusResponse = await fetch(`${this.integration.url}/control/status`, {
+    const statusResponse = await fetch(this.url("/control/status"), {
       headers: {
         Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
@@ -30,7 +30,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       );
     }
 
-    const filteringStatusResponse = await fetch(`${this.integration.url}/control/filtering/status`, {
+    const filteringStatusResponse = await fetch(this.url("/control/filtering/status"), {
       headers: {
         Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
@@ -86,7 +86,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/control/status`, {
+        return await fetch(this.url("/control/status"), {
           headers: {
             Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
           },
@@ -106,7 +106,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
   }
 
   public async enableAsync(): Promise<void> {
-    const response = await fetch(`${this.integration.url}/control/protection`, {
+    const response = await fetch(this.url("/control/protection"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
   }
 
   public async disableAsync(duration = 0): Promise<void> {
-    const response = await fetch(`${this.integration.url}/control/protection`, {
+    const response = await fetch(this.url("/control/protection"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

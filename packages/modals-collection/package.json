@@ -1,7 +1,8 @@
 {
   "name": "@homarr/modals-collection",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -13,13 +14,13 @@
       ]
     }
   },
-  "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
@@ -32,17 +33,16 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^7.14.3",
-    "@tabler/icons-react": "^3.22.0",
+    "@tabler/icons-react": "^3.24.0",
     "dayjs": "^1.11.13",
-    "next": "^14.2.18",
+    "next": "^14.2.19",
     "react": "^18.3.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "typescript": "^5.7.2"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }

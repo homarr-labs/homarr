@@ -1,4 +1,3 @@
-import { appendPath } from "@homarr/common";
 import { logger } from "@homarr/log";
 
 import { Integration } from "../base/integration";
@@ -17,7 +16,7 @@ export class HomeAssistantIntegration extends Integration {
       }
       return entityStateSchema.safeParseAsync(body);
     } catch (err) {
-      logger.error(`Failed to fetch from ${this.integration.url}: ${err as string}`);
+      logger.error(`Failed to fetch from ${this.url("/")}: ${err as string}`);
       return {
         success: false as const,
         error: err,
@@ -33,7 +32,7 @@ export class HomeAssistantIntegration extends Integration {
 
       return response.ok;
     } catch (err) {
-      logger.error(`Failed to fetch from '${this.integration.url}': ${err as string}`);
+      logger.error(`Failed to fetch from '${this.url("/")}': ${err as string}`);
       return false;
     }
   }
@@ -52,7 +51,7 @@ export class HomeAssistantIntegration extends Integration {
 
       return response.ok;
     } catch (err) {
-      logger.error(`Failed to fetch from '${this.integration.url}': ${err as string}`);
+      logger.error(`Failed to fetch from '${this.url("/")}': ${err as string}`);
       return false;
     }
   }
@@ -72,7 +71,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async getAsync(path: `/api/${string}`) {
-    return await fetch(appendPath(this.integration.url, path), {
+    return await fetch(this.url(path), {
       headers: this.getAuthHeaders(),
     });
   }
@@ -85,7 +84,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async postAsync(path: `/api/${string}`, body: Record<string, string>) {
-    return await fetch(appendPath(this.integration.url, path), {
+    return await fetch(this.url(path), {
       headers: this.getAuthHeaders(),
       body: JSON.stringify(body),
       method: "POST",

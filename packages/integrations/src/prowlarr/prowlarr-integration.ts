@@ -7,7 +7,7 @@ export class ProwlarrIntegration extends Integration {
   public async getIndexersAsync(): Promise<Indexer[]> {
     const apiKey = super.getSecretValue("apiKey");
 
-    const indexerResponse = await fetch(`${this.integration.url}/api/v1/indexer`, {
+    const indexerResponse = await fetch(this.url("/api/v1/indexer"), {
       headers: {
         "X-Api-Key": apiKey,
       },
@@ -18,7 +18,7 @@ export class ProwlarrIntegration extends Integration {
       );
     }
 
-    const statusResponse = await fetch(`${this.integration.url}/api/v1/indexerstatus`, {
+    const statusResponse = await fetch(this.url("/api/v1/indexerstatus"), {
       headers: {
         "X-Api-Key": apiKey,
       },
@@ -60,7 +60,7 @@ export class ProwlarrIntegration extends Integration {
 
   public async testAllAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetch(`${this.integration.url}/api/v1/indexer/testall`, {
+    const response = await fetch(this.url("/api/v1/indexer/testall"), {
       headers: {
         "X-Api-Key": apiKey,
       },
@@ -78,7 +78,7 @@ export class ProwlarrIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api`, {
+        return await fetch(this.url("/api"), {
           headers: {
             "X-Api-Key": apiKey,
           },
