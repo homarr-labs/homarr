@@ -1,6 +1,7 @@
 name: "[Crowdin] Upload translations"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "packages/translation/src/lang/**"
