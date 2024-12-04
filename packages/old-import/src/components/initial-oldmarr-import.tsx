@@ -2,10 +2,12 @@ import { useMemo, useState } from "react";
 import { Stack } from "@mantine/core";
 import SuperJSON from "superjson";
 
-import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
 import { boardSizes } from "@homarr/old-schema";
 
+// We don't have access to the API client here, so we need to import it from the API package
+// In the future we should consider having the used router also in this package
+import { clientApi } from "../../../api/src/client";
 import type { AnalyseResult } from "../analyse/analyse-oldmarr-import";
 import { prepareMultipleImports } from "../prepare/prepare-multiple";
 import type { InitialOldmarrImportSettings } from "../settings";

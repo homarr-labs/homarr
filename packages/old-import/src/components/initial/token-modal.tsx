@@ -1,11 +1,14 @@
 import { Button, Group, PasswordInput, Stack } from "@mantine/core";
 import { z } from "zod";
 
-import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+
+// We don't have access to the API client here, so we need to import it from the API package
+// In the future we should consider having the used router also in this package
+import { clientApi } from "../../../../api/src/client";
 
 interface InnerProps {
   checksum: string;
