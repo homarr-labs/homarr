@@ -3,12 +3,7 @@ import { Anchor, Card, Checkbox, Group, Stack, Text } from "@mantine/core";
 
 import { objectEntries, objectKeys } from "@homarr/common";
 import { boardSizes } from "@homarr/old-schema";
-
-const trans = {
-  sm: "Small",
-  md: "Medium",
-  lg: "Large",
-};
+import { useScopedI18n } from "@homarr/translation/client";
 
 type BoardSize = (typeof boardSizes)[number];
 
@@ -28,6 +23,7 @@ const groupChecked = (selection: BoardSizeRecord) =>
   objectEntries(selection).every(([_, value]) => value === true || value === null);
 
 export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelectionCardProps) => {
+  const tBoardSelection = useScopedI18n("init.step.import.boardSelection");
   const areAllChecked = allChecked(selections);
 
   const handleToggleAll = () => {
@@ -89,13 +85,13 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
       <Stack gap="sm">
         <Stack gap={0}>
           <Group justify="space-between" align="center">
-            <Text fw={500}>Found {selections.size} boards</Text>
+            <Text fw={500}>{tBoardSelection("title", { count: selections.size })}</Text>
             <Anchor component="button" onClick={handleToggleAll}>
-              {areAllChecked ? "Unselect all" : "Select all"}
+              {areAllChecked ? tBoardSelection("action.unselectAll") : tBoardSelection("action.selectAll")}
             </Anchor>
           </Group>
           <Text size="sm" c="gray.6">
-            Choose all boards with there size you want to import
+            {tBoardSelection("description")}
           </Text>
         </Stack>
 
@@ -119,7 +115,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
                       disabled={selection[size] === null}
                       checked={selection[size] ?? undefined}
                       onChange={registerToggle(name, size)}
-                      label={trans[size]}
+                      label={tBoardSelection(`screenSize.${size}`)}
                     />
                   ))}
                 </Group>
@@ -142,7 +138,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
                         key={size}
                         checked={value ?? undefined}
                         onChange={registerToggle(name, size)}
-                        label={trans[size]}
+                        label={`screenSize.${size}`}
                       />
                     ))}
                 </Stack>

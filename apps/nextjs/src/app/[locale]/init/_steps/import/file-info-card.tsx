@@ -3,6 +3,7 @@ import type { FileWithPath } from "@mantine/dropzone";
 import { IconPencil } from "@tabler/icons-react";
 
 import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface FileInfoCardProps {
   file: FileWithPath;
@@ -10,6 +11,7 @@ interface FileInfoCardProps {
 }
 
 export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
+  const tFileInfo = useScopedI18n("init.step.import.fileInfo");
   return (
     <Card w={64 * 12 + 8} maw="90vw">
       <Group justify="space-between" align="center" wrap="nowrap">
@@ -28,7 +30,7 @@ export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
           onClick={onRemove}
           visibleFrom="md"
         >
-          Change file
+          {tFileInfo("action.change")}
         </Button>
         <ActionIcon size="sm" variant="subtle" color="gray" hiddenFrom="md" onClick={onRemove}>
           <IconPencil size={16} stroke={1.5} />

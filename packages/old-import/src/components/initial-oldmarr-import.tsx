@@ -3,6 +3,7 @@ import { Stack } from "@mantine/core";
 import SuperJSON from "superjson";
 
 import { clientApi } from "@homarr/api/client";
+import { useModalAction } from "@homarr/modals";
 import { boardSizes } from "@homarr/old-schema";
 
 import type { AnalyseResult } from "../analyse/analyse-oldmarr-import";
@@ -13,6 +14,7 @@ import type { BoardSelectionMap, BoardSizeRecord } from "./initial/board-selecti
 import { BoardSelectionCard } from "./initial/board-selection-card";
 import { ImportSettingsCard } from "./initial/import-settings-card";
 import { ImportSummaryCard } from "./initial/import-summary-card";
+import { ImportTokenModal } from "./initial/token-modal";
 
 interface InitialOldmarrImportProps {
   file: File;
@@ -34,15 +36,31 @@ export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImpo
   );
 
   const { mutateAsync, isPending } = clientApi.import.importInitialOldmarrImport.useMutation();
+  const { openModal } = useModalAction(ImportTokenModal);
 
-  const handleSubmitAsync = async () => {
+  const createFormData = (token: string | null) => {
     const formData = new FormData();
     formData.set("file", file);
     formData.set("settings", JSON.stringify(settings));
     // Map can not be send over the wire without superjson
     formData.set("boardSelections", SuperJSON.stringify(boardSelections));
-    formData.set("token", "temp");
-    await mutateAsync(formData);
+    if (token) {
+      formData.set("token", token);
+    }
+    return formData;
+  };
+
+  const handleSubmitAsync = async () => {
+    if (analyseResult.checksum) {
+      openModal({
+        checksum: analyseResult.checksum,
+        onSuccessAsync: async (token) => {
+          await mutateAsync(createFormData(token));
+        },
+      });
+      return;
+    }
+    await mutateAsync(createFormData(null));
   };
 
   return (
@@ -61,7 +79,7 @@ export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImpo
           apps: preparedApps.length,
           boards: preparedBoards.length,
           integrations: preparedIntegrations.length,
-          users: analyseResult.userCount,
+          credentialUsers: analyseResult.userCount,
         }}
         onSubmit={handleSubmitAsync}
         loading={isPending}

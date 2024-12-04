@@ -7,21 +7,10 @@ import { mapColor } from "./map-colors";
 import { mapColumnCount } from "./map-column-count";
 
 type PreparedBoard = ReturnType<typeof prepareMultipleImports>["preparedBoards"][number];
-export type ScreenSize = PreparedBoard["size"];
-
-const boardSizeSuffix: Record<ScreenSize, string> = {
-  lg: "large",
-  md: "medium",
-  sm: "small",
-};
-
-const mapBoardName = (fileName: string, screenSize: ScreenSize) => {
-  return `${fileName.replace(".json", "")}-${boardSizeSuffix[screenSize]}`;
-};
 
 export const mapBoard = (preparedBoard: PreparedBoard): InferInsertModel<typeof boards> => ({
   id: createId(),
-  name: mapBoardName(preparedBoard.name, preparedBoard.size),
+  name: preparedBoard.name,
   backgroundImageAttachment: preparedBoard.config.settings.customization.backgroundImageAttachment,
   backgroundImageUrl: preparedBoard.config.settings.customization.backgroundImageUrl,
   backgroundImageRepeat: preparedBoard.config.settings.customization.backgroundImageRepeat,

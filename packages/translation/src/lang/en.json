@@ -7,7 +7,61 @@
       },
       "import": {
         "title": "Import data",
-        "subtitle": "You can import data from an existing Homarr instance."
+        "subtitle": "You can import data from an existing Homarr instance.",
+        "dropzone": {
+          "title": "Drag the zip file here or click to browse",
+          "description": "The uploaded zip will be processed and you'll be able to select what you want to import"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Change file"
+          }
+        },
+        "importSettings": {
+          "title": "Import settings",
+          "description": "Configure the import behavior"
+        },
+        "boardSelection": {
+          "title": "Found {count} boards",
+          "description": "Choose all boards with there size you want to import",
+          "action": {
+            "selectAll": "Select all",
+            "unselectAll": "Unselect all"
+          },
+          "screenSize": {
+            "sm": "Small",
+            "md": "Medium",
+            "lg": "Large"
+          }
+        },
+        "summary": {
+          "title": "Import summary",
+          "description": "In the below summary you can see what will be imported",
+          "action": {
+            "import": "Confirm import and continue"
+          },
+          "entities": {
+            "apps": "Apps",
+            "boards": "Boards",
+            "integrations": "Integrations",
+            "credentialUsers": "Credential users"
+          }
+        },
+        "tokenModal": {
+          "title": "Enter import token",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Enter the shown import token from your previous homarr instance"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Invalid token",
+              "message": "The token you entered is invalid"
+            }
+          }
+        }
       },
       "user": {
         "title": "Admin user",
@@ -15,7 +69,13 @@
       },
       "group": {
         "title": "External group",
-        "subtitle": "Specify the group that should be used for external users."
+        "subtitle": "Specify the group that should be used for external users.",
+        "form": {
+          "name": {
+            "label": "Group name",
+            "description": "Name has to match admin group of external provider"
+          }
+        }
       },
       "settings": {
         "title": "Settings",
@@ -624,6 +684,10 @@
     "secrets": {
       "title": "Secrets",
       "lastUpdated": "Last updated {date}",
+      "notSet": {
+        "label": "No value set",
+        "tooltip": "This required secret has not been set yet"
+      },
       "secureNotice": "This secret cannot be retrieved after creation",
       "reset": {
         "title": "Reset secret",

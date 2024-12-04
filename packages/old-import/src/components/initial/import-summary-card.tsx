@@ -2,21 +2,23 @@ import { Button, Card, Group, Stack, Text } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface ImportSummaryCardProps {
-  counts: { apps: number; boards: number; integrations: number; users: number };
+  counts: { apps: number; boards: number; integrations: number; credentialUsers: number };
   loading: boolean;
   onSubmit: () => MaybePromise<void>;
 }
 
 export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCardProps) => {
+  const tSummary = useScopedI18n("init.step.import.summary");
   return (
     <Card w={64 * 12 + 8} maw="90vw">
       <Stack gap="sm">
         <Stack gap={0}>
-          <Text fw={500}>Import summary</Text>
+          <Text fw={500}>{tSummary("title")}</Text>
           <Text size="sm" c="gray.6">
-            In the below summary you can see what will be imported
+            {tSummary("description")}
           </Text>
         </Stack>
 
@@ -25,7 +27,7 @@ export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCa
             <Card withBorder p="sm">
               <Group justify="space-between" align="center">
                 <Text fw={500} size="sm">
-                  {key}
+                  {tSummary(`entities.${key}`)}
                 </Text>
                 <Text size="sm">{count}</Text>
               </Group>
@@ -34,7 +36,7 @@ export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCa
         </Stack>
 
         <Button onClick={onSubmit} loading={loading}>
-          Confirm import and continue
+          {tSummary("action.import")}
         </Button>
       </Stack>
     </Card>

@@ -1223,6 +1223,12 @@ importers:
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
+      '@homarr/modals':
+        specifier: workspace:^0.1.0
+        version: link:../modals
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../notifications
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../old-schema

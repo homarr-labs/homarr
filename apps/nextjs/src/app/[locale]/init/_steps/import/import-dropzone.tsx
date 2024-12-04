@@ -5,12 +5,15 @@ import { IconFileZip, IconUpload, IconX } from "@tabler/icons-react";
 
 import "@mantine/dropzone/styles.css";
 
+import { useScopedI18n } from "@homarr/translation/client";
+
 interface ImportDropZoneProps {
   loading: boolean;
   updateFile: (file: FileWithPath) => void;
 }
 
 export const ImportDropZone = ({ loading, updateFile }: ImportDropZoneProps) => {
+  const tDropzone = useScopedI18n("init.step.import.dropzone");
   return (
     <Dropzone
       onDrop={(files) => {
@@ -39,10 +42,10 @@ export const ImportDropZone = ({ loading, updateFile }: ImportDropZoneProps) => 
 
         <div>
           <Text size="xl" inline>
-            Drag the zip file here or click to browse
+            {tDropzone("title")}
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            The uploaded zip will be processed and you'll be able to select what you want to import
+            {tDropzone("description")}
           </Text>
         </div>
       </Group>
