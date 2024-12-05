@@ -2,9 +2,25 @@
   "user": {
     "title": "Пользователи",
     "name": "Пользователь",
+    "page": {
+      "login": {
+        "title": "",
+        "subtitle": ""
+      },
+      "invite": {
+        "title": "",
+        "subtitle": "",
+        "description": ""
+      },
+      "init": {
+        "title": "",
+        "subtitle": ""
+      }
+    },
     "field": {
       "email": {
-        "label": "E-Mail"
+        "label": "",
+        "verified": ""
       },
       "username": {
         "label": "Имя пользователя"
@@ -12,117 +28,720 @@
       "password": {
         "label": "Пароль",
         "requirement": {
+          "length": "",
           "lowercase": "Включает строчную букву",
           "uppercase": "Включает заглавную букву",
-          "number": "Включает цифру"
+          "number": "Включает цифру",
+          "special": ""
         }
       },
       "passwordConfirm": {
         "label": "Подтвердите пароль"
+      },
+      "previousPassword": {
+        "label": ""
+      },
+      "homeBoard": {
+        "label": ""
+      },
+      "pingIconsEnabled": {
+        "label": ""
       }
+    },
+    "error": {
+      "usernameTaken": ""
     },
     "action": {
       "login": {
-        "label": "Вход в систему"
+        "label": "Вход в систему",
+        "labelWith": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "forgotPassword": {
+          "label": "",
+          "description": ""
+        }
       },
       "register": {
         "label": "Создать аккаунт",
         "notification": {
           "success": {
-            "title": "Аккаунт создан"
+            "title": "Аккаунт создан",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       },
-      "create": "Создать пользователя"
+      "create": "Создать пользователя",
+      "changePassword": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeFirstDayOfWeek": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePingIconsEnabled": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            },
+            "toLarge": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "removeImage": {
+          "label": "",
+          "confirm": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": ""
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
+      },
+      "transfer": {
+        "label": ""
+      }
     }
   },
   "group": {
+    "title": "",
+    "name": "",
+    "search": "",
     "field": {
-      "name": "Имя"
+      "name": "Имя",
+      "members": ""
     },
     "permission": {
       "admin": {
-        "title": "Администратор"
+        "title": "Администратор",
+        "item": {
+          "admin": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "app": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "board": {
-        "title": "Панели"
+        "title": "Панели",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "integration": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "interact-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "media": {
+        "title": "",
+        "item": {
+          "upload": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "other": {
+        "title": "",
+        "item": {
+          "view-logs": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "search-engine": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      }
+    },
+    "memberNotice": {
+      "mixed": "",
+      "external": ""
+    },
+    "reservedNotice": {
+      "message": ""
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "transfer": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "addMember": {
+        "label": ""
+      },
+      "removeMember": {
+        "label": "",
+        "confirm": ""
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePermissions": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "update": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "app": {
     "page": {
       "list": {
-        "title": "Приложения"
+        "title": "Приложения",
+        "noResults": {
+          "title": "",
+          "action": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     },
     "field": {
       "name": {
         "label": "Имя"
+      },
+      "description": {
+        "label": ""
+      },
+      "url": {
+        "label": ""
+      }
+    },
+    "action": {
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "integration": {
+    "page": {
+      "list": {
+        "title": "",
+        "search": "",
+        "noResults": {
+          "title": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      }
+    },
     "field": {
       "name": {
         "label": "Имя"
+      },
+      "url": {
+        "label": ""
       }
     },
+    "action": {
+      "create": ""
+    },
     "testConnection": {
+      "action": {
+        "create": "",
+        "edit": ""
+      },
+      "alertNotice": "",
       "notification": {
+        "success": {
+          "title": "",
+          "message": ""
+        },
         "invalidUrl": {
-          "title": "Неверный URL"
+          "title": "Неверный URL",
+          "message": ""
+        },
+        "secretNotDefined": {
+          "title": "",
+          "message": ""
+        },
+        "invalidCredentials": {
+          "title": "",
+          "message": ""
+        },
+        "commonError": {
+          "title": "",
+          "message": ""
+        },
+        "badRequest": {
+          "title": "",
+          "message": ""
+        },
+        "unauthorized": {
+          "title": "",
+          "message": ""
+        },
+        "forbidden": {
+          "title": "",
+          "message": ""
+        },
+        "notFound": {
+          "title": "",
+          "message": ""
+        },
+        "internalServerError": {
+          "title": "",
+          "message": ""
+        },
+        "serviceUnavailable": {
+          "title": "",
+          "message": ""
+        },
+        "connectionAborted": {
+          "title": "",
+          "message": ""
+        },
+        "domainNotFound": {
+          "title": "",
+          "message": ""
+        },
+        "connectionRefused": {
+          "title": "",
+          "message": ""
+        },
+        "invalidJson": {
+          "title": "",
+          "message": ""
+        },
+        "wrongPath": {
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
+      "title": "",
+      "lastUpdated": "",
+      "secureNotice": "",
+      "reset": {
+        "title": "",
+        "message": ""
+      },
+      "noSecretsRequired": {
+        "segmentTitle": "",
+        "text": ""
+      },
       "kind": {
         "username": {
-          "label": "Имя пользователя"
+          "label": "Имя пользователя",
+          "newLabel": ""
+        },
+        "apiKey": {
+          "label": "",
+          "newLabel": ""
         },
         "password": {
           "label": "Пароль",
           "newLabel": "Новый пароль"
         }
       }
+    },
+    "permission": {
+      "use": "",
+      "interact": "",
+      "full": ""
     }
   },
   "media": {
+    "plural": "",
+    "search": "",
     "field": {
       "name": "Имя",
       "size": "Размер",
       "creator": "Создатель"
+    },
+    "action": {
+      "upload": {
+        "label": "",
+        "file": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "copy": {
+        "label": ""
+      }
     }
   },
   "common": {
+    "beta": "",
     "error": "Ошибка",
     "action": {
       "add": "Добавить",
       "apply": "Применить",
+      "backToOverview": "",
       "create": "Создать",
       "edit": "Изменить",
+      "import": "",
       "insert": "Вставить",
       "remove": "Удалить",
       "save": "Сохранить",
       "saveChanges": "Сохранить изменения",
       "cancel": "Отмена",
       "delete": "Удалить",
+      "discard": "",
       "confirm": "Подтвердить",
+      "continue": "",
       "previous": "Предыдущий",
       "next": "Далее",
-      "tryAgain": "Попробовать снова"
+      "checkoutDocs": "",
+      "tryAgain": "Попробовать снова",
+      "loading": ""
+    },
+    "here": "",
+    "iconPicker": {
+      "label": "",
+      "header": ""
     },
     "information": {
+      "min": "",
+      "max": "",
+      "days": "",
       "hours": "Часы",
       "minutes": "Минуты"
     },
+    "notification": {
+      "create": {
+        "success": "",
+        "error": ""
+      },
+      "delete": {
+        "success": "",
+        "error": ""
+      },
+      "update": {
+        "success": "",
+        "error": ""
+      },
+      "transfer": {
+        "success": "",
+        "error": ""
+      }
+    },
+    "multiSelect": {
+      "placeholder": ""
+    },
+    "multiText": {
+      "placeholder": "",
+      "addLabel": ""
+    },
+    "select": {
+      "placeholder": "",
+      "badge": {
+        "recommended": ""
+      }
+    },
     "userAvatar": {
       "menu": {
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
         "preferences": "Ваши настройки",
-        "login": "Вход в систему"
+        "logout": "",
+        "login": "Вход в систему",
+        "homeBoard": "",
+        "loggedOut": ""
       }
     },
     "dangerZone": "Зона опасности",
     "noResults": "Результаты не найдены",
+    "preview": {
+      "show": "",
+      "hide": ""
+    },
     "zod": {
       "errors": {
         "default": "Данное поле недействительно",
@@ -130,7 +749,8 @@
         "string": {
           "startsWith": "Значение данного поля должно начинаться с {startsWith}",
           "endsWith": "Значение данного поля должно заканчиваться на {endsWith}",
-          "includes": "Значение данного поля должно включать {includes}"
+          "includes": "Значение данного поля должно включать {includes}",
+          "invalidEmail": ""
         },
         "tooSmall": {
           "string": "Данное поле должно содержать не менее {minimum} символов",
@@ -139,11 +759,29 @@
         "tooBig": {
           "string": "Данное поле должно содержать не более {maximum} символов",
           "number": "Значение этого поля должно быть меньше или равно {maximum}"
+        },
+        "custom": {
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
+          "fileTooLarge": "",
+          "invalidConfiguration": ""
         }
       }
     }
   },
   "section": {
+    "dynamic": {
+      "action": {
+        "create": "",
+        "remove": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      }
+    },
     "category": {
       "field": {
         "name": {
@@ -151,42 +789,147 @@
         }
       },
       "action": {
+        "create": "",
+        "edit": "",
+        "remove": "",
         "moveUp": "Переместить вверх",
-        "moveDown": "Переместить вниз"
+        "moveDown": "Переместить вниз",
+        "createAbove": "",
+        "createBelow": ""
+      },
+      "create": {
+        "title": "",
+        "submit": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
+          "create": "",
           "changePosition": "Изменить положение"
         }
       }
     }
   },
   "item": {
+    "action": {
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
+    },
     "menu": {
       "label": {
         "settings": "Настройки"
       }
     },
+    "create": {
+      "title": "",
+      "addToBoard": ""
+    },
     "moveResize": {
+      "title": "",
       "field": {
         "width": {
           "label": "Ширина"
         },
         "height": {
           "label": "Высота"
+        },
+        "xOffset": {
+          "label": ""
+        },
+        "yOffset": {
+          "label": ""
         }
       }
+    },
+    "edit": {
+      "title": "",
+      "advancedOptions": {
+        "label": "",
+        "title": ""
+      },
+      "field": {
+        "integrations": {
+          "label": ""
+        },
+        "customCssClasses": {
+          "label": ""
+        }
+      }
+    },
+    "remove": {
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
+      "name": "",
+      "description": "",
       "option": {
+        "appId": {
+          "label": ""
+        },
         "openInNewTab": {
           "label": "Открыть в новой вкладке"
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "pingEnabled": {
+          "label": ""
+        }
+      },
+      "error": {
+        "notFound": {
+          "label": "",
+          "tooltip": ""
+        }
+      }
+    },
+    "bookmarks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": ""
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "items": {
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
           "label": "Макет",
@@ -196,17 +939,29 @@
             },
             "column": {
               "label": "Вертикальный"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "usePiHoleColors": {
+          "label": ""
         }
+      },
+      "error": {
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
         "adsBlockedToday": "Заблокировано сегодня",
         "adsBlockedTodayPercentage": "Заблокировано сегодня",
-        "dnsQueriesToday": "запросов сегодня"
+        "dnsQueriesToday": "запросов сегодня",
+        "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
+      "name": "",
       "description": "Управляйте PiHole или AdGuard прямо с вашей панели",
       "option": {
         "layout": {
@@ -217,28 +972,70 @@
             },
             "column": {
               "label": "Вертикальный"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "showToggleAllButtons": {
+          "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "controls": {
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
         "set": "Установить",
         "enabled": "Включено",
         "disabled": "Отключено",
+        "processing": "",
+        "disconnected": "",
         "hours": "Часы",
-        "minutes": "Минуты"
+        "minutes": "Минуты",
+        "unlimited": ""
       }
     },
     "clock": {
+      "name": "",
       "description": "Отображает текущую дату и время.",
       "option": {
+        "customTitleToggle": {
+          "label": "",
+          "description": ""
+        },
+        "customTitle": {
+          "label": ""
+        },
+        "is24HourFormat": {
+          "label": "",
+          "description": ""
+        },
+        "showSeconds": {
+          "label": ""
+        },
+        "useCustomTimezone": {
+          "label": ""
+        },
         "timezone": {
-          "label": "Часовой пояс"
+          "label": "Часовой пояс",
+          "description": ""
+        },
+        "showDate": {
+          "label": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
     "notebook": {
       "name": "Блокнот",
+      "description": "",
       "option": {
         "showToolbar": {
           "label": "Показать панель инструментов для написания текста с использованием разметки Markdown"
@@ -298,7 +1095,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Встраиваемое содержимое из интернета. Некоторые веб-сайты могут ограничивать доступ.",
       "option": {
         "embedUrl": {
@@ -330,17 +1127,31 @@
         }
       },
       "error": {
+        "noUrl": "",
         "noBrowerSupport": "Ваш браузер не поддерживает iframes. Пожалуйста, обновите свой браузер."
       }
     },
     "smartHome-entityState": {
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
           "label": "ID объекта"
+        },
+        "displayName": {
+          "label": ""
+        },
+        "entityUnit": {
+          "label": ""
+        },
+        "clickable": {
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
           "label": "Отображаемое имя"
@@ -352,9 +1163,21 @@
     },
     "calendar": {
       "name": "Календарь",
+      "description": "",
       "option": {
         "releaseType": {
-          "label": "Тип релиза в Radarr"
+          "label": "Тип релиза в Radarr",
+          "options": {
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
+          }
+        },
+        "filterPastMonths": {
+          "label": ""
+        },
+        "filterFutureMonths": {
+          "label": ""
         }
       }
     },
@@ -362,8 +1185,25 @@
       "name": "Погода",
       "description": "Отображает текущую информацию о погоде для заданного местоположения.",
       "option": {
+        "isFormatFahrenheit": {
+          "label": ""
+        },
         "location": {
           "label": "Местоположение"
+        },
+        "showCity": {
+          "label": ""
+        },
+        "hasForecast": {
+          "label": ""
+        },
+        "forecastDayCount": {
+          "label": "",
+          "description": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       },
       "kind": {
@@ -385,8 +1225,17 @@
     },
     "indexerManager": {
       "name": "Статус менеджера индексаторов",
+      "description": "",
+      "option": {
+        "openIndexerSiteInNewTab": {
+          "label": ""
+        }
+      },
       "title": "Статус менеджера индексаторов",
-      "testAll": "Тестировать все"
+      "testAll": "Тестировать все",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "healthMonitoring": {
       "name": "Мониторинг состояния системы",
@@ -406,20 +1255,63 @@
         }
       },
       "popover": {
-        "available": "Доступен"
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "Доступен",
+        "lastSeen": ""
+      },
+      "memory": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
       "location": {
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
         "search": "Поиск",
         "table": {
-          "header": {},
-          "action": {},
+          "header": {
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
+          },
+          "action": {
+            "select": ""
+          },
           "population": {
             "fallback": "Неизвестно"
           }
         }
-      }
+      },
+      "integration": {
+        "noData": "",
+        "description": ""
+      },
+      "app": {
+        "noData": "",
+        "description": ""
+      },
+      "error": {
+        "action": {
+          "logs": ""
+        },
+        "noIntegration": "",
+        "noData": ""
+      },
+      "option": {}
     },
     "video": {
       "name": "Трансляция видео",
@@ -429,33 +1321,129 @@
           "label": "URL-адрес потока"
         },
         "hasAutoPlay": {
-          "label": "Автовоспроизведение"
+          "label": "Автовоспроизведение",
+          "description": ""
+        },
+        "isMuted": {
+          "label": ""
+        },
+        "hasControls": {
+          "label": ""
         }
+      },
+      "error": {
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
       }
     },
+    "mediaServer": {
+      "name": "",
+      "description": "",
+      "option": {}
+    },
     "downloads": {
+      "name": "",
+      "description": "",
+      "option": {
+        "columns": {
+          "label": ""
+        },
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": ""
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        },
+        "showCompletedUsenet": {
+          "label": ""
+        },
+        "showCompletedTorrent": {
+          "label": ""
+        },
+        "activeTorrentThreshold": {
+          "label": ""
+        },
+        "categoryFilter": {
+          "label": ""
+        },
+        "filterIsWhitelist": {
+          "label": ""
+        },
+        "applyFilterToRatio": {
+          "label": ""
+        }
+      },
+      "errors": {
+        "noColumns": "",
+        "noCommunications": ""
+      },
       "items": {
+        "actions": {
+          "columnTitle": ""
+        },
         "added": {
+          "columnTitle": "",
           "detailsTitle": "Дата добавления"
+        },
+        "category": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "downSpeed": {
           "columnTitle": "Загрузка",
           "detailsTitle": "Скорость скачивания"
         },
+        "index": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "id": {
+          "columnTitle": ""
+        },
         "integration": {
           "columnTitle": "Интеграция"
         },
+        "name": {
+          "columnTitle": ""
+        },
         "progress": {
-          "columnTitle": "Прогресс"
+          "columnTitle": "Прогресс",
+          "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Рейтинг"
+          "columnTitle": "Рейтинг",
+          "detailsTitle": ""
+        },
+        "received": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "sent": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "size": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Состояние"
+          "columnTitle": "Состояние",
+          "detailsTitle": ""
+        },
+        "time": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "type": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Отдача"
+          "columnTitle": "Отдача",
+          "detailsTitle": ""
         }
       },
       "states": {
@@ -463,62 +1451,244 @@
         "queued": "Очередь",
         "paused": "Приостановлено",
         "completed": "Завершено",
-        "unknown": "Неизвестно"
-      }
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "Неизвестно",
+        "seeding": ""
+      },
+      "actions": {
+        "clients": {
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
+        },
+        "client": {
+          "pause": "",
+          "resume": ""
+        },
+        "item": {
+          "pause": "",
+          "resume": "",
+          "delete": {
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
+          }
+        }
+      },
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
+      "name": "",
       "description": "Просмотреть список всех медиа-запросов из вашего экземпляра Overseerr или Jellyseerr",
       "option": {
         "linksTargetNewTab": {
           "label": "Открывать ссылки в новой вкладке"
         }
       },
+      "pending": {
+        "approve": "",
+        "approving": "",
+        "decline": ""
+      },
       "availability": {
         "unknown": "Неизвестно",
+        "pending": "",
+        "processing": "",
         "partiallyAvailable": "Частично",
         "available": "Доступен"
-      }
+      },
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
+      "name": "",
       "description": "Статистика ваших медиазапросов",
+      "option": {},
       "titles": {
         "stats": {
           "main": "Статистика медиа",
           "approved": "Уже одобрено",
           "pending": "Ожидающие утверждения",
+          "processing": "",
+          "declined": "",
+          "available": "",
           "tv": "Запросы сериалов",
           "movie": "Запросы фильмов",
           "total": "Всего"
         },
         "users": {
-          "main": "Топ пользователей"
+          "main": "Топ пользователей",
+          "requests": ""
+        }
+      }
+    },
+    "rssFeed": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrls": {
+          "label": ""
+        },
+        "enableRtl": {
+          "label": ""
+        },
+        "textLinesClamp": {
+          "label": ""
+        },
+        "maximumAmountPosts": {
+          "label": ""
         }
       }
     }
   },
+  "widgetPreview": {
+    "toggle": {
+      "enabled": "",
+      "disabled": ""
+    },
+    "dimensions": {
+      "title": ""
+    }
+  },
   "board": {
     "action": {
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "confirmLeave": {
+          "title": "",
+          "message": ""
+        }
+      },
       "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
         "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
           "apps": {
-            "label": "Приложения"
+            "label": "Приложения",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
           },
           "screenSize": {
+            "label": "",
             "option": {
               "sm": "Маленький",
               "md": "Средний",
               "lg": "Большой"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
             }
           }
         }
       }
     },
     "field": {
+      "pageTitle": {
+        "label": ""
+      },
+      "metaTitle": {
+        "label": ""
+      },
+      "logoImageUrl": {
+        "label": ""
+      },
+      "faviconImageUrl": {
+        "label": ""
+      },
+      "backgroundImageUrl": {
+        "label": ""
+      },
       "backgroundImageAttachment": {
-        "label": "Закрепление фонового изображения"
+        "label": "Закрепление фонового изображения",
+        "option": {
+          "fixed": {
+            "label": "",
+            "description": ""
+          },
+          "scroll": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "backgroundImageRepeat": {
+        "label": "",
+        "option": {
+          "repeat": {
+            "label": "",
+            "description": ""
+          },
+          "no-repeat": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-x": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-y": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "backgroundImageSize": {
-        "label": "Размер фонового изображения"
+        "label": "Размер фонового изображения",
+        "option": {
+          "cover": {
+            "label": "",
+            "description": ""
+          },
+          "contain": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "primaryColor": {
         "label": "Основной цвет"
@@ -526,20 +1696,37 @@
       "secondaryColor": {
         "label": "Дополнительный цвет"
       },
+      "opacity": {
+        "label": ""
+      },
       "customCss": {
-        "description": "Дополнительная настройка вашей панели с использованием CSS, рекомендуется только опытным пользователям"
+        "label": "",
+        "description": "Дополнительная настройка вашей панели с использованием CSS, рекомендуется только опытным пользователям",
+        "customClassesAlert": {
+          "title": "",
+          "description": ""
+        }
+      },
+      "columnCount": {
+        "label": ""
       },
       "name": {
         "label": "Имя"
       },
       "isPublic": {
-        "label": "Публичный"
+        "label": "Публичный",
+        "description": ""
       }
     },
+    "content": {
+      "metaTitle": ""
+    },
     "setting": {
+      "title": "",
       "section": {
         "general": {
-          "title": "Общие"
+          "title": "Общие",
+          "unrecognizedLink": ""
         },
         "layout": {
           "title": "Макет"
@@ -547,11 +1734,24 @@
         "background": {
           "title": "Фон"
         },
+        "color": {
+          "title": ""
+        },
+        "customCss": {
+          "title": ""
+        },
         "access": {
+          "title": "",
           "permission": {
             "item": {
               "view": {
                 "label": "Просмотр панели"
+              },
+              "modify": {
+                "label": ""
+              },
+              "full": {
+                "label": ""
               }
             }
           }
@@ -559,9 +1759,42 @@
         "dangerZone": {
           "title": "Зона опасности",
           "action": {
-            "delete": {
+            "rename": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "modal": {
+                "title": ""
+              }
+            },
+            "visibility": {
+              "label": "",
+              "description": {
+                "public": "",
+                "private": ""
+              },
+              "button": {
+                "public": "",
+                "private": ""
+              },
               "confirm": {
-                "title": "Удалить панель"
+                "public": {
+                  "title": "",
+                  "description": ""
+                },
+                "private": {
+                  "title": "",
+                  "description": ""
+                }
+              }
+            },
+            "delete": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "confirm": {
+                "title": "Удалить панель",
+                "description": ""
               }
             }
           }
@@ -570,23 +1803,39 @@
     }
   },
   "management": {
+    "metaTitle": "",
+    "title": {
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
+    },
+    "notFound": {
+      "title": "",
+      "text": ""
+    },
     "navbar": {
       "items": {
         "home": "Главная",
         "boards": "Панели",
         "apps": "Приложения",
+        "integrations": "",
+        "searchEngies": "",
+        "medias": "",
         "users": {
           "label": "Пользователи",
           "items": {
             "manage": "Управление",
-            "invites": "Приглашения"
+            "invites": "Приглашения",
+            "groups": ""
           }
         },
         "tools": {
           "label": "Инструменты",
           "items": {
-            "docker": "Docker",
-            "api": "API"
+            "docker": "",
+            "logs": "",
+            "api": "",
+            "tasks": ""
           }
         },
         "settings": "Настройки",
@@ -594,7 +1843,9 @@
           "label": "Помощь",
           "items": {
             "documentation": "Документация",
-            "discord": "Сообщество Discord"
+            "submitIssue": "",
+            "discord": "Сообщество Discord",
+            "sourceCode": ""
           }
         },
         "about": "О программе"
@@ -606,29 +1857,47 @@
           "board": "Панели",
           "user": "Пользователи",
           "invite": "Приглашения",
-          "app": "Приложения"
+          "integration": "",
+          "app": "Приложения",
+          "group": ""
         },
         "statisticLabel": {
-          "boards": "Панели"
+          "boards": "Панели",
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "Ваши панели",
         "action": {
+          "new": {
+            "label": ""
+          },
+          "open": {
+            "label": ""
+          },
           "settings": {
             "label": "Настройки"
           },
           "setHomeBoard": {
+            "label": "",
             "badge": {
-              "label": "Главная"
+              "label": "Главная",
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "Удалить навсегда",
             "confirm": {
-              "title": "Удалить панель"
+              "title": "Удалить панель",
+              "description": ""
             }
           }
+        },
+        "visibility": {
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -640,11 +1909,18 @@
           }
         }
       },
+      "media": {
+        "includeFromAllUsers": ""
+      },
       "user": {
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
             "title": "Общие",
             "item": {
+              "language": "",
+              "board": "",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Доступность"
             }
@@ -660,22 +1936,51 @@
           "metaTitle": "Управлять пользователями",
           "title": "Пользователи"
         },
+        "edit": {
+          "metaTitle": ""
+        },
         "create": {
           "metaTitle": "Создать пользователя",
+          "title": "",
           "step": {
+            "personalInformation": {
+              "label": ""
+            },
             "security": {
               "label": "Безопасность"
+            },
+            "groups": {
+              "label": "",
+              "title": "",
+              "description": ""
+            },
+            "review": {
+              "label": ""
+            },
+            "completed": {
+              "title": ""
+            },
+            "error": {
+              "title": ""
             }
+          },
+          "action": {
+            "createAnother": "",
+            "back": ""
           }
         },
         "invite": {
           "title": "Управление приглашениями пользователей",
           "action": {
             "new": {
+              "title": "",
               "description": "По истечении этого срока приглашение перестает быть действительным, и получатель приглашения не сможет создать аккаунт."
             },
             "copy": {
-              "link": "Ссылка на приглашение"
+              "title": "",
+              "description": "",
+              "link": "Ссылка на приглашение",
+              "button": ""
             },
             "delete": {
               "title": "Удалить приглашение",
@@ -684,7 +1989,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Создатель"
@@ -699,43 +2004,199 @@
         }
       },
       "group": {
+        "back": "",
         "setting": {
           "general": {
-            "title": "Общие"
+            "title": "Общие",
+            "owner": "",
+            "ownerOfGroup": "",
+            "ownerOfGroupDeleted": ""
+          },
+          "members": {
+            "title": "",
+            "search": "",
+            "notFound": ""
+          },
+          "permissions": {
+            "title": "",
+            "form": {
+              "unsavedChanges": ""
+            }
           }
         }
       },
       "settings": {
-        "title": "Настройки"
+        "title": "Настройки",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        },
+        "section": {
+          "analytics": {
+            "title": "",
+            "general": {
+              "title": "",
+              "text": ""
+            },
+            "widgetData": {
+              "title": "",
+              "text": ""
+            },
+            "integrationData": {
+              "title": "",
+              "text": ""
+            },
+            "usersData": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "crawlingAndIndexing": {
+            "title": "",
+            "warning": "",
+            "noIndex": {
+              "title": "",
+              "text": ""
+            },
+            "noFollow": {
+              "title": "",
+              "text": ""
+            },
+            "noTranslate": {
+              "title": "",
+              "text": ""
+            },
+            "noSiteLinksSearchBox": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "board": {
+            "title": "",
+            "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "appearance": {
+            "title": "",
+            "defaultColorScheme": {
+              "label": "",
+              "options": {
+                "light": "",
+                "dark": ""
+              }
+            }
+          },
+          "culture": {
+            "title": "",
+            "defaultLocale": {
+              "label": ""
+            }
+          }
+        }
       },
       "tool": {
         "tasks": {
+          "title": "",
           "status": {
+            "idle": "",
             "running": "Работает",
             "error": "Ошибка"
           },
           "job": {
+            "iconsUpdater": {
+              "label": ""
+            },
+            "analytics": {
+              "label": ""
+            },
+            "smartHomeEntityState": {
+              "label": ""
+            },
+            "ping": {
+              "label": ""
+            },
             "mediaServer": {
               "label": "Медиасервер"
             },
-            "mediaRequests": {
-              "label": "Запросы на медиа"
+            "mediaOrganizer": {
+              "label": ""
+            },
+            "downloads": {
+              "label": ""
+            },
+            "mediaRequestStats": {
+              "label": ""
+            },
+            "mediaRequestList": {
+              "label": ""
+            },
+            "rssFeeds": {
+              "label": ""
+            },
+            "indexerManager": {
+              "label": ""
+            },
+            "healthMonitoring": {
+              "label": ""
+            },
+            "dnsHole": {
+              "label": ""
+            },
+            "sessionCleanup": {
+              "label": ""
             }
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
+          "modal": {
+            "createApiToken": {
+              "title": "",
+              "description": "",
+              "button": ""
+            }
+          },
           "tab": {
             "documentation": {
               "label": "Документация"
             },
             "apiKey": {
+              "label": "",
+              "title": "",
+              "button": {
+                "createApiToken": ""
+              },
               "table": {
                 "header": {
-                  "id": "ID"
+                  "id": "",
+                  "createdBy": ""
                 }
               }
             }
+          }
+        }
+      },
+      "about": {
+        "version": "",
+        "text": "",
+        "accordion": {
+          "contributors": {
+            "title": "",
+            "subtitle": ""
+          },
+          "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "libraries": {
+            "title": "",
+            "subtitle": ""
           }
         }
       }
@@ -743,6 +2204,11 @@
   },
   "docker": {
     "title": "Контейнеры",
+    "table": {
+      "updated": "",
+      "search": "",
+      "selected": ""
+    },
     "field": {
       "name": {
         "label": "Имя"
@@ -754,7 +2220,9 @@
           "running": "Работает",
           "paused": "Приостановлено",
           "restarting": "Перезапуск",
-          "removing": "Удаление"
+          "exited": "",
+          "removing": "Удаление",
+          "dead": ""
         }
       },
       "containerImage": {
@@ -766,27 +2234,99 @@
     },
     "action": {
       "start": {
-        "label": "Запустить"
+        "label": "Запустить",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "stop": {
-        "label": "Остановить"
+        "label": "Остановить",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "restart": {
-        "label": "Перезапустить"
+        "label": "Перезапустить",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "remove": {
-        "label": "Удалить"
+        "label": "Удалить",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "refresh": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     }
   },
   "permission": {
+    "title": "",
+    "userSelect": {
+      "title": ""
+    },
+    "groupSelect": {
+      "title": ""
+    },
     "tab": {
-      "user": "Пользователи"
+      "user": "Пользователи",
+      "group": "",
+      "inherited": ""
     },
     "field": {
       "user": {
         "label": "Пользователь"
+      },
+      "group": {
+        "label": ""
+      },
+      "permission": {
+        "label": ""
       }
+    },
+    "action": {
+      "saveUser": "",
+      "saveGroup": ""
     }
   },
   "navigationStructure": {
@@ -796,17 +2336,31 @@
         "label": "Панели"
       },
       "integrations": {
+        "label": "",
         "edit": {
           "label": "Изменить"
+        },
+        "new": {
+          "label": ""
         }
       },
       "search-engines": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "Изменить"
         }
       },
+      "medias": {
+        "label": ""
+      },
       "apps": {
         "label": "Приложения",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "Изменить"
         }
@@ -819,6 +2373,9 @@
         "general": "Общие",
         "security": "Безопасность",
         "board": "Панели",
+        "groups": {
+          "label": ""
+        },
         "invites": {
           "label": "Приглашения"
         }
@@ -826,7 +2383,10 @@
       "tools": {
         "label": "Инструменты",
         "docker": {
-          "label": "Docker"
+          "label": ""
+        },
+        "logs": {
+          "label": ""
         }
       },
       "settings": {
@@ -838,23 +2398,141 @@
     }
   },
   "search": {
+    "placeholder": "",
+    "nothingFound": "",
+    "error": {
+      "fetch": ""
+    },
     "mode": {
       "appIntegrationBoard": {
+        "help": "",
         "group": {
           "app": {
-            "title": "Приложения"
+            "title": "Приложения",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "edit": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           },
           "board": {
-            "title": "Панели"
+            "title": "Панели",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "homeBoard": {
+                  "label": ""
+                },
+                "settings": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "integration": {
+            "title": ""
+          }
+        }
+      },
+      "command": {
+        "help": "",
+        "group": {
+          "globalCommand": {
+            "title": "",
+            "option": {
+              "colorScheme": {
+                "light": "",
+                "dark": ""
+              },
+              "language": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
+                "label": ""
+              },
+              "newApp": {
+                "label": ""
+              },
+              "newIntegration": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newUser": {
+                "label": ""
+              },
+              "newInvite": {
+                "label": ""
+              },
+              "newGroup": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "external": {
+        "help": "",
         "group": {
           "searchEngine": {
+            "title": "",
+            "children": {
+              "action": {
+                "search": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              },
+              "searchResults": {
+                "title": ""
+              }
+            },
             "option": {
+              "google": {
+                "name": "",
+                "description": ""
+              },
+              "bing": {
+                "name": "",
+                "description": ""
+              },
+              "duckduckgo": {
+                "name": "",
+                "description": ""
+              },
               "torrent": {
-                "name": "Торренты"
+                "name": "Торренты",
+                "description": ""
+              },
+              "youTube": {
+                "name": "",
+                "description": ""
               }
             }
           }
@@ -862,11 +2540,17 @@
       },
       "help": {
         "group": {
+          "mode": {
+            "title": ""
+          },
           "help": {
             "title": "Помощь",
             "option": {
               "documentation": {
                 "label": "Документация"
+              },
+              "submitIssue": {
+                "label": ""
               },
               "discord": {
                 "label": "Сообщество Discord"
@@ -876,14 +2560,58 @@
         }
       },
       "page": {
+        "help": "",
         "group": {
           "page": {
+            "title": "",
             "option": {
+              "manageHome": {
+                "label": ""
+              },
+              "manageBoard": {
+                "label": ""
+              },
+              "manageApp": {
+                "label": ""
+              },
+              "manageIntegration": {
+                "label": ""
+              },
+              "manageSearchEngine": {
+                "label": ""
+              },
+              "manageMedia": {
+                "label": ""
+              },
               "manageUser": {
                 "label": "Управлять пользователями"
               },
+              "manageInvite": {
+                "label": ""
+              },
+              "manageGroup": {
+                "label": ""
+              },
+              "manageDocker": {
+                "label": ""
+              },
+              "manageApi": {
+                "label": ""
+              },
+              "manageLog": {
+                "label": ""
+              },
+              "manageTask": {
+                "label": ""
+              },
+              "manageSettings": {
+                "label": ""
+              },
               "about": {
                 "label": "О программе"
+              },
+              "homeBoard": {
+                "label": ""
               },
               "preferences": {
                 "label": "Ваши настройки"
@@ -893,17 +2621,112 @@
         }
       },
       "userGroup": {
+        "help": "",
         "group": {
           "user": {
-            "title": "Пользователи"
+            "title": "Пользователи",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "group": {
+            "title": "",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                },
+                "manageMember": {
+                  "label": ""
+                },
+                "managePermission": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           }
         }
       }
     },
     "engine": {
+      "search": "",
       "field": {
         "name": {
           "label": "Имя"
+        },
+        "short": {
+          "label": ""
+        },
+        "urlTemplate": {
+          "label": ""
+        },
+        "description": {
+          "label": ""
+        }
+      },
+      "page": {
+        "list": {
+          "title": "",
+          "noResults": {
+            "title": "",
+            "action": ""
+          },
+          "interactive": ""
+        },
+        "create": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "edit": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "configControl": "",
+          "searchEngineType": {
+            "generic": "",
+            "fromIntegration": ""
+          }
+        },
+        "delete": {
+          "title": "",
+          "message": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
         }
       }
     }

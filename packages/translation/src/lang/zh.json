@@ -1,7 +1,7 @@
 {
   "user": {
-    "title": "사용자",
-    "name": "사용자",
+    "title": "",
+    "name": "",
     "page": {
       "login": {
         "title": "",
@@ -19,24 +19,24 @@
     },
     "field": {
       "email": {
-        "label": "이메일",
+        "label": "",
         "verified": ""
       },
       "username": {
-        "label": "사용자 이름"
+        "label": ""
       },
       "password": {
-        "label": "비밀번호",
+        "label": "",
         "requirement": {
           "length": "",
-          "lowercase": "소문자 포함",
-          "uppercase": "대문자 포함",
-          "number": "번호 포함",
+          "lowercase": "",
+          "uppercase": "",
+          "number": "",
           "special": ""
         }
       },
       "passwordConfirm": {
-        "label": "비밀번호 확인"
+        "label": ""
       },
       "previousPassword": {
         "label": ""
@@ -53,7 +53,7 @@
     },
     "action": {
       "login": {
-        "label": "로그인",
+        "label": "",
         "labelWith": "",
         "notification": {
           "success": {
@@ -71,10 +71,10 @@
         }
       },
       "register": {
-        "label": "계정 만들기",
+        "label": "",
         "notification": {
           "success": {
-            "title": "계정 생성",
+            "title": "",
             "message": ""
           },
           "error": {
@@ -83,7 +83,7 @@
           }
         }
       },
-      "create": "사용자 만들기",
+      "create": "",
       "changePassword": {
         "label": "",
         "notification": {
@@ -183,7 +183,7 @@
     "name": "",
     "search": "",
     "field": {
-      "name": "이름",
+      "name": "",
       "members": ""
     },
     "permission": {
@@ -218,7 +218,7 @@
         }
       },
       "board": {
-        "title": "보드",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -386,7 +386,7 @@
   "app": {
     "page": {
       "list": {
-        "title": "앱",
+        "title": "",
         "noResults": {
           "title": "",
           "action": ""
@@ -435,7 +435,7 @@
     },
     "field": {
       "name": {
-        "label": "이름"
+        "label": ""
       },
       "description": {
         "label": ""
@@ -503,7 +503,7 @@
     },
     "field": {
       "name": {
-        "label": "이름"
+        "label": ""
       },
       "url": {
         "label": ""
@@ -524,7 +524,7 @@
           "message": ""
         },
         "invalidUrl": {
-          "title": "잘못된 URL",
+          "title": "",
           "message": ""
         },
         "secretNotDefined": {
@@ -599,7 +599,7 @@
       },
       "kind": {
         "username": {
-          "label": "사용자 이름",
+          "label": "",
           "newLabel": ""
         },
         "apiKey": {
@@ -607,7 +607,7 @@
           "newLabel": ""
         },
         "password": {
-          "label": "비밀번호",
+          "label": "",
           "newLabel": ""
         }
       }
@@ -622,9 +622,9 @@
     "plural": "",
     "search": "",
     "field": {
-      "name": "이름",
-      "size": "크기",
-      "creator": "크리에이터"
+      "name": "",
+      "size": "",
+      "creator": ""
     },
     "action": {
       "upload": {
@@ -658,27 +658,27 @@
   },
   "common": {
     "beta": "",
-    "error": "오류",
+    "error": "",
     "action": {
-      "add": "추가",
+      "add": "",
       "apply": "",
       "backToOverview": "",
-      "create": "만들기",
-      "edit": "수정",
+      "create": "",
+      "edit": "",
       "import": "",
       "insert": "",
-      "remove": "제거",
-      "save": "저장",
-      "saveChanges": "변경 사항 저장",
-      "cancel": "취소",
-      "delete": "삭제",
+      "remove": "",
+      "save": "",
+      "saveChanges": "",
+      "cancel": "",
+      "delete": "",
       "discard": "",
-      "confirm": "확인",
+      "confirm": "",
       "continue": "",
-      "previous": "이전",
-      "next": "다음",
+      "previous": "",
+      "next": "",
       "checkoutDocs": "",
-      "tryAgain": "다시 시도",
+      "tryAgain": "",
       "loading": ""
     },
     "here": "",
@@ -729,36 +729,36 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "",
-        "preferences": "기본 설정",
+        "preferences": "",
         "logout": "",
-        "login": "로그인",
+        "login": "",
         "homeBoard": "",
         "loggedOut": ""
       }
     },
-    "dangerZone": "위험한 설정",
-    "noResults": "결과를 찾을 수 없습니다.",
+    "dangerZone": "",
+    "noResults": "",
     "preview": {
       "show": "",
       "hide": ""
     },
     "zod": {
       "errors": {
-        "default": "이 필드는 유효하지 않습니다.",
-        "required": "이 필드는 필수 입력 사항입니다.",
+        "default": "",
+        "required": "",
         "string": {
-          "startsWith": "이 필드는 {startsWith}로 시작해야 합니다.",
-          "endsWith": "이 필드는 {endsWith}으로 끝나야 합니다.",
-          "includes": "이 필드에는 {includes}",
+          "startsWith": "",
+          "endsWith": "",
+          "includes": "",
           "invalidEmail": ""
         },
         "tooSmall": {
-          "string": "이 필드는 {minimum} 자 이상이어야 합니다.",
-          "number": "이 필드는 {minimum}이상이어야 합니다."
+          "string": "",
+          "number": ""
         },
         "tooBig": {
-          "string": "이 필드는 최대 {maximum} 자까지만 입력할 수 있습니다.",
-          "number": "이 필드는 {maximum}보다 작거나 같아야 합니다."
+          "string": "",
+          "number": ""
         },
         "custom": {
           "passwordsDoNotMatch": "",
@@ -785,15 +785,15 @@
     "category": {
       "field": {
         "name": {
-          "label": "이름"
+          "label": ""
         }
       },
       "action": {
         "create": "",
         "edit": "",
         "remove": "",
-        "moveUp": "위로 이동",
-        "moveDown": "아래로 이동",
+        "moveUp": "",
+        "moveDown": "",
         "createAbove": "",
         "createBelow": ""
       },
@@ -812,7 +812,7 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "위치 변경"
+          "changePosition": ""
         }
       }
     }
@@ -828,7 +828,7 @@
     },
     "menu": {
       "label": {
-        "settings": "설정"
+        "settings": ""
       }
     },
     "create": {
@@ -839,10 +839,10 @@
       "title": "",
       "field": {
         "width": {
-          "label": "너비"
+          "label": ""
         },
         "height": {
-          "label": "높이"
+          "label": ""
         },
         "xOffset": {
           "label": ""
@@ -881,7 +881,7 @@
           "label": ""
         },
         "openInNewTab": {
-          "label": "새 탭에서 열기"
+          "label": ""
         },
         "showTitle": {
           "label": ""
@@ -932,13 +932,13 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "레이아웃",
+          "label": "",
           "option": {
             "row": {
-              "label": "수평"
+              "label": ""
             },
             "column": {
-              "label": "세로"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -956,22 +956,22 @@
       "data": {
         "adsBlockedToday": "",
         "adsBlockedTodayPercentage": "",
-        "dnsQueriesToday": "오늘 쿼리",
+        "dnsQueriesToday": "",
         "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
       "name": "",
-      "description": "대시보드에서 PiHole 또는 AdGuard를 제어하세요.",
+      "description": "",
       "option": {
         "layout": {
-          "label": "레이아웃",
+          "label": "",
           "option": {
             "row": {
-              "label": "수평"
+              "label": ""
             },
             "column": {
-              "label": "세로"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -990,8 +990,8 @@
         "disableAll": "",
         "setTimer": "",
         "set": "",
-        "enabled": "활성화됨",
-        "disabled": "장애인",
+        "enabled": "",
+        "disabled": "",
         "processing": "",
         "disconnected": "",
         "hours": "",
@@ -1001,7 +1001,7 @@
     },
     "clock": {
       "name": "",
-      "description": "현재 날짜와 시간을 표시합니다.",
+      "description": "",
       "option": {
         "customTitleToggle": {
           "label": "",
@@ -1034,17 +1034,17 @@
       }
     },
     "notebook": {
-      "name": "노트북",
+      "name": "",
       "description": "",
       "option": {
         "showToolbar": {
-          "label": "마크다운 작성에 도움이 되는 도구 모음 표시"
+          "label": ""
         },
         "allowReadOnlyCheck": {
           "label": ""
         },
         "content": {
-          "label": "노트북의 콘텐츠"
+          "label": ""
         }
       },
       "controls": {
@@ -1080,9 +1080,9 @@
         "deleteRow": ""
       },
       "align": {
-        "left": "왼쪽",
+        "left": "",
         "center": "",
-        "right": "오른쪽"
+        "right": ""
       },
       "popover": {
         "clearColor": "",
@@ -1090,45 +1090,45 @@
         "widthPlaceholder": "",
         "columns": "",
         "rows": "",
-        "width": "너비",
-        "height": "높이"
+        "width": "",
+        "height": ""
       }
     },
     "iframe": {
       "name": "",
-      "description": "인터넷에서 콘텐츠를 퍼옵니다. 일부 웹사이트는 액세스를 제한할 수 있습니다.",
+      "description": "",
       "option": {
         "embedUrl": {
-          "label": "임베드 URL"
+          "label": ""
         },
         "allowFullScreen": {
-          "label": "전체 화면 허용"
+          "label": ""
         },
         "allowTransparency": {
-          "label": "투명성 허용"
+          "label": ""
         },
         "allowScrolling": {
-          "label": "스크롤 허용"
+          "label": ""
         },
         "allowPayment": {
-          "label": "결제 허용"
+          "label": ""
         },
         "allowAutoPlay": {
-          "label": "자동 재생 허용"
+          "label": ""
         },
         "allowMicrophone": {
-          "label": "마이크 허용"
+          "label": ""
         },
         "allowCamera": {
-          "label": "카메라 허용"
+          "label": ""
         },
         "allowGeolocation": {
-          "label": "지리적 위치 허용"
+          "label": ""
         }
       },
       "error": {
         "noUrl": "",
-        "noBrowerSupport": "브라우저가 iframe을 지원하지 않습니다. 브라우저를 업데이트하세요."
+        "noBrowerSupport": ""
       }
     },
     "smartHome-entityState": {
@@ -1162,11 +1162,11 @@
       }
     },
     "calendar": {
-      "name": "캘린더",
+      "name": "",
       "description": "",
       "option": {
         "releaseType": {
-          "label": "레이더 릴리스 유형",
+          "label": "",
           "options": {
             "inCinemas": "",
             "digitalRelease": "",
@@ -1182,14 +1182,14 @@
       }
     },
     "weather": {
-      "name": "날씨",
-      "description": "설정한 위치의 현재 날씨 정보를 표시합니다.",
+      "name": "",
+      "description": "",
       "option": {
         "isFormatFahrenheit": {
           "label": ""
         },
         "location": {
-          "label": "날씨 위치"
+          "label": ""
         },
         "showCity": {
           "label": ""
@@ -1207,20 +1207,20 @@
         }
       },
       "kind": {
-        "clear": "맑음",
-        "mainlyClear": "대체로 맑음",
-        "fog": "안개",
-        "drizzle": "이슬비",
-        "freezingDrizzle": "어는 이슬비",
-        "rain": "비",
-        "freezingRain": "어는 비",
-        "snowFall": "눈",
-        "snowGrains": "쌀알눈",
-        "rainShowers": "소나기",
-        "snowShowers": "소낙눈",
-        "thunderstorm": "뇌우",
-        "thunderstormWithHail": "우박을 동반한 뇌우",
-        "unknown": "알 수 없음"
+        "clear": "",
+        "mainlyClear": "",
+        "fog": "",
+        "drizzle": "",
+        "freezingDrizzle": "",
+        "rain": "",
+        "freezingRain": "",
+        "snowFall": "",
+        "snowGrains": "",
+        "rainShowers": "",
+        "snowShowers": "",
+        "thunderstorm": "",
+        "thunderstormWithHail": "",
+        "unknown": ""
       }
     },
     "indexerManager": {
@@ -1280,7 +1280,7 @@
         "longitude": "",
         "disabledTooltip": "",
         "unknownLocation": "",
-        "search": "검색",
+        "search": "",
         "table": {
           "header": {
             "city": "",
@@ -1292,7 +1292,7 @@
             "select": ""
           },
           "population": {
-            "fallback": "알 수 없음"
+            "fallback": ""
           }
         }
       },
@@ -1314,14 +1314,14 @@
       "option": {}
     },
     "video": {
-      "name": "비디오 스트림",
-      "description": "카메라 또는 웹사이트의 비디오 스트림 또는 비디오 임베드하기",
+      "name": "",
+      "description": "",
       "option": {
         "feedUrl": {
-          "label": "피드 URL"
+          "label": ""
         },
         "hasAutoPlay": {
-          "label": "자동 재생",
+          "label": "",
           "description": ""
         },
         "isMuted": {
@@ -1393,8 +1393,8 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "다운로드",
-          "detailsTitle": "다운로드 속도"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "index": {
           "columnTitle": "",
@@ -1404,13 +1404,13 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "통합"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "진행률",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "ratio": {
@@ -1430,7 +1430,7 @@
           "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "상태",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "time": {
@@ -1442,20 +1442,20 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "업로드",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
       "states": {
         "downloading": "",
         "queued": "",
-        "paused": "일시 중지됨",
-        "completed": "완료됨",
+        "paused": "",
+        "completed": "",
         "failed": "",
         "processing": "",
         "leeching": "",
         "stalled": "",
-        "unknown": "알 수 없음",
+        "unknown": "",
         "seeding": ""
       },
       "actions": {
@@ -1483,10 +1483,10 @@
     },
     "mediaRequests-requestList": {
       "name": "",
-      "description": "오버서 또는 젤리서 인스턴스의 모든 미디어 요청 목록 보기",
+      "description": "",
       "option": {
         "linksTargetNewTab": {
-          "label": "새 탭에서 링크 열기"
+          "label": ""
         }
       },
       "pending": {
@@ -1495,7 +1495,7 @@
         "decline": ""
       },
       "availability": {
-        "unknown": "알 수 없음",
+        "unknown": "",
         "pending": "",
         "processing": "",
         "partiallyAvailable": "",
@@ -1505,22 +1505,22 @@
     },
     "mediaRequests-requestStats": {
       "name": "",
-      "description": "미디어 요청에 대한 통계",
+      "description": "",
       "option": {},
       "titles": {
         "stats": {
-          "main": "미디어 통계",
-          "approved": "이미 승인됨",
-          "pending": "승인 대기 중",
+          "main": "",
+          "approved": "",
+          "pending": "",
           "processing": "",
           "declined": "",
           "available": "",
-          "tv": "TV 요청",
-          "movie": "영화 요청",
-          "total": "합계"
+          "tv": "",
+          "movie": "",
+          "total": ""
         },
         "users": {
-          "main": "상위 사용자",
+          "main": "",
           "requests": ""
         }
       }
@@ -1589,7 +1589,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "앱",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -1691,17 +1691,17 @@
         }
       },
       "primaryColor": {
-        "label": "기본 색상"
+        "label": ""
       },
       "secondaryColor": {
-        "label": "보조 색상"
+        "label": ""
       },
       "opacity": {
         "label": ""
       },
       "customCss": {
         "label": "",
-        "description": "또한 숙련된 사용자에게만 권장되는 CSS를 사용하여 대시보드를 사용자 지정할 수 있습니다.",
+        "description": "",
         "customClassesAlert": {
           "title": "",
           "description": ""
@@ -1711,10 +1711,10 @@
         "label": ""
       },
       "name": {
-        "label": "이름"
+        "label": ""
       },
       "isPublic": {
-        "label": "공개",
+        "label": "",
         "description": ""
       }
     },
@@ -1725,14 +1725,14 @@
       "title": "",
       "section": {
         "general": {
-          "title": "일반",
+          "title": "",
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "레이아웃"
+          "title": ""
         },
         "background": {
-          "title": "배경"
+          "title": ""
         },
         "color": {
           "title": ""
@@ -1745,7 +1745,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "게시판 보기"
+                "label": ""
               },
               "modify": {
                 "label": ""
@@ -1757,7 +1757,7 @@
           }
         },
         "dangerZone": {
-          "title": "위험한 설정",
+          "title": "",
           "action": {
             "rename": {
               "label": "",
@@ -1793,7 +1793,7 @@
               "description": "",
               "button": "",
               "confirm": {
-                "title": "게시판 삭제",
+                "title": "",
                 "description": ""
               }
             }
@@ -1815,22 +1815,22 @@
     },
     "navbar": {
       "items": {
-        "home": "홈",
-        "boards": "보드",
-        "apps": "앱",
+        "home": "",
+        "boards": "",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
         "users": {
-          "label": "사용자",
+          "label": "",
           "items": {
-            "manage": "관리",
-            "invites": "초대",
+            "manage": "",
+            "invites": "",
             "groups": ""
           }
         },
         "tools": {
-          "label": "도구",
+          "label": "",
           "items": {
             "docker": "",
             "logs": "",
@@ -1838,38 +1838,38 @@
             "tasks": ""
           }
         },
-        "settings": "설정",
+        "settings": "",
         "help": {
-          "label": "도움말",
+          "label": "",
           "items": {
-            "documentation": "문서",
+            "documentation": "",
             "submitIssue": "",
-            "discord": "커뮤니티 불화",
+            "discord": "",
             "sourceCode": ""
           }
         },
-        "about": "정보"
+        "about": ""
       }
     },
     "page": {
       "home": {
         "statistic": {
-          "board": "보드",
-          "user": "사용자",
-          "invite": "초대",
+          "board": "",
+          "user": "",
+          "invite": "",
           "integration": "",
-          "app": "앱",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "보드",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
         }
       },
       "board": {
-        "title": "보드",
+        "title": "",
         "action": {
           "new": {
             "label": ""
@@ -1878,19 +1878,19 @@
             "label": ""
           },
           "settings": {
-            "label": "설정"
+            "label": ""
           },
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "홈",
+              "label": "",
               "tooltip": ""
             }
           },
           "delete": {
-            "label": "영구 삭제",
+            "label": "",
             "confirm": {
-              "title": "게시판 삭제",
+              "title": "",
               "description": ""
             }
           }
@@ -1903,7 +1903,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "이름"
+                "label": ""
               }
             }
           }
@@ -1917,30 +1917,30 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "일반",
+            "title": "",
             "item": {
               "language": "",
               "board": "",
-              "firstDayOfWeek": "요일별 요일",
-              "accessibility": "접근성"
+              "firstDayOfWeek": "",
+              "accessibility": ""
             }
           },
           "security": {
             "title": ""
           },
           "board": {
-            "title": "보드"
+            "title": ""
           }
         },
         "list": {
-          "metaTitle": "사용자 관리",
-          "title": "사용자"
+          "metaTitle": "",
+          "title": ""
         },
         "edit": {
           "metaTitle": ""
         },
         "create": {
-          "metaTitle": "사용자 만들기",
+          "metaTitle": "",
           "title": "",
           "step": {
             "personalInformation": {
@@ -1970,21 +1970,21 @@
           }
         },
         "invite": {
-          "title": "사용자 초대 관리",
+          "title": "",
           "action": {
             "new": {
               "title": "",
-              "description": "만료 후에는 초대가 더 이상 유효하지 않으며 초대를 받은 사람은 계정을 만들 수 없습니다."
+              "description": ""
             },
             "copy": {
               "title": "",
               "description": "",
-              "link": "초대 링크",
+              "link": "",
               "button": ""
             },
             "delete": {
-              "title": "초대 삭제",
-              "description": "이 초대를 삭제하시겠습니까? 이 링크를 받은 사용자는 더 이상 해당 링크를 사용하여 계정을 만들 수 없습니다."
+              "title": "",
+              "description": ""
             }
           },
           "field": {
@@ -1992,13 +1992,13 @@
               "label": ""
             },
             "creator": {
-              "label": "크리에이터"
+              "label": ""
             },
             "expirationDate": {
-              "label": "만료 날짜"
+              "label": ""
             },
             "token": {
-              "label": "토큰"
+              "label": ""
             }
           }
         }
@@ -2007,7 +2007,7 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "일반",
+            "title": "",
             "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
@@ -2026,7 +2026,7 @@
         }
       },
       "settings": {
-        "title": "설정",
+        "title": "",
         "notification": {
           "success": {
             "message": ""
@@ -2105,8 +2105,8 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "실행 중",
-            "error": "오류"
+            "running": "",
+            "error": ""
           },
           "job": {
             "iconsUpdater": {
@@ -2122,7 +2122,7 @@
               "label": ""
             },
             "mediaServer": {
-              "label": "미디어 서버"
+              "label": ""
             },
             "mediaOrganizer": {
               "label": ""
@@ -2164,7 +2164,7 @@
           },
           "tab": {
             "documentation": {
-              "label": "문서"
+              "label": ""
             },
             "apiKey": {
               "label": "",
@@ -2211,30 +2211,30 @@
     },
     "field": {
       "name": {
-        "label": "이름"
+        "label": ""
       },
       "state": {
-        "label": "상태",
+        "label": "",
         "option": {
-          "created": "생성됨",
-          "running": "실행 중",
-          "paused": "일시 중지됨",
-          "restarting": "다시 시작",
+          "created": "",
+          "running": "",
+          "paused": "",
+          "restarting": "",
           "exited": "",
-          "removing": "제거",
+          "removing": "",
           "dead": ""
         }
       },
       "containerImage": {
-        "label": "이미지"
+        "label": ""
       },
       "ports": {
-        "label": "포트"
+        "label": ""
       }
     },
     "action": {
       "start": {
-        "label": "시작",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2247,7 +2247,7 @@
         }
       },
       "stop": {
-        "label": "중지",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2260,7 +2260,7 @@
         }
       },
       "restart": {
-        "label": "재시작",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2273,7 +2273,7 @@
         }
       },
       "remove": {
-        "label": "제거",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2309,13 +2309,13 @@
       "title": ""
     },
     "tab": {
-      "user": "사용자",
+      "user": "",
       "group": "",
       "inherited": ""
     },
     "field": {
       "user": {
-        "label": "사용자"
+        "label": ""
       },
       "group": {
         "label": ""
@@ -2331,14 +2331,14 @@
   },
   "navigationStructure": {
     "manage": {
-      "label": "관리",
+      "label": "",
       "boards": {
-        "label": "보드"
+        "label": ""
       },
       "integrations": {
         "label": "",
         "edit": {
-          "label": "수정"
+          "label": ""
         },
         "new": {
           "label": ""
@@ -2350,38 +2350,38 @@
           "label": ""
         },
         "edit": {
-          "label": "수정"
+          "label": ""
         }
       },
       "medias": {
         "label": ""
       },
       "apps": {
-        "label": "앱",
+        "label": "",
         "new": {
           "label": ""
         },
         "edit": {
-          "label": "수정"
+          "label": ""
         }
       },
       "users": {
-        "label": "사용자",
+        "label": "",
         "create": {
-          "label": "만들기"
+          "label": ""
         },
-        "general": "일반",
+        "general": "",
         "security": "",
-        "board": "보드",
+        "board": "",
         "groups": {
           "label": ""
         },
         "invites": {
-          "label": "초대"
+          "label": ""
         }
       },
       "tools": {
-        "label": "도구",
+        "label": "",
         "docker": {
           "label": ""
         },
@@ -2390,10 +2390,10 @@
         }
       },
       "settings": {
-        "label": "설정"
+        "label": ""
       },
       "about": {
-        "label": "정보"
+        "label": ""
       }
     }
   },
@@ -2408,7 +2408,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "앱",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2424,7 +2424,7 @@
             }
           },
           "board": {
-            "title": "보드",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2527,7 +2527,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "토렌트",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2544,16 +2544,16 @@
             "title": ""
           },
           "help": {
-            "title": "도움말",
+            "title": "",
             "option": {
               "documentation": {
-                "label": "문서"
+                "label": ""
               },
               "submitIssue": {
                 "label": ""
               },
               "discord": {
-                "label": "커뮤니티 불화"
+                "label": ""
               }
             }
           }
@@ -2584,7 +2584,7 @@
                 "label": ""
               },
               "manageUser": {
-                "label": "사용자 관리"
+                "label": ""
               },
               "manageInvite": {
                 "label": ""
@@ -2608,13 +2608,13 @@
                 "label": ""
               },
               "about": {
-                "label": "정보"
+                "label": ""
               },
               "homeBoard": {
                 "label": ""
               },
               "preferences": {
-                "label": "기본 설정"
+                "label": ""
               }
             }
           }
@@ -2624,7 +2624,7 @@
         "help": "",
         "group": {
           "user": {
-            "title": "사용자",
+            "title": "",
             "children": {
               "action": {
                 "detail": {
@@ -2662,7 +2662,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": "이름"
+          "label": ""
         },
         "short": {
           "label": ""

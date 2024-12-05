@@ -2,9 +2,25 @@
   "user": {
     "title": "Gebruikers",
     "name": "Gebruiker",
+    "page": {
+      "login": {
+        "title": "",
+        "subtitle": ""
+      },
+      "invite": {
+        "title": "",
+        "subtitle": "",
+        "description": ""
+      },
+      "init": {
+        "title": "",
+        "subtitle": ""
+      }
+    },
     "field": {
       "email": {
-        "label": "E-mail"
+        "label": "E-mail",
+        "verified": ""
       },
       "username": {
         "label": "Gebruikersnaam"
@@ -12,117 +28,720 @@
       "password": {
         "label": "Wachtwoord",
         "requirement": {
+          "length": "",
           "lowercase": "Inclusief kleine letter",
           "uppercase": "Inclusief hoofdletter",
-          "number": "Inclusief aantal"
+          "number": "Inclusief aantal",
+          "special": ""
         }
       },
       "passwordConfirm": {
         "label": "Wachtwoord bevestigen"
+      },
+      "previousPassword": {
+        "label": ""
+      },
+      "homeBoard": {
+        "label": ""
+      },
+      "pingIconsEnabled": {
+        "label": ""
       }
+    },
+    "error": {
+      "usernameTaken": ""
     },
     "action": {
       "login": {
-        "label": "Inloggen"
+        "label": "Inloggen",
+        "labelWith": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "forgotPassword": {
+          "label": "",
+          "description": ""
+        }
       },
       "register": {
         "label": "Account aanmaken",
         "notification": {
           "success": {
-            "title": "Account aangemaakt"
+            "title": "Account aangemaakt",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       },
-      "create": "Gebruiker aanmaken"
+      "create": "Gebruiker aanmaken",
+      "changePassword": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeFirstDayOfWeek": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePingIconsEnabled": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            },
+            "toLarge": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "removeImage": {
+          "label": "",
+          "confirm": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": ""
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
+      },
+      "transfer": {
+        "label": ""
+      }
     }
   },
   "group": {
+    "title": "",
+    "name": "",
+    "search": "",
     "field": {
-      "name": "Naam"
+      "name": "Naam",
+      "members": ""
     },
     "permission": {
       "admin": {
-        "title": "Beheerder"
+        "title": "Beheerder",
+        "item": {
+          "admin": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "app": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "board": {
-        "title": "Borden"
+        "title": "Borden",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "integration": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "interact-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "media": {
+        "title": "",
+        "item": {
+          "upload": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "other": {
+        "title": "",
+        "item": {
+          "view-logs": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "search-engine": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      }
+    },
+    "memberNotice": {
+      "mixed": "",
+      "external": ""
+    },
+    "reservedNotice": {
+      "message": ""
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "transfer": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "addMember": {
+        "label": ""
+      },
+      "removeMember": {
+        "label": "",
+        "confirm": ""
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePermissions": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "update": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "app": {
     "page": {
       "list": {
-        "title": "Apps"
+        "title": "",
+        "noResults": {
+          "title": "",
+          "action": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     },
     "field": {
       "name": {
         "label": "Naam"
+      },
+      "description": {
+        "label": ""
+      },
+      "url": {
+        "label": ""
+      }
+    },
+    "action": {
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "integration": {
+    "page": {
+      "list": {
+        "title": "",
+        "search": "",
+        "noResults": {
+          "title": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      }
+    },
     "field": {
       "name": {
         "label": "Naam"
+      },
+      "url": {
+        "label": ""
       }
     },
+    "action": {
+      "create": ""
+    },
     "testConnection": {
+      "action": {
+        "create": "",
+        "edit": ""
+      },
+      "alertNotice": "",
       "notification": {
+        "success": {
+          "title": "",
+          "message": ""
+        },
         "invalidUrl": {
-          "title": "Ongeldige URL"
+          "title": "Ongeldige URL",
+          "message": ""
+        },
+        "secretNotDefined": {
+          "title": "",
+          "message": ""
+        },
+        "invalidCredentials": {
+          "title": "",
+          "message": ""
+        },
+        "commonError": {
+          "title": "",
+          "message": ""
+        },
+        "badRequest": {
+          "title": "",
+          "message": ""
+        },
+        "unauthorized": {
+          "title": "",
+          "message": ""
+        },
+        "forbidden": {
+          "title": "",
+          "message": ""
+        },
+        "notFound": {
+          "title": "",
+          "message": ""
+        },
+        "internalServerError": {
+          "title": "",
+          "message": ""
+        },
+        "serviceUnavailable": {
+          "title": "",
+          "message": ""
+        },
+        "connectionAborted": {
+          "title": "",
+          "message": ""
+        },
+        "domainNotFound": {
+          "title": "",
+          "message": ""
+        },
+        "connectionRefused": {
+          "title": "",
+          "message": ""
+        },
+        "invalidJson": {
+          "title": "",
+          "message": ""
+        },
+        "wrongPath": {
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
+      "title": "",
+      "lastUpdated": "",
+      "secureNotice": "",
+      "reset": {
+        "title": "",
+        "message": ""
+      },
+      "noSecretsRequired": {
+        "segmentTitle": "",
+        "text": ""
+      },
       "kind": {
         "username": {
-          "label": "Gebruikersnaam"
+          "label": "Gebruikersnaam",
+          "newLabel": ""
+        },
+        "apiKey": {
+          "label": "",
+          "newLabel": ""
         },
         "password": {
           "label": "Wachtwoord",
           "newLabel": "Nieuw wachtwoord"
         }
       }
+    },
+    "permission": {
+      "use": "",
+      "interact": "",
+      "full": ""
     }
   },
   "media": {
+    "plural": "",
+    "search": "",
     "field": {
       "name": "Naam",
       "size": "Grootte",
       "creator": "Maker"
+    },
+    "action": {
+      "upload": {
+        "label": "",
+        "file": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "copy": {
+        "label": ""
+      }
     }
   },
   "common": {
+    "beta": "",
     "error": "Fout",
     "action": {
       "add": "Toevoegen",
       "apply": "Toepassen",
+      "backToOverview": "",
       "create": "Aanmaken",
       "edit": "Wijzigen",
+      "import": "",
       "insert": "Invoegen",
       "remove": "Verwijderen",
       "save": "Opslaan",
       "saveChanges": "Wijzigingen opslaan",
       "cancel": "Annuleren",
       "delete": "Verwijderen",
+      "discard": "",
       "confirm": "Bevestigen",
+      "continue": "",
       "previous": "Vorige",
       "next": "Volgende",
-      "tryAgain": "Probeer het opnieuw"
+      "checkoutDocs": "",
+      "tryAgain": "Probeer het opnieuw",
+      "loading": ""
+    },
+    "here": "",
+    "iconPicker": {
+      "label": "",
+      "header": ""
     },
     "information": {
+      "min": "",
+      "max": "",
+      "days": "",
       "hours": "Uren",
       "minutes": "Minuten"
     },
+    "notification": {
+      "create": {
+        "success": "",
+        "error": ""
+      },
+      "delete": {
+        "success": "",
+        "error": ""
+      },
+      "update": {
+        "success": "",
+        "error": ""
+      },
+      "transfer": {
+        "success": "",
+        "error": ""
+      }
+    },
+    "multiSelect": {
+      "placeholder": ""
+    },
+    "multiText": {
+      "placeholder": "",
+      "addLabel": ""
+    },
+    "select": {
+      "placeholder": "",
+      "badge": {
+        "recommended": ""
+      }
+    },
     "userAvatar": {
       "menu": {
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
         "preferences": "Jouw voorkeuren",
-        "login": "Inloggen"
+        "logout": "",
+        "login": "Inloggen",
+        "homeBoard": "",
+        "loggedOut": ""
       }
     },
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
+    "preview": {
+      "show": "",
+      "hide": ""
+    },
     "zod": {
       "errors": {
         "default": "Dit veld is ongeldig",
@@ -130,7 +749,8 @@
         "string": {
           "startsWith": "Dit veld moet beginnen met {startsWith}",
           "endsWith": "Dit veld moet eindigen op {endsWith}",
-          "includes": "Dit veld moet {includes} bevatten."
+          "includes": "Dit veld moet {includes} bevatten.",
+          "invalidEmail": ""
         },
         "tooSmall": {
           "string": "Dit veld moet minstens {minimum} tekens lang zijn",
@@ -139,11 +759,29 @@
         "tooBig": {
           "string": "Dit veld mag maximaal {maximum} tekens lang zijn",
           "number": "Dit veld moet kleiner of gelijk zijn aan {maximum}"
+        },
+        "custom": {
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
+          "fileTooLarge": "",
+          "invalidConfiguration": ""
         }
       }
     }
   },
   "section": {
+    "dynamic": {
+      "action": {
+        "create": "",
+        "remove": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      }
+    },
     "category": {
       "field": {
         "name": {
@@ -151,42 +789,147 @@
         }
       },
       "action": {
+        "create": "",
+        "edit": "",
+        "remove": "",
         "moveUp": "Omhoog",
-        "moveDown": "Omlaag"
+        "moveDown": "Omlaag",
+        "createAbove": "",
+        "createBelow": ""
+      },
+      "create": {
+        "title": "",
+        "submit": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
+          "create": "",
           "changePosition": "Positie wijzigen"
         }
       }
     }
   },
   "item": {
+    "action": {
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
+    },
     "menu": {
       "label": {
         "settings": "Instellingen"
       }
     },
+    "create": {
+      "title": "",
+      "addToBoard": ""
+    },
     "moveResize": {
+      "title": "",
       "field": {
         "width": {
           "label": "Breedte"
         },
         "height": {
           "label": "Hoogte"
+        },
+        "xOffset": {
+          "label": ""
+        },
+        "yOffset": {
+          "label": ""
         }
       }
+    },
+    "edit": {
+      "title": "",
+      "advancedOptions": {
+        "label": "",
+        "title": ""
+      },
+      "field": {
+        "integrations": {
+          "label": ""
+        },
+        "customCssClasses": {
+          "label": ""
+        }
+      }
+    },
+    "remove": {
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
+      "name": "",
+      "description": "",
       "option": {
+        "appId": {
+          "label": ""
+        },
         "openInNewTab": {
           "label": "Open in nieuw tabblad"
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "pingEnabled": {
+          "label": ""
+        }
+      },
+      "error": {
+        "notFound": {
+          "label": "",
+          "tooltip": ""
+        }
+      }
+    },
+    "bookmarks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": ""
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "items": {
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
           "label": "Indeling",
@@ -196,17 +939,29 @@
             },
             "column": {
               "label": "Verticaal"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "usePiHoleColors": {
+          "label": ""
         }
+      },
+      "error": {
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
         "adsBlockedToday": "Vandaag geblokkeerd",
         "adsBlockedTodayPercentage": "Vandaag geblokkeerd",
-        "dnsQueriesToday": "Queries vandaag"
+        "dnsQueriesToday": "Queries vandaag",
+        "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
+      "name": "",
       "description": "Bedien PiHole of AdGuard vanaf je dashboard",
       "option": {
         "layout": {
@@ -217,28 +972,70 @@
             },
             "column": {
               "label": "Verticaal"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "showToggleAllButtons": {
+          "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "controls": {
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
         "set": "Instellen",
         "enabled": "Ingeschakeld",
         "disabled": "Uitgeschakeld",
+        "processing": "",
+        "disconnected": "",
         "hours": "Uren",
-        "minutes": "Minuten"
+        "minutes": "Minuten",
+        "unlimited": ""
       }
     },
     "clock": {
+      "name": "",
       "description": "Toont de huidige datum en tijd.",
       "option": {
+        "customTitleToggle": {
+          "label": "",
+          "description": ""
+        },
+        "customTitle": {
+          "label": ""
+        },
+        "is24HourFormat": {
+          "label": "",
+          "description": ""
+        },
+        "showSeconds": {
+          "label": ""
+        },
+        "useCustomTimezone": {
+          "label": ""
+        },
         "timezone": {
-          "label": "Tijdzone"
+          "label": "Tijdzone",
+          "description": ""
+        },
+        "showDate": {
+          "label": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
     "notebook": {
       "name": "Notitieboek",
+      "description": "",
       "option": {
         "showToolbar": {
           "label": "Toon de werkbalk om je te helpen markdown te schrijven"
@@ -257,7 +1054,7 @@
         "underline": "Onderstreept",
         "colorText": "Kleur tekst",
         "colorHighlight": "Gekleurde tekst markeren",
-        "code": "Code",
+        "code": "",
         "clear": "Opmaak wissen",
         "heading": "Koptekst {level}",
         "align": "Tekst uitlijnen: {position}",
@@ -268,7 +1065,7 @@
         "checkList": "Controlelijst",
         "increaseIndent": "Inspringen vergroten",
         "decreaseIndent": "Inspringen verminderen",
-        "link": "Link",
+        "link": "",
         "unlink": "Link verwijderen",
         "image": "Afbeelding insluiten",
         "addTable": "Tabel toevoegen",
@@ -298,7 +1095,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Insluiten van alle inhoud van het internet. Sommige websites kunnen de toegang beperken.",
       "option": {
         "embedUrl": {
@@ -330,17 +1127,31 @@
         }
       },
       "error": {
+        "noUrl": "",
         "noBrowerSupport": "Je browser ondersteunt geen iframes. Update je browser."
       }
     },
     "smartHome-entityState": {
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
           "label": "Entiteit-ID"
+        },
+        "displayName": {
+          "label": ""
+        },
+        "entityUnit": {
+          "label": ""
+        },
+        "clickable": {
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
           "label": "Weergavenaam"
@@ -352,9 +1163,21 @@
     },
     "calendar": {
       "name": "Kalender",
+      "description": "",
       "option": {
         "releaseType": {
-          "label": "Radarr release type"
+          "label": "",
+          "options": {
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
+          }
+        },
+        "filterPastMonths": {
+          "label": ""
+        },
+        "filterFutureMonths": {
+          "label": ""
         }
       }
     },
@@ -362,8 +1185,25 @@
       "name": "Weer",
       "description": "Toont de huidige weersinformatie van een ingestelde locatie.",
       "option": {
+        "isFormatFahrenheit": {
+          "label": ""
+        },
         "location": {
           "label": "Weerslocatie"
+        },
+        "showCity": {
+          "label": ""
+        },
+        "hasForecast": {
+          "label": ""
+        },
+        "forecastDayCount": {
+          "label": "",
+          "description": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       },
       "kind": {
@@ -385,8 +1225,17 @@
     },
     "indexerManager": {
       "name": "Indexeer beheerder status",
+      "description": "",
+      "option": {
+        "openIndexerSiteInNewTab": {
+          "label": ""
+        }
+      },
       "title": "Indexeer beheerder",
-      "testAll": "Alles testen"
+      "testAll": "Alles testen",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "healthMonitoring": {
       "name": "Systeem gezondheidsmonitoring",
@@ -406,56 +1255,195 @@
         }
       },
       "popover": {
-        "available": "Beschikbaar"
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "Beschikbaar",
+        "lastSeen": ""
+      },
+      "memory": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
       "location": {
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
         "search": "Zoeken",
         "table": {
-          "header": {},
-          "action": {},
+          "header": {
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
+          },
+          "action": {
+            "select": ""
+          },
           "population": {
             "fallback": "Onbekend"
           }
         }
-      }
+      },
+      "integration": {
+        "noData": "",
+        "description": ""
+      },
+      "app": {
+        "noData": "",
+        "description": ""
+      },
+      "error": {
+        "action": {
+          "logs": ""
+        },
+        "noIntegration": "",
+        "noData": ""
+      },
+      "option": {}
     },
     "video": {
       "name": "Video stream",
       "description": "Een videostream of video van een camera of een website insluiten",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
-          "label": "Automatisch afspelen"
+          "label": "Automatisch afspelen",
+          "description": ""
+        },
+        "isMuted": {
+          "label": ""
+        },
+        "hasControls": {
+          "label": ""
         }
+      },
+      "error": {
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
       }
     },
+    "mediaServer": {
+      "name": "",
+      "description": "",
+      "option": {}
+    },
     "downloads": {
+      "name": "",
+      "description": "",
+      "option": {
+        "columns": {
+          "label": ""
+        },
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": ""
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        },
+        "showCompletedUsenet": {
+          "label": ""
+        },
+        "showCompletedTorrent": {
+          "label": ""
+        },
+        "activeTorrentThreshold": {
+          "label": ""
+        },
+        "categoryFilter": {
+          "label": ""
+        },
+        "filterIsWhitelist": {
+          "label": ""
+        },
+        "applyFilterToRatio": {
+          "label": ""
+        }
+      },
+      "errors": {
+        "noColumns": "",
+        "noCommunications": ""
+      },
       "items": {
+        "actions": {
+          "columnTitle": ""
+        },
         "added": {
+          "columnTitle": "",
           "detailsTitle": "Datum toegevoegd"
         },
+        "category": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "",
           "detailsTitle": "Downloadsnelheid"
+        },
+        "index": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "id": {
+          "columnTitle": ""
         },
         "integration": {
           "columnTitle": "Integratie"
         },
+        "name": {
+          "columnTitle": ""
+        },
         "progress": {
-          "columnTitle": "Voortgang"
+          "columnTitle": "Voortgang",
+          "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Verhouding"
+          "columnTitle": "Verhouding",
+          "detailsTitle": ""
+        },
+        "received": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "sent": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "size": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Status"
+          "columnTitle": "Status",
+          "detailsTitle": ""
+        },
+        "time": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "type": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Up"
+          "columnTitle": "",
+          "detailsTitle": ""
         }
       },
       "states": {
@@ -463,62 +1451,244 @@
         "queued": "In wachtrij",
         "paused": "Gepauzeerd",
         "completed": "Voltooid",
-        "unknown": "Onbekend"
-      }
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "Onbekend",
+        "seeding": ""
+      },
+      "actions": {
+        "clients": {
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
+        },
+        "client": {
+          "pause": "",
+          "resume": ""
+        },
+        "item": {
+          "pause": "",
+          "resume": "",
+          "delete": {
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
+          }
+        }
+      },
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
+      "name": "",
       "description": "Bekijk een lijst met alle mediaverzoeken van je Overseerr of Jellyseerr instantie",
       "option": {
         "linksTargetNewTab": {
           "label": "Links in nieuw tabblad openen"
         }
       },
+      "pending": {
+        "approve": "",
+        "approving": "",
+        "decline": ""
+      },
       "availability": {
         "unknown": "Onbekend",
+        "pending": "",
+        "processing": "",
         "partiallyAvailable": "Gedeeltelijk",
         "available": "Beschikbaar"
-      }
+      },
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
+      "name": "",
       "description": "Statistieken over je mediaverzoeken",
+      "option": {},
       "titles": {
         "stats": {
           "main": "Media statistieken",
           "approved": "Reeds goedgekeurd",
           "pending": "In afwachting van goedkeuring",
+          "processing": "",
+          "declined": "",
+          "available": "",
           "tv": "TV verzoeken",
           "movie": "Film verzoeken",
           "total": "Totaal"
         },
         "users": {
-          "main": "Grootste gebruikers"
+          "main": "Grootste gebruikers",
+          "requests": ""
+        }
+      }
+    },
+    "rssFeed": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrls": {
+          "label": ""
+        },
+        "enableRtl": {
+          "label": ""
+        },
+        "textLinesClamp": {
+          "label": ""
+        },
+        "maximumAmountPosts": {
+          "label": ""
         }
       }
     }
   },
+  "widgetPreview": {
+    "toggle": {
+      "enabled": "",
+      "disabled": ""
+    },
+    "dimensions": {
+      "title": ""
+    }
+  },
   "board": {
     "action": {
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "confirmLeave": {
+          "title": "",
+          "message": ""
+        }
+      },
       "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
         "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
           "apps": {
-            "label": "Apps"
+            "label": "",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
           },
           "screenSize": {
+            "label": "",
             "option": {
               "sm": "Klein",
               "md": "Middel",
               "lg": "Groot"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
             }
           }
         }
       }
     },
     "field": {
+      "pageTitle": {
+        "label": ""
+      },
+      "metaTitle": {
+        "label": ""
+      },
+      "logoImageUrl": {
+        "label": ""
+      },
+      "faviconImageUrl": {
+        "label": ""
+      },
+      "backgroundImageUrl": {
+        "label": ""
+      },
       "backgroundImageAttachment": {
-        "label": "Achtergrondafbeelding bijlage"
+        "label": "Achtergrondafbeelding bijlage",
+        "option": {
+          "fixed": {
+            "label": "",
+            "description": ""
+          },
+          "scroll": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "backgroundImageRepeat": {
+        "label": "",
+        "option": {
+          "repeat": {
+            "label": "",
+            "description": ""
+          },
+          "no-repeat": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-x": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-y": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "backgroundImageSize": {
-        "label": "Achtergrondafbeelding grootte"
+        "label": "Achtergrondafbeelding grootte",
+        "option": {
+          "cover": {
+            "label": "",
+            "description": ""
+          },
+          "contain": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "primaryColor": {
         "label": "Primaire kleur"
@@ -526,20 +1696,37 @@
       "secondaryColor": {
         "label": "Secundaire kleur"
       },
+      "opacity": {
+        "label": ""
+      },
       "customCss": {
-        "description": "Pas je dashboard verder aan met behulp van CSS, alleen aanbevolen voor ervaren gebruikers"
+        "label": "",
+        "description": "Pas je dashboard verder aan met behulp van CSS, alleen aanbevolen voor ervaren gebruikers",
+        "customClassesAlert": {
+          "title": "",
+          "description": ""
+        }
+      },
+      "columnCount": {
+        "label": ""
       },
       "name": {
         "label": "Naam"
       },
       "isPublic": {
-        "label": "Openbaar"
+        "label": "Openbaar",
+        "description": ""
       }
     },
+    "content": {
+      "metaTitle": ""
+    },
     "setting": {
+      "title": "",
       "section": {
         "general": {
-          "title": "Algemeen"
+          "title": "Algemeen",
+          "unrecognizedLink": ""
         },
         "layout": {
           "title": "Indeling"
@@ -547,11 +1734,24 @@
         "background": {
           "title": "Achtergrond"
         },
+        "color": {
+          "title": ""
+        },
+        "customCss": {
+          "title": ""
+        },
         "access": {
+          "title": "",
           "permission": {
             "item": {
               "view": {
                 "label": "Bord bekijken"
+              },
+              "modify": {
+                "label": ""
+              },
+              "full": {
+                "label": ""
               }
             }
           }
@@ -559,9 +1759,42 @@
         "dangerZone": {
           "title": "Gevarenzone",
           "action": {
-            "delete": {
+            "rename": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "modal": {
+                "title": ""
+              }
+            },
+            "visibility": {
+              "label": "",
+              "description": {
+                "public": "",
+                "private": ""
+              },
+              "button": {
+                "public": "",
+                "private": ""
+              },
               "confirm": {
-                "title": "Bord verwijderen"
+                "public": {
+                  "title": "",
+                  "description": ""
+                },
+                "private": {
+                  "title": "",
+                  "description": ""
+                }
+              }
+            },
+            "delete": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "confirm": {
+                "title": "Bord verwijderen",
+                "description": ""
               }
             }
           }
@@ -570,31 +1803,49 @@
     }
   },
   "management": {
+    "metaTitle": "",
+    "title": {
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
+    },
+    "notFound": {
+      "title": "",
+      "text": ""
+    },
     "navbar": {
       "items": {
-        "home": "Home",
+        "home": "",
         "boards": "Borden",
-        "apps": "Apps",
+        "apps": "",
+        "integrations": "",
+        "searchEngies": "",
+        "medias": "",
         "users": {
           "label": "Gebruikers",
           "items": {
             "manage": "Beheren",
-            "invites": "Uitnodigingen"
+            "invites": "Uitnodigingen",
+            "groups": ""
           }
         },
         "tools": {
           "label": "Gereedschappen",
           "items": {
-            "docker": "Docker",
-            "api": "API"
+            "docker": "",
+            "logs": "",
+            "api": "",
+            "tasks": ""
           }
         },
         "settings": "Instellingen",
         "help": {
-          "label": "Help",
+          "label": "",
           "items": {
             "documentation": "Documentatie",
-            "discord": "Community Discord"
+            "submitIssue": "",
+            "discord": "",
+            "sourceCode": ""
           }
         },
         "about": "Over"
@@ -606,29 +1857,47 @@
           "board": "Borden",
           "user": "Gebruikers",
           "invite": "Uitnodigingen",
-          "app": "Apps"
+          "integration": "",
+          "app": "",
+          "group": ""
         },
         "statisticLabel": {
-          "boards": "Borden"
+          "boards": "Borden",
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "Jouw borden",
         "action": {
+          "new": {
+            "label": ""
+          },
+          "open": {
+            "label": ""
+          },
           "settings": {
             "label": "Instellingen"
           },
           "setHomeBoard": {
+            "label": "",
             "badge": {
-              "label": "Home"
+              "label": "",
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "Permanent verwijderen",
             "confirm": {
-              "title": "Bord verwijderen"
+              "title": "Bord verwijderen",
+              "description": ""
             }
           }
+        },
+        "visibility": {
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -640,11 +1909,18 @@
           }
         }
       },
+      "media": {
+        "includeFromAllUsers": ""
+      },
       "user": {
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
             "title": "Algemeen",
             "item": {
+              "language": "",
+              "board": "",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
             }
@@ -660,22 +1936,51 @@
           "metaTitle": "Gebruikers beheren",
           "title": "Gebruikers"
         },
+        "edit": {
+          "metaTitle": ""
+        },
         "create": {
           "metaTitle": "Gebruiker aanmaken",
+          "title": "",
           "step": {
+            "personalInformation": {
+              "label": ""
+            },
             "security": {
               "label": "Beveiliging"
+            },
+            "groups": {
+              "label": "",
+              "title": "",
+              "description": ""
+            },
+            "review": {
+              "label": ""
+            },
+            "completed": {
+              "title": ""
+            },
+            "error": {
+              "title": ""
             }
+          },
+          "action": {
+            "createAnother": "",
+            "back": ""
           }
         },
         "invite": {
           "title": "Gebruikersuitnodigingen beheren",
           "action": {
             "new": {
+              "title": "",
               "description": "Na de vervaldatum is een uitnodiging niet langer geldig en kan de ontvanger van de uitnodiging geen account meer aanmaken."
             },
             "copy": {
-              "link": "Uitnodigingslink"
+              "title": "",
+              "description": "",
+              "link": "Uitnodigingslink",
+              "button": ""
             },
             "delete": {
               "title": "Uitnodiging verwijderen",
@@ -684,7 +1989,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Maker"
@@ -699,50 +2004,211 @@
         }
       },
       "group": {
+        "back": "",
         "setting": {
           "general": {
-            "title": "Algemeen"
+            "title": "Algemeen",
+            "owner": "",
+            "ownerOfGroup": "",
+            "ownerOfGroupDeleted": ""
+          },
+          "members": {
+            "title": "",
+            "search": "",
+            "notFound": ""
+          },
+          "permissions": {
+            "title": "",
+            "form": {
+              "unsavedChanges": ""
+            }
           }
         }
       },
       "settings": {
-        "title": "Instellingen"
+        "title": "Instellingen",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        },
+        "section": {
+          "analytics": {
+            "title": "",
+            "general": {
+              "title": "",
+              "text": ""
+            },
+            "widgetData": {
+              "title": "",
+              "text": ""
+            },
+            "integrationData": {
+              "title": "",
+              "text": ""
+            },
+            "usersData": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "crawlingAndIndexing": {
+            "title": "",
+            "warning": "",
+            "noIndex": {
+              "title": "",
+              "text": ""
+            },
+            "noFollow": {
+              "title": "",
+              "text": ""
+            },
+            "noTranslate": {
+              "title": "",
+              "text": ""
+            },
+            "noSiteLinksSearchBox": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "board": {
+            "title": "",
+            "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "appearance": {
+            "title": "",
+            "defaultColorScheme": {
+              "label": "",
+              "options": {
+                "light": "",
+                "dark": ""
+              }
+            }
+          },
+          "culture": {
+            "title": "",
+            "defaultLocale": {
+              "label": ""
+            }
+          }
+        }
       },
       "tool": {
         "tasks": {
+          "title": "",
           "status": {
+            "idle": "",
             "running": "Actief",
             "error": "Fout"
           },
           "job": {
+            "iconsUpdater": {
+              "label": ""
+            },
+            "analytics": {
+              "label": ""
+            },
+            "smartHomeEntityState": {
+              "label": ""
+            },
+            "ping": {
+              "label": ""
+            },
             "mediaServer": {
               "label": "Media server"
             },
-            "mediaRequests": {
-              "label": "Mediaverzoeken"
+            "mediaOrganizer": {
+              "label": ""
+            },
+            "downloads": {
+              "label": ""
+            },
+            "mediaRequestStats": {
+              "label": ""
+            },
+            "mediaRequestList": {
+              "label": ""
+            },
+            "rssFeeds": {
+              "label": ""
+            },
+            "indexerManager": {
+              "label": ""
+            },
+            "healthMonitoring": {
+              "label": ""
+            },
+            "dnsHole": {
+              "label": ""
+            },
+            "sessionCleanup": {
+              "label": ""
             }
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
+          "modal": {
+            "createApiToken": {
+              "title": "",
+              "description": "",
+              "button": ""
+            }
+          },
           "tab": {
             "documentation": {
               "label": "Documentatie"
             },
             "apiKey": {
+              "label": "",
+              "title": "",
+              "button": {
+                "createApiToken": ""
+              },
               "table": {
                 "header": {
-                  "id": "ID"
+                  "id": "",
+                  "createdBy": ""
                 }
               }
             }
+          }
+        }
+      },
+      "about": {
+        "version": "",
+        "text": "",
+        "accordion": {
+          "contributors": {
+            "title": "",
+            "subtitle": ""
+          },
+          "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "libraries": {
+            "title": "",
+            "subtitle": ""
           }
         }
       }
     }
   },
   "docker": {
-    "title": "Containers",
+    "title": "",
+    "table": {
+      "updated": "",
+      "search": "",
+      "selected": ""
+    },
     "field": {
       "name": {
         "label": "Naam"
@@ -754,7 +2220,9 @@
           "running": "Actief",
           "paused": "Gepauzeerd",
           "restarting": "Bezig met herstarten",
-          "removing": "Bezig met verwijderen"
+          "exited": "",
+          "removing": "Bezig met verwijderen",
+          "dead": ""
         }
       },
       "containerImage": {
@@ -766,27 +2234,99 @@
     },
     "action": {
       "start": {
-        "label": "Start"
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "stop": {
-        "label": "Stop"
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "restart": {
-        "label": "Herstart"
+        "label": "Herstart",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "remove": {
-        "label": "Verwijderen"
+        "label": "Verwijderen",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "refresh": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     }
   },
   "permission": {
+    "title": "",
+    "userSelect": {
+      "title": ""
+    },
+    "groupSelect": {
+      "title": ""
+    },
     "tab": {
-      "user": "Gebruikers"
+      "user": "Gebruikers",
+      "group": "",
+      "inherited": ""
     },
     "field": {
       "user": {
         "label": "Gebruiker"
+      },
+      "group": {
+        "label": ""
+      },
+      "permission": {
+        "label": ""
       }
+    },
+    "action": {
+      "saveUser": "",
+      "saveGroup": ""
     }
   },
   "navigationStructure": {
@@ -796,17 +2336,31 @@
         "label": "Borden"
       },
       "integrations": {
+        "label": "",
         "edit": {
           "label": "Wijzigen"
+        },
+        "new": {
+          "label": ""
         }
       },
       "search-engines": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "Wijzigen"
         }
       },
+      "medias": {
+        "label": ""
+      },
       "apps": {
-        "label": "Apps",
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "Wijzigen"
         }
@@ -819,6 +2373,9 @@
         "general": "Algemeen",
         "security": "Beveiliging",
         "board": "Borden",
+        "groups": {
+          "label": ""
+        },
         "invites": {
           "label": "Uitnodigingen"
         }
@@ -826,7 +2383,10 @@
       "tools": {
         "label": "Gereedschappen",
         "docker": {
-          "label": "Docker"
+          "label": ""
+        },
+        "logs": {
+          "label": ""
         }
       },
       "settings": {
@@ -838,23 +2398,141 @@
     }
   },
   "search": {
+    "placeholder": "",
+    "nothingFound": "",
+    "error": {
+      "fetch": ""
+    },
     "mode": {
       "appIntegrationBoard": {
+        "help": "",
         "group": {
           "app": {
-            "title": "Apps"
+            "title": "",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "edit": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           },
           "board": {
-            "title": "Borden"
+            "title": "Borden",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "homeBoard": {
+                  "label": ""
+                },
+                "settings": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "integration": {
+            "title": ""
+          }
+        }
+      },
+      "command": {
+        "help": "",
+        "group": {
+          "globalCommand": {
+            "title": "",
+            "option": {
+              "colorScheme": {
+                "light": "",
+                "dark": ""
+              },
+              "language": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
+                "label": ""
+              },
+              "newApp": {
+                "label": ""
+              },
+              "newIntegration": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newUser": {
+                "label": ""
+              },
+              "newInvite": {
+                "label": ""
+              },
+              "newGroup": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "external": {
+        "help": "",
         "group": {
           "searchEngine": {
+            "title": "",
+            "children": {
+              "action": {
+                "search": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              },
+              "searchResults": {
+                "title": ""
+              }
+            },
             "option": {
+              "google": {
+                "name": "",
+                "description": ""
+              },
+              "bing": {
+                "name": "",
+                "description": ""
+              },
+              "duckduckgo": {
+                "name": "",
+                "description": ""
+              },
               "torrent": {
-                "name": "Torrents"
+                "name": "",
+                "description": ""
+              },
+              "youTube": {
+                "name": "",
+                "description": ""
               }
             }
           }
@@ -862,28 +2540,78 @@
       },
       "help": {
         "group": {
+          "mode": {
+            "title": ""
+          },
           "help": {
-            "title": "Help",
+            "title": "",
             "option": {
               "documentation": {
                 "label": "Documentatie"
               },
+              "submitIssue": {
+                "label": ""
+              },
               "discord": {
-                "label": "Community Discord"
+                "label": ""
               }
             }
           }
         }
       },
       "page": {
+        "help": "",
         "group": {
           "page": {
+            "title": "",
             "option": {
+              "manageHome": {
+                "label": ""
+              },
+              "manageBoard": {
+                "label": ""
+              },
+              "manageApp": {
+                "label": ""
+              },
+              "manageIntegration": {
+                "label": ""
+              },
+              "manageSearchEngine": {
+                "label": ""
+              },
+              "manageMedia": {
+                "label": ""
+              },
               "manageUser": {
                 "label": "Gebruikers beheren"
               },
+              "manageInvite": {
+                "label": ""
+              },
+              "manageGroup": {
+                "label": ""
+              },
+              "manageDocker": {
+                "label": ""
+              },
+              "manageApi": {
+                "label": ""
+              },
+              "manageLog": {
+                "label": ""
+              },
+              "manageTask": {
+                "label": ""
+              },
+              "manageSettings": {
+                "label": ""
+              },
               "about": {
                 "label": "Over"
+              },
+              "homeBoard": {
+                "label": ""
               },
               "preferences": {
                 "label": "Jouw voorkeuren"
@@ -893,17 +2621,112 @@
         }
       },
       "userGroup": {
+        "help": "",
         "group": {
           "user": {
-            "title": "Gebruikers"
+            "title": "Gebruikers",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "group": {
+            "title": "",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                },
+                "manageMember": {
+                  "label": ""
+                },
+                "managePermission": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           }
         }
       }
     },
     "engine": {
+      "search": "",
       "field": {
         "name": {
           "label": "Naam"
+        },
+        "short": {
+          "label": ""
+        },
+        "urlTemplate": {
+          "label": ""
+        },
+        "description": {
+          "label": ""
+        }
+      },
+      "page": {
+        "list": {
+          "title": "",
+          "noResults": {
+            "title": "",
+            "action": ""
+          },
+          "interactive": ""
+        },
+        "create": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "edit": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "configControl": "",
+          "searchEngineType": {
+            "generic": "",
+            "fromIntegration": ""
+          }
+        },
+        "delete": {
+          "title": "",
+          "message": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
         }
       }
     }

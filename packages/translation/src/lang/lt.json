@@ -2,123 +2,746 @@
   "user": {
     "title": "Vartotojai",
     "name": "Vartotojas",
+    "page": {
+      "login": {
+        "title": "",
+        "subtitle": ""
+      },
+      "invite": {
+        "title": "",
+        "subtitle": "",
+        "description": ""
+      },
+      "init": {
+        "title": "",
+        "subtitle": ""
+      }
+    },
     "field": {
       "email": {
-        "label": "El. paštas"
+        "label": "El. paštas",
+        "verified": ""
       },
       "username": {
         "label": ""
       },
       "password": {
         "label": "Slaptažodis",
-        "requirement": {}
+        "requirement": {
+          "length": "",
+          "lowercase": "",
+          "uppercase": "",
+          "number": "",
+          "special": ""
+        }
       },
       "passwordConfirm": {
         "label": "Patvirtinti slaptažodį"
+      },
+      "previousPassword": {
+        "label": ""
+      },
+      "homeBoard": {
+        "label": ""
+      },
+      "pingIconsEnabled": {
+        "label": ""
       }
+    },
+    "error": {
+      "usernameTaken": ""
     },
     "action": {
       "login": {
-        "label": "Prisijungti"
+        "label": "Prisijungti",
+        "labelWith": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "forgotPassword": {
+          "label": "",
+          "description": ""
+        }
       },
       "register": {
         "label": "Sukurti paskyrą",
         "notification": {
           "success": {
-            "title": "Paskyra sukurta"
+            "title": "Paskyra sukurta",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       },
-      "create": "Sukurti vartotoją"
+      "create": "Sukurti vartotoją",
+      "changePassword": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeFirstDayOfWeek": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePingIconsEnabled": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            },
+            "toLarge": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "removeImage": {
+          "label": "",
+          "confirm": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": ""
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
+      },
+      "transfer": {
+        "label": ""
+      }
     }
   },
   "group": {
+    "title": "",
+    "name": "",
+    "search": "",
     "field": {
-      "name": "Pavadinimas"
+      "name": "Pavadinimas",
+      "members": ""
     },
     "permission": {
       "admin": {
-        "title": "Administratorius"
+        "title": "Administratorius",
+        "item": {
+          "admin": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "app": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "board": {
-        "title": "Lentos"
+        "title": "Lentos",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "integration": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "interact-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "media": {
+        "title": "",
+        "item": {
+          "upload": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "other": {
+        "title": "",
+        "item": {
+          "view-logs": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "search-engine": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      }
+    },
+    "memberNotice": {
+      "mixed": "",
+      "external": ""
+    },
+    "reservedNotice": {
+      "message": ""
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "transfer": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "addMember": {
+        "label": ""
+      },
+      "removeMember": {
+        "label": "",
+        "confirm": ""
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePermissions": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "update": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "app": {
     "page": {
       "list": {
-        "title": "Programėlės"
+        "title": "Programėlės",
+        "noResults": {
+          "title": "",
+          "action": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     },
     "field": {
       "name": {
         "label": "Pavadinimas"
+      },
+      "description": {
+        "label": ""
+      },
+      "url": {
+        "label": ""
+      }
+    },
+    "action": {
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "integration": {
+    "page": {
+      "list": {
+        "title": "",
+        "search": "",
+        "noResults": {
+          "title": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      }
+    },
     "field": {
       "name": {
         "label": "Pavadinimas"
+      },
+      "url": {
+        "label": ""
       }
     },
+    "action": {
+      "create": ""
+    },
     "testConnection": {
+      "action": {
+        "create": "",
+        "edit": ""
+      },
+      "alertNotice": "",
       "notification": {
+        "success": {
+          "title": "",
+          "message": ""
+        },
         "invalidUrl": {
-          "title": "Klaidingas URL"
+          "title": "Klaidingas URL",
+          "message": ""
+        },
+        "secretNotDefined": {
+          "title": "",
+          "message": ""
+        },
+        "invalidCredentials": {
+          "title": "",
+          "message": ""
+        },
+        "commonError": {
+          "title": "",
+          "message": ""
+        },
+        "badRequest": {
+          "title": "",
+          "message": ""
+        },
+        "unauthorized": {
+          "title": "",
+          "message": ""
+        },
+        "forbidden": {
+          "title": "",
+          "message": ""
+        },
+        "notFound": {
+          "title": "",
+          "message": ""
+        },
+        "internalServerError": {
+          "title": "",
+          "message": ""
+        },
+        "serviceUnavailable": {
+          "title": "",
+          "message": ""
+        },
+        "connectionAborted": {
+          "title": "",
+          "message": ""
+        },
+        "domainNotFound": {
+          "title": "",
+          "message": ""
+        },
+        "connectionRefused": {
+          "title": "",
+          "message": ""
+        },
+        "invalidJson": {
+          "title": "",
+          "message": ""
+        },
+        "wrongPath": {
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
+      "title": "",
+      "lastUpdated": "",
+      "secureNotice": "",
+      "reset": {
+        "title": "",
+        "message": ""
+      },
+      "noSecretsRequired": {
+        "segmentTitle": "",
+        "text": ""
+      },
       "kind": {
         "username": {
-          "label": ""
+          "label": "",
+          "newLabel": ""
+        },
+        "apiKey": {
+          "label": "",
+          "newLabel": ""
         },
         "password": {
           "label": "Slaptažodis",
           "newLabel": "Naujas slaptažodis"
         }
       }
+    },
+    "permission": {
+      "use": "",
+      "interact": "",
+      "full": ""
     }
   },
   "media": {
+    "plural": "",
+    "search": "",
     "field": {
       "name": "Pavadinimas",
       "size": "",
       "creator": "Kūrėjas"
+    },
+    "action": {
+      "upload": {
+        "label": "",
+        "file": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "copy": {
+        "label": ""
+      }
     }
   },
   "common": {
+    "beta": "",
     "error": "",
     "action": {
       "add": "",
       "apply": "",
+      "backToOverview": "",
       "create": "Sukurti",
       "edit": "",
+      "import": "",
       "insert": "",
       "remove": "Pašalinti",
       "save": "",
       "saveChanges": "Išsaugoti pakeitimus",
       "cancel": "Atšaukti",
       "delete": "",
+      "discard": "",
       "confirm": "",
+      "continue": "",
       "previous": "",
       "next": "",
-      "tryAgain": ""
+      "checkoutDocs": "",
+      "tryAgain": "",
+      "loading": ""
+    },
+    "here": "",
+    "iconPicker": {
+      "label": "",
+      "header": ""
     },
     "information": {
+      "min": "",
+      "max": "",
+      "days": "",
       "hours": "",
       "minutes": ""
     },
+    "notification": {
+      "create": {
+        "success": "",
+        "error": ""
+      },
+      "delete": {
+        "success": "",
+        "error": ""
+      },
+      "update": {
+        "success": "",
+        "error": ""
+      },
+      "transfer": {
+        "success": "",
+        "error": ""
+      }
+    },
+    "multiSelect": {
+      "placeholder": ""
+    },
+    "multiText": {
+      "placeholder": "",
+      "addLabel": ""
+    },
+    "select": {
+      "placeholder": "",
+      "badge": {
+        "recommended": ""
+      }
+    },
     "userAvatar": {
       "menu": {
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
         "preferences": "",
-        "login": "Prisijungti"
+        "logout": "",
+        "login": "Prisijungti",
+        "homeBoard": "",
+        "loggedOut": ""
       }
     },
     "dangerZone": "",
     "noResults": "Rezultatų nerasta",
+    "preview": {
+      "show": "",
+      "hide": ""
+    },
     "zod": {
       "errors": {
         "default": "",
@@ -126,7 +749,8 @@
         "string": {
           "startsWith": "",
           "endsWith": "",
-          "includes": ""
+          "includes": "",
+          "invalidEmail": ""
         },
         "tooSmall": {
           "string": "",
@@ -135,11 +759,29 @@
         "tooBig": {
           "string": "",
           "number": ""
+        },
+        "custom": {
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
+          "fileTooLarge": "",
+          "invalidConfiguration": ""
         }
       }
     }
   },
   "section": {
+    "dynamic": {
+      "action": {
+        "create": "",
+        "remove": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      }
+    },
     "category": {
       "field": {
         "name": {
@@ -147,42 +789,147 @@
         }
       },
       "action": {
+        "create": "",
+        "edit": "",
+        "remove": "",
         "moveUp": "Pakelti aukštyn",
-        "moveDown": "Perkelti žemyn"
+        "moveDown": "Perkelti žemyn",
+        "createAbove": "",
+        "createBelow": ""
+      },
+      "create": {
+        "title": "",
+        "submit": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
+          "create": "",
           "changePosition": ""
         }
       }
     }
   },
   "item": {
+    "action": {
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
+    },
     "menu": {
       "label": {
         "settings": "Nustatymai"
       }
     },
+    "create": {
+      "title": "",
+      "addToBoard": ""
+    },
     "moveResize": {
+      "title": "",
       "field": {
         "width": {
           "label": "Plotis"
         },
         "height": {
           "label": "Aukštis"
+        },
+        "xOffset": {
+          "label": ""
+        },
+        "yOffset": {
+          "label": ""
         }
       }
+    },
+    "edit": {
+      "title": "",
+      "advancedOptions": {
+        "label": "",
+        "title": ""
+      },
+      "field": {
+        "integrations": {
+          "label": ""
+        },
+        "customCssClasses": {
+          "label": ""
+        }
+      }
+    },
+    "remove": {
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
+      "name": "",
+      "description": "",
       "option": {
+        "appId": {
+          "label": ""
+        },
         "openInNewTab": {
           "label": "Atidaryti naujame skirtuke"
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "pingEnabled": {
+          "label": ""
+        }
+      },
+      "error": {
+        "notFound": {
+          "label": "",
+          "tooltip": ""
+        }
+      }
+    },
+    "bookmarks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": ""
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "items": {
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
           "label": "",
@@ -192,17 +939,29 @@
             },
             "column": {
               "label": "Vertikalus"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "usePiHoleColors": {
+          "label": ""
         }
+      },
+      "error": {
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
         "adsBlockedToday": "Šiandien užblokuota",
         "adsBlockedTodayPercentage": "Šiandien užblokuota",
-        "dnsQueriesToday": "Užklausos šiandien"
+        "dnsQueriesToday": "Užklausos šiandien",
+        "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
+      "name": "",
       "description": "Valdykite PiHole arba AdGuard iš savo prietaisų skydelio",
       "option": {
         "layout": {
@@ -213,28 +972,70 @@
             },
             "column": {
               "label": "Vertikalus"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "showToggleAllButtons": {
+          "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "controls": {
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
         "set": "",
         "enabled": "",
         "disabled": "",
+        "processing": "",
+        "disconnected": "",
         "hours": "",
-        "minutes": ""
+        "minutes": "",
+        "unlimited": ""
       }
     },
     "clock": {
+      "name": "",
       "description": "Rodo dabartinę datą ir laiką.",
       "option": {
+        "customTitleToggle": {
+          "label": "",
+          "description": ""
+        },
+        "customTitle": {
+          "label": ""
+        },
+        "is24HourFormat": {
+          "label": "",
+          "description": ""
+        },
+        "showSeconds": {
+          "label": ""
+        },
+        "useCustomTimezone": {
+          "label": ""
+        },
         "timezone": {
-          "label": "Laiko juosta"
+          "label": "Laiko juosta",
+          "description": ""
+        },
+        "showDate": {
+          "label": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
     "notebook": {
       "name": "Užrašai",
+      "description": "",
       "option": {
         "showToolbar": {
           "label": "Rodyti įrankių juostą, padedančią rašyti žymėjimą"
@@ -294,7 +1095,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Įterpkite bet kokį turinį iš interneto. Kai kuriose svetainėse prieiga gali būti ribojama.",
       "option": {
         "embedUrl": {
@@ -326,17 +1127,31 @@
         }
       },
       "error": {
+        "noUrl": "",
         "noBrowerSupport": "Jūsų naršyklė nepalaiko iframe. Atnaujinkite savo naršyklę."
       }
     },
     "smartHome-entityState": {
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
           "label": "Subjekto ID"
+        },
+        "displayName": {
+          "label": ""
+        },
+        "entityUnit": {
+          "label": ""
+        },
+        "clickable": {
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
           "label": "Rodomas vardas"
@@ -348,9 +1163,21 @@
     },
     "calendar": {
       "name": "Kalendorius",
+      "description": "",
       "option": {
         "releaseType": {
-          "label": "\"Radarr\" išleidimo tipas"
+          "label": "\"Radarr\" išleidimo tipas",
+          "options": {
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
+          }
+        },
+        "filterPastMonths": {
+          "label": ""
+        },
+        "filterFutureMonths": {
+          "label": ""
         }
       }
     },
@@ -358,8 +1185,25 @@
       "name": "",
       "description": "",
       "option": {
+        "isFormatFahrenheit": {
+          "label": ""
+        },
         "location": {
           "label": ""
+        },
+        "showCity": {
+          "label": ""
+        },
+        "hasForecast": {
+          "label": ""
+        },
+        "forecastDayCount": {
+          "label": "",
+          "description": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       },
       "kind": {
@@ -381,8 +1225,17 @@
     },
     "indexerManager": {
       "name": "Indeksavimo tvarkytuvo būsena",
+      "description": "",
+      "option": {
+        "openIndexerSiteInNewTab": {
+          "label": ""
+        }
+      },
       "title": "Indeksavimo tvarkyklė",
-      "testAll": "Išbandyk viską"
+      "testAll": "Išbandyk viską",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "healthMonitoring": {
       "name": "Sistemos būklės stebėjimas",
@@ -402,20 +1255,63 @@
         }
       },
       "popover": {
-        "available": "Galima"
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "Galima",
+        "lastSeen": ""
+      },
+      "memory": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
       "location": {
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
         "search": "Ieškoti",
         "table": {
-          "header": {},
-          "action": {},
+          "header": {
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
+          },
+          "action": {
+            "select": ""
+          },
           "population": {
             "fallback": "Nežinoma"
           }
         }
-      }
+      },
+      "integration": {
+        "noData": "",
+        "description": ""
+      },
+      "app": {
+        "noData": "",
+        "description": ""
+      },
+      "error": {
+        "action": {
+          "logs": ""
+        },
+        "noIntegration": "",
+        "noData": ""
+      },
+      "option": {}
     },
     "video": {
       "name": "",
@@ -425,33 +1321,129 @@
           "label": ""
         },
         "hasAutoPlay": {
+          "label": "",
+          "description": ""
+        },
+        "isMuted": {
+          "label": ""
+        },
+        "hasControls": {
           "label": ""
         }
+      },
+      "error": {
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
       }
     },
+    "mediaServer": {
+      "name": "",
+      "description": "",
+      "option": {}
+    },
     "downloads": {
+      "name": "",
+      "description": "",
+      "option": {
+        "columns": {
+          "label": ""
+        },
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": ""
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        },
+        "showCompletedUsenet": {
+          "label": ""
+        },
+        "showCompletedTorrent": {
+          "label": ""
+        },
+        "activeTorrentThreshold": {
+          "label": ""
+        },
+        "categoryFilter": {
+          "label": ""
+        },
+        "filterIsWhitelist": {
+          "label": ""
+        },
+        "applyFilterToRatio": {
+          "label": ""
+        }
+      },
+      "errors": {
+        "noColumns": "",
+        "noCommunications": ""
+      },
       "items": {
+        "actions": {
+          "columnTitle": ""
+        },
         "added": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "category": {
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "downSpeed": {
           "columnTitle": "Žemyn",
           "detailsTitle": "Atsisiuntimo greitis"
         },
+        "index": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "id": {
+          "columnTitle": ""
+        },
         "integration": {
           "columnTitle": "Integracija"
         },
-        "progress": {
+        "name": {
           "columnTitle": ""
+        },
+        "progress": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": ""
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "received": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "sent": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "size": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Būsena"
+          "columnTitle": "Būsena",
+          "detailsTitle": ""
+        },
+        "time": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "type": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Aukštyn"
+          "columnTitle": "Aukštyn",
+          "detailsTitle": ""
         }
       },
       "states": {
@@ -459,62 +1451,244 @@
         "queued": "",
         "paused": "",
         "completed": "",
-        "unknown": "Nežinoma"
-      }
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "Nežinoma",
+        "seeding": ""
+      },
+      "actions": {
+        "clients": {
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
+        },
+        "client": {
+          "pause": "",
+          "resume": ""
+        },
+        "item": {
+          "pause": "",
+          "resume": "",
+          "delete": {
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
+          }
+        }
+      },
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
+      "name": "",
       "description": "Peržiūrėkite visų medijų užklausų iš \"Overseerr\" arba \"Jellyseerr\" sąrašą",
       "option": {
         "linksTargetNewTab": {
           "label": "Atidaryti naujame skirtuke"
         }
       },
+      "pending": {
+        "approve": "",
+        "approving": "",
+        "decline": ""
+      },
       "availability": {
         "unknown": "Nežinoma",
+        "pending": "",
+        "processing": "",
         "partiallyAvailable": "Dalis",
         "available": "Galima"
-      }
+      },
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
+      "name": "",
       "description": "Statistikos apie jūsų medijų užklausas",
+      "option": {},
       "titles": {
         "stats": {
           "main": "Medijų statistikos",
           "approved": "Jau patvirtinta",
           "pending": "Laukia patvirtinimo",
+          "processing": "",
+          "declined": "",
+          "available": "",
           "tv": "TV užklausos",
           "movie": "Filmų užklausos",
           "total": "Iš viso"
         },
         "users": {
-          "main": "Top vartotojai"
+          "main": "Top vartotojai",
+          "requests": ""
+        }
+      }
+    },
+    "rssFeed": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrls": {
+          "label": ""
+        },
+        "enableRtl": {
+          "label": ""
+        },
+        "textLinesClamp": {
+          "label": ""
+        },
+        "maximumAmountPosts": {
+          "label": ""
         }
       }
     }
   },
+  "widgetPreview": {
+    "toggle": {
+      "enabled": "",
+      "disabled": ""
+    },
+    "dimensions": {
+      "title": ""
+    }
+  },
   "board": {
     "action": {
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "confirmLeave": {
+          "title": "",
+          "message": ""
+        }
+      },
       "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
         "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
           "apps": {
-            "label": "Programėlės"
+            "label": "Programėlės",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
           },
           "screenSize": {
+            "label": "",
             "option": {
               "sm": "Mažas",
               "md": "Vidutinis",
               "lg": "Didelis"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
             }
           }
         }
       }
     },
     "field": {
-      "backgroundImageAttachment": {
+      "pageTitle": {
         "label": ""
       },
-      "backgroundImageSize": {
+      "metaTitle": {
         "label": ""
+      },
+      "logoImageUrl": {
+        "label": ""
+      },
+      "faviconImageUrl": {
+        "label": ""
+      },
+      "backgroundImageUrl": {
+        "label": ""
+      },
+      "backgroundImageAttachment": {
+        "label": "",
+        "option": {
+          "fixed": {
+            "label": "",
+            "description": ""
+          },
+          "scroll": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "backgroundImageRepeat": {
+        "label": "",
+        "option": {
+          "repeat": {
+            "label": "",
+            "description": ""
+          },
+          "no-repeat": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-x": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-y": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "backgroundImageSize": {
+        "label": "",
+        "option": {
+          "cover": {
+            "label": "",
+            "description": ""
+          },
+          "contain": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "primaryColor": {
         "label": "Pagrindinė spalva"
@@ -522,20 +1696,37 @@
       "secondaryColor": {
         "label": "Antrinė spalva"
       },
+      "opacity": {
+        "label": ""
+      },
       "customCss": {
-        "description": ""
+        "label": "",
+        "description": "",
+        "customClassesAlert": {
+          "title": "",
+          "description": ""
+        }
+      },
+      "columnCount": {
+        "label": ""
       },
       "name": {
         "label": "Pavadinimas"
       },
       "isPublic": {
-        "label": "Vieša"
+        "label": "Vieša",
+        "description": ""
       }
     },
+    "content": {
+      "metaTitle": ""
+    },
     "setting": {
+      "title": "",
       "section": {
         "general": {
-          "title": "Bendras"
+          "title": "Bendras",
+          "unrecognizedLink": ""
         },
         "layout": {
           "title": ""
@@ -543,11 +1734,24 @@
         "background": {
           "title": ""
         },
+        "color": {
+          "title": ""
+        },
+        "customCss": {
+          "title": ""
+        },
         "access": {
+          "title": "",
           "permission": {
             "item": {
               "view": {
                 "label": "Žiūrėti lentą"
+              },
+              "modify": {
+                "label": ""
+              },
+              "full": {
+                "label": ""
               }
             }
           }
@@ -555,9 +1759,42 @@
         "dangerZone": {
           "title": "",
           "action": {
-            "delete": {
+            "rename": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "modal": {
+                "title": ""
+              }
+            },
+            "visibility": {
+              "label": "",
+              "description": {
+                "public": "",
+                "private": ""
+              },
+              "button": {
+                "public": "",
+                "private": ""
+              },
               "confirm": {
-                "title": "Ištrinti lentą"
+                "public": {
+                  "title": "",
+                  "description": ""
+                },
+                "private": {
+                  "title": "",
+                  "description": ""
+                }
+              }
+            },
+            "delete": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "confirm": {
+                "title": "Ištrinti lentą",
+                "description": ""
               }
             }
           }
@@ -566,23 +1803,39 @@
     }
   },
   "management": {
+    "metaTitle": "",
+    "title": {
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
+    },
+    "notFound": {
+      "title": "",
+      "text": ""
+    },
     "navbar": {
       "items": {
         "home": "Pagrindinis",
         "boards": "Lentos",
         "apps": "Programėlės",
+        "integrations": "",
+        "searchEngies": "",
+        "medias": "",
         "users": {
           "label": "Vartotojai",
           "items": {
             "manage": "Valdyti",
-            "invites": "Pakvietimai"
+            "invites": "Pakvietimai",
+            "groups": ""
           }
         },
         "tools": {
           "label": "Įrankiai",
           "items": {
-            "docker": "Docker",
-            "api": "API"
+            "docker": "",
+            "logs": "",
+            "api": "",
+            "tasks": ""
           }
         },
         "settings": "Nustatymai",
@@ -590,7 +1843,9 @@
           "label": "Pagalba",
           "items": {
             "documentation": "Dokumentacija",
-            "discord": "Bendruomenės Discord"
+            "submitIssue": "",
+            "discord": "Bendruomenės Discord",
+            "sourceCode": ""
           }
         },
         "about": ""
@@ -602,29 +1857,47 @@
           "board": "Lentos",
           "user": "Vartotojai",
           "invite": "Pakvietimai",
-          "app": "Programėlės"
+          "integration": "",
+          "app": "Programėlės",
+          "group": ""
         },
         "statisticLabel": {
-          "boards": "Lentos"
+          "boards": "Lentos",
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "Jūsų lentos",
         "action": {
+          "new": {
+            "label": ""
+          },
+          "open": {
+            "label": ""
+          },
           "settings": {
             "label": "Nustatymai"
           },
           "setHomeBoard": {
+            "label": "",
             "badge": {
-              "label": "Pagrindinis"
+              "label": "Pagrindinis",
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "Ištrinti visam laikui",
             "confirm": {
-              "title": "Ištrinti lentą"
+              "title": "Ištrinti lentą",
+              "description": ""
             }
           }
+        },
+        "visibility": {
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -636,11 +1909,18 @@
           }
         }
       },
+      "media": {
+        "includeFromAllUsers": ""
+      },
       "user": {
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
             "title": "Bendras",
             "item": {
+              "language": "",
+              "board": "",
               "firstDayOfWeek": "",
               "accessibility": ""
             }
@@ -656,22 +1936,51 @@
           "metaTitle": "Tvarkyti vartotojus",
           "title": "Vartotojai"
         },
+        "edit": {
+          "metaTitle": ""
+        },
         "create": {
           "metaTitle": "Sukurti vartotoją",
+          "title": "",
           "step": {
+            "personalInformation": {
+              "label": ""
+            },
             "security": {
               "label": "Apsauga"
+            },
+            "groups": {
+              "label": "",
+              "title": "",
+              "description": ""
+            },
+            "review": {
+              "label": ""
+            },
+            "completed": {
+              "title": ""
+            },
+            "error": {
+              "title": ""
             }
+          },
+          "action": {
+            "createAnother": "",
+            "back": ""
           }
         },
         "invite": {
           "title": "Tvarkyti naudotojų kvietimus",
           "action": {
             "new": {
+              "title": "",
               "description": "Pasibaigus galiojimo laikui, kvietimas nebegalios ir kvietimo gavėjas negalės sukurti paskyros."
             },
             "copy": {
-              "link": "Kvietimo nuoroda"
+              "title": "",
+              "description": "",
+              "link": "Kvietimo nuoroda",
+              "button": ""
             },
             "delete": {
               "title": "Ištrinti kvietimą",
@@ -680,7 +1989,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Kūrėjas"
@@ -695,43 +2004,199 @@
         }
       },
       "group": {
+        "back": "",
         "setting": {
           "general": {
-            "title": "Bendras"
+            "title": "Bendras",
+            "owner": "",
+            "ownerOfGroup": "",
+            "ownerOfGroupDeleted": ""
+          },
+          "members": {
+            "title": "",
+            "search": "",
+            "notFound": ""
+          },
+          "permissions": {
+            "title": "",
+            "form": {
+              "unsavedChanges": ""
+            }
           }
         }
       },
       "settings": {
-        "title": "Nustatymai"
+        "title": "Nustatymai",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        },
+        "section": {
+          "analytics": {
+            "title": "",
+            "general": {
+              "title": "",
+              "text": ""
+            },
+            "widgetData": {
+              "title": "",
+              "text": ""
+            },
+            "integrationData": {
+              "title": "",
+              "text": ""
+            },
+            "usersData": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "crawlingAndIndexing": {
+            "title": "",
+            "warning": "",
+            "noIndex": {
+              "title": "",
+              "text": ""
+            },
+            "noFollow": {
+              "title": "",
+              "text": ""
+            },
+            "noTranslate": {
+              "title": "",
+              "text": ""
+            },
+            "noSiteLinksSearchBox": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "board": {
+            "title": "",
+            "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "appearance": {
+            "title": "",
+            "defaultColorScheme": {
+              "label": "",
+              "options": {
+                "light": "",
+                "dark": ""
+              }
+            }
+          },
+          "culture": {
+            "title": "",
+            "defaultLocale": {
+              "label": ""
+            }
+          }
+        }
       },
       "tool": {
         "tasks": {
+          "title": "",
           "status": {
+            "idle": "",
             "running": "Veikia",
             "error": ""
           },
           "job": {
+            "iconsUpdater": {
+              "label": ""
+            },
+            "analytics": {
+              "label": ""
+            },
+            "smartHomeEntityState": {
+              "label": ""
+            },
+            "ping": {
+              "label": ""
+            },
             "mediaServer": {
               "label": "Medijų serveris"
             },
-            "mediaRequests": {
-              "label": "Medijų užklausos"
+            "mediaOrganizer": {
+              "label": ""
+            },
+            "downloads": {
+              "label": ""
+            },
+            "mediaRequestStats": {
+              "label": ""
+            },
+            "mediaRequestList": {
+              "label": ""
+            },
+            "rssFeeds": {
+              "label": ""
+            },
+            "indexerManager": {
+              "label": ""
+            },
+            "healthMonitoring": {
+              "label": ""
+            },
+            "dnsHole": {
+              "label": ""
+            },
+            "sessionCleanup": {
+              "label": ""
             }
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
+          "modal": {
+            "createApiToken": {
+              "title": "",
+              "description": "",
+              "button": ""
+            }
+          },
           "tab": {
             "documentation": {
               "label": "Dokumentacija"
             },
             "apiKey": {
+              "label": "",
+              "title": "",
+              "button": {
+                "createApiToken": ""
+              },
               "table": {
                 "header": {
-                  "id": "ID"
+                  "id": "",
+                  "createdBy": ""
                 }
               }
             }
+          }
+        }
+      },
+      "about": {
+        "version": "",
+        "text": "",
+        "accordion": {
+          "contributors": {
+            "title": "",
+            "subtitle": ""
+          },
+          "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "libraries": {
+            "title": "",
+            "subtitle": ""
           }
         }
       }
@@ -739,6 +2204,11 @@
   },
   "docker": {
     "title": "",
+    "table": {
+      "updated": "",
+      "search": "",
+      "selected": ""
+    },
     "field": {
       "name": {
         "label": "Pavadinimas"
@@ -750,7 +2220,9 @@
           "running": "Veikia",
           "paused": "",
           "restarting": "Paleidžiama iš naujo",
-          "removing": "Trinamas"
+          "exited": "",
+          "removing": "Trinamas",
+          "dead": ""
         }
       },
       "containerImage": {
@@ -762,27 +2234,99 @@
     },
     "action": {
       "start": {
-        "label": "Paleisti"
+        "label": "Paleisti",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "stop": {
-        "label": "Sustabdyti"
+        "label": "Sustabdyti",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "restart": {
-        "label": "Paleisti iš naujo"
+        "label": "Paleisti iš naujo",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "remove": {
-        "label": "Pašalinti"
+        "label": "Pašalinti",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "refresh": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     }
   },
   "permission": {
+    "title": "",
+    "userSelect": {
+      "title": ""
+    },
+    "groupSelect": {
+      "title": ""
+    },
     "tab": {
-      "user": "Vartotojai"
+      "user": "Vartotojai",
+      "group": "",
+      "inherited": ""
     },
     "field": {
       "user": {
         "label": "Vartotojas"
+      },
+      "group": {
+        "label": ""
+      },
+      "permission": {
+        "label": ""
       }
+    },
+    "action": {
+      "saveUser": "",
+      "saveGroup": ""
     }
   },
   "navigationStructure": {
@@ -792,17 +2336,31 @@
         "label": "Lentos"
       },
       "integrations": {
+        "label": "",
         "edit": {
+          "label": ""
+        },
+        "new": {
           "label": ""
         }
       },
       "search-engines": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": ""
         }
       },
+      "medias": {
+        "label": ""
+      },
       "apps": {
         "label": "Programėlės",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": ""
         }
@@ -815,6 +2373,9 @@
         "general": "Bendras",
         "security": "Apsauga",
         "board": "Lentos",
+        "groups": {
+          "label": ""
+        },
         "invites": {
           "label": "Pakvietimai"
         }
@@ -822,7 +2383,10 @@
       "tools": {
         "label": "Įrankiai",
         "docker": {
-          "label": "Docker"
+          "label": ""
+        },
+        "logs": {
+          "label": ""
         }
       },
       "settings": {
@@ -834,23 +2398,141 @@
     }
   },
   "search": {
+    "placeholder": "",
+    "nothingFound": "",
+    "error": {
+      "fetch": ""
+    },
     "mode": {
       "appIntegrationBoard": {
+        "help": "",
         "group": {
           "app": {
-            "title": "Programėlės"
+            "title": "Programėlės",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "edit": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           },
           "board": {
-            "title": "Lentos"
+            "title": "Lentos",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "homeBoard": {
+                  "label": ""
+                },
+                "settings": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "integration": {
+            "title": ""
+          }
+        }
+      },
+      "command": {
+        "help": "",
+        "group": {
+          "globalCommand": {
+            "title": "",
+            "option": {
+              "colorScheme": {
+                "light": "",
+                "dark": ""
+              },
+              "language": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
+                "label": ""
+              },
+              "newApp": {
+                "label": ""
+              },
+              "newIntegration": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newUser": {
+                "label": ""
+              },
+              "newInvite": {
+                "label": ""
+              },
+              "newGroup": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "external": {
+        "help": "",
         "group": {
           "searchEngine": {
+            "title": "",
+            "children": {
+              "action": {
+                "search": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              },
+              "searchResults": {
+                "title": ""
+              }
+            },
             "option": {
+              "google": {
+                "name": "",
+                "description": ""
+              },
+              "bing": {
+                "name": "",
+                "description": ""
+              },
+              "duckduckgo": {
+                "name": "",
+                "description": ""
+              },
               "torrent": {
-                "name": "Torrentai"
+                "name": "Torrentai",
+                "description": ""
+              },
+              "youTube": {
+                "name": "",
+                "description": ""
               }
             }
           }
@@ -858,11 +2540,17 @@
       },
       "help": {
         "group": {
+          "mode": {
+            "title": ""
+          },
           "help": {
             "title": "Pagalba",
             "option": {
               "documentation": {
                 "label": "Dokumentacija"
+              },
+              "submitIssue": {
+                "label": ""
               },
               "discord": {
                 "label": "Bendruomenės Discord"
@@ -872,13 +2560,57 @@
         }
       },
       "page": {
+        "help": "",
         "group": {
           "page": {
+            "title": "",
             "option": {
+              "manageHome": {
+                "label": ""
+              },
+              "manageBoard": {
+                "label": ""
+              },
+              "manageApp": {
+                "label": ""
+              },
+              "manageIntegration": {
+                "label": ""
+              },
+              "manageSearchEngine": {
+                "label": ""
+              },
+              "manageMedia": {
+                "label": ""
+              },
               "manageUser": {
                 "label": "Tvarkyti vartotojus"
               },
+              "manageInvite": {
+                "label": ""
+              },
+              "manageGroup": {
+                "label": ""
+              },
+              "manageDocker": {
+                "label": ""
+              },
+              "manageApi": {
+                "label": ""
+              },
+              "manageLog": {
+                "label": ""
+              },
+              "manageTask": {
+                "label": ""
+              },
+              "manageSettings": {
+                "label": ""
+              },
               "about": {
+                "label": ""
+              },
+              "homeBoard": {
                 "label": ""
               },
               "preferences": {
@@ -889,17 +2621,112 @@
         }
       },
       "userGroup": {
+        "help": "",
         "group": {
           "user": {
-            "title": "Vartotojai"
+            "title": "Vartotojai",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "group": {
+            "title": "",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                },
+                "manageMember": {
+                  "label": ""
+                },
+                "managePermission": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           }
         }
       }
     },
     "engine": {
+      "search": "",
       "field": {
         "name": {
           "label": "Pavadinimas"
+        },
+        "short": {
+          "label": ""
+        },
+        "urlTemplate": {
+          "label": ""
+        },
+        "description": {
+          "label": ""
+        }
+      },
+      "page": {
+        "list": {
+          "title": "",
+          "noResults": {
+            "title": "",
+            "action": ""
+          },
+          "interactive": ""
+        },
+        "create": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "edit": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "configControl": "",
+          "searchEngineType": {
+            "generic": "",
+            "fromIntegration": ""
+          }
+        },
+        "delete": {
+          "title": "",
+          "message": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
         }
       }
     }
