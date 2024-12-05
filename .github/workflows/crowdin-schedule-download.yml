@@ -33,6 +33,7 @@ jobs:
           pull_request_base_branch_name: "dev"
           github_user_name: "Crowdin Homarr"
           github_user_email: "190541745+homarr-crowdin[bot]@users.noreply.github.com"
+          skip_untranslated_strings: true
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
