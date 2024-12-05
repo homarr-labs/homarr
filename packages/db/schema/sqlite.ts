@@ -354,6 +354,20 @@ export const icons = sqliteTable("icon", {
     .references(() => iconRepositories.id, { onDelete: "cascade" }),
 });
 
+export const notifications = sqliteTable("notifications", {
+  id: text().notNull().primaryKey(),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+  dismissAfterOneAcknowledgement: int({ mode: "boolean" }).default(false).notNull(),
+  content: text().notNull()
+});
+
+export const notificationsAcknowledgements  = sqliteTable("notificationAcknowledgements", {
+  id: text().notNull().primaryKey(),
+  acknowledgedAt: int({ mode: "timestamp" }).notNull(),
+  userId: text().notNull().references(() => users.id, { onDelete: "cascade" }),
+  notificationId: text().notNull().references(() => notifications.id, { onDelete: "cascade" }),
+});
+
 export const iconRepositories = sqliteTable("iconRepository", {
   id: text().notNull().primaryKey(),
   slug: text().notNull(),

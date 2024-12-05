@@ -13,6 +13,7 @@ import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { sessionCleanupJob } from "./jobs/session-cleanup";
 import { createCronJobGroup } from "./lib";
+import {notificationsFetcherJob} from "./jobs/notifications-fetcher";
 
 export const jobGroup = createCronJobGroup({
   analytics: analyticsJob,
@@ -29,6 +30,7 @@ export const jobGroup = createCronJobGroup({
   indexerManager: indexerManagerJob,
   healthMonitoring: healthMonitoringJob,
   sessionCleanup: sessionCleanupJob,
+  "notifications-fetcher": notificationsFetcherJob
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];

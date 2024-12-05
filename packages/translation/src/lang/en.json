@@ -2150,6 +2150,9 @@
             },
             "sessionCleanup": {
               "label": "Session Cleanup"
+            },
+            "notifications-fetcher": {
+              "label": "Notifications fetcher"
             }
           }
         },
