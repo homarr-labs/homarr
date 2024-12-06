@@ -92,9 +92,9 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     method: CallType,
     ...params: Parameters<NzbGetClient[CallType]>
   ): Promise<ReturnType<NzbGetClient[CallType]>> {
-    const url = new URL(this.integration.url);
-    url.pathname += `${this.getSecretValue("username")}:${this.getSecretValue("password")}`;
-    url.pathname += url.pathname.endsWith("/") ? "jsonrpc" : "/jsonrpc";
+    const username = this.getSecretValue("username");
+    const password = this.getSecretValue("password");
+    const url = this.url(`/${username}:${password}/jsonrpc`);
     const body = JSON.stringify({ method, params });
     return await fetch(url, { method: "POST", body })
       .then(async (response) => {

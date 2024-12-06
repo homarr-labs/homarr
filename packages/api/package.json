@@ -40,18 +40,18 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
-    "next": "^14.2.18",
+    "next": "^14.2.20",
     "react": "^18.3.1",
-    "superjson": "2.2.1",
-    "trpc-to-openapi": "^2.0.2"
+    "superjson": "2.2.2",
+    "trpc-to-openapi": "^2.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "^3.3.32",
-    "eslint": "^9.15.0",
-    "prettier": "^3.4.1",
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.2",
     "typescript": "^5.7.2"
   }
 }

@@ -1,7 +1,8 @@
 {
   "name": "@homarr/old-schema",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -13,13 +14,13 @@
       ]
     }
   },
-  "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
+  "prettier": "@homarr/prettier-config",
   "dependencies": {
     "zod": "^3.23.8"
   },
@@ -27,8 +28,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "typescript": "^5.7.2"
-  },
-  "prettier": "@homarr/prettier-config"
+  }
 }

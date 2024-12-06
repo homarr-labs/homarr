@@ -8,7 +8,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api`, {
+        return await fetch(this.url("/api"), {
           headers: { "X-Api-Key": super.getSecretValue("apiKey") },
         });
       },
@@ -27,12 +27,13 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     includeUnmonitored = true,
     includeAuthor = true,
   ): Promise<CalendarEvent[]> {
-    const url = new URL(this.integration.url);
-    url.pathname = "/api/v1/calendar";
-    url.searchParams.append("start", start.toISOString());
-    url.searchParams.append("end", end.toISOString());
-    url.searchParams.append("unmonitored", includeUnmonitored.toString());
-    url.searchParams.append("includeAuthor", includeAuthor.toString());
+    const url = this.url("/api/v1/calendar", {
+      start,
+      end,
+      unmonitored: includeUnmonitored,
+      includeAuthor,
+    });
+
     const response = await fetch(url, {
       headers: {
         "X-Api-Key": super.getSecretValue("apiKey"),
@@ -58,7 +59,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
   private getLinksForReadarrCalendarEvent = (event: z.infer<typeof readarrCalendarEventSchema>) => {
     return [
       {
-        href: `${this.integration.url}/author/${event.author.foreignAuthorId}`,
+        href: this.url(`/author/${event.author.foreignAuthorId}`).toString(),
         color: "#f5c518",
         isDark: false,
         logo: "/images/apps/readarr.svg",
@@ -85,7 +86,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     if (!bestImage) {
       return undefined;
     }
-    return `${this.integration.url}${bestImage.url}`;
+    return this.url(bestImage.url as `/${string}`).toString();
   };
 }
 

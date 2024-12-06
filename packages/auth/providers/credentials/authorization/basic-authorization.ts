@@ -11,7 +11,7 @@ export const authorizeWithBasicCredentialsAsync = async (
   credentials: z.infer<typeof validation.user.signIn>,
 ) => {
   const user = await db.query.users.findFirst({
-    where: and(eq(users.name, credentials.name), eq(users.provider, "credentials")),
+    where: and(eq(users.name, credentials.name.toLowerCase()), eq(users.provider, "credentials")),
   });
 
   if (!user?.password) {

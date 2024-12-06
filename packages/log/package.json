@@ -27,14 +27,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "ioredis": "5.4.1",
-    "superjson": "2.2.1",
+    "superjson": "2.2.2",
     "winston": "3.17.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "typescript": "^5.7.2"
   }
 }

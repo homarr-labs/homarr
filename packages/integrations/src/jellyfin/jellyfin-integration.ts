@@ -29,9 +29,7 @@ export class JellyfinIntegration extends Integration {
     const sessions = await sessionApi.getSessions();
 
     if (sessions.status !== 200) {
-      throw new Error(
-        `Jellyfin server ${this.integration.url} returned a non successful status code: ${sessions.status}`,
-      );
+      throw new Error(`Jellyfin server ${this.url("/")} returned a non successful status code: ${sessions.status}`);
     }
 
     return sessions.data.map((sessionInfo): StreamSession => {
@@ -52,7 +50,7 @@ export class JellyfinIntegration extends Integration {
         sessionId: `${sessionInfo.Id}`,
         sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
         user: {
-          profilePictureUrl: `${this.integration.url}/Users/${sessionInfo.UserId}/Images/Primary`,
+          profilePictureUrl: this.url(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
           userId: sessionInfo.UserId ?? "",
           username: sessionInfo.UserName ?? "",
         },
@@ -63,6 +61,6 @@ export class JellyfinIntegration extends Integration {
 
   private getApi() {
     const apiKey = this.getSecretValue("apiKey");
-    return this.jellyfin.createApi(this.integration.url, apiKey);
+    return this.jellyfin.createApi(this.url("/").toString(), apiKey);
   }
 }

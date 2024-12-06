@@ -12,14 +12,15 @@ export class SonarrIntegration extends MediaOrganizerIntegration {
    * @param includeUnmonitored When true results will include unmonitored items of the Sonarr library.
    */
   async getCalendarEventsAsync(start: Date, end: Date, includeUnmonitored = true): Promise<CalendarEvent[]> {
-    const url = new URL(this.integration.url);
-    url.pathname = "/api/v3/calendar";
-    url.searchParams.append("start", start.toISOString());
-    url.searchParams.append("end", end.toISOString());
-    url.searchParams.append("includeSeries", "true");
-    url.searchParams.append("includeEpisodeFile", "true");
-    url.searchParams.append("includeEpisodeImages", "true");
-    url.searchParams.append("unmonitored", includeUnmonitored ? "true" : "false");
+    const url = this.url("/api/v3/calendar", {
+      start,
+      end,
+      unmonitored: includeUnmonitored,
+      includeSeries: true,
+      includeEpisodeFile: true,
+      includeEpisodeImages: true,
+    });
+
     const response = await fetch(url, {
       headers: {
         "X-Api-Key": super.getSecretValue("apiKey"),
@@ -47,7 +48,7 @@ export class SonarrIntegration extends MediaOrganizerIntegration {
   private getLinksForSonarCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
     const links: CalendarEvent["links"] = [
       {
-        href: `${this.integration.url}/series/${event.series.titleSlug}`,
+        href: this.url(`/series/${event.series.titleSlug}`).toString(),
         name: "Sonarr",
         logo: "/images/apps/sonarr.svg",
         color: undefined,
@@ -92,7 +93,7 @@ export class SonarrIntegration extends MediaOrganizerIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(`${this.integration.url}/api`, {
+        return await fetch(this.url("/api"), {
           headers: { "X-Api-Key": super.getSecretValue("apiKey") },
         });
       },

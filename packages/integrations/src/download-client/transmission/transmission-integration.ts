@@ -71,9 +71,8 @@ export class TransmissionIntegration extends DownloadClientIntegration {
   }
 
   private getClient() {
-    const baseUrl = new URL(this.integration.url).href;
     return new Transmission({
-      baseUrl,
+      baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
     });
