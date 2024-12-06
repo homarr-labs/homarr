@@ -26,7 +26,7 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@umami/node": "^0.4.0",
-    "superjson": "2.2.1"
+    "superjson": "2.2.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
