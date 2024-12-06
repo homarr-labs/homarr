@@ -30,7 +30,7 @@
     "@homarr/redis": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
     "pretty-print-error": "^1.1.2",
-    "superjson": "2.2.1"
+    "superjson": "2.2.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
