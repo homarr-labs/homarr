@@ -38,7 +38,9 @@
     "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0"
+    "@homarr/validation": "workspace:^0.1.0",
+    "octokit": "^4.0.2",
+    "semver-parser": "^4.1.7"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
