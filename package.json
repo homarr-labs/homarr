@@ -1,6 +1,7 @@
 {
   "name": "homarr",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
