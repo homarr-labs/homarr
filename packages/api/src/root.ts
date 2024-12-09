@@ -12,6 +12,7 @@ import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { mediaRouter } from "./router/medias/media-router";
+import { onboardRouter } from "./router/onboard/onboard-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
@@ -31,6 +32,7 @@ export const appRouter = createTRPCRouter({
   log: logRouter,
   icon: iconsRouter,
   import: importRouter,
+  onboard: onboardRouter,
   home: homeRouter,
   docker: dockerRouter,
   serverSettings: serverSettingsRouter,

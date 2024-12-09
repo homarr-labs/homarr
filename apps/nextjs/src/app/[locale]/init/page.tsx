@@ -1,5 +1,7 @@
 import { Center, Stack, Text, Title } from "@mantine/core";
 
+import { api } from "@homarr/api/server";
+import type { OnboardingStep } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
@@ -9,7 +11,7 @@ import { InitSettings } from "./_steps/settings/init-settings";
 import { InitStart } from "./_steps/start/init-start";
 import { InitUser } from "./_steps/user/init-user";
 
-const stepComponents: Record<(typeof availableSteps)[number], null | (() => JSX.Element)> = {
+const stepComponents: Record<OnboardingStep, null | (() => JSX.Element)> = {
   start: InitStart,
   import: InitImport,
   user: InitUser,
@@ -20,13 +22,7 @@ const stepComponents: Record<(typeof availableSteps)[number], null | (() => JSX.
   finish: null,
 };
 
-interface InitPageProps {
-  searchParams: {
-    step?: (typeof availableSteps)[number];
-  };
-}
-
-export default async function InitPage({ searchParams }: InitPageProps) {
+export default async function InitPage() {
   const t = await getScopedI18n("init.step");
   // Steps:
   // 1. Import existing data from another system
@@ -36,8 +32,7 @@ export default async function InitPage({ searchParams }: InitPageProps) {
   // 5. Search engines (skippable)
   // 6. Create a new board (skippable and only when no boards are present)
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const currentStep = availableSteps.includes(searchParams.step!) ? (searchParams.step ?? "start") : "start";
+  const currentStep = await api.onboard.currentStep();
 
   const CurrentComponent = stepComponents[currentStep];
 
@@ -58,5 +53,3 @@ export default async function InitPage({ searchParams }: InitPageProps) {
     </Center>
   );
 }
-
-const availableSteps = ["start", "import", "user", "group", "settings", "searchEngines", "board", "finish"] as const;
