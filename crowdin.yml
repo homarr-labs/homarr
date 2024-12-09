@@ -1,10 +1,3 @@
 files:
   - source: /packages/translation/src/lang/en.json
     translation: /packages/translation/src/lang/%two_letters_code%.json
-
-# Title of pull request and so the commit that will be used for squashed merge commit
-pull_request_title: "chore(lang): updated translations from crowdin"
-
-# Custom commit message that is not only appended
-commit_message: "chore(lang): update translations %original_file_name% from crowdin [skip ci]"
-append_commit_message: false

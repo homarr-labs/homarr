@@ -4,9 +4,9 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  approve-renovate-prs:
+  approve-automatic-prs:
     runs-on: ubuntu-latest
-    if: github.actor_id == 158783068 # Id of renovate bot see https://api.github.com/users/homarr-renovate%5Bbot%5D
+    if: github.actor_id == 158783068 || github.actor_id == 190541745 # Id of renovate bot and crowdin bot see https://api.github.com/users/homarr-renovate%5Bbot%5D and https://api.github.com/users/homarr-crowdin%5Bbot%5D
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
           app_id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
-      - name: Approve Renovate PRs
+      - name: Approve automatic PRs
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
