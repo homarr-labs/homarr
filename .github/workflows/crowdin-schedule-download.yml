@@ -31,6 +31,7 @@ jobs:
           create_pull_request: true
           pull_request_title: "chore(lang): updated translations from crowdin"
           pull_request_body: "New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)"
+          commit_message: "chore(lang): update translations from crowdin"
           pull_request_base_branch_name: "dev"
           github_user_name: "Crowdin Homarr"
           github_user_email: "190541745+homarr-crowdin[bot]@users.noreply.github.com"
