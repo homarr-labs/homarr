@@ -47,6 +47,8 @@ const integrationSchema = z.enum([
   "tdarr",
 ]);
 
+export type OldmarrIntegrationType = z.infer<typeof integrationSchema>;
+
 const appIntegrationPropertySchema = z.object({
   type: z.enum(["private", "public"]),
   field: z.enum(["apiKey", "password", "username"]),
