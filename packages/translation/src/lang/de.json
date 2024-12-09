@@ -1159,6 +1159,9 @@
         "automationId": {
           "label": "Automatisierungs-ID"
         }
+      },
+      "spotlightAction": {
+        "run": ""
       }
     },
     "calendar": {
@@ -2450,6 +2453,9 @@
       "command": {
         "help": "",
         "group": {
+          "localCommand": {
+            "title": ""
+          },
           "globalCommand": {
             "title": "",
             "option": {
@@ -2556,6 +2562,13 @@
                 "label": ""
               }
             }
+          }
+        }
+      },
+      "home": {
+        "group": {
+          "local": {
+            "title": ""
           }
         }
       },

@@ -4,8 +4,8 @@
     "name": "Uporabnik",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Prijavite se v svoj račun",
+        "subtitle": "Dobrodošli nazaj! Prosimo vnesite svoje podatke"
       },
       "invite": {
         "title": "",
@@ -39,7 +39,7 @@
         "label": "Potrditev gesla"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Prejšnje geslo"
       },
       "homeBoard": {
         "label": ""
@@ -57,8 +57,8 @@
         "labelWith": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Prijava uspešna",
+            "message": "Zdaj ste prijavljeni"
           },
           "error": {
             "title": "",
@@ -85,7 +85,7 @@
       },
       "create": "Ustvari uporabnika",
       "changePassword": {
-        "label": "",
+        "label": "Spremeni geslo",
         "notification": {
           "success": {
             "message": ""
@@ -142,7 +142,7 @@
           }
         },
         "removeImage": {
-          "label": "",
+          "label": "Odstrani sliko",
           "confirm": "",
           "notification": {
             "success": {
@@ -170,7 +170,7 @@
         "confirm": ""
       },
       "select": {
-        "label": "",
+        "label": "Izberi uporabnika",
         "notFound": ""
       },
       "transfer": {
@@ -1159,6 +1159,9 @@
         "automationId": {
           "label": ""
         }
+      },
+      "spotlightAction": {
+        "run": ""
       }
     },
     "calendar": {
@@ -2450,6 +2453,9 @@
       "command": {
         "help": "",
         "group": {
+          "localCommand": {
+            "title": ""
+          },
           "globalCommand": {
             "title": "",
             "option": {
@@ -2556,6 +2562,13 @@
                 "label": "Skupnost Discord"
               }
             }
+          }
+        }
+      },
+      "home": {
+        "group": {
+          "local": {
+            "title": ""
           }
         }
       },
