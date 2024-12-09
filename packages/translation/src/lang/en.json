@@ -1259,6 +1259,9 @@
         "automationId": {
           "label": "Automation ID"
         }
+      },
+      "spotlightAction": {
+        "run": "Run {name}"
       }
     },
     "calendar": {
@@ -2550,6 +2553,9 @@
       "command": {
         "help": "Activate command mode",
         "group": {
+          "localCommand": {
+            "title": "Local commands"
+          },
           "globalCommand": {
             "title": "Global commands",
             "option": {
@@ -2656,6 +2662,13 @@
                 "label": "Community Discord"
               }
             }
+          }
+        }
+      },
+      "home": {
+        "group": {
+          "local": {
+            "title": "Local results"
           }
         }
       },

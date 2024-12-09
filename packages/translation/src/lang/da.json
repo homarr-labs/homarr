@@ -2,9 +2,25 @@
   "user": {
     "title": "Brugere",
     "name": "Bruger",
+    "page": {
+      "login": {
+        "title": "",
+        "subtitle": ""
+      },
+      "invite": {
+        "title": "",
+        "subtitle": "",
+        "description": ""
+      },
+      "init": {
+        "title": "",
+        "subtitle": ""
+      }
+    },
     "field": {
       "email": {
-        "label": "E-mail"
+        "label": "E-mail",
+        "verified": ""
       },
       "username": {
         "label": "Brugernavn"
@@ -12,117 +28,720 @@
       "password": {
         "label": "Adgangskode",
         "requirement": {
+          "length": "",
           "lowercase": "Inkluderer små bogstaver",
           "uppercase": "Inkluderer store bogstaver",
-          "number": "Inkluderer nummer"
+          "number": "Inkluderer nummer",
+          "special": ""
         }
       },
       "passwordConfirm": {
         "label": "Bekræft kodeord"
+      },
+      "previousPassword": {
+        "label": ""
+      },
+      "homeBoard": {
+        "label": ""
+      },
+      "pingIconsEnabled": {
+        "label": ""
       }
+    },
+    "error": {
+      "usernameTaken": ""
     },
     "action": {
       "login": {
-        "label": "Log ind"
+        "label": "Log ind",
+        "labelWith": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "forgotPassword": {
+          "label": "",
+          "description": ""
+        }
       },
       "register": {
         "label": "Opret konto",
         "notification": {
           "success": {
-            "title": "Konto oprettet"
+            "title": "Konto oprettet",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       },
-      "create": "Opret bruger"
+      "create": "Opret bruger",
+      "changePassword": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeFirstDayOfWeek": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePingIconsEnabled": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            },
+            "toLarge": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "removeImage": {
+          "label": "",
+          "confirm": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": ""
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
+      },
+      "transfer": {
+        "label": ""
+      }
     }
   },
   "group": {
+    "title": "",
+    "name": "",
+    "search": "",
     "field": {
-      "name": "Navn"
+      "name": "Navn",
+      "members": ""
     },
     "permission": {
       "admin": {
-        "title": "Admin"
+        "title": "",
+        "item": {
+          "admin": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "app": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "board": {
-        "title": "Boards"
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "integration": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "interact-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "media": {
+        "title": "",
+        "item": {
+          "upload": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "other": {
+        "title": "",
+        "item": {
+          "view-logs": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "search-engine": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      }
+    },
+    "memberNotice": {
+      "mixed": "",
+      "external": ""
+    },
+    "reservedNotice": {
+      "message": ""
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "transfer": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "addMember": {
+        "label": ""
+      },
+      "removeMember": {
+        "label": "",
+        "confirm": ""
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePermissions": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "update": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "app": {
     "page": {
       "list": {
-        "title": "Apps"
+        "title": "",
+        "noResults": {
+          "title": "",
+          "action": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     },
     "field": {
       "name": {
         "label": "Navn"
+      },
+      "description": {
+        "label": ""
+      },
+      "url": {
+        "label": ""
+      }
+    },
+    "action": {
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "integration": {
+    "page": {
+      "list": {
+        "title": "",
+        "search": "",
+        "noResults": {
+          "title": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      }
+    },
     "field": {
       "name": {
         "label": "Navn"
+      },
+      "url": {
+        "label": ""
       }
     },
+    "action": {
+      "create": ""
+    },
     "testConnection": {
+      "action": {
+        "create": "",
+        "edit": ""
+      },
+      "alertNotice": "",
       "notification": {
+        "success": {
+          "title": "",
+          "message": ""
+        },
         "invalidUrl": {
-          "title": "Ugyldig URL"
+          "title": "Ugyldig URL",
+          "message": ""
+        },
+        "secretNotDefined": {
+          "title": "",
+          "message": ""
+        },
+        "invalidCredentials": {
+          "title": "",
+          "message": ""
+        },
+        "commonError": {
+          "title": "",
+          "message": ""
+        },
+        "badRequest": {
+          "title": "",
+          "message": ""
+        },
+        "unauthorized": {
+          "title": "",
+          "message": ""
+        },
+        "forbidden": {
+          "title": "",
+          "message": ""
+        },
+        "notFound": {
+          "title": "",
+          "message": ""
+        },
+        "internalServerError": {
+          "title": "",
+          "message": ""
+        },
+        "serviceUnavailable": {
+          "title": "",
+          "message": ""
+        },
+        "connectionAborted": {
+          "title": "",
+          "message": ""
+        },
+        "domainNotFound": {
+          "title": "",
+          "message": ""
+        },
+        "connectionRefused": {
+          "title": "",
+          "message": ""
+        },
+        "invalidJson": {
+          "title": "",
+          "message": ""
+        },
+        "wrongPath": {
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
+      "title": "",
+      "lastUpdated": "",
+      "secureNotice": "",
+      "reset": {
+        "title": "",
+        "message": ""
+      },
+      "noSecretsRequired": {
+        "segmentTitle": "",
+        "text": ""
+      },
       "kind": {
         "username": {
-          "label": "Brugernavn"
+          "label": "Brugernavn",
+          "newLabel": ""
+        },
+        "apiKey": {
+          "label": "",
+          "newLabel": ""
         },
         "password": {
           "label": "Adgangskode",
           "newLabel": "Nyt kodeord"
         }
       }
+    },
+    "permission": {
+      "use": "",
+      "interact": "",
+      "full": ""
     }
   },
   "media": {
+    "plural": "",
+    "search": "",
     "field": {
       "name": "Navn",
       "size": "Størrelse",
       "creator": "Skaber"
+    },
+    "action": {
+      "upload": {
+        "label": "",
+        "file": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "copy": {
+        "label": ""
+      }
     }
   },
   "common": {
+    "beta": "",
     "error": "Fejl",
     "action": {
       "add": "Tilføj",
       "apply": "Anvend",
+      "backToOverview": "",
       "create": "Opret",
       "edit": "Rediger",
+      "import": "",
       "insert": "Indsæt",
       "remove": "Fjern",
       "save": "Gem",
       "saveChanges": "Gem ændringer",
       "cancel": "Annuller",
       "delete": "Slet",
+      "discard": "",
       "confirm": "Bekræft",
+      "continue": "",
       "previous": "Forrige",
       "next": "Næste",
-      "tryAgain": "Prøv igen"
+      "checkoutDocs": "",
+      "tryAgain": "Prøv igen",
+      "loading": ""
+    },
+    "here": "",
+    "iconPicker": {
+      "label": "",
+      "header": ""
     },
     "information": {
+      "min": "",
+      "max": "",
+      "days": "",
       "hours": "Timer",
       "minutes": "Minutter"
     },
+    "notification": {
+      "create": {
+        "success": "",
+        "error": ""
+      },
+      "delete": {
+        "success": "",
+        "error": ""
+      },
+      "update": {
+        "success": "",
+        "error": ""
+      },
+      "transfer": {
+        "success": "",
+        "error": ""
+      }
+    },
+    "multiSelect": {
+      "placeholder": ""
+    },
+    "multiText": {
+      "placeholder": "",
+      "addLabel": ""
+    },
+    "select": {
+      "placeholder": "",
+      "badge": {
+        "recommended": ""
+      }
+    },
     "userAvatar": {
       "menu": {
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
         "preferences": "Dine indstillinger",
-        "login": "Log ind"
+        "logout": "",
+        "login": "Log ind",
+        "homeBoard": "",
+        "loggedOut": ""
       }
     },
     "dangerZone": "Farezone",
     "noResults": "Ingen resultater fundet",
+    "preview": {
+      "show": "",
+      "hide": ""
+    },
     "zod": {
       "errors": {
         "default": "Dette felt er ugyldigt",
@@ -130,7 +749,8 @@
         "string": {
           "startsWith": "Dette felt skal starte med {startsWith}",
           "endsWith": "Dette felt skal slutte med {endsWith}",
-          "includes": "Dette felt skal indeholde {includes}"
+          "includes": "Dette felt skal indeholde {includes}",
+          "invalidEmail": ""
         },
         "tooSmall": {
           "string": "Dette felt skal være mindst {minimum} tegn langt",
@@ -139,11 +759,29 @@
         "tooBig": {
           "string": "Dette felt må højst være på {maximum} tegn",
           "number": "Dette felt skal være mindre end eller lig med {maximum}"
+        },
+        "custom": {
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
+          "fileTooLarge": "",
+          "invalidConfiguration": ""
         }
       }
     }
   },
   "section": {
+    "dynamic": {
+      "action": {
+        "create": "",
+        "remove": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      }
+    },
     "category": {
       "field": {
         "name": {
@@ -151,94 +789,253 @@
         }
       },
       "action": {
+        "create": "",
+        "edit": "",
+        "remove": "",
         "moveUp": "Flyt op",
-        "moveDown": "Flyt ned"
+        "moveDown": "Flyt ned",
+        "createAbove": "",
+        "createBelow": ""
+      },
+      "create": {
+        "title": "",
+        "submit": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
+          "create": "",
           "changePosition": "Ændre placering"
         }
       }
     }
   },
   "item": {
+    "action": {
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
+    },
     "menu": {
       "label": {
         "settings": "Indstillinger"
       }
     },
+    "create": {
+      "title": "",
+      "addToBoard": ""
+    },
     "moveResize": {
+      "title": "",
       "field": {
         "width": {
           "label": "Bredde"
         },
         "height": {
           "label": "Højde"
+        },
+        "xOffset": {
+          "label": ""
+        },
+        "yOffset": {
+          "label": ""
         }
       }
+    },
+    "edit": {
+      "title": "",
+      "advancedOptions": {
+        "label": "",
+        "title": ""
+      },
+      "field": {
+        "integrations": {
+          "label": ""
+        },
+        "customCssClasses": {
+          "label": ""
+        }
+      }
+    },
+    "remove": {
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
+      "name": "",
+      "description": "",
       "option": {
+        "appId": {
+          "label": ""
+        },
         "openInNewTab": {
           "label": "Åbn i nyt faneblad"
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "pingEnabled": {
+          "label": ""
+        }
+      },
+      "error": {
+        "notFound": {
+          "label": "",
+          "tooltip": ""
+        }
+      }
+    },
+    "bookmarks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": {
+              "label": ""
+            },
+            "column": {
+              "label": ""
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "items": {
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
             },
             "column": {
               "label": "Vertikal"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "usePiHoleColors": {
+          "label": ""
         }
+      },
+      "error": {
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
         "adsBlockedToday": "Blokeret i dag",
         "adsBlockedTodayPercentage": "Blokeret i dag",
-        "dnsQueriesToday": "Forespørgsler i dag"
+        "dnsQueriesToday": "Forespørgsler i dag",
+        "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
+      "name": "",
       "description": "Kontroller PiHole eller AdGuard fra dit dashboard",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
             },
             "column": {
               "label": "Vertikal"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "showToggleAllButtons": {
+          "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "controls": {
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
         "set": "Indstil",
         "enabled": "Aktiveret",
         "disabled": "Deaktiveret",
+        "processing": "",
+        "disconnected": "",
         "hours": "Timer",
-        "minutes": "Minutter"
+        "minutes": "Minutter",
+        "unlimited": ""
       }
     },
     "clock": {
+      "name": "",
       "description": "Viser aktuel dag og klokkeslæt.",
       "option": {
+        "customTitleToggle": {
+          "label": "",
+          "description": ""
+        },
+        "customTitle": {
+          "label": ""
+        },
+        "is24HourFormat": {
+          "label": "",
+          "description": ""
+        },
+        "showSeconds": {
+          "label": ""
+        },
+        "useCustomTimezone": {
+          "label": ""
+        },
         "timezone": {
-          "label": "Tidszone"
+          "label": "Tidszone",
+          "description": ""
+        },
+        "showDate": {
+          "label": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
     "notebook": {
       "name": "Notesbog",
+      "description": "",
       "option": {
         "showToolbar": {
           "label": "Vis værktøjslinjen, der hjælper dig med at skrive markdown"
@@ -268,7 +1065,7 @@
         "checkList": "Tjekliste",
         "increaseIndent": "Forøg indrykning",
         "decreaseIndent": "Formindsk indrykning",
-        "link": "Link",
+        "link": "",
         "unlink": "Fjern link",
         "image": "Integrer billede",
         "addTable": "Tilføj tabel",
@@ -330,17 +1127,31 @@
         }
       },
       "error": {
+        "noUrl": "",
         "noBrowerSupport": "Din browser understøtter ikke iframes. Opdater venligst din browser."
       }
     },
     "smartHome-entityState": {
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
           "label": "Entitet ID"
+        },
+        "displayName": {
+          "label": ""
+        },
+        "entityUnit": {
+          "label": ""
+        },
+        "clickable": {
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
           "label": "Visningsnavn"
@@ -352,9 +1163,21 @@
     },
     "calendar": {
       "name": "Kalender",
+      "description": "",
       "option": {
         "releaseType": {
-          "label": "Radarr udgivelsestype"
+          "label": "Radarr udgivelsestype",
+          "options": {
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
+          }
+        },
+        "filterPastMonths": {
+          "label": ""
+        },
+        "filterFutureMonths": {
+          "label": ""
         }
       }
     },
@@ -362,8 +1185,25 @@
       "name": "Vejr",
       "description": "Viser de aktuelle vejroplysninger for en bestemt placering.",
       "option": {
+        "isFormatFahrenheit": {
+          "label": ""
+        },
         "location": {
           "label": "Vejr lokation"
+        },
+        "showCity": {
+          "label": ""
+        },
+        "hasForecast": {
+          "label": ""
+        },
+        "forecastDayCount": {
+          "label": "",
+          "description": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       },
       "kind": {
@@ -385,8 +1225,17 @@
     },
     "indexerManager": {
       "name": "Indekserings manager status",
+      "description": "",
+      "option": {
+        "openIndexerSiteInNewTab": {
+          "label": ""
+        }
+      },
       "title": "Indexer-manager",
-      "testAll": "Test alle"
+      "testAll": "Test alle",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "healthMonitoring": {
       "name": "Systemsundhedsovervågning",
@@ -406,56 +1255,195 @@
         }
       },
       "popover": {
-        "available": "Tilgængelig"
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "Tilgængelig",
+        "lastSeen": ""
+      },
+      "memory": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
       "location": {
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
         "search": "Søg",
         "table": {
-          "header": {},
-          "action": {},
+          "header": {
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
+          },
+          "action": {
+            "select": ""
+          },
           "population": {
             "fallback": "Ukendt"
           }
         }
-      }
+      },
+      "integration": {
+        "noData": "",
+        "description": ""
+      },
+      "app": {
+        "noData": "",
+        "description": ""
+      },
+      "error": {
+        "action": {
+          "logs": ""
+        },
+        "noIntegration": "",
+        "noData": ""
+      },
+      "option": {}
     },
     "video": {
-      "name": "Video Stream",
+      "name": "",
       "description": "Indlejr en video stream eller video fra et kamera eller et website",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
-          "label": "Auto-afspilning"
+          "label": "Auto-afspilning",
+          "description": ""
+        },
+        "isMuted": {
+          "label": ""
+        },
+        "hasControls": {
+          "label": ""
         }
+      },
+      "error": {
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
       }
     },
+    "mediaServer": {
+      "name": "",
+      "description": "",
+      "option": {}
+    },
     "downloads": {
+      "name": "",
+      "description": "",
+      "option": {
+        "columns": {
+          "label": ""
+        },
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": ""
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        },
+        "showCompletedUsenet": {
+          "label": ""
+        },
+        "showCompletedTorrent": {
+          "label": ""
+        },
+        "activeTorrentThreshold": {
+          "label": ""
+        },
+        "categoryFilter": {
+          "label": ""
+        },
+        "filterIsWhitelist": {
+          "label": ""
+        },
+        "applyFilterToRatio": {
+          "label": ""
+        }
+      },
+      "errors": {
+        "noColumns": "",
+        "noCommunications": ""
+      },
       "items": {
+        "actions": {
+          "columnTitle": ""
+        },
         "added": {
+          "columnTitle": "",
           "detailsTitle": "Dato tilføjet"
         },
+        "category": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "",
           "detailsTitle": "Download hastighed"
         },
+        "index": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "id": {
+          "columnTitle": ""
+        },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": ""
+        },
+        "name": {
+          "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "Fremskridt"
+          "columnTitle": "Fremskridt",
+          "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Delingsforhold"
+          "columnTitle": "Delingsforhold",
+          "detailsTitle": ""
+        },
+        "received": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "sent": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "size": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Tilstand"
+          "columnTitle": "Tilstand",
+          "detailsTitle": ""
+        },
+        "time": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "type": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Up"
+          "columnTitle": "",
+          "detailsTitle": ""
         }
       },
       "states": {
@@ -463,62 +1451,244 @@
         "queued": "I kø",
         "paused": "På pause",
         "completed": "Fuldført",
-        "unknown": "Ukendt"
-      }
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "Ukendt",
+        "seeding": ""
+      },
+      "actions": {
+        "clients": {
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
+        },
+        "client": {
+          "pause": "",
+          "resume": ""
+        },
+        "item": {
+          "pause": "",
+          "resume": "",
+          "delete": {
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
+          }
+        }
+      },
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
+      "name": "",
       "description": "Se en liste over alle medieforespørgsler fra din Overseerr eller Jellyseerr instans",
       "option": {
         "linksTargetNewTab": {
           "label": "Åbn links i ny fane"
         }
       },
+      "pending": {
+        "approve": "",
+        "approving": "",
+        "decline": ""
+      },
       "availability": {
         "unknown": "Ukendt",
+        "pending": "",
+        "processing": "",
         "partiallyAvailable": "Delvis",
         "available": "Tilgængelig"
-      }
+      },
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
+      "name": "",
       "description": "Statistik over dine medieanmodninger",
+      "option": {},
       "titles": {
         "stats": {
           "main": "Mediestatistik",
           "approved": "Allerede godkendt",
           "pending": "Afventer godkendelse",
+          "processing": "",
+          "declined": "",
+          "available": "",
           "tv": "TV-anmodninger",
           "movie": "Film anmodninger",
-          "total": "Total"
+          "total": ""
         },
         "users": {
-          "main": "Topbrugere"
+          "main": "Topbrugere",
+          "requests": ""
+        }
+      }
+    },
+    "rssFeed": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrls": {
+          "label": ""
+        },
+        "enableRtl": {
+          "label": ""
+        },
+        "textLinesClamp": {
+          "label": ""
+        },
+        "maximumAmountPosts": {
+          "label": ""
         }
       }
     }
   },
+  "widgetPreview": {
+    "toggle": {
+      "enabled": "",
+      "disabled": ""
+    },
+    "dimensions": {
+      "title": ""
+    }
+  },
   "board": {
     "action": {
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "confirmLeave": {
+          "title": "",
+          "message": ""
+        }
+      },
       "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
         "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
           "apps": {
-            "label": "Apps"
+            "label": "",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
           },
           "screenSize": {
+            "label": "",
             "option": {
               "sm": "Lille",
               "md": "Mellem",
               "lg": "Stor"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
             }
           }
         }
       }
     },
     "field": {
+      "pageTitle": {
+        "label": ""
+      },
+      "metaTitle": {
+        "label": ""
+      },
+      "logoImageUrl": {
+        "label": ""
+      },
+      "faviconImageUrl": {
+        "label": ""
+      },
+      "backgroundImageUrl": {
+        "label": ""
+      },
       "backgroundImageAttachment": {
-        "label": "Vedhæftning af baggrundsbillede"
+        "label": "Vedhæftning af baggrundsbillede",
+        "option": {
+          "fixed": {
+            "label": "",
+            "description": ""
+          },
+          "scroll": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "backgroundImageRepeat": {
+        "label": "",
+        "option": {
+          "repeat": {
+            "label": "",
+            "description": ""
+          },
+          "no-repeat": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-x": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-y": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "backgroundImageSize": {
-        "label": "Baggrundsbilledets størrelse"
+        "label": "Baggrundsbilledets størrelse",
+        "option": {
+          "cover": {
+            "label": "",
+            "description": ""
+          },
+          "contain": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "primaryColor": {
         "label": "Primær farve"
@@ -526,32 +1696,62 @@
       "secondaryColor": {
         "label": "Sekundær farve"
       },
+      "opacity": {
+        "label": ""
+      },
       "customCss": {
-        "description": "Yderligere, tilpasse dit dashboard ved hjælp af CSS, anbefales kun til erfarne brugere"
+        "label": "",
+        "description": "Yderligere, tilpasse dit dashboard ved hjælp af CSS, anbefales kun til erfarne brugere",
+        "customClassesAlert": {
+          "title": "",
+          "description": ""
+        }
+      },
+      "columnCount": {
+        "label": ""
       },
       "name": {
         "label": "Navn"
       },
       "isPublic": {
-        "label": "Offentlig"
+        "label": "Offentlig",
+        "description": ""
       }
     },
+    "content": {
+      "metaTitle": ""
+    },
     "setting": {
+      "title": "",
       "section": {
         "general": {
-          "title": "Generelt"
+          "title": "Generelt",
+          "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Layout"
+          "title": ""
         },
         "background": {
           "title": "Baggrund"
         },
+        "color": {
+          "title": ""
+        },
+        "customCss": {
+          "title": ""
+        },
         "access": {
+          "title": "",
           "permission": {
             "item": {
               "view": {
                 "label": "Se board"
+              },
+              "modify": {
+                "label": ""
+              },
+              "full": {
+                "label": ""
               }
             }
           }
@@ -559,9 +1759,42 @@
         "dangerZone": {
           "title": "Farezone",
           "action": {
-            "delete": {
+            "rename": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "modal": {
+                "title": ""
+              }
+            },
+            "visibility": {
+              "label": "",
+              "description": {
+                "public": "",
+                "private": ""
+              },
+              "button": {
+                "public": "",
+                "private": ""
+              },
               "confirm": {
-                "title": "Slet board"
+                "public": {
+                  "title": "",
+                  "description": ""
+                },
+                "private": {
+                  "title": "",
+                  "description": ""
+                }
+              }
+            },
+            "delete": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "confirm": {
+                "title": "Slet board",
+                "description": ""
               }
             }
           }
@@ -570,23 +1803,39 @@
     }
   },
   "management": {
+    "metaTitle": "",
+    "title": {
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
+    },
+    "notFound": {
+      "title": "",
+      "text": ""
+    },
     "navbar": {
       "items": {
         "home": "Hjem",
-        "boards": "Boards",
-        "apps": "Apps",
+        "boards": "",
+        "apps": "",
+        "integrations": "",
+        "searchEngies": "",
+        "medias": "",
         "users": {
           "label": "Brugere",
           "items": {
             "manage": "Administrer",
-            "invites": "Invitationer"
+            "invites": "Invitationer",
+            "groups": ""
           }
         },
         "tools": {
           "label": "Værktøjer",
           "items": {
-            "docker": "Docker",
-            "api": "API"
+            "docker": "",
+            "logs": "",
+            "api": "",
+            "tasks": ""
           }
         },
         "settings": "Indstillinger",
@@ -594,7 +1843,9 @@
           "label": "Hjælp",
           "items": {
             "documentation": "Dokumentation",
-            "discord": "Discordfællesskab"
+            "submitIssue": "",
+            "discord": "Discordfællesskab",
+            "sourceCode": ""
           }
         },
         "about": "Om"
@@ -603,32 +1854,50 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Boards",
+          "board": "",
           "user": "Brugere",
           "invite": "Invitationer",
-          "app": "Apps"
+          "integration": "",
+          "app": "",
+          "group": ""
         },
         "statisticLabel": {
-          "boards": "Boards"
+          "boards": "",
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "Dine boards",
         "action": {
+          "new": {
+            "label": ""
+          },
+          "open": {
+            "label": ""
+          },
           "settings": {
             "label": "Indstillinger"
           },
           "setHomeBoard": {
+            "label": "",
             "badge": {
-              "label": "Hjem"
+              "label": "Hjem",
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "Slet permanent",
             "confirm": {
-              "title": "Slet board"
+              "title": "Slet board",
+              "description": ""
             }
           }
+        },
+        "visibility": {
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -640,11 +1909,18 @@
           }
         }
       },
+      "media": {
+        "includeFromAllUsers": ""
+      },
       "user": {
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
             "title": "Generelt",
             "item": {
+              "language": "",
+              "board": "",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner"
             }
@@ -653,29 +1929,58 @@
             "title": "Sikkerhed"
           },
           "board": {
-            "title": "Boards"
+            "title": ""
           }
         },
         "list": {
           "metaTitle": "Administrér brugere",
           "title": "Brugere"
         },
+        "edit": {
+          "metaTitle": ""
+        },
         "create": {
           "metaTitle": "Opret bruger",
+          "title": "",
           "step": {
+            "personalInformation": {
+              "label": ""
+            },
             "security": {
               "label": "Sikkerhed"
+            },
+            "groups": {
+              "label": "",
+              "title": "",
+              "description": ""
+            },
+            "review": {
+              "label": ""
+            },
+            "completed": {
+              "title": ""
+            },
+            "error": {
+              "title": ""
             }
+          },
+          "action": {
+            "createAnother": "",
+            "back": ""
           }
         },
         "invite": {
           "title": "Administrer brugerinvitationer",
           "action": {
             "new": {
+              "title": "",
               "description": "Efter udløb vil en invitation ikke længere være gyldig, og modtageren af invitationen vil ikke være i stand til at oprette en konto."
             },
             "copy": {
-              "link": "Invitationslink"
+              "title": "",
+              "description": "",
+              "link": "Invitationslink",
+              "button": ""
             },
             "delete": {
               "title": "Slet invitation",
@@ -684,7 +1989,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Skaber"
@@ -693,49 +1998,205 @@
               "label": "Udløbsdato"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
       },
       "group": {
+        "back": "",
         "setting": {
           "general": {
-            "title": "Generelt"
+            "title": "Generelt",
+            "owner": "",
+            "ownerOfGroup": "",
+            "ownerOfGroupDeleted": ""
+          },
+          "members": {
+            "title": "",
+            "search": "",
+            "notFound": ""
+          },
+          "permissions": {
+            "title": "",
+            "form": {
+              "unsavedChanges": ""
+            }
           }
         }
       },
       "settings": {
-        "title": "Indstillinger"
+        "title": "Indstillinger",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        },
+        "section": {
+          "analytics": {
+            "title": "",
+            "general": {
+              "title": "",
+              "text": ""
+            },
+            "widgetData": {
+              "title": "",
+              "text": ""
+            },
+            "integrationData": {
+              "title": "",
+              "text": ""
+            },
+            "usersData": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "crawlingAndIndexing": {
+            "title": "",
+            "warning": "",
+            "noIndex": {
+              "title": "",
+              "text": ""
+            },
+            "noFollow": {
+              "title": "",
+              "text": ""
+            },
+            "noTranslate": {
+              "title": "",
+              "text": ""
+            },
+            "noSiteLinksSearchBox": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "board": {
+            "title": "",
+            "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "appearance": {
+            "title": "",
+            "defaultColorScheme": {
+              "label": "",
+              "options": {
+                "light": "",
+                "dark": ""
+              }
+            }
+          },
+          "culture": {
+            "title": "",
+            "defaultLocale": {
+              "label": ""
+            }
+          }
+        }
       },
       "tool": {
         "tasks": {
+          "title": "",
           "status": {
+            "idle": "",
             "running": "Kører",
             "error": "Fejl"
           },
           "job": {
+            "iconsUpdater": {
+              "label": ""
+            },
+            "analytics": {
+              "label": ""
+            },
+            "smartHomeEntityState": {
+              "label": ""
+            },
+            "ping": {
+              "label": ""
+            },
             "mediaServer": {
               "label": "Medieserver"
             },
-            "mediaRequests": {
-              "label": "Medieforespørgsler"
+            "mediaOrganizer": {
+              "label": ""
+            },
+            "downloads": {
+              "label": ""
+            },
+            "mediaRequestStats": {
+              "label": ""
+            },
+            "mediaRequestList": {
+              "label": ""
+            },
+            "rssFeeds": {
+              "label": ""
+            },
+            "indexerManager": {
+              "label": ""
+            },
+            "healthMonitoring": {
+              "label": ""
+            },
+            "dnsHole": {
+              "label": ""
+            },
+            "sessionCleanup": {
+              "label": ""
             }
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
+          "modal": {
+            "createApiToken": {
+              "title": "",
+              "description": "",
+              "button": ""
+            }
+          },
           "tab": {
             "documentation": {
               "label": "Dokumentation"
             },
             "apiKey": {
+              "label": "",
+              "title": "",
+              "button": {
+                "createApiToken": ""
+              },
               "table": {
                 "header": {
-                  "id": "ID"
+                  "id": "",
+                  "createdBy": ""
                 }
               }
             }
+          }
+        }
+      },
+      "about": {
+        "version": "",
+        "text": "",
+        "accordion": {
+          "contributors": {
+            "title": "",
+            "subtitle": ""
+          },
+          "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "libraries": {
+            "title": "",
+            "subtitle": ""
           }
         }
       }
@@ -743,6 +2204,11 @@
   },
   "docker": {
     "title": "Containere",
+    "table": {
+      "updated": "",
+      "search": "",
+      "selected": ""
+    },
     "field": {
       "name": {
         "label": "Navn"
@@ -754,11 +2220,13 @@
           "running": "Kører",
           "paused": "På pause",
           "restarting": "Genstarter",
-          "removing": "Fjerner"
+          "exited": "",
+          "removing": "Fjerner",
+          "dead": ""
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
         "label": "Porte"
@@ -766,47 +2234,133 @@
     },
     "action": {
       "start": {
-        "label": "Start"
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "stop": {
-        "label": "Stop"
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "restart": {
-        "label": "Genstart"
+        "label": "Genstart",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "remove": {
-        "label": "Fjern"
+        "label": "Fjern",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "refresh": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     }
   },
   "permission": {
+    "title": "",
+    "userSelect": {
+      "title": ""
+    },
+    "groupSelect": {
+      "title": ""
+    },
     "tab": {
-      "user": "Brugere"
+      "user": "Brugere",
+      "group": "",
+      "inherited": ""
     },
     "field": {
       "user": {
         "label": "Bruger"
+      },
+      "group": {
+        "label": ""
+      },
+      "permission": {
+        "label": ""
       }
+    },
+    "action": {
+      "saveUser": "",
+      "saveGroup": ""
     }
   },
   "navigationStructure": {
     "manage": {
       "label": "Administrer",
       "boards": {
-        "label": "Boards"
+        "label": ""
       },
       "integrations": {
+        "label": "",
         "edit": {
           "label": "Rediger"
+        },
+        "new": {
+          "label": ""
         }
       },
       "search-engines": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "Rediger"
         }
       },
+      "medias": {
+        "label": ""
+      },
       "apps": {
-        "label": "Apps",
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "Rediger"
         }
@@ -818,7 +2372,10 @@
         },
         "general": "Generelt",
         "security": "Sikkerhed",
-        "board": "Boards",
+        "board": "",
+        "groups": {
+          "label": ""
+        },
         "invites": {
           "label": "Invitationer"
         }
@@ -826,7 +2383,10 @@
       "tools": {
         "label": "Værktøjer",
         "docker": {
-          "label": "Docker"
+          "label": ""
+        },
+        "logs": {
+          "label": ""
         }
       },
       "settings": {
@@ -838,23 +2398,141 @@
     }
   },
   "search": {
+    "placeholder": "",
+    "nothingFound": "",
+    "error": {
+      "fetch": ""
+    },
     "mode": {
       "appIntegrationBoard": {
+        "help": "",
         "group": {
           "app": {
-            "title": "Apps"
+            "title": "",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "edit": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           },
           "board": {
-            "title": "Boards"
+            "title": "",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "homeBoard": {
+                  "label": ""
+                },
+                "settings": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "integration": {
+            "title": ""
+          }
+        }
+      },
+      "command": {
+        "help": "",
+        "group": {
+          "globalCommand": {
+            "title": "",
+            "option": {
+              "colorScheme": {
+                "light": "",
+                "dark": ""
+              },
+              "language": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
+                "label": ""
+              },
+              "newApp": {
+                "label": ""
+              },
+              "newIntegration": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newUser": {
+                "label": ""
+              },
+              "newInvite": {
+                "label": ""
+              },
+              "newGroup": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "external": {
+        "help": "",
         "group": {
           "searchEngine": {
+            "title": "",
+            "children": {
+              "action": {
+                "search": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              },
+              "searchResults": {
+                "title": ""
+              }
+            },
             "option": {
+              "google": {
+                "name": "",
+                "description": ""
+              },
+              "bing": {
+                "name": "",
+                "description": ""
+              },
+              "duckduckgo": {
+                "name": "",
+                "description": ""
+              },
               "torrent": {
-                "name": "Torrents"
+                "name": "",
+                "description": ""
+              },
+              "youTube": {
+                "name": "",
+                "description": ""
               }
             }
           }
@@ -862,11 +2540,17 @@
       },
       "help": {
         "group": {
+          "mode": {
+            "title": ""
+          },
           "help": {
             "title": "Hjælp",
             "option": {
               "documentation": {
                 "label": "Dokumentation"
+              },
+              "submitIssue": {
+                "label": ""
               },
               "discord": {
                 "label": "Discordfællesskab"
@@ -876,14 +2560,58 @@
         }
       },
       "page": {
+        "help": "",
         "group": {
           "page": {
+            "title": "",
             "option": {
+              "manageHome": {
+                "label": ""
+              },
+              "manageBoard": {
+                "label": ""
+              },
+              "manageApp": {
+                "label": ""
+              },
+              "manageIntegration": {
+                "label": ""
+              },
+              "manageSearchEngine": {
+                "label": ""
+              },
+              "manageMedia": {
+                "label": ""
+              },
               "manageUser": {
                 "label": "Administrér brugere"
               },
+              "manageInvite": {
+                "label": ""
+              },
+              "manageGroup": {
+                "label": ""
+              },
+              "manageDocker": {
+                "label": ""
+              },
+              "manageApi": {
+                "label": ""
+              },
+              "manageLog": {
+                "label": ""
+              },
+              "manageTask": {
+                "label": ""
+              },
+              "manageSettings": {
+                "label": ""
+              },
               "about": {
                 "label": "Om"
+              },
+              "homeBoard": {
+                "label": ""
               },
               "preferences": {
                 "label": "Dine indstillinger"
@@ -893,17 +2621,112 @@
         }
       },
       "userGroup": {
+        "help": "",
         "group": {
           "user": {
-            "title": "Brugere"
+            "title": "Brugere",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "group": {
+            "title": "",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                },
+                "manageMember": {
+                  "label": ""
+                },
+                "managePermission": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           }
         }
       }
     },
     "engine": {
+      "search": "",
       "field": {
         "name": {
           "label": "Navn"
+        },
+        "short": {
+          "label": ""
+        },
+        "urlTemplate": {
+          "label": ""
+        },
+        "description": {
+          "label": ""
+        }
+      },
+      "page": {
+        "list": {
+          "title": "",
+          "noResults": {
+            "title": "",
+            "action": ""
+          },
+          "interactive": ""
+        },
+        "create": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "edit": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "configControl": "",
+          "searchEngineType": {
+            "generic": "",
+            "fromIntegration": ""
+          }
+        },
+        "delete": {
+          "title": "",
+          "message": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
         }
       }
     }

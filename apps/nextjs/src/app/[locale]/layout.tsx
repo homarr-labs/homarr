@@ -13,6 +13,7 @@ import { env } from "@homarr/auth/env.mjs";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
+import { SpotlightProvider } from "@homarr/spotlight";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { getI18nMessages } from "@homarr/translation/server";
 
@@ -82,6 +83,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
     (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} />,
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
+    (innerProps) => <SpotlightProvider {...innerProps} />,
   ]);
 
   return (

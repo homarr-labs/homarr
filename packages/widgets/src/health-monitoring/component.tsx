@@ -169,15 +169,15 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
                         </List.Item>
                         <List m="0.5cqmin" withPadding center spacing="0.5cqmin" icon={<IconCpu size="1cqmin" />}>
                           <List.Item className="health-monitoring-information-load-average-1min">
-                            {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}
+                            {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}%
                           </List.Item>
                           <List.Item className="health-monitoring-information-load-average-5min">
                             {t("widget.healthMonitoring.popover.minutes", { count: 5 })}{" "}
-                            {healthInfo.loadAverage["5min"]}
+                            {healthInfo.loadAverage["5min"]}%
                           </List.Item>
                           <List.Item className="health-monitoring-information-load-average-15min">
                             {t("widget.healthMonitoring.popover.minutes", { count: 15 })}{" "}
-                            {healthInfo.loadAverage["15min"]}
+                            {healthInfo.loadAverage["15min"]}%
                           </List.Item>
                         </List>
                       </List>
@@ -363,7 +363,7 @@ const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: nu
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text className="health-monitoring-cpu-temp-value" size="3cqmin">
-              {fahrenheit ? `${(cpuTemp * 1.8 + 32).toFixed(1)}°F` : `${cpuTemp}°C`}
+              {fahrenheit ? `${(cpuTemp * 1.8 + 32).toFixed(1)}°F` : `${cpuTemp.toFixed(1)}°C`}
             </Text>
             <IconCpu className="health-monitoring-cpu-temp-icon" size="7cqmin" />
           </Center>

@@ -4,6 +4,7 @@ import type { Integration as DbIntegration } from "@homarr/db/schema/sqlite";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { DashDotIntegration } from "../dashdot/dashdot-integration";
 import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
 import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
@@ -68,4 +69,5 @@ export const integrationCreators = {
   openmediavault: OpenMediaVaultIntegration,
   lidarr: LidarrIntegration,
   readarr: ReadarrIntegration,
+  dashDot: DashDotIntegration,
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;
