@@ -13,7 +13,7 @@ export const UserButton = async () => {
   return (
     <UserAvatarMenu availableUpdates={isAdmin ? data : undefined}>
       <UnstyledButton>
-        <Indicator disabled={!data || data.length === 0 || !isAdmin} size={15} processing withBorder>
+        <Indicator disabled={data.length === 0 || !isAdmin} size={15} processing withBorder>
           <CurrentUserAvatar size="md" />
         </Indicator>
       </UnstyledButton>

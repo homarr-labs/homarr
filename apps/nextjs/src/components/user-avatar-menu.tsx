@@ -31,7 +31,7 @@ import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
-  availableUpdates: RouterOutputs["updateChecker"]["getAvailableUpdates"];
+  availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
 }
 
 export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuProps) => {
