@@ -7,6 +7,7 @@ import { integrationSchemas } from "./integration";
 import { locationSchemas } from "./location";
 import { mediaSchemas } from "./media";
 import { searchEngineSchemas } from "./search-engine";
+import { settingsSchemas } from "./settings";
 import { userSchemas } from "./user";
 import { widgetSchemas } from "./widgets";
 
@@ -21,11 +22,12 @@ export const validation = {
   icons: iconsSchemas,
   searchEngine: searchEngineSchemas,
   media: mediaSchemas,
+  settings: settingsSchemas,
   common: commonSchemas,
 };
 
-export { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "./board";
-export type { OldmarrImportConfiguration } from "./board";
+export { oldmarrImportConfigurationSchema, initialOldmarrImportSettings, superRefineJsonImportFile } from "./board";
+export type { OldmarrImportConfiguration, InitialOldmarrImportSettings } from "./board";
 export {
   createSectionSchema,
   itemAdvancedOptionsSchema,
@@ -35,3 +37,4 @@ export {
 } from "./shared";
 export { passwordRequirements } from "./user";
 export { supportedMediaUploadFormats } from "./media";
+export { zodEnumFromArray, zodUnionFromArray } from "./enums";

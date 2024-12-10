@@ -15,6 +15,7 @@ import {
   wsLink,
 } from "@trpc/client";
 import superjson from "superjson";
+import type { SuperJSONResult } from "superjson";
 
 import type { AppRouter } from "@homarr/api";
 import { clientApi, createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/client";
@@ -82,8 +83,8 @@ export function TRPCReactProvider(props: PropsWithChildren) {
                 serialize(object: unknown) {
                   return object;
                 },
-                deserialize(data: unknown) {
-                  return data;
+                deserialize(data: SuperJSONResult) {
+                  return superjson.deserialize<unknown>(data);
                 },
               },
               url: getTrpcUrl(),

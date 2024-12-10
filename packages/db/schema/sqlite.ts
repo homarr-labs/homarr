@@ -16,6 +16,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  OnboardingStep,
   SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
@@ -380,6 +381,12 @@ export const searchEngines = sqliteTable("search_engine", {
   urlTemplate: text(),
   type: text().$type<SearchEngineType>().notNull().default("generic"),
   integrationId: text().references(() => integrations.id, { onDelete: "cascade" }),
+});
+
+export const onboarding = sqliteTable("onboarding", {
+  id: text().notNull().primaryKey(),
+  step: text().$type<OnboardingStep>().notNull(),
+  previousStep: text().$type<OnboardingStep>(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({

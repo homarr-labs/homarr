@@ -6,8 +6,9 @@ import { groupMembers, groupPermissions, groups } from "@homarr/db/schema/sqlite
 import { everyoneGroup } from "@homarr/definitions";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
+import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
   getPaginated: permissionRequiredProcedure
@@ -144,6 +145,19 @@ export const groupRouter = createTRPCRouter({
         },
         limit: input.limit,
       });
+    }),
+  createInitialExternalGroup: onboardingProcedure
+    .requiresStep("group")
+    .input(validation.group.create)
+    .mutation(async ({ input, ctx }) => {
+      await checkSimilarNameAndThrowAsync(ctx.db, input.name);
+
+      await ctx.db.insert(groups).values({
+        id: createId(),
+        name: input.name,
+      });
+
+      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")

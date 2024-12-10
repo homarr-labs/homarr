@@ -5,47 +5,44 @@ import type { Database } from "@homarr/db";
 import { and, createId, eq, like, schema } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
+import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { validation, z } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  onboardingProcedure,
+  permissionRequiredProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const userRouter = createTRPCRouter({
-  initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
-    throwIfCredentialsDisabled();
+  initUser: onboardingProcedure
+    .requiresStep("user")
+    .input(validation.user.init)
+    .mutation(async ({ ctx, input }) => {
+      throwIfCredentialsDisabled();
 
-    const firstUser = await ctx.db.query.users.findFirst({
-      columns: {
-        id: true,
-      },
-    });
-
-    if (firstUser) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "User already exists",
+      const userId = await createUserAsync(ctx.db, input);
+      const groupId = createId();
+      await ctx.db.insert(groups).values({
+        id: groupId,
+        name: credentialsAdminGroup,
+        ownerId: userId,
       });
-    }
-
-    const userId = await createUserAsync(ctx.db, input);
-    const groupId = createId();
-    await ctx.db.insert(groups).values({
-      id: groupId,
-      name: "admin",
-      ownerId: userId,
-    });
-    await ctx.db.insert(groupPermissions).values({
-      groupId,
-      permission: "admin",
-    });
-    await ctx.db.insert(groupMembers).values({
-      groupId,
-      userId,
-    });
-  }),
+      await ctx.db.insert(groupPermissions).values({
+        groupId,
+        permission: "admin",
+      });
+      await ctx.db.insert(groupMembers).values({
+        groupId,
+        userId,
+      });
+    }),
   register: publicProcedure
     .input(validation.user.registrationApi)
     .output(z.void())

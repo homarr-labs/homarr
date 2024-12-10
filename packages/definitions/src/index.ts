@@ -10,3 +10,4 @@ export * from "./group";
 export * from "./docs";
 export * from "./cookie";
 export * from "./search-engine";
+export * from "./onboarding";
