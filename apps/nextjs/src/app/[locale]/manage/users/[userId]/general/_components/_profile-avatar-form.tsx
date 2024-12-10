@@ -149,6 +149,9 @@ const fileToBase64Async = async (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
+
+    // The functionality below works as expected and doesn't result in [object Object].
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     reader.onload = () => resolve(reader.result?.toString() ?? "");
     reader.onerror = reject;
   });

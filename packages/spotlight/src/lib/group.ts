@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import type { UseTRPCQueryResult } from "@trpc/react-query/shared";
 
 import type { stringOrTranslation } from "@homarr/translation";

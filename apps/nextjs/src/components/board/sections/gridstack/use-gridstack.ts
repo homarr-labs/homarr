@@ -1,4 +1,4 @@
-import type { MutableRefObject, RefObject } from "react";
+import type { RefObject } from "react";
 import { createRef, useCallback, useEffect, useRef } from "react";
 import { useElementSize } from "@mantine/hooks";
 
@@ -11,9 +11,9 @@ import { useSectionActions } from "../section-actions";
 import { initializeGridstack } from "./init-gridstack";
 
 export interface UseGridstackRefs {
-  wrapper: RefObject<HTMLDivElement>;
-  items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
-  gridstack: MutableRefObject<GridStack | undefined>;
+  wrapper: RefObject<HTMLDivElement | null>;
+  items: RefObject<Record<string, RefObject<GridItemHTMLElement | null>>>;
+  gridstack: RefObject<GridStack | null>;
 }
 
 interface UseGristackReturnType {
@@ -60,9 +60,9 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   // define reference for wrapper - is used to calculate the width of the wrapper
   const { ref: wrapperRef, width, height } = useElementSize<HTMLDivElement>();
   // references to the diffrent items contained in the gridstack
-  const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement>>>({});
+  const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement | null>>>({});
   // reference of the gridstack object for modifications after initialization
-  const gridRef = useRef<GridStack>();
+  const gridRef = useRef<GridStack>(null);
 
   const board = useRequiredBoard();
 
