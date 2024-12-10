@@ -16,8 +16,8 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
   const t = useI18n();
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
-  const hoursHandlers = useRef<NumberInputHandlers>();
-  const minutesHandlers = useRef<NumberInputHandlers>();
+  const hoursHandlers = useRef<NumberInputHandlers>(null);
+  const minutesHandlers = useRef<NumberInputHandlers>(null);
 
   const handleSetTimer = () => {
     const duration = hours * 3600 + minutes * 60;

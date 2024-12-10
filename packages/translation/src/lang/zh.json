@@ -1,7 +1,7 @@
 {
   "user": {
-    "title": "Kullanıcılar",
-    "name": "Kullanıcı",
+    "title": "",
+    "name": "",
     "page": {
       "login": {
         "title": "",
@@ -19,24 +19,24 @@
     },
     "field": {
       "email": {
-        "label": "E-Posta",
+        "label": "",
         "verified": ""
       },
       "username": {
-        "label": "Kullanıcı adı"
+        "label": ""
       },
       "password": {
-        "label": "Şifre",
+        "label": "",
         "requirement": {
           "length": "",
-          "lowercase": "Küçük harf içermeli",
-          "uppercase": "Büyük harf içermeli",
-          "number": "Rakam içermeli",
+          "lowercase": "",
+          "uppercase": "",
+          "number": "",
           "special": ""
         }
       },
       "passwordConfirm": {
-        "label": "Şifreyi onayla"
+        "label": ""
       },
       "previousPassword": {
         "label": ""
@@ -53,7 +53,7 @@
     },
     "action": {
       "login": {
-        "label": "Giriş",
+        "label": "",
         "labelWith": "",
         "notification": {
           "success": {
@@ -71,10 +71,10 @@
         }
       },
       "register": {
-        "label": "Hesap oluştur",
+        "label": "",
         "notification": {
           "success": {
-            "title": "Hesap oluşturuldu",
+            "title": "",
             "message": ""
           },
           "error": {
@@ -83,7 +83,7 @@
           }
         }
       },
-      "create": "Kullanıcı ekle",
+      "create": "",
       "changePassword": {
         "label": "",
         "notification": {
@@ -183,12 +183,12 @@
     "name": "",
     "search": "",
     "field": {
-      "name": "İsim",
+      "name": "",
       "members": ""
     },
     "permission": {
       "admin": {
-        "title": "Yönetici",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -218,7 +218,7 @@
         }
       },
       "board": {
-        "title": "Paneller",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -386,7 +386,7 @@
   "app": {
     "page": {
       "list": {
-        "title": "Uygulamalar",
+        "title": "",
         "noResults": {
           "title": "",
           "action": ""
@@ -435,7 +435,7 @@
     },
     "field": {
       "name": {
-        "label": "İsim"
+        "label": ""
       },
       "description": {
         "label": ""
@@ -503,7 +503,7 @@
     },
     "field": {
       "name": {
-        "label": "İsim"
+        "label": ""
       },
       "url": {
         "label": ""
@@ -524,7 +524,7 @@
           "message": ""
         },
         "invalidUrl": {
-          "title": "Geçersiz URL",
+          "title": "",
           "message": ""
         },
         "secretNotDefined": {
@@ -599,7 +599,7 @@
       },
       "kind": {
         "username": {
-          "label": "Kullanıcı adı",
+          "label": "",
           "newLabel": ""
         },
         "apiKey": {
@@ -607,8 +607,8 @@
           "newLabel": ""
         },
         "password": {
-          "label": "Şifre",
-          "newLabel": "Yeni parola"
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -622,9 +622,9 @@
     "plural": "",
     "search": "",
     "field": {
-      "name": "İsim",
-      "size": "Boyut",
-      "creator": "Oluşturan"
+      "name": "",
+      "size": "",
+      "creator": ""
     },
     "action": {
       "upload": {
@@ -658,27 +658,27 @@
   },
   "common": {
     "beta": "",
-    "error": "Hata",
+    "error": "",
     "action": {
-      "add": "Ekle",
-      "apply": "Uygula",
+      "add": "",
+      "apply": "",
       "backToOverview": "",
-      "create": "Oluştur",
-      "edit": "Düzenle",
+      "create": "",
+      "edit": "",
       "import": "",
-      "insert": "Ekle",
-      "remove": "Kaldır",
-      "save": "Kaydet",
-      "saveChanges": "Değişiklikleri kaydet",
-      "cancel": "Vazgeç",
-      "delete": "Sil",
+      "insert": "",
+      "remove": "",
+      "save": "",
+      "saveChanges": "",
+      "cancel": "",
+      "delete": "",
       "discard": "",
-      "confirm": "Onayla",
+      "confirm": "",
       "continue": "",
-      "previous": "Önceki",
-      "next": "İleri",
+      "previous": "",
+      "next": "",
       "checkoutDocs": "",
-      "tryAgain": "Tekrar Deneyin",
+      "tryAgain": "",
       "loading": ""
     },
     "here": "",
@@ -690,8 +690,8 @@
       "min": "",
       "max": "",
       "days": "",
-      "hours": "Saat",
-      "minutes": "Dakika"
+      "hours": "",
+      "minutes": ""
     },
     "notification": {
       "create": {
@@ -729,36 +729,36 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "",
-        "preferences": "Tercihleriniz",
+        "preferences": "",
         "logout": "",
-        "login": "Giriş",
+        "login": "",
         "homeBoard": "",
         "loggedOut": ""
       }
     },
-    "dangerZone": "Tehlikeli bölge",
-    "noResults": "Sonuç bulunamadı",
+    "dangerZone": "",
+    "noResults": "",
     "preview": {
       "show": "",
       "hide": ""
     },
     "zod": {
       "errors": {
-        "default": "Bu alan geçersiz",
-        "required": "Bu alan gereklidir",
+        "default": "",
+        "required": "",
         "string": {
-          "startsWith": "Bu alan {startsWith} ile başlamalıdır",
-          "endsWith": "Bu alan {endsWith} ile bitmelidir",
-          "includes": "Bu alan {includes} adresini içermelidir",
+          "startsWith": "",
+          "endsWith": "",
+          "includes": "",
           "invalidEmail": ""
         },
         "tooSmall": {
-          "string": "Bu alan en az {minimum} karakter uzunluğunda olmalıdır",
-          "number": "Bu alan {minimum} adresinden uzun veya eşit olmalıdır"
+          "string": "",
+          "number": ""
         },
         "tooBig": {
-          "string": "Bu alan en fazla {maximum} karakter uzunluğunda olmalıdır",
-          "number": "Bu alan {maximum} adresinden kısa veya eşit olmalıdır"
+          "string": "",
+          "number": ""
         },
         "custom": {
           "passwordsDoNotMatch": "",
@@ -785,15 +785,15 @@
     "category": {
       "field": {
         "name": {
-          "label": "İsim"
+          "label": ""
         }
       },
       "action": {
         "create": "",
         "edit": "",
         "remove": "",
-        "moveUp": "Yukarı taşı",
-        "moveDown": "Aşağı taşı",
+        "moveUp": "",
+        "moveDown": "",
         "createAbove": "",
         "createBelow": ""
       },
@@ -812,7 +812,7 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Pozisyonu değiştir"
+          "changePosition": ""
         }
       }
     }
@@ -828,7 +828,7 @@
     },
     "menu": {
       "label": {
-        "settings": "Ayarlar"
+        "settings": ""
       }
     },
     "create": {
@@ -839,10 +839,10 @@
       "title": "",
       "field": {
         "width": {
-          "label": "Genişlik"
+          "label": ""
         },
         "height": {
-          "label": "Yükseklik"
+          "label": ""
         },
         "xOffset": {
           "label": ""
@@ -881,7 +881,7 @@
           "label": ""
         },
         "openInNewTab": {
-          "label": "Yeni sekmede aç"
+          "label": ""
         },
         "showTitle": {
           "label": ""
@@ -932,13 +932,13 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "Düzen",
+          "label": "",
           "option": {
             "row": {
-              "label": "Yatay"
+              "label": ""
             },
             "column": {
-              "label": "Dikey"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -954,24 +954,24 @@
         "integrationsDisconnected": ""
       },
       "data": {
-        "adsBlockedToday": "Bugün engellenenler",
-        "adsBlockedTodayPercentage": "Bugün engellenenler",
-        "dnsQueriesToday": "Bugünkü Sorgular",
+        "adsBlockedToday": "",
+        "adsBlockedTodayPercentage": "",
+        "dnsQueriesToday": "",
         "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
       "name": "",
-      "description": "Kontrol panelinizden PiHole veya AdGuard'ı kontrol edin",
+      "description": "",
       "option": {
         "layout": {
-          "label": "Düzen",
+          "label": "",
           "option": {
             "row": {
-              "label": "Yatay"
+              "label": ""
             },
             "column": {
-              "label": "Dikey"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -989,19 +989,19 @@
         "enableAll": "",
         "disableAll": "",
         "setTimer": "",
-        "set": "Ayarla",
-        "enabled": "Etkin",
-        "disabled": "Pasif",
+        "set": "",
+        "enabled": "",
+        "disabled": "",
         "processing": "",
         "disconnected": "",
-        "hours": "Saat",
-        "minutes": "Dakika",
+        "hours": "",
+        "minutes": "",
         "unlimited": ""
       }
     },
     "clock": {
       "name": "",
-      "description": "Geçerli tarih ve saati görüntüler.",
+      "description": "",
       "option": {
         "customTitleToggle": {
           "label": "",
@@ -1021,7 +1021,7 @@
           "label": ""
         },
         "timezone": {
-          "label": "Saat dilimi",
+          "label": "",
           "description": ""
         },
         "showDate": {
@@ -1034,101 +1034,101 @@
       }
     },
     "notebook": {
-      "name": "Not defteri",
+      "name": "",
       "description": "",
       "option": {
         "showToolbar": {
-          "label": "Markdown'da yazarken size yardımcı olacak araç çubuğunu aktif edin"
+          "label": ""
         },
         "allowReadOnlyCheck": {
-          "label": "Salt okunur modda onay kutusu işaretlemeye izin ver"
+          "label": ""
         },
         "content": {
-          "label": "Not defterinin içeriği"
+          "label": ""
         }
       },
       "controls": {
-        "bold": "Kalın",
-        "italic": "İtalik",
-        "strikethrough": "Üstü Çizgili",
-        "underline": "Alt Çizgili",
-        "colorText": "Renkli metin",
-        "colorHighlight": "Renkli vurgulu metin",
-        "code": "Kod",
-        "clear": "Biçimlendirmeyi temizle",
-        "heading": "Başlık {level}",
-        "align": "Metin hizalama: {position}",
-        "blockquote": "Blok alıntı",
-        "horizontalLine": "Yatay çizgi",
-        "bulletList": "Maddeli liste",
-        "orderedList": "Sıralı liste",
-        "checkList": "Kontrol listesi",
-        "increaseIndent": "Girintiyi Artır",
-        "decreaseIndent": "Girintiyi Azalt",
-        "link": "Bağlantı",
-        "unlink": "Bağlantıyı kaldır",
-        "image": "Resim Göm",
-        "addTable": "Tablo ekle",
-        "deleteTable": "Tablo Sil",
-        "colorCell": "Renk Hücresi",
-        "mergeCell": "Hücre birleştirmeyi aç / kapat",
-        "addColumnLeft": "Öncesine sütun ekle",
-        "addColumnRight": "Sonrasına sütun ekle",
-        "deleteColumn": "Sütunu sil",
-        "addRowTop": "Öncesine satır ekle",
-        "addRowBelow": "Sonrasına satır ekle",
-        "deleteRow": "Satırı sil"
+        "bold": "",
+        "italic": "",
+        "strikethrough": "",
+        "underline": "",
+        "colorText": "",
+        "colorHighlight": "",
+        "code": "",
+        "clear": "",
+        "heading": "",
+        "align": "",
+        "blockquote": "",
+        "horizontalLine": "",
+        "bulletList": "",
+        "orderedList": "",
+        "checkList": "",
+        "increaseIndent": "",
+        "decreaseIndent": "",
+        "link": "",
+        "unlink": "",
+        "image": "",
+        "addTable": "",
+        "deleteTable": "",
+        "colorCell": "",
+        "mergeCell": "",
+        "addColumnLeft": "",
+        "addColumnRight": "",
+        "deleteColumn": "",
+        "addRowTop": "",
+        "addRowBelow": "",
+        "deleteRow": ""
       },
       "align": {
-        "left": "Sol",
-        "center": "Merkez",
-        "right": "Sağ"
+        "left": "",
+        "center": "",
+        "right": ""
       },
       "popover": {
-        "clearColor": "Rengi temizle",
-        "source": "Kaynak",
-        "widthPlaceholder": "% veya piksel cinsinden değer",
-        "columns": "Sütunlar",
-        "rows": "Satırlar",
-        "width": "Genişlik",
-        "height": "Yükseklik"
+        "clearColor": "",
+        "source": "",
+        "widthPlaceholder": "",
+        "columns": "",
+        "rows": "",
+        "width": "",
+        "height": ""
       }
     },
     "iframe": {
       "name": "",
-      "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
+      "description": "",
       "option": {
         "embedUrl": {
-          "label": "Yerleştirme URL'si"
+          "label": ""
         },
         "allowFullScreen": {
-          "label": "Tam ekrana izin ver"
+          "label": ""
         },
         "allowTransparency": {
-          "label": "Şeffaflığa İzin Ver"
+          "label": ""
         },
         "allowScrolling": {
-          "label": "Kaydırmaya izin ver"
+          "label": ""
         },
         "allowPayment": {
-          "label": "Ödemeye izin ver"
+          "label": ""
         },
         "allowAutoPlay": {
-          "label": "Otomatik oynatmaya izin ver"
+          "label": ""
         },
         "allowMicrophone": {
-          "label": "Mikrofona izin ver"
+          "label": ""
         },
         "allowCamera": {
-          "label": "Kameraya İzin Ver"
+          "label": ""
         },
         "allowGeolocation": {
-          "label": "Coğrafi konuma izin ver (geolocation)"
+          "label": ""
         }
       },
       "error": {
         "noUrl": "",
-        "noBrowerSupport": "Tarayıcınız iframe'leri desteklemiyor. Lütfen tarayıcınızı güncelleyin."
+        "noBrowerSupport": ""
       }
     },
     "smartHome-entityState": {
@@ -1136,7 +1136,7 @@
       "description": "",
       "option": {
         "entityId": {
-          "label": "Varlık Kimliği"
+          "label": ""
         },
         "displayName": {
           "label": ""
@@ -1154,10 +1154,10 @@
       "description": "",
       "option": {
         "displayName": {
-          "label": "Ekran adı"
+          "label": ""
         },
         "automationId": {
-          "label": "Otomasyon Kimliği"
+          "label": ""
         }
       },
       "spotlightAction": {
@@ -1165,11 +1165,11 @@
       }
     },
     "calendar": {
-      "name": "Takvim",
+      "name": "",
       "description": "",
       "option": {
         "releaseType": {
-          "label": "Radarr yayın türü",
+          "label": "",
           "options": {
             "inCinemas": "",
             "digitalRelease": "",
@@ -1185,14 +1185,14 @@
       }
     },
     "weather": {
-      "name": "Hava Durumu",
-      "description": "Belirlenen bir konumun güncel hava durumu bilgilerini görüntüler.",
+      "name": "",
+      "description": "",
       "option": {
         "isFormatFahrenheit": {
           "label": ""
         },
         "location": {
-          "label": "Hava durumu konumu"
+          "label": ""
         },
         "showCity": {
           "label": ""
@@ -1210,51 +1210,51 @@
         }
       },
       "kind": {
-        "clear": "Temiz",
-        "mainlyClear": "Genel olarak açık",
-        "fog": "Sis",
-        "drizzle": "Çiseleme",
-        "freezingDrizzle": "Soğuk çiseleme",
-        "rain": "Yağmur",
-        "freezingRain": "Dondurucu yağmur",
-        "snowFall": "Kar yağışı",
-        "snowGrains": "Kar taneleri",
-        "rainShowers": "Sağanak yağmur",
-        "snowShowers": "Kar yağışı",
-        "thunderstorm": "Fırtına",
-        "thunderstormWithHail": "Fırtına ve dolu",
-        "unknown": "Bilinmeyen"
+        "clear": "",
+        "mainlyClear": "",
+        "fog": "",
+        "drizzle": "",
+        "freezingDrizzle": "",
+        "rain": "",
+        "freezingRain": "",
+        "snowFall": "",
+        "snowGrains": "",
+        "rainShowers": "",
+        "snowShowers": "",
+        "thunderstorm": "",
+        "thunderstormWithHail": "",
+        "unknown": ""
       }
     },
     "indexerManager": {
-      "name": "Dizin oluşturucu yöneticisi statüsü",
+      "name": "",
       "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": ""
         }
       },
-      "title": "Dizin oluşturucu yöneticisi",
-      "testAll": "Tümünü test et",
+      "title": "",
+      "testAll": "",
       "error": {
         "internalServerError": ""
       }
     },
     "healthMonitoring": {
-      "name": "Sistem Sağlığı İzleme",
-      "description": "Sistem(ler)inizin sağlığını ve durumunu gösteren bilgileri görüntüler.",
+      "name": "",
+      "description": "",
       "option": {
         "fahrenheit": {
-          "label": "Fahrenheit cinsinden CPU Sıcaklığı"
+          "label": ""
         },
         "cpu": {
-          "label": "CPU Bilgilerini Göster"
+          "label": ""
         },
         "memory": {
-          "label": "Bellek Bilgilerini Göster"
+          "label": ""
         },
         "fileSystem": {
-          "label": "Dosya Sistemi Bilgilerini Göster"
+          "label": ""
         }
       },
       "popover": {
@@ -1268,7 +1268,7 @@
         "minute": "",
         "minutes": "",
         "used": "",
-        "available": "Mevcut",
+        "available": "",
         "lastSeen": ""
       },
       "memory": {},
@@ -1283,7 +1283,7 @@
         "longitude": "",
         "disabledTooltip": "",
         "unknownLocation": "",
-        "search": "Ara",
+        "search": "",
         "table": {
           "header": {
             "city": "",
@@ -1295,7 +1295,7 @@
             "select": ""
           },
           "population": {
-            "fallback": "Bilinmeyen"
+            "fallback": ""
           }
         }
       },
@@ -1317,14 +1317,14 @@
       "option": {}
     },
     "video": {
-      "name": "Video Akışı",
-      "description": "Bir video akışını veya bir kameradan veya bir web sitesinden video gömün",
+      "name": "",
+      "description": "",
       "option": {
         "feedUrl": {
-          "label": "Akış URL'si"
+          "label": ""
         },
         "hasAutoPlay": {
-          "label": "Otomatik oynatma",
+          "label": "",
           "description": ""
         },
         "isMuted": {
@@ -1389,15 +1389,15 @@
         },
         "added": {
           "columnTitle": "",
-          "detailsTitle": "Ekleme Tarihi"
+          "detailsTitle": ""
         },
         "category": {
           "columnTitle": "",
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "İndirme",
-          "detailsTitle": "İndirme Hızı"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "index": {
           "columnTitle": "",
@@ -1407,13 +1407,13 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Entegrasyon"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "İlerleme",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "ratio": {
@@ -1433,7 +1433,7 @@
           "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Durum",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "time": {
@@ -1445,20 +1445,20 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Yükleme",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
       "states": {
-        "downloading": "İndiriliyor",
-        "queued": "Sıraya alındı",
-        "paused": "Duraklatıldı",
-        "completed": "Tamamlanan",
+        "downloading": "",
+        "queued": "",
+        "paused": "",
+        "completed": "",
         "failed": "",
         "processing": "",
         "leeching": "",
         "stalled": "",
-        "unknown": "Bilinmeyen",
+        "unknown": "",
         "seeding": ""
       },
       "actions": {
@@ -1486,10 +1486,10 @@
     },
     "mediaRequests-requestList": {
       "name": "",
-      "description": "Overseerr veya Jellyseerr uygulamanızdan gelen tüm medya taleplerinin bir listesini görün",
+      "description": "",
       "option": {
         "linksTargetNewTab": {
-          "label": "Bağlantıları yeni sekmede aç"
+          "label": ""
         }
       },
       "pending": {
@@ -1498,32 +1498,32 @@
         "decline": ""
       },
       "availability": {
-        "unknown": "Bilinmeyen",
+        "unknown": "",
         "pending": "",
         "processing": "",
-        "partiallyAvailable": "Kısmi",
-        "available": "Mevcut"
+        "partiallyAvailable": "",
+        "available": ""
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
       "name": "",
-      "description": "Medya taleplerinizle ilgili istatistikler",
+      "description": "",
       "option": {},
       "titles": {
         "stats": {
-          "main": "Medya İstatistikleri",
-          "approved": "Onaylanan",
-          "pending": "Onay bekleyen",
+          "main": "",
+          "approved": "",
+          "pending": "",
           "processing": "",
           "declined": "",
           "available": "",
-          "tv": "Dizi talepleri",
-          "movie": "Film talepleri",
-          "total": "Toplam"
+          "tv": "",
+          "movie": "",
+          "total": ""
         },
         "users": {
-          "main": "En İyi Kullanıcılar",
+          "main": "",
           "requests": ""
         }
       }
@@ -1592,7 +1592,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Uygulamalar",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -1608,9 +1608,9 @@
           "screenSize": {
             "label": "",
             "option": {
-              "sm": "Küçük",
-              "md": "Orta",
-              "lg": "Büyük"
+              "sm": "",
+              "md": "",
+              "lg": ""
             }
           },
           "sidebarBehavior": {
@@ -1647,7 +1647,7 @@
         "label": ""
       },
       "backgroundImageAttachment": {
-        "label": "Arkaplan resim ekle",
+        "label": "",
         "option": {
           "fixed": {
             "label": "",
@@ -1681,7 +1681,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Arkaplan resim boyutu",
+        "label": "",
         "option": {
           "cover": {
             "label": "",
@@ -1694,17 +1694,17 @@
         }
       },
       "primaryColor": {
-        "label": "Birincil renk"
+        "label": ""
       },
       "secondaryColor": {
-        "label": "İkincil renk"
+        "label": ""
       },
       "opacity": {
         "label": ""
       },
       "customCss": {
         "label": "",
-        "description": "Ayrıca, yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak kontrol panelinizi özelleştirin",
+        "description": "",
         "customClassesAlert": {
           "title": "",
           "description": ""
@@ -1714,10 +1714,10 @@
         "label": ""
       },
       "name": {
-        "label": "İsim"
+        "label": ""
       },
       "isPublic": {
-        "label": "Herkese açık",
+        "label": "",
         "description": ""
       }
     },
@@ -1728,14 +1728,14 @@
       "title": "",
       "section": {
         "general": {
-          "title": "Genel",
+          "title": "",
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Düzen"
+          "title": ""
         },
         "background": {
-          "title": "Arkaplan"
+          "title": ""
         },
         "color": {
           "title": ""
@@ -1748,7 +1748,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "Panelleri görüntüle"
+                "label": ""
               },
               "modify": {
                 "label": ""
@@ -1760,7 +1760,7 @@
           }
         },
         "dangerZone": {
-          "title": "Tehlikeli bölge",
+          "title": "",
           "action": {
             "rename": {
               "label": "",
@@ -1796,7 +1796,7 @@
               "description": "",
               "button": "",
               "confirm": {
-                "title": "Paneli sil",
+                "title": "",
                 "description": ""
               }
             }
@@ -1818,22 +1818,22 @@
     },
     "navbar": {
       "items": {
-        "home": "Ana sayfa",
-        "boards": "Paneller",
-        "apps": "Uygulamalar",
+        "home": "",
+        "boards": "",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
         "users": {
-          "label": "Kullanıcılar",
+          "label": "",
           "items": {
-            "manage": "Yönet",
-            "invites": "Davetler",
+            "manage": "",
+            "invites": "",
             "groups": ""
           }
         },
         "tools": {
-          "label": "Araçlar",
+          "label": "",
           "items": {
             "docker": "",
             "logs": "",
@@ -1841,38 +1841,38 @@
             "tasks": ""
           }
         },
-        "settings": "Ayarlar",
+        "settings": "",
         "help": {
-          "label": "Yardım",
+          "label": "",
           "items": {
-            "documentation": "Dokümantasyon",
+            "documentation": "",
             "submitIssue": "",
-            "discord": "Discord Topluluğu",
+            "discord": "",
             "sourceCode": ""
           }
         },
-        "about": "Hakkında"
+        "about": ""
       }
     },
     "page": {
       "home": {
         "statistic": {
-          "board": "Paneller",
-          "user": "Kullanıcılar",
-          "invite": "Davetler",
+          "board": "",
+          "user": "",
+          "invite": "",
           "integration": "",
-          "app": "Uygulamalar",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "Paneller",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
         }
       },
       "board": {
-        "title": "Panelleriniz",
+        "title": "",
         "action": {
           "new": {
             "label": ""
@@ -1881,19 +1881,19 @@
             "label": ""
           },
           "settings": {
-            "label": "Ayarlar"
+            "label": ""
           },
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "Ana sayfa",
+              "label": "",
               "tooltip": ""
             }
           },
           "delete": {
-            "label": "Kalıcı olarak sil",
+            "label": "",
             "confirm": {
-              "title": "Paneli sil",
+              "title": "",
               "description": ""
             }
           }
@@ -1906,7 +1906,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "İsim"
+                "label": ""
               }
             }
           }
@@ -1920,37 +1920,37 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "Genel",
+            "title": "",
             "item": {
               "language": "",
               "board": "",
-              "firstDayOfWeek": "Haftanın ilk günü",
-              "accessibility": "Erişilebilirlik"
+              "firstDayOfWeek": "",
+              "accessibility": ""
             }
           },
           "security": {
-            "title": "Güvenlik"
+            "title": ""
           },
           "board": {
-            "title": "Paneller"
+            "title": ""
           }
         },
         "list": {
-          "metaTitle": "Kullanıcıları yönet",
-          "title": "Kullanıcılar"
+          "metaTitle": "",
+          "title": ""
         },
         "edit": {
           "metaTitle": ""
         },
         "create": {
-          "metaTitle": "Kullanıcı ekle",
+          "metaTitle": "",
           "title": "",
           "step": {
             "personalInformation": {
               "label": ""
             },
             "security": {
-              "label": "Güvenlik"
+              "label": ""
             },
             "groups": {
               "label": "",
@@ -1973,35 +1973,35 @@
           }
         },
         "invite": {
-          "title": "Kullanıcı davetlerini yönet",
+          "title": "",
           "action": {
             "new": {
               "title": "",
-              "description": "Süre sona erdikten sonra davet artık geçerli olmayacak ve daveti alan kişi bir hesap oluşturamayacaktır."
+              "description": ""
             },
             "copy": {
               "title": "",
               "description": "",
-              "link": "Davet bağlantısı",
+              "link": "",
               "button": ""
             },
             "delete": {
-              "title": "Daveti sil",
-              "description": "Bu daveti silmek istediğinizden emin misiniz? Bu bağlantıya sahip kullanıcılar artık bu bağlantıyı kullanarak hesap oluşturamayacaktır."
+              "title": "",
+              "description": ""
             }
           },
           "field": {
             "id": {
-              "label": "Kimlik"
+              "label": ""
             },
             "creator": {
-              "label": "Oluşturan"
+              "label": ""
             },
             "expirationDate": {
-              "label": "Son geçerlilik tarihi"
+              "label": ""
             },
             "token": {
-              "label": "Erişim Anahtarı"
+              "label": ""
             }
           }
         }
@@ -2010,7 +2010,7 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "Genel",
+            "title": "",
             "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
@@ -2029,7 +2029,7 @@
         }
       },
       "settings": {
-        "title": "Ayarlar",
+        "title": "",
         "notification": {
           "success": {
             "message": ""
@@ -2108,8 +2108,8 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "Çalışıyor",
-            "error": "Hata"
+            "running": "",
+            "error": ""
           },
           "job": {
             "iconsUpdater": {
@@ -2125,7 +2125,7 @@
               "label": ""
             },
             "mediaServer": {
-              "label": "Medya Sunucusu"
+              "label": ""
             },
             "mediaOrganizer": {
               "label": ""
@@ -2167,7 +2167,7 @@
           },
           "tab": {
             "documentation": {
-              "label": "Dokümantasyon"
+              "label": ""
             },
             "apiKey": {
               "label": "",
@@ -2177,7 +2177,7 @@
               },
               "table": {
                 "header": {
-                  "id": "Kimlik",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2206,7 +2206,7 @@
     }
   },
   "docker": {
-    "title": "Konteyner",
+    "title": "",
     "table": {
       "updated": "",
       "search": "",
@@ -2214,30 +2214,30 @@
     },
     "field": {
       "name": {
-        "label": "İsim"
+        "label": ""
       },
       "state": {
-        "label": "Durum",
+        "label": "",
         "option": {
-          "created": "Oluşturuldu",
-          "running": "Çalışıyor",
-          "paused": "Duraklatıldı",
-          "restarting": "Yeniden başlatılıyor",
+          "created": "",
+          "running": "",
+          "paused": "",
+          "restarting": "",
           "exited": "",
-          "removing": "Kaldırılıyor",
+          "removing": "",
           "dead": ""
         }
       },
       "containerImage": {
-        "label": "İmaj"
+        "label": ""
       },
       "ports": {
-        "label": "Bağlantı noktaları"
+        "label": ""
       }
     },
     "action": {
       "start": {
-        "label": "Başlat",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2250,7 +2250,7 @@
         }
       },
       "stop": {
-        "label": "Durdur",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2263,7 +2263,7 @@
         }
       },
       "restart": {
-        "label": "Yeniden Başlat",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2276,7 +2276,7 @@
         }
       },
       "remove": {
-        "label": "Kaldır",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2312,13 +2312,13 @@
       "title": ""
     },
     "tab": {
-      "user": "Kullanıcılar",
+      "user": "",
       "group": "",
       "inherited": ""
     },
     "field": {
       "user": {
-        "label": "Kullanıcı"
+        "label": ""
       },
       "group": {
         "label": ""
@@ -2334,14 +2334,14 @@
   },
   "navigationStructure": {
     "manage": {
-      "label": "Yönet",
+      "label": "",
       "boards": {
-        "label": "Paneller"
+        "label": ""
       },
       "integrations": {
         "label": "",
         "edit": {
-          "label": "Düzenle"
+          "label": ""
         },
         "new": {
           "label": ""
@@ -2353,38 +2353,38 @@
           "label": ""
         },
         "edit": {
-          "label": "Düzenle"
+          "label": ""
         }
       },
       "medias": {
         "label": ""
       },
       "apps": {
-        "label": "Uygulamalar",
+        "label": "",
         "new": {
           "label": ""
         },
         "edit": {
-          "label": "Düzenle"
+          "label": ""
         }
       },
       "users": {
-        "label": "Kullanıcılar",
+        "label": "",
         "create": {
-          "label": "Oluştur"
+          "label": ""
         },
-        "general": "Genel",
-        "security": "Güvenlik",
-        "board": "Paneller",
+        "general": "",
+        "security": "",
+        "board": "",
         "groups": {
           "label": ""
         },
         "invites": {
-          "label": "Davetler"
+          "label": ""
         }
       },
       "tools": {
-        "label": "Araçlar",
+        "label": "",
         "docker": {
           "label": ""
         },
@@ -2393,10 +2393,10 @@
         }
       },
       "settings": {
-        "label": "Ayarlar"
+        "label": ""
       },
       "about": {
-        "label": "Hakkında"
+        "label": ""
       }
     }
   },
@@ -2411,7 +2411,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Uygulamalar",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2427,7 +2427,7 @@
             }
           },
           "board": {
-            "title": "Paneller",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2533,7 +2533,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrentler",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2550,16 +2550,16 @@
             "title": ""
           },
           "help": {
-            "title": "Yardım",
+            "title": "",
             "option": {
               "documentation": {
-                "label": "Dokümantasyon"
+                "label": ""
               },
               "submitIssue": {
                 "label": ""
               },
               "discord": {
-                "label": "Discord Topluluğu"
+                "label": ""
               }
             }
           }
@@ -2597,7 +2597,7 @@
                 "label": ""
               },
               "manageUser": {
-                "label": "Kullanıcıları yönet"
+                "label": ""
               },
               "manageInvite": {
                 "label": ""
@@ -2621,13 +2621,13 @@
                 "label": ""
               },
               "about": {
-                "label": "Hakkında"
+                "label": ""
               },
               "homeBoard": {
                 "label": ""
               },
               "preferences": {
-                "label": "Tercihleriniz"
+                "label": ""
               }
             }
           }
@@ -2637,7 +2637,7 @@
         "help": "",
         "group": {
           "user": {
-            "title": "Kullanıcılar",
+            "title": "",
             "children": {
               "action": {
                 "detail": {
@@ -2675,7 +2675,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": "İsim"
+          "label": ""
         },
         "short": {
           "label": ""

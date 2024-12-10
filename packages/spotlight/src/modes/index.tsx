@@ -11,10 +11,11 @@ import type { SearchMode } from "../lib/mode";
 import { appIntegrationBoardMode } from "./app-integration-board";
 import { commandMode } from "./command";
 import { externalMode } from "./external";
+import { homeMode } from "./home";
 import { pageMode } from "./page";
 import { userGroupMode } from "./user-group";
 
-const searchModesWithoutHelp = [userGroupMode, appIntegrationBoardMode, externalMode, commandMode, pageMode] as const;
+const searchModesForHelp = [userGroupMode, appIntegrationBoardMode, externalMode, commandMode, pageMode] as const;
 
 const helpMode = {
   modeKey: "help",
@@ -82,4 +83,4 @@ const helpMode = {
   },
 } satisfies SearchMode;
 
-export const searchModes = [...searchModesWithoutHelp, helpMode] as const;
+export const searchModes = [...searchModesForHelp, helpMode, homeMode] as const;

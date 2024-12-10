@@ -125,6 +125,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openmediavault.png",
     category: ["healthMonitoring"],
   },
+  dashDot: {
+    name: "Dash.",
+    secretKinds: [[]],
+    category: ["healthMonitoring"],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dashdot.png",
+    supportsSearch: false,
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;

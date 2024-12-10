@@ -1,5 +1,6 @@
 import { observable } from "@trpc/server/observable";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { HealthMonitoring } from "@homarr/integrations";
 import { systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
@@ -8,7 +9,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const healthMonitoringRouter = createTRPCRouter({
   getHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault"))
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("healthMonitoring")))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -26,7 +27,7 @@ export const healthMonitoringRouter = createTRPCRouter({
     }),
 
   subscribeHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault"))
+    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("healthMonitoring")))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];

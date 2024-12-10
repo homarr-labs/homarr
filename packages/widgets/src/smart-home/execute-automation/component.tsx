@@ -6,6 +6,8 @@ import { useDisclosure, useTimeout } from "@mantine/hooks";
 import { IconAutomation, IconCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -34,6 +36,29 @@ export default function SmartHomeTriggerAutomationWidget({
       integrationId: integrationIds[0] ?? "",
     });
   }, [integrationIds, isEditMode, mutateAsync, options.automationId]);
+
+  const t = useI18n();
+  useRegisterSpotlightContextActions(
+    `smartHome-automation-${options.automationId}`,
+    [
+      {
+        id: options.automationId,
+        name: t("widget.smartHome-executeAutomation.spotlightAction.run", { name: options.displayName }),
+        icon: IconAutomation,
+        interaction() {
+          return {
+            type: "javaScript",
+            // eslint-disable-next-line no-restricted-syntax
+            async onSelect() {
+              await handleClick();
+            },
+          };
+        },
+      },
+    ],
+    [handleClick, options.automationId, options.displayName],
+  );
+
   return (
     <UnstyledButton onClick={handleClick} style={{ cursor: !isEditMode ? "pointer" : "initial" }} w="100%" h="100%">
       {isShowSuccess && (

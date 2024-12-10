@@ -1,4 +1,4 @@
-import type { MutableRefObject, RefObject } from "react";
+import type { RefObject } from "react";
 
 import type { GridItemHTMLElement } from "@homarr/gridstack";
 import { GridStack } from "@homarr/gridstack";
@@ -9,9 +9,9 @@ interface InitializeGridstackProps {
   section: Omit<Section, "items">;
   itemIds: string[];
   refs: {
-    wrapper: RefObject<HTMLDivElement>;
-    items: MutableRefObject<Record<string, RefObject<GridItemHTMLElement>>>;
-    gridstack: MutableRefObject<GridStack | undefined>;
+    wrapper: RefObject<HTMLDivElement | null>;
+    items: RefObject<Record<string, RefObject<GridItemHTMLElement | null>>>;
+    gridstack: RefObject<GridStack | null>;
   };
   sectionColumnCount: number;
 }

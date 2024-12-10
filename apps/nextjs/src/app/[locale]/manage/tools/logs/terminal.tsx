@@ -13,7 +13,7 @@ import classes from "./terminal.module.css";
 export const TerminalComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const terminalRef = useRef<Terminal>();
+  const terminalRef = useRef<Terminal>(null);
   clientApi.log.subscribe.useSubscription(undefined, {
     onData(data) {
       terminalRef.current?.writeln(`${data.timestamp} ${data.level} ${data.message}`);

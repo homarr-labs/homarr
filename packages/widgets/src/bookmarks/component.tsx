@@ -4,16 +4,35 @@ import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledBu
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
+import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
 
-export default function BookmarksWidget({ options, width, height }: WidgetComponentProps<"bookmarks">) {
+export default function BookmarksWidget({ options, width, height, itemId }: WidgetComponentProps<"bookmarks">) {
   const [data] = clientApi.app.byIds.useSuspenseQuery(options.items, {
     select(data) {
       return data.sort((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
     },
   });
+
+  useRegisterSpotlightContextResults(
+    `bookmark-${itemId}`,
+    data.map((app) => ({
+      id: app.id,
+      name: app.name,
+      icon: app.iconUrl,
+      interaction() {
+        return {
+          type: "link",
+          href: parseAppHrefWithVariablesClient(app.href ?? ""),
+          newTab: false,
+        };
+      },
+    })),
+    [data],
+  );
 
   return (
     <Stack h="100%" gap="sm" p="sm">

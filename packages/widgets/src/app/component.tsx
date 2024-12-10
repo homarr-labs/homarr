@@ -8,6 +8,7 @@ import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
+import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -27,6 +28,24 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
       refetchOnReconnect: false,
       retry: false,
     },
+  );
+  useRegisterSpotlightContextResults(
+    `app-${app.id}`,
+    [
+      {
+        id: app.id,
+        name: app.name,
+        icon: app.iconUrl,
+        interaction() {
+          return {
+            type: "link",
+            href: parseAppHrefWithVariablesClient(app.href ?? ""),
+            newTab: options.openInNewTab,
+          };
+        },
+      },
+    ],
+    [app, options.openInNewTab],
   );
 
   return (

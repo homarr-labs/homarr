@@ -34,6 +34,10 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
   });
 
   if (Array.isArray(options)) {
+    if (options.length === 0) {
+      return null;
+    }
+
     const filteredOptions = options
       .filter((option) => ("filter" in group ? group.filter(query, option) : false))
       .sort((optionA, optionB) => {

@@ -17,7 +17,7 @@ interface Props extends BoxProps {
   height: number;
   minWidth?: number;
   minHeight?: number;
-  innerRef: React.RefObject<GridItemHTMLElement> | undefined;
+  innerRef: React.RefObject<GridItemHTMLElement | null> | undefined;
 }
 
 export const GridStackItem = ({

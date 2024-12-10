@@ -2,8 +2,10 @@
 
 import { useCallback } from "react";
 import { Center, Stack, Text, UnstyledButton } from "@mantine/core";
+import { IconBinaryTree } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationSelectedError } from "../../errors";
@@ -59,6 +61,27 @@ const InnerComponent = ({ options, integrationId, isEditMode }: InnerComponentPr
       integrationId,
     });
   }, [integrationId, isEditMode, mutate, options.clickable, options.entityId]);
+
+  useRegisterSpotlightContextActions(
+    `smartHome-entityState-${options.entityId}`,
+    [
+      {
+        id: options.entityId,
+        name: options.displayName,
+        icon: IconBinaryTree,
+        interaction() {
+          return {
+            type: "javaScript",
+            onSelect() {
+              handleClick();
+            },
+          };
+        },
+        disabled: !options.clickable,
+      },
+    ],
+    [handleClick, options.clickable, options.displayName, options.entityId],
+  );
 
   return (
     <UnstyledButton
