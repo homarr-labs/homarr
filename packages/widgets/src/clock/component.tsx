@@ -44,8 +44,8 @@ interface UseCurrentTimeProps {
 
 const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
   const [time, setTime] = useState(new Date());
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
+  const intervalRef = useRef<NodeJS.Timeout>(null);
   const intervalMultiplier = useMemo(() => (showSeconds ? 1 : 60), [showSeconds]);
 
   useEffect(() => {
@@ -62,8 +62,8 @@ const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
     );
 
     return () => {
-      clearTimeout(timeoutRef.current);
-      clearInterval(intervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [intervalMultiplier, showSeconds]);
 

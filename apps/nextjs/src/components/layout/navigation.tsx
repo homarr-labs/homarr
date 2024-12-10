@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
 
 import type { TablerIcon } from "@homarr/ui";
