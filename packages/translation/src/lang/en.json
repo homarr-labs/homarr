@@ -733,7 +733,8 @@
         "logout": "Logout",
         "login": "Login",
         "homeBoard": "Your home board",
-        "loggedOut": "Logged out"
+        "loggedOut": "Logged out",
+        "updateAvailable": "{countUpdates} updates available: {tag}"
       }
     },
     "dangerZone": "Danger zone",
@@ -2153,6 +2154,9 @@
             },
             "sessionCleanup": {
               "label": "Session Cleanup"
+            },
+            "updateChecker": {
+              "label": "Update checker"
             }
           }
         },

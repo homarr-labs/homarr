@@ -7,6 +7,7 @@ export {
   createIntegrationOptionsChannel,
   createChannelWithLatestAndEvents,
   handshakeAsync,
+  createSubPubChannel,
 } from "./lib/channel";
 
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");
