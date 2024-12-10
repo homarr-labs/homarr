@@ -141,7 +141,7 @@ importers:
         version: 1.0.13(rollup@4.21.3)(webpack-sources@3.2.3)
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
-        version: 0.11.1(typescript@5.7.2)(zod@3.23.8)
+        version: 0.11.1(typescript@5.7.2)(zod@3.24.0)
       '@tabler/icons-react':
         specifier: ^3.24.0
         version: 3.24.0(react@18.3.1)
@@ -529,7 +529,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.1.0
-        version: 2.1.0(@trpc/server@11.0.0-rc.660(typescript@5.7.2))(zod-openapi@2.19.0(zod@3.23.8))(zod@3.23.8)
+        version: 2.1.0(@trpc/server@11.0.0-rc.660(typescript@5.7.2))(zod-openapi@2.19.0(zod@3.24.0))(zod@3.24.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -578,7 +578,7 @@ importers:
         version: link:../validation
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
-        version: 0.11.1(typescript@5.7.2)(zod@3.23.8)
+        version: 0.11.1(typescript@5.7.2)(zod@3.24.0)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -879,7 +879,7 @@ importers:
         version: 0.38.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.13)(better-sqlite3@11.7.0)(mysql2@3.11.5)(react@18.3.1)
       drizzle-zod:
         specifier: ^0.6.0
-        version: 0.6.0(drizzle-orm@0.38.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.13)(better-sqlite3@11.7.0)(mysql2@3.11.5)(react@18.3.1))(zod@3.23.8)
+        version: 0.6.0(drizzle-orm@0.38.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.13)(better-sqlite3@11.7.0)(mysql2@3.11.5)(react@18.3.1))(zod@3.24.0)
       mysql2:
         specifier: 3.11.5
         version: 3.11.5
@@ -1242,8 +1242,8 @@ importers:
   packages/old-schema:
     dependencies:
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^3.24.0
+        version: 3.24.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1577,11 +1577,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../translation
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^3.24.0
+        version: 3.24.0
       zod-form-data:
         specifier: ^2.0.2
-        version: 2.0.2(zod@3.23.8)
+        version: 2.0.2(zod@3.24.0)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -8366,8 +8366,8 @@ packages:
     peerDependencies:
       zod: ^3.21.4
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+  zod@3.24.0:
+    resolution: {integrity: sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==}
 
 snapshots:
 
@@ -9857,16 +9857,16 @@ snapshots:
       '@swc/counter': 0.1.3
       tslib: 2.7.0
 
-  '@t3-oss/env-core@0.11.1(typescript@5.7.2)(zod@3.23.8)':
+  '@t3-oss/env-core@0.11.1(typescript@5.7.2)(zod@3.24.0)':
     dependencies:
-      zod: 3.23.8
+      zod: 3.24.0
     optionalDependencies:
       typescript: 5.7.2
 
-  '@t3-oss/env-nextjs@0.11.1(typescript@5.7.2)(zod@3.23.8)':
+  '@t3-oss/env-nextjs@0.11.1(typescript@5.7.2)(zod@3.24.0)':
     dependencies:
-      '@t3-oss/env-core': 0.11.1(typescript@5.7.2)(zod@3.23.8)
-      zod: 3.23.8
+      '@t3-oss/env-core': 0.11.1(typescript@5.7.2)(zod@3.24.0)
+      zod: 3.24.0
     optionalDependencies:
       typescript: 5.7.2
 
@@ -11576,10 +11576,10 @@ snapshots:
       mysql2: 3.11.5
       react: 18.3.1
 
-  drizzle-zod@0.6.0(drizzle-orm@0.38.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.13)(better-sqlite3@11.7.0)(mysql2@3.11.5)(react@18.3.1))(zod@3.23.8):
+  drizzle-zod@0.6.0(drizzle-orm@0.38.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.13)(better-sqlite3@11.7.0)(mysql2@3.11.5)(react@18.3.1))(zod@3.24.0):
     dependencies:
       drizzle-orm: 0.38.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.13)(better-sqlite3@11.7.0)(mysql2@3.11.5)(react@18.3.1)
-      zod: 3.23.8
+      zod: 3.24.0
 
   eastasianwidth@0.2.0: {}
 
@@ -14827,15 +14827,15 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-to-openapi@2.1.0(@trpc/server@11.0.0-rc.660(typescript@5.7.2))(zod-openapi@2.19.0(zod@3.23.8))(zod@3.23.8):
+  trpc-to-openapi@2.1.0(@trpc/server@11.0.0-rc.660(typescript@5.7.2))(zod-openapi@2.19.0(zod@3.24.0))(zod@3.24.0):
     dependencies:
       '@trpc/server': 11.0.0-rc.660(typescript@5.7.2)
       co-body: 6.2.0
       h3: 1.13.0
       lodash.clonedeep: 4.5.0
       openapi3-ts: 4.3.3
-      zod: 3.23.8
-      zod-openapi: 2.19.0(zod@3.23.8)
+      zod: 3.24.0
+      zod-openapi: 2.19.0(zod@3.24.0)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -15498,12 +15498,12 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.2(zod@3.23.8):
+  zod-form-data@2.0.2(zod@3.24.0):
     dependencies:
-      zod: 3.23.8
+      zod: 3.24.0
 
-  zod-openapi@2.19.0(zod@3.23.8):
+  zod-openapi@2.19.0(zod@3.24.0):
     dependencies:
-      zod: 3.23.8
+      zod: 3.24.0
 
-  zod@3.23.8: {}
+  zod@3.24.0: {}
