@@ -1,17 +1,11 @@
-import { createSubPubChannel } from "@homarr/redis";
+import { updateCheckerRequestHandler } from "@homarr/request-handler/update-checker";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const updateCheckerRouter = createTRPCRouter({
   getAvailableUpdates: protectedProcedure.query(async () => {
-    const channel = createSubPubChannel<{
-      availableUpdates: { name: string | null; contentHtml?: string; url: string; tag_name: string }[];
-    }>("homarr:update", {
-      persist: true,
-    });
-
-    const data = await channel.getLastDataAsync();
-
-    return data?.availableUpdates;
+    const handler = updateCheckerRequestHandler.handler({});
+    const data = await handler.getCachedOrUpdatedDataAsync({});
+    return data.data.availableUpdates;
   }),
 });
