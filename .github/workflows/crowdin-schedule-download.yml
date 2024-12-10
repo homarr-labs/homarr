@@ -21,6 +21,7 @@ jobs:
           app_id: ${{ secrets.CROWDIN_APP_ID }}
 
       - name: Download Crowdin translations
+        id: crowdin-download
         uses: crowdin/github-action@v2
         with:
           upload_sources: false
@@ -30,6 +31,7 @@ jobs:
           create_pull_request: true
           pull_request_title: "chore(lang): updated translations from crowdin"
           pull_request_body: "New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)"
+          commit_message: "chore(lang): update translations from crowdin"
           pull_request_base_branch_name: "dev"
           github_user_name: "Crowdin Homarr"
           github_user_email: "190541745+homarr-crowdin[bot]@users.noreply.github.com"
@@ -38,3 +40,9 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Enable auto-merge
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: |
+          gh pr merge ${{steps.crowdin-download.pull_request_number}} --auto --merge --squash --delete-branch --title "chore(lang): updated translations from crowdin"
