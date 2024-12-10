@@ -866,7 +866,8 @@
           "boardAlreadyExists": "A board with this name already exists",
           "invalidFileType": "Invalid file type, expected {expected}",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
-          "invalidConfiguration": "Invalid configuration"
+          "invalidConfiguration": "Invalid configuration",
+          "groupNameTaken": "Group name already taken"
         }
       }
     }

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Stack } from "@mantine/core";
 import SuperJSON from "superjson";
 
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
 import { boardSizes } from "@homarr/old-schema";
 
@@ -37,7 +38,11 @@ export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImpo
     [analyseResult, boardSelections, settings],
   );
 
-  const { mutateAsync, isPending } = clientApi.import.importInitialOldmarrImport.useMutation();
+  const { mutateAsync, isPending } = clientApi.import.importInitialOldmarrImport.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/init");
+    },
+  });
   const { openModal } = useModalAction(ImportTokenModal);
 
   const createFormData = (token: string | null) => {

@@ -1247,11 +1247,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@mantine/core':
-        specifier: 7.14.3
-        version: 7.14.3(@mantine/hooks@7.14.3(react@18.3.1))(@types/react@18.3.13)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
+        specifier: 7.15.0
+        version: 7.15.0(@mantine/hooks@7.15.0(react@18.3.1))(@types/react@18.3.13)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
-        specifier: 7.14.3
-        version: 7.14.3(react@18.3.1)
+        specifier: 7.15.0
+        version: 7.15.0(react@18.3.1)
       adm-zip:
         specifier: 0.5.16
         version: 0.5.16
@@ -3053,13 +3053,6 @@ packages:
     peerDependencies:
       chroma-js: '>=2.4.2'
 
-  '@mantine/core@7.14.3':
-    resolution: {integrity: sha512-niAi+ZYBr4KrG+X2Mx+muvEzUOOHc/Rx0vsbIGYeNe7urwHSm/xNEGsaapmCqeRC0CSL4KI6TJOq8QhnSuQZcw==}
-    peerDependencies:
-      '@mantine/hooks': 7.14.3
-      react: ^18.x || ^19.x
-      react-dom: ^18.x || ^19.x
-
   '@mantine/core@7.15.0':
     resolution: {integrity: sha512-tZlRydfaEaaCNIi3tl1u+VtJxNyBoml2iCJAy6ZqcNNcjy/krJmta5lVtjUeApZfE33rkvr+3WVqGk0YjW6oSQ==}
     peerDependencies:
@@ -3086,11 +3079,6 @@ packages:
 
   '@mantine/form@7.15.0':
     resolution: {integrity: sha512-gTn68Y8zXGI8zRw9EdVA00tiS5V3nQ7VkGmyAC45ZOfOpP0H9bFhnqFLM8vQHEtnLCmI3oU93zyVBUgjwlF19A==}
-    peerDependencies:
-      react: ^18.x || ^19.x
-
-  '@mantine/hooks@7.14.3':
-    resolution: {integrity: sha512-cU3R9b8GLs6aCvpsVC56ZOOJCUIoDqX3RcLWkcfpA5a47LjWa/rzegP4YWfNW6/E9vodPJT4AEbYXVffYlyNwA==}
     peerDependencies:
       react: ^18.x || ^19.x
 
@@ -9572,10 +9560,10 @@ snapshots:
     dependencies:
       chroma-js: 3.1.2
 
-  '@mantine/core@7.14.3(@mantine/hooks@7.14.3(react@18.3.1))(@types/react@18.3.13)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)':
+  '@mantine/core@7.15.0(@mantine/hooks@7.15.0(react@18.3.1))(@types/react@18.3.13)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@floating-ui/react': 0.26.28(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
-      '@mantine/hooks': 7.14.3(react@18.3.1)
+      '@mantine/hooks': 7.15.0(react@18.3.1)
       clsx: 2.1.1
       react: 18.3.1
       react-dom: 19.0.0(react@18.3.1)
@@ -9646,7 +9634,7 @@ snapshots:
       klona: 2.0.6
       react: 19.0.0
 
-  '@mantine/hooks@7.14.3(react@18.3.1)':
+  '@mantine/hooks@7.15.0(react@18.3.1)':
     dependencies:
       react: 18.3.1
 

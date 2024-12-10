@@ -6,13 +6,18 @@ import {
 } from "@homarr/old-import/import";
 import { z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, onboardingProcedure } from "../../trpc";
+import { nextOnboardingStepAsync } from "../onboard/onboard-queries";
 
 export const importRouter = createTRPCRouter({
-  analyseInitialOldmarrImport: publicProcedure.input(analyseOldmarrImportInputSchema).mutation(async ({ input }) => {
-    return await analyseOldmarrImportForRouterAsync(input);
-  }),
-  validateToken: publicProcedure
+  analyseInitialOldmarrImport: onboardingProcedure
+    .requiresStep("import")
+    .input(analyseOldmarrImportInputSchema)
+    .mutation(async ({ input }) => {
+      return await analyseOldmarrImportForRouterAsync(input);
+    }),
+  validateToken: onboardingProcedure
+    .requiresStep("import")
     .input(
       z.object({
         checksum: z.string(),
@@ -27,9 +32,11 @@ export const importRouter = createTRPCRouter({
         return false;
       }
     }),
-  importInitialOldmarrImport: publicProcedure
+  importInitialOldmarrImport: onboardingProcedure
+    .requiresStep("import")
     .input(importInitialOldmarrInputSchema)
     .mutation(async ({ ctx, input }) => {
       await importInitialOldmarrAsync(ctx.db, input);
+      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
 });
