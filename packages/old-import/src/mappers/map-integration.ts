@@ -1,7 +1,8 @@
+import { decryptSecretWithKey } from "@homarr/common/server";
 import { createId } from "@homarr/db";
 import type { IntegrationKind } from "@homarr/definitions";
 import type { OldmarrIntegrationType } from "@homarr/old-schema";
-import { decryptSecretWithKey } from "@homarr/common/server";
+
 import type { PreparedIntegration } from "../prepare/prepare-integrations";
 
 export const mapIntegrationType = (type: OldmarrIntegrationType) => {
@@ -35,7 +36,10 @@ const mapping: Record<OldmarrIntegrationType, IntegrationKind | null> = {
   plex: "plex",
 };
 
-export const mapAndDecryptIntegrations = (preparedIntegrations: PreparedIntegration[], encryptionToken: string | null) => {
+export const mapAndDecryptIntegrations = (
+  preparedIntegrations: PreparedIntegration[],
+  encryptionToken: string | null,
+) => {
   // TODO: Remove this when the encryption is implemented
   if (encryptionToken === "temp" || encryptionToken === null) {
     return [];
