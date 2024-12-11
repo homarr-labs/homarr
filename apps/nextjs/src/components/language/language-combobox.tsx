@@ -9,14 +9,17 @@ import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 
 import classes from "./language-combobox.module.css";
 
+import "flag-icons/css/flag-icons.min.css";
+
 interface LanguageComboboxProps {
   label?: string;
   value: SupportedLanguage;
   onChange: (value: SupportedLanguage) => void;
   isPending?: boolean;
+  w?: string;
 }
 
-export const LanguageCombobox = ({ label, value, onChange, isPending }: LanguageComboboxProps) => {
+export const LanguageCombobox = ({ label, value, onChange, isPending, w }: LanguageComboboxProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -49,6 +52,7 @@ export const LanguageCombobox = ({ label, value, onChange, isPending }: Language
           rightSectionPointerEvents="none"
           onClick={handleOnClick}
           variant="filled"
+          w={w}
         >
           <OptionItem currentLocale={value} localeKey={value} />
         </InputBase>

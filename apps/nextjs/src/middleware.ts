@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   if (!pathname.endsWith("/init")) {
     const currentOnboardingStep = await serverFetchApi.onboard.currentStep.query();
-    if (currentOnboardingStep !== "finish") {
+    if (currentOnboardingStep.current !== "finish") {
       return NextResponse.redirect(new URL("/init", request.url));
     }
   }

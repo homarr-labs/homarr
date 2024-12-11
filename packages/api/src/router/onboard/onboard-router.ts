@@ -7,7 +7,7 @@ import { getOnboardingOrFallbackAsync, nextOnboardingStepAsync } from "./onboard
 
 export const onboardRouter = createTRPCRouter({
   currentStep: publicProcedure.query(async ({ ctx }) => {
-    return await getOnboardingOrFallbackAsync(ctx.db).then(({ current }) => current);
+    return await getOnboardingOrFallbackAsync(ctx.db);
   }),
   nextStep: publicProcedure
     .input(

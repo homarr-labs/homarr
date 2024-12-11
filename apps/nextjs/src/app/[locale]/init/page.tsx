@@ -1,12 +1,15 @@
 import type { JSX } from "react";
-import { Center, Stack, Text, Title } from "@mantine/core";
+import { Box, Center, Stack, Text, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import type { MaybePromise } from "@homarr/common/types";
 import type { OnboardingStep } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
+import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-color-scheme-combobox";
+import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
+import { BackToStart } from "./_steps/back";
 import { InitFinish } from "./_steps/finish/init-finish";
 import { InitGroup } from "./_steps/group/init-group";
 import { InitImport } from "./_steps/import/init-import";
@@ -27,22 +30,27 @@ export default async function InitPage() {
   const t = await getScopedI18n("init.step");
   const currentStep = await api.onboard.currentStep();
 
-  const CurrentComponent = stepComponents[currentStep];
+  const CurrentComponent = stepComponents[currentStep.current];
 
   return (
-    <Center>
-      <Stack align="center" mt="xl">
-        <HomarrLogoWithTitle size="lg" />
-        <Stack gap={6} align="center">
-          <Title order={3} fw={400} ta="center">
-            {t(`${currentStep}.title`)}
-          </Title>
-          <Text size="sm" c="gray.5" ta="center">
-            {t(`${currentStep}.subtitle`)}
-          </Text>
+    <Box mih="100dvh">
+      <Center>
+        <Stack align="center" mt="xl">
+          <HomarrLogoWithTitle size="lg" />
+          <Stack gap={6} align="center">
+            <Title order={3} fw={400} ta="center">
+              {t(`${currentStep.current}.title`)}
+            </Title>
+            <Text size="sm" c="gray.5" ta="center">
+              {t(`${currentStep.current}.subtitle`)}
+            </Text>
+          </Stack>
+          <CurrentLanguageCombobox w="100%" />
+          <CurrentColorSchemeCombobox w="100%" />
+          {CurrentComponent && <CurrentComponent />}
+          {currentStep.previous === "start" && <BackToStart />}
         </Stack>
-        {CurrentComponent && <CurrentComponent />}
-      </Stack>
-    </Center>
+      </Center>
+    </Box>
   );
 }
