@@ -81,14 +81,6 @@
         "title": "Settings",
         "subtitle": "Configure server settings."
       },
-      "searchEngines": {
-        "title": "Search engines",
-        "subtitle": "Select the search engines you want to use."
-      },
-      "board": {
-        "title": "Initial board",
-        "subtitle": "Create your first board."
-      },
       "finish": {
         "title": "Finish setup",
         "subtitle": "You are ready to go!"

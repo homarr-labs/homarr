@@ -1,11 +1,11 @@
 import { env } from "@homarr/auth/env.mjs";
 import { objectEntries } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
-import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { boards, groups, onboarding } from "@homarr/db/schema/sqlite";
-import { credentialsAdminGroup } from "@homarr/definitions";
+import { eq } from "@homarr/db";
+import { groups, onboarding } from "@homarr/db/schema/sqlite";
 import type { OnboardingStep } from "@homarr/definitions";
+import { credentialsAdminGroup } from "@homarr/definitions";
 
 export const nextOnboardingStepAsync = async (db: Database, preferredStep: OnboardingStep | undefined) => {
   const { current } = await getOnboardingOrFallbackAsync(db);
@@ -76,17 +76,6 @@ const nextSteps: Partial<Record<OnboardingStep, Partial<Record<OnboardingStep, N
     settings: true,
   },
   settings: {
-    searchEngines: true,
-  },
-  searchEngines: {
-    // eslint-disable-next-line no-restricted-syntax
-    board: async (db: Database) => {
-      const count = await db.$count(boards);
-      return count === 0;
-    },
-    finish: true,
-  },
-  board: {
     finish: true,
   },
 };
