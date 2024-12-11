@@ -70,6 +70,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
               overflow: "visible",
               cursor: "pointer",
             }}
+            withBorder
           >
             <Box w={25} h={25}>
               <Image src={item.url} w={25} h={25} radius="md" />

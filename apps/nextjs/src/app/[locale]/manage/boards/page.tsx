@@ -67,7 +67,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card>
+    <Card withBorder>
       <CardSection p="sm" withBorder>
         <Group justify="space-between" align="center">
           <Group gap="sm">
