@@ -21,7 +21,7 @@ export const importSingleOldmarrConfigAsync = async (
     ),
   });
 
-  preparedApps.map((app) => {
+  preparedApps.forEach((app) => {
     const existingApp = existingApps.find((existingApp) => doAppsMatch(existingApp, app));
     if (existingApp) {
       app.existingId = existingApp.id;
