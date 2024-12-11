@@ -7,40 +7,40 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { getMantineColor } from "@homarr/common";
 import { db } from "@homarr/db";
 import { createDocumentationLink } from "@homarr/definitions";
+import { getScopedI18n } from "@homarr/translation/server";
 import type { TablerIcon } from "@homarr/ui";
 
 export const InitFinish = async () => {
   const firstBoard = await db.query.boards.findFirst({ columns: { name: true } });
+  const tFinish = await getScopedI18n("init.step.finish");
 
   return (
     <Card w={64 * 6} maw="90vw" withBorder>
       <Stack>
-        <Text>
-          You have successfully completed the setup process. You can now start using Homarr. Select your next action:
-        </Text>
+        <Text>{tFinish("description")}</Text>
 
         {firstBoard ? (
           <InternalLinkButton
             href={`/auth/login?callbackUrl=/boards/${firstBoard.name}`}
             iconProps={{ icon: IconLayoutDashboard, color: "blue" }}
           >
-            Go to your board
+            {tFinish("action.goToBoard", { name: firstBoard.name })}
           </InternalLinkButton>
         ) : (
           <InternalLinkButton
             href="/auth/login?callbackUrl=/manage/boards"
             iconProps={{ icon: IconCategoryPlus, color: "blue" }}
           >
-            Create your first board
+            {tFinish("action.createBoard")}
           </InternalLinkButton>
         )}
 
         {isProviderEnabled("credentials") && (
           <InternalLinkButton
             href="/auth/login?callbackUrl=/manage/users/invites"
-            iconProps={{ icon: IconMailForward, color: "indigo" }}
+            iconProps={{ icon: IconMailForward, color: "pink" }}
           >
-            Invite other users
+            {tFinish("action.inviteUser")}
           </InternalLinkButton>
         )}
 
@@ -48,7 +48,7 @@ export const InitFinish = async () => {
           href={createDocumentationLink("/docs/getting-started/after-the-installation")}
           iconProps={{ icon: IconBook2, color: "yellow" }}
         >
-          Read the documentation
+          {tFinish("action.docs")}
         </ExternalLinkButton>
       </Stack>
     </Card>

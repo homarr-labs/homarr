@@ -12,6 +12,7 @@ import { validation } from "@homarr/validation";
 
 export const InitUserForm = () => {
   const t = useScopedI18n("user");
+  const tUser = useScopedI18n("init.step.user");
   const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
   const form = useZodForm(validation.user.init, {
     initialValues: {
@@ -25,13 +26,13 @@ export const InitUserForm = () => {
     await mutateAsync(values, {
       onSuccess: () => {
         showSuccessNotification({
-          title: "User created",
-          message: "You can now log in",
+          title: tUser("notification.success.title"),
+          message: tUser("notification.success.message"),
         });
       },
       onError: (error) => {
         showErrorNotification({
-          title: "User creation failed",
+          title: tUser("notification.error.title"),
           message: error.message,
         });
       },

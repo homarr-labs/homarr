@@ -3,7 +3,12 @@
     "step": {
       "start": {
         "title": "Welcome to Homarr",
-        "subtitle": "Let's get started with setting up your Homarr instance."
+        "subtitle": "Let's get started with setting up your Homarr instance.",
+        "description": "To get started, please select how you want to set up your Homarr instance.",
+        "action": {
+          "scratch": "Start from scratch",
+          "importOldmarr": "Import from Homarr before 1.0"
+        }
       },
       "import": {
         "title": "Import data",
@@ -65,7 +70,16 @@
       },
       "user": {
         "title": "Admin user",
-        "subtitle": "Specify the credentials for your administrator user."
+        "subtitle": "Specify the credentials for your administrator user.",
+        "notification": {
+          "success": {
+            "title": "User created",
+            "message": "The user was successfully created"
+          },
+          "error": {
+            "title": "User creation failed"
+          }
+        }
       },
       "group": {
         "title": "External group",
@@ -83,7 +97,14 @@
       },
       "finish": {
         "title": "Finish setup",
-        "subtitle": "You are ready to go!"
+        "subtitle": "You are ready to go!",
+        "description": "You have successfully completed the setup process. You can now start using Homarr. Select your next action:",
+        "action": {
+          "goToBoard": "Go to {name} board",
+          "createBoard": "Create your first board",
+          "inviteUser": "Invite other users",
+          "docs": "Read the documentation"
+        }
       }
     }
   },
