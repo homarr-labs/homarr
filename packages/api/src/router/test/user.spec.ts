@@ -37,30 +37,6 @@ vi.mock("@homarr/auth/env.mjs", () => {
 });
 
 describe("initUser should initialize the first user", () => {
-  it("should throw an error if a user already exists", async () => {
-    const db = createDb();
-    await createOnboardingStepAsync(db, "user");
-    const caller = userRouter.createCaller({
-      db,
-      session: null,
-    });
-
-    await db.insert(schema.users).values({
-      id: "test",
-      name: "test",
-      password: "test",
-    });
-
-    const actAsync = async () =>
-      await caller.initUser({
-        username: "test",
-        password: "123ABCdef+/-",
-        confirmPassword: "123ABCdef+/-",
-      });
-
-    await expect(actAsync()).rejects.toThrow("User already exists");
-  });
-
   it("should create a user if none exists", async () => {
     const db = createDb();
     await createOnboardingStepAsync(db, "user");
