@@ -1,10 +1,11 @@
 import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
+import type { Database } from "@homarr/db";
 import { createId, eq, schema } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import { onboarding, users } from "@homarr/db/schema/sqlite";
 import { createDb } from "@homarr/db/test";
-import type { GroupPermissionKey } from "@homarr/definitions";
+import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
 import { userRouter } from "../user";
 
@@ -38,6 +39,7 @@ vi.mock("@homarr/auth/env.mjs", () => {
 describe("initUser should initialize the first user", () => {
   it("should throw an error if a user already exists", async () => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       session: null,
@@ -61,6 +63,7 @@ describe("initUser should initialize the first user", () => {
 
   it("should create a user if none exists", async () => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       session: null,
@@ -83,6 +86,7 @@ describe("initUser should initialize the first user", () => {
 
   it("should not create a user if the password and confirmPassword do not match", async () => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       session: null,
@@ -106,6 +110,7 @@ describe("initUser should initialize the first user", () => {
     ["abc123+/-"], // does not contain uppercase
   ])("should throw error that password requirements do not match for '%s' as password", async (password) => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       session: null,
@@ -324,3 +329,10 @@ describe("delete should delete user", () => {
     expect(usersInDb[1]).containSubset(initialUsers[2]);
   });
 });
+
+const createOnboardingStepAsync = async (db: Database, step: OnboardingStep) => {
+  await db.insert(onboarding).values({
+    id: createId(),
+    step,
+  });
+};
