@@ -19,6 +19,7 @@ import {
   publicProcedure,
 } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
+import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
@@ -42,6 +43,7 @@ export const userRouter = createTRPCRouter({
         groupId,
         userId,
       });
+      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   register: publicProcedure
     .input(validation.user.registrationApi)

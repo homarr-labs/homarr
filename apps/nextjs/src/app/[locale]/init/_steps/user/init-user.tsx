@@ -1,6 +1,6 @@
 import { Card } from "@mantine/core";
 
-import { InitUserForm } from "../../user/_init-user-form";
+import { InitUserForm } from "./init-user-form";
 
 export const InitUser = () => {
   return (

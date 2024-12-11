@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -12,9 +11,8 @@ import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 export const InitUserForm = () => {
-  const router = useRouter();
   const t = useScopedI18n("user");
-  const { mutateAsync, error, isPending } = clientApi.user.initUser.useMutation();
+  const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
   const form = useZodForm(validation.user.init, {
     initialValues: {
       username: "",
@@ -30,12 +28,11 @@ export const InitUserForm = () => {
           title: "User created",
           message: "You can now log in",
         });
-        router.push("/auth/login");
       },
-      onError: () => {
+      onError: (error) => {
         showErrorNotification({
           title: "User creation failed",
-          message: error?.message ?? "Unknown error",
+          message: error.message,
         });
       },
     });
