@@ -21,19 +21,25 @@ export const InitFinish = async () => {
 
         {firstBoard ? (
           <InternalLinkButton
-            href={`/boards/${firstBoard.name}`}
+            href={`/auth/login?callbackUrl=/boards/${firstBoard.name}`}
             iconProps={{ icon: IconLayoutDashboard, color: "blue" }}
           >
             Go to your board
           </InternalLinkButton>
         ) : (
-          <InternalLinkButton href="/manage/boards" iconProps={{ icon: IconCategoryPlus, color: "blue" }}>
+          <InternalLinkButton
+            href="/auth/login?callbackUrl=/manage/boards"
+            iconProps={{ icon: IconCategoryPlus, color: "blue" }}
+          >
             Create your first board
           </InternalLinkButton>
         )}
 
         {isProviderEnabled("credentials") && (
-          <InternalLinkButton href="/manage/users/invites" iconProps={{ icon: IconMailForward, color: "indigo" }}>
+          <InternalLinkButton
+            href="/auth/login?callbackUrl=/manage/users/invites"
+            iconProps={{ icon: IconMailForward, color: "indigo" }}
+          >
             Invite other users
           </InternalLinkButton>
         )}
