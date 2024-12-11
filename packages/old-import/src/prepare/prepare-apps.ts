@@ -6,7 +6,7 @@ import type { ValidAnalyseConfig } from "../analyse/types";
 import { mapOldmarrApp, mapOldmarrBookmarkApp } from "../mappers/map-app";
 import type { OldmarrBookmarkDefinition } from "../widgets/definitions/bookmark";
 
-export type PreparedApp = Omit<InferSelectModel<typeof apps>, "id"> & { ids: string[] };
+export type PreparedApp = Omit<InferSelectModel<typeof apps>, "id"> & { ids: string[]; existingId?: string };
 
 export const prepareApps = (analyseConfigs: ValidAnalyseConfig[]) => {
   const preparedApps: PreparedApp[] = [];
@@ -46,7 +46,7 @@ const addAppsToPreparedApps = (preparedApps: PreparedApp[], configApps: InferSel
   });
 };
 
-const doAppsMatch = (
+export const doAppsMatch = (
   app1: Omit<InferSelectModel<typeof apps>, "id">,
   app2: Omit<InferSelectModel<typeof apps>, "id">,
 ) => {

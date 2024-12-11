@@ -19,7 +19,7 @@ export const createBoardInsertCollection = (
 
   const appsMap = new Map(
     preparedApps.flatMap(({ ids, ...app }) => {
-      const id = createId();
+      const id = app.existingId ?? createId();
       return ids.map((oldId) => [oldId, { id, ...app }] as const);
     }),
   );
@@ -27,6 +27,10 @@ export const createBoardInsertCollection = (
   for (const app of appsMap.values()) {
     // Skip duplicate apps
     if (insertCollection.apps.some((appEntry) => appEntry.id === app.id)) {
+      continue;
+    }
+    // Skip apps that already exist in the database
+    if (app.existingId) {
       continue;
     }
 
