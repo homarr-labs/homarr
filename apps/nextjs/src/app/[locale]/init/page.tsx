@@ -25,8 +25,7 @@ const stepComponents: Record<OnboardingStep, null | (() => MaybePromise<JSX.Elem
 
 export default async function InitPage() {
   const t = await getScopedI18n("init.step");
-
-  const currentStep = "finish"; // await api.onboard.currentStep();
+  const currentStep = await api.onboard.currentStep();
 
   const CurrentComponent = stepComponents[currentStep];
 
