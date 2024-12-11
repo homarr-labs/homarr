@@ -43,5 +43,3 @@ export const importInitialOldmarrAsync = async (
 
   logger.info(`Import successful (in ${stopwatch.getElapsedInHumanWords()})`);
 };
-
-// TODO: Add note about screen size feature no longer exists

@@ -32,11 +32,6 @@
           "action": {
             "selectAll": "Select all",
             "unselectAll": "Unselect all"
-          },
-          "screenSize": {
-            "sm": "Small",
-            "md": "Medium",
-            "lg": "Large"
           }
         },
         "summary": {
@@ -1728,6 +1723,7 @@
           },
           "screenSize": {
             "label": "Screen size",
+            "description": "In versions before 1.0 three different modes existed, so you were able to choose the amount of columns for each screen size.",
             "option": {
               "sm": "Small",
               "md": "Medium",

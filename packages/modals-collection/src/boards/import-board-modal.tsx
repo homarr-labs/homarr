@@ -11,13 +11,14 @@ import { OldmarrImportAppsSettings, SidebarBehaviourSelect } from "@homarr/old-i
 import type { OldmarrImportConfiguration } from "@homarr/old-import/shared";
 import { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { z } from "@homarr/validation";
 
 import { useBoardNameStatus } from "./add-board-modal";
 
 export const ImportBoardModal = createModal(({ actions }) => {
   const tOldImport = useScopedI18n("board.action.oldImport");
+  const t = useI18n();
   const tCommon = useScopedI18n("common");
   const [fileValid, setFileValid] = useState(true);
   const form = useZodForm(
@@ -138,12 +139,13 @@ export const ImportBoardModal = createModal(({ actions }) => {
         <Radio.Group
           withAsterisk
           label={tOldImport("form.screenSize.label")}
+          description={t("board.action.oldImport.form.screenSize.description")}
           {...form.getInputProps("configuration.screenSize")}
         >
           <Group mt="xs">
-            <Radio value="sm" label={tOldImport("form.screenSize.option.sm")} />
-            <Radio value="md" label={tOldImport("form.screenSize.option.md")} />
-            <Radio value="lg" label={tOldImport("form.screenSize.option.lg")} />
+            <Radio value="sm" label={t("board.action.oldImport.form.screenSize.option.sm")} />
+            <Radio value="md" label={t("board.action.oldImport.form.screenSize.option.md")} />
+            <Radio value="lg" label={t("board.action.oldImport.form.screenSize.option.lg")} />
           </Group>
         </Radio.Group>
 

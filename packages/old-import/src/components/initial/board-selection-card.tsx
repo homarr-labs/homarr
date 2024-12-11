@@ -3,7 +3,7 @@ import { Anchor, Card, Checkbox, Group, Stack, Text } from "@mantine/core";
 
 import { objectEntries, objectKeys } from "@homarr/common";
 import { boardSizes } from "@homarr/old-schema";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 type BoardSize = (typeof boardSizes)[number];
 
@@ -24,6 +24,7 @@ const groupChecked = (selection: BoardSizeRecord) =>
 
 export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelectionCardProps) => {
   const tBoardSelection = useScopedI18n("init.step.import.boardSelection");
+  const t = useI18n();
   const areAllChecked = allChecked(selections);
 
   const handleToggleAll = () => {
@@ -93,6 +94,9 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
           <Text size="sm" c="gray.6">
             {tBoardSelection("description")}
           </Text>
+          <Text size="xs" c="gray.6">
+            {t("board.action.oldImport.form.screenSize.description")}
+          </Text>
         </Stack>
 
         <Stack gap="sm">
@@ -115,7 +119,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
                       disabled={selection[size] === null}
                       checked={selection[size] ?? undefined}
                       onChange={registerToggle(name, size)}
-                      label={tBoardSelection(`screenSize.${size}`)}
+                      label={t(`board.action.oldImport.form.screenSize.option.${size}`)}
                     />
                   ))}
                 </Group>
