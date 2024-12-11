@@ -24,7 +24,7 @@ export const ImportSummaryCard = ({ counts, onSubmit, loading }: ImportSummaryCa
 
         <Stack gap="xs">
           {objectEntries(counts).map(([key, count]) => (
-            <Card withBorder p="sm">
+            <Card key={key} withBorder p="sm">
               <Group justify="space-between" align="center">
                 <Text fw={500} size="sm">
                   {tSummary(`entities.${key}`)}

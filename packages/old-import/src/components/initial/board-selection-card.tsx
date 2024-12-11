@@ -97,7 +97,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
 
         <Stack gap="sm">
           {[...selections.entries()].map(([name, selection]) => (
-            <Card withBorder>
+            <Card key={name} withBorder>
               <Group justify="space-between" align="center" visibleFrom="md">
                 <Checkbox
                   checked={groupChecked(selection)}

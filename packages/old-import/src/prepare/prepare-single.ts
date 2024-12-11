@@ -4,7 +4,7 @@ import type { OldmarrImportConfiguration } from "../settings";
 import { prepareApps } from "./prepare-apps";
 
 export const prepareSingleImport = (config: OldmarrConfig, settings: OldmarrImportConfiguration) => {
-  const validAnalyseConfigs = [{ name: settings.name, config: config, isError: false }];
+  const validAnalyseConfigs = [{ name: settings.name, config, isError: false }];
 
   return {
     preparedApps: prepareApps(validAnalyseConfigs),
@@ -14,7 +14,7 @@ export const prepareSingleImport = (config: OldmarrConfig, settings: OldmarrImpo
           {
             name: settings.name,
             size: settings.screenSize,
-            config: config,
+            config,
           },
         ],
   };

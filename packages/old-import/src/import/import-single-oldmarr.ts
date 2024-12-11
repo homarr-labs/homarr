@@ -5,7 +5,7 @@ import { prepareSingleImport } from "../prepare/prepare-single";
 import type { OldmarrImportConfiguration } from "../settings";
 import { createBoardInsertCollection } from "./collections/board-collection";
 
-export const importSingleOldmarrConfigAsync = async (
+export const importSingleOldmarrConfig = (
   db: Database,
   config: OldmarrConfig,
   settings: OldmarrImportConfiguration,
