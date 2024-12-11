@@ -1292,6 +1292,9 @@ importers:
 
   packages/old-schema:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -1621,9 +1624,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/old-schema':
-        specifier: workspace:^0.1.0
-        version: link:../old-schema
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation

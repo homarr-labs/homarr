@@ -44,6 +44,7 @@ const seedOnboardingAsync = async (db: Database) => {
     id: createId(),
     step: "start",
   });
+  console.log("Created onboarding step through seed");
 };
 
 const seedServerSettingsAsync = async (db: Database) => {

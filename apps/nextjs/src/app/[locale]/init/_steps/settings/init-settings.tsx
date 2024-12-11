@@ -41,7 +41,7 @@ export const InitSettings = () => {
   return (
     <form onSubmit={form.onSubmit(handleSubmitAsync)}>
       <Stack>
-        <Card w={64 * 12 + 8} maw="90vw">
+        <Card w={64 * 12 + 8} maw="90vw" withBorder>
           <Stack gap="sm">
             <Text fw={500}>{tSection("analytics.title")}</Text>
 
@@ -68,7 +68,7 @@ export const InitSettings = () => {
             </Stack>
           </Stack>
         </Card>
-        <Card w={64 * 12 + 8} maw="90vw">
+        <Card w={64 * 12 + 8} maw="90vw" withBorder>
           <Stack gap="sm">
             <Text fw={500}>{tSection("crawlingAndIndexing.title")}</Text>
 

@@ -10,7 +10,7 @@ export const InitStart = async () => {
   const tStart = await getScopedI18n("init.step.start");
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <Card w={64 * 6} maw="90vw" withBorder>
       <Stack>
         <Text>{tStart("description")}</Text>
 

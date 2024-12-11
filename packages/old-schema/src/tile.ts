@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { objectKeys } from "../../common/src";
+import { objectKeys } from "@homarr/common";
 
 const createAreaSchema = <TType extends string, TPropertiesSchema extends z.AnyZodObject>(
   type: TType,

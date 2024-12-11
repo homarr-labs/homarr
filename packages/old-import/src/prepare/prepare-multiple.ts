@@ -1,7 +1,6 @@
-import type { InitialOldmarrImportSettings } from "@homarr/validation";
-
 import type { AnalyseConfig, ValidAnalyseConfig } from "../analyse/types";
 import type { BoardSelectionMap } from "../components/initial/board-selection-card";
+import type { InitialOldmarrImportSettings } from "../settings";
 import { prepareApps } from "./prepare-apps";
 import { prepareBoards } from "./prepare-boards";
 import { prepareIntegrations } from "./prepare-integrations";

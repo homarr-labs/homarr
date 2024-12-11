@@ -3,10 +3,10 @@ import { createId } from "@homarr/db";
 import { boards } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { OldmarrConfig } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import { mapColor } from "./mappers/map-colors";
 import { mapColumnCount } from "./mappers/map-column-count";
+import type { OldmarrImportConfiguration } from "./settings";
 
 export const insertBoardAsync = async (db: Database, old: OldmarrConfig, configuration: OldmarrImportConfiguration) => {
   logger.info(`Importing old homarr board configuration=${old.configProperties.name}`);

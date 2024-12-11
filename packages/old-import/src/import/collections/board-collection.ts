@@ -6,7 +6,7 @@ import { mapBoard } from "../../mappers/map-board";
 import { moveWidgetsAndAppsIfMerge } from "../../move-widgets-and-apps-merge";
 import { prepareItems } from "../../prepare/prepare-items";
 import type { prepareMultipleImports } from "../../prepare/prepare-multiple";
-import { prepareSections } from "../../prepare/prepate-sections";
+import { prepareSections } from "../../prepare/prepare-sections";
 import type { InitialOldmarrImportSettings } from "../../settings";
 import { createDbInsertCollection } from "./common";
 

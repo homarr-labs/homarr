@@ -8,10 +8,11 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { OldmarrImportAppsSettings, SidebarBehaviourSelect } from "@homarr/old-import/components";
+import type { OldmarrImportConfiguration } from "@homarr/old-import/shared";
+import { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
-import { oldmarrImportConfigurationSchema, superRefineJsonImportFile, z } from "@homarr/validation";
+import { z } from "@homarr/validation";
 
 import { useBoardNameStatus } from "./add-board-modal";
 

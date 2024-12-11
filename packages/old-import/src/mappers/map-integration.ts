@@ -40,8 +40,7 @@ export const mapAndDecryptIntegrations = (
   preparedIntegrations: PreparedIntegration[],
   encryptionToken: string | null,
 ) => {
-  // TODO: Remove this when the encryption is implemented
-  if (encryptionToken === "temp" || encryptionToken === null) {
+  if (encryptionToken === null) {
     return [];
   }
 

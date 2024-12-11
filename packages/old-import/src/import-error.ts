@@ -1,5 +1,6 @@
 import type { OldmarrConfig } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
+
+import type { OldmarrImportConfiguration } from "./settings";
 
 export class OldHomarrImportError extends Error {
   constructor(oldConfig: OldmarrConfig, cause: unknown) {

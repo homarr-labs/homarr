@@ -1,4 +1,4 @@
-import { env } from "@homarr/auth/env.mjs";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { objectEntries } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
@@ -47,14 +47,14 @@ type NextStepCondition = true | "preferred" | ((db: Database) => MaybePromise<bo
 const nextSteps: Partial<Record<OnboardingStep, Partial<Record<OnboardingStep, NextStepCondition>>>> = {
   start: {
     import: "preferred" as const,
-    user: () => env.AUTH_PROVIDERS.includes("credentials"),
-    group: () => env.AUTH_PROVIDERS.includes("ldap") || env.AUTH_PROVIDERS.includes("oidc"),
+    user: () => isProviderEnabled("credentials"),
+    group: () => isProviderEnabled("ldap") || isProviderEnabled("oidc"),
     settings: true,
   },
   import: {
     // eslint-disable-next-line no-restricted-syntax
     user: async (db: Database) => {
-      if (!env.AUTH_PROVIDERS.includes("credentials")) return false;
+      if (!isProviderEnabled("credentials")) return false;
 
       const adminGroup = await db.query.groups.findFirst({
         where: eq(groups.name, credentialsAdminGroup),
@@ -65,11 +65,11 @@ const nextSteps: Partial<Record<OnboardingStep, Partial<Record<OnboardingStep, N
 
       return !adminGroup || adminGroup.members.length === 0;
     },
-    group: () => env.AUTH_PROVIDERS.includes("ldap") || env.AUTH_PROVIDERS.includes("oidc"),
+    group: () => isProviderEnabled("ldap") || isProviderEnabled("oidc"),
     settings: true,
   },
   user: {
-    group: () => env.AUTH_PROVIDERS.includes("ldap") || env.AUTH_PROVIDERS.includes("oidc"),
+    group: () => isProviderEnabled("ldap") || isProviderEnabled("oidc"),
     settings: true,
   },
   group: {

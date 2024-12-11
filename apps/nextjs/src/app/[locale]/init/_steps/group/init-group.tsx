@@ -33,7 +33,7 @@ export const InitGroup = () => {
   };
 
   return (
-    <Card w={64 * 6} maw="90vw">
+    <Card w={64 * 6} maw="90vw" withBorder>
       <form onSubmit={form.onSubmit(handleSubmitAsync)}>
         <Stack>
           <TextInput
