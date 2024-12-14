@@ -9,7 +9,7 @@ import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-r
 import packageJson from "../../../package.json";
 
 export const updateCheckerRequestHandler = createCachedRequestHandler({
-  queryKey: "",
+  queryKey: "homarr-update-checker",
   cacheDuration: dayjs.duration(1, "hour"),
   async requestAsync(_) {
     const octokit = new Octokit();
@@ -47,13 +47,13 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
         name: release.name,
         contentHtml: release.body_html,
         url: release.html_url,
-        tag_name: release.tag_name,
+        tagName: release.tag_name,
       })),
     };
   },
   createRedisChannel() {
     return createChannelWithLatestAndEvents<{
-      availableUpdates: { name: string | null; contentHtml?: string; url: string; tag_name: string }[];
+      availableUpdates: { name: string | null; contentHtml?: string; url: string; tagName: string }[];
     }>("homarr:update");
   },
 });
