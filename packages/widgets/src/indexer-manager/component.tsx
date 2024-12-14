@@ -7,7 +7,6 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationSelectedError } from "../errors";
 
 export default function IndexerManagerWidget({ options, integrationIds }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
@@ -38,10 +37,6 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
   );
 
   const iconStyle = { height: "7.5cqmin", width: "7.5cqmin" };
-
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
 
   return (
     <Flex className="indexer-manager-container" h="100%" direction="column" gap="2.5cqmin" p="2.5cqmin" align="center">

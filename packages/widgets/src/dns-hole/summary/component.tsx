@@ -17,7 +17,6 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
-import { NoIntegrationSelectedError } from "../../errors";
 
 export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
   const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
@@ -61,10 +60,6 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   );
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
-
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
 
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)} p="2cqmin">

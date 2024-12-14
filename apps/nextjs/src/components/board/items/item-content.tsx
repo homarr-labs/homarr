@@ -2,9 +2,10 @@ import { Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
+import { NoIntegrationSelectedError } from "node_modules/@homarr/widgets/src/errors";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues } from "@homarr/widgets";
+import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 
 import type { Item } from "~/app/[locale]/boards/_types";
@@ -54,11 +55,14 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const Comp = loadWidgetDynamic(item.kind);
+  const { definition } = widgetImports[item.kind];
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, item.options);
   const newItem = { ...item, options };
   const { updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
     updateItemOptions({ itemId: item.id, newOptions });
+  const widgetSupportsIntegrations =
+    "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
 
   return (
     <QueryErrorResetBoundary>
@@ -72,6 +76,10 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             </>
           )}
         >
+          <Throw
+            error={new NoIntegrationSelectedError()}
+            when={widgetSupportsIntegrations && item.integrationIds.length === 0}
+          />
           <BoardItemMenu offset={4} item={newItem} />
           <Comp
             options={options as never}
@@ -86,4 +94,9 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
       )}
     </QueryErrorResetBoundary>
   );
+};
+
+const Throw = ({ when, error }: { when: boolean; error: Error }) => {
+  if (when) throw error;
+  return null;
 };
