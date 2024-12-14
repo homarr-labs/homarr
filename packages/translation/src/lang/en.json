@@ -678,6 +678,7 @@
       "previous": "Previous",
       "next": "Next",
       "checkoutDocs": "Check out the documentation",
+      "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
       "loading": "Loading"
     },
@@ -1308,9 +1309,6 @@
         "description": "Click <here></here> to create a new app"
       },
       "error": {
-        "action": {
-          "logs": "Check logs for more details"
-        },
         "noIntegration": "No integration selected",
         "noData": "No integration data available"
       },
@@ -2301,6 +2299,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Docker containers"
     }
   },
   "permission": {
