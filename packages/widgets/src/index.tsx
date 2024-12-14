@@ -21,6 +21,7 @@ import * as indexerManager from "./indexer-manager";
 import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
+import * as mediaTranscoding from "./media-transcoding";
 import * as notebook from "./notebook";
 import type { WidgetOptionDefinition } from "./options";
 import * as rssFeed from "./rssFeed";
@@ -52,6 +53,7 @@ export const widgetImports = {
   bookmarks,
   indexerManager,
   healthMonitoring,
+  mediaTranscoding,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

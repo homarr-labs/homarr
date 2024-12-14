@@ -1529,6 +1529,65 @@
         }
       }
     },
+    "mediaTranscoding": {
+      "name": "Media transcoding",
+      "description": "Statistics, current queue and worker status of your media transcoding",
+      "option": {
+        "defaultView": {
+          "label": "Default view"
+        },
+        "queuePageSize": {
+          "label": "Queue page size"
+        }
+      },
+      "tab": {
+        "workers": "Workers",
+        "queue": "Queue",
+        "statistics": "Statistics"
+      },
+      "currentIndex": "{start}-{end} of {total}",
+      "healthCheck": {
+        "title": "Health check",
+        "queued": "Queued",
+        "status": {
+          "healthy": "Healthy",
+          "unhealthy": "Unhealthy"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "Empty",
+          "transcodes": "Transcodes",
+          "transcodesCount": "Transcodes: {value}",
+          "healthChecksCount": "Health checks: {value}",
+          "filesCount": "Files: {value}",
+          "savedSpace": "Saved space: {value}",
+          "healthChecks": "Health checks",
+          "videoCodecs": "Codecs",
+          "videoContainers": "Containers",
+          "videoResolutions": "Resolutions"
+        },
+        "workers": {
+          "empty": "Empty",
+          "table": {
+            "file": "File",
+            "eta": "ETA",
+            "progress": "Progress",
+            "transcode": "Transcode",
+            "healthCheck": "Health check"
+          }
+        },
+        "queue": {
+          "empty": "Empty",
+          "table": {
+            "file": "File",
+            "size": "Size",
+            "transcode": "Transcode",
+            "healthCheck": "Health check"
+          }
+        }
+      }
+    },
     "rssFeed": {
       "name": "RSS feeds",
       "description": "Monitor and display one or more generic RSS, ATOM or JSON feeds",
@@ -2157,6 +2216,9 @@
             },
             "updateChecker": {
               "label": "Update checker"
+            },
+            "mediaTranscoding": {
+              "label": "Media transcoding"
             }
           }
         },

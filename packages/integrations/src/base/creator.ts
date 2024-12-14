@@ -17,6 +17,7 @@ import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration"
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
@@ -70,4 +71,5 @@ export const integrationCreators = {
   lidarr: LidarrIntegration,
   readarr: ReadarrIntegration,
   dashDot: DashDotIntegration,
+  tdarr: TdarrIntegration,
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;

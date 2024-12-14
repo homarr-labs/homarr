@@ -151,6 +151,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/dashdot.png",
     supportsSearch: false,
   },
+  tdarr: {
+    name: "Tdarr",
+    secretKinds: [[]],
+    category: ["mediaTranscoding"],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/tdarr.png",
+    supportsSearch: false,
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
@@ -217,4 +224,5 @@ export type IntegrationCategory =
   | "torrent"
   | "smartHomeServer"
   | "indexerManager"
-  | "healthMonitoring";
+  | "healthMonitoring"
+  | "mediaTranscoding";
