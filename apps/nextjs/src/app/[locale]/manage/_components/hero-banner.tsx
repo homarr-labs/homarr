@@ -32,9 +32,9 @@ const icons = [
 
 const countIconGroups = 3;
 const animationDurationInSeconds = 12;
+const arrayInChunks = splitToNChunks(icons, countIconGroups);
 
 export const HeroBanner = () => {
-  const arrayInChunks = splitToNChunks(icons, countIconGroups);
   const gridSpan = 12 / countIconGroups;
 
   return (
