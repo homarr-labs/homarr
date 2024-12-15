@@ -14,7 +14,7 @@ export function QueuePanel(props: QueuePanelProps) {
 
   const t = useI18n("widget.mediaTranscoding.panel.queue");
 
-  if (queue.array.length == 0) {
+  if (queue.array.length === 0) {
     return (
       <Center style={{ flex: "1" }}>
         <Title order={3}>{t("empty")}</Title>

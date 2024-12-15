@@ -107,7 +107,7 @@ export class TdarrIntegration extends Integration {
       body: JSON.stringify({
         data: {
           start: firstItemIndex,
-          pageSize: pageSize,
+          pageSize,
           filters: [],
           sorts: [],
           opts: { table: "table1" },
@@ -142,7 +142,7 @@ export class TdarrIntegration extends Integration {
       body: JSON.stringify({
         data: {
           start: Math.max(firstItemIndex - totalQueueCount, 0),
-          pageSize: pageSize,
+          pageSize,
           filters: [],
           sorts: [],
           opts: {

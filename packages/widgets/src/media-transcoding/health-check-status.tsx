@@ -31,7 +31,7 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
         <Stack gap="sm" align="center">
           <Group gap="xs">
             <IconHeartbeat size={18} />
-            <Text size="sm">{t(`title`)}</Text>
+            <Text size="sm">{t("title")}</Text>
           </Group>
           <Divider
             style={{
@@ -50,19 +50,19 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
               <Text size="xs" c={textColor("yellow", colorScheme)}>
                 {props.statistics.stagedHealthCheckCount}
               </Text>
-              <Text size="xs">{t(`queued`)}</Text>
+              <Text size="xs">{t("queued")}</Text>
             </Stack>
             <Stack style={{ flex: 1 }} gap={0} align="center">
               <Text size="xs" c={textColor("green", colorScheme)}>
                 {props.statistics.totalHealthCheckCount}
               </Text>
-              <Text size="xs">{t(`status.healthy`)}</Text>
+              <Text size="xs">{t("status.healthy")}</Text>
             </Stack>
             <Stack style={{ flex: 1 }} gap={0} align="center">
               <Text size="xs" c={textColor("red", colorScheme)}>
                 {props.statistics.failedHealthCheckCount}
               </Text>
-              <Text size="xs">{t(`status.unhealthy`)}</Text>
+              <Text size="xs">{t("status.unhealthy")}</Text>
             </Stack>
           </Group>
         </Stack>
