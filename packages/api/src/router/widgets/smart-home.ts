@@ -7,7 +7,7 @@ import { z } from "@homarr/validation";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createSmartHomeIntegrationMiddleware = (action: IntegrationAction) =>
   createOneIntegrationMiddleware(action, ...getIntegrationKindsByCategory("smartHomeServer"));
@@ -41,7 +41,7 @@ export const smartHomeRouter = createTRPCRouter({
         };
       });
     }),
-  switchEntity: publicProcedure
+  switchEntity: protectedProcedure
     .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
@@ -53,7 +53,7 @@ export const smartHomeRouter = createTRPCRouter({
 
       return success;
     }),
-  executeAutomation: publicProcedure
+  executeAutomation: protectedProcedure
     .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {

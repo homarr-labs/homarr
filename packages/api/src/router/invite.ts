@@ -6,11 +6,12 @@ import { invites } from "@homarr/db/schema/sqlite";
 import { selectInviteSchema } from "@homarr/db/validationSchemas";
 import { z } from "@homarr/validation";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 
 export const inviteRouter = createTRPCRouter({
-  getAll: protectedProcedure
+  getAll: permissionRequiredProcedure
+    .requiresPermission("admin")
     .output(
       z.array(
         selectInviteSchema
@@ -40,7 +41,8 @@ export const inviteRouter = createTRPCRouter({
         },
       });
     }),
-  createInvite: protectedProcedure
+  createInvite: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         expirationDate: z.date(),
@@ -65,7 +67,8 @@ export const inviteRouter = createTRPCRouter({
         token,
       };
     }),
-  deleteInvite: protectedProcedure
+  deleteInvite: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         id: z.string(),

@@ -575,11 +575,14 @@ export const boardRouter = createTRPCRouter({
         );
       });
     }),
-  importOldmarrConfig: protectedProcedure.input(importJsonFileSchema).mutation(async ({ input, ctx }) => {
-    const content = await input.file.text();
-    const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-    await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
-  }),
+  importOldmarrConfig: permissionRequiredProcedure
+    .requiresPermission("board-create")
+    .input(importJsonFileSchema)
+    .mutation(async ({ input, ctx }) => {
+      const content = await input.file.text();
+      const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
+      await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+    }),
 });
 
 const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredIds: string[] = []) => {

@@ -3,17 +3,18 @@ import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, onboardingProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, publicProcedure } from "../trpc";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
     return await getServerSettingByKeyAsync(ctx.db, "culture");
   }),
-  getAll: protectedProcedure.query(async ({ ctx }) => {
+  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
     return await getServerSettingsAsync(ctx.db);
   }),
-  saveSettings: protectedProcedure
+  saveSettings: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         settingsKey: z.enum(defaultServerSettingsKeys),
