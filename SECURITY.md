@@ -23,7 +23,7 @@ See https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Chea
 If you're unable / unwilling (or it's not safe) to disclose vulnerabilites via GitHub, please report them with the subject "Security advisory - CVEXXX" to our email homarr-labs@proton.me.
 Please never disclose security vulnerabilits on your own publicly - we'd like to search for a dimplomatic solution that is also safe for our users.
 
-In your initial conact with us, please provide details according to the [OWASP guidelines for initial reports](https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html#initial-report).
+In your initial contact with us, please provide details according to the [OWASP guidelines for initial reports](https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html#initial-report).
 
 Thank you!
 We're looking forward to your report
