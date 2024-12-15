@@ -170,7 +170,7 @@
         "confirm": ""
       },
       "select": {
-        "label": "",
+        "label": "Benutzer auswählen",
         "notFound": ""
       },
       "transfer": {
@@ -678,6 +678,7 @@
       "previous": "Zurück",
       "next": "Weiter",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Erneut versuchen",
       "loading": ""
     },
@@ -1309,9 +1310,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -2305,6 +2303,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
