@@ -55,8 +55,8 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
         key={item.id}
         value={item.url}
         p={0}
-        h={`calc(2*var(--mantine-spacing-sm)+25px)`}
-        w={`calc(2*var(--mantine-spacing-sm)+25px)`}
+        h="calc(2*var(--mantine-spacing-sm)+25px)"
+        w="calc(2*var(--mantine-spacing-sm)+25px)"
       >
         <UnstyledButton
           onClick={() => {
