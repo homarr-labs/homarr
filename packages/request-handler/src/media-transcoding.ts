@@ -2,10 +2,8 @@ import dayjs from "dayjs";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
+import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "@homarr/integrations";
 
-import type { TdarrQueue } from "../../integrations/src/interfaces/media-transcoding/queue";
-import type { TdarrStatistics } from "../../integrations/src/interfaces/media-transcoding/statistics";
-import type { TdarrWorker } from "../../integrations/src/interfaces/media-transcoding/workers";
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
 export const mediaTranscodingRequestHandler = createCachedIntegrationRequestHandler<

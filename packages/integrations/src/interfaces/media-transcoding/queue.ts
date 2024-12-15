@@ -8,7 +8,7 @@ export interface TdarrQueue {
     container: string;
     codec: string;
     resolution: string;
-    type: "transcode" | "health check";
+    type: "transcode" | "health-check";
   }[];
   totalCount: number;
   startIndex: number;
