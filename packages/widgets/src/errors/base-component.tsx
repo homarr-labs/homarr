@@ -23,7 +23,7 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
         <Text ta="center">{translateIfNecessary(t, props.message)}</Text>
         {props.showLogsLink && (
           <Anchor component={Link} href="/manage/tools/logs" target="_blank" ta="center" size="sm">
-            {t("widget.common.error.action.logs")}
+            {t("common.action.checkLogs")}
           </Anchor>
         )}
       </Stack>
