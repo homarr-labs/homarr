@@ -25,6 +25,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  OnboardingStep,
   SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
@@ -393,6 +394,12 @@ export const searchEngines = mysqlTable("search_engine", {
   urlTemplate: text(),
   type: varchar({ length: 64 }).$type<SearchEngineType>().notNull().default("generic"),
   integrationId: varchar({ length: 64 }).references(() => integrations.id, { onDelete: "cascade" }),
+});
+
+export const onboarding = mysqlTable("onboarding", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  step: varchar({ length: 64 }).$type<OnboardingStep>().notNull(),
+  previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({

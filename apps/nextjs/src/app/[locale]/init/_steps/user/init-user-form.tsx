@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -12,9 +12,9 @@ import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 export const InitUserForm = () => {
-  const router = useRouter();
   const t = useScopedI18n("user");
-  const { mutateAsync, error, isPending } = clientApi.user.initUser.useMutation();
+  const tUser = useScopedI18n("init.step.user");
+  const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
   const form = useZodForm(validation.user.init, {
     initialValues: {
       username: "",
@@ -25,17 +25,17 @@ export const InitUserForm = () => {
 
   const handleSubmitAsync = async (values: FormType) => {
     await mutateAsync(values, {
-      onSuccess: () => {
+      async onSuccess() {
         showSuccessNotification({
-          title: "User created",
-          message: "You can now log in",
+          title: tUser("notification.success.title"),
+          message: tUser("notification.success.message"),
         });
-        router.push("/auth/login");
+        await revalidatePathActionAsync("/init");
       },
-      onError: () => {
+      onError: (error) => {
         showErrorNotification({
-          title: "User creation failed",
-          message: error?.message ?? "Unknown error",
+          title: tUser("notification.error.title"),
+          message: error.message,
         });
       },
     });

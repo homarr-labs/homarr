@@ -6,11 +6,13 @@ import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
 import { homeRouter } from "./router/home";
 import { iconsRouter } from "./router/icons";
+import { importRouter } from "./router/import/import-router";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { mediaRouter } from "./router/medias/media-router";
+import { onboardRouter } from "./router/onboard/onboard-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { updateCheckerRouter } from "./router/update-checker";
@@ -30,6 +32,8 @@ export const appRouter = createTRPCRouter({
   location: locationRouter,
   log: logRouter,
   icon: iconsRouter,
+  import: importRouter,
+  onboard: onboardRouter,
   home: homeRouter,
   docker: dockerRouter,
   serverSettings: serverSettingsRouter,

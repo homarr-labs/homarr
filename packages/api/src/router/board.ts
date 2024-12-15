@@ -18,12 +18,12 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
-import { importAsync } from "@homarr/old-import";
+import { importOldmarrAsync } from "@homarr/old-import";
+import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
-import { createSectionSchema, sharedItemSchema, validation, z } from "@homarr/validation";
+import { createSectionSchema, sharedItemSchema, validation, z, zodUnionFromArray } from "@homarr/validation";
 
-import { zodUnionFromArray } from "../../../validation/src/enums";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
@@ -575,13 +575,11 @@ export const boardRouter = createTRPCRouter({
         );
       });
     }),
-  importOldmarrConfig: protectedProcedure
-    .input(validation.board.importOldmarrConfig)
-    .mutation(async ({ input, ctx }) => {
-      const content = await input.file.text();
-      const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-      await importAsync(ctx.db, oldmarr, input.configuration);
-    }),
+  importOldmarrConfig: protectedProcedure.input(importJsonFileSchema).mutation(async ({ input, ctx }) => {
+    const content = await input.file.text();
+    const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
+    await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+  }),
 });
 
 const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredIds: string[] = []) => {

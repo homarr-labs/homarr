@@ -5,10 +5,10 @@ import { createId } from "@homarr/db";
 import { items } from "@homarr/db/schema/sqlite";
 import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import type { WidgetComponentProps } from "../../widgets/src/definition";
 import { OldHomarrScreenSizeError } from "./import-error";
+import type { OldmarrImportConfiguration } from "./settings";
 import { mapKind } from "./widgets/definitions";
 import { mapOptions } from "./widgets/options";
 

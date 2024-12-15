@@ -18,13 +18,10 @@ import {
   IconTool,
 } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-
-import "flag-icons/css/flag-icons.min.css";
-
-import type { RouterOutputs } from "@homarr/api";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
