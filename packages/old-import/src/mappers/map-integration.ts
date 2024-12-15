@@ -31,7 +31,7 @@ const mapping: Record<OldmarrIntegrationType, IntegrationKind | null> = {
   readarr: "readarr",
   sabnzbd: "sabNzbd",
   sonarr: "sonarr",
-  tdarr: null,
+  tdarr: "tdarr",
   transmission: "transmission",
   plex: "plex",
 };
