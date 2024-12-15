@@ -20,6 +20,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import classes from "./icon-picker.module.css";
+
 interface IconPickerProps {
   initialValue?: string;
   onChange: (iconUrl: string) => void;
@@ -49,35 +51,43 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const totalOptions = data?.icons.reduce((acc, group) => acc + group.icons.length, 0) ?? 0;
   const groups = data?.icons.map((group) => {
     const options = group.icons.map((item) => (
-      <UnstyledButton
-        onClick={() => {
-          const value = item.url;
-          startTransition(() => {
-            setValue(value);
-            setPreviewUrl(value);
-            setSearch(value);
-            onChange(value);
-            combobox.closeDropdown();
-          });
-        }}
+      <Combobox.Option
         key={item.id}
+        value={item.url}
+        p={0}
+        h={`calc(2*var(--mantine-spacing-sm)+25px)`}
+        w={`calc(2*var(--mantine-spacing-sm)+25px)`}
       >
-        <Indicator label="SVG" disabled={!item.url.endsWith(".svg")} size={16}>
-          <Card
-            p="sm"
-            pos="relative"
-            style={{
-              overflow: "visible",
-              cursor: "pointer",
-            }}
-            withBorder
-          >
-            <Box w={25} h={25}>
-              <Image src={item.url} w={25} h={25} radius="md" />
-            </Box>
-          </Card>
-        </Indicator>
-      </UnstyledButton>
+        <UnstyledButton
+          onClick={() => {
+            const value = item.url;
+            startTransition(() => {
+              setValue(value);
+              setPreviewUrl(value);
+              setSearch(value);
+              onChange(value);
+              combobox.closeDropdown();
+            });
+          }}
+        >
+          <Indicator label="SVG" disabled={!item.url.endsWith(".svg")} size={16}>
+            <Card
+              p="sm"
+              pos="relative"
+              style={{
+                overflow: "visible",
+                cursor: "pointer",
+              }}
+              className={classes.iconCard}
+              withBorder
+            >
+              <Box w={25} h={25}>
+                <Image src={item.url} w={25} h={25} radius="md" />
+              </Box>
+            </Card>
+          </Indicator>
+        </UnstyledButton>
+      </Combobox.Option>
     ));
 
     return (
