@@ -733,7 +733,8 @@
         "logout": "",
         "login": "Iniciar sesión",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Zona de riesgo",
@@ -2152,6 +2153,9 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
               "label": ""
             }
           }

@@ -733,7 +733,8 @@
         "logout": "",
         "login": "Prihlásiť sa",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Nebezpečná zóna",
@@ -2152,6 +2153,9 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
               "label": ""
             }
           }

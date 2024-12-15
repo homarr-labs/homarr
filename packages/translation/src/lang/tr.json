@@ -733,7 +733,8 @@
         "logout": "",
         "login": "Giriş",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Tehlikeli bölge",
@@ -2152,6 +2153,9 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
               "label": ""
             }
           }

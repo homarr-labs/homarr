@@ -733,7 +733,8 @@
         "logout": "",
         "login": "Вход в систему",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Зона опасности",
@@ -2152,6 +2153,9 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
               "label": ""
             }
           }

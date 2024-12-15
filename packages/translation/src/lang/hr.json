@@ -733,7 +733,8 @@
         "logout": "",
         "login": "Prijaviti se",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Opasna zona",
@@ -2152,6 +2153,9 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
               "label": ""
             }
           }
