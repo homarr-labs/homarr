@@ -678,6 +678,7 @@
       "previous": "Forrige",
       "next": "Næste",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Prøv igen",
       "loading": ""
     },
@@ -1309,9 +1310,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -2305,6 +2303,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
