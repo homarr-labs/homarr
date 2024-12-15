@@ -29,7 +29,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
-import { NoIntegrationSelectedError } from "../../errors";
 import TimerModal from "./TimerModal";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
@@ -183,10 +182,6 @@ export default function DnsHoleControlsWidget({
   const [opened, { close, open }] = useDisclosure(false);
 
   const controlAllButtonsVisible = options.showToggleAllButtons && integrationsWithInteractions.length > 0;
-
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
 
   return (
     <Flex

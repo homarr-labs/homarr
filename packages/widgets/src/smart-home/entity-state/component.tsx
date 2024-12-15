@@ -8,27 +8,16 @@ import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 
 import type { WidgetComponentProps } from "../../definition";
-import { NoIntegrationSelectedError } from "../../errors";
 
 export default function SmartHomeEntityStateWidget({
   options,
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<"smartHome-entityState">) {
-  const integrationId = integrationIds[0];
+  // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const integrationId = integrationIds[0]!;
 
-  if (!integrationId) {
-    throw new NoIntegrationSelectedError();
-  }
-
-  return <InnerComponent options={options} integrationId={integrationId} isEditMode={isEditMode} />;
-}
-
-type InnerComponentProps = Pick<WidgetComponentProps<"smartHome-entityState">, "options" | "isEditMode"> & {
-  integrationId: string;
-};
-
-const InnerComponent = ({ options, integrationId, isEditMode }: InnerComponentProps) => {
   const input = {
     entityId: options.entityId,
     integrationId,
@@ -103,4 +92,4 @@ const InnerComponent = ({ options, integrationId, isEditMode }: InnerComponentPr
       </Center>
     </UnstyledButton>
   );
-};
+}

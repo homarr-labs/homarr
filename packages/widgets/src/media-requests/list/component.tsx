@@ -9,7 +9,6 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
-import { NoIntegrationSelectedError } from "../../errors";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 
 export default function MediaServerWidget({
@@ -57,8 +56,6 @@ export default function MediaServerWidget({
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
-
-  if (integrationIds.length === 0) throw new NoIntegrationSelectedError();
 
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 

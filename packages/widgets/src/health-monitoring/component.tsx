@@ -37,7 +37,6 @@ import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationSelectedError } from "../errors";
 
 dayjs.extend(duration);
 
@@ -76,9 +75,6 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
     },
   );
 
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
   return (
     <Stack h="100%" gap="2.5cqmin" className="health-monitoring">
       {healthData.map(({ integrationId, integrationName, healthInfo, updatedAt }) => {
