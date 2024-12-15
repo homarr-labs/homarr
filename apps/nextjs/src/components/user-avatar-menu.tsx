@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
 import {
+  IconBellRinging,
   IconCheck,
   IconHome,
   IconLogin,
@@ -17,6 +18,7 @@ import {
   IconTool,
 } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -26,9 +28,10 @@ import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
+  availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
 }
 
-export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   useHotkeys([["mod+J", toggleColorScheme]]);
@@ -62,6 +65,21 @@ export const UserAvatarMenu = ({ children }: UserAvatarMenuProps) => {
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
     <Menu width={300} withArrow withinPortal keepMounted>
       <Menu.Dropdown>
+        {availableUpdates && availableUpdates.length > 0 && availableUpdates[0] && (
+          <>
+            <Menu.Item
+              component={"a"}
+              href={availableUpdates[0].url}
+              target="_blank"
+              leftSection={<IconBellRinging size="1rem" />}
+            >
+              <Text fw="bold" size="sm">
+                {t("updateAvailable", { countUpdates: availableUpdates.length, tag: availableUpdates[0].tagName })}
+              </Text>
+            </Menu.Item>
+            <Menu.Divider />
+          </>
+        )}
         <Menu.Item onClick={toggleColorScheme} leftSection={<ColorSchemeIcon size="1rem" />}>
           {colorSchemeText}
         </Menu.Item>

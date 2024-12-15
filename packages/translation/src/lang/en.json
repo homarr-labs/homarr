@@ -787,6 +787,7 @@
       "previous": "Previous",
       "next": "Next",
       "checkoutDocs": "Check out the documentation",
+      "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
       "loading": "Loading"
     },
@@ -848,7 +849,8 @@
         "logout": "Logout",
         "login": "Login",
         "homeBoard": "Your home board",
-        "loggedOut": "Logged out"
+        "loggedOut": "Logged out",
+        "updateAvailable": "{countUpdates} updates available: {tag}"
       }
     },
     "dangerZone": "Danger zone",
@@ -1424,9 +1426,6 @@
         "description": "Click <here></here> to create a new app"
       },
       "error": {
-        "action": {
-          "logs": "Check logs for more details"
-        },
         "noIntegration": "No integration selected",
         "noData": "No integration data available"
       },
@@ -2270,6 +2269,9 @@
             },
             "sessionCleanup": {
               "label": "Session Cleanup"
+            },
+            "updateChecker": {
+              "label": "Update checker"
             }
           }
         },
@@ -2418,6 +2420,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Docker containers"
     }
   },
   "permission": {

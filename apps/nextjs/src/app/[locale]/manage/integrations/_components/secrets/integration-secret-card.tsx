@@ -33,7 +33,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
   const KindIcon = integrationSecretIcons[secret.kind];
 
   return (
-    <Card>
+    <Card withBorder>
       <Stack>
         <Group justify="space-between">
           <Group>

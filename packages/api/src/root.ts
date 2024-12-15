@@ -15,6 +15,7 @@ import { mediaRouter } from "./router/medias/media-router";
 import { onboardRouter } from "./router/onboard/onboard-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { serverSettingsRouter } from "./router/serverSettings";
+import { updateCheckerRouter } from "./router/update-checker";
 import { userRouter } from "./router/user";
 import { widgetRouter } from "./router/widgets";
 import { createTRPCRouter } from "./trpc";
@@ -39,6 +40,7 @@ export const appRouter = createTRPCRouter({
   cronJobs: cronJobsRouter,
   apiKeys: apiKeysRouter,
   media: mediaRouter,
+  updateChecker: updateCheckerRouter,
 });
 
 // export type definition of API
