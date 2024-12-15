@@ -678,6 +678,7 @@
       "previous": "이전",
       "next": "다음",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "다시 시도",
       "loading": ""
     },
@@ -1309,9 +1310,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -2305,6 +2303,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
