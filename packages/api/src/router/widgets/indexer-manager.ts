@@ -9,7 +9,7 @@ import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-ma
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
   createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("indexerManager"));
@@ -54,7 +54,7 @@ export const indexerManagerRouter = createTRPCRouter({
         };
       });
     }),
-  testAllIndexers: publicProcedure
+  testAllIndexers: protectedProcedure
     .unstable_concat(createIndexerManagerIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
       await Promise.all(

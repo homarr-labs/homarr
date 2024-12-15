@@ -15,7 +15,7 @@ vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 const defaultSession = {
   user: {
     id: createId(),
-    permissions: [],
+    permissions: ["admin"],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),

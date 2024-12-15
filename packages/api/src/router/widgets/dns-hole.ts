@@ -10,7 +10,7 @@ import { controlsInputSchema } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
@@ -62,7 +62,7 @@ export const dnsHoleRouter = createTRPCRouter({
       });
     }),
 
-  enable: publicProcedure
+  enable: protectedProcedure
     .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration } }) => {
       const client = integrationCreator(integration);
@@ -75,7 +75,7 @@ export const dnsHoleRouter = createTRPCRouter({
       });
     }),
 
-  disable: publicProcedure
+  disable: protectedProcedure
     .input(controlsInputSchema)
     .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration }, input }) => {

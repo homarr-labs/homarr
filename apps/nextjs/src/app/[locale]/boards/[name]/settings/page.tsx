@@ -66,8 +66,12 @@ const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
 export default async function BoardSettingsPage({ params, searchParams }: Props) {
   const { board, permissions } = await getBoardAndPermissionsAsync(params);
   const boardSettings = await getServerSettingByKeyAsync(db, "board");
-  const { hasFullAccess } = await getBoardPermissionsAsync(board);
+  const { hasFullAccess, hasChangeAccess } = await getBoardPermissionsAsync(board);
   const t = await getScopedI18n("board.setting");
+
+  if (!hasChangeAccess) {
+    notFound();
+  }
 
   return (
     <Container>

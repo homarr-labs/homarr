@@ -11,7 +11,7 @@ import { inviteRouter } from "../invite";
 const defaultSession = {
   user: {
     id: createId(),
-    permissions: [],
+    permissions: ["admin"],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),
