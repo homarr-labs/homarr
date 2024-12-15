@@ -129,6 +129,10 @@ const optionMapping: OptionMapping = {
     fahrenheit: (oldOptions) => oldOptions.fahrenheit,
     fileSystem: (oldOptions) => oldOptions.fileSystem,
   },
+  mediaTranscoding: {
+    defaultView: (oldOptions) => oldOptions.defaultView,
+    queuePageSize: (oldOptions) => oldOptions.queuePageSize,
+  },
   app: null,
 };
 

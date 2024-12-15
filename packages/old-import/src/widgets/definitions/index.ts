@@ -68,6 +68,7 @@ export const widgetKindMapping = {
   indexerManager: "indexer-manager",
   bookmarks: "bookmark",
   healthMonitoring: "health-monitoring",
+  mediaTranscoding: "media-transcoding",
 } satisfies Record<WidgetKind, OldmarrWidgetDefinitions["id"] | null>;
 // Use null for widgets that did not exist in oldmarr
 // TODO: revert assignment so that only old widgets are needed in the object,

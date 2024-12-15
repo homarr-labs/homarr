@@ -8,6 +8,7 @@ import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { mediaRequestListJob, mediaRequestStatsJob } from "./jobs/integrations/media-requests";
 import { mediaServerJob } from "./jobs/integrations/media-server";
+import { mediaTranscodingJob } from "./jobs/integrations/media-transcoding";
 import { pingJob } from "./jobs/ping";
 import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
@@ -31,6 +32,7 @@ export const jobGroup = createCronJobGroup({
   healthMonitoring: healthMonitoringJob,
   sessionCleanup: sessionCleanupJob,
   updateChecker: updateCheckerJob,
+  mediaTranscoding: mediaTranscodingJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
