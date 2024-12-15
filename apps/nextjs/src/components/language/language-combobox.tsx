@@ -16,10 +16,10 @@ interface LanguageComboboxProps {
   value: SupportedLanguage;
   onChange: (value: SupportedLanguage) => void;
   isPending?: boolean;
-  w?: string;
+  width?: string;
 }
 
-export const LanguageCombobox = ({ label, value, onChange, isPending, w }: LanguageComboboxProps) => {
+export const LanguageCombobox = ({ label, value, onChange, isPending, width }: LanguageComboboxProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -52,7 +52,7 @@ export const LanguageCombobox = ({ label, value, onChange, isPending, w }: Langu
           rightSectionPointerEvents="none"
           onClick={handleOnClick}
           variant="filled"
-          w={w}
+          w={width}
         >
           <OptionItem currentLocale={value} localeKey={value} />
         </InputBase>

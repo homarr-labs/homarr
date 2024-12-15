@@ -45,7 +45,7 @@ export default async function InitPage() {
               {t(`${currentStep.current}.subtitle`)}
             </Text>
           </Stack>
-          <CurrentLanguageCombobox w="100%" />
+          <CurrentLanguageCombobox width="100%" />
           <CurrentColorSchemeCombobox w="100%" />
           {CurrentComponent && <CurrentComponent />}
           {currentStep.previous === "start" && <BackToStart />}

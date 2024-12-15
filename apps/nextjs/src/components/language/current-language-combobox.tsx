@@ -5,12 +5,12 @@ import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 import { LanguageCombobox } from "./language-combobox";
 
 interface CurrentLanguageComboboxProps {
-  w?: string;
+  width?: string;
 }
 
-export const CurrentLanguageCombobox = ({ w }: CurrentLanguageComboboxProps) => {
+export const CurrentLanguageCombobox = ({ width }: CurrentLanguageComboboxProps) => {
   const currentLocale = useCurrentLocale();
   const { changeLocale, isPending } = useChangeLocale();
 
-  return <LanguageCombobox value={currentLocale} onChange={changeLocale} isPending={isPending} w={w} />;
+  return <LanguageCombobox value={currentLocale} onChange={changeLocale} isPending={isPending} width={width} />;
 };

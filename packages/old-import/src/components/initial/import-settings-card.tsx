@@ -27,7 +27,7 @@ export const ImportSettingsCard = ({ settings, updateSetting }: ImportSettingsCa
         </Stack>
 
         <OldmarrImportAppsSettings
-          bg="transparent"
+          background="transparent"
           onlyImportApps={{
             checked: settings.onlyImportApps,
             onChange: (event) => updateSetting("onlyImportApps", event.target.checked),

@@ -5,14 +5,14 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 interface OldmarrImportAppsSettingsProps {
   onlyImportApps: CheckboxProps;
-  bg?: string;
+  background?: string;
 }
 
-export const OldmarrImportAppsSettings = ({ bg, onlyImportApps }: OldmarrImportAppsSettingsProps) => {
+export const OldmarrImportAppsSettings = ({ background, onlyImportApps }: OldmarrImportAppsSettingsProps) => {
   const tApps = useScopedI18n("board.action.oldImport.form.apps");
 
   return (
-    <Fieldset legend={tApps("label")} bg={bg}>
+    <Fieldset legend={tApps("label")} bg={background}>
       <Switch
         {...onlyImportApps}
         label={tApps("onlyImportApps.label")}
