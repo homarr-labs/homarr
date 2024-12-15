@@ -4,23 +4,23 @@
     "name": "Gebruiker",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Log in op je account",
+        "subtitle": "Welkom terug! Voer je inloggegevens in"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Deelnemen aan Homarr",
+        "subtitle": "Welkom bij Homarr! Maak een account aan",
+        "description": "Je bent uitgenodigd door {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nieuwe Homarr installatie",
+        "subtitle": "Maak de eerste beheerdersgebruiker aan"
       }
     },
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Geverifiëerd"
       },
       "username": {
         "label": "Gebruikersnaam"
@@ -28,7 +28,7 @@
       "password": {
         "label": "Wachtwoord",
         "requirement": {
-          "length": "",
+          "length": "Bevat ten minste 8 tekens",
           "lowercase": "Inclusief kleine letter",
           "uppercase": "Inclusief hoofdletter",
           "number": "Inclusief aantal",
@@ -39,35 +39,35 @@
         "label": "Wachtwoord bevestigen"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Vorig wachtwoord"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Home bord"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Gebruik iconen voor pings"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Gebruikersnaam is al in gebruik"
     },
     "action": {
       "login": {
         "label": "Inloggen",
-        "labelWith": "",
+        "labelWith": "Login met {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Login succesvol",
+            "message": "Je bent nu ingelogd"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Login mislukt",
+            "message": "Je login is mislukt"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Wachtwoord vergeten?",
+          "description": "Een beheerder kan het volgende commando gebruiken om je wachtwoord opnieuw in te stellen:"
         }
       },
       "register": {
@@ -678,6 +678,7 @@
       "previous": "Vorige",
       "next": "Volgende",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Probeer het opnieuw",
       "loading": ""
     },
@@ -733,7 +734,8 @@
         "logout": "",
         "login": "Inloggen",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Gevarenzone",
@@ -1308,9 +1310,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -2153,6 +2152,9 @@
             },
             "sessionCleanup": {
               "label": ""
+            },
+            "updateChecker": {
+              "label": ""
             }
           }
         },
@@ -2301,6 +2303,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {

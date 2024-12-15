@@ -45,7 +45,6 @@ import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/i
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationSelectedError } from "../errors";
 
 //Ratio table for relative width between columns
 const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
@@ -635,10 +634,6 @@ export default function DownloadClientsWidget({
       }),
       { up: 0, down: 0 },
     );
-
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
 
   if (options.columns.length === 0)
     return (

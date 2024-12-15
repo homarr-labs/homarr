@@ -97,6 +97,9 @@ importers:
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../../packages/notifications
+      '@homarr/old-import':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/old-import
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../../packages/old-schema
@@ -127,6 +130,9 @@ importers:
       '@mantine/core':
         specifier: ^7.15.1
         version: 7.15.1(@mantine/hooks@7.15.1(react@19.0.0))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/dropzone':
+        specifier: ^7.15.1
+        version: 7.15.1(@mantine/core@7.15.1(@mantine/hooks@7.15.1(react@19.0.0))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.15.1(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks':
         specifier: ^7.15.1
         version: 7.15.1(react@19.0.0)
@@ -939,6 +945,9 @@ importers:
 
   packages/form:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
@@ -1130,6 +1139,9 @@ importers:
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../notifications
+      '@homarr/old-import':
+        specifier: workspace:^0.1.0
+        version: link:../old-import
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../old-schema
@@ -1213,18 +1225,54 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/form':
+        specifier: workspace:^0.1.0
+        version: link:../form
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
+      '@homarr/modals':
+        specifier: workspace:^0.1.0
+        version: link:../modals
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../notifications
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../old-schema
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
+      '@homarr/ui':
+        specifier: workspace:^0.1.0
+        version: link:../ui
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      '@mantine/core':
+        specifier: ^7.15.1
+        version: 7.15.1(@mantine/hooks@7.15.1(react@19.0.0))(@types/react@18.3.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/hooks':
+        specifier: ^7.15.1
+        version: 7.15.1(react@19.0.0)
+      adm-zip:
+        specifier: 0.5.16
+        version: 0.5.16
+      next:
+        specifier: ^14.2.20
+        version: 14.2.20(@babel/core@7.26.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.0)
+      react:
+        specifier: ^19.0.0
+        version: 19.0.0
       superjson:
         specifier: 2.2.2
         version: 2.2.2
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
+      zod-form-data:
+        specifier: ^2.0.2
+        version: 2.0.2(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1235,6 +1283,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/adm-zip':
+        specifier: 0.5.7
+        version: 0.5.7
       eslint:
         specifier: ^9.17.0
         version: 9.17.0
@@ -1244,6 +1295,9 @@ importers:
 
   packages/old-schema:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -1576,9 +1630,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/old-schema':
-        specifier: workspace:^0.1.0
-        version: link:../old-schema
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
@@ -2916,6 +2967,14 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
+  '@mantine/dropzone@7.15.1':
+    resolution: {integrity: sha512-1kaIc8ReKI+xxh0Q+pTkPk9vW0hvTC++GttZ9kLQUH3Rd/VEVKC+gTqj2WFnkwaCSqe6rcGR7Xnb0deNvJ1mwA==}
+    peerDependencies:
+      '@mantine/core': 7.15.1
+      '@mantine/hooks': 7.15.1
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
+
   '@mantine/form@7.15.1':
     resolution: {integrity: sha512-DA2syNlPsG1f+UtnbEG+pf4Pc/DoZUgcdvZn3LsCRxJZYNuwz8qQ16oL/wQ6UIk3klGlJI/RDzRJ9rvn6E28YQ==}
     peerDependencies:
@@ -3803,6 +3862,9 @@ packages:
     resolution: {integrity: sha512-PSys7Hy5NuX76HBleOkd8wlRtI4GCzLHS2XUpKeGIj0vpzH4fqE+tpi7fBb5t9U7UiyM6E6pyabSKjoD2zUsoQ==}
     hasBin: true
 
+  '@types/adm-zip@0.5.7':
+    resolution: {integrity: sha512-DNEs/QvmyRLurdQPChqq0Md4zGvPwHerAJYWk9l2jCbD1VPpnzRJorOdiq4zsw09NFbYnhfsoEhWtxIzXpn2yw==}
+
   '@types/asn1@0.2.4':
     resolution: {integrity: sha512-V91DSJ2l0h0gRhVP4oBfBzRBN9lAbPUkGDMCnwedqPKX2d84aAMc9CulOvxdw1f7DfEYx99afab+Rsm3e52jhA==}
 
@@ -4204,6 +4266,10 @@ packages:
     resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  adm-zip@0.5.16:
+    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
+    engines: {node: '>=12.0'}
 
   aes-decrypter@4.0.2:
     resolution: {integrity: sha512-lc+/9s6iJvuaRe5qDlMTpCFjnwpkeOXp8qP3oiZ5jsj1MRg+SBVUmmICrhxHvc8OELSmc+fEyyxAuppY6hrWzw==}
@@ -7056,6 +7122,12 @@ packages:
     peerDependencies:
       react: ^19.0.0
 
+  react-dropzone-esm@15.2.0:
+    resolution: {integrity: sha512-pPwR8xWVL+tFLnbAb8KVH5f6Vtl397tck8dINkZ1cPMxHWH+l9dFmIgRWgbh7V7jbjIcuKXCsVrXbhQz68+dVA==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+
   react-error-boundary@4.1.2:
     resolution: {integrity: sha512-GQDxZ5Jd+Aq/qUxbCm1UtzmL/s++V7zKgE8yMktJiCQXCCFZnMZh9ng+6/Ne6PjNSXH0L9CjeOEREfRnq6Duag==}
     peerDependencies:
@@ -9368,6 +9440,14 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
+  '@mantine/dropzone@7.15.1(@mantine/core@7.15.1(@mantine/hooks@7.15.1(react@19.0.0))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.15.1(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@mantine/core': 7.15.1(@mantine/hooks@7.15.1(react@19.0.0))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/hooks': 7.15.1(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-dropzone-esm: 15.2.0(react@19.0.0)
+
   '@mantine/form@7.15.1(react@19.0.0)':
     dependencies:
       fast-deep-equal: 3.1.3
@@ -10520,6 +10600,10 @@ snapshots:
       semver: 7.6.2
       update-check: 1.5.4
 
+  '@types/adm-zip@0.5.7':
+    dependencies:
+      '@types/node': 22.10.2
+
   '@types/asn1@0.2.4':
     dependencies:
       '@types/node': 22.10.2
@@ -11043,6 +11127,8 @@ snapshots:
       acorn: 8.14.0
 
   acorn@8.14.0: {}
+
+  adm-zip@0.5.16: {}
 
   aes-decrypter@4.0.2:
     dependencies:
@@ -14224,6 +14310,11 @@ snapshots:
     dependencies:
       react: 19.0.0
       scheduler: 0.25.0
+
+  react-dropzone-esm@15.2.0(react@19.0.0):
+    dependencies:
+      prop-types: 15.8.1
+      react: 19.0.0
 
   react-error-boundary@4.1.2(react@19.0.0):
     dependencies:

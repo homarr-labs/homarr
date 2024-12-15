@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { objectKeys } from "@homarr/common";
+
 const createAreaSchema = <TType extends string, TPropertiesSchema extends z.AnyZodObject>(
   type: TType,
   propertiesSchema: TPropertiesSchema,
@@ -53,3 +55,6 @@ export const tileBaseSchema = z.object({
   area: areaSchema,
   shape: shapeSchema,
 });
+
+export const boardSizes = objectKeys(shapeSchema._def.shape());
+export type BoardSize = (typeof boardSizes)[number];

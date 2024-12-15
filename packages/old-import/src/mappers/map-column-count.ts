@@ -1,5 +1,6 @@
 import type { OldmarrConfig } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
+
+import type { OldmarrImportConfiguration } from "../settings";
 
 export const mapColumnCount = (old: OldmarrConfig, screenSize: OldmarrImportConfiguration["screenSize"]) => {
   switch (screenSize) {

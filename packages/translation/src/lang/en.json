@@ -1,4 +1,109 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "Welcome to Homarr",
+        "subtitle": "Let's get started with setting up your Homarr instance.",
+        "description": "To get started, please select how you want to set up your Homarr instance.",
+        "action": {
+          "scratch": "Start from scratch",
+          "importOldmarr": "Import from Homarr before 1.0"
+        }
+      },
+      "import": {
+        "title": "Import data",
+        "subtitle": "You can import data from an existing Homarr instance.",
+        "dropzone": {
+          "title": "Drag the zip file here or click to browse",
+          "description": "The uploaded zip will be processed and you'll be able to select what you want to import"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Change file"
+          }
+        },
+        "importSettings": {
+          "title": "Import settings",
+          "description": "Configure the import behavior"
+        },
+        "boardSelection": {
+          "title": "Found {count} boards",
+          "description": "Choose all boards with there size you want to import",
+          "action": {
+            "selectAll": "Select all",
+            "unselectAll": "Unselect all"
+          }
+        },
+        "summary": {
+          "title": "Import summary",
+          "description": "In the below summary you can see what will be imported",
+          "action": {
+            "import": "Confirm import and continue"
+          },
+          "entities": {
+            "apps": "Apps",
+            "boards": "Boards",
+            "integrations": "Integrations",
+            "credentialUsers": "Credential users"
+          }
+        },
+        "tokenModal": {
+          "title": "Enter import token",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Enter the shown import token from your previous homarr instance"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Invalid token",
+              "message": "The token you entered is invalid"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Admin user",
+        "subtitle": "Specify the credentials for your administrator user.",
+        "notification": {
+          "success": {
+            "title": "User created",
+            "message": "The user was successfully created"
+          },
+          "error": {
+            "title": "User creation failed"
+          }
+        }
+      },
+      "group": {
+        "title": "External group",
+        "subtitle": "Specify the group that should be used for external users.",
+        "form": {
+          "name": {
+            "label": "Group name",
+            "description": "Name has to match admin group of external provider"
+          }
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "subtitle": "Configure server settings."
+      },
+      "finish": {
+        "title": "Finish setup",
+        "subtitle": "You are ready to go!",
+        "description": "You have successfully completed the setup process. You can now start using Homarr. Select your next action:",
+        "action": {
+          "goToBoard": "Go to {name} board",
+          "createBoard": "Create your first board",
+          "inviteUser": "Invite other users",
+          "docs": "Read the documentation"
+        }
+      }
+    },
+    "backToStart": "Back to start"
+  },
   "user": {
     "title": "Users",
     "name": "User",
@@ -588,6 +693,10 @@
     "secrets": {
       "title": "Secrets",
       "lastUpdated": "Last updated {date}",
+      "notSet": {
+        "label": "No value set",
+        "tooltip": "This required secret has not been set yet"
+      },
       "secureNotice": "This secret cannot be retrieved after creation",
       "reset": {
         "title": "Reset secret",
@@ -678,6 +787,7 @@
       "previous": "Previous",
       "next": "Next",
       "checkoutDocs": "Check out the documentation",
+      "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
       "loading": "Loading"
     },
@@ -685,6 +795,12 @@
     "iconPicker": {
       "label": "Icon URL",
       "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you."
+    },
+    "colorScheme": {
+      "options": {
+        "light": "Light",
+        "dark": "Dark"
+      }
     },
     "information": {
       "min": "Min",
@@ -767,7 +883,8 @@
           "boardAlreadyExists": "A board with this name already exists",
           "invalidFileType": "Invalid file type, expected {expected}",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
-          "invalidConfiguration": "Invalid configuration"
+          "invalidConfiguration": "Invalid configuration",
+          "groupNameTaken": "Group name already taken"
         }
       }
     }
@@ -1309,9 +1426,6 @@
         "description": "Click <here></here> to create a new app"
       },
       "error": {
-        "action": {
-          "logs": "Check logs for more details"
-        },
         "noIntegration": "No integration selected",
         "noData": "No integration data available"
       },
@@ -1667,6 +1781,7 @@
           },
           "screenSize": {
             "label": "Screen size",
+            "description": "In versions before 1.0 three different modes existed, so you were able to choose the amount of columns for each screen size.",
             "option": {
               "sm": "Small",
               "md": "Medium",
@@ -2367,6 +2482,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Docker containers"
     }
   },
   "permission": {

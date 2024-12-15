@@ -678,6 +678,7 @@
       "previous": "Poprzedni",
       "next": "Dalej",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Spróbuj ponownie",
       "loading": ""
     },
@@ -733,7 +734,8 @@
         "logout": "",
         "login": "Zaloguj się",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Strefa zagrożenia",
@@ -1308,9 +1310,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -2153,6 +2152,9 @@
             },
             "sessionCleanup": {
               "label": ""
+            },
+            "updateChecker": {
+              "label": ""
             }
           }
         },
@@ -2301,6 +2303,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {

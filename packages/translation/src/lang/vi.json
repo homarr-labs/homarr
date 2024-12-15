@@ -678,6 +678,7 @@
       "previous": "Trước",
       "next": "Kế tiếp",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Thử lại",
       "loading": ""
     },
@@ -733,7 +734,8 @@
         "logout": "",
         "login": "Đăng nhập",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Khu vực nguy hiểm",
@@ -1308,9 +1310,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -2153,6 +2152,9 @@
             },
             "sessionCleanup": {
               "label": ""
+            },
+            "updateChecker": {
+              "label": ""
             }
           }
         },
@@ -2301,6 +2303,9 @@
           }
         }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {

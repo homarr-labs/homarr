@@ -1,10 +1,10 @@
 import { objectEntries } from "@homarr/common";
 import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import { OldHomarrScreenSizeError } from "./import-error";
 import { mapColumnCount } from "./mappers/map-column-count";
+import type { OldmarrImportConfiguration } from "./settings";
 
 export const moveWidgetsAndAppsIfMerge = (
   old: OldmarrConfig,
