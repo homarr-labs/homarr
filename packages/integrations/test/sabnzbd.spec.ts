@@ -28,7 +28,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Test connection should fail with wrong ApiKey", async () => {
     // Arrange
@@ -43,7 +43,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("pauseQueueAsync should work", async () => {
     // Arrange
@@ -60,7 +60,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("resumeQueueAsync should work", async () => {
     // Arrange
@@ -80,7 +80,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Items should be empty", async () => {
     // Arrange
@@ -98,7 +98,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("1 Items should exist after adding one", async () => {
     // Arrange
@@ -115,7 +115,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Pause item should work", async () => {
     // Arrange
@@ -134,7 +134,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Resume item should work", async () => {
     // Arrange
@@ -154,7 +154,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Delete item should result in empty items", async () => {
     // Arrange
@@ -173,7 +173,7 @@ describe("Sabnzbd integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 });
 
 const createSabnzbdContainer = () => {

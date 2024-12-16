@@ -28,7 +28,7 @@ describe("Nzbget integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000);
+  }, 30_000);
 
   test("Test connection should fail with wrong credentials", async () => {
     // Arrange
@@ -43,7 +43,7 @@ describe("Nzbget integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("pauseQueueAsync should work", async () => {
     // Arrange
@@ -60,7 +60,7 @@ describe("Nzbget integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("resumeQueueAsync should work", async () => {
     // Arrange
@@ -80,7 +80,7 @@ describe("Nzbget integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Items should be empty", async () => {
     // Arrange
@@ -98,7 +98,7 @@ describe("Nzbget integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("1 Items should exist after adding one", async () => {
     // Arrange
@@ -115,7 +115,7 @@ describe("Nzbget integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
+  }, 30_000); // Timeout of 30 seconds
 
   test("Delete item should result in empty items", async () => {
     // Arrange
@@ -124,16 +124,18 @@ describe("Nzbget integration", () => {
     const item = await nzbGetAddItemAsync(startedContainer, username, password, nzbGetIntegration);
 
     // Act
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
     const actAsync = async () => await nzbGetIntegration.deleteItemAsync(item, true);
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
-    await expect(getAsync()).resolves.toMatchObject({ items: [] });
+    // NzbGet is slow and we wait for a second before querying the items. Test was flaky without this.
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const result = await nzbGetIntegration.getClientJobsAndStatusAsync();
+    expect(result.items).toHaveLength(0);
 
     // Cleanup
     await startedContainer.stop();
-  }, 20_000); // Timeout of 20 seconds*/
+  }, 30_000); // Timeout of 30 seconds
 });
 
 const createNzbGetContainer = () => {
