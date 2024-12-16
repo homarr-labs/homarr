@@ -1978,6 +1978,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "Welcome to Homarr",
+        "description": "A sleek,  modern dashboard that puts all of your apps and services at your fingertips.",
+        "link": "Create your first board",
+        "notice": "To make this page disappear, create a board and set it as the home board"
+      },
+      "notFound": {
+        "title": "Board not found",
+        "description": "The board specified was either not found or you don't have access to it.",
+        "link": "View all boards",
+        "notice": "Check the link or contact an administrator if you think it should be accessible"
+      },
+      "homeBoard": {
+        "title": "No home board",
+        "admin": {
+          "description": "You haven't set a home board for the server yet.",
+          "link": "Configure server-wide home board",
+          "notice": "To make this page disappear for all users, set a home board for the server"
+        },
+        "user": {
+          "description": "You haven't set a home board yet.",
+          "link": "Configure your home board",
+          "notice": "To make this page disappear, specify the home board in your preferences"
+        },
+        "anonymous": {
+          "description": "The server administrator hasn't set a home board yet.",
+          "link": "View public boards",
+          "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
+        }
+      }
     }
   },
   "management": {

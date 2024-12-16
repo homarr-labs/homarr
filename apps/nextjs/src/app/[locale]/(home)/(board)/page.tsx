@@ -1,4 +1,4 @@
-import definition from "../boards/(content)/(home)/_definition";
+import definition from "../../boards/(content)/(home)/_definition";
 
 const { generateMetadataAsync: generateMetadata, page } = definition;
 
