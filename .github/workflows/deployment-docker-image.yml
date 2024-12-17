@@ -20,7 +20,7 @@ on:
         description: Push Docker Image
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 env:
