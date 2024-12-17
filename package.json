@@ -1,7 +1,7 @@
 {
   "name": "homarr",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
     "clean": "git clean -xdf node_modules",
@@ -21,6 +21,7 @@
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
     "package:new": "turbo gen init",
+    "release": "semantic-release",
     "test": "cross-env NODE_ENV=development vitest run --exclude e2e --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development vitest e2e",
     "test:ui": "cross-env NODE_ENV=development vitest --exclude e2e --ui --coverage.enabled",
@@ -30,13 +31,21 @@
   "prettier": "@homarr/prettier-config",
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
     "@turbo/gen": "^2.3.3",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/ui": "^2.1.8",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
     "cross-env": "^7.0.3",
     "jsdom": "^25.0.1",
     "prettier": "^3.4.2",
+    "semantic-release": "^24.2.0",
     "testcontainers": "^10.16.0",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2",
@@ -48,9 +57,9 @@
     "node": ">=22.12.0"
   },
   "pnpm": {
+    "allowNonAppliedPatches": true,
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"
-    },
-    "allowNonAppliedPatches": true
+    }
   }
 }
