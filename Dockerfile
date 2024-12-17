@@ -67,7 +67,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
-COPY --chown=nextjs:nodejs scripts/generateEncryptionKey.js ./generateEncryptionKey.js
+COPY --chown=nextjs:nodejs scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
 

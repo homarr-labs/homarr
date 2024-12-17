@@ -89,7 +89,6 @@ export const createConfiguration = (
       signIn: createSignInEventHandler(db),
     },
     redirectProxyUrl: createRedirectUri(headers, "/api/auth"),
-    secret: "secret-is-not-defined-yet", // TODO: This should be added later
     session: {
       strategy: "database",
       maxAge: env.AUTH_SESSION_EXPIRY_TIME,
