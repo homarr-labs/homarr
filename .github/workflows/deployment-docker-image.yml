@@ -103,6 +103,7 @@ jobs:
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
+      DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
       PUSH_IMAGE: ${{ github.event_name != 'workflow_dispatch' || github.events.inputs.push-image == 'true' }}
     steps:
       - uses: actions/checkout@v4
@@ -130,6 +131,7 @@ jobs:
           images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           tags: |
             ${{ env.DEPLOY_LATEST == true && 'type=raw,value=latest' || null }}
+            ${{ env.DEPLOY_BETA == true && 'type=raw,value=beta' || null }}
             type=raw,value=${{ env.NEXT_VERSION }}
       - name: Build and maybe push
         id: buildPushAction
