@@ -1,3 +1,9 @@
+## [1.0.0-beta.3](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2024-12-17)
+
+### Bug Fixes
+
+* boolean checks do not work correctly in deploy workflow ([649506b](https://github.com/homarr-labs/homarr/commit/649506b56a5f3cbbee9b782b637730f2196785cc))
+
 ## [1.0.0-beta.2](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2024-12-17)
 
 ### Bug Fixes
