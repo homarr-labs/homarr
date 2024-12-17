@@ -137,7 +137,7 @@ jobs:
         id: buildPushAction
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           context: .
           push: ${{ env.PUSH_IMAGE}}
           tags: ${{ steps.meta.outputs.tags }}
