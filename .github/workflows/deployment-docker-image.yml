@@ -29,7 +29,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   TURBO_TELEMETRY_DISABLED: 1
 
-concurrency: production
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
 
 jobs:
   release:
