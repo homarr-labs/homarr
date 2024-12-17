@@ -1,3 +1,9 @@
+## [1.0.0-beta.2](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2024-12-17)
+
+### Bug Fixes
+
+* add missing branch-name to discord deploy notification ([50697eb](https://github.com/homarr-labs/homarr/commit/50697eb21f923bbe9a6811c964cfc313f79a2806))
+
 ## 1.0.0-beta.1 (2024-12-17)
 
 ### ⚠ BREAKING CHANGES
