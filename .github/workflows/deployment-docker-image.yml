@@ -130,8 +130,8 @@ jobs:
         with:
           images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           tags: |
-            ${{ env.DEPLOY_LATEST == true && 'type=raw,value=latest' || null }}
-            ${{ env.DEPLOY_BETA == true && 'type=raw,value=beta' || null }}
+            ${{ env.DEPLOY_LATEST == 'true' && 'type=raw,value=latest' || null }}
+            ${{ env.DEPLOY_BETA == 'true' && 'type=raw,value=beta' || null }}
             type=raw,value=${{ env.NEXT_VERSION }}
       - name: Build and maybe push
         id: buildPushAction
@@ -150,4 +150,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'. ${{ env.PUSH_IMAGE == true && '' || 'This was a dry run' }}"
+          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'. ${{ env.PUSH_IMAGE == 'true' && '' || 'This was a dry run' }}"
