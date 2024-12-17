@@ -148,4 +148,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of image has completed. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'. ${{ env.PUSH_IMAGE == true && '' || 'This was a dry run' }}"
+          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'. ${{ env.PUSH_IMAGE == true && '' || 'This was a dry run' }}"
