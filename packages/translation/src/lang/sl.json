@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Aplikacije",
+            "boards": "Deske",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Žeton",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Nastavitve",
         "subtitle": ""
       },
       "finish": {
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
             "label": "",
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplikacije",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Postavitev",
           "option": {
             "row": {
-              "label": ""
+              "label": "Vodoravno"
             },
             "column": {
-              "label": ""
+              "label": "Navpično"
             },
             "grid": {
               "label": ""
@@ -1199,7 +1199,7 @@
       },
       "align": {
         "left": "Leva stran",
-        "center": "",
+        "center": "Center",
         "right": "Desno"
       },
       "popover": {
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Vstavite katero koli vsebino iz interneta. Nekatera spletna mesta lahko omejijo dostop.",
       "option": {
         "embedUrl": {
@@ -1656,7 +1656,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
+        "queue": "Čakalna vrsta",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1670,7 +1670,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "Prazno",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1682,20 +1682,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "Prazno",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "ETA",
+            "progress": "Napredek",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Prazno",
           "table": {
             "file": "",
-            "size": "",
+            "size": "Velikost",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2042,7 +2042,7 @@
         "tools": {
           "label": "Orodja",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Ustvarjalec"
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Splošno",
-            "owner": "",
+            "owner": "Lastnik",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Deske",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Videz",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Orodja",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
