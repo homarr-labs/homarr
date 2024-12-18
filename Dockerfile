@@ -65,7 +65,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
-COPY scripts/entry-point.sh ./entry-point.sh
+COPY scripts/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 COPY --chown=nextjs:nodejs scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
