@@ -81,11 +81,18 @@ export const moveWidgetsAndAppsIfMerge = (
   }
 
   if (configuration.sidebarBehaviour === "last-section") {
-    if (old.settings.customization.layout.enabledLeftSidebar) {
+    const areas = [...old.apps.map((app) => app.area), ...old.widgets.map((widget) => widget.area)];
+    if (
+      old.settings.customization.layout.enabledLeftSidebar ||
+      areas.some((area) => area.type === "sidebar" && area.properties.location === "left")
+    ) {
       offset = moveWidgetsAndAppsInLeftSidebar(old, firstId, offset, configuration.screenSize);
     }
 
-    if (old.settings.customization.layout.enabledRightSidebar) {
+    if (
+      old.settings.customization.layout.enabledRightSidebar ||
+      areas.some((area) => area.type === "sidebar" && area.properties.location === "right")
+    ) {
       moveWidgetsAndAppsInRightSidebar(old, firstId, offset, configuration.screenSize);
     }
   }
