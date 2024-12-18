@@ -1,7 +1,7 @@
 import fsPromises from "fs/promises";
 import { glob } from "glob";
 
-import packageJson from "~/../package.json";
+import packageJson from "../../../../package.json";
 
 const getPackageVersion = () => packageJson.version;
 const getDependenciesAsync = async (): Promise<PackageJsonDependencies> => {
