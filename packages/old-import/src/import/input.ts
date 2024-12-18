@@ -20,5 +20,5 @@ export const importInitialOldmarrInputSchema = zfd.formData({
     const map = boardSelectionMapSchema.parse(SuperJSON.parse(value));
     return map;
   }),
-  token: zfd.text().nullable(),
+  token: zfd.text().nullable().optional(),
 });
