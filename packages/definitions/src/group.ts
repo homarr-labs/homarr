@@ -1,2 +1,2 @@
 export const everyoneGroup = "everyone";
-export const credentialsAdminGroup = "admin";
+export const credentialsAdminGroup = "credentials-admin";

@@ -26,7 +26,7 @@ FROM base AS runner
 WORKDIR /app
 
 # gettext is required for envsubst
-RUN apk add --no-cache redis nginx bash gettext
+RUN apk add --no-cache redis nginx bash gettext su-exec
 RUN mkdir /appdata
 VOLUME /appdata
 RUN mkdir /secrets
@@ -43,14 +43,12 @@ RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homa
 RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
-RUN chown -R nextjs:nodejs /appdata
 RUN chown -R nextjs:nodejs /secrets
 RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
     mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
     mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
     touch /run/nginx/nginx.pid && chown -R nextjs:nodejs /run/nginx/nginx.pid && \
     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs && chown -R nextjs:nodejs /etc/nginx
-USER nextjs
 
 COPY --from=builder /app/apps/nextjs/next.config.mjs .
 COPY --from=builder /app/apps/nextjs/package.json .
@@ -67,6 +65,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
+COPY scripts/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 COPY --chown=nextjs:nodejs scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
@@ -77,4 +77,5 @@ ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
 
+ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]

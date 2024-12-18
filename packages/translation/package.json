@@ -33,7 +33,7 @@
     "deepmerge": "4.3.1",
     "mantine-react-table": "2.0.0-beta.7",
     "next": "^14.2.20",
-    "next-intl": "3.26.1",
+    "next-intl": "3.26.2",
     "react": "^19.0.0"
   },
   "devDependencies": {

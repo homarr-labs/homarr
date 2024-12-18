@@ -14,15 +14,16 @@ import {
 } from "@homarr/db/schema/sqlite";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
+  getIntegrationKindsByCategory,
   getPermissionsWithParents,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
-  isIntegrationWithSearchSupport,
 } from "@homarr/definitions";
-import { integrationCreatorFromSecrets } from "@homarr/integrations";
+import { integrationCreator } from "@homarr/integrations";
 import { validation, z } from "@homarr/validation";
 
+import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { testConnectionAsync } from "./integration-test-connection";
@@ -90,7 +91,7 @@ export const integrationRouter = createTRPCRouter({
       where: inArray(
         integrations.kind,
         objectEntries(integrationDefs)
-          .filter(([_, integration]) => integration.supportsSearch)
+          .filter(([_, integration]) => [...integration.category].includes("search"))
           .map(([kind, _]) => kind),
       ),
     });
@@ -383,31 +384,11 @@ export const integrationRouter = createTRPCRouter({
       });
     }),
   searchInIntegration: protectedProcedure
+    .unstable_concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
     .query(async ({ ctx, input }) => {
-      const integration = await ctx.db.query.integrations.findFirst({
-        where: eq(integrations.id, input.integrationId),
-        with: {
-          secrets: true,
-        },
-      });
-
-      if (!integration) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "The requested integration does not exist",
-        });
-      }
-
-      if (!isIntegrationWithSearchSupport(integration)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "The requested integration does not support searching",
-        });
-      }
-
-      const integrationInstance = integrationCreatorFromSecrets(integration);
-      return await integrationInstance.searchAsync(input.query);
+      const integrationInstance = integrationCreator(ctx.integration);
+      return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
 });
 

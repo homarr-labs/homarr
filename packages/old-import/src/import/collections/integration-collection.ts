@@ -7,12 +7,17 @@ import { createDbInsertCollection } from "./common";
 
 export const createIntegrationInsertCollection = (
   preparedIntegrations: PreparedIntegration[],
-  encryptionToken: string | null,
+  encryptionToken: string | null | undefined,
 ) => {
   const insertCollection = createDbInsertCollection(["integrations", "integrationSecrets"]);
+
+  if (preparedIntegrations.length === 0) {
+    return insertCollection;
+  }
+
   logger.info(`Preparing integrations for insert collection count=${preparedIntegrations.length}`);
 
-  if (encryptionToken === null) {
+  if (encryptionToken === null || encryptionToken === undefined) {
     logger.debug("Skipping integration decryption due to missing token");
     return insertCollection;
   }
