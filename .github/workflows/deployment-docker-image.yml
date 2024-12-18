@@ -104,7 +104,7 @@ jobs:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
       DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
-      PUSH_IMAGE: ${{ github.event_name != 'workflow_dispatch' || github.events.inputs.push-image == 'true' }}
+      PUSH_IMAGE: ${{ github.event_name != 'workflow_dispatch' || github.events.inputs.push-image == true }}
     steps:
       - uses: actions/checkout@v4
       - name: Discord notification
