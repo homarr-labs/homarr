@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Lietotnes",
+            "boards": "Dēļi",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Atslēga",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Iestatījumi",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Lietotnes",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Izkārtojums",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontāli"
             },
             "column": {
-              "label": ""
+              "label": "Vertikāli"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Iegult jebkuru saturu no interneta. Dažas vietnes var ierobežot piekļuvi.",
       "option": {
         "embedUrl": {
@@ -1528,7 +1528,7 @@
           "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "",
+          "columnTitle": "Progress",
           "detailsTitle": ""
         },
         "ratio": {
@@ -1656,7 +1656,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
+        "queue": "Rinda",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1670,7 +1670,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "Tukšs",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1682,20 +1682,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "Tukšs",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "ETA",
+            "progress": "Progress",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Tukšs",
           "table": {
             "file": "",
-            "size": "",
+            "size": "Lielums",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Rīki",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Izveidotājs"
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Vispārīgi",
-            "owner": "",
+            "owner": "Īpašnieks",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Dēļi",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Izskats",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2445,7 +2445,7 @@
         "label": "Attēls"
       },
       "ports": {
-        "label": ""
+        "label": "Ports"
       }
     },
     "action": {
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Rīki",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
