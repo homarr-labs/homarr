@@ -1295,8 +1295,8 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
       zod-form-data:
-        specifier: ^2.0.3
-        version: 2.0.3(@rvf/set-get@7.0.0)(zod@3.24.1)
+        specifier: ^2.0.4
+        version: 2.0.4(@rvf/set-get@7.0.0)(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1661,8 +1661,8 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
       zod-form-data:
-        specifier: ^2.0.3
-        version: 2.0.3(@rvf/set-get@7.0.0)(zod@3.24.1)
+        specifier: ^2.0.4
+        version: 2.0.4(@rvf/set-get@7.0.0)(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -9290,8 +9290,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@2.0.3:
-    resolution: {integrity: sha512-yNBNGLg/HNTHk8F00QVmUIzBz0NLnZtEEvDUyyt3zyJTCPU6UnlG4jvtWjxomoJlaeRUFU2iaO/WC6jcraAb6g==}
+  zod-form-data@2.0.4:
+    resolution: {integrity: sha512-9OrcgjNN51kf4r+zgTXyTi7lS5OkqO6Wo0CLWpin9pgfGzpBBTIV0E+tyQDbNUvn2yrqNx3OXca+CDwb4kZDbg==}
     peerDependencies:
       '@rvf/set-get': '>= 6.0.3 < 8.0.0'
       zod: '>= 3.11.0'
@@ -17417,7 +17417,7 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.3(@rvf/set-get@7.0.0)(zod@3.24.1):
+  zod-form-data@2.0.4(@rvf/set-get@7.0.0)(zod@3.24.1):
     dependencies:
       '@rvf/set-get': 7.0.0
       zod: 3.24.1
