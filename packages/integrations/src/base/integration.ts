@@ -29,6 +29,10 @@ export abstract class Integration {
     return secret.value;
   }
 
+  protected hasSecretValue(kind: IntegrationSecretKind) {
+    return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
+  }
+
   protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
     const baseUrl = removeTrailingSlash(this.integration.url);
     const url = new URL(`${baseUrl}${path}`);
