@@ -27,15 +27,14 @@ WORKDIR /app
 
 # gettext is required for envsubst
 RUN apk add --no-cache redis nginx bash gettext
-RUN mkdir /appdata
-VOLUME /appdata
-RUN mkdir /secrets
-VOLUME /secrets
 
 
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+RUN mkdir /appdata
+RUN mkdir /secrets
 
 # Enable homarr cli
 COPY --from=builder --chown=nextjs:nodejs /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
@@ -51,6 +50,9 @@ RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
     touch /run/nginx/nginx.pid && chown -R nextjs:nodejs /run/nginx/nginx.pid && \
     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs && chown -R nextjs:nodejs /etc/nginx
 USER nextjs
+
+VOLUME /appdata
+VOLUME /secrets
 
 COPY --from=builder /app/apps/nextjs/next.config.mjs .
 COPY --from=builder /app/apps/nextjs/package.json .
