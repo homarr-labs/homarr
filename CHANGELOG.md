@@ -1,3 +1,16 @@
+## [1.0.0-beta.4](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2024-12-18)
+
+### Bug Fixes
+
+* about version reads nextjs package-json ([#1706](https://github.com/homarr-labs/homarr/issues/1706)) ([d803087](https://github.com/homarr-labs/homarr/commit/d8030873452d2248d79d16a2fc4464ff2fbb478d))
+* conflicts between common admin group for ldap or oidc and credentials default group ([#1710](https://github.com/homarr-labs/homarr/issues/1710)) ([3c0f272](https://github.com/homarr-labs/homarr/commit/3c0f272707ee66fd00bffb0d16e30df98b4f1aff))
+* **deps:** update dependency ldapts to v7.3.0 ([#1696](https://github.com/homarr-labs/homarr/issues/1696)) ([6943505](https://github.com/homarr-labs/homarr/commit/694350583a0e53014a950c4a5bed4d487ad4ca7b))
+* **deps:** update dependency next-intl to v3.26.2 ([#1703](https://github.com/homarr-labs/homarr/issues/1703)) ([d3a883a](https://github.com/homarr-labs/homarr/commit/d3a883a252167612f3f64579730c8f26453897e3))
+* docker statup permission issue ([#1709](https://github.com/homarr-labs/homarr/issues/1709)) ([1baa9fc](https://github.com/homarr-labs/homarr/commit/1baa9fc74cf15df8ead7bbe6d1615f7bf0895813))
+* import sidebar issues ([#1712](https://github.com/homarr-labs/homarr/issues/1712)) ([a519994](https://github.com/homarr-labs/homarr/commit/a51999457b57c042b543768bc1ef43647d62a85d))
+* jellyfin integration does not allow username password auth ([#1714](https://github.com/homarr-labs/homarr/issues/1714)) ([63a7be3](https://github.com/homarr-labs/homarr/commit/63a7be35a4cf0f11610c2097afc32d2ced0ef9e1))
+* permission required for home page ([#1711](https://github.com/homarr-labs/homarr/issues/1711)) ([5fbbf03](https://github.com/homarr-labs/homarr/commit/5fbbf037ce8a06642533c7f68c1c34ed8b01e4e4))
+
 ## [1.0.0-beta.3](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2024-12-17)
 
 ### Bug Fixes
