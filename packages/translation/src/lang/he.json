@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "אפליקציות",
+            "boards": "לוחות",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "טוקן",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "הגדרות",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "אפליקציות",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "פריסה",
           "option": {
             "row": {
-              "label": ""
+              "label": "אופקי"
             },
             "column": {
-              "label": ""
+              "label": "אנכי"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "תצוגת ברירת מחדל"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "עובדים",
+        "queue": "תור",
+        "statistics": "סטָטִיסטִיקָה"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "בתור",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "בָּרִיא",
+          "unhealthy": "לא בריא"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "ריק",
+          "transcodes": "קידודים",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "קודקים",
+          "videoContainers": "מיכלים",
+          "videoResolutions": "רזולוציות"
         },
         "workers": {
-          "empty": "",
+          "empty": "ריק",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "קוֹבֶץ",
+            "eta": "זמן סיום משוער",
+            "progress": "התקדמות",
+            "transcode": "קידוד",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "ריק",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "קוֹבֶץ",
+            "size": "גודל",
+            "transcode": "קידוד",
             "healthCheck": ""
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "כללי",
-            "owner": "",
+            "owner": "בעלים",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "לוחות",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "מראה",
             "defaultColorScheme": {
               "label": "",
               "options": {
