@@ -95,6 +95,12 @@ export const moveWidgetsAndAppsIfMerge = (
     ) {
       moveWidgetsAndAppsInRightSidebar(old, firstId, offset, configuration.screenSize);
     }
+  } else {
+    // Remove all widgets and apps in the sidebar
+    return {
+      apps: old.apps.filter((app) => app.area.type !== "sidebar"),
+      widgets: old.widgets.filter((app) => app.area.type !== "sidebar"),
+    };
   }
 
   return { apps: old.apps, widgets: old.widgets };
