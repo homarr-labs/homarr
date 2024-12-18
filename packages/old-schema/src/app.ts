@@ -69,7 +69,7 @@ export const oldmarrAppSchema = z
     behaviour: appBehaviourSchema,
     network: appNetworkSchema,
     appearance: appAppearanceSchema,
-    integration: appIntegrationSchema.optional(),
+    integration: appIntegrationSchema.optional().nullable(),
   })
   .and(tileBaseSchema);
 
