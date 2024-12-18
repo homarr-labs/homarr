@@ -1,6 +1,6 @@
 import { decryptSecretWithKey } from "@homarr/common/server";
 
-export const ensureValidTokenOrThrow = (checksum: string | undefined, encryptionToken: string | null) => {
+export const ensureValidTokenOrThrow = (checksum: string | undefined, encryptionToken: string | null | undefined) => {
   if (!encryptionToken || !checksum) return;
 
   const [first, second] = checksum.split("\n");
