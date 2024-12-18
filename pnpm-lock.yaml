@@ -1295,8 +1295,8 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
       zod-form-data:
-        specifier: ^2.0.2
-        version: 2.0.2(zod@3.24.1)
+        specifier: ^2.0.3
+        version: 2.0.3(@rvf/set-get@7.0.0)(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1661,8 +1661,8 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
       zod-form-data:
-        specifier: ^2.0.2
-        version: 2.0.2(zod@3.24.1)
+        specifier: ^2.0.3
+        version: 2.0.3(@rvf/set-get@7.0.0)(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -3455,6 +3455,9 @@ packages:
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
+
+  '@rvf/set-get@7.0.0':
+    resolution: {integrity: sha512-mseFkwanF/heWzO2Eey741P4m+Fovl9GWwa7Bfgw4YW2E7dcA6d7KAYl012rTGdW4L9KP5GOSA48CkEA1mC2eg==}
 
   '@scarf/scarf@1.4.0':
     resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
@@ -9287,9 +9290,10 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@2.0.2:
-    resolution: {integrity: sha512-sKTi+k0fvkxdakD0V5rq+9WVJA3cuTQUfEmNqvHrTzPLvjfLmkkBLfR0ed3qOi9MScJXTHIDH/jUNnEJ3CBX4g==}
+  zod-form-data@2.0.3:
+    resolution: {integrity: sha512-yNBNGLg/HNTHk8F00QVmUIzBz0NLnZtEEvDUyyt3zyJTCPU6UnlG4jvtWjxomoJlaeRUFU2iaO/WC6jcraAb6g==}
     peerDependencies:
+      '@rvf/set-get': '>= 6.0.3 < 8.0.0'
       zod: '>= 3.11.0'
 
   zod-openapi@2.19.0:
@@ -10625,6 +10629,8 @@ snapshots:
       rrweb-snapshot: 2.0.0-alpha.17
 
   '@rtsao/scc@1.1.0': {}
+
+  '@rvf/set-get@7.0.0': {}
 
   '@scarf/scarf@1.4.0': {}
 
@@ -17411,8 +17417,9 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.2(zod@3.24.1):
+  zod-form-data@2.0.3(@rvf/set-get@7.0.0)(zod@3.24.1):
     dependencies:
+      '@rvf/set-get': 7.0.0
       zod: 3.24.1
 
   zod-openapi@2.19.0(zod@3.24.1):
