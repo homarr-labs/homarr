@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Uygulamalar",
+            "boards": "Paneller",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Erişim Anahtarı",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Ayarlar",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Uygulamalar",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Düzen",
           "option": {
             "row": {
-              "label": ""
+              "label": "Yatay"
             },
             "column": {
-              "label": ""
+              "label": "Dikey"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
       "option": {
         "embedUrl": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Ratio",
           "detailsTitle": ""
         },
         "received": {
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Varsayılan görünüm"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "İşçiler",
+        "queue": "Kuyruk",
+        "statistics": "İstatistik"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "Sıraya alındı",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Sağlıklı",
+          "unhealthy": "Sağlıksız"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Boş",
+          "transcodes": "Kod dönüştürmeler",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Kodek'ler",
+          "videoContainers": "Konteyner",
+          "videoResolutions": "Çözünürlükler"
         },
         "workers": {
-          "empty": "",
+          "empty": "Boş",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Dosya",
+            "eta": "ETA (Kalan Süre)",
+            "progress": "İlerleme",
+            "transcode": "Kod dönüştürme",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Boş",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Dosya",
+            "size": "Boyut",
+            "transcode": "Kod dönüştürme",
             "healthCheck": ""
           }
         }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Araçlar",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Genel",
-            "owner": "",
+            "owner": "Sahip",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Paneller",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Görünüş",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Araçlar",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
