@@ -6,12 +6,19 @@ import { mapAndDecryptUsers } from "../../mappers/map-user";
 import type { OldmarrImportUser } from "../../user-schema";
 import { createDbInsertCollection } from "./common";
 
-export const createUserInsertCollection = (importUsers: OldmarrImportUser[], encryptionToken: string | null) => {
+export const createUserInsertCollection = (
+  importUsers: OldmarrImportUser[],
+  encryptionToken: string | null | undefined,
+) => {
   const insertCollection = createDbInsertCollection(["users", "groups", "groupMembers", "groupPermissions"]);
+
+  if (importUsers.length === 0) {
+    return insertCollection;
+  }
 
   logger.info(`Preparing users for insert collection count=${importUsers.length}`);
 
-  if (encryptionToken === null) {
+  if (encryptionToken === null || encryptionToken === undefined) {
     logger.debug("Skipping user decryption due to missing token");
     return insertCollection;
   }
