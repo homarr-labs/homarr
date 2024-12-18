@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "アプリ",
+            "boards": "ボード",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "トークン",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "設定",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "アプリ",
         "item": {
           "create": {
             "label": "",
@@ -770,7 +770,7 @@
     "error": "エラー",
     "action": {
       "add": "追加",
-      "apply": "適用する",
+      "apply": "適用",
       "backToOverview": "",
       "create": "作成",
       "edit": "編集",
@@ -785,7 +785,7 @@
       "confirm": "確認",
       "continue": "",
       "previous": "前へ",
-      "next": "次のページ",
+      "next": "次へ",
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "リトライ",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "レイアウト",
           "option": {
             "row": {
-              "label": ""
+              "label": "水平"
             },
             "column": {
-              "label": ""
+              "label": "垂直"
             },
             "grid": {
               "label": ""
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "デフォルト表示"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "ワーカー",
+        "queue": "キュー",
+        "statistics": "統計"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "処理待ち",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "正常",
+          "unhealthy": "異常"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "空",
+          "transcodes": "トランスコード",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "コーデック",
+          "videoContainers": "コンテナ",
+          "videoResolutions": "解像度"
         },
         "workers": {
-          "empty": "",
+          "empty": "空",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "ファイル",
+            "eta": "ETA",
+            "progress": "進捗状況",
+            "transcode": "トランスコード",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "空",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "ファイル",
+            "size": "サイズ",
+            "transcode": "トランスコード",
             "healthCheck": ""
           }
         }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "ツール",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2058,7 +2058,7 @@
             "sourceCode": ""
           }
         },
-        "about": ""
+        "about": "About"
       }
     },
     "page": {
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "クリエイター"
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "一般",
-            "owner": "",
+            "owner": "所有者",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "ボード",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "外観",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "ツール",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2612,7 +2612,7 @@
         "label": "設定"
       },
       "about": {
-        "label": ""
+        "label": "About"
       }
     }
   },
@@ -2837,7 +2837,7 @@
                 "label": ""
               },
               "about": {
-                "label": ""
+                "label": "About"
               },
               "homeBoard": {
                 "label": ""
