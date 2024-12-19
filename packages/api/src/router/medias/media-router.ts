@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { and, createId, desc, eq, like } from "@homarr/db";
-import { medias } from "@homarr/db/schema/sqlite";
+import { medias } from "@homarr/db/schema";
 import { validation, z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";

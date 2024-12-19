@@ -3,7 +3,7 @@ import { command, string } from "@drizzle-team/brocli";
 import { hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import { and, db, eq } from "@homarr/db";
-import { sessions, users } from "@homarr/db/schema/sqlite";
+import { sessions, users } from "@homarr/db/schema";
 
 export const resetPassword = command({
   name: "reset-password",

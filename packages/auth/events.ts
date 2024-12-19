@@ -4,7 +4,7 @@ import type { NextAuthConfig } from "next-auth";
 
 import { and, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema/sqlite";
+import { groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 

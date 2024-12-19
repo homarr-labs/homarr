@@ -1,6 +1,6 @@
 import type { InferInsertModel } from "@homarr/db";
 import { createId } from "@homarr/db";
-import type { boards } from "@homarr/db/schema/sqlite";
+import type { boards } from "@homarr/db/schema";
 
 import type { prepareMultipleImports } from "../prepare/prepare-multiple";
 import { mapColor } from "./map-colors";

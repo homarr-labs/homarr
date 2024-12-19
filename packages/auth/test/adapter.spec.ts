@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { users } from "@homarr/db/schema/sqlite";
+import { users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { createAdapter } from "../adapter";

@@ -11,7 +11,7 @@ import {
   integrations,
   integrationSecrets,
   integrationUserPermissions,
-} from "@homarr/db/schema/sqlite";
+} from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
   getIntegrationKindsByCategory,

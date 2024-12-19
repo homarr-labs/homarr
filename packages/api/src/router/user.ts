@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { and, createId, eq, like, schema } from "@homarr/db";
-import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
+import { and, createId, eq, like } from "@homarr/db";
+import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
@@ -509,7 +509,7 @@ const createUserAsync = async (db: Database, input: Omit<z.infer<typeof validati
   const username = input.username.toLowerCase();
 
   const userId = createId();
-  await db.insert(schema.users).values({
+  await db.insert(users).values({
     id: userId,
     name: username,
     email: input.email,

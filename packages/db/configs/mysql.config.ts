@@ -4,6 +4,13 @@ import type { Config } from "drizzle-kit";
 
 dotenv.config({ path: "../../.env" });
 
+console.log(
+  Object.entries(process.env)
+    .filter(([key]) => key.startsWith("DB"))
+    .map(([key, value]) => `${key}=${value}`)
+    .join("\n"),
+);
+
 export default {
   dialect: "mysql",
   schema: "./schema",

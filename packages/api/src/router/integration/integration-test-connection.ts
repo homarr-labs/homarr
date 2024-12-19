@@ -1,5 +1,5 @@
 import { decryptSecret } from "@homarr/common/server";
-import type { Integration } from "@homarr/db/schema/sqlite";
+import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { integrationCreator, IntegrationTestConnectionError } from "@homarr/integrations";

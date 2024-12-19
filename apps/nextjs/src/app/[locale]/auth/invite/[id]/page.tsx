@@ -4,7 +4,7 @@ import { Card, Center, Stack, Text, Title } from "@mantine/core";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { and, db, eq } from "@homarr/db";
-import { invites } from "@homarr/db/schema/sqlite";
+import { invites } from "@homarr/db/schema";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
