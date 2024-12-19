@@ -5,6 +5,9 @@ set -e
 mkdir -p /appdata/db
 mkdir -p /appdata/redis
 
+echo $(whoami)
+echo $(ls -la /appdata)
+
 chown -R nextjs:nodejs /appdata
 
 su-exec 1001:1001 "$@"
