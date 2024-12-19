@@ -2,12 +2,12 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Homarr'a Hoş Geldiniz",
+        "subtitle": "Homarr örneğinizi kurmaya başlayalım.",
+        "description": "Başlamak için lütfen Homarr örneğinizi nasıl kurmak istediğinizi seçin.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Sıfırdan başlayın",
+          "importOldmarr": "Homarr 1.0'dan önceki yedeğinizi içe aktarın"
         }
       },
       "import": {
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Homarr'a Hoş Geldiniz",
         "description": "",
         "link": "",
         "notice": ""
