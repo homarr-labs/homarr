@@ -2,96 +2,96 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "ברוכים הבאים ל- Homarr",
+        "subtitle": "בוא נתחיל בהגדרת ה-Homarr שלך.",
+        "description": "כדי להתחיל, בחר כיצד ברצונך להגדיר את ה-Homarr שלך.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "התחל מאפס",
+          "importOldmarr": "יבוא מ-Homarr לפני 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "ייבוא נתונים",
+        "subtitle": "אתה יכול לייבא נתונים מ- Homarr קיים.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "גרור את קובץ ה-zip לכאן או לחץ כדי לחפש",
+          "description": "ה-zip שהועלה יעובד ותוכל לבחור מה אתה רוצה לייבא"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "שנה קובץ"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "הגדרות ייבוא",
+          "description": "הגדר את התנהגות הייבוא"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "נמצאו {count} לוחות",
+          "description": "בחר את כל הלוחות שברצונך לייבא",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "בחר הכל",
+            "unselectAll": "בטל את הבחירה בכולם"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "סיכום ייבוא",
+          "description": "בסיכום למטה תוכלו לראות מה ייבא",
           "action": {
-            "import": ""
+            "import": "אשר את הייבוא והמשך"
           },
           "entities": {
             "apps": "אפליקציות",
             "boards": "לוחות",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "אינטגרציות",
+            "credentialUsers": "משתמשים מאושרים"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "הזן אסימון ייבוא",
           "field": {
             "token": {
               "label": "טוקן",
-              "description": ""
+              "description": "הזן את אסימון הייבוא המוצג ב- Homarr הקודם שלך"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "אסימון לא חוקי",
+              "message": "האסימון שהזנת אינו חוקי"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "משתמש מנהל",
+        "subtitle": "ציין את האישורים עבור משתמש המנהל שלך.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "המשתמש נוצר",
+            "message": "המשתמש נוצר בהצלחה"
           },
           "error": {
-            "title": ""
+            "title": "יצירת המשתמש נכשלה"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "קבוצה חיצונית",
+        "subtitle": "ציין את הקבוצה שבה יש להשתמש עבור משתמשים חיצוניים.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "שם הקבוצה",
+            "description": "השם צריך להתאים לקבוצת הניהול של הספק החיצוני"
           }
         }
       },
       "settings": {
         "title": "הגדרות",
-        "subtitle": ""
+        "subtitle": "קבע את הגדרות השרת."
       },
       "finish": {
-        "title": "",
+        "title": "סיים את ההגדרה",
         "subtitle": "",
         "description": "",
         "action": {
@@ -344,7 +344,7 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "אינטגרציות",
         "item": {
           "create": {
             "label": "",
@@ -559,7 +559,7 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
+        "title": "אינטגרציות",
         "search": "",
         "noResults": {
           "title": ""
@@ -978,7 +978,7 @@
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "אינטגרציות"
         },
         "customCssClasses": {
           "label": ""
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "ברוכים הבאים ל- Homarr",
         "description": "",
         "link": "",
         "notice": ""
@@ -2028,7 +2028,7 @@
         "home": "מסך הבית",
         "boards": "לוחות",
         "apps": "אפליקציות",
-        "integrations": "",
+        "integrations": "אינטגרציות",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -2067,7 +2067,7 @@
           "board": "לוחות",
           "user": "משתמשים",
           "invite": "הזמנות",
-          "integration": "",
+          "integration": "אינטגרציות",
           "app": "אפליקציות",
           "group": ""
         },
@@ -2168,10 +2168,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "המשתמש נוצר"
             },
             "error": {
-              "title": ""
+              "title": "יצירת המשתמש נכשלה"
             }
           },
           "action": {
@@ -2555,7 +2555,7 @@
         "label": "לוחות"
       },
       "integrations": {
-        "label": "",
+        "label": "אינטגרציות",
         "edit": {
           "label": "עריכה"
         },
@@ -2662,7 +2662,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "אינטגרציות"
           }
         }
       },
