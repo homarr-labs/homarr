@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -1026,7 +1026,7 @@
           "label": ""
         },
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
@@ -1050,7 +1050,7 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
@@ -1083,7 +1083,7 @@
       "description": "Styr PiHole eller AdGuard från din instrumentpanel",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Bädda in valfritt innehåll från internet. Vissa webbplatser kan begränsa åtkomsten.",
       "option": {
         "embedUrl": {
@@ -1522,7 +1522,7 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
@@ -1677,8 +1677,8 @@
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "Codecs",
-          "videoContainers": "Containers",
+          "videoCodecs": "",
+          "videoContainers": "",
           "videoResolutions": "Upplösningar"
         },
         "workers": {
@@ -1907,7 +1907,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Layout"
+          "title": ""
         },
         "background": {
           "title": "Bakgrund"
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Verktyg",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Skapare"
@@ -2208,7 +2208,7 @@
               "label": "Utgångsdatum"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "Containers",
+    "title": "",
     "table": {
       "updated": "",
       "search": "",
@@ -2442,7 +2442,7 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
         "label": "Portar"
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Verktyg",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": ""
               },
               "youTube": {

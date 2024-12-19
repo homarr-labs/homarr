@@ -546,7 +546,7 @@
         "label": "Tanım"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "İsim"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "Beta",
+    "beta": "",
     "error": "Hata",
     "action": {
       "add": "Ekle",
@@ -848,7 +848,7 @@
         "preferences": "Tercihleriniz",
         "logout": "Oturumu kapat",
         "login": "Giriş",
-        "homeBoard": "Ev panonuz",
+        "homeBoard": "Varsayılan Panel",
         "loggedOut": "Oturum kapatıldı",
         "updateAvailable": "{countUpdates} güncelleme mevcut: {tag}"
       }
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
       "option": {
         "embedUrl": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Ratio",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "received": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Araçlar",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Araçlar",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
