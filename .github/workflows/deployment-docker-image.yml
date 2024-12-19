@@ -90,6 +90,8 @@ jobs:
       - name: Update dev branch
         if: env.SKIP_RELEASE == 'false'
         continue-on-error: true # Prevent pipeline from failing when merge fails
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
           git fetch origin dev
           git checkout dev
