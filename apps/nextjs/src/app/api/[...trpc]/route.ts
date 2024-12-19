@@ -8,7 +8,7 @@ import { hashPasswordAsync } from "@homarr/auth";
 import type { Session } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
 import { db, eq } from "@homarr/db";
-import { apiKeys } from "@homarr/db/schema/sqlite";
+import { apiKeys } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 
 const handlerAsync = async (req: NextRequest) => {

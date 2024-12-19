@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { encryptSecret } from "@homarr/common/server";
 import { createId } from "@homarr/db";
-import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
+import { integrations, integrationSecrets } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 

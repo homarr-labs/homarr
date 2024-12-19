@@ -2,8 +2,8 @@ import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { createId, eq, schema } from "@homarr/db";
-import { onboarding, users } from "@homarr/db/schema/sqlite";
+import { createId, eq } from "@homarr/db";
+import { invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
@@ -121,7 +121,7 @@ describe("register should create a user with valid invitation", () => {
     await db.insert(users).values({
       id: userId,
     });
-    await db.insert(schema.invites).values({
+    await db.insert(invites).values({
       id: inviteId,
       token: inviteToken,
       creatorId: userId,
@@ -176,7 +176,7 @@ describe("register should create a user with valid invitation", () => {
       await db.insert(users).values({
         id: userId,
       });
-      await db.insert(schema.invites).values({
+      await db.insert(invites).values({
         id: inviteId,
         token: inviteToken,
         creatorId: userId,
@@ -211,7 +211,7 @@ describe("editProfile shoud update user", () => {
 
     const emailVerified = new Date(2024, 0, 5);
 
-    await db.insert(schema.users).values({
+    await db.insert(users).values({
       id: defaultOwnerId,
       name: "TEST 1",
       email: "abc@gmail.com",
@@ -226,7 +226,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
+    const user = await db.select().from(users).where(eq(users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
     expect(user[0]).containSubset({
@@ -245,7 +245,7 @@ describe("editProfile shoud update user", () => {
       session: defaultSession,
     });
 
-    await db.insert(schema.users).values({
+    await db.insert(users).values({
       id: defaultOwnerId,
       name: "TEST 1",
       email: "abc@gmail.com",
@@ -260,7 +260,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
+    const user = await db.select().from(users).where(eq(users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
     expect(user[0]).containSubset({
@@ -295,11 +295,11 @@ describe("delete should delete user", () => {
       },
     ];
 
-    await db.insert(schema.users).values(initialUsers);
+    await db.insert(users).values(initialUsers);
 
     await caller.delete({ userId: defaultOwnerId });
 
-    const usersInDb = await db.select().from(schema.users);
+    const usersInDb = await db.select().from(users);
     expect(usersInDb).toHaveLength(2);
     expect(usersInDb[0]).containSubset(initialUsers[0]);
     expect(usersInDb[1]).containSubset(initialUsers[2]);

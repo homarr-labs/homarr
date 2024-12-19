@@ -3,7 +3,7 @@ import { objectEntries } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { groups, onboarding } from "@homarr/db/schema/sqlite";
+import { groups, onboarding } from "@homarr/db/schema";
 import type { OnboardingStep } from "@homarr/definitions";
 import { credentialsAdminGroup } from "@homarr/definitions";
 

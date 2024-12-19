@@ -4,7 +4,7 @@ import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
-import { boardGroupPermissions, boardUserPermissions, groupMembers } from "@homarr/db/schema/sqlite";
+import { boardGroupPermissions, boardUserPermissions, groupMembers } from "@homarr/db/schema";
 import type { BoardPermission } from "@homarr/definitions";
 
 /**

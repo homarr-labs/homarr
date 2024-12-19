@@ -7,7 +7,7 @@ import { decryptSecret } from "@homarr/common/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
-import { integrations } from "@homarr/db/schema/sqlite";
+import { integrations } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 import { z } from "@homarr/validation";
 

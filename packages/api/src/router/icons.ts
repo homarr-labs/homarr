@@ -1,5 +1,5 @@
 import { count, like } from "@homarr/db";
-import { icons } from "@homarr/db/schema/sqlite";
+import { icons } from "@homarr/db/schema";
 import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
