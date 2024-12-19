@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Aplikace",
+            "boards": "Plochy",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Nastavení",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplikace",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Rozložení",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontální"
             },
             "column": {
-              "label": ""
+              "label": "Vertikální"
             },
             "grid": {
               "label": ""
@@ -1213,11 +1213,11 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Vložte jakýkoli obsah z internetu. Některé webové stránky mohou omezit přístup.",
       "option": {
         "embedUrl": {
-          "label": ""
+          "label": "Embed URL"
         },
         "allowFullScreen": {
           "label": "Povolit celou obrazovku"
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Výchozí zobrazení"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Stroje",
+        "queue": "Fronta",
+        "statistics": "Statistiky"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "Ve frontě",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "V pořádku",
+          "unhealthy": "Nastal problém"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Prázdné",
+          "transcodes": "Překódování",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Kodeky",
+          "videoContainers": "Kontejnery",
+          "videoResolutions": "Rozlišení"
         },
         "workers": {
-          "empty": "",
+          "empty": "Prázdné",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Soubor",
+            "eta": "Odhadovaný čas",
+            "progress": "Postup",
+            "transcode": "Překódovat",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Prázdné",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Soubor",
+            "size": "Velikost",
+            "transcode": "Překódovat",
             "healthCheck": ""
           }
         }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Nástroje",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Vytvořil/a"
@@ -2208,7 +2208,7 @@
               "label": "Datum konce platnosti"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Obecné",
-            "owner": "",
+            "owner": "Vlastník",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Plochy",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Vzhled",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Nástroje",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

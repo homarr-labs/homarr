@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Aplicativos",
+            "boards": "Placas",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Configurações",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplicativos",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1050,13 +1050,13 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1083,13 +1083,13 @@
       "description": "Controle o PiHole ou o AdGuard em seu painel de controle",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1183,7 +1183,7 @@
         "checkList": "Lista de verificação",
         "increaseIndent": "Aumentar recuo",
         "decreaseIndent": "Diminuir recuo",
-        "link": "",
+        "link": "Link",
         "unlink": "Remover link",
         "image": "Incorporar imagem",
         "addTable": "Adicionar tabela",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incorporar qualquer conteúdo da internet. Alguns sites podem restringir o acesso.",
       "option": {
         "embedUrl": {
@@ -1635,7 +1635,7 @@
           "available": "",
           "tv": "Solicitações de TV",
           "movie": "Solicitações de filmes",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Principais usuários",
@@ -1656,8 +1656,8 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
-        "statistics": ""
+        "queue": "Fila",
+        "statistics": "Estatísticas"
       },
       "currentIndex": "",
       "healthCheck": {
@@ -1670,33 +1670,33 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "Vazio",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
+          "videoCodecs": "Codecs",
           "videoContainers": "",
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "Vazio",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Ficheiro",
+            "eta": "TED",
+            "progress": "Progresso",
+            "transcode": "Transcodificar",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Vazio",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Ficheiro",
+            "size": "Tamanho",
+            "transcode": "Transcodificar",
             "healthCheck": ""
           }
         }
@@ -1907,7 +1907,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": ""
+          "title": "Layout"
         },
         "background": {
           "title": "Antecedentes"
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Ferramentas",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Criador"
@@ -2208,7 +2208,7 @@
               "label": "Data de expiração"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Geral",
-            "owner": "",
+            "owner": "Dono",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Placas",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Aparência",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Ferramentas",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

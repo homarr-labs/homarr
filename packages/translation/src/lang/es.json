@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Aplicaciones",
+            "boards": "Tableros",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Ajustes",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplicaciones",
         "item": {
           "create": {
             "label": "",
@@ -767,7 +767,7 @@
   },
   "common": {
     "beta": "",
-    "error": "",
+    "error": "Error",
     "action": {
       "add": "Añadir",
       "apply": "Aplicar",
@@ -806,8 +806,8 @@
       "min": "",
       "max": "",
       "days": "",
-      "hours": "",
-      "minutes": ""
+      "hours": "Horas",
+      "minutes": "Minutos"
     },
     "notification": {
       "create": {
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1053,10 +1053,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1086,10 +1086,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1107,13 +1107,13 @@
         "enableAll": "",
         "disableAll": "",
         "setTimer": "",
-        "set": "",
+        "set": "Establecer",
         "enabled": "Activado",
         "disabled": "Desactivado",
         "processing": "",
         "disconnected": "",
-        "hours": "",
-        "minutes": "",
+        "hours": "Horas",
+        "minutes": "Minutos",
         "unlimited": ""
       }
     },
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incrusta cualquier contenido de Internet. Algunos sitios web pueden restringir el acceso.",
       "option": {
         "embedUrl": {
@@ -1345,15 +1345,15 @@
       }
     },
     "indexerManager": {
-      "name": "",
+      "name": "Estado del Administrador de Índices",
       "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": ""
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Administrador de Índices",
+      "testAll": "Probar todo",
       "error": {
         "internalServerError": ""
       }
@@ -1504,7 +1504,7 @@
         },
         "added": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Fecha Agregada"
         },
         "category": {
           "columnTitle": "",
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Ratio",
           "detailsTitle": ""
         },
         "received": {
@@ -1566,7 +1566,7 @@
       },
       "states": {
         "downloading": "Descargando",
-        "queued": "",
+        "queued": "En cola",
         "paused": "Pausado",
         "completed": "Completado",
         "failed": "",
@@ -1635,7 +1635,7 @@
           "available": "",
           "tv": "Solicitudes de TV",
           "movie": "Solicitudes de películas",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Mejores usuarios",
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Vista predeterminada"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Trabajadores",
+        "queue": "Cola",
+        "statistics": "Estadísticas"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "En cola",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Saludable",
+          "unhealthy": "No saludable"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Vacío",
+          "transcodes": "Transcodificaciones",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Códecs",
+          "videoContainers": "Contenedores",
+          "videoResolutions": "Resoluciones"
         },
         "workers": {
-          "empty": "",
+          "empty": "Vacío",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Archivo",
+            "eta": "Tiempo restante",
+            "progress": "Completado %",
+            "transcode": "Transcodificar",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Vacío",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Archivo",
+            "size": "Tamaño",
+            "transcode": "Transcodificar",
             "healthCheck": ""
           }
         }
@@ -1903,7 +1903,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Herramientas",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2127,7 +2127,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "item": {
               "language": "",
               "board": "",
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Creador"
@@ -2208,7 +2208,7 @@
               "label": "Fecha de caducidad"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2217,8 +2217,8 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "",
-            "owner": "",
+            "title": "General",
+            "owner": "Propietario",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Tableros",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Apariencia",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2316,7 +2316,7 @@
           "status": {
             "idle": "",
             "running": "En ejecución",
-            "error": ""
+            "error": "Error"
           },
           "job": {
             "iconsUpdater": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Contenedores",
     "table": {
       "updated": "",
       "search": "",
@@ -2589,7 +2589,7 @@
         "create": {
           "label": "Crear"
         },
-        "general": "",
+        "general": "General",
         "security": "Seguridad",
         "board": "Tableros",
         "groups": {
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Herramientas",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
+                "name": "Torrents",
                 "description": ""
               },
               "youTube": {

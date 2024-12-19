@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Εφαρμογές",
+            "boards": "Πίνακες",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Ρυθμίσεις",
         "subtitle": ""
       },
       "finish": {
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "",
+        "label": "E-Mail",
         "verified": ""
       },
       "username": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Εφαρμογές",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Διάταξη",
           "option": {
             "row": {
-              "label": ""
+              "label": "Οριζόντια"
             },
             "column": {
-              "label": ""
+              "label": "Κατακόρυφα"
             },
             "grid": {
               "label": ""
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Προεπιλεγμένη προβολή"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Εργάτες",
+        "queue": "Ουρά",
+        "statistics": "Στατιστικά"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "Στην ουρά",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Υγιές",
+          "unhealthy": "Μη υγιές"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Άδειο",
+          "transcodes": "Μετακωδικοποιήσεις",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Κωδικοποιητές",
+          "videoContainers": "Containers",
+          "videoResolutions": "Αναλύσεις"
         },
         "workers": {
-          "empty": "",
+          "empty": "Άδειο",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Αρχείο",
+            "eta": "Εκτιμώμενος χρόνος αναμονής",
+            "progress": "Πρόοδος",
+            "transcode": "Μετακωδικοποίηση",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Άδειο",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Αρχείο",
+            "size": "Μέγεθος",
+            "transcode": "Μετακωδικοποίηση",
             "healthCheck": ""
           }
         }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Εργαλεία",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2208,7 +2208,7 @@
               "label": "Ημερομηνία λήξης"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Γενικά",
-            "owner": "",
+            "owner": "Ιδιοκτήτης",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Πίνακες",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Εμφάνιση",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Containers",
     "table": {
       "updated": "",
       "search": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Εργαλεία",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

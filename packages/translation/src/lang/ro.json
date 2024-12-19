@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Aplicații",
+            "boards": "Planșe",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Setări",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplicații",
         "item": {
           "create": {
             "label": "",
@@ -733,7 +733,7 @@
     "field": {
       "name": "Nume",
       "size": "Mărime",
-      "creator": ""
+      "creator": "Creator"
     },
     "action": {
       "upload": {
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Aspect",
           "option": {
             "row": {
-              "label": ""
+              "label": "Orizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1056,7 +1056,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1089,7 +1089,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1183,7 +1183,7 @@
         "checkList": "Lista de verificare cu bifă",
         "increaseIndent": "Mărește spațierea",
         "decreaseIndent": "Scade spațierea",
-        "link": "",
+        "link": "Link",
         "unlink": "Șterge link-ul",
         "image": "Încorporează imagine",
         "addTable": "Adaugă tabelă",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Încorporați orice conținut de pe internet. Unele site-uri web pot restricționa accesul.",
       "option": {
         "embedUrl": {
@@ -1283,7 +1283,7 @@
       }
     },
     "calendar": {
-      "name": "",
+      "name": "Calendar",
       "description": "",
       "option": {
         "releaseType": {
@@ -1635,7 +1635,7 @@
           "available": "",
           "tv": "Cereri seriale TV",
           "movie": "Cereri filme",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Top utilizatori",
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Afișare implicită"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Lucrători",
+        "queue": "Listă de așteptare",
+        "statistics": "Statistici"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "Pus în așteptare",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Sănătos",
+          "unhealthy": "Nesănătos"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Gol",
+          "transcodes": "Transcrieri",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Codec-uri",
+          "videoContainers": "Containere",
+          "videoResolutions": "Rezoluţie"
         },
         "workers": {
-          "empty": "",
+          "empty": "Gol",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Fișier",
+            "eta": "Timp rămas estimat",
+            "progress": "Progres",
+            "transcode": "Transcriere",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Gol",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Fișier",
+            "size": "Mărime",
+            "transcode": "Transcriere",
             "healthCheck": ""
           }
         }
@@ -1892,7 +1892,7 @@
         "label": "Nume"
       },
       "isPublic": {
-        "label": "",
+        "label": "Public",
         "description": ""
       }
     },
@@ -1903,7 +1903,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Unelte",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2127,7 +2127,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "item": {
               "language": "",
               "board": "",
@@ -2199,16 +2199,16 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
-              "label": ""
+              "label": "Creator"
             },
             "expirationDate": {
               "label": "Data expirării"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2217,8 +2217,8 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "",
-            "owner": "",
+            "title": "General",
+            "owner": "Proprietar",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Planșe",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Aspect",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2589,7 +2589,7 @@
         "create": {
           "label": "Creează"
         },
-        "general": "",
+        "general": "General",
         "security": "Securitate",
         "board": "Planșe",
         "groups": {
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Unelte",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

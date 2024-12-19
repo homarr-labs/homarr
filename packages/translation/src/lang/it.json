@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Applicazioni",
+            "boards": "Boards",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Impostazioni",
         "subtitle": ""
       },
       "finish": {
@@ -131,7 +131,7 @@
         "label": "Nome utente"
       },
       "password": {
-        "label": "",
+        "label": "Password",
         "requirement": {
           "length": "",
           "lowercase": "Include lettera minuscola",
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
             "label": "",
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Applicazioni",
         "item": {
           "create": {
             "label": "",
@@ -323,7 +323,7 @@
         }
       },
       "board": {
-        "title": "",
+        "title": "Boards",
         "item": {
           "create": {
             "label": "",
@@ -716,7 +716,7 @@
           "newLabel": ""
         },
         "password": {
-          "label": "",
+          "label": "Password",
           "newLabel": "Nuova password"
         }
       }
@@ -853,7 +853,7 @@
         "updateAvailable": ""
       }
     },
-    "dangerZone": "",
+    "dangerZone": "Danger zone",
     "noResults": "Nessun risultato trovato",
     "preview": {
       "show": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Orizzontale"
             },
             "column": {
-              "label": ""
+              "label": "Verticale"
             },
             "grid": {
               "label": ""
@@ -1050,7 +1050,7 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
               "label": "Orizzontale"
@@ -1083,7 +1083,7 @@
       "description": "Controlla PiHole o AdGuard dalla tua dashboard",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
               "label": "Orizzontale"
@@ -1183,7 +1183,7 @@
         "checkList": "Elenco di controllo",
         "increaseIndent": "Aumenta indentatura",
         "decreaseIndent": "Diminuisci indentatura",
-        "link": "",
+        "link": "Link",
         "unlink": "Elimina link",
         "image": "Incorpora immagine",
         "addTable": "Aggiungi tabella",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incorpora qualsiasi contenuto da Internet. Alcuni siti web possono limitare l'accesso.",
       "option": {
         "embedUrl": {
@@ -1511,7 +1511,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Down",
           "detailsTitle": "Velocità Di Download"
         },
         "index": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Ratio",
           "detailsTitle": ""
         },
         "received": {
@@ -1560,7 +1560,7 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Up",
           "detailsTitle": ""
         }
       },
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Vista predefinita"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Worker",
+        "queue": "Coda",
+        "statistics": "Statistiche"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "In coda",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Sano",
+          "unhealthy": "Non integro"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Vuoto",
+          "transcodes": "Transcodes",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Codecs",
+          "videoContainers": "Containers",
+          "videoResolutions": "Risoluzioni"
         },
         "workers": {
-          "empty": "",
+          "empty": "Vuoto",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "File",
+            "eta": "ETA",
+            "progress": "Avanzamento",
+            "transcode": "Transcode",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Vuoto",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "File",
+            "size": "Dimensione",
+            "transcode": "Transcode",
             "healthCheck": ""
           }
         }
@@ -1907,7 +1907,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": ""
+          "title": "Layout"
         },
         "background": {
           "title": "Sfondo"
@@ -1935,7 +1935,7 @@
           }
         },
         "dangerZone": {
-          "title": "",
+          "title": "Danger zone",
           "action": {
             "rename": {
               "label": "",
@@ -2025,8 +2025,8 @@
     },
     "navbar": {
       "items": {
-        "home": "",
-        "boards": "",
+        "home": "Home",
+        "boards": "Boards",
         "apps": "Applicazioni",
         "integrations": "",
         "searchEngies": "",
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Strumenti",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2064,7 +2064,7 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "",
+          "board": "Boards",
           "user": "Utenti",
           "invite": "Inviti",
           "integration": "",
@@ -2072,7 +2072,7 @@
           "group": ""
         },
         "statisticLabel": {
-          "boards": "",
+          "boards": "Boards",
           "resources": "",
           "authentication": "",
           "authorization": ""
@@ -2093,7 +2093,7 @@
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "",
+              "label": "Home",
               "tooltip": ""
             }
           },
@@ -2139,7 +2139,7 @@
             "title": "Sicurezza"
           },
           "board": {
-            "title": ""
+            "title": "Boards"
           }
         },
         "list": {
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Creatore"
@@ -2208,7 +2208,7 @@
               "label": "Data di scadenza"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Generale",
-            "owner": "",
+            "owner": "Proprietario",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Boards",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Aspetto",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Containers",
     "table": {
       "updated": "",
       "search": "",
@@ -2552,7 +2552,7 @@
     "manage": {
       "label": "Gestisci",
       "boards": {
-        "label": ""
+        "label": "Boards"
       },
       "integrations": {
         "label": "",
@@ -2591,7 +2591,7 @@
         },
         "general": "Generale",
         "security": "Sicurezza",
-        "board": "",
+        "board": "Boards",
         "groups": {
           "label": ""
         },
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Strumenti",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2643,7 +2643,7 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Boards",
             "children": {
               "action": {
                 "open": {
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
+                "name": "Torrents",
                 "description": ""
               },
               "youTube": {

@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "aplikacije",
+            "boards": "Daske",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Znak",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Postavke",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "aplikacije",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Raspored",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontalno"
             },
             "column": {
-              "label": ""
+              "label": "Okomito"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Ugradite bilo koji sadržaj s interneta. Neke web stranice mogu ograničiti pristup.",
       "option": {
         "embedUrl": {
@@ -1432,7 +1432,7 @@
       "option": {}
     },
     "video": {
-      "name": "",
+      "name": "Video Stream",
       "description": "Ugradi video stream ili video sa kamere i/ili web stranice",
       "option": {
         "feedUrl": {
@@ -1656,7 +1656,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
+        "queue": "Red čekanja",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1670,7 +1670,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "Isprazni",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1682,20 +1682,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "Isprazni",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "ETA",
+            "progress": "Napredak",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Isprazni",
           "table": {
             "file": "",
-            "size": "",
+            "size": "Veličina",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2042,7 +2042,7 @@
         "tools": {
           "label": "Alati",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Daske",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Izgled",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Alati",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
