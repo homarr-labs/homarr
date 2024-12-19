@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Programėlės",
+            "boards": "Lentos",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Žetonas",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Nustatymai",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Programėlės",
         "item": {
           "create": {
             "label": "",
@@ -1029,10 +1029,10 @@
           "label": "",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontalus"
             },
             "column": {
-              "label": ""
+              "label": "Vertikalus"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Įterpkite bet kokį turinį iš interneto. Kai kuriose svetainėse prieiga gali būti ribojama.",
       "option": {
         "embedUrl": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Įrankiai",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Kūrėjas"
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Bendras",
-            "owner": "",
+            "owner": "Savininkas",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Lentos",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Išvaizda",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Įrankiai",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

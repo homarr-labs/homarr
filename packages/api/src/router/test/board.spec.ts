@@ -17,7 +17,7 @@ import {
   sections,
   serverSettings,
   users,
-} from "@homarr/db/schema/sqlite";
+} from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
 

@@ -2,7 +2,7 @@ import SuperJSON from "superjson";
 
 import type { InferInsertModel } from "@homarr/db";
 import { createId } from "@homarr/db";
-import type { items } from "@homarr/db/schema/sqlite";
+import type { items } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 

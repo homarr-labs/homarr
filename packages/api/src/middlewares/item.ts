@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { and, eq } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
+import { items } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
 import { z } from "@homarr/validation";
 

@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Alkalmazások",
+            "boards": "Táblák",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Beállítások",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Alkalmazások",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Elrendezés",
           "option": {
             "row": {
-              "label": ""
+              "label": "Vízszintes"
             },
             "column": {
-              "label": ""
+              "label": "Függőleges"
             },
             "grid": {
               "label": ""
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Alapértelmezett nézet"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Munkások",
+        "queue": "Várólista",
+        "statistics": "Statisztikák"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "Sorban áll",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Egészséges",
+          "unhealthy": "Egészségtelen"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Üres",
+          "transcodes": "Átkódolás",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Kodekek",
+          "videoContainers": "Tartály",
+          "videoResolutions": "Felbontás"
         },
         "workers": {
-          "empty": "",
+          "empty": "Üres",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Fájl",
+            "eta": "Hátralévő idő",
+            "progress": "Folyamat",
+            "transcode": "Átkódolás",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Üres",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Fájl",
+            "size": "Méret",
+            "transcode": "Átkódolás",
             "healthCheck": ""
           }
         }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Eszközök",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2208,7 +2208,7 @@
               "label": "Lejárati idő"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Általános",
-            "owner": "",
+            "owner": "Tulajdonos",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Táblák",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Megjelenés",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Eszközök",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

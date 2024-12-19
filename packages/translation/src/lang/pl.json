@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Aplikacje",
+            "boards": "Tablice",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Ustawienia",
         "subtitle": ""
       },
       "finish": {
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
             "label": "",
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplikacje",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Układ",
           "option": {
             "row": {
-              "label": ""
+              "label": "Poziomy"
             },
             "column": {
-              "label": ""
+              "label": "Pionowy"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Osadzaj dowolne treści z internetu. Niektóre strony internetowe mogą ograniczać dostęp.",
       "option": {
         "embedUrl": {
@@ -1656,7 +1656,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
+        "queue": "Kolejka",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1670,7 +1670,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "Puste",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1682,20 +1682,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "Puste",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "ETA",
+            "progress": "Postęp",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Puste",
           "table": {
             "file": "",
-            "size": "",
+            "size": "Rozmiar",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Narzędzia",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Twórca"
@@ -2208,7 +2208,7 @@
               "label": "Wygasa"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Ogólne",
-            "owner": "",
+            "owner": "Właściciel",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Tablice",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Wygląd",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Narzędzia",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

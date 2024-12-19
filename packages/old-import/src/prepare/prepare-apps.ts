@@ -1,5 +1,5 @@
 import type { InferSelectModel } from "@homarr/db";
-import type { apps } from "@homarr/db/schema/sqlite";
+import type { apps } from "@homarr/db/schema";
 import type { OldmarrConfig } from "@homarr/old-schema";
 
 import type { ValidAnalyseConfig } from "../analyse/types";

@@ -3,7 +3,7 @@ import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
 import { db, inArray } from "@homarr/db";
 import { createId } from "@homarr/db/client";
-import { iconRepositories, icons } from "@homarr/db/schema/sqlite";
+import { iconRepositories, icons } from "@homarr/db/schema";
 import { fetchIconsAsync } from "@homarr/icons";
 import { logger } from "@homarr/log";
 

@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Apps",
+            "boards": "Boards",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Einstellungen",
         "subtitle": ""
       },
       "finish": {
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "",
+        "label": "E-Mail",
         "verified": "Verifiziert"
       },
       "username": {
@@ -288,12 +288,12 @@
     "name": "",
     "search": "",
     "field": {
-      "name": "",
+      "name": "Name",
       "members": ""
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
             "label": "",
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Apps",
         "item": {
           "create": {
             "label": "",
@@ -323,7 +323,7 @@
         }
       },
       "board": {
-        "title": "",
+        "title": "Boards",
         "item": {
           "create": {
             "label": "",
@@ -491,7 +491,7 @@
   "app": {
     "page": {
       "list": {
-        "title": "",
+        "title": "Apps",
         "noResults": {
           "title": "",
           "action": ""
@@ -540,7 +540,7 @@
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "description": {
         "label": ""
@@ -608,7 +608,7 @@
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "url": {
         "label": ""
@@ -731,7 +731,7 @@
     "plural": "",
     "search": "",
     "field": {
-      "name": "",
+      "name": "Name",
       "size": "Größe",
       "creator": "Ersteller"
     },
@@ -903,7 +903,7 @@
     "category": {
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         }
       },
       "action": {
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Ansicht",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertikal"
             },
             "grid": {
               "label": ""
@@ -1053,7 +1053,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
               "label": "Vertikal"
@@ -1086,7 +1086,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
               "label": "Vertikal"
@@ -1172,7 +1172,7 @@
         "underline": "Unterstrichen",
         "colorText": "Farbiger Text",
         "colorHighlight": "Farbig hervorgehobener Text",
-        "code": "",
+        "code": "Code",
         "clear": "Formatierung entfernen",
         "heading": "Überschrift {level}",
         "align": "Text ausrichten: {position}",
@@ -1183,7 +1183,7 @@
         "checkList": "Checkliste",
         "increaseIndent": "Einzug vergrößern",
         "decreaseIndent": "Einzug verkleinern",
-        "link": "",
+        "link": "Link",
         "unlink": "Link entfernen",
         "image": "Bild einbetten",
         "addTable": "Tabelle hinzufügen",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Einbetten von Inhalten aus dem Internet. Einige Websites können den Zugriff einschränken.",
       "option": {
         "embedUrl": {
@@ -1511,7 +1511,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Down",
           "detailsTitle": "Download Geschwindigkeit"
         },
         "index": {
@@ -1522,7 +1522,7 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": ""
+          "columnTitle": "Integration"
         },
         "name": {
           "columnTitle": ""
@@ -1560,7 +1560,7 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Up",
           "detailsTitle": ""
         }
       },
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Standardansicht"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Workers",
+        "queue": "Warteschlange",
+        "statistics": "Statistiken"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "In der Warteschlange",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Gesund",
+          "unhealthy": "Fehlerhaft"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Leer",
+          "transcodes": "Transkodieren",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Codecs",
+          "videoContainers": "Container",
+          "videoResolutions": "Auflösungen"
         },
         "workers": {
-          "empty": "",
+          "empty": "Leer",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Datei",
+            "eta": "Voraussichtlicher Abschluss",
+            "progress": "Fortschritt",
+            "transcode": "Transkodieren",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Leer",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Datei",
+            "size": "Größe",
+            "transcode": "Transkodieren",
             "healthCheck": ""
           }
         }
@@ -1766,7 +1766,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "",
+            "label": "Apps",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -1889,7 +1889,7 @@
         "label": ""
       },
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "isPublic": {
         "label": "Öffentlich sichtbar",
@@ -2026,8 +2026,8 @@
     "navbar": {
       "items": {
         "home": "Startseite",
-        "boards": "",
-        "apps": "",
+        "boards": "Boards",
+        "apps": "Apps",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Werkzeuge",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2054,7 +2054,7 @@
           "items": {
             "documentation": "Dokumentation",
             "submitIssue": "",
-            "discord": "",
+            "discord": "Community Discord",
             "sourceCode": ""
           }
         },
@@ -2064,15 +2064,15 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "",
+          "board": "Boards",
           "user": "Benutzer",
           "invite": "Einladungen",
           "integration": "",
-          "app": "",
+          "app": "Apps",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "",
+          "boards": "Boards",
           "resources": "",
           "authentication": "",
           "authorization": ""
@@ -2113,7 +2113,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": ""
+                "label": "Name"
               }
             }
           }
@@ -2139,7 +2139,7 @@
             "title": "Sicherheit"
           },
           "board": {
-            "title": ""
+            "title": "Boards"
           }
         },
         "list": {
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Ersteller"
@@ -2208,7 +2208,7 @@
               "label": "Ablaufdatum"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Allgemein",
-            "owner": "",
+            "owner": "Eigentümer",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Boards",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Aussehen",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2427,7 +2427,7 @@
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "state": {
         "label": "Staat",
@@ -2442,10 +2442,10 @@
         }
       },
       "containerImage": {
-        "label": ""
+        "label": "Image"
       },
       "ports": {
-        "label": ""
+        "label": "Ports"
       }
     },
     "action": {
@@ -2552,7 +2552,7 @@
     "manage": {
       "label": "Verwalten",
       "boards": {
-        "label": ""
+        "label": "Boards"
       },
       "integrations": {
         "label": "",
@@ -2576,7 +2576,7 @@
         "label": ""
       },
       "apps": {
-        "label": "",
+        "label": "Apps",
         "new": {
           "label": ""
         },
@@ -2591,7 +2591,7 @@
         },
         "general": "Allgemein",
         "security": "Sicherheit",
-        "board": "",
+        "board": "Boards",
         "groups": {
           "label": ""
         },
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Werkzeuge",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2627,7 +2627,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "",
+            "title": "Apps",
             "children": {
               "action": {
                 "open": {
@@ -2643,7 +2643,7 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Boards",
             "children": {
               "action": {
                 "open": {
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
+                "name": "Torrents",
                 "description": ""
               },
               "youTube": {
@@ -2775,7 +2775,7 @@
                 "label": ""
               },
               "discord": {
-                "label": ""
+                "label": "Community Discord"
               }
             }
           }
@@ -2891,7 +2891,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         },
         "short": {
           "label": ""

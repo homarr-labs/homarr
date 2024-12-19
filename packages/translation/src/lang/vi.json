@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Ứng dụng",
+            "boards": "Bảng",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Mã thông báo",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Cài đặt",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Ứng dụng",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Bố cục",
           "option": {
             "row": {
-              "label": ""
+              "label": "Nằm ngang"
             },
             "column": {
-              "label": ""
+              "label": "Thẳng đứng"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Nhúng bất kỳ nội dung nào từ internet. Một số trang web có thể hạn chế quyền truy cập.",
       "option": {
         "embedUrl": {
@@ -1656,7 +1656,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
+        "queue": "Chờ",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1670,7 +1670,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "Trống",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1682,20 +1682,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "Trống",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "Thời gian dự kiến",
+            "progress": "Tiến độ",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Trống",
           "table": {
             "file": "",
-            "size": "",
+            "size": "Kích cỡ",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Công cụ",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Chung",
-            "owner": "",
+            "owner": "Chủ",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Bảng",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Hiển thị",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Công cụ",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

@@ -1,4 +1,4 @@
-import type { Integration } from "@homarr/db/schema/sqlite";
+import type { Integration } from "@homarr/db/schema";
 
 export interface DownloadClientStatus {
   /** If client is considered paused */

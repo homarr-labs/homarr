@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "앱",
+            "boards": "보드",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "토큰",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "설정",
         "subtitle": ""
       },
       "finish": {
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "앱",
         "item": {
           "create": {
             "label": "",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "레이아웃",
           "option": {
             "row": {
-              "label": ""
+              "label": "수평"
             },
             "column": {
-              "label": ""
+              "label": "세로"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "인터넷에서 콘텐츠를 퍼옵니다. 일부 웹사이트는 액세스를 제한할 수 있습니다.",
       "option": {
         "embedUrl": {
@@ -1656,7 +1656,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "",
+        "queue": "대기열",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1670,7 +1670,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "",
+          "empty": "비어 있음",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1682,20 +1682,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "",
+          "empty": "비어 있음",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "남은 시간",
+            "progress": "진행률",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "비어 있음",
           "table": {
             "file": "",
-            "size": "",
+            "size": "크기",
             "transcode": "",
             "healthCheck": ""
           }
@@ -1783,9 +1783,9 @@
             "label": "",
             "description": "",
             "option": {
-              "sm": "",
-              "md": "",
-              "lg": ""
+              "sm": "Small",
+              "md": "Medium",
+              "lg": "Large"
             }
           },
           "sidebarBehavior": {
@@ -2042,7 +2042,7 @@
         "tools": {
           "label": "도구",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "크리에이터"
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "보드",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "모양",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "도구",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

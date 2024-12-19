@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "",
-            "boards": "",
+            "apps": "Додатки",
+            "boards": "Дошки",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Токен.",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Налаштування",
         "subtitle": ""
       },
       "finish": {
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Адміністратор",
         "item": {
           "admin": {
             "label": "",
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Додатки",
         "item": {
           "create": {
             "label": "",
@@ -717,7 +717,7 @@
         },
         "password": {
           "label": "Пароль",
-          "newLabel": ""
+          "newLabel": "Новий пароль"
         }
       }
     },
@@ -770,12 +770,12 @@
     "error": "Помилка",
     "action": {
       "add": "Додати",
-      "apply": "",
+      "apply": "Застосувати",
       "backToOverview": "",
       "create": "Створити",
       "edit": "Редагувати",
       "import": "",
-      "insert": "",
+      "insert": "Вставити",
       "remove": "Видалити",
       "save": "Зберегти",
       "saveChanges": "Зберегти зміни",
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Макет",
           "option": {
             "row": {
-              "label": ""
+              "label": "Горизонтальний"
             },
             "column": {
-              "label": ""
+              "label": "Вертикальний"
             },
             "grid": {
               "label": ""
@@ -1139,7 +1139,7 @@
           "label": ""
         },
         "timezone": {
-          "label": "",
+          "label": "Часовий пояс",
           "description": ""
         },
         "showDate": {
@@ -1199,7 +1199,7 @@
       },
       "align": {
         "left": "Ліворуч.",
-        "center": "",
+        "center": "Центр",
         "right": "Так."
       },
       "popover": {
@@ -1254,7 +1254,7 @@
       "description": "",
       "option": {
         "entityId": {
-          "label": ""
+          "label": "Ідентифікатор об'єкта"
         },
         "displayName": {
           "label": ""
@@ -1272,10 +1272,10 @@
       "description": "",
       "option": {
         "displayName": {
-          "label": ""
+          "label": "Відображати ім'я"
         },
         "automationId": {
-          "label": ""
+          "label": "Ідентифікатор автоматизації"
         }
       },
       "spotlightAction": {
@@ -1345,15 +1345,15 @@
       }
     },
     "indexerManager": {
-      "name": "",
+      "name": "Статус менеджера індексування",
       "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": ""
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Менеджер індексації",
+      "testAll": "Перевірте все",
       "error": {
         "internalServerError": ""
       }
@@ -1504,7 +1504,7 @@
         },
         "added": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Дата додавання"
         },
         "category": {
           "columnTitle": "",
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Співвідношення",
           "detailsTitle": ""
         },
         "received": {
@@ -1565,8 +1565,8 @@
         }
       },
       "states": {
-        "downloading": "",
-        "queued": "",
+        "downloading": "Завантаження",
+        "queued": "У черзі",
         "paused": "Призупинено",
         "completed": "Завершено",
         "failed": "",
@@ -1648,55 +1648,55 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Вигляд за замовчуванням"
         },
         "queuePageSize": {
           "label": ""
         }
       },
       "tab": {
-        "workers": "",
-        "queue": "",
-        "statistics": ""
+        "workers": "Робітники",
+        "queue": "Черга",
+        "statistics": "Статистика"
       },
       "currentIndex": "",
       "healthCheck": {
         "title": "",
-        "queued": "",
+        "queued": "У черзі",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Здоровий",
+          "unhealthy": "Нездоровий"
         }
       },
       "panel": {
         "statistics": {
-          "empty": "",
-          "transcodes": "",
+          "empty": "Пусто",
+          "transcodes": "Перекодує",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoCodecs": "Кодеки",
+          "videoContainers": "Контейнери",
+          "videoResolutions": "Роздільна здатність"
         },
         "workers": {
-          "empty": "",
+          "empty": "Пусто",
           "table": {
-            "file": "",
-            "eta": "",
-            "progress": "",
-            "transcode": "",
+            "file": "Файл",
+            "eta": "Залишилося",
+            "progress": "Прогрес",
+            "transcode": "Перекодувати",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "",
+          "empty": "Пусто",
           "table": {
-            "file": "",
-            "size": "",
-            "transcode": "",
+            "file": "Файл",
+            "size": "Розмір",
+            "transcode": "Перекодувати",
             "healthCheck": ""
           }
         }
@@ -1822,7 +1822,7 @@
         "label": ""
       },
       "backgroundImageAttachment": {
-        "label": "",
+        "label": "Прикріплене фонове зображення",
         "option": {
           "fixed": {
             "label": "",
@@ -1856,7 +1856,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "",
+        "label": "Розмір фонового зображення",
         "option": {
           "cover": {
             "label": "",
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Інструменти",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2136,7 +2136,7 @@
             }
           },
           "security": {
-            "title": ""
+            "title": "Безпека"
           },
           "board": {
             "title": "Дошки"
@@ -2157,7 +2157,7 @@
               "label": ""
             },
             "security": {
-              "label": ""
+              "label": "Безпека"
             },
             "groups": {
               "label": "",
@@ -2218,7 +2218,7 @@
         "setting": {
           "general": {
             "title": "Загальне",
-            "owner": "",
+            "owner": "Власник",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2286,14 +2286,14 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Дошки",
             "homeBoard": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Вигляд",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Контейнери",
     "table": {
       "updated": "",
       "search": "",
@@ -2590,7 +2590,7 @@
           "label": "Створити"
         },
         "general": "Загальне",
-        "security": "",
+        "security": "Безпека",
         "board": "Дошки",
         "groups": {
           "label": ""
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Інструменти",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

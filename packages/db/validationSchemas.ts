@@ -1,6 +1,6 @@
 import { createSelectSchema } from "drizzle-zod";
 
-import { apps, boards, groups, invites, searchEngines, serverSettings, users } from "./schema/sqlite";
+import { apps, boards, groups, invites, searchEngines, serverSettings, users } from "./schema";
 
 export const selectAppSchema = createSelectSchema(apps);
 export const selectBoardSchema = createSelectSchema(boards);

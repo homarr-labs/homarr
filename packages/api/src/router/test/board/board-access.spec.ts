@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import * as authShared from "@homarr/auth/shared";
 import { createId, eq } from "@homarr/db";
-import { boards, users } from "@homarr/db/schema/sqlite";
+import { boards, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { throwIfActionForbiddenAsync } from "../../board/board-access";

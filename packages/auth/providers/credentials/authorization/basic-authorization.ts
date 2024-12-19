@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import { users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { validation, z } from "@homarr/validation";
 
