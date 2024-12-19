@@ -251,10 +251,10 @@
           "confirm": "Valóban törölni szeretnéd ezt a képet?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Kép sikeresen eltávolítva"
             },
             "error": {
-              "message": ""
+              "message": "Nem sikerült eltávolítani a képet"
             }
           }
         }
@@ -262,42 +262,42 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A profil sikeresen frissítve"
           },
           "error": {
-            "message": ""
+            "message": "Nem sikerült frissíteni a profilt"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Felhasználó végleges törlése",
+        "description": "Törli ezt a felhasználót, beleértve a beállításait. Nem töröl egyetlen táblát sem. A felhasználó nem kap értesítést.",
+        "confirm": "Biztos benne, hogy törli a {username} felhasználót a beállításaival együtt?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Felhasználó kiválasztása",
+        "notFound": "Felhasználó nem található"
       },
       "transfer": {
-        "label": ""
+        "label": "Válasszon új tulajdonost"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Csoportok",
+    "name": "Csoport",
+    "search": "Csoport keresése",
     "field": {
       "name": "Név",
-      "members": ""
+      "members": "Tagok"
     },
     "permission": {
       "admin": {
         "title": "Adminisztrátor",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Admin",
+            "description": "Az ezzel az engedéllyel rendelkező tagok teljes hozzáféréssel rendelkeznek az összes funkcióhoz és beállításhoz"
           }
         }
       },
@@ -305,15 +305,15 @@
         "title": "Alkalmazások",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Alkalmazások létrehozása",
+            "description": "Alkalmazások létrehozásának engedélyezése a tagoknak"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Minden alkalmazás használata",
+            "description": "Lehetővé teszi a tagok számára, hogy bármilyen alkalmazást hozzáadjanak a tábláikhoz"
           },
           "modify-all": {
-            "label": "",
+            "label": "Minden alkalmazás módosítása",
             "description": ""
           },
           "full-all": {
@@ -436,39 +436,39 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Nem lehet átruházni a tulajdonjogot"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Tag hozzáadása"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Tag eltávolítása",
+        "confirm": "Biztos, hogy el akarod távolítani a {user} felhasználót ebből a csoportból?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Csoport törlése",
+        "description": "Ha töröl egy csoportot, az végleges. Kérjük, legyen biztos benne.",
+        "confirm": "Biztosan törli a {name} csoportot?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A {name} csoport sikeresen törölve"
           },
           "error": {
-            "message": ""
+            "message": "A {name} csoport nem törölhető"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Engedélyek mentve",
+            "message": "Engedélyek mentése sikeresen megtörtént"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Engedélyek nincsenek mentve",
+            "message": "Engedélyek nem kerültek mentésre"
           }
         }
       },
@@ -543,10 +543,10 @@
         "label": "Név"
       },
       "description": {
-        "label": ""
+        "label": "Leírás"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "Név"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -2036,7 +2036,7 @@
           "items": {
             "manage": "Kezelés",
             "invites": "Meghívók",
-            "groups": ""
+            "groups": "Csoportok"
           }
         },
         "tools": {
@@ -2069,7 +2069,7 @@
           "invite": "Meghívók",
           "integration": "Integrációk",
           "app": "Alkalmazások",
-          "group": ""
+          "group": "Csoportok"
         },
         "statisticLabel": {
           "boards": "Táblák",
@@ -2160,7 +2160,7 @@
               "label": "Biztonság"
             },
             "groups": {
-              "label": "",
+              "label": "Csoportok",
               "title": "",
               "description": ""
             },
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "Tagok",
             "search": "",
             "notFound": ""
           },
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "Felhasználók",
-      "group": "",
+      "group": "Csoportok",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "Felhasználó"
       },
       "group": {
-        "label": ""
+        "label": "Csoport"
       },
       "permission": {
         "label": ""
@@ -2593,7 +2593,7 @@
         "security": "Biztonság",
         "board": "Táblák",
         "groups": {
-          "label": ""
+          "label": "Csoportok"
         },
         "invites": {
           "label": "Meghívók"
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Csoportok",
             "children": {
               "action": {
                 "detail": {
@@ -2900,7 +2900,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Leírás"
         }
       },
       "page": {
