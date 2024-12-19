@@ -1,7 +1,7 @@
 import { decryptSecretWithKey } from "@homarr/common/server";
 import type { InferInsertModel } from "@homarr/db";
 import { createId } from "@homarr/db";
-import type { users } from "@homarr/db/schema/sqlite";
+import type { users } from "@homarr/db/schema";
 
 import type { OldmarrImportUser } from "../user-schema";
 

@@ -5,7 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema/sqlite";
+import { groupMembers, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 

@@ -40,6 +40,7 @@ jobs:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' }}
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
+      git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
 
     steps:
       - run: echo "Skipping release for workflow_dispatch event"
@@ -87,9 +88,16 @@ jobs:
         run: |
           git fetch --tags
           echo "version=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
+      - name: Read git ref
+        if: env.SKIP_RELEASE == 'false'
+        id: read-git-ref
+        run: |
+          echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Update dev branch
         if: env.SKIP_RELEASE == 'false'
         continue-on-error: true # Prevent pipeline from failing when merge fails
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
           git fetch origin dev
           git checkout dev
@@ -107,6 +115,8 @@ jobs:
       PUSH_IMAGE: ${{ github.event_name != 'workflow_dispatch' || github.events.inputs.push-image == true }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
       - name: Discord notification
         if: ${{ github.events.inputs.send-notifications != false }}
         env:

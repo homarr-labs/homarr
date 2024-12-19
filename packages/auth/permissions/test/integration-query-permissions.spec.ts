@@ -3,14 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { InferInsertModel } from "@homarr/db";
 import { createId } from "@homarr/db";
-import {
-  boardGroupPermissions,
-  boards,
-  boardUserPermissions,
-  groupMembers,
-  groups,
-  users,
-} from "@homarr/db/schema/sqlite";
+import { boardGroupPermissions, boards, boardUserPermissions, groupMembers, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import * as integrationPermissions from "../integration-permissions";

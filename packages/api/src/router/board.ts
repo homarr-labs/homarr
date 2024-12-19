@@ -15,7 +15,7 @@ import {
   items,
   sections,
   users,
-} from "@homarr/db/schema/sqlite";
+} from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
 import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";

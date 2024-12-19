@@ -546,7 +546,7 @@
         "label": "Tanım"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "İsim"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "Beta",
+    "beta": "",
     "error": "Hata",
     "action": {
       "add": "Ekle",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
       "option": {
         "embedUrl": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "API token'ı oluşturuldu",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Araçlar",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": "Günlükler"

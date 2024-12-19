@@ -2,7 +2,7 @@ import SuperJSON from "superjson";
 
 import type { Database } from "@homarr/db";
 import { createId } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
+import { items } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 

@@ -1,6 +1,6 @@
 import { objectEntries } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
-import { schema } from "@homarr/db";
+import * as schema from "@homarr/db/schema";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;

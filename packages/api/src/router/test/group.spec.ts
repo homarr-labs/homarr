@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import * as env from "@homarr/auth/env.mjs";
 import { createId, eq } from "@homarr/db";
-import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 

@@ -2,7 +2,7 @@ import { IconHomeOff } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
 import { db } from "@homarr/db";
-import { boards } from "@homarr/db/schema/sqlite";
+import { boards } from "@homarr/db/schema";
 import { getI18n } from "@homarr/translation/server";
 
 import type { BoardNotFoundProps } from "~/components/board/not-found";

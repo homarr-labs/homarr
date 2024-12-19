@@ -1,5 +1,6 @@
 // Importing env files here to validate on build
 import "@homarr/auth/env.mjs";
+import "@homarr/db/env.mjs";
 
 import MillionLint from "@million/lint";
 import createNextIntlPlugin from "next-intl/plugin";

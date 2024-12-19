@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { db, inArray } from "@homarr/db";
-import { groups } from "@homarr/db/schema/sqlite";
+import { groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 

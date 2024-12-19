@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Database } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
-import { groups, users } from "@homarr/db/schema/sqlite";
+import { groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";

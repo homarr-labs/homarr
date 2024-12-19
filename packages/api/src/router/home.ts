@@ -3,7 +3,7 @@ import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
 import { isProviderEnabled } from "@homarr/auth/server";
 import type { Database } from "@homarr/db";
 import { count } from "@homarr/db";
-import { apps, boards, groups, integrations, invites, users } from "@homarr/db/schema/sqlite";
+import { apps, boards, groups, integrations, invites, users } from "@homarr/db/schema";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
