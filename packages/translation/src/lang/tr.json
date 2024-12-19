@@ -1661,7 +1661,7 @@
       },
       "currentIndex": "{start}-{end} / {total}",
       "healthCheck": {
-        "title": "",
+        "title": "Sağlık kontrolü",
         "queued": "Sıraya alındı",
         "status": {
           "healthy": "Sağlıklı",
@@ -1672,11 +1672,11 @@
         "statistics": {
           "empty": "Boş",
           "transcodes": "Kod dönüştürmeler",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
+          "transcodesCount": "Kod dönüştürmeler: {value}",
+          "healthChecksCount": "Sağlık kontrolleri: {value}",
+          "filesCount": "Dosyalar: {value}",
+          "savedSpace": "Kaydedilen alan: {value}",
+          "healthChecks": "Sağlık kontrolleri",
           "videoCodecs": "Kodek'ler",
           "videoContainers": "Konteyner",
           "videoResolutions": "Çözünürlükler"
@@ -1688,7 +1688,7 @@
             "eta": "ETA (Kalan Süre)",
             "progress": "İlerleme",
             "transcode": "Kod dönüştürme",
-            "healthCheck": ""
+            "healthCheck": "Sağlık kontrolü"
           }
         },
         "queue": {
@@ -1697,37 +1697,37 @@
             "file": "Dosya",
             "size": "Boyut",
             "transcode": "Kod dönüştürme",
-            "healthCheck": ""
+            "healthCheck": "Sağlık kontrolü"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "RSS beslemeleri",
+      "description": "Bir veya daha fazla genel RSS, ATOM veya JSON beslemesini izleyin ve görüntüleyin",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Besleme URL'leri"
         },
         "enableRtl": {
-          "label": ""
+          "label": "RTL'yi etkinleştir"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Açıklamalar satır sınırı"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Gönderi değer sınırı"
         }
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Düzenleme modu etkinleştirildi",
+      "disabled": "Düzenleme modu devre dışı bırakıldı"
     },
     "dimensions": {
-      "title": ""
+      "title": "Boyutları değiştir"
     }
   },
   "board": {
@@ -1736,52 +1736,52 @@
         "notification": {
           "success": {
             "title": "Değişiklikler başarıyla uygulandı",
-            "message": ""
+            "message": "Panel başarıyla kaydedildi"
           },
           "error": {
             "title": "Değişiklikler uygulanamıyor",
-            "message": ""
+            "message": "Panel kaydedilemedi"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Kaydedilmemiş değişiklikler",
+          "message": "Kaydedilmemiş değişiklikleriniz var, çıkmak istediğinizden emin misiniz?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Homarr 1.0'dan önceki yedeğinizi içe aktarın",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "İçe aktarma başarılı",
+            "message": "Panel başarıyla içe aktarıldı"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "İçe aktarma başarısız oldu",
+            "message": "Panel içe aktarılamadı, daha fazla ayrıntı için günlükleri kontrol edin"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "JSON Dosyası Seç",
+            "invalidError": "Geçersiz yapılandırma dosyası"
           },
           "apps": {
             "label": "Uygulamalar",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Tekrarlardan kaçının",
+              "description": "Aynı href'e sahip bir uygulamanın zaten mevcut olduğu uygulamaları yok sayar"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Yalnızca uygulamaları içe aktar",
+              "description": "Sadece uygulamaları ekler, panelin manuel olarak yeniden oluşturulması gerekir"
             }
           },
           "name": {
-            "label": ""
+            "label": "Panel adı"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "Ekran boyutu",
+            "description": "1.0'dan önceki sürümlerde üç farklı mod mevcuttu, yani her ekran boyutu için sütun miktarını seçebiliyordunuz.",
             "option": {
               "sm": "Küçük",
               "md": "Orta",
@@ -1789,16 +1789,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Kenar çubuğu davranışı",
+            "description": "Kenar çubukları 1.0'da kaldırıldı, içlerindeki öğelere ne olacağını seçebilirsiniz.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Son bölüm",
+                "description": "Kenar çubuğu son bölümün altında görüntülenecektir"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Öğeleri kaldır",
+                "description": "Kenar çubuğunda bulunan öğeler kaldırılacak"
               }
             }
           }
@@ -1807,38 +1807,38 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Sayfa başlığı"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Meta başlığı"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "Logo görseli URL'si"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "Favicon görsel URL'si"
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "Arkaplan görsel URL'si"
       },
       "backgroundImageAttachment": {
         "label": "Arkaplan resim ekle",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Düzeltildi",
+            "description": "Arka plan aynı pozisyonda kalır."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Kaydır",
+            "description": "Arkaplan farenizle birlikte kayar."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Arkaplan görüntüsünü Tekrarla",
         "option": {
           "repeat": {
-            "label": "",
+            "label": "Tekrarla",
             "description": "Resim, tüm arka plan alanını kaplayacak kadar tekrarlanır."
           },
           "no-repeat": {
@@ -2001,12 +2001,12 @@
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
-          "link": "",
-          "notice": ""
+          "link": "Ana panelinizi yapılandırın",
+          "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerinizde ana panelinizi belirtin"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
+          "description": "Sunucu yöneticiniz henüz bir ana panel belirlemedi.",
+          "link": "Herkese açık panelleri görüntüle",
           "notice": ""
         }
       }
@@ -2295,7 +2295,7 @@
           "appearance": {
             "title": "Görünüş",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Varsayılan renk şeması",
               "options": {
                 "light": "Aydınlık",
                 "dark": "Koyu"
@@ -2303,9 +2303,9 @@
             }
           },
           "culture": {
-            "title": "",
+            "title": "Kültür",
             "defaultLocale": {
-              "label": ""
+              "label": "Varsayılan dil"
             }
           }
         }
@@ -2314,55 +2314,55 @@
         "tasks": {
           "title": "",
           "status": {
-            "idle": "",
+            "idle": "Boşta",
             "running": "Çalışıyor",
             "error": "Hata"
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Simge Güncelleyici"
             },
             "analytics": {
               "label": ""
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "Akıllı Ev Varlık Durumu"
             },
             "ping": {
-              "label": ""
+              "label": "Pingler"
             },
             "mediaServer": {
               "label": "Medya Sunucusu"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "Medya Düzenleyicileri"
             },
             "downloads": {
-              "label": ""
+              "label": "İndirmeler"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Medya Talep İstatistikleri"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Medya Talep Listesi"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "RSS beslemeleri"
             },
             "indexerManager": {
-              "label": ""
+              "label": "Dizinleyici Yöneticisi"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Sağlık İzleme"
             },
             "dnsHole": {
-              "label": ""
+              "label": "DNS Çözümleyici Verileri"
             },
             "sessionCleanup": {
-              "label": ""
+              "label": "Oturum Temizleme"
             },
             "updateChecker": {
-              "label": ""
+              "label": "Güncelleme denetleyicisi"
             },
             "mediaTranscoding": {
               "label": "Medya kod dönüştürme"
@@ -2373,9 +2373,9 @@
           "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API token'ı oluşturuldu",
+              "description": "API token'ı oluşturuldu. Dikkatli olun, bu token veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu belirteci kaybederseniz, bu token'ı artık geri alamazsınız.",
+              "button": "Kopyala ve kapat"
             }
           },
           "tab": {
@@ -2384,14 +2384,14 @@
             },
             "apiKey": {
               "label": "",
-              "title": "",
+              "title": "API Anahtarları",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "API token'ı oluştur"
               },
               "table": {
                 "header": {
                   "id": "Kimlik",
-                  "createdBy": ""
+                  "createdBy": "Tarafından oluşturuldu"
                 }
               }
             }
@@ -2399,20 +2399,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Sürüm {version}",
+        "text": "Homarr, gönüllüler tarafından sürdürülen topluluk odaklı bir açık kaynak projesidir. Bu kişiler sayesinde Homarr, 2021'den beri büyüyen bir projedir. Ekibimiz, boş zamanlarında Homarr üzerinde birçok farklı ülkeden tamamen uzaktan, hiçbir ücret almadan çalışmaktadır.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Katkıda Bulunanlar",
+            "subtitle": "{count} kod & Homarr yazarı"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Çevirmenler",
+            "subtitle": "{count} dilde birçok kişi çevirilere katkıda bulunuyor"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Kütüphaneler",
+            "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
           }
         }
       }
@@ -2421,9 +2421,9 @@
   "docker": {
     "title": "Konteyner",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": ""
+      "updated": "Güncellendi {when}",
+      "search": "{count} konteyner ara",
+      "selected": "{selectCount} / {totalCount} konteyner seçildi"
     },
     "field": {
       "name": {
@@ -2436,9 +2436,9 @@
           "running": "Çalışıyor",
           "paused": "Duraklatıldı",
           "restarting": "Yeniden başlatılıyor",
-          "exited": "",
+          "exited": "Çıkıldı",
           "removing": "Kaldırılıyor",
-          "dead": ""
+          "dead": "Ölü"
         }
       },
       "containerImage": {
@@ -2453,12 +2453,12 @@
         "label": "Başlat",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler başladı",
+            "message": "Konteynerler başarıyla başlatıldı"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler başlatılmadı",
+            "message": "Konteynerler başlatılamadı"
           }
         }
       },
@@ -2466,12 +2466,12 @@
         "label": "Durdur",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler durduruldu",
+            "message": "Konteynerler başarıyla durduruldu"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler durdurulamadı",
+            "message": "Konteynerler durdurulamadı"
           }
         }
       },
@@ -2479,12 +2479,12 @@
         "label": "Yeniden Başlat",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler yeniden başlatıldı",
+            "message": "Konteynerler başarıyla yeniden başlatıldı"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler yeniden başlatılmadı",
+            "message": "Konteynerler yeniden başlatılamadı"
           }
         }
       },
@@ -2492,11 +2492,11 @@
         "label": "Kaldır",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Konteynerler kaldırıldı",
+            "message": "Konteynerler başarıyla kaldırıldı"
           },
           "error": {
-            "title": "",
+            "title": "Konteynerler kaldırılmadı",
             "message": ""
           }
         }
