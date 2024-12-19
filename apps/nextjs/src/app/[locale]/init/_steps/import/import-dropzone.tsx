@@ -28,6 +28,9 @@ export const ImportDropZone = ({ loading, updateFile }: ImportDropZoneProps) => 
       loading={loading}
       multiple={false}
       maxSize={1024 * 1024 * 1024 * 64} // 64 MB
+      onReject={(files) => {
+        console.error("Rejected files", files);
+      }}
     >
       <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
         <Dropzone.Accept>
