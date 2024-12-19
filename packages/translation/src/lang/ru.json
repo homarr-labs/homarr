@@ -23,109 +23,109 @@
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Настройки импорта",
+          "description": "Настройте параметры импорта"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Найдено {count} панелей",
+          "description": "Выберите все панели с их размерами, которые вы хотите импортировать",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Выбрать все",
+            "unselectAll": "Снять выбор со всех"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Сводка по импорту",
+          "description": "В приведенной ниже сводке вы можете увидеть, что будет импортировано",
           "action": {
-            "import": ""
+            "import": "Подтвердить импорт и продолжить"
           },
           "entities": {
             "apps": "Приложения",
             "boards": "Панели",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Интеграции",
+            "credentialUsers": "Пользователи учетных данных"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Введите токен импорта",
           "field": {
             "token": {
               "label": "Токен",
-              "description": ""
+              "description": "Введите показанный токен импорта из вашего предыдущего экземпляра Homarr"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Недействительный токен",
+              "message": "Введенный токен недействителен"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Администратор системы",
+        "subtitle": "Укажите учетные данные для администратора системы.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Пользователь создан",
+            "message": "Пользователь успешно создан"
           },
           "error": {
-            "title": ""
+            "title": "Не удалось создать пользователя"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Внешняя группа",
+        "subtitle": "Укажите группу, которая будет использоваться для внешних пользователей.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Название группы",
+            "description": "Название должно соответствовать группе администраторов внешнего провайдера"
           }
         }
       },
       "settings": {
         "title": "Настройки",
-        "subtitle": ""
+        "subtitle": "Настройте параметры сервера."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Завершение настройки",
+        "subtitle": "Всё готово к работе!",
+        "description": "Вы успешно завершили процесс настройки. Теперь вы можете начать использовать Homarr. Выберите следующее действие:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Перейти к панели {name}",
+          "createBoard": "Создать первую панель",
+          "inviteUser": "Пригласить других пользователей",
+          "docs": "Прочитать документацию"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Вернуться к началу"
   },
   "user": {
     "title": "Пользователи",
     "name": "Пользователь",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Вход в учётную запись",
+        "subtitle": "С возвращением! Пожалуйста, введите ваши учётные данные"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Присоединиться к Homarr",
+        "subtitle": "Добро пожаловать в Homarr! Пожалуйста, создайте вашу учётную запись",
+        "description": "Вас пригласил пользователь {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Новая установка Homarr",
+        "subtitle": "Пожалуйста, создайте начального пользователя-администратора"
       }
     },
     "field": {
       "email": {
         "label": "Электронная почта",
-        "verified": ""
+        "verified": "Подтверждена"
       },
       "username": {
         "label": "Имя пользователя"
@@ -133,46 +133,46 @@
       "password": {
         "label": "Пароль",
         "requirement": {
-          "length": "",
+          "length": "Содержит не менее 8 символов",
           "lowercase": "Содержит строчную букву",
           "uppercase": "Содержит заглавную букву",
           "number": "Содержит цифру",
-          "special": ""
+          "special": "Содержит спецсимвол"
         }
       },
       "passwordConfirm": {
         "label": "Подтверждение пароля"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Предыдущий пароль"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Домашняя панель"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Использовать индикаторы доступности"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Это имя пользователя уже занято"
     },
     "action": {
       "login": {
         "label": "Вход",
-        "labelWith": "",
+        "labelWith": "Войти через {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Вход выполнен",
+            "message": "Вы успешно вошли в систему"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось войти",
+            "message": "Не удалось выполнить вход"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Забыли пароль?",
+          "description": "Администратор может использовать следующую команду для сброса вашего пароля:"
         }
       },
       "register": {
@@ -180,81 +180,81 @@
         "notification": {
           "success": {
             "title": "Учётная запись создана",
-            "message": ""
+            "message": "Пожалуйста, войдите для продолжения"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось создать учётную запись",
+            "message": "Не удалось создать вашу учётную запись"
           }
         }
       },
       "create": "Создание пользователя",
       "changePassword": {
-        "label": "",
+        "label": "Изменить пароль",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Пароль успешно изменён"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось изменить пароль"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Домашняя панель успешно изменена"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось изменить домашнюю панель"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Первый день недели успешно изменён"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось изменить первый день недели"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Отображение индикаторов доступности успешно изменено"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось изменить настройки индикаторов доступности"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Изменить изображение",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Изображение успешно изменено"
             },
             "error": {
-              "message": ""
+              "message": "Не удалось изменить изображение"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Изображение слишком большое",
+              "message": "Максимальный размер изображения: {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Удалить изображение",
+          "confirm": "Вы уверены, что хотите удалить изображение?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Изображение успешно удалено"
             },
             "error": {
-              "message": ""
+              "message": "Не удалось удалить изображение"
             }
           }
         }
@@ -262,42 +262,42 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Профиль успешно обновлён"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось обновить профиль"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Удалить пользователя навсегда",
+        "description": "Удаляет этого пользователя вместе с его настройками. Панели не будут удалены. Пользователь не получит уведомление.",
+        "confirm": "Вы уверены, что хотите удалить пользователя {username} вместе с его настройками?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Выбрать пользователя",
+        "notFound": "Пользователи не найдены"
       },
       "transfer": {
-        "label": ""
+        "label": "Выбрать нового владельца"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Группы",
+    "name": "Группа",
+    "search": "Поиск группы",
     "field": {
       "name": "Название",
-      "members": ""
+      "members": "Участники"
     },
     "permission": {
       "admin": {
         "title": "Администратор",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Администратор",
+            "description": "Участники с этим разрешением имеют полный доступ ко всем функциям и настройкам"
           }
         }
       },
@@ -305,20 +305,20 @@
         "title": "Приложения",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Создание приложений",
+            "description": "Разрешить участникам создавать приложения"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Использование всех приложений",
+            "description": "Разрешить участникам добавлять любые приложения на свои панели"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Изменение всех приложений",
+            "description": "Разрешить участникам изменять все приложения"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Полный доступ к приложениям",
+            "description": "Разрешить участникам управлять, использовать и удалять любые приложения"
           }
         }
       },
@@ -326,165 +326,165 @@
         "title": "Панели",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Создание панелей",
+            "description": "Разрешить участникам создавать панели"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Просмотр всех панелей",
+            "description": "Разрешить участникам просматривать все панели"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Изменение всех панелей",
+            "description": "Разрешить участникам изменять все панели (не включает управление доступом и опасную зону)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Полный доступ к панелям",
+            "description": "Разрешить участникам просматривать, изменять и удалять все панели (включая управление доступом и опасную зону)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Интеграции",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Создание интеграций",
+            "description": "Разрешить участникам создавать интеграции"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Использование всех интеграций",
+            "description": "Разрешить участникам добавлять любые интеграции на свои панели"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Взаимодействие со всеми интеграциями",
+            "description": "Разрешить участникам взаимодействовать с любыми интеграциями"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Полный доступ к интеграциям",
+            "description": "Разрешить участникам управлять, использовать и взаимодействовать с любыми интеграциями"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Медиафайлы",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Загрузка медиафайлов",
+            "description": "Разрешить участникам загружать медиафайлы"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Просмотр всех медиафайлов",
+            "description": "Разрешить участникам просматривать все медиафайлы"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Полный доступ к медиафайлам",
+            "description": "Разрешить участникам управлять и удалять любые медиафайлы"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Прочее",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Просмотр журналов",
+            "description": "Разрешить участникам просматривать журналы"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Поисковые системы",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Создание поисковых систем",
+            "description": "Разрешить участникам создавать поисковые системы"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Изменение всех поисковых систем",
+            "description": "Разрешить участникам изменять все поисковые системы"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Полный доступ к поисковым системам",
+            "description": "Разрешить участникам управлять и удалять любые поисковые системы"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Некоторые участники используют внешние системы аутентификации и не могут управляться здесь",
+      "external": "Все участники используют внешние системы аутентификации и не могут управляться здесь"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Эта группа зарезервирована для системных нужд и имеет ограничения на некоторые действия. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Новая группа",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Группа успешно создана"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось создать группу"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Передать права владельца",
+        "description": "Передать права владельца этой группы другому пользователю.",
+        "confirm": "Вы уверены, что хотите передать права владельца группы {name} пользователю {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Группа {group} успешно передана пользователю {user}"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось передать права владельца"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Добавить участника"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Удалить участника",
+        "confirm": "Вы уверены, что хотите удалить {user} из этой группы?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Удалить группу",
+        "description": "После удаления группы восстановление будет невозможно. Пожалуйста, будьте уверены в своём решении.",
+        "confirm": "Вы уверены, что хотите удалить группу {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Группа {name} успешно удалена"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось удалить группу {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Разрешения сохранены",
+            "message": "Разрешения успешно сохранены"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Разрешения не сохранены",
+            "message": "Не удалось сохранить разрешения"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Группа {name} успешно сохранена"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось сохранить группу {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Выбрать группу",
+        "notFound": "Группы не найдены"
       }
     }
   },
@@ -493,47 +493,47 @@
       "list": {
         "title": "Приложения",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Приложения пока отсутствуют",
+          "action": "Создать первое приложение"
         }
       },
       "create": {
-        "title": "",
+        "title": "Новое приложение",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Приложение создано",
+            "message": "Приложение успешно создано"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось создать",
+            "message": "Не удалось создать приложение"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Редактирование приложения",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Изменения сохранены",
+            "message": "Приложение успешно сохранено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось сохранить",
+            "message": "Не удалось сохранить приложение"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Удаление приложения",
+        "message": "Вы уверены, что хотите удалить приложение {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Приложение удалено",
+            "message": "Приложение успешно удалено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось удалить",
+            "message": "Не удалось удалить приложение"
           }
         }
       }
@@ -543,23 +543,23 @@
         "label": "Название"
       },
       "description": {
-        "label": ""
+        "label": "Описание"
       },
       "url": {
-        "label": ""
+        "label": "URL-адрес"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Выбрать приложение",
+        "notFound": "Приложения не найдены"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
+        "title": "Интеграции",
         "search": "",
         "noResults": {
           "title": ""
@@ -569,11 +569,11 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Приложение создано",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Не удалось создать",
             "message": ""
           }
         }
@@ -582,11 +582,11 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Изменения сохранены",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Не удалось сохранить",
             "message": ""
           }
         }
@@ -596,11 +596,11 @@
         "message": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Приложение удалено",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Не удалось удалить",
             "message": ""
           }
         }
@@ -611,7 +611,7 @@
         "label": "Название"
       },
       "url": {
-        "label": ""
+        "label": "URL-адрес"
       }
     },
     "action": {
@@ -724,11 +724,11 @@
     "permission": {
       "use": "",
       "interact": "",
-      "full": ""
+      "full": "Полный доступ к интеграциям"
     }
   },
   "media": {
-    "plural": "",
+    "plural": "Медиафайлы",
     "search": "",
     "field": {
       "name": "Название",
@@ -811,16 +811,16 @@
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Приложение создано",
+        "error": "Не удалось создать"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Приложение удалено",
+        "error": "Не удалось удалить"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Изменения сохранены",
+        "error": "Не удалось сохранить"
       },
       "transfer": {
         "success": "",
@@ -978,7 +978,7 @@
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Интеграции"
         },
         "customCssClasses": {
           "label": ""
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Приложения не найдены",
         "description": ""
       },
       "error": {
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "Изменения сохранены",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Не удалось сохранить",
             "message": ""
           }
         },
@@ -1983,13 +1983,13 @@
       "noBoard": {
         "title": "Добро пожаловать в Homarr",
         "description": "",
-        "link": "",
+        "link": "Создать первую панель",
         "notice": ""
       },
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Просмотр всех панелей",
         "notice": ""
       },
       "homeBoard": {
@@ -2028,15 +2028,15 @@
         "home": "Главная",
         "boards": "Панели",
         "apps": "Приложения",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Интеграции",
+        "searchEngies": "Поисковые системы",
+        "medias": "Медиафайлы",
         "users": {
           "label": "Пользователи",
           "items": {
             "manage": "Управление",
             "invites": "Приглашения",
-            "groups": ""
+            "groups": "Группы"
           }
         },
         "tools": {
@@ -2067,9 +2067,9 @@
           "board": "Панели",
           "user": "Пользователи",
           "invite": "Приглашения",
-          "integration": "",
+          "integration": "Интеграции",
           "app": "Приложения",
-          "group": ""
+          "group": "Группы"
         },
         "statisticLabel": {
           "boards": "Панели",
@@ -2130,7 +2130,7 @@
             "title": "Основное",
             "item": {
               "language": "",
-              "board": "",
+              "board": "Домашняя панель",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
@@ -2160,7 +2160,7 @@
               "label": "Безопасность"
             },
             "groups": {
-              "label": "",
+              "label": "Группы",
               "title": "",
               "description": ""
             },
@@ -2168,10 +2168,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Пользователь создан"
             },
             "error": {
-              "title": ""
+              "title": "Не удалось создать пользователя"
             }
           },
           "action": {
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "Участники",
             "search": "",
             "notFound": ""
           },
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "Пользователи",
-      "group": "",
+      "group": "Группы",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "Пользователь"
       },
       "group": {
-        "label": ""
+        "label": "Группа"
       },
       "permission": {
         "label": ""
@@ -2555,7 +2555,7 @@
         "label": "Панели"
       },
       "integrations": {
-        "label": "",
+        "label": "Интеграции",
         "edit": {
           "label": "Редактировать"
         },
@@ -2564,7 +2564,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Поисковые системы",
         "new": {
           "label": ""
         },
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Медиафайлы"
       },
       "apps": {
         "label": "Приложения",
@@ -2593,7 +2593,7 @@
         "security": "Безопасность",
         "board": "Панели",
         "groups": {
-          "label": ""
+          "label": "Группы"
         },
         "invites": {
           "label": "Приглашения"
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Редактирование приложения"
                 }
               },
               "detail": {
@@ -2662,7 +2662,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Интеграции"
           }
         }
       },
@@ -2721,7 +2721,7 @@
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Поисковые системы",
             "children": {
               "action": {
                 "search": {
@@ -2828,7 +2828,7 @@
                 "label": ""
               },
               "manageLog": {
-                "label": ""
+                "label": "Просмотр журналов"
               },
               "manageTask": {
                 "label": ""
@@ -2840,7 +2840,7 @@
                 "label": "О программе"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Домашняя панель"
               },
               "preferences": {
                 "label": "Ваши настройки"
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Группы",
             "children": {
               "action": {
                 "detail": {
@@ -2900,12 +2900,12 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Описание"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Поисковые системы",
           "noResults": {
             "title": "",
             "action": ""
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Изменения сохранены",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Не удалось сохранить",
               "message": ""
             }
           },
