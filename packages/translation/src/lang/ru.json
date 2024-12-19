@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "Изменения сохранены",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Не удалось сохранить",
             "message": ""
           }
         },
@@ -1983,13 +1983,13 @@
       "noBoard": {
         "title": "Добро пожаловать в Homarr",
         "description": "",
-        "link": "",
+        "link": "Создать первую панель",
         "notice": ""
       },
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Просмотр всех панелей",
         "notice": ""
       },
       "homeBoard": {
@@ -2028,15 +2028,15 @@
         "home": "Главная",
         "boards": "Панели",
         "apps": "Приложения",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Интеграции",
+        "searchEngies": "Поисковые системы",
+        "medias": "Медиафайлы",
         "users": {
           "label": "Пользователи",
           "items": {
             "manage": "Управление",
             "invites": "Приглашения",
-            "groups": ""
+            "groups": "Группы"
           }
         },
         "tools": {
@@ -2067,9 +2067,9 @@
           "board": "Панели",
           "user": "Пользователи",
           "invite": "Приглашения",
-          "integration": "",
+          "integration": "Интеграции",
           "app": "Приложения",
-          "group": ""
+          "group": "Группы"
         },
         "statisticLabel": {
           "boards": "Панели",
@@ -2130,7 +2130,7 @@
             "title": "Основное",
             "item": {
               "language": "",
-              "board": "",
+              "board": "Домашняя панель",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
@@ -2160,7 +2160,7 @@
               "label": "Безопасность"
             },
             "groups": {
-              "label": "",
+              "label": "Группы",
               "title": "",
               "description": ""
             },
@@ -2168,10 +2168,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Пользователь создан"
             },
             "error": {
-              "title": ""
+              "title": "Не удалось создать пользователя"
             }
           },
           "action": {
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "Участники",
             "search": "",
             "notFound": ""
           },
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "Пользователи",
-      "group": "",
+      "group": "Группы",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "Пользователь"
       },
       "group": {
-        "label": ""
+        "label": "Группа"
       },
       "permission": {
         "label": ""
@@ -2555,7 +2555,7 @@
         "label": "Панели"
       },
       "integrations": {
-        "label": "",
+        "label": "Интеграции",
         "edit": {
           "label": "Редактировать"
         },
@@ -2564,7 +2564,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Поисковые системы",
         "new": {
           "label": ""
         },
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Медиафайлы"
       },
       "apps": {
         "label": "Приложения",
@@ -2593,7 +2593,7 @@
         "security": "Безопасность",
         "board": "Панели",
         "groups": {
-          "label": ""
+          "label": "Группы"
         },
         "invites": {
           "label": "Приглашения"
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Редактирование приложения"
                 }
               },
               "detail": {
@@ -2662,7 +2662,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Интеграции"
           }
         }
       },
@@ -2721,7 +2721,7 @@
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Поисковые системы",
             "children": {
               "action": {
                 "search": {
@@ -2828,7 +2828,7 @@
                 "label": ""
               },
               "manageLog": {
-                "label": ""
+                "label": "Просмотр журналов"
               },
               "manageTask": {
                 "label": ""
@@ -2840,7 +2840,7 @@
                 "label": "О программе"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Домашняя панель"
               },
               "preferences": {
                 "label": "Ваши настройки"
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Группы",
             "children": {
               "action": {
                 "detail": {
@@ -2900,12 +2900,12 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Описание"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Поисковые системы",
           "noResults": {
             "title": "",
             "action": ""
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Изменения сохранены",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Не удалось сохранить",
               "message": ""
             }
           },

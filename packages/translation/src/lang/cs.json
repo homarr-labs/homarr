@@ -2,40 +2,40 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Vítejte v Homarru",
+        "subtitle": "Pojďme začít nastavením instance Homarru.",
+        "description": "Chcete-li začít, zvolte, jak chcete nastavit instanci Homarru.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Začít od začátku",
+          "importOldmarr": "Import z Homarru před verzí 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Import dat",
+        "subtitle": "Můžete importovat data z existující instance Homarru.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Přetáhněte zip soubor sem nebo klikněte pro procházení souborů",
+          "description": "Nahraný zip soubor bude zpracován a budete si moci vybrat, co chcete importovat"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Změnit soubor"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importovat nastavení",
+          "description": "Konfigurovat chování importu"
         },
         "boardSelection": {
           "title": "",
-          "description": "",
+          "description": "Vyberte všechny plochy s velikostmi, které chcete importovat",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Vybrat vše",
+            "unselectAll": "Zrušit vybraní všeho"
           }
         },
         "summary": {
-          "title": "",
+          "title": "Přehled importu",
           "description": "",
           "action": {
             "import": ""
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Vítejte v Homarru",
         "description": "",
         "link": "",
         "notice": ""
