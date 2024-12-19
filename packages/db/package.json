@@ -10,7 +10,8 @@
     "./schema/sqlite": "./schema/sqlite.ts",
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
-    "./validationSchemas": "./validationSchemas.ts"
+    "./validationSchemas": "./validationSchemas.ts",
+    "./env.mjs": "./env.mjs"
   },
   "main": "./index.ts",
   "types": "./index.ts",

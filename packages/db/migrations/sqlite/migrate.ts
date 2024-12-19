@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { schema } from "../..";
-import { env } from "../../env";
+import { env } from "../../env.mjs";
 import { seedDataAsync } from "../seed";
 
 const migrationsFolder = process.argv[2] ?? ".";

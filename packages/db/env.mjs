@@ -1,15 +1,12 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-import { objectKeys } from "@homarr/common";
-
 const drivers = {
-  betterSqlite3: "better-sqlite3" as const,
-  mysql2: "mysql2" as const,
+  betterSqlite3: "better-sqlite3",
+  mysql2: "mysql2",
 };
-type Driver = (typeof drivers)[keyof typeof drivers];
 
-const isDriver = (driver: Driver) => process.env.DB_DRIVER === driver;
+const isDriver = (driver) => process.env.DB_DRIVER === driver;
 const isUsingDbHost = Boolean(process.env.DB_HOST);
 const onlyAllowUrl = isDriver(drivers.betterSqlite3);
 const urlRequired = onlyAllowUrl || !isUsingDbHost;
@@ -23,7 +20,7 @@ export const env = createEnv({
   server: {
     DB_DRIVER: z
       .union([z.literal(drivers.betterSqlite3), z.literal(drivers.mysql2)], {
-        message: `Invalid database driver, supported are ${objectKeys(drivers).join(", ")}`,
+        message: `Invalid database driver, supported are ${Object.keys(drivers).join(", ")}`,
       })
       .default(drivers.betterSqlite3),
     ...(urlRequired
