@@ -2,24 +2,24 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Добро пожаловать в Homarr",
+        "subtitle": "Давайте начнем настройку вашего экземпляра Homarr.",
+        "description": "Для начала выберите, как вы хотите настроить ваш экземпляр Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Начать с нуля",
+          "importOldmarr": "Импортировать из Homarr версии до 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Импорт данных",
+        "subtitle": "Вы можете импортировать данные из существующего экземпляра Homarr.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Перетащите ZIP-файл сюда или нажмите для выбора",
+          "description": "Загруженный ZIP-файл будет обработан, и вы сможете выбрать, что хотите импортировать"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Изменить файл"
           }
         },
         "importSettings": {
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Добро пожаловать в Homarr",
         "description": "",
         "link": "",
         "notice": ""
