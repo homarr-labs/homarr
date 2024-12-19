@@ -2,7 +2,7 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
+        "title": "歡迎來到 Homarr",
         "subtitle": "",
         "description": "",
         "action": {
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "歡迎來到 Homarr",
         "description": "",
         "link": "",
         "notice": ""
