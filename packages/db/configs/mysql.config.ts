@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import * as dotenv from "dotenv";
 import type { Config } from "drizzle-kit";
 
-dotenv.config({ path: "../../.env" });
+import { env } from "../env";
 
 export default {
   dialect: "mysql",
   schema: "./schema",
   casing: "snake_case",
-  dbCredentials: {
-    host: process.env.DB_HOST!,
-    user: process.env.DB_USER!,
-    password: process.env.DB_PASSWORD!,
-    database: process.env.DB_NAME!,
-    port: parseInt(process.env.DB_PORT!),
-  },
+  dbCredentials: env.DB_URL
+    ? { url: env.DB_URL }
+    : {
+        host: env.DB_HOST,
+        user: env.DB_USER,
+        password: env.DB_PASSWORD,
+        database: env.DB_NAME,
+        port: env.DB_PORT,
+      },
   out: "./migrations/mysql",
 } satisfies Config;
