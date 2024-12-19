@@ -40,7 +40,7 @@ jobs:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' }}
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
-      git_ref: ${{ github.ref || steps.read-git-ref.outputs.ref }}
+      git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
 
     steps:
       - run: echo "Skipping release for workflow_dispatch event"
