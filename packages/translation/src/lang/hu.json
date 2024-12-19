@@ -93,39 +93,39 @@
       "finish": {
         "title": "Beállítás befejezése",
         "subtitle": "Készen állsz!",
-        "description": "",
+        "description": "Sikeresen befejezte a beállítási folyamatot. Most már használhatja a Homarr-t. Válassza ki a következő műveletet:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Tovább a {name} oldalra",
+          "createBoard": "Az első tábla létrehozása",
+          "inviteUser": "Más felhasználók meghívása",
+          "docs": "Olvassa el a dokumentációt"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Vissza a starthoz"
   },
   "user": {
     "title": "Felhasználók",
     "name": "Felhasználó",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Jelentkezzen be a fiókjába",
+        "subtitle": "Üdvözöljük újra! Kérjük, adja meg hitelesítő adatait"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Csatlakozz Homarrhoz",
+        "subtitle": "Üdvözöljük a Homarrban! Kérjük, hozza létre fiókját",
+        "description": "{username} meghívott"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Új Homarr telepítés",
+        "subtitle": "Kérjük, hozza létre a kezdeti rendszergazda felhasználót"
       }
     },
     "field": {
       "email": {
         "label": "Email cím",
-        "verified": ""
+        "verified": "Ellenőrzött"
       },
       "username": {
         "label": "Felhasználónév"
@@ -133,46 +133,46 @@
       "password": {
         "label": "Jelszó",
         "requirement": {
-          "length": "",
+          "length": "Tartalmazzon legalább 8 karaktert",
           "lowercase": "Tartalmazzon kisbetűt",
           "uppercase": "Tartalmazzon nagybetűt",
           "number": "Tartalmazzon számot",
-          "special": ""
+          "special": "Különleges szimbólumot tartalmaz"
         }
       },
       "passwordConfirm": {
         "label": "Jelszó megerősítése"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Előző jelszó"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Főoldal"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Ikonok használata a pingekhez"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "A felhasználónév már foglalt"
     },
     "action": {
       "login": {
         "label": "Bejelentkezés",
-        "labelWith": "",
+        "labelWith": "Bejelentkezés {provider} fiókkal",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Belépés sikeres",
+            "message": "Be van jelentkezve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Belépés sikertelen",
+            "message": "Belépés sikertelen"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Elfelejtette a jelszavát?",
+          "description": "A rendszergazda a következő paranccsal állíthatja vissza a jelszavát:"
         }
       },
       "register": {
@@ -180,75 +180,75 @@
         "notification": {
           "success": {
             "title": "Fiók létrehozva",
-            "message": ""
+            "message": "Kérjük, jelentkezzen be a folytatáshoz"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Fiók létrehozása sikertelen",
+            "message": "Fiókját nem sikerült létrehozni"
           }
         }
       },
       "create": "Felhasználó létrehozása",
       "changePassword": {
-        "label": "",
+        "label": "Jelszó módosítása",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Jelszó sikeresen megváltozott"
           },
           "error": {
-            "message": ""
+            "message": "Nem lehet megváltoztatni a jelszót"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A kezdőlap sikeresen cserélve"
           },
           "error": {
-            "message": ""
+            "message": "A kezdőlap cseréje nem lehetséges"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A hét első napja sikeresen megváltozott"
           },
           "error": {
-            "message": ""
+            "message": "A hét első napja nem módosítható"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A ping ikonok sikeresen váltakoztak"
           },
           "error": {
-            "message": ""
+            "message": "Nem lehet ping ikonokat megváltoztatni"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Képcsere",
           "notification": {
             "success": {
-              "message": ""
+              "message": "A kép sikeresen megváltozott"
             },
             "error": {
-              "message": ""
+              "message": "A kép nem módosítható"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "A kép túl nagy",
+              "message": "A maximális képméret {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Kép eltávolítása",
+          "confirm": "Valóban törölni szeretnéd ezt a képet?",
           "notification": {
             "success": {
               "message": ""
@@ -1983,7 +1983,7 @@
       "noBoard": {
         "title": "Üdvözöljük a Homarrban",
         "description": "",
-        "link": "",
+        "link": "Az első tábla létrehozása",
         "notice": ""
       },
       "notFound": {
@@ -2130,7 +2130,7 @@
             "title": "Általános",
             "item": {
               "language": "",
-              "board": "",
+              "board": "Főoldal",
               "firstDayOfWeek": "A hét első napja",
               "accessibility": "Kisegítő lehetőségek"
             }
@@ -2840,7 +2840,7 @@
                 "label": "Névjegy"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Főoldal"
               },
               "preferences": {
                 "label": "Saját preferenciák"
