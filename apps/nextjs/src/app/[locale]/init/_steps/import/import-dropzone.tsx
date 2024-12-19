@@ -24,12 +24,18 @@ export const ImportDropZone = ({ loading, updateFile }: ImportDropZoneProps) => 
       }}
       acceptColor="blue.6"
       rejectColor="red.6"
-      accept={[MIME_TYPES.zip]}
+      accept={[MIME_TYPES.zip, "application/x-zip-compressed"]}
       loading={loading}
       multiple={false}
       maxSize={1024 * 1024 * 1024 * 64} // 64 MB
-      onReject={(files) => {
-        console.error("Rejected files", files);
+      onReject={(rejections) => {
+        console.error(
+          "Rejected files",
+          rejections.map(
+            (rejection) =>
+              `File: ${rejection.file.name} size=${rejection.file.size} fileType=${rejection.file.type}\n - ${rejection.errors.map((error) => error.message).join("\n - ")}`,
+          ),
+        );
       }}
     >
       <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
