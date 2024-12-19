@@ -1,12 +1,13 @@
 #!/bin/sh
 set -e
 
+echo $(whoami)
+echo $(ls -la)
+echo $(ls -la /appdata)
+
 # Creating folders in volume
 mkdir -p /appdata/db
 mkdir -p /appdata/redis
-
-echo $(whoami)
-echo $(ls -la /appdata)
 
 chown -R nextjs:nodejs /appdata
 
