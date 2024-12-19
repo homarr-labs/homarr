@@ -1,3 +1,23 @@
+## [1.0.0-beta.5](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2024-12-19)
+
+### Features
+
+* Add quick filters for integration and status + minor UI improvement from feedback ([#1641](https://github.com/homarr-labs/homarr/issues/1641)) ([b6dad43](https://github.com/homarr-labs/homarr/commit/b6dad438c2f44aa8d7a740c1a22c9d4c39edf43e))
+
+### Bug Fixes
+
+* about version is one behind because of missing package-json update in deploy ([#1725](https://github.com/homarr-labs/homarr/issues/1725)) ([8c11562](https://github.com/homarr-labs/homarr/commit/8c1156240c8a0d332301ae6dd0a4521f3db19d9a))
+* allow additional file-type for oldmarr import ([#1723](https://github.com/homarr-labs/homarr/issues/1723)) ([1e8a535](https://github.com/homarr-labs/homarr/commit/1e8a5359b78e28db7683ba837a962685446c6c32))
+* always require db-user and password for mysql ([#1730](https://github.com/homarr-labs/homarr/issues/1730)) ([d2584b6](https://github.com/homarr-labs/homarr/commit/d2584b63c55ca143a2b5dc6a71cb00fd5612b78a))
+* **deps:** update dependency tldts to ^6.1.69 ([#1726](https://github.com/homarr-labs/homarr/issues/1726)) ([c0f6816](https://github.com/homarr-labs/homarr/commit/c0f681637db1d6e7abdf3326b3a3c17283440d09))
+* **deps:** update dependency undici to v7.2.0 ([#1718](https://github.com/homarr-labs/homarr/issues/1718)) ([61afab5](https://github.com/homarr-labs/homarr/commit/61afab518f6193a700a547faffa4619b28fb0837))
+* **deps:** update dependency zod-form-data to ^2.0.3 ([#1717](https://github.com/homarr-labs/homarr/issues/1717)) ([a7bd664](https://github.com/homarr-labs/homarr/commit/a7bd664c5cee578574bf37b7149a2142be9f8b7a))
+* **deps:** update dependency zod-form-data to ^2.0.4 ([#1719](https://github.com/homarr-labs/homarr/issues/1719)) ([3b7e6cc](https://github.com/homarr-labs/homarr/commit/3b7e6cc083220a0e3a0cf4f5243c073067ba5bc7))
+* **deps:** update nextjs monorepo to ^14.2.21 ([#1727](https://github.com/homarr-labs/homarr/issues/1727)) ([2b4bc83](https://github.com/homarr-labs/homarr/commit/2b4bc8352efa1e2cffb71a6d4d6e42f941358f02))
+* **deps:** update tiptap monorepo to v2.10.4 ([#1729](https://github.com/homarr-labs/homarr/issues/1729)) ([2ae3d93](https://github.com/homarr-labs/homarr/commit/2ae3d938eeea5bd49a74d9c09b4cb2c680b059d0))
+* mysql operations not working ([#1728](https://github.com/homarr-labs/homarr/issues/1728)) ([550bca6](https://github.com/homarr-labs/homarr/commit/550bca6dee743a4ed68ec15677304ecfd7a9a385))
+* update of dev branch has no credentials ([#1724](https://github.com/homarr-labs/homarr/issues/1724)) ([bb7f751](https://github.com/homarr-labs/homarr/commit/bb7f7514814d49a77ac79f63d68923d08148573e))
+
 ## [1.0.0-beta.4](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2024-12-18)
 
 ### Bug Fixes
