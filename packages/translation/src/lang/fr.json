@@ -2,53 +2,53 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Bienvenue dans Homarr",
+        "subtitle": "Commençons par configurer votre instance Homarr.",
+        "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Partir de zéro",
+          "importOldmarr": "Importer à partir d'Homarr avant la 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importer des données",
+        "subtitle": "Vous pouvez importer des données depuis une instance Homarr existante.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Déposez le fichier zip ici ou cliquez pour naviguer",
+          "description": "Le zip téléchargé sera traité et vous pourrez sélectionner ce que vous voulez importer"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Changer le fichier"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importer des paramètres",
+          "description": "Configurer le comportement d'importation"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "{count} tableaux trouvés",
+          "description": "Choisissez tous les tableaux avec la taille que vous souhaitez importer",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Tout sélectionner",
+            "unselectAll": "Tout désélectionner"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Résumé de l'importation",
+          "description": "Dans le résumé ci-dessous vous pouvez voir ce qui va être importé",
           "action": {
-            "import": ""
+            "import": "Confirmer l'importation et continuer"
           },
           "entities": {
             "apps": "Applications",
             "boards": "Tableaux de bord",
-            "integrations": "",
+            "integrations": "Intégrations",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Saisir le jeton d'importation",
           "field": {
             "token": {
               "label": "Jeton",
@@ -57,75 +57,75 @@
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Jeton non valide",
+              "message": "Le jeton que vous avez saisi est invalide"
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Administrateur",
         "subtitle": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Utilisateur créé",
+            "message": "L’utilisateur a été créé avec succès"
           },
           "error": {
-            "title": ""
+            "title": "La création de l'utilisateur a échoué"
           }
         }
       },
       "group": {
-        "title": "",
+        "title": "Groupe externe",
         "subtitle": "",
         "form": {
           "name": {
-            "label": "",
+            "label": "Nom du groupe",
             "description": ""
           }
         }
       },
       "settings": {
         "title": "Paramètres",
-        "subtitle": ""
+        "subtitle": "Configurer les paramètres du serveur."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Terminer la configuration",
+        "subtitle": "Vous êtes prêt !",
+        "description": "Vous avez terminé avec succès le processus d'installation. Vous pouvez maintenant commencer à utiliser Homarr. Sélectionnez votre prochaine action :",
         "action": {
           "goToBoard": "",
           "createBoard": "",
           "inviteUser": "",
-          "docs": ""
+          "docs": "Lire la documentation"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Retour au début"
   },
   "user": {
     "title": "Utilisateurs",
     "name": "Utilisateur",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Connectez-vous à votre compte",
+        "subtitle": "Bon retour parmi nous ! Veuillez entrer vos identifiants"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Rejoindre Homarr",
+        "subtitle": "Bienvenue sur Homarr! Veuillez créer votre compte",
+        "description": "Vous avez été invité par {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nouvelle installation Homarr",
+        "subtitle": "Veuillez créer l'utilisateur administrateur initial"
       }
     },
     "field": {
       "email": {
         "label": "Courriel",
-        "verified": ""
+        "verified": "Vérifié"
       },
       "username": {
         "label": "Nom d'utilisateur"
@@ -133,11 +133,11 @@
       "password": {
         "label": "Mot de passe",
         "requirement": {
-          "length": "",
+          "length": "Contient au moins 8 caractères",
           "lowercase": "Inclut une lettre minuscule",
           "uppercase": "Inclut une lettre majuscule",
           "number": "Inclut un nombre",
-          "special": ""
+          "special": "Contient un symbole spécial"
         }
       },
       "passwordConfirm": {
@@ -154,16 +154,16 @@
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Nom d'utilisateur déjà utilisé"
     },
     "action": {
       "login": {
         "label": "Connexion",
-        "labelWith": "",
+        "labelWith": "Se connecter avec {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Connexion réussie",
+            "message": "Vous êtes maintenant connecté"
           },
           "error": {
             "title": "",
@@ -171,7 +171,7 @@
           }
         },
         "forgotPassword": {
-          "label": "",
+          "label": "Mot de passe oublié?",
           "description": ""
         }
       },
@@ -190,10 +190,10 @@
       },
       "create": "Créer un utilisateur",
       "changePassword": {
-        "label": "",
+        "label": "Changer le mot de passe",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mot de passe modifié avec succès"
           },
           "error": {
             "message": ""
@@ -238,23 +238,23 @@
               "message": ""
             },
             "error": {
-              "message": ""
+              "message": "Impossible de modifier l'image"
             },
             "toLarge": {
-              "title": "",
+              "title": "L'image est trop volumineuse",
               "message": ""
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Retirer l'image",
+          "confirm": "Êtes-vous sûr de vouloir retirer cette image ?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Image retirée avec succès"
             },
             "error": {
-              "message": ""
+              "message": "Impossible de retirer l'image"
             }
           }
         }
@@ -262,41 +262,41 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profil mis à jour avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Impossible de mettre à jour le profil"
           }
         }
       },
       "delete": {
-        "label": "",
+        "label": "Supprimer définitivement l'utilisateur",
         "description": "",
         "confirm": ""
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Sélectionner l'utilisateur",
+        "notFound": "Aucun utilisateur trouvé"
       },
       "transfer": {
-        "label": ""
+        "label": "Choisir un nouveau propriétaire"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Groupes",
+    "name": "Groupe",
+    "search": "Trouver un groupe",
     "field": {
       "name": "Nom",
-      "members": ""
+      "members": "Membres"
     },
     "permission": {
       "admin": {
         "title": "Admin",
         "item": {
           "admin": {
-            "label": "",
+            "label": "Administrateur",
             "description": ""
           }
         }
@@ -305,8 +305,8 @@
         "title": "Applications",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Créer une app",
+            "description": "Autoriser les membres à créer des apps"
           },
           "use-all": {
             "label": "",
@@ -807,7 +807,7 @@
       "max": "",
       "days": "",
       "hours": "Heures",
-      "minutes": "Minutes"
+      "minutes": ""
     },
     "notification": {
       "create": {
@@ -842,8 +842,8 @@
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
+        "switchToDarkMode": "Activer le mode sombre",
+        "switchToLightMode": "Activer le mode clair",
         "management": "",
         "preferences": "Vos préférences",
         "logout": "",
@@ -1113,7 +1113,7 @@
         "processing": "",
         "disconnected": "",
         "hours": "Heures",
-        "minutes": "Minutes",
+        "minutes": "",
         "unlimited": ""
       }
     },
@@ -1172,7 +1172,7 @@
         "underline": "Souligner",
         "colorText": "Colorer le texte",
         "colorHighlight": "Surligner en couleur",
-        "code": "Code",
+        "code": "",
         "clear": "Effacer la mise en forme",
         "heading": "Titre {level}",
         "align": "Aligner le texte : {position}",
@@ -1204,7 +1204,7 @@
       },
       "popover": {
         "clearColor": "Enlever la couleur",
-        "source": "Source",
+        "source": "",
         "widthPlaceholder": "Valeur en % ou en pixels",
         "columns": "Colonnes",
         "rows": "Lignes",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Intégrer n'importe quel contenu à partir d'Internet. Certains sites Web peuvent restreindre l'accès.",
       "option": {
         "embedUrl": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Ratio",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "received": {
@@ -1635,7 +1635,7 @@
           "available": "",
           "tv": "Demandes de séries TV",
           "movie": "Demandes de films",
-          "total": "Total"
+          "total": ""
         },
         "users": {
           "main": "Principaux utilisateurs",
@@ -1677,7 +1677,7 @@
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "Codecs",
+          "videoCodecs": "",
           "videoContainers": "Conteneurs",
           "videoResolutions": "Résolutions"
         },
@@ -1685,7 +1685,7 @@
           "empty": "Vide",
           "table": {
             "file": "Fichier",
-            "eta": "ETA",
+            "eta": "",
             "progress": "Progrès",
             "transcode": "Transcodeur",
             "healthCheck": ""
@@ -1892,7 +1892,7 @@
         "label": "Nom"
       },
       "isPublic": {
-        "label": "Public",
+        "label": "",
         "description": ""
       }
     },
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Outils",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2052,7 +2052,7 @@
         "help": {
           "label": "Aide",
           "items": {
-            "documentation": "Documentation",
+            "documentation": "",
             "submitIssue": "",
             "discord": "Communauté Discord",
             "sourceCode": ""
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Créateur"
@@ -2315,7 +2315,7 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "Running",
+            "running": "",
             "error": "Erreur"
           },
           "job": {
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2380,7 +2380,7 @@
           },
           "tab": {
             "documentation": {
-              "label": "Documentation"
+              "label": ""
             },
             "apiKey": {
               "label": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2433,7 +2433,7 @@
         "label": "État",
         "option": {
           "created": "Créé",
-          "running": "Running",
+          "running": "",
           "paused": "En pause",
           "restarting": "Redémarrage en cours",
           "exited": "",
@@ -2442,10 +2442,10 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
-        "label": "Ports"
+        "label": ""
       }
     },
     "action": {
@@ -2463,7 +2463,7 @@
         }
       },
       "stop": {
-        "label": "Stop",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Outils",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
@@ -2676,8 +2676,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Activer le mode clair",
+                "dark": "Activer le mode sombre"
               },
               "language": {
                 "label": "",
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2769,7 +2769,7 @@
             "title": "Aide",
             "option": {
               "documentation": {
-                "label": "Documentation"
+                "label": ""
               },
               "submitIssue": {
                 "label": ""
