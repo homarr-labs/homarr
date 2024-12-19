@@ -2,97 +2,97 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Üdvözöljük a Homarrban",
+        "subtitle": "Kezdjük el a Homarr-példány beállítását.",
+        "description": "A kezdéshez válassza ki, hogyan szeretné beállítani a Homarr-példányt.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Kezdjük a legelejétől",
+          "importOldmarr": "Importálás Homarr 1.0 előtti verzióból"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importálás",
+        "subtitle": "Importálhat adatokat egy meglévő Homarr-példányból.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Húzza ide a zip fájlt, vagy kattintson a böngészéshez",
+          "description": "A feltöltött zip fájlt feldolgozzuk, és kiválaszthatja, hogy mit szeretne importálni"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Fájl módosítása"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Beállítások importálása",
+          "description": "Az importálási viselkedés konfigurálása"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Talált {count} táblák",
+          "description": "Válassza ki az összes olyan méretű táblát, amelyet importálni szeretne",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Összes kijelölése",
+            "unselectAll": "Kijelölés megszüntetése"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Import összefoglaló",
+          "description": "Az alábbi összefoglalóban láthatja, hogy mi lesz importálva",
           "action": {
-            "import": ""
+            "import": "Importálás megerősítése és folytatás"
           },
           "entities": {
             "apps": "Alkalmazások",
             "boards": "Táblák",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integrációk",
+            "credentialUsers": "Hitelesített felhasználók"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Import token megadása",
           "field": {
             "token": {
               "label": "Token",
-              "description": ""
+              "description": "Írja be a megjelenített import tokent az előző homarr példányból"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Érvénytelen token",
+              "message": "A megadott token érvénytelen"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Admin felhasználó",
+        "subtitle": "Adja meg a rendszergazda felhasználó hitelesítő adatait.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Létrejött a felhasználó",
+            "message": "A felhasználót sikeresen létrehoztuk"
           },
           "error": {
-            "title": ""
+            "title": "A felhasználó létrehozása sikertelen"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Külső csoport",
+        "subtitle": "Adja meg a külső felhasználók számára használandó csoportot.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Csoportnév",
+            "description": "A névnek meg kell egyeznie a külső szolgáltató admin csoportjával"
           }
         }
       },
       "settings": {
         "title": "Beállítások",
-        "subtitle": ""
+        "subtitle": "Szerver beállítások konfigurálása."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
+        "title": "Beállítás befejezése",
+        "subtitle": "Készen állsz!",
         "description": "",
         "action": {
           "goToBoard": "",
@@ -344,7 +344,7 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrációk",
         "item": {
           "create": {
             "label": "",
@@ -559,7 +559,7 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
+        "title": "Integrációk",
         "search": "",
         "noResults": {
           "title": ""
@@ -978,7 +978,7 @@
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrációk"
         },
         "customCssClasses": {
           "label": ""
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Üdvözöljük a Homarrban",
         "description": "",
         "link": "",
         "notice": ""
@@ -2028,7 +2028,7 @@
         "home": "Nyitólap",
         "boards": "Táblák",
         "apps": "Alkalmazások",
-        "integrations": "",
+        "integrations": "Integrációk",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -2067,7 +2067,7 @@
           "board": "Táblák",
           "user": "Felhasználók",
           "invite": "Meghívók",
-          "integration": "",
+          "integration": "Integrációk",
           "app": "Alkalmazások",
           "group": ""
         },
@@ -2168,10 +2168,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Létrejött a felhasználó"
             },
             "error": {
-              "title": ""
+              "title": "A felhasználó létrehozása sikertelen"
             }
           },
           "action": {
@@ -2555,7 +2555,7 @@
         "label": "Táblák"
       },
       "integrations": {
-        "label": "",
+        "label": "Integrációk",
         "edit": {
           "label": "Szerkesztés"
         },
@@ -2662,7 +2662,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integrációk"
           }
         }
       },
