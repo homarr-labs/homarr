@@ -51,7 +51,7 @@
           "title": "Import token megadása",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": "Írja be a megjelenített import tokent az előző homarr példányból"
             }
           },
@@ -546,7 +546,7 @@
         "label": "Leírás"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "Név"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
