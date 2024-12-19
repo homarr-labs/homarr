@@ -1515,7 +1515,7 @@
           "detailsTitle": "İndirme Hızı"
         },
         "index": {
-          "columnTitle": "#",
+          "columnTitle": "",
           "detailsTitle": "İstemci içindeki mevcut endeks"
         },
         "id": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "Ratio",
+          "columnTitle": "",
           "detailsTitle": "Torrent oranı (alınan/gönderilen)"
         },
         "received": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Araçlar",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "Günlükler",
-            "api": "API",
+            "api": "",
             "tasks": "Görevler"
           }
         },
@@ -2737,15 +2737,15 @@
             },
             "option": {
               "google": {
-                "name": "Google",
+                "name": "",
                 "description": "Google ile web'de arama yapın"
               },
               "bing": {
-                "name": "Bing",
+                "name": "",
                 "description": "Bing ile web'de arama yapın"
               },
               "duckduckgo": {
-                "name": "DuckDuckGo",
+                "name": "",
                 "description": "DuckDuckGo ile web'de arama yapın"
               },
               "torrent": {
@@ -2753,7 +2753,7 @@
                 "description": "Torrentdownloads.pro'da torrentleri arayın"
               },
               "youTube": {
-                "name": "YouTube",
+                "name": "",
                 "description": "YouTube'da video arayın"
               }
             }
@@ -2825,7 +2825,7 @@
                 "label": "Docker'ı yönet"
               },
               "manageApi": {
-                "label": "Swagger API"
+                "label": ""
               },
               "manageLog": {
                 "label": "Günlükleri görüntüle"
