@@ -1,6 +1,6 @@
 import { decryptSecret } from "@homarr/common/server";
 import type { Modify } from "@homarr/common/types";
-import type { Integration as DbIntegration } from "@homarr/db/schema/sqlite";
+import type { Integration as DbIntegration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";

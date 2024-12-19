@@ -6,8 +6,8 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import { createId, eq } from "..";
 import type { Database } from "..";
+import { onboarding, serverSettings } from "../schema";
 import { groups } from "../schema/mysql";
-import { onboarding, serverSettings } from "../schema/sqlite";
 
 export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);

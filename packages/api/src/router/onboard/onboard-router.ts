@@ -1,4 +1,4 @@
-import { onboarding } from "@homarr/db/schema/sqlite";
+import { onboarding } from "@homarr/db/schema";
 import { onboardingSteps } from "@homarr/definitions";
 import { z, zodEnumFromArray } from "@homarr/validation";
 

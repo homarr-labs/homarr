@@ -1,6 +1,6 @@
 import type { InferInsertModel } from "@homarr/db";
 import { createId } from "@homarr/db";
-import type { sections } from "@homarr/db/schema/sqlite";
+import type { sections } from "@homarr/db/schema";
 import type { OldmarrCategorySection, OldmarrEmptySection } from "@homarr/old-schema";
 
 export const mapCategorySection = (

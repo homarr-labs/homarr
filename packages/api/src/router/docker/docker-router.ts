@@ -3,7 +3,7 @@ import type Docker from "dockerode";
 import type { Container } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
-import { icons } from "@homarr/db/schema/sqlite";
+import { icons } from "@homarr/db/schema";
 import type { DockerContainerState } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";

@@ -1,6 +1,6 @@
 import { createId, inArray } from "@homarr/db";
 import type { Database, InferInsertModel, InferSelectModel } from "@homarr/db";
-import { apps as appsTable } from "@homarr/db/schema/sqlite";
+import { apps as appsTable } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { OldmarrApp } from "@homarr/old-schema";
 

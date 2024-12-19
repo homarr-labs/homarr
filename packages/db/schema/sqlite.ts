@@ -1,6 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { DayOfWeek } from "@mantine/dates";
-import type { InferSelectModel } from "drizzle-orm";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
@@ -567,10 +566,3 @@ export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
     references: [integrations.id],
   }),
 }));
-
-export type User = InferSelectModel<typeof users>;
-export type Account = InferSelectModel<typeof accounts>;
-export type Session = InferSelectModel<typeof sessions>;
-export type VerificationToken = InferSelectModel<typeof verificationTokens>;
-export type Integration = InferSelectModel<typeof integrations>;
-export type IntegrationSecret = InferSelectModel<typeof integrationSecrets>;

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { asc, createId, eq, inArray, like } from "@homarr/db";
-import { apps } from "@homarr/db/schema/sqlite";
+import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { validation, z } from "@homarr/validation";
 

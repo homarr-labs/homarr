@@ -1,6 +1,6 @@
 import type { Database } from "@homarr/db";
 import { createId } from "@homarr/db";
-import { boards } from "@homarr/db/schema/sqlite";
+import { boards } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { OldmarrConfig } from "@homarr/old-schema";
 

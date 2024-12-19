@@ -3,7 +3,7 @@ import { Umami } from "@umami/node";
 
 import { count, db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
-import { integrations, items, users } from "@homarr/db/schema/sqlite";
+import { integrations, items, users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { defaultServerSettings } from "@homarr/server-settings";
 

@@ -1,5 +1,5 @@
 import type { InferSelectModel } from "@homarr/db";
-import type { apps } from "@homarr/db/schema/sqlite";
+import type { apps } from "@homarr/db/schema";
 import type { OldmarrApp } from "@homarr/old-schema";
 
 import type { OldmarrBookmarkDefinition } from "../widgets/definitions/bookmark";

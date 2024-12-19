@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { db, eq } from "@homarr/db";
-import { medias } from "@homarr/db/schema/sqlite";
+import { medias } from "@homarr/db/schema";
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const image = await db.query.medias.findFirst({

@@ -1,7 +1,7 @@
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import { createId, db } from "@homarr/db";
-import { apiKeys } from "@homarr/db/schema/sqlite";
+import { apiKeys } from "@homarr/db/schema";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 

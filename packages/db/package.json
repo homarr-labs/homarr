@@ -7,7 +7,7 @@
   "exports": {
     ".": "./index.ts",
     "./client": "./client.ts",
-    "./schema/sqlite": "./schema/sqlite.ts",
+    "./schema": "./schema/index.ts",
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
     "./validationSchemas": "./validationSchemas.ts"
