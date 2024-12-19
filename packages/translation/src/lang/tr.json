@@ -2250,46 +2250,46 @@
             "title": "",
             "general": {
               "title": "Anonim analizler gönder",
-              "text": ""
+              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve işlerimizi önceliklendirmesine yardımcı olmaktadır."
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "Widget verileri",
+              "text": "Widget (ve sayıları) yapılandırma verilerini gönder. URL'leri, adları veya başka herhangi bir veriyi içermez."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "Entegrasyon verileri",
+              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, adları veya başka herhangi bir veriyi içermez."
             },
             "usersData": {
-              "title": "",
-              "text": ""
+              "title": "Kullanıcı verileri",
+              "text": "Kullanıcı sayısını ve SSO etkinleştirme verilerini gönder"
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Tarama ve Dizinleme",
+            "warning": "Burada herhangi bir ayarı etkinleştirmek veya devre dışı bırakmak, arama motorlarının sayfanızı nasıl dizine ekleyeceğini ve tarayacağını ciddi şekilde etkileyecektir. Herhangi bir ayar bir istektir ve bu ayarları uygulamak tarayıcıya bağlıdır. Herhangi bir değişikliğin uygulanması birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özgü olabilir.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "İndeks yok",
+              "text": "Web sitesini arama motorlarında indekslemeyin ve hiçbir arama sonucunda göstermeyin"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Takip yok",
+              "text": "Dizinleme sırasında hiçbir bağlantıyı takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların Homarr'daki tüm bağlantıları takip etmeye çalışmasına yol açacaktır."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Çeviri yok",
+              "text": "Site dilinin kullanıcının okumak isteyeceği bir dil olmaması durumunda Google, arama sonuçlarında bir çeviri bağlantısı gösterecektir"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Site bağlantıları arama kutusu yok",
+              "text": "Google, taranan bağlantıların yanı sıra diğer doğrudan bağlantılarla bir arama kutusu oluşturacaktır. Bunu etkinleştirmek Google'dan bu kutuyu devre dışı bırakmasını isteyecektir."
             }
           },
           "board": {
             "title": "Paneller",
             "homeBoard": {
-              "label": "",
-              "description": ""
+              "label": "Küresel ana sayfa paneli",
+              "description": "Seçim için yalnızca herkese açık paneller kullanılabilir"
             }
           },
           "appearance": {
