@@ -546,7 +546,7 @@
         "label": "Tanım"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "İsim"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Hata",
     "action": {
       "add": "Ekle",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
       "option": {
         "embedUrl": {
@@ -1515,7 +1515,7 @@
           "detailsTitle": "İndirme Hızı"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": "İstemci içindeki mevcut endeks"
         },
         "id": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Ratio",
           "detailsTitle": "Torrent oranı (alınan/gönderilen)"
         },
         "received": {
@@ -1593,7 +1593,7 @@
             "title": "Öğeyi Sil",
             "modalTitle": "Bu işi silmek istediğinizden emin misiniz?",
             "entry": "Girdiyi sil",
-            "entryAndFiles": "Girişi ve dosyayı sil"
+            "entryAndFiles": "Girdiyi ve dosyaları sil"
           }
         }
       },
@@ -1813,7 +1813,7 @@
         "label": "Meta başlığı"
       },
       "logoImageUrl": {
-        "label": "Logo görseli URL'si"
+        "label": "Logo görsel URL'si"
       },
       "faviconImageUrl": {
         "label": "Favicon görsel URL'si"
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Araçlar",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "Günlükler",
-            "api": "",
+            "api": "API",
             "tasks": "Görevler"
           }
         },
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "API token'ı oluşturuldu",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Araçlar",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": "Günlükler"
@@ -2737,15 +2737,15 @@
             },
             "option": {
               "google": {
-                "name": "",
+                "name": "Google",
                 "description": "Google ile web'de arama yapın"
               },
               "bing": {
-                "name": "",
+                "name": "Bing",
                 "description": "Bing ile web'de arama yapın"
               },
               "duckduckgo": {
-                "name": "",
+                "name": "DuckDuckGo",
                 "description": "DuckDuckGo ile web'de arama yapın"
               },
               "torrent": {
@@ -2753,7 +2753,7 @@
                 "description": "Torrentdownloads.pro'da torrentleri arayın"
               },
               "youTube": {
-                "name": "",
+                "name": "YouTube",
                 "description": "YouTube'da video arayın"
               }
             }
@@ -2825,7 +2825,7 @@
                 "label": "Docker'ı yönet"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
                 "label": "Günlükleri görüntüle"
