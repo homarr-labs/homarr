@@ -791,7 +791,7 @@
       "tryAgain": "Tekrar Deneyin",
       "loading": "Yükleniyor"
     },
-    "here": "burada",
+    "here": "buraya",
     "iconPicker": {
       "label": "Simge URL'si",
       "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır."
@@ -1419,11 +1419,11 @@
       },
       "integration": {
         "noData": "Hiçbir entegrasyon bulunamadı",
-        "description": "Yeni bir entegrasyon oluşturmak için <here></here> öğesine tıklayın"
+        "description": "Yeni bir entegrasyon oluşturmak için <here></here> tıklayın"
       },
       "app": {
         "noData": "Uygulama bulunamadı",
-        "description": "Yeni bir uygulama oluşturmak için <here></here> öğesine tıklayın"
+        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -1879,7 +1879,7 @@
       },
       "customCss": {
         "label": "Bu panel için özel css",
-        "description": "Ayrıca, yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak kontrol panelinizi özelleştirin",
+        "description": "Kontrol panelinizi yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak özelleştirin",
         "customClassesAlert": {
           "title": "Özel sınıflar",
           "description": "Her öğenin gelişmiş seçeneklerinde panel örneklerinize özel sınıflar ekleyebilir ve bunları yukarıdaki özel CSS'de kullanabilirsiniz."
@@ -2120,7 +2120,7 @@
         }
       },
       "media": {
-        "includeFromAllUsers": "Tüm kullanıcıların medyasına dahil edin"
+        "includeFromAllUsers": "Tüm kullanıcıların medyalarını dahil et"
       },
       "user": {
         "back": "Kullanıcılara geri dön",
