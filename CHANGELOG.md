@@ -1,3 +1,10 @@
+## [1.0.0-beta.6](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2024-12-20)
+
+### Bug Fixes
+
+* **deps:** update dependency ioredis to v5.4.2 ([#1739](https://github.com/homarr-labs/homarr/issues/1739)) ([720fdb7](https://github.com/homarr-labs/homarr/commit/720fdb772c2142e23b2bfa2ecaddf0063fbe192c))
+* **deps:** update dependency next-intl to v3.26.3 ([#1740](https://github.com/homarr-labs/homarr/issues/1740)) ([fff1da8](https://github.com/homarr-labs/homarr/commit/fff1da88bd44162b08a76f8b2f49e2b929fc56e8))
+
 ## [1.0.0-beta.5](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2024-12-19)
 
 ### Features
