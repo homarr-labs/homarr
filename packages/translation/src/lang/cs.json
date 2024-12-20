@@ -2,40 +2,40 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Vítejte v Homarru",
+        "subtitle": "Pojďme začít nastavením instance Homarru.",
+        "description": "Chcete-li začít, zvolte, jak chcete nastavit instanci Homarru.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Začít od začátku",
+          "importOldmarr": "Import z Homarru před verzí 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Import dat",
+        "subtitle": "Můžete importovat data z existující instance Homarru.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Přetáhněte zip soubor sem nebo klikněte pro procházení souborů",
+          "description": "Nahraný zip soubor bude zpracován a budete si moci vybrat, co chcete importovat"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Změnit soubor"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importovat nastavení",
+          "description": "Konfigurovat chování importu"
         },
         "boardSelection": {
           "title": "",
-          "description": "",
+          "description": "Vyberte všechny plochy s velikostmi, které chcete importovat",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Vybrat vše",
+            "unselectAll": "Zrušit vybraní všeho"
           }
         },
         "summary": {
-          "title": "",
+          "title": "Přehled importu",
           "description": "",
           "action": {
             "import": ""
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -1213,11 +1213,11 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Vložte jakýkoli obsah z internetu. Některé webové stránky mohou omezit přístup.",
       "option": {
         "embedUrl": {
-          "label": "Embed URL"
+          "label": ""
         },
         "allowFullScreen": {
           "label": "Povolit celou obrazovku"
@@ -1981,7 +1981,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Vítejte v Homarru",
         "description": "",
         "link": "",
         "notice": ""
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Nástroje",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Vytvořil/a"
@@ -2208,7 +2208,7 @@
               "label": "Datum konce platnosti"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Nástroje",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""

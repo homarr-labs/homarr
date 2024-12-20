@@ -41,7 +41,7 @@
             "import": ""
           },
           "entities": {
-            "apps": "Apps",
+            "apps": "",
             "boards": "Borden",
             "integrations": "",
             "credentialUsers": ""
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "Apps",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -491,7 +491,7 @@
   "app": {
     "page": {
       "list": {
-        "title": "Apps",
+        "title": "",
         "noResults": {
           "title": "",
           "action": ""
@@ -1172,7 +1172,7 @@
         "underline": "Onderstreept",
         "colorText": "Kleur tekst",
         "colorHighlight": "Gekleurde tekst markeren",
-        "code": "Code",
+        "code": "",
         "clear": "Opmaak wissen",
         "heading": "Koptekst {level}",
         "align": "Tekst uitlijnen: {position}",
@@ -1183,7 +1183,7 @@
         "checkList": "Controlelijst",
         "increaseIndent": "Inspringen vergroten",
         "decreaseIndent": "Inspringen verminderen",
-        "link": "Link",
+        "link": "",
         "unlink": "Link verwijderen",
         "image": "Afbeelding insluiten",
         "addTable": "Tabel toevoegen",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Insluiten van alle inhoud van het internet. Sommige websites kunnen de toegang beperken.",
       "option": {
         "embedUrl": {
@@ -1287,7 +1287,7 @@
       "description": "",
       "option": {
         "releaseType": {
-          "label": "Radarr release type",
+          "label": "",
           "options": {
             "inCinemas": "",
             "digitalRelease": "",
@@ -1436,7 +1436,7 @@
       "description": "Een videostream of video van een camera of een website insluiten",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
           "label": "Automatisch afspelen",
@@ -1511,7 +1511,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "",
           "detailsTitle": "Downloadsnelheid"
         },
         "index": {
@@ -1560,7 +1560,7 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Up",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
@@ -1655,7 +1655,7 @@
         }
       },
       "tab": {
-        "workers": "Workers",
+        "workers": "",
         "queue": "Wachtrij",
         "statistics": "Statistieken"
       },
@@ -1671,21 +1671,21 @@
       "panel": {
         "statistics": {
           "empty": "Leeg",
-          "transcodes": "Transcodes",
+          "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "Codecs",
-          "videoContainers": "Containers",
+          "videoCodecs": "",
+          "videoContainers": "",
           "videoResolutions": "Resoluties"
         },
         "workers": {
           "empty": "Leeg",
           "table": {
             "file": "Bestand",
-            "eta": "ETA",
+            "eta": "",
             "progress": "Voortgang",
             "transcode": "Transcoderen",
             "healthCheck": ""
@@ -1766,7 +1766,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Apps",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -2025,9 +2025,9 @@
     },
     "navbar": {
       "items": {
-        "home": "Home",
+        "home": "",
         "boards": "Borden",
-        "apps": "Apps",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
@@ -2042,19 +2042,19 @@
         "tools": {
           "label": "Gereedschappen",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
         "settings": "Instellingen",
         "help": {
-          "label": "Help",
+          "label": "",
           "items": {
             "documentation": "Documentatie",
             "submitIssue": "",
-            "discord": "Community Discord",
+            "discord": "",
             "sourceCode": ""
           }
         },
@@ -2068,7 +2068,7 @@
           "user": "Gebruikers",
           "invite": "Uitnodigingen",
           "integration": "",
-          "app": "Apps",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
@@ -2093,7 +2093,7 @@
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "Home",
+              "label": "",
               "tooltip": ""
             }
           },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Maker"
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "Containers",
+    "title": "",
     "table": {
       "updated": "",
       "search": "",
@@ -2450,7 +2450,7 @@
     },
     "action": {
       "start": {
-        "label": "Start",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2463,7 +2463,7 @@
         }
       },
       "stop": {
-        "label": "Stop",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2576,7 +2576,7 @@
         "label": ""
       },
       "apps": {
-        "label": "Apps",
+        "label": "",
         "new": {
           "label": ""
         },
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Gereedschappen",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
@@ -2627,7 +2627,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Apps",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2766,7 +2766,7 @@
             "title": ""
           },
           "help": {
-            "title": "Help",
+            "title": "",
             "option": {
               "documentation": {
                 "label": "Documentatie"
@@ -2775,7 +2775,7 @@
                 "label": ""
               },
               "discord": {
-                "label": "Community Discord"
+                "label": ""
               }
             }
           }
