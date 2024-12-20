@@ -223,38 +223,38 @@
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping Icons erfolgreich umgeschaltet"
           },
           "error": {
-            "message": ""
+            "message": "Ping Icons konnten nicht umgeschaltet werden"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Bild ändern",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Der Name wurde erfolgreich geändert"
             },
             "error": {
-              "message": ""
+              "message": "Bild konnte nicht geändert werden"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Bild ist zu groß",
+              "message": "Die maximale Bildgröße beträgt {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Bild entfernen",
+          "confirm": "Sind Sie sicher, dass Sie dieses Bild entfernen möchten?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Bild erfolgreich entfernt"
             },
             "error": {
-              "message": ""
+              "message": "Bild konnte nicht entfernt werden"
             }
           }
         }
@@ -262,42 +262,42 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profil wurde aktualisiert"
           },
           "error": {
-            "message": ""
+            "message": "Aktualisierung des Profils fehlgeschlagen"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Benutzer dauerhaft löschen",
+        "description": "Löscht diesen Benutzer einschließlich seiner Einstellungen. Es werden keine Boards gelöscht. Der Benutzer wird nicht benachrichtigt.",
+        "confirm": "Sind Sie sicher, dass Sie den Benutzer {username} mit seinen Einstellungen löschen möchten?"
       },
       "select": {
         "label": "Benutzer auswählen",
-        "notFound": ""
+        "notFound": "Kein Benutzer gefunden"
       },
       "transfer": {
-        "label": ""
+        "label": "Neuen Eigentümer auswählen"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Gruppen",
+    "name": "Gruppe",
+    "search": "Finde eine Gruppe",
     "field": {
       "name": "Name",
-      "members": ""
+      "members": "Mitglieder"
     },
     "permission": {
       "admin": {
         "title": "Admin",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrator",
+            "description": "Mitglieder mit dieser Berechtigung haben vollen Zugriff auf alle Funktionen und Einstellungen"
           }
         }
       },
@@ -305,11 +305,11 @@
         "title": "Apps",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Anwendung erstellen",
+            "description": "Mitgliedern erlauben, Apps zu erstellen"
           },
           "use-all": {
-            "label": "",
+            "label": "Alle Apps verwenden",
             "description": ""
           },
           "modify-all": {
@@ -483,8 +483,8 @@
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Gruppe auswählen",
+        "notFound": "Keine Gruppe gefunden"
       }
     }
   },
@@ -493,25 +493,25 @@
       "list": {
         "title": "Apps",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Es gibt noch keine Apps",
+          "action": "Erstelle deine erste App"
         }
       },
       "create": {
-        "title": "",
+        "title": "Neue App",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Erstellung erfolgreich",
+            "message": "Die App wurde erfolgreich erstellt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Erstellung fehlgeschlagen",
+            "message": "Die App konnte nicht erstellt werden"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "App bearbeiten",
         "notification": {
           "success": {
             "title": "",
@@ -569,11 +569,11 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Erstellung erfolgreich",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Erstellung fehlgeschlagen",
             "message": ""
           }
         }
@@ -811,8 +811,8 @@
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Erstellung erfolgreich",
+        "error": "Erstellung fehlgeschlagen"
       },
       "delete": {
         "success": "",
@@ -2036,7 +2036,7 @@
           "items": {
             "manage": "Verwalten",
             "invites": "Einladungen",
-            "groups": ""
+            "groups": "Gruppen"
           }
         },
         "tools": {
@@ -2069,7 +2069,7 @@
           "invite": "Einladungen",
           "integration": "Integrationen",
           "app": "Apps",
-          "group": ""
+          "group": "Gruppen"
         },
         "statisticLabel": {
           "boards": "Boards",
@@ -2160,7 +2160,7 @@
               "label": "Sicherheit"
             },
             "groups": {
-              "label": "",
+              "label": "Gruppen",
               "title": "",
               "description": ""
             },
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "Mitglieder",
             "search": "",
             "notFound": ""
           },
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "Benutzer",
-      "group": "",
+      "group": "Gruppen",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "Benutzer"
       },
       "group": {
-        "label": ""
+        "label": "Gruppe"
       },
       "permission": {
         "label": ""
@@ -2593,7 +2593,7 @@
         "security": "Sicherheit",
         "board": "Boards",
         "groups": {
-          "label": ""
+          "label": "Gruppen"
         },
         "invites": {
           "label": "Einladungen"
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "App bearbeiten"
                 }
               },
               "detail": {
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Gruppen",
             "children": {
               "action": {
                 "detail": {
