@@ -51,7 +51,7 @@
           "title": "Zadajte token importu",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": "Zadajte zobrazený token importu z predchádzajúcej inštancie homarr"
             }
           },
@@ -546,7 +546,7 @@
         "label": "Popis"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "Názov"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "Beta",
+    "beta": "",
     "error": "Chyba",
     "action": {
       "add": "Pridať",
@@ -803,8 +803,8 @@
       }
     },
     "information": {
-      "min": "Min",
-      "max": "Max",
+      "min": "",
+      "max": "",
       "days": "Dni",
       "hours": "Hodiny",
       "minutes": "Minúty"
@@ -963,10 +963,10 @@
           "label": "Výška"
         },
         "xOffset": {
-          "label": "X offset"
+          "label": ""
         },
         "yOffset": {
-          "label": "Y offset"
+          "label": ""
         }
       }
     },
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Vložte akýkoľvek obsah z internetu. Niektoré webové stránky môžu obmedziť prístup.",
       "option": {
         "embedUrl": {
@@ -1515,11 +1515,11 @@
           "detailsTitle": "Rýchlosť sťahovania"
         },
         "index": {
-          "columnTitle": "#",
+          "columnTitle": "",
           "detailsTitle": "Aktuálny index v rámci klienta"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": ""
         },
         "integration": {
           "columnTitle": "Integrácia"
@@ -1619,7 +1619,7 @@
         "partiallyAvailable": "Čiastočný",
         "available": "K dispozícii"
       },
-      "toBeDetermined": "TBD"
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
       "name": "Štatistiky mediálnych žiadostí",
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Nástroje",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "Záznamy",
-            "api": "API",
+            "api": "",
             "tasks": "Úlohy"
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Autor"
@@ -2208,7 +2208,7 @@
               "label": "Dátum vypršania"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "Vytvorený token API",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": "Vytvoril/a"
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Nástroje",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": "Záznamy"
@@ -2737,15 +2737,15 @@
             },
             "option": {
               "google": {
-                "name": "Google",
+                "name": "",
                 "description": "Hľadajte na webe pomocou Google"
               },
               "bing": {
-                "name": "Bing",
+                "name": "",
                 "description": "Vyhľadávajte na webe pomocou Bingu"
               },
               "duckduckgo": {
-                "name": "DuckDuckGo",
+                "name": "",
                 "description": "Vyhľadávajte na webe pomocou DuckDuckGo"
               },
               "torrent": {
@@ -2753,7 +2753,7 @@
                 "description": "Vyhľadajte torrenty na torrentdownloads.pro"
               },
               "youTube": {
-                "name": "YouTube",
+                "name": "",
                 "description": "Hľadajte videá na YouTube"
               }
             }
@@ -2825,7 +2825,7 @@
                 "label": "Spravovať docker"
               },
               "manageApi": {
-                "label": "Swagger API"
+                "label": ""
               },
               "manageLog": {
                 "label": "Zobraziť denníky"
