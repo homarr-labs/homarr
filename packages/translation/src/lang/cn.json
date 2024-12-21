@@ -2,124 +2,124 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "欢迎使用 Homarr",
+        "subtitle": "让我们开始设置您的 Homarr 实例。",
+        "description": "首先，请选择您想要如何设置您的 Homarr 实例。",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "从头开始",
+          "importOldmarr": "从 1.0 之前的 Homarr 导入"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "导入数据",
+        "subtitle": "您可以从已有的 Homarr 实例导入数据。",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "将 zip 文件拖到此处或单击浏览",
+          "description": "上传的压缩包将被处理，您可以选择要导入的内容"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "更改文件"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "导入设置",
+          "description": "配置导入方式"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "找到 {count} 个面板",
+          "description": "选择您想要导入的所有面板",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "选择全部",
+            "unselectAll": "取消全选"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "导入概况",
+          "description": "在下面的概况中，您可以看到将要导入的内容",
           "action": {
-            "import": ""
+            "import": "确认导入并继续"
           },
           "entities": {
             "apps": "应用",
             "boards": "面板",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "组件",
+            "credentialUsers": "凭证用户"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "输入导入密钥",
           "field": {
             "token": {
               "label": "Token",
-              "description": ""
+              "description": "输入您之前的 homarr 实例中显示的导入秘钥"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "无效秘钥",
+              "message": "您输入的秘钥无效"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "管理员用户",
+        "subtitle": "指定您的管理员用户的凭据。",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "创建用户",
+            "message": "用户已成功创建"
           },
           "error": {
-            "title": ""
+            "title": "用户创建失败"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "外部组",
+        "subtitle": "指定应该用于外部用户的组。",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "组名称",
+            "description": "名称必须与外部提供商的管理组匹配"
           }
         }
       },
       "settings": {
         "title": "设置",
-        "subtitle": ""
+        "subtitle": "配置服务器的设置"
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "完成设置",
+        "subtitle": "你已设置完成！",
+        "description": "您已成功完成设置过程。现在您可以开始使用 Homarr 了。选择下一步操作：",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "转到 {name} 面板",
+          "createBoard": "创建您的第一个面板",
+          "inviteUser": "邀请其他用户",
+          "docs": "阅读文档"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "返回起点"
   },
   "user": {
     "title": "用户",
     "name": "用户",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "登录你的账户",
+        "subtitle": "欢迎回来！请输入您的凭据"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "加入 Homarr",
+        "subtitle": "欢迎来到 Homarr！请创建您的账户",
+        "description": "您受到了 {username} 的邀请。"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "新建Homarr 安装",
+        "subtitle": "请创建初始管理员用户"
       }
     },
     "field": {
@@ -190,71 +190,71 @@
       },
       "create": "创建用户",
       "changePassword": {
-        "label": "",
+        "label": "修改密码",
         "notification": {
           "success": {
-            "message": ""
+            "message": "密码修改成功"
           },
           "error": {
-            "message": ""
+            "message": "无法修改密码"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "主页面修改成功"
           },
           "error": {
-            "message": ""
+            "message": "无法修改主面板"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "成功修改一周的第一天"
           },
           "error": {
-            "message": ""
+            "message": "无法修改一周的第一天"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping 图标切换成功"
           },
           "error": {
-            "message": ""
+            "message": "无法切换 ping 图标"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "更改图像",
           "notification": {
             "success": {
-              "message": ""
+              "message": "图像修改成功"
             },
             "error": {
-              "message": ""
+              "message": "无法更改图像"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "图片太大",
+              "message": "最大图像尺寸为 {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "删除图像",
+          "confirm": "确定要移除这张图片吗？",
           "notification": {
             "success": {
-              "message": ""
+              "message": "图像删除成功"
             },
             "error": {
-              "message": ""
+              "message": "无法删除图像"
             }
           }
         }
@@ -272,11 +272,11 @@
       "delete": {
         "label": "",
         "description": "",
-        "confirm": ""
+        "confirm": "您确定要删除用户 {username} 及其偏好设置吗？"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "选择用户",
+        "notFound": "找不到用户"
       },
       "transfer": {
         "label": ""
@@ -297,7 +297,7 @@
         "item": {
           "admin": {
             "label": "",
-            "description": ""
+            "description": "拥有此权限的成员可完全访问所有功能和设置"
           }
         }
       },
@@ -326,11 +326,11 @@
         "title": "面板",
         "item": {
           "create": {
-            "label": "",
+            "label": "创建面板",
             "description": ""
           },
           "view-all": {
-            "label": "",
+            "label": "查看所有面板",
             "description": ""
           },
           "modify-all": {
@@ -344,7 +344,7 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "组件",
         "item": {
           "create": {
             "label": "",
@@ -559,7 +559,7 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
+        "title": "组件",
         "search": "",
         "noResults": {
           "title": ""
@@ -978,7 +978,7 @@
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "组件"
         },
         "customCssClasses": {
           "label": ""
@@ -1981,15 +1981,15 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "欢迎使用 Homarr",
         "description": "",
-        "link": "",
+        "link": "创建您的第一个面板",
         "notice": ""
       },
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "查看所有面板",
         "notice": ""
       },
       "homeBoard": {
@@ -2028,7 +2028,7 @@
         "home": "首页",
         "boards": "面板",
         "apps": "应用",
-        "integrations": "",
+        "integrations": "组件",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -2067,7 +2067,7 @@
           "board": "面板",
           "user": "用户",
           "invite": "邀请",
-          "integration": "",
+          "integration": "组件",
           "app": "应用",
           "group": ""
         },
@@ -2168,10 +2168,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "创建用户"
             },
             "error": {
-              "title": ""
+              "title": "用户创建失败"
             }
           },
           "action": {
@@ -2555,7 +2555,7 @@
         "label": "面板"
       },
       "integrations": {
-        "label": "",
+        "label": "组件",
         "edit": {
           "label": "编辑"
         },
@@ -2662,7 +2662,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "组件"
           }
         }
       },
