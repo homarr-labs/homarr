@@ -2093,7 +2093,7 @@
           "setHomeBoard": {
             "label": "Сделать домашней панелью",
             "badge": {
-              "label": "Домашняя",
+              "label": "Главная",
               "tooltip": "Эта панель будет показываться как ваша домашняя панель"
             }
           },
@@ -2312,70 +2312,70 @@
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Задачи",
           "status": {
-            "idle": "",
-            "running": "Работает",
+            "idle": "Ожидание",
+            "running": "Выполняется",
             "error": "Ошибка"
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Обновление иконок"
             },
             "analytics": {
-              "label": ""
+              "label": "Аналитика"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "Состояние объектов умного дома"
             },
             "ping": {
-              "label": ""
+              "label": "Проверка доступности"
             },
             "mediaServer": {
               "label": "Медиасервер"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "Организация медиафайлов"
             },
             "downloads": {
-              "label": ""
+              "label": "Загрузки"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Статистика запросов медиаконтента"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Список запросов медиаконтента"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "RSS-ленты"
             },
             "indexerManager": {
-              "label": ""
+              "label": "Управление индексаторами"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Мониторинг состояния"
             },
             "dnsHole": {
-              "label": ""
+              "label": "Данные DNS-фильтра"
             },
             "sessionCleanup": {
-              "label": ""
+              "label": "Очистка сессий"
             },
             "updateChecker": {
-              "label": ""
+              "label": "Проверка обновлений"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "Перекодирование медиафайлов"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API-токен создан",
+              "description": "API-токен создан. Этот токен зашифрован в базе данных и будет показан только один раз. После закрытия окна его нельзя будет восстановить.",
+              "button": "Копировать и закрыть"
             }
           },
           "tab": {
@@ -2383,15 +2383,15 @@
               "label": "Документация"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Аутентификация",
+              "title": "API-ключи",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Создать API-токен"
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": ""
+                  "id": "ID",
+                  "createdBy": "Создан пользователем"
                 }
               }
             }
@@ -2399,20 +2399,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Версия {version}",
+        "text": "Homarr — это проект с открытым исходным кодом, поддерживаемый сообществом и развиваемый добровольцами. Благодаря этим людям Homarr остаётся растущим проектом с 2021 года. Наша команда работает над Homarr полностью удалённо из разных стран в своё свободное время без какой-либо компенсации.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Участники проекта",
+            "subtitle": "{count} поддерживают код и Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Переводчики",
+            "subtitle": "{count} помогают с переводами на разные языки"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Библиотеки",
+            "subtitle": "{count} используются в коде Homarr"
           }
         }
       }
@@ -2421,9 +2421,9 @@
   "docker": {
     "title": "Контейнеры",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": ""
+      "updated": "Обновлено {when}",
+      "search": "Поиск среди {count} контейнеров",
+      "selected": "Выбрано {selectCount} из {totalCount} контейнеров"
     },
     "field": {
       "name": {
@@ -2434,11 +2434,11 @@
         "option": {
           "created": "Создан",
           "running": "Работает",
-          "paused": "Приостановлено",
-          "restarting": "Перезапуск",
-          "exited": "",
-          "removing": "Удаление",
-          "dead": ""
+          "paused": "Приостановлен",
+          "restarting": "Перезапускается",
+          "exited": "Остановлен",
+          "removing": "Удаляется",
+          "dead": "Нерабочий"
         }
       },
       "containerImage": {
@@ -2453,12 +2453,12 @@
         "label": "Запустить",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнеры запущены",
+            "message": "Контейнеры успешно запущены"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось запустить контейнеры",
+            "message": "Не удалось запустить контейнеры"
           }
         }
       },
@@ -2466,12 +2466,12 @@
         "label": "Остановить",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнеры остановлены",
+            "message": "Контейнеры успешно остановлены"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось остановить контейнеры",
+            "message": "Не удалось остановить контейнеры"
           }
         }
       },
@@ -2479,12 +2479,12 @@
         "label": "Перезапустить",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнеры перезапущены",
+            "message": "Контейнеры успешно перезапущены"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось перезапустить контейнеры",
+            "message": "Не удалось перезапустить контейнеры"
           }
         }
       },
@@ -2492,45 +2492,45 @@
         "label": "Удалить",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнеры удалены",
+            "message": "Контейнеры успешно удалены"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось удалить контейнеры",
+            "message": "Не удалось удалить контейнеры"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Обновить",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнеры обновлены",
+            "message": "Отображаются актуальные данные"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось обновить контейнеры",
+            "message": "Произошла ошибка при обновлении данных о контейнерах"
           }
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Произошла ошибка при обновлении данных о контейнерах"
     }
   },
   "permission": {
-    "title": "",
+    "title": "Права доступа",
     "userSelect": {
-      "title": ""
+      "title": "Добавить права для пользователя"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Добавить права для группы"
     },
     "tab": {
       "user": "Пользователи",
       "group": "Группы",
-      "inherited": ""
+      "inherited": "Унаследованные группы"
     },
     "field": {
       "user": {
@@ -2540,12 +2540,12 @@
         "label": "Группа"
       },
       "permission": {
-        "label": ""
+        "label": "Права доступа"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Сохранить права пользователя",
+      "saveGroup": "Сохранить права группы"
     }
   },
   "navigationStructure": {
@@ -2560,13 +2560,13 @@
           "label": "Редактировать"
         },
         "new": {
-          "label": ""
+          "label": "Новая"
         }
       },
       "search-engines": {
         "label": "Поисковые системы",
         "new": {
-          "label": ""
+          "label": "Новая"
         },
         "edit": {
           "label": "Редактировать"
@@ -2578,7 +2578,7 @@
       "apps": {
         "label": "Приложения",
         "new": {
-          "label": ""
+          "label": "Новое"
         },
         "edit": {
           "label": "Редактировать"
@@ -2589,7 +2589,7 @@
         "create": {
           "label": "Создать"
         },
-        "general": "Основное",
+        "general": "Общие",
         "security": "Безопасность",
         "board": "Панели",
         "groups": {
@@ -2602,10 +2602,10 @@
       "tools": {
         "label": "Инструменты",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
-          "label": ""
+          "label": "Логи"
         }
       },
       "settings": {
@@ -2617,28 +2617,28 @@
     }
   },
   "search": {
-    "placeholder": "",
-    "nothingFound": "",
+    "placeholder": "Найдётся все",
+    "nothingFound": "Ничего не найдено",
     "error": {
-      "fetch": ""
+      "fetch": "Произошла ошибка при получении данных"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Поиск приложений, интеграций или панелей",
         "group": {
           "app": {
             "title": "Приложения",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Открыть URL приложения"
                 },
                 "edit": {
-                  "label": "Редактирование приложения"
+                  "label": "Редактировать приложение"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Выберите действие для приложения"
               }
             }
           },
@@ -2647,17 +2647,17 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Открыть панель"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Сделать домашней панелью"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Открыть настройки"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Выберите действие для панели"
               }
             }
           },
@@ -2667,94 +2667,94 @@
         }
       },
       "command": {
-        "help": "",
+        "help": "Активировать режим команд",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Локальные команды"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Глобальные команды",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Переключить на светлую тему",
+                "dark": "Переключить на тёмную тему"
               },
               "language": {
-                "label": "",
+                "label": "Изменить язык",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите предпочитаемый язык"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Создать новую панель"
               },
               "importBoard": {
-                "label": ""
+                "label": "Импортировать панель"
               },
               "newApp": {
-                "label": ""
+                "label": "Создать новое приложение"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Создать новую интеграцию",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите тип интеграции для создания"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Создать нового пользователя"
               },
               "newInvite": {
-                "label": ""
+                "label": "Создать новое приглашение"
               },
               "newGroup": {
-                "label": ""
+                "label": "Создать новую группу"
               }
             }
           }
         }
       },
       "external": {
-        "help": "",
+        "help": "Использовать внешнюю поисковую систему",
         "group": {
           "searchEngine": {
             "title": "Поисковые системы",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Искать через {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Выберите действие для поисковой системы"
               },
               "searchResults": {
-                "title": ""
+                "title": "Выберите результат поиска для действий"
               }
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Поиск в интернете через Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Поиск в интернете через Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Поиск в интернете через DuckDuckGo"
               },
               "torrent": {
                 "name": "Торренты",
-                "description": ""
+                "description": "Поиск торрентов на torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Поиск видео на YouTube"
               }
             }
           }
@@ -2763,7 +2763,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Режимы"
           },
           "help": {
             "title": "Справка",
@@ -2772,7 +2772,7 @@
                 "label": "Документация"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Сообщить о проблеме"
               },
               "discord": {
                 "label": "Сообщество Discord"
@@ -2784,57 +2784,57 @@
       "home": {
         "group": {
           "local": {
-            "title": ""
+            "title": "Локальные результаты"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Поиск по страницам",
         "group": {
           "page": {
-            "title": "",
+            "title": "Страницы",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Управление главной страницей"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Управление панелями"
               },
               "manageApp": {
-                "label": ""
+                "label": "Управление приложениями"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Управление интеграциями"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Управление поисковыми системами"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Управление медиафайлами"
               },
               "manageUser": {
                 "label": "Управление пользователями"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Управление приглашениями"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Управление группами"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Управление Docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": "Просмотр журналов"
+                "label": "Просмотр логов"
               },
               "manageTask": {
-                "label": ""
+                "label": "Управление задачами"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Глобальные настройки"
               },
               "about": {
                 "label": "О программе"
@@ -2850,18 +2850,18 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Поиск пользователей или групп",
         "group": {
           "user": {
             "title": "Пользователи",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Показать сведения о пользователе"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Выберите действие для пользователя"
               }
             }
           },
@@ -2870,17 +2870,17 @@
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Показать сведения о группе"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Управление участниками"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Управление разрешениями"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Выберите действие для группы"
               }
             }
           }
@@ -2888,16 +2888,16 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Найти поисковую систему",
       "field": {
         "name": {
           "label": "Название"
         },
         "short": {
-          "label": ""
+          "label": "Краткое название"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "Шаблон URL поиска"
         },
         "description": {
           "label": "Описание"
@@ -2907,53 +2907,53 @@
         "list": {
           "title": "Поисковые системы",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Поисковые системы пока отсутствуют",
+            "action": "Создать первую поисковую систему"
           },
-          "interactive": ""
+          "interactive": "Интерактивная, использует интеграцию"
         },
         "create": {
-          "title": "",
+          "title": "Новая поисковая система",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Поисковая система создана",
+              "message": "Поисковая система успешно создана"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Не удалось создать",
+              "message": "Не удалось создать поисковую систему"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Редактирование поисковой системы",
           "notification": {
             "success": {
               "title": "Изменения сохранены",
-              "message": ""
+              "message": "Поисковая система успешно сохранена"
             },
             "error": {
               "title": "Не удалось сохранить",
-              "message": ""
+              "message": "Не удалось сохранить поисковую систему"
             }
           },
-          "configControl": "",
+          "configControl": "Настройка",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Обычная",
+            "fromIntegration": "Из интеграции"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Удаление поисковой системы",
+          "message": "Вы уверены, что хотите удалить поисковую систему '{name}'?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Поисковая система удалена",
+              "message": "Поисковая система успешно удалена"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Не удалось удалить",
+              "message": "Не удалось удалить поисковую систему"
             }
           }
         }

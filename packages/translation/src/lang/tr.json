@@ -546,7 +546,7 @@
         "label": "Tanım"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "İsim"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Test",
     "error": "Hata",
     "action": {
       "add": "Ekle",
@@ -791,7 +791,7 @@
       "tryAgain": "Tekrar Deneyin",
       "loading": "Yükleniyor"
     },
-    "here": "burada",
+    "here": "buraya",
     "iconPicker": {
       "label": "Simge URL'si",
       "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır."
@@ -803,8 +803,8 @@
       }
     },
     "information": {
-      "min": "Asgari",
-      "max": "Azami",
+      "min": "En Düşük",
+      "max": "En Yüksek",
       "days": "Gün",
       "hours": "Saat",
       "minutes": "Dakika"
@@ -1185,7 +1185,7 @@
         "decreaseIndent": "Girintiyi Azalt",
         "link": "Bağlantı",
         "unlink": "Bağlantıyı kaldır",
-        "image": "Resim Göm",
+        "image": "Görsel Göm",
         "addTable": "Tablo ekle",
         "deleteTable": "Tablo Sil",
         "colorCell": "Renk Hücresi",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "İnternetten herhangi bir içeriği yerleştirin. Bazı web siteleri erişimi kısıtlayabilir.",
       "option": {
         "embedUrl": {
@@ -1419,11 +1419,11 @@
       },
       "integration": {
         "noData": "Hiçbir entegrasyon bulunamadı",
-        "description": "Yeni bir entegrasyon oluşturmak için <here></here> öğesine tıklayın"
+        "description": "Yeni bir entegrasyon oluşturmak için <here></here> tıklayın"
       },
       "app": {
         "noData": "Uygulama bulunamadı",
-        "description": "Yeni bir uygulama oluşturmak için <here></here> öğesine tıklayın"
+        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -1515,7 +1515,7 @@
           "detailsTitle": "İndirme Hızı"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": "İstemci içindeki mevcut endeks"
         },
         "id": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Oran",
           "detailsTitle": "Torrent oranı (alınan/gönderilen)"
         },
         "received": {
@@ -1593,7 +1593,7 @@
             "title": "Öğeyi Sil",
             "modalTitle": "Bu işi silmek istediğinizden emin misiniz?",
             "entry": "Girdiyi sil",
-            "entryAndFiles": "Girişi ve dosyayı sil"
+            "entryAndFiles": "Girdiyi ve dosyaları sil"
           }
         }
       },
@@ -1813,7 +1813,7 @@
         "label": "Meta başlığı"
       },
       "logoImageUrl": {
-        "label": "Logo görseli URL'si"
+        "label": "Logo görsel URL'si"
       },
       "faviconImageUrl": {
         "label": "Favicon görsel URL'si"
@@ -1822,10 +1822,10 @@
         "label": "Arkaplan görsel URL'si"
       },
       "backgroundImageAttachment": {
-        "label": "Arkaplan resim ekle",
+        "label": "Arkaplan görsel yerleştirme",
         "option": {
           "fixed": {
-            "label": "Düzeltildi",
+            "label": "Sabit",
             "description": "Arka plan aynı pozisyonda kalır."
           },
           "scroll": {
@@ -1839,11 +1839,11 @@
         "option": {
           "repeat": {
             "label": "Tekrarla",
-            "description": "Resim, tüm arka plan alanını kaplayacak kadar tekrarlanır."
+            "description": "Görsel, tüm arka plan alanını kaplayacak kadar tekrarlanır."
           },
           "no-repeat": {
             "label": "Tekrarlama yok",
-            "description": "Resim tekrarlanmaz ve tüm alanı doldurmayabilir."
+            "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
             "label": "Y tekrarla",
@@ -1856,7 +1856,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Arkaplan resim boyutu",
+        "label": "Arkaplan görsel boyutu",
         "option": {
           "cover": {
             "label": "Kapak",
@@ -1879,7 +1879,7 @@
       },
       "customCss": {
         "label": "Bu panel için özel css",
-        "description": "Ayrıca, yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak kontrol panelinizi özelleştirin",
+        "description": "Kontrol panelinizi yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak özelleştirin",
         "customClassesAlert": {
           "title": "Özel sınıflar",
           "description": "Her öğenin gelişmiş seçeneklerinde panel örneklerinize özel sınıflar ekleyebilir ve bunları yukarıdaki özel CSS'de kullanabilirsiniz."
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Araçlar",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "Günlükler",
-            "api": "",
+            "api": "API",
             "tasks": "Görevler"
           }
         },
@@ -2120,7 +2120,7 @@
         }
       },
       "media": {
-        "includeFromAllUsers": "Tüm kullanıcıların medyasına dahil edin"
+        "includeFromAllUsers": "Tüm kullanıcıların medyalarını dahil et"
       },
       "user": {
         "back": "Kullanıcılara geri dön",
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "API token'ı oluşturuldu",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Araçlar",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": "Günlükler"
@@ -2617,7 +2617,7 @@
     }
   },
   "search": {
-    "placeholder": "Aramak için yaz",
+    "placeholder": "Ara",
     "nothingFound": "Hiçbir şey bulunamadı",
     "error": {
       "fetch": "Veriler alınırken bir hata oluştu"
@@ -2737,15 +2737,15 @@
             },
             "option": {
               "google": {
-                "name": "",
+                "name": "Google",
                 "description": "Google ile web'de arama yapın"
               },
               "bing": {
-                "name": "",
+                "name": "Bing",
                 "description": "Bing ile web'de arama yapın"
               },
               "duckduckgo": {
-                "name": "",
+                "name": "DuckDuckGo",
                 "description": "DuckDuckGo ile web'de arama yapın"
               },
               "torrent": {
@@ -2753,7 +2753,7 @@
                 "description": "Torrentdownloads.pro'da torrentleri arayın"
               },
               "youTube": {
-                "name": "",
+                "name": "YouTube",
                 "description": "YouTube'da video arayın"
               }
             }
@@ -2825,7 +2825,7 @@
                 "label": "Docker'ı yönet"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API'si"
               },
               "manageLog": {
                 "label": "Günlükleri görüntüle"
