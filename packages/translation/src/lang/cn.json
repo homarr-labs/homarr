@@ -203,30 +203,30 @@
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "主页面修改成功"
           },
           "error": {
-            "message": ""
+            "message": "无法修改主面板"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "成功修改一周的第一天"
           },
           "error": {
-            "message": ""
+            "message": "无法修改一周的第一天"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping 图标切换成功"
           },
           "error": {
-            "message": ""
+            "message": "无法切换 ping 图标"
           }
         }
       },
@@ -235,7 +235,7 @@
           "label": "更改图像",
           "notification": {
             "success": {
-              "message": ""
+              "message": "图像修改成功"
             },
             "error": {
               "message": "无法更改图像"
