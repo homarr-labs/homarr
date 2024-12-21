@@ -93,39 +93,39 @@
       "finish": {
         "title": "סיים את ההגדרה",
         "subtitle": "",
-        "description": "",
+        "description": "השלמת בהצלחה את תהליך ההגדרה. כעת תוכל להתחיל להשתמש ב-Homarr. בחר את הפעולה הבאה שלך:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "עבור ללוח {name}",
+          "createBoard": "צור את הלוח הראשון שלך",
+          "inviteUser": "הזמן משתמשים אחרים",
+          "docs": "קרא את הדוקומנטציה"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "חזרה להתחלה"
   },
   "user": {
     "title": "משתמשים",
     "name": "משתמש",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "היכנס לחשבון שלך",
+        "subtitle": "ברוך שובך! אנא הזן את שם המשתמש והסיסמה שלך"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "הצטרף ל- Homarr",
+        "subtitle": "ברוכים הבאים ל- Homarr! נא ליצור את החשבון שלך",
+        "description": "הוזמנת על ידי {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "התקנת Homarr חדשה",
+        "subtitle": "נא ליצור את משתמש המנהל הראשוני"
       }
     },
     "field": {
       "email": {
         "label": "אימייל",
-        "verified": ""
+        "verified": "מאומת"
       },
       "username": {
         "label": "שם משתמש"
@@ -133,46 +133,46 @@
       "password": {
         "label": "סיסמה",
         "requirement": {
-          "length": "",
+          "length": "כולל לפחות 8 תווים",
           "lowercase": "אפשר אותיות קטנות",
           "uppercase": "אפשר אותיות גדולות",
           "number": "אפשר מספרים",
-          "special": ""
+          "special": "כולל סמל מיוחד"
         }
       },
       "passwordConfirm": {
         "label": "אימות סיסמא"
       },
       "previousPassword": {
-        "label": ""
+        "label": "סיסמה קודמת"
       },
       "homeBoard": {
-        "label": ""
+        "label": "לוח בית"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "השתמש בסמלים עבור פינגים"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "שם המשתמש תפוס"
     },
     "action": {
       "login": {
         "label": "התחבר/י",
-        "labelWith": "",
+        "labelWith": "התחבר עם {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "התחברת בהצלחה",
+            "message": "אתה כעת מחובר"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "התחברות נכשלה",
+            "message": "הכניסה נכשלה"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "שכחת את הסיסמה שלך?",
+          "description": "מנהל מערכת יכול להשתמש בפקודה הבאה כדי לאפס את הסיסמה שלך:"
         }
       },
       "register": {
@@ -180,40 +180,40 @@
         "notification": {
           "success": {
             "title": "החשבון נוצר",
-            "message": ""
+            "message": "אנא היכנס כדי להמשיך"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "יצירת החשבון נכשלה",
+            "message": "לא ניתן ליצור את החשבון שלך"
           }
         }
       },
       "create": "צור משתמש",
       "changePassword": {
-        "label": "",
+        "label": "שינוי סיסמה",
         "notification": {
           "success": {
-            "message": ""
+            "message": "הסיסמה שונתה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לשנות סיסמה"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "לוח הבית השתנה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לשנות לוח בית"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "היום הראשון בשבוע השתנה בהצלחה"
           },
           "error": {
             "message": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -1983,7 +1983,7 @@
       "noBoard": {
         "title": "ברוכים הבאים ל- Homarr",
         "description": "",
-        "link": "",
+        "link": "צור את הלוח הראשון שלך",
         "notice": ""
       },
       "notFound": {
@@ -2130,7 +2130,7 @@
             "title": "כללי",
             "item": {
               "language": "",
-              "board": "",
+              "board": "לוח בית",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
             }
@@ -2840,7 +2840,7 @@
                 "label": "אודות"
               },
               "homeBoard": {
-                "label": ""
+                "label": "לוח בית"
               },
               "preferences": {
                 "label": "העדפות שלך"
