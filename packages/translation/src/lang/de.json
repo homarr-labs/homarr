@@ -619,57 +619,57 @@
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Verbindung erstellen und testen",
+        "edit": "Verbindung erstellen und speichern"
       },
-      "alertNotice": "",
+      "alertNotice": "Der Speichern Button ist verfügbar, sobald eine erfolgreiche Verbindung hergestellt wurde",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Verbindung hergestellt",
+          "message": "Die Verbindung wurde erfolgreich hergestellt"
         },
         "invalidUrl": {
           "title": "Ungültige URL",
-          "message": ""
+          "message": "Die URL ist ungültig"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Fehlende Anmeldeinformationen",
+          "message": "Es wurden nicht alle Zugangsdaten angegeben"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Ungültige Zugangsdaten",
+          "message": "Die Zugangsdaten sind ungültig"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Verbindung fehlgeschlagen",
+          "message": "Die Verbindung konnte nicht hergestellt werden"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Ungültige Anfrage",
+          "message": "Die Anfrage war fehlerhaft"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Unberechtigt",
+          "message": "Wahrscheinlich falsche Anmeldeinformationen"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Verweigert",
+          "message": "Vermutlich fehlende Berechtigungen"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Nicht gefunden",
+          "message": "Wahrscheinlich falsche URL oder falscher Pfad"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Interner Serverfehler",
+          "message": "Auf dem Server ist ein Fehler aufgetreten"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Dienst nicht verfügbar",
+          "message": "Der Server ist derzeit nicht erreichbar"
         },
         "connectionAborted": {
-          "title": "",
+          "title": "Verbindung abgebrochen",
           "message": ""
         },
         "domainNotFound": {
@@ -787,25 +787,25 @@
       "previous": "Zurück",
       "next": "Weiter",
       "checkoutDocs": "Sieh dir die Dokumentation an",
-      "checkLogs": "",
+      "checkLogs": "Überprüfen Sie die Logs für weitere Details",
       "tryAgain": "Erneut versuchen",
-      "loading": ""
+      "loading": "Wird geladen..."
     },
-    "here": "",
+    "here": "hier",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "Icon URL",
+      "header": "Geben Sie den Namen oder das Objekte ein, um nach Symbolen zu filtern ... Homarr durchsucht für Sie {countIcons} Symbole."
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Hell",
+        "dark": "Dunkel"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "Min",
+      "max": "Max",
+      "days": "Tage",
       "hours": "Stunden",
       "minutes": "Minuten"
     },
@@ -823,41 +823,41 @@
         "error": "Änderungen konnten nicht angewendet werden"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Übertragung erfolgreich",
+        "error": "Übertragung ist fehlgeschlagen"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Wählen Sie einen oder mehrere Werte aus"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Weitere Werte hinzufügen",
+      "addLabel": "{value} hinzufügen"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Wert auswählen",
       "badge": {
-        "recommended": ""
+        "recommended": "Empfohlen"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Zum dunklen Design wechseln",
+        "switchToLightMode": "Zum hellen Design wechseln",
+        "management": "Verwaltung",
         "preferences": "Ihre Einstellungen",
-        "logout": "",
+        "logout": "Abmelden",
         "login": "Anmelden",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "homeBoard": "Ihr Home Board",
+        "loggedOut": "Abgemeldet",
+        "updateAvailable": "{countUpdates} Aktualisierungen verfügbar: {tag}"
       }
     },
     "dangerZone": "Gefahrenzone",
     "noResults": "Die Suche ergab keine Treffer",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Vorschau anzeigen",
+      "hide": "Vorschau verbergen"
     },
     "zod": {
       "errors": {
@@ -867,7 +867,7 @@
           "startsWith": "Dieses Feld muss mit {startsWith} beginnen",
           "endsWith": "Dieses Feld muss mit {endsWith} enden",
           "includes": "Dieses Feld muss {includes} beinhalten",
-          "invalidEmail": ""
+          "invalidEmail": "Dieses Feld beinhaltet keine gültige E-Mail-Adresse"
         },
         "tooSmall": {
           "string": "Dieses Feld muss mindestens {minimum} Zeichen lang sein",
@@ -878,13 +878,13 @@
           "number": "Dieses Feld muss größer oder gleich {maximum} sein"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+          "passwordRequirements": "Passwort erfüllt nicht alle Anforderungen",
+          "boardAlreadyExists": "Ein Board mit diesem Namen existiert bereits",
+          "invalidFileType": "Ungültiger Dateityp, erwarte {expected}",
+          "fileTooLarge": "Die Datei ist zu groß. Die maximale Größe beträgt {maxSize}",
+          "invalidConfiguration": "Ungültige Konfiguration",
+          "groupNameTaken": "Gruppenname bereits vergeben"
         }
       }
     }
@@ -892,11 +892,11 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Neuer dynamischer Abschnitt",
+        "remove": "Dynamischen Abschnitt entfernen"
       },
       "remove": {
-        "title": "",
+        "title": "Dynamischen Abschnitt entfernen",
         "message": ""
       }
     },
@@ -1114,46 +1114,46 @@
         "disconnected": "",
         "hours": "Stunden",
         "minutes": "Minuten",
-        "unlimited": ""
+        "unlimited": "Freilassen für unbegrenzt"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Datum und Uhrzeit",
       "description": "Zeigt das aktuelle Datum und die Uhrzeit an.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Benutzerdefinierte Titel-/Stadtanzeige",
+          "description": "Zeigen Sie einen individuellen Titel oder den Namen der Stadt/des Landes oben auf der Uhr."
         },
         "customTitle": {
           "label": ""
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-Stunden Format",
+          "description": "24-Stunden Format anstelle von 12-Stunden Format verwenden"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Sekunden anzeigen"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Eine feste Zeitzone verwenden"
         },
         "timezone": {
           "label": "Zeitzone",
-          "description": ""
+          "description": "Wählen Sie die Zeitzone gemäß dem IANA-Standard"
         },
         "showDate": {
-          "label": ""
+          "label": "Datum anzeigen"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datumsformat",
+          "description": "Wie das Datum aussehen sollte"
         }
       }
     },
     "notebook": {
       "name": "Notizbuch",
-      "description": "",
+      "description": "Ein einfaches Notizbuch Widget, das Markdown unterstützt",
       "option": {
         "showToolbar": {
           "label": "Zeigt die Symbolleiste an, um Ihnen beim Schreiben der Markdown zu assistieren"
@@ -1245,31 +1245,31 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Keine iFrame URL angegeben",
         "noBrowerSupport": "Ihr Browser unterstützt keine iframes. Bitte aktualisieren Sie Ihren Browser."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Zustand der Entität",
+      "description": "Den Status einer Entität anzeigen und optional umschalten",
       "option": {
         "entityId": {
           "label": "Eintrag-ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Anzeigename"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Einheit der Entität"
         },
         "clickable": {
-          "label": ""
+          "label": "Anklickbar"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Automatisierung ausführen",
+      "description": "Lösen Sie eine Automatisierung mit einem Klick aus",
       "option": {
         "displayName": {
           "label": "Anzeigename"
@@ -1279,26 +1279,26 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "{name} ausführen"
       }
     },
     "calendar": {
       "name": "Kalender",
-      "description": "",
+      "description": "Zeigt Ereignisse aus Ihren Integrationen in einer Kalenderansicht innerhalb eines bestimmten Zeitraums an",
       "option": {
         "releaseType": {
           "label": "Radarr Veröffentlichungs Typ",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "In Kinos",
+            "digitalRelease": "Digitale Veröffentlichung",
+            "physicalRelease": "Physische Veröffentlichung"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Start von"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Endet um"
         }
       }
     },
@@ -1307,24 +1307,24 @@
       "description": "Zeigt die aktuellen Wetterinformationen für einen bestimmten Ort an.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatur in Fahrenheit"
         },
         "location": {
           "label": "Wetterstandort"
         },
         "showCity": {
-          "label": ""
+          "label": "Stadt anzeigen"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Prognose anzeigen"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Anzahl der Prognose Tage",
+          "description": "Wenn das Widget nicht breit genug ist, werden weniger Tage angezeigt"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datumsformat",
+          "description": "Wie das Datum aussehen sollte"
         }
       },
       "kind": {
@@ -1346,16 +1346,16 @@
     },
     "indexerManager": {
       "name": "Status des Indexer-Managers",
-      "description": "",
+      "description": "Status des Indexer",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Indexer Seite in neuem Tab öffnen"
         }
       },
       "title": "Indexer-Manager",
       "testAll": "Alle testen",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen des Indexer Status"
       }
     },
     "healthMonitoring": {
@@ -1376,16 +1376,16 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "Informationen",
+        "processor": "Prozessor: {cpuModelName}",
+        "memory": "Speicher: {memory}GiB",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
+        "version": "Version: {version}",
+        "uptime": "Betriebszeit: {days} Tage, {hours} Stunden, {minutes} Minuten",
+        "loadAverage": "Durchschnittliche Last:",
+        "minute": "1 Minute",
+        "minutes": "{count} Minuten",
+        "used": "Belegt",
         "available": "Verfügbar",
         "lastSeen": ""
       },
@@ -2013,7 +2013,7 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Verwaltung",
     "title": {
       "morning": "",
       "afternoon": "",
@@ -2297,8 +2297,8 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Hell",
+                "dark": "Dunkel"
               }
             }
           },
@@ -2676,8 +2676,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Zum hellen Design wechseln",
+                "dark": "Zum dunklen Design wechseln"
               },
               "language": {
                 "label": "",
