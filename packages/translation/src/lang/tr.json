@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "Beta",
+    "beta": "Test",
     "error": "Hata",
     "action": {
       "add": "Ekle",
@@ -803,8 +803,8 @@
       }
     },
     "information": {
-      "min": "Asgari",
-      "max": "Azami",
+      "min": "En Düşük",
+      "max": "En Yüksek",
       "days": "Gün",
       "hours": "Saat",
       "minutes": "Dakika"
@@ -856,8 +856,8 @@
     "dangerZone": "Tehlikeli bölge",
     "noResults": "Sonuç bulunamadı",
     "preview": {
-      "show": "Önizlemeyi göster",
-      "hide": "Önizlemeyi Gizle"
+      "show": "Ara Renkleri Göster",
+      "hide": "Ara Renkleri Gizle"
     },
     "zod": {
       "errors": {
@@ -866,16 +866,16 @@
         "string": {
           "startsWith": "Bu alan {startsWith} ile başlamalıdır",
           "endsWith": "Bu alan {endsWith} ile bitmelidir",
-          "includes": "Bu alan {includes} adresini içermelidir",
+          "includes": "Bu alan {includes} içermelidir",
           "invalidEmail": "Bu alanda geçerli bir e-posta olmalıdır"
         },
         "tooSmall": {
           "string": "Bu alan en az {minimum} karakter uzunluğunda olmalıdır",
-          "number": "Bu alan {minimum} adresinden uzun veya eşit olmalıdır"
+          "number": "Bu alan {minimum} değerinden uzun veya eşit olmalıdır"
         },
         "tooBig": {
           "string": "Bu alan en fazla {maximum} karakter uzunluğunda olmalıdır",
-          "number": "Bu alan {maximum} adresinden kısa veya eşit olmalıdır"
+          "number": "Bu alan {maximum} değerinden kısa veya eşit olmalıdır"
         },
         "custom": {
           "passwordsDoNotMatch": "Parolalar uyuşmuyor",
@@ -1295,10 +1295,10 @@
           }
         },
         "filterPastMonths": {
-          "label": "Başla"
+          "label": "Başlangıç"
         },
         "filterFutureMonths": {
-          "label": "Bitir"
+          "label": "Bitiş"
         }
       }
     },
@@ -1532,7 +1532,7 @@
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "Ratio",
+          "columnTitle": "Oran",
           "detailsTitle": "Torrent oranı (alınan/gönderilen)"
         },
         "received": {
@@ -1713,10 +1713,10 @@
           "label": "RTL'yi etkinleştir"
         },
         "textLinesClamp": {
-          "label": "Açıklamalar satır sınırı"
+          "label": "Açıklamalarda satır sınırı"
         },
         "maximumAmountPosts": {
-          "label": "Gönderi değer sınırı"
+          "label": "Gönderi sayısı sınırı"
         }
       }
     }
@@ -1822,7 +1822,7 @@
         "label": "Arkaplan görsel URL'si"
       },
       "backgroundImageAttachment": {
-        "label": "Arkaplan görseli ekle",
+        "label": "Arkaplan görsel yerleştirme",
         "option": {
           "fixed": {
             "label": "Sabit",
@@ -2825,7 +2825,7 @@
                 "label": "Docker'ı yönet"
               },
               "manageApi": {
-                "label": "Swagger API"
+                "label": "Swagger API'si"
               },
               "manageLog": {
                 "label": "Günlükleri görüntüle"
@@ -2894,7 +2894,7 @@
           "label": "İsim"
         },
         "short": {
-          "label": "Kısa"
+          "label": "Kısa Ad"
         },
         "urlTemplate": {
           "label": "URL arama şablonu"
