@@ -670,50 +670,50 @@
         },
         "connectionAborted": {
           "title": "Verbindung abgebrochen",
-          "message": ""
+          "message": "Die Verbindung wurde abgebrochen"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Die Domain konnte nicht gefunden werden",
+          "message": "Die Domain konnte nicht gefunden werden"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Verbindung abgelehnt",
+          "message": "Die Verbindung wurde abgelehnt"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Ungültiges JSON",
+          "message": "Die Antwort war kein gültiges JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Ungültiger Pfad",
+          "message": "Der Pfad ist wahrscheinlich nicht korrekt"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Geheimnisse",
+      "lastUpdated": "Zuletzt aktualisiert {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Kein Wert angegeben",
+        "tooltip": "Dieses erforderliche Geheimnis wurde noch nicht festgelegt"
       },
-      "secureNotice": "",
+      "secureNotice": "Dieses Geheimnis kann nach der Erstellung nicht mehr abgerufen werden",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Geheimnis zurücksetzen",
+        "message": "Bist du sicher, dass du dieses Secret zurücksetzen möchtest?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Keine Geheimnisse",
+        "text": "Für diese Integration sind keine Geheimnisse erforderlich"
       },
       "kind": {
         "username": {
           "label": "Benutzername",
-          "newLabel": ""
+          "newLabel": "Neuer Benutzername"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Schlüssel",
+          "newLabel": "Neuer API Schlüssel"
         },
         "password": {
           "label": "Passwort",
@@ -722,14 +722,14 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
+      "use": "Integrationen in Elementen auswählen",
+      "interact": "Mit Integrationen interagieren",
       "full": "Voller Zugriff auf Integrationen"
     }
   },
   "media": {
     "plural": "Medien",
-    "search": "",
+    "search": "Medium finden",
     "field": {
       "name": "Name",
       "size": "Größe",
@@ -737,7 +737,7 @@
     },
     "action": {
       "upload": {
-        "label": "",
+        "label": "Medium hochladen",
         "file": "Datei auswählen",
         "notification": {
           "success": {
@@ -783,7 +783,7 @@
       "delete": "Löschen",
       "discard": "Verwerfen",
       "confirm": "Bestätigen",
-      "continue": "",
+      "continue": "Fortfahren",
       "previous": "Zurück",
       "next": "Weiter",
       "checkoutDocs": "Sieh dir die Dokumentation an",
@@ -897,7 +897,7 @@
       },
       "remove": {
         "title": "Dynamischen Abschnitt entfernen",
-        "message": ""
+        "message": "Möchten Sie diesen dynamischen Abschnitt wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Abschnitt verschoben."
       }
     },
     "category": {
@@ -907,29 +907,29 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Neue Kategorie",
+        "edit": "Kategorie umbenennen",
+        "remove": "Kategorie entfernen",
         "moveUp": "Nach oben bewegen",
         "moveDown": "Nach unten bewegen",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Neue Kategorie oben",
+        "createBelow": "Neue Kategorie unten"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Neue Kategorie",
+        "submit": "Kategorie hinzufügen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Kategorie entfernen",
+        "message": "Möchten Sie die Kategorie {name} wirklich entfernen?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Kategorie umbenennen",
+        "submit": "Kategorie umbenennen"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Neue Kategorie",
           "changePosition": "Position wechseln"
         }
       }
@@ -937,12 +937,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Neues Element",
+      "import": "Element importieren",
+      "edit": "Element bearbeiten",
+      "moveResize": "Element verschieben/Größe ändern",
+      "duplicate": "Element duplizieren",
+      "remove": "Element löschen"
     },
     "menu": {
       "label": {
@@ -950,11 +950,11 @@
       }
     },
     "create": {
-      "title": "",
-      "addToBoard": ""
+      "title": "Wählen Sie das hinzuzufügende Element aus",
+      "addToBoard": "Zum Board hinzufügen"
     },
     "moveResize": {
-      "title": "",
+      "title": "Element verschieben/Größe ändern",
       "field": {
         "width": {
           "label": "Breite"
@@ -963,67 +963,67 @@
           "label": "Höhe"
         },
         "xOffset": {
-          "label": ""
+          "label": "X Versatz"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y Versatz"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Element bearbeiten",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Erweiterte Optionen",
+        "title": "Erweiterte Element Optionen"
       },
       "field": {
         "integrations": {
           "label": "Integrationen"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Benutzerdefinierte CSS Klassen"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Element löschen",
+      "message": "Soll dieses Element wirklich entfernt werden?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "App",
+      "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "App auswählen"
         },
         "openInNewTab": {
           "label": "In neuem Tab öffnen"
         },
         "showTitle": {
-          "label": ""
+          "label": "App Namen anzeigen"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Beschreibungs Tooltip anzeigen"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Einfachen Ping aktivieren"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Keine App",
+          "tooltip": "Sie haben keine gültige App ausgewählt"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Lesezeichen",
+      "description": "Zeigt mehrere App Links an",
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "layout": {
           "label": "Ansicht",
@@ -1040,7 +1040,7 @@
           }
         },
         "items": {
-          "label": "",
+          "label": "Lesezeichen",
           "add": ""
         }
       }
@@ -1126,7 +1126,7 @@
           "description": "Zeigen Sie einen individuellen Titel oder den Namen der Stadt/des Landes oben auf der Uhr."
         },
         "customTitle": {
-          "label": ""
+          "label": "Titel"
         },
         "is24HourFormat": {
           "label": "24-Stunden Format",
