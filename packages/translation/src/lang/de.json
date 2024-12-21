@@ -310,15 +310,15 @@
           },
           "use-all": {
             "label": "Alle Apps verwenden",
-            "description": ""
+            "description": "Erlauben Sie Mitgliedern, beliebige Apps zu ihren Boards hinzuzufügen"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Apps ändern",
+            "description": "Mitgliedern erlauben Apps zu ändern"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Voller App Zugriff",
+            "description": "Mitgliedern das Benutzen, Verwalten und Löschen von Apps erlauben"
           }
         }
       },
@@ -326,20 +326,20 @@
         "title": "Boards",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Boards erstellen",
+            "description": "Mitgliedern das Erstellen von Boards erlauben"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Boards anzeigen",
+            "description": "Mitgliedern das Ansehen von Boards erlauben"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Boards ändern",
+            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet nicht die Zugangskontrolle und den Gefahrenbereich)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Voller Board Zugriff",
+            "description": "Erlaube Mitgliedern alle Boards (einschließlich der Zugriffskontrolle und des Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -347,28 +347,28 @@
         "title": "Integrationen",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Integration anlegen",
+            "description": "Mitgliedern die Erstellung von Integrationen erlauben"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Integrationen nutzen",
+            "description": "Ermöglicht Mitgliedern, beliebige Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interaktion mit allen Integrationen",
+            "description": "Ermöglichen Sie Mitgliedern die Interaktion mit jeder Integration"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Voller Zugriff auf Integrationen",
+            "description": "Erlaubt Mitgliedern jegliche Integration zu verwalten, nutzen und interagieren"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Medien",
         "item": {
           "upload": {
-            "label": "",
+            "label": "Medien hochladen",
             "description": "Erlaubt Mitgliedern Medien hochzuladen"
           },
           "view-all": {
@@ -514,26 +514,26 @@
         "title": "App bearbeiten",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen erfolgreich angewendet",
+            "message": "Die App wurde erfolgreich gespeichert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen konnten nicht angewendet werden",
+            "message": "Die App konnte nicht gespeichert werden"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "App löschen",
+        "message": "Sind Sie sicher, dass Sie die App {name} löschen möchten?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Erfolgreich gellöscht",
+            "message": "Die App wurde erfolgreich gelöscht"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Löschen fehlgeschlagen",
+            "message": "Die App konnte nicht gelöscht werden"
           }
         }
       }
@@ -543,16 +543,16 @@
         "label": "Name"
       },
       "description": {
-        "label": ""
+        "label": "Beschreibung"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "App auswählen",
+        "notFound": "Keine App gefunden"
       }
     }
   },
@@ -560,48 +560,48 @@
     "page": {
       "list": {
         "title": "Integrationen",
-        "search": "",
+        "search": "Integrationen durchsuchen",
         "noResults": {
-          "title": ""
+          "title": "Es wurden noch keine Integrationen erstellt"
         }
       },
       "create": {
-        "title": "",
+        "title": "Neue {name} Integration",
         "notification": {
           "success": {
             "title": "Erstellung erfolgreich",
-            "message": ""
+            "message": "Die Integration wurde erfolgreich erstellt"
           },
           "error": {
             "title": "Erstellung fehlgeschlagen",
-            "message": ""
+            "message": "Die Integration konnte nicht erstellt werden"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Neue {name} Integration",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen erfolgreich angewendet",
+            "message": "Die Integration wurde erfolgreich gespeichert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen konnten nicht angewendet werden",
+            "message": "Die Integration konnte nicht gespeichert werden"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Integration löschen",
+        "message": "Sind Sie sicher, dass Sie die Integration {name} löschen möchten?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Erfolgreich gellöscht",
+            "message": "Die Integration wurde erfolgreich gelöscht"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Löschen fehlgeschlagen",
+            "message": "Integration konnte nicht gelöscht werden"
           }
         }
       }
@@ -611,11 +611,11 @@
         "label": "Name"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       }
     },
     "action": {
-      "create": ""
+      "create": "Neue Integration"
     },
     "testConnection": {
       "action": {
@@ -724,11 +724,11 @@
     "permission": {
       "use": "",
       "interact": "",
-      "full": ""
+      "full": "Voller Zugriff auf Integrationen"
     }
   },
   "media": {
-    "plural": "",
+    "plural": "Medien",
     "search": "",
     "field": {
       "name": "Name",
@@ -738,55 +738,55 @@
     "action": {
       "upload": {
         "label": "",
-        "file": "",
+        "file": "Datei auswählen",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Das Medium wurde erfolgreich hochgeladen"
           },
           "error": {
-            "message": ""
+            "message": "Das Medium konnte nicht hochgeladen werden"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Medium löschen",
+        "description": "Möchten Sie das Medium <bName></bName> wirklich löschen?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Das Medium wurde erfolgreich gelöscht"
           },
           "error": {
-            "message": ""
+            "message": "Das Medium konnte nicht gelöscht werden"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "URL kopieren"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Fehler",
     "action": {
       "add": "Hinzufügen",
       "apply": "Übernehmen",
-      "backToOverview": "",
+      "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
       "edit": "Bearbeiten",
-      "import": "",
+      "import": "Importieren",
       "insert": "Einfügen",
       "remove": "Entfernen",
       "save": "Speichern",
       "saveChanges": "Änderungen speichern",
       "cancel": "Abbrechen",
       "delete": "Löschen",
-      "discard": "",
+      "discard": "Verwerfen",
       "confirm": "Bestätigen",
       "continue": "",
       "previous": "Zurück",
       "next": "Weiter",
-      "checkoutDocs": "",
+      "checkoutDocs": "Sieh dir die Dokumentation an",
       "checkLogs": "",
       "tryAgain": "Erneut versuchen",
       "loading": ""
@@ -815,12 +815,12 @@
         "error": "Erstellung fehlgeschlagen"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Erfolgreich gellöscht",
+        "error": "Löschen fehlgeschlagen"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Änderungen erfolgreich angewendet",
+        "error": "Änderungen konnten nicht angewendet werden"
       },
       "transfer": {
         "success": "",
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Keine App gefunden",
         "description": ""
       },
       "error": {
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "Änderungen erfolgreich angewendet",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Änderungen konnten nicht angewendet werden",
             "message": ""
           }
         },
@@ -1989,7 +1989,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Alle Boards anzeigen",
         "notice": ""
       },
       "homeBoard": {
@@ -2030,7 +2030,7 @@
         "apps": "Apps",
         "integrations": "Integrationen",
         "searchEngies": "Suchmaschinen",
-        "medias": "",
+        "medias": "Medien",
         "users": {
           "label": "Benutzer",
           "items": {
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Medien"
       },
       "apps": {
         "label": "Apps",
@@ -2900,7 +2900,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Beschreibung"
         }
       },
       "page": {
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Änderungen erfolgreich angewendet",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Änderungen konnten nicht angewendet werden",
               "message": ""
             }
           },
