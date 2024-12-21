@@ -216,45 +216,45 @@
             "message": "היום הראשון בשבוע השתנה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לשנות את היום הראשון בשבוע"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "סמלי פינג הוחלפו בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לשנות את סמלי הפינג"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "שנה תמונה",
           "notification": {
             "success": {
-              "message": ""
+              "message": "התמונה השתנתה בהצלחה"
             },
             "error": {
-              "message": ""
+              "message": "לא ניתן לשנות תמונה"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "התמונה גדולה מדי",
+              "message": "גודל התמונה המרבי הוא {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "הסר תמונה",
+          "confirm": "האם אתה בטוח שברצונך להסיר את התמונה?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "התמונה הוסרה בהצלחה"
             },
             "error": {
-              "message": ""
+              "message": "לא ניתן להסיר תמונה"
             }
           }
         }
@@ -262,7 +262,7 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "הפרופיל עודכן בהצלחה"
           },
           "error": {
             "message": ""
