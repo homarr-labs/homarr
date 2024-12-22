@@ -718,6 +718,14 @@
         "password": {
           "label": "Password",
           "newLabel": "New password"
+        },
+        "tokenId": {
+          "label": "Token ID",
+          "newLabel": "New token ID"
+        },
+        "realm": {
+          "label": "Realm",
+          "newLabel": "New realm"
         }
       }
     },
