@@ -15,7 +15,7 @@ export const CopyMedia = ({ media }: CopyMediaProps) => {
 
   const url =
     typeof window !== "undefined"
-      ? `${window.location.protocol}://${window.location.hostname}:${window.location.port}/api/user-medias/${media.id}`
+      ? `${window.location.protocol}//${window.location.hostname}${window.location.port === "" ? ":" + window.location.port : ""}/api/user-medias/${media.id}`
       : "";
 
   return (
