@@ -6,13 +6,13 @@
         "subtitle": "Homarr örneğinizi kurmaya başlayalım.",
         "description": "Başlamak için lütfen Homarr örneğinizi nasıl kurmak istediğinizi seçin.",
         "action": {
-          "scratch": "Sıfırdan başlayın",
-          "importOldmarr": "Homarr 1.0'dan önceki yedeğinizi içe aktarın"
+          "scratch": "Sıfırdan Başla",
+          "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın"
         }
       },
       "import": {
-        "title": "Verileri içe aktar",
-        "subtitle": "Mevcut bir Homarr örneğinden alınan verileri içe aktarabilirsiniz.",
+        "title": "Verileri İçe Aktar",
+        "subtitle": "Mevcut Homarr Örneğinden Alınan Verileri İçe Aktarabilirsiniz.",
         "dropzone": {
           "title": "Zip dosyasını buraya sürükleyin veya göz atmak için tıklayın",
           "description": "Seçtiğiniz zip işlenecek ve içe aktarmak istediğiniz verileri seçebileceksiniz"
@@ -1110,7 +1110,7 @@
         "set": "Ayarla",
         "enabled": "Etkin",
         "disabled": "Pasif",
-        "processing": "İşleniyor",
+        "processing": "İşlemde",
         "disconnected": "Bağlantısı kesildi",
         "hours": "Saat",
         "minutes": "Dakika",
@@ -1570,7 +1570,7 @@
         "paused": "Duraklatıldı",
         "completed": "Tamamlanan",
         "failed": "Başarısız",
-        "processing": "İşleniyor",
+        "processing": "İşlemde",
         "leeching": "Leechleme",
         "stalled": "Durduruldu",
         "unknown": "Bilinmeyen",
@@ -1615,7 +1615,7 @@
       "availability": {
         "unknown": "Bilinmeyen",
         "pending": "Bekleyen",
-        "processing": "İşleniyor",
+        "processing": "İşlemde",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut"
       },
@@ -1631,8 +1631,8 @@
           "approved": "Onaylanan",
           "pending": "Onay bekleyen",
           "processing": "İşleniyor",
-          "declined": "Zaten reddedildi",
-          "available": "Zaten Mevcut",
+          "declined": "Reddedilen",
+          "available": "Mevcut",
           "tv": "Dizi talepleri",
           "movie": "Film talepleri",
           "total": "Toplam"
@@ -2001,13 +2001,13 @@
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
-          "link": "Varsayılan paneli yapılandır",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden varsayılan panel seçin"
+          "link": "Varsayılan Paneli Yapılandır",
+          "notice": "Bu Sayfanın Kaybolmasını Sağlamak İçin Tercihlerden Varsayılan Panel Atayın"
         },
         "anonymous": {
-          "description": "Sunucu yöneticiniz henüz bir varsayılan panel belirlemedi.",
+          "description": "Sunucu Yöneticiniz Henüz Bir Varsayılan Panel Atamadı.",
           "link": "Herkese açık panelleri görüntüle",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden varsayılan panel ayarlamasını isteyin"
+          "notice": "Bu Sayfanın Kaybolmasını Sağlamak İçin Sunucu Yöneticisinden Varsayılan Panel Atamasını isteyin"
         }
       }
     }
@@ -2091,7 +2091,7 @@
             "label": "Ayarlar"
           },
           "setHomeBoard": {
-            "label": "Varsayılan panel olarak ayarlayın",
+            "label": "Varsayılan Panel Olarak Ata",
             "badge": {
               "label": "Ana sayfa",
               "tooltip": "Bu panel sizin varsayılan paneliniz olarak görüntülenecektir"
@@ -2130,7 +2130,7 @@
             "title": "Genel",
             "item": {
               "language": "Dil & Bölge",
-              "board": "Varsayılan panel",
+              "board": "Varsayılan Panel",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
@@ -2650,7 +2650,7 @@
                   "label": "Panel'i aç"
                 },
                 "homeBoard": {
-                  "label": "Varsayılan panel olarak ayarla"
+                  "label": "Varsayılan Panel Olarak Ata"
                 },
                 "settings": {
                   "label": "Ayarları aç"
@@ -2840,7 +2840,7 @@
                 "label": "Hakkında"
               },
               "homeBoard": {
-                "label": "Varsayılan panel"
+                "label": "Varsayılan Panel"
               },
               "preferences": {
                 "label": "Tercihleriniz"
