@@ -10,8 +10,8 @@
 <a href="https://github.com/homarr-labs/homarr/actions/workflows/deployment-docker-image.yml">
   <img title="Docker CI Status" src="https://github.com/homarr-labs/homarr/actions/workflows/deployment-docker-image.yml/badge.svg" alt="CI Status">
 </a>
-<a href=https://translate.homarr.dev/>
-<img title="Translations" src="https://badges.crowdin.net/homarr/localized.svg" />
+<a href="https://crowdin.com/project/homarr_labs">
+<img title="Translations" src="https://badges.crowdin.net/homarr_labs/localized.svg" />
 </a>
 <a href="https://discord.gg/aCsmEV5RgA">
   <img title="Discord" src="https://discordapp.com/api/guilds/972958686051962910/widget.png?style=shield">
