@@ -310,11 +310,11 @@
           },
           "use-all": {
             "label": "Alle Apps verwenden",
-            "description": "Mitgliedern erlauben, Apps zu ihren Boards hinzuzufügen"
+            "description": "Erlauben Sie Mitgliedern, beliebige Apps zu ihren Boards hinzuzufügen"
           },
           "modify-all": {
             "label": "Alle Apps ändern",
-            "description": "Mitgliedern das Erstellen von Apps erlauben"
+            "description": "Mitgliedern erlauben Apps zu ändern"
           },
           "full-all": {
             "label": "Voller App Zugriff",
@@ -335,11 +335,11 @@
           },
           "modify-all": {
             "label": "Alle Boards ändern",
-            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
+            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet nicht die Zugangskontrolle und den Gefahrenbereich)"
           },
           "full-all": {
             "label": "Voller Board Zugriff",
-            "description": "Erlaube Mitgliedern alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
+            "description": "Erlaube Mitgliedern alle Boards (einschließlich der Zugriffskontrolle und des Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -347,20 +347,20 @@
         "title": "Integrationen",
         "item": {
           "create": {
-            "label": "Integrationen erstellen",
-            "description": "Mitgliedern erlauben, Integrationen zu erstellen"
+            "label": "Integration anlegen",
+            "description": "Mitgliedern die Erstellung von Integrationen erlauben"
           },
           "use-all": {
             "label": "Alle Integrationen nutzen",
-            "description": "Erlaubt Mitgliedern Integrationen zu ihren Boards hinzuzufügen"
+            "description": "Ermöglicht Mitgliedern, beliebige Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
-            "label": "Mit jeder Integration interagieren",
-            "description": "Mitgliedern erlauben, mit jeder Integration zu interagieren"
+            "label": "Interaktion mit allen Integrationen",
+            "description": "Ermöglichen Sie Mitgliedern die Interaktion mit jeder Integration"
           },
           "full-all": {
             "label": "Voller Zugriff auf Integrationen",
-            "description": "Erlaube Mitgliedern jede Integration zu verwalten, zu nutzen und zu interagieren"
+            "description": "Erlaubt Mitgliedern jegliche Integration zu verwalten, nutzen und interagieren"
           }
         }
       },
@@ -368,8 +368,8 @@
         "title": "Medien",
         "item": {
           "upload": {
-            "label": "Medien Hochladen",
-            "description": "Erlaube Mitgliedern Medien hochzuladen"
+            "label": "Medien hochladen",
+            "description": "Erlaubt Mitgliedern Medien hochzuladen"
           },
           "view-all": {
             "label": "Alle Medien anzeigen",
@@ -528,12 +528,12 @@
         "message": "Sind Sie sicher, dass Sie die App {name} löschen möchten?",
         "notification": {
           "success": {
-            "title": "Löschen erfolgreich",
+            "title": "Erfolgreich gelöscht",
             "message": "Die App wurde erfolgreich gelöscht"
           },
           "error": {
             "title": "Löschen fehlgeschlagen",
-            "message": "App konnte nicht gelöscht werden"
+            "message": "Die App konnte nicht gelöscht werden"
           }
         }
       }
@@ -562,7 +562,7 @@
         "title": "Integrationen",
         "search": "Integrationen durchsuchen",
         "noResults": {
-          "title": "Es gibt noch keine Integrationen"
+          "title": "Es wurden noch keine Integrationen erstellt"
         }
       },
       "create": {
@@ -630,26 +630,26 @@
         },
         "invalidUrl": {
           "title": "Ungültige URL",
-          "message": "Die Adresse ist ungültig"
+          "message": "Die URL ist ungültig"
         },
         "secretNotDefined": {
-          "title": "Fehlende Anmeldedaten",
-          "message": "Nicht alle Zugangsdaten wurden angegeben"
+          "title": "Fehlende Anmeldeinformationen",
+          "message": "Es wurden nicht alle Zugangsdaten angegeben"
         },
         "invalidCredentials": {
           "title": "Ungültige Zugangsdaten",
           "message": "Die Zugangsdaten sind ungültig"
         },
         "commonError": {
-          "title": "Verbindungsaufbau fehlgeschlagen",
+          "title": "Verbindung fehlgeschlagen",
           "message": "Die Verbindung konnte nicht hergestellt werden"
         },
         "badRequest": {
-          "title": "Fehlerhafte Anfrage",
+          "title": "Ungültige Anfrage",
           "message": "Die Anfrage war fehlerhaft"
         },
         "unauthorized": {
-          "title": "Nicht autorisiert",
+          "title": "Unberechtigt",
           "message": "Wahrscheinlich falsche Anmeldeinformationen"
         },
         "forbidden": {
@@ -658,7 +658,7 @@
         },
         "notFound": {
           "title": "Nicht gefunden",
-          "message": "Wahrscheinlich falsche URL oder Pfad"
+          "message": "Wahrscheinlich falsche URL oder falscher Pfad"
         },
         "internalServerError": {
           "title": "Interner Serverfehler",
@@ -682,29 +682,29 @@
         },
         "invalidJson": {
           "title": "Ungültiges JSON",
-          "message": "Die Antwort war ungültig JSON"
+          "message": "Die Antwort war kein gültiges JSON"
         },
         "wrongPath": {
-          "title": "Falscher Pfad",
-          "message": "Der Pfad ist vermutlich nicht korrekt"
+          "title": "Ungültiger Pfad",
+          "message": "Der Pfad ist wahrscheinlich nicht korrekt"
         }
       }
     },
     "secrets": {
-      "title": "Secrets",
-      "lastUpdated": "Zuletzt aktualisiert am {date}",
+      "title": "Geheimnisse",
+      "lastUpdated": "Zuletzt aktualisiert {date}",
       "notSet": {
-        "label": "Kein Wert festgelegt",
-        "tooltip": "Das erforderliche Secret wurde noch nicht festgelegt"
+        "label": "Kein Wert angegeben",
+        "tooltip": "Dieses erforderliche Geheimnis wurde noch nicht festgelegt"
       },
-      "secureNotice": "Das Secret kann nicht nach der Erstellung abgerufen werden",
+      "secureNotice": "Dieses Geheimnis kann nach der Erstellung nicht mehr abgerufen werden",
       "reset": {
-        "title": "Secret zurücksetzen",
+        "title": "Geheimnis zurücksetzen",
         "message": "Bist du sicher, dass du dieses Secret zurücksetzen möchtest?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "Keine Secrets",
-        "text": "Kein Secret für diese Integration erforderlich"
+        "segmentTitle": "Keine Geheimnisse",
+        "text": "Für diese Integration sind keine Geheimnisse erforderlich"
       },
       "kind": {
         "username": {
@@ -713,7 +713,7 @@
         },
         "apiKey": {
           "label": "API Schlüssel",
-          "newLabel": "neuer API Schlüssel"
+          "newLabel": "Neuer API Schlüssel"
         },
         "password": {
           "label": "Passwort",
@@ -729,7 +729,7 @@
   },
   "media": {
     "plural": "Medien",
-    "search": "Medien suchen",
+    "search": "Medium finden",
     "field": {
       "name": "Name",
       "size": "Größe",
@@ -737,7 +737,7 @@
     },
     "action": {
       "upload": {
-        "label": "Medien Hochladen",
+        "label": "Medium hochladen",
         "file": "Datei auswählen",
         "notification": {
           "success": {
@@ -750,18 +750,18 @@
       },
       "delete": {
         "label": "Medium löschen",
-        "description": "Sind Sie sicher, dass Sie die Medien <bName></bName> löschen möchten?",
+        "description": "Möchten Sie das Medium <bName></bName> wirklich löschen?",
         "notification": {
           "success": {
             "message": "Das Medium wurde erfolgreich gelöscht"
           },
           "error": {
-            "message": "Die Medien konnten nicht gelöscht werden"
+            "message": "Das Medium konnte nicht gelöscht werden"
           }
         }
       },
       "copy": {
-        "label": "URL in Zwischenablage kopieren"
+        "label": "URL kopieren"
       }
     }
   },
@@ -774,7 +774,7 @@
       "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
       "edit": "Bearbeiten",
-      "import": "Import",
+      "import": "Importieren",
       "insert": "Einfügen",
       "remove": "Entfernen",
       "save": "Speichern",
@@ -786,15 +786,15 @@
       "continue": "Fortfahren",
       "previous": "Zurück",
       "next": "Weiter",
-      "checkoutDocs": "Die Dokumentation ansehen",
-      "checkLogs": "Logs für weitere Details prüfen",
+      "checkoutDocs": "Sieh dir die Dokumentation an",
+      "checkLogs": "Überprüfen Sie die Logs für weitere Details",
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen"
     },
-    "here": "Hier",
+    "here": "hier",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
+      "header": "Geben Sie den Namen oder das Objekte ein, um nach Symbolen zu filtern ... Homarr durchsucht für Sie {countIcons} Symbole."
     },
     "colorScheme": {
       "options": {
@@ -815,7 +815,7 @@
         "error": "Erstellung fehlgeschlagen"
       },
       "delete": {
-        "success": "Löschen erfolgreich",
+        "success": "Erfolgreich gelöscht",
         "error": "Löschen fehlgeschlagen"
       },
       "update": {
@@ -828,7 +828,7 @@
       }
     },
     "multiSelect": {
-      "placeholder": "Wählen Sie einen oder mehrere Werte"
+      "placeholder": "Wählen Sie einen oder mehrere Werte aus"
     },
     "multiText": {
       "placeholder": "Weitere Werte hinzufügen",
@@ -850,14 +850,14 @@
         "login": "Anmelden",
         "homeBoard": "Ihr Home Board",
         "loggedOut": "Abgemeldet",
-        "updateAvailable": "{countUpdates} Updates verfügbar: {tag}"
+        "updateAvailable": "{countUpdates} Aktualisierungen verfügbar: {tag}"
       }
     },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "preview": {
-      "show": "Vorschau ansehen",
-      "hide": "Vorschau ausblenden"
+      "show": "Vorschau anzeigen",
+      "hide": "Vorschau verbergen"
     },
     "zod": {
       "errors": {
@@ -881,8 +881,8 @@
           "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
           "passwordRequirements": "Passwort erfüllt nicht alle Anforderungen",
           "boardAlreadyExists": "Ein Board mit diesem Namen existiert bereits",
-          "invalidFileType": "Ungültiger Dateityp, erwartete {expected}",
-          "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
+          "invalidFileType": "Ungültiger Dateityp, erwarte {expected}",
+          "fileTooLarge": "Die Datei ist zu groß. Die maximale Größe beträgt {maxSize}",
           "invalidConfiguration": "Ungültige Konfiguration",
           "groupNameTaken": "Gruppenname bereits vergeben"
         }
@@ -893,11 +893,11 @@
     "dynamic": {
       "action": {
         "create": "Neuer dynamischer Abschnitt",
-        "remove": ""
+        "remove": "Dynamischen Abschnitt entfernen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Dynamischen Abschnitt entfernen",
+        "message": "Möchten Sie diesen dynamischen Abschnitt wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Abschnitt verschoben."
       }
     },
     "category": {
@@ -907,29 +907,29 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Neue Kategorie",
+        "edit": "Kategorie umbenennen",
+        "remove": "Kategorie entfernen",
         "moveUp": "Nach oben bewegen",
         "moveDown": "Nach unten bewegen",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Neue Kategorie oben",
+        "createBelow": "Neue Kategorie unten"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Neue Kategorie",
+        "submit": "Kategorie hinzufügen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Kategorie entfernen",
+        "message": "Möchten Sie die Kategorie {name} wirklich entfernen?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Kategorie umbenennen",
+        "submit": "Kategorie umbenennen"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Neue Kategorie",
           "changePosition": "Position wechseln"
         }
       }
@@ -937,12 +937,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Neues Element",
+      "import": "Element importieren",
+      "edit": "Element bearbeiten",
+      "moveResize": "Element verschieben/Größe ändern",
+      "duplicate": "Element duplizieren",
+      "remove": "Element löschen"
     },
     "menu": {
       "label": {
@@ -950,11 +950,11 @@
       }
     },
     "create": {
-      "title": "",
-      "addToBoard": ""
+      "title": "Wählen Sie das hinzuzufügende Element aus",
+      "addToBoard": "Zum Board hinzufügen"
     },
     "moveResize": {
-      "title": "",
+      "title": "Element verschieben/Größe ändern",
       "field": {
         "width": {
           "label": "Breite"
@@ -963,67 +963,67 @@
           "label": "Höhe"
         },
         "xOffset": {
-          "label": ""
+          "label": "X Versatz"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y Versatz"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Element bearbeiten",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Erweiterte Optionen",
+        "title": "Erweiterte Element Optionen"
       },
       "field": {
         "integrations": {
           "label": "Integrationen"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Benutzerdefinierte CSS Klassen"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Element löschen",
+      "message": "Soll dieses Element wirklich entfernt werden?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "App",
+      "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "App auswählen"
         },
         "openInNewTab": {
           "label": "In neuem Tab öffnen"
         },
         "showTitle": {
-          "label": ""
+          "label": "App Namen anzeigen"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Beschreibungs Tooltip anzeigen"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Einfachen Ping aktivieren"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Keine App",
+          "tooltip": "Sie haben keine gültige App ausgewählt"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Lesezeichen",
+      "description": "Zeigt mehrere App Links an",
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "layout": {
           "label": "Ansicht",
@@ -1040,7 +1040,7 @@
           }
         },
         "items": {
-          "label": "",
+          "label": "Lesezeichen",
           "add": ""
         }
       }
@@ -1122,8 +1122,8 @@
       "description": "Zeigt das aktuelle Datum und die Uhrzeit an.",
       "option": {
         "customTitleToggle": {
-          "label": "Eigene Titel/Stadt Anzeige",
-          "description": "Zeige einen benutzerdefinierten Titel oder den Namen der Stadt oder des Landes oben auf der Uhr."
+          "label": "Benutzerdefinierte Titel-/Stadtanzeige",
+          "description": "Zeigen Sie einen individuellen Titel oder den Namen der Stadt/des Landes oben auf der Uhr."
         },
         "customTitle": {
           "label": "Titel"
@@ -1140,7 +1140,7 @@
         },
         "timezone": {
           "label": "Zeitzone",
-          "description": "Wählen Sie die Zeitzone nach dem IANA-Standard"
+          "description": "Wählen Sie die Zeitzone gemäß dem IANA-Standard"
         },
         "showDate": {
           "label": "Datum anzeigen"
@@ -1251,7 +1251,7 @@
     },
     "smartHome-entityState": {
       "name": "Zustand der Entität",
-      "description": "Zeigt den Status einer Entität an und schaltet ihn optional ein",
+      "description": "Den Status einer Entität anzeigen und optional umschalten",
       "option": {
         "entityId": {
           "label": "Eintrag-ID"
@@ -1269,7 +1269,7 @@
     },
     "smartHome-executeAutomation": {
       "name": "Automatisierung ausführen",
-      "description": "Automatisierung mit einem Klick auslösen",
+      "description": "Lösen Sie eine Automatisierung mit einem Klick aus",
       "option": {
         "displayName": {
           "label": "Anzeigename"
@@ -1298,7 +1298,7 @@
           "label": "Start von"
         },
         "filterFutureMonths": {
-          "label": "Endet am"
+          "label": "Endet um"
         }
       }
     },
@@ -1345,7 +1345,7 @@
       }
     },
     "indexerManager": {
-      "name": "Status des Index Managers",
+      "name": "Status des Indexer-Managers",
       "description": "Status des Indexer",
       "option": {
         "openIndexerSiteInNewTab": {
@@ -1376,16 +1376,16 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "Informationen",
+        "processor": "Prozessor: {cpuModelName}",
+        "memory": "Speicher: {memory}GiB",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
+        "version": "Version: {version}",
+        "uptime": "Betriebszeit: {days} Tage, {hours} Stunden, {minutes} Minuten",
+        "loadAverage": "Durchschnittliche Last:",
+        "minute": "1 Minute",
+        "minutes": "{count} Minuten",
+        "used": "Belegt",
         "available": "Verfügbar",
         "lastSeen": ""
       },
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Keine App gefunden",
         "description": ""
       },
       "error": {
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "Änderungen erfolgreich angewendet",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Änderungen konnten nicht angewendet werden",
             "message": ""
           }
         },
@@ -1989,7 +1989,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Alle Boards anzeigen",
         "notice": ""
       },
       "homeBoard": {
@@ -2013,7 +2013,7 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Verwaltung",
     "title": {
       "morning": "",
       "afternoon": "",
@@ -2030,7 +2030,7 @@
         "apps": "",
         "integrations": "Integrationen",
         "searchEngies": "Suchmaschinen",
-        "medias": "",
+        "medias": "Medien",
         "users": {
           "label": "Benutzer",
           "items": {
@@ -2297,8 +2297,8 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Hell",
+                "dark": "Dunkel"
               }
             }
           },
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Medien"
       },
       "apps": {
         "label": "",
@@ -2676,8 +2676,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Zum hellen Design wechseln",
+                "dark": "Zum dunklen Design wechseln"
               },
               "language": {
                 "label": "",
@@ -2900,7 +2900,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Beschreibung"
         }
       },
       "page": {
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Änderungen erfolgreich angewendet",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Änderungen konnten nicht angewendet werden",
               "message": ""
             }
           },
