@@ -1,5 +1,6 @@
 import { QBittorrent } from "@ctrl/qbittorrent";
 import dayjs from "dayjs";
+import https from "https";
 
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
@@ -70,10 +71,16 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
   }
 
   private getClient() {
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: false,
+    });
     return new QBittorrent({
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
+      requestConfig: {
+        httpsAgent,
+      },
     });
   }
 
