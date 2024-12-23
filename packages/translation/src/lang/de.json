@@ -310,11 +310,11 @@
           },
           "use-all": {
             "label": "Alle Apps verwenden",
-            "description": "Erlauben Sie Mitgliedern, beliebige Apps zu ihren Boards hinzuzufügen"
+            "description": "Mitgliedern erlauben, Apps zu ihren Boards hinzuzufügen"
           },
           "modify-all": {
             "label": "Alle Apps ändern",
-            "description": "Mitgliedern erlauben Apps zu ändern"
+            "description": "Mitgliedern das Erstellen von Apps erlauben"
           },
           "full-all": {
             "label": "Voller App Zugriff",
@@ -335,11 +335,11 @@
           },
           "modify-all": {
             "label": "Alle Boards ändern",
-            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet nicht die Zugangskontrolle und den Gefahrenbereich)"
+            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
           },
           "full-all": {
             "label": "Voller Board Zugriff",
-            "description": "Erlaube Mitgliedern alle Boards (einschließlich der Zugriffskontrolle und des Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
+            "description": "Erlaube Mitgliedern alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -347,20 +347,20 @@
         "title": "Integrationen",
         "item": {
           "create": {
-            "label": "Integration anlegen",
-            "description": "Mitgliedern die Erstellung von Integrationen erlauben"
+            "label": "Integrationen erstellen",
+            "description": "Mitgliedern erlauben, Integrationen zu erstellen"
           },
           "use-all": {
             "label": "Alle Integrationen nutzen",
-            "description": "Ermöglicht Mitgliedern, beliebige Integrationen zu ihren Boards hinzuzufügen"
+            "description": "Erlaubt Mitgliedern Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
-            "label": "Interaktion mit allen Integrationen",
-            "description": "Ermöglichen Sie Mitgliedern die Interaktion mit jeder Integration"
+            "label": "Mit jeder Integration interagieren",
+            "description": "Mitgliedern erlauben, mit jeder Integration zu interagieren"
           },
           "full-all": {
             "label": "Voller Zugriff auf Integrationen",
-            "description": "Erlaubt Mitgliedern jegliche Integration zu verwalten, nutzen und interagieren"
+            "description": "Erlaube Mitgliedern jede Integration zu verwalten, zu nutzen und zu interagieren"
           }
         }
       },
@@ -368,8 +368,8 @@
         "title": "Medien",
         "item": {
           "upload": {
-            "label": "Medien hochladen",
-            "description": "Erlaubt Mitgliedern Medien hochzuladen"
+            "label": "Medien Hochladen",
+            "description": "Erlaube Mitgliedern Medien hochzuladen"
           },
           "view-all": {
             "label": "Alle Medien anzeigen",
@@ -528,12 +528,12 @@
         "message": "Sind Sie sicher, dass Sie die App {name} löschen möchten?",
         "notification": {
           "success": {
-            "title": "Erfolgreich gelöscht",
+            "title": "Löschen erfolgreich",
             "message": "Die App wurde erfolgreich gelöscht"
           },
           "error": {
             "title": "Löschen fehlgeschlagen",
-            "message": "Die App konnte nicht gelöscht werden"
+            "message": "App konnte nicht gelöscht werden"
           }
         }
       }
@@ -562,7 +562,7 @@
         "title": "Integrationen",
         "search": "Integrationen durchsuchen",
         "noResults": {
-          "title": "Es wurden noch keine Integrationen erstellt"
+          "title": "Es gibt noch keine Integrationen"
         }
       },
       "create": {
@@ -630,26 +630,26 @@
         },
         "invalidUrl": {
           "title": "Ungültige URL",
-          "message": "Die URL ist ungültig"
+          "message": "Die Adresse ist ungültig"
         },
         "secretNotDefined": {
-          "title": "Fehlende Anmeldeinformationen",
-          "message": "Es wurden nicht alle Zugangsdaten angegeben"
+          "title": "Fehlende Anmeldedaten",
+          "message": "Nicht alle Zugangsdaten wurden angegeben"
         },
         "invalidCredentials": {
           "title": "Ungültige Zugangsdaten",
           "message": "Die Zugangsdaten sind ungültig"
         },
         "commonError": {
-          "title": "Verbindung fehlgeschlagen",
+          "title": "Verbindungsaufbau fehlgeschlagen",
           "message": "Die Verbindung konnte nicht hergestellt werden"
         },
         "badRequest": {
-          "title": "Ungültige Anfrage",
+          "title": "Fehlerhafte Anfrage",
           "message": "Die Anfrage war fehlerhaft"
         },
         "unauthorized": {
-          "title": "Unberechtigt",
+          "title": "Nicht autorisiert",
           "message": "Wahrscheinlich falsche Anmeldeinformationen"
         },
         "forbidden": {
@@ -658,7 +658,7 @@
         },
         "notFound": {
           "title": "Nicht gefunden",
-          "message": "Wahrscheinlich falsche URL oder falscher Pfad"
+          "message": "Wahrscheinlich falsche URL oder Pfad"
         },
         "internalServerError": {
           "title": "Interner Serverfehler",
@@ -682,29 +682,29 @@
         },
         "invalidJson": {
           "title": "Ungültiges JSON",
-          "message": "Die Antwort war kein gültiges JSON"
+          "message": "Die Antwort war ungültig JSON"
         },
         "wrongPath": {
-          "title": "Ungültiger Pfad",
-          "message": "Der Pfad ist wahrscheinlich nicht korrekt"
+          "title": "Falscher Pfad",
+          "message": "Der Pfad ist vermutlich nicht korrekt"
         }
       }
     },
     "secrets": {
-      "title": "Geheimnisse",
-      "lastUpdated": "Zuletzt aktualisiert {date}",
+      "title": "Secrets",
+      "lastUpdated": "Zuletzt aktualisiert am {date}",
       "notSet": {
-        "label": "Kein Wert angegeben",
-        "tooltip": "Dieses erforderliche Geheimnis wurde noch nicht festgelegt"
+        "label": "Kein Wert festgelegt",
+        "tooltip": "Das erforderliche Secret wurde noch nicht festgelegt"
       },
-      "secureNotice": "Dieses Geheimnis kann nach der Erstellung nicht mehr abgerufen werden",
+      "secureNotice": "Das Secret kann nicht nach der Erstellung abgerufen werden",
       "reset": {
-        "title": "Geheimnis zurücksetzen",
+        "title": "Secret zurücksetzen",
         "message": "Bist du sicher, dass du dieses Secret zurücksetzen möchtest?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "Keine Geheimnisse",
-        "text": "Für diese Integration sind keine Geheimnisse erforderlich"
+        "segmentTitle": "Keine Secrets",
+        "text": "Kein Secret für diese Integration erforderlich"
       },
       "kind": {
         "username": {
@@ -713,7 +713,7 @@
         },
         "apiKey": {
           "label": "API Schlüssel",
-          "newLabel": "Neuer API Schlüssel"
+          "newLabel": "neuer API Schlüssel"
         },
         "password": {
           "label": "Passwort",
@@ -729,7 +729,7 @@
   },
   "media": {
     "plural": "Medien",
-    "search": "Medium finden",
+    "search": "Medien suchen",
     "field": {
       "name": "Name",
       "size": "Größe",
@@ -737,7 +737,7 @@
     },
     "action": {
       "upload": {
-        "label": "Medium hochladen",
+        "label": "Medien Hochladen",
         "file": "Datei auswählen",
         "notification": {
           "success": {
@@ -750,18 +750,18 @@
       },
       "delete": {
         "label": "Medium löschen",
-        "description": "Möchten Sie das Medium <bName></bName> wirklich löschen?",
+        "description": "Sind Sie sicher, dass Sie die Medien <bName></bName> löschen möchten?",
         "notification": {
           "success": {
             "message": "Das Medium wurde erfolgreich gelöscht"
           },
           "error": {
-            "message": "Das Medium konnte nicht gelöscht werden"
+            "message": "Die Medien konnten nicht gelöscht werden"
           }
         }
       },
       "copy": {
-        "label": "URL kopieren"
+        "label": "URL in Zwischenablage kopieren"
       }
     }
   },
@@ -774,7 +774,7 @@
       "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
       "edit": "Bearbeiten",
-      "import": "Importieren",
+      "import": "Import",
       "insert": "Einfügen",
       "remove": "Entfernen",
       "save": "Speichern",
@@ -786,15 +786,15 @@
       "continue": "Fortfahren",
       "previous": "Zurück",
       "next": "Weiter",
-      "checkoutDocs": "Sieh dir die Dokumentation an",
-      "checkLogs": "Überprüfen Sie die Logs für weitere Details",
+      "checkoutDocs": "Die Dokumentation ansehen",
+      "checkLogs": "Logs für weitere Details prüfen",
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen"
     },
-    "here": "hier",
+    "here": "Hier",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Geben Sie den Namen oder das Objekte ein, um nach Symbolen zu filtern ... Homarr durchsucht für Sie {countIcons} Symbole."
+      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
     },
     "colorScheme": {
       "options": {
@@ -815,7 +815,7 @@
         "error": "Erstellung fehlgeschlagen"
       },
       "delete": {
-        "success": "Erfolgreich gelöscht",
+        "success": "Löschen erfolgreich",
         "error": "Löschen fehlgeschlagen"
       },
       "update": {
@@ -828,7 +828,7 @@
       }
     },
     "multiSelect": {
-      "placeholder": "Wählen Sie einen oder mehrere Werte aus"
+      "placeholder": "Wählen Sie einen oder mehrere Werte"
     },
     "multiText": {
       "placeholder": "Weitere Werte hinzufügen",
@@ -850,14 +850,14 @@
         "login": "Anmelden",
         "homeBoard": "Ihr Home Board",
         "loggedOut": "Abgemeldet",
-        "updateAvailable": "{countUpdates} Aktualisierungen verfügbar: {tag}"
+        "updateAvailable": "{countUpdates} Updates verfügbar: {tag}"
       }
     },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "preview": {
-      "show": "Vorschau anzeigen",
-      "hide": "Vorschau verbergen"
+      "show": "Vorschau ansehen",
+      "hide": "Vorschau ausblenden"
     },
     "zod": {
       "errors": {
@@ -881,8 +881,8 @@
           "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
           "passwordRequirements": "Passwort erfüllt nicht alle Anforderungen",
           "boardAlreadyExists": "Ein Board mit diesem Namen existiert bereits",
-          "invalidFileType": "Ungültiger Dateityp, erwarte {expected}",
-          "fileTooLarge": "Die Datei ist zu groß. Die maximale Größe beträgt {maxSize}",
+          "invalidFileType": "Ungültiger Dateityp, erwartete {expected}",
+          "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
           "invalidConfiguration": "Ungültige Konfiguration",
           "groupNameTaken": "Gruppenname bereits vergeben"
         }
@@ -992,7 +992,7 @@
   },
   "widget": {
     "app": {
-      "name": "App",
+      "name": "",
       "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
@@ -1122,8 +1122,8 @@
       "description": "Zeigt das aktuelle Datum und die Uhrzeit an.",
       "option": {
         "customTitleToggle": {
-          "label": "Benutzerdefinierte Titel-/Stadtanzeige",
-          "description": "Zeigen Sie einen individuellen Titel oder den Namen der Stadt/des Landes oben auf der Uhr."
+          "label": "Eigene Titel/Stadt Anzeige",
+          "description": "Zeige einen benutzerdefinierten Titel oder den Namen der Stadt oder des Landes oben auf der Uhr."
         },
         "customTitle": {
           "label": "Titel"
@@ -1140,7 +1140,7 @@
         },
         "timezone": {
           "label": "Zeitzone",
-          "description": "Wählen Sie die Zeitzone gemäß dem IANA-Standard"
+          "description": "Wählen Sie die Zeitzone nach dem IANA-Standard"
         },
         "showDate": {
           "label": "Datum anzeigen"
@@ -1251,7 +1251,7 @@
     },
     "smartHome-entityState": {
       "name": "Zustand der Entität",
-      "description": "Den Status einer Entität anzeigen und optional umschalten",
+      "description": "Zeigt den Status einer Entität an und schaltet ihn optional ein",
       "option": {
         "entityId": {
           "label": "Eintrag-ID"
@@ -1269,7 +1269,7 @@
     },
     "smartHome-executeAutomation": {
       "name": "Automatisierung ausführen",
-      "description": "Lösen Sie eine Automatisierung mit einem Klick aus",
+      "description": "Automatisierung mit einem Klick auslösen",
       "option": {
         "displayName": {
           "label": "Anzeigename"
@@ -1298,7 +1298,7 @@
           "label": "Start von"
         },
         "filterFutureMonths": {
-          "label": "Endet um"
+          "label": "Endet am"
         }
       }
     },
@@ -1345,7 +1345,7 @@
       }
     },
     "indexerManager": {
-      "name": "Status des Indexer-Managers",
+      "name": "Status des Index Managers",
       "description": "Status des Indexer",
       "option": {
         "openIndexerSiteInNewTab": {
@@ -1380,7 +1380,7 @@
         "processor": "Prozessor: {cpuModelName}",
         "memory": "Speicher: {memory}GiB",
         "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
-        "version": "Version: {version}",
+        "version": "",
         "uptime": "Betriebszeit: {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
         "minute": "1 Minute",
