@@ -359,7 +359,7 @@
             "description": "אפשר לחברים לקיים אינטראקציה עם כל אינטגרציה"
           },
           "full-all": {
-            "label": "",
+            "label": "גישת אינטגרציה מלאה",
             "description": "אפשר לחברים לנהל, להשתמש ולקיים אינטראקציה עם כל אינטגרציה"
           }
         }
@@ -395,90 +395,90 @@
         "item": {
           "create": {
             "label": "צור מנועי חיפוש",
-            "description": ""
+            "description": "אפשר לחברים ליצור מנועי חיפוש"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "שנה את כל מנועי החיפוש",
+            "description": "אפשר לחברים לשנות את כל מנועי החיפוש"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "גישה מלאה למנועי חיפוש",
+            "description": "אפשר לחברים לנהל ולמחוק כל מנוע חיפוש"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "חלק מהחברים הם מספקים חיצוניים ולא ניתן לנהל אותם כאן",
+      "external": "כל החברים הם מספקים חיצוניים ולא ניתן לנהל אותם כאן"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "קבוצה זו שמורה לשימוש במערכת ומגבילה חלק מהפעולות. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "קבוצה חדשה",
         "notification": {
           "success": {
-            "message": ""
+            "message": "הקבוצה נוצרה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן ליצור את הקבוצה"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "העברת בעלות",
+        "description": "העבר את הבעלות על הקבוצה הזו למשתמש אחר.",
+        "confirm": "האם אתה בטוח שברצונך להעביר בעלות על הקבוצה {name} ל- {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "הקבוצה {group} הועברה בהצלחה ל {user}"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן להעביר בעלות"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "הוסף חבר"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "הסר חבר",
+        "confirm": "האם אתה בטוח שברצונך להסיר את {user} מהקבוצה הזו?"
       },
       "delete": {
-        "label": "",
+        "label": "מחק קבוצה",
         "description": "",
-        "confirm": "",
+        "confirm": "האם אתה בטוח שברצונך למחוק את הקבוצה {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "הקבוצה {name} נמחקה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן למחוק את הקבוצה {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "ההרשאות נשמרו",
+            "message": "ההרשאות נשמרו בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "ההרשאות לא נשמרו",
+            "message": "ההרשאות לא נשמרו"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "הקבוצה {name} נשמרה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לשמור את הקבוצה {name}"
           }
         }
       },
@@ -724,7 +724,7 @@
     "permission": {
       "use": "",
       "interact": "",
-      "full": ""
+      "full": "גישת אינטגרציה מלאה"
     }
   },
   "media": {
