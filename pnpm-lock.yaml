@@ -509,6 +509,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/icons':
+        specifier: workspace:^0.1.0
+        version: link:../icons
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../integrations
