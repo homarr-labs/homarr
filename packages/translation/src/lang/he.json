@@ -265,39 +265,39 @@
             "message": "הפרופיל עודכן בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לעדכן את הפרופיל"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "מחק משתמש לצמיתות",
+        "description": "מוחק משתמש זה כולל העדפותיו. לא ימחק אף לוח. המשתמש לא יקבל הודעה.",
+        "confirm": "האם אתה בטוח שאתה רוצה למחוק את המשתמש {username} עם ההעדפות שלו?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "בחר משתמש",
+        "notFound": "לא נמצא משתמש"
       },
       "transfer": {
-        "label": ""
+        "label": "בחר בעלים חדש"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "קבוצות",
+    "name": "קבוצה",
+    "search": "מצא קבוצה",
     "field": {
       "name": "שם",
-      "members": ""
+      "members": "חברים"
     },
     "permission": {
       "admin": {
         "title": "מנהל מערכת",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "מנהל",
+            "description": "לחברים עם הרשאה זו יש גישה מלאה לכל התכונות וההגדרות"
           }
         }
       },
@@ -305,7 +305,7 @@
         "title": "אפליקציות",
         "item": {
           "create": {
-            "label": "",
+            "label": "צור אפליקציות",
             "description": ""
           },
           "use-all": {
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -2036,7 +2036,7 @@
           "items": {
             "manage": "ניהול",
             "invites": "הזמנות",
-            "groups": ""
+            "groups": "קבוצות"
           }
         },
         "tools": {
@@ -2069,7 +2069,7 @@
           "invite": "הזמנות",
           "integration": "אינטגרציות",
           "app": "אפליקציות",
-          "group": ""
+          "group": "קבוצות"
         },
         "statisticLabel": {
           "boards": "לוחות",
@@ -2160,7 +2160,7 @@
               "label": "אבטחה"
             },
             "groups": {
-              "label": "",
+              "label": "קבוצות",
               "title": "",
               "description": ""
             },
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "חברים",
             "search": "",
             "notFound": ""
           },
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "משתמשים",
-      "group": "",
+      "group": "קבוצות",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "משתמש"
       },
       "group": {
-        "label": ""
+        "label": "קבוצה"
       },
       "permission": {
         "label": ""
@@ -2593,7 +2593,7 @@
         "security": "אבטחה",
         "board": "לוחות",
         "groups": {
-          "label": ""
+          "label": "קבוצות"
         },
         "invites": {
           "label": "הזמנות"
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "קבוצות",
             "children": {
               "action": {
                 "detail": {
