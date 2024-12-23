@@ -51,7 +51,7 @@
           "title": "Import token megadása",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": "Írja be a megjelenített import tokent az előző homarr példányból"
             }
           },
@@ -314,11 +314,11 @@
           },
           "modify-all": {
             "label": "Minden alkalmazás módosítása",
-            "description": ""
+            "description": "A tagok módosíthatják az összes alkalmazást"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes alkalmazás hozzáférés",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék, használják és töröljék az alkalmazásokat"
           }
         }
       },
@@ -326,20 +326,20 @@
         "title": "Táblák",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tábla létrehozása",
+            "description": "A tagok táblákat hozhatnak létre"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Az összes tábla megtekintése",
+            "description": "A tagok megtekinthetik az összes táblát"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Az összes tábla módosítása",
+            "description": "Lehetővé teszi a tagoknak, hogy módosítsák az összes táblát (Nem tartalmazza a beléptetést és a veszélyes zónát)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes alkalmazás hozzáférés",
+            "description": "Lehetővé teszi a tagoknak az összes tábla megtekintését, módosítását és törlését (beleértve a beléptetést és a veszélyzónát)"
           }
         }
       },
@@ -347,90 +347,90 @@
         "title": "Integrációk",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Integrációk létrehozása",
+            "description": "A tagok integrációkat hozhatnak létre"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Használja az összes integrációt",
+            "description": "Lehetővé teszi a tagok számára, hogy bármilyen integrációt hozzáadjanak a tábláikhoz"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interakció bármely integrációval",
+            "description": "Lehetővé teszi a tagoknak, hogy bármilyen integrációval kapcsolatba lépjenek"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes integrációs hozzáférés",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék, használhassák és kapcsolatba lépjenek bármilyen integrációval"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Média",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Média feltöltése",
+            "description": "Engedélyezze a tagok számára a médiák feltöltését"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Az összes média megtekintése",
+            "description": "Engedélyezze a tagok számára az összes média megtekintését"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes médiahozzáférés",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék és töröljék a médiatartalmakat"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Egyéb",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Naplók megtekintése",
+            "description": "A tagok megtekinthetik a naplókat"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Keresőmotorok",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Egyéni keresőmotor",
+            "description": "A tagok egyéni keresőmotorokat hozhatnak létre"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Módosítsa az összes keresőmotort",
+            "description": "A tagok módosíthatják az összes a keresőmotorokat"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes hozzáférés a keresőmotorokhoz",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék és töröljék a keresőmotorokat"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Egyes tagok külső szolgáltatóktól származnak, és itt nem kezelhetők",
+      "external": "Minden tag külső szolgáltatótól származik, és itt nem kezelhetők"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ez a csoport a rendszer használatára van fenntartva, és korlátoz bizonyos műveleteket. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Új csoport",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A csoport sikeresen létrejött"
           },
           "error": {
-            "message": ""
+            "message": "A csoport létrehozása nem sikerült"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Tulajdonos megváltoztatása",
+        "description": "A csoport tulajdonjogának átadása másik felhasználónak.",
+        "confirm": "Biztosan át akarja adni a {name} csoport tulajdonjogát {username}felhasználónak?",
         "notification": {
           "success": {
             "message": ""
@@ -546,7 +546,7 @@
         "label": "Leírás"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "Név"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -724,11 +724,11 @@
     "permission": {
       "use": "",
       "interact": "",
-      "full": ""
+      "full": "Teljes integrációs hozzáférés"
     }
   },
   "media": {
-    "plural": "",
+    "plural": "Média",
     "search": "",
     "field": {
       "name": "Név",
@@ -1989,7 +1989,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Az összes tábla megtekintése",
         "notice": ""
       },
       "homeBoard": {
@@ -2029,8 +2029,8 @@
         "boards": "Táblák",
         "apps": "Alkalmazások",
         "integrations": "Integrációk",
-        "searchEngies": "",
-        "medias": "",
+        "searchEngies": "Keresőmotorok",
+        "medias": "Média",
         "users": {
           "label": "Felhasználók",
           "items": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Eszközök",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2208,7 +2208,7 @@
               "label": "Lejárati idő"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2564,7 +2564,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Keresőmotorok",
         "new": {
           "label": ""
         },
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Média"
       },
       "apps": {
         "label": "Alkalmazások",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Eszközök",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2721,7 +2721,7 @@
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Keresőmotorok",
             "children": {
               "action": {
                 "search": {
@@ -2828,7 +2828,7 @@
                 "label": ""
               },
               "manageLog": {
-                "label": ""
+                "label": "Naplók megtekintése"
               },
               "manageTask": {
                 "label": ""
@@ -2905,7 +2905,7 @@
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Keresőmotorok",
           "noResults": {
             "title": "",
             "action": ""
