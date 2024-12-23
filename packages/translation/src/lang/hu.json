@@ -433,7 +433,7 @@
         "confirm": "Biztosan át akarja adni a {name} csoport tulajdonjogát {username}felhasználónak?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A {group} csoport sikeresen áthelyezve {user} felhasználó tulajdonába"
           },
           "error": {
             "message": "Nem lehet átruházni a tulajdonjogot"
@@ -475,16 +475,16 @@
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A {name} csoport mentése sikeresen megtörtént"
           },
           "error": {
-            "message": ""
+            "message": "Nem sikerült menteni a {name} csoportot"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Csoport kiválasztása",
+        "notFound": "Nem található csoport"
       }
     }
   },
@@ -654,57 +654,57 @@
         },
         "forbidden": {
           "title": "",
-          "message": ""
+          "message": "Valószínűleg hiányoznak az engedélyek"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Nem található",
+          "message": "Valószínűleg rossz url vagy elérési útvonal"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Belső szerverhiba",
+          "message": "A szerver hibát észlelt"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "A szolgáltatás nem elérhető",
+          "message": "A szerver jelenleg nem elérhető"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "A kapcsolat megszakadt",
+          "message": "A kapcsolat megszakadt"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "A domain nem található",
+          "message": "A domain nem található"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Csatlakozás elutasítva",
+          "message": "Csatlakozás elutasítva"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Hibás JSON",
+          "message": "A válasz nem érvényes JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Rossz útvonal",
+          "message": "Az útvonal valószínűleg nem helyes"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Titkok",
+      "lastUpdated": "Utoljára frissítve: {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Nincs beállítva érték",
+        "tooltip": "Ez a szükséges titok még nincs beállítva"
       },
-      "secureNotice": "",
+      "secureNotice": "Ezt a titkot a létrehozás után nem lehet visszakeresni",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Titok visszaállítása",
+        "message": "Biztosan valaphelyzetbe állítja ezt a titkot?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Nincsenek titkok",
+        "text": "Ehhez az integrációhoz nincs szükség titkokra"
       },
       "kind": {
         "username": {
