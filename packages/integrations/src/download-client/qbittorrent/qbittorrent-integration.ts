@@ -1,6 +1,7 @@
 import { QBittorrent } from "@ctrl/qbittorrent";
 import dayjs from "dayjs";
 import https from "https";
+import fs from "fs";
 
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
@@ -71,16 +72,37 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
   }
 
   private getClient() {
-    const httpsAgent = new https.Agent({
+    const certPath = process.env.QBITTORRENT_SSL_CERT;
+    const keyPath = process.env.QBITTORRENT_SSL_KEY;
+    const insecure = process.env.QBITTORRENT_SSL_INSECURE === "true";
+    let httpsAgent;
+  
+    if (certPath && keyPath) {
+      try {
+        const cert = fs.readFileSync(certPath);
+        const key = fs.readFileSync(keyPath);
+  
+        httpsAgent = new https.Agent({
+          cert,
+          key,
+          rejectUnauthorized: true,
+        });
+      } catch (err) {
+        throw new Error(
+          `Failed to load SSL certificate or key. Ensure that QBITTORRENT_SSL_CERT (${certPath}) and QBITTORRENT_SSL_KEY (${keyPath}) point to valid files.`
+        );
+      }
+    } else if (insecure) {
+      httpsAgent = new https.Agent({
         rejectUnauthorized: false,
-    });
+      });
+    }
+  
     return new QBittorrent({
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
-      requestConfig: {
-        httpsAgent,
-      },
+      ...(httpsAgent && { requestConfig: { httpsAgent } }),
     });
   }
 
