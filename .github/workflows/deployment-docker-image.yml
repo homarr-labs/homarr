@@ -149,7 +149,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           context: .
-          push: ${{ env.PUSH_IMAGE == 'true' }}
+          push: ${{ env.PUSH_IMAGE }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           network: host
