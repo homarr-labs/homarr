@@ -493,43 +493,43 @@
       "list": {
         "title": "Alkalmazások",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Még nincsenek alkalmazások",
+          "action": "Hozza létre első alkalmazását"
         }
       },
       "create": {
-        "title": "",
+        "title": "Új alkalmazás",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres létrehozás",
+            "message": "Az alkalmazás sikeresen létrejött"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "A létrehozás nem sikerült",
+            "message": "Az alkalmazást nem sikerült létrehozni"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Alkalmazás szerkesztése",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "A módosítások sikeresen alkalmazva",
+            "message": "Az alkalmazás sikeresen mentve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nem sikerült alkalmazni a változtatásokat",
+            "message": "Az alkalmazást nem sikerült menteni"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Törölje az alkalmazást",
+        "message": "Biztosan törli a {name} alkalmazást?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres törlés",
+            "message": "Az alkalmazás sikeresen törölve"
           },
           "error": {
             "title": "",
@@ -569,11 +569,11 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Sikeres létrehozás",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "A létrehozás nem sikerült",
             "message": ""
           }
         }
@@ -582,11 +582,11 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "A módosítások sikeresen alkalmazva",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Nem sikerült alkalmazni a változtatásokat",
             "message": ""
           }
         }
@@ -596,7 +596,7 @@
         "message": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Sikeres törlés",
             "message": ""
           },
           "error": {
@@ -709,11 +709,11 @@
       "kind": {
         "username": {
           "label": "Felhasználónév",
-          "newLabel": ""
+          "newLabel": "Új felhasználónév"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Kulcs",
+          "newLabel": "Új API kulcs"
         },
         "password": {
           "label": "Jelszó",
@@ -722,14 +722,14 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
+      "use": "Válassza ki az integrációkat az elemekben",
+      "interact": "Interakció az integrációkkal",
       "full": "Teljes integrációs hozzáférés"
     }
   },
   "media": {
     "plural": "Média",
-    "search": "",
+    "search": "Média keresése",
     "field": {
       "name": "Név",
       "size": "Méret",
@@ -737,53 +737,53 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Média feltöltése",
+        "file": "Fájl kiválasztása",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A média sikeresen feltöltve"
           },
           "error": {
-            "message": ""
+            "message": "A médiát nem lehetett feltölteni"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Média törlése",
+        "description": "Biztos, hogy törölni akarja a médiát <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A média sikeresen törölve"
           },
           "error": {
-            "message": ""
+            "message": "A médiát nem lehetett törölni"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "URL másolása"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Béta",
     "error": "Hiba",
     "action": {
       "add": "Hozzáadás",
       "apply": "Alkalmaz",
-      "backToOverview": "",
+      "backToOverview": "Vissza az áttekintéshez",
       "create": "Létrehozás",
       "edit": "Szerkesztés",
-      "import": "",
+      "import": "Importálás",
       "insert": "Beillesztés",
       "remove": "Eltávolítás",
       "save": "Mentés",
       "saveChanges": "Változások mentése",
       "cancel": "Mégse",
       "delete": "Törlés",
-      "discard": "",
+      "discard": "Elvetés",
       "confirm": "Megerősít",
-      "continue": "",
+      "continue": "Folytatás",
       "previous": "Előző",
       "next": "Következő",
       "checkoutDocs": "",
@@ -791,7 +791,7 @@
       "tryAgain": "Próbálja újra",
       "loading": ""
     },
-    "here": "",
+    "here": "itt",
     "iconPicker": {
       "label": "",
       "header": ""
@@ -811,16 +811,16 @@
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Sikeres létrehozás",
+        "error": "A létrehozás nem sikerült"
       },
       "delete": {
-        "success": "",
+        "success": "Sikeres törlés",
         "error": ""
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "A módosítások sikeresen alkalmazva",
+        "error": "Nem sikerült alkalmazni a változtatásokat"
       },
       "transfer": {
         "success": "",
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "A módosítások sikeresen alkalmazva",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Nem sikerült alkalmazni a változtatásokat",
             "message": ""
           }
         },
@@ -2338,7 +2338,7 @@
               "label": ""
             },
             "downloads": {
-              "label": ""
+              "label": "Letöltések"
             },
             "mediaRequestStats": {
               "label": ""
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Alkalmazás szerkesztése"
                 }
               },
               "detail": {
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "A módosítások sikeresen alkalmazva",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Nem sikerült alkalmazni a változtatásokat",
               "message": ""
             }
           },
