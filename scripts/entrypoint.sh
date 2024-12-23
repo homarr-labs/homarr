@@ -7,4 +7,9 @@ mkdir -p /appdata/redis
 
 chown -R nextjs:nodejs /appdata
 
+DOCKER_SOCKET=/var/run/docker.sock
+if [ -f "$DOCKER_SOCKET" ]; then
+    chown -R nextjs:nodejs $DOCKER_SOCKET
+fi
+
 su-exec 1001:1001 "$@"
