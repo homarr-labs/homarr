@@ -305,20 +305,20 @@
         "title": "אפליקציות",
         "item": {
           "create": {
-            "label": "צור אפליקציות",
-            "description": ""
+            "label": "יצירת אפליקציות",
+            "description": "מאפשר לחברים ליצור אפליקציות"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "שימוש בכל האפליקציות",
+            "description": "מאפשר לחברים להוסיף כל אפליקציות ללוחות שלהם"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "משנה את כל האפליקציות",
+            "description": "מאפשר לחברים לשנות את כל האפליקציות"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "גישה מלאה לאפליקציה",
+            "description": "מאפשר לחברים לנהל, להשתמש ולמחוק כל אפליקציה"
           }
         }
       },
@@ -326,20 +326,20 @@
         "title": "לוחות",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "יצירת לוחות",
+            "description": "מאפשר לחברים ליצור לוחות"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "הצגת כל הלוחות",
+            "description": "מאפשר לחברים לצפות בכל הלוחות"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "משנה את כל הלוחות",
+            "description": "מאפשר לחברים לשנות את כל הלוחות (לא כולל בקרת גישה ואזור סכנה)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "גישה מלאה ללוח",
+            "description": "אפשר לחברים להציג, לשנות ולמחוק את כל הלוחות (כולל בקרת גישה ואזור סכנה)"
           }
         }
       },
@@ -347,54 +347,54 @@
         "title": "אינטגרציות",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "יצירת אינטגרציות",
+            "description": "אפשר לחברים ליצור אינטגרציות"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "שימוש בכל האינטגרציות",
+            "description": "מאפשר לחברים להוסיף כל אינטגרציה ללוחות שלהם"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "אינטראקציה עם כל אינטגרציה",
+            "description": "אפשר לחברים לקיים אינטראקציה עם כל אינטגרציה"
           },
           "full-all": {
             "label": "",
-            "description": ""
+            "description": "אפשר לחברים לנהל, להשתמש ולקיים אינטראקציה עם כל אינטגרציה"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "מדיה",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "העלה מדיה",
+            "description": "אפשר לחברים להעלות מדיה"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "הצג את כל המדיה",
+            "description": "אפשר לחברים להציג את כל המדיה"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "גישה מלאה למדיה",
+            "description": "אפשר לחברים לנהל ולמחוק כל מדיה"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "אחר",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "הצג לוגים",
+            "description": "אפשר לחברים לצפות בלוגים"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "מנועי חיפוש",
         "item": {
           "create": {
-            "label": "",
+            "label": "צור מנועי חיפוש",
             "description": ""
           },
           "modify-all": {
@@ -728,7 +728,7 @@
     }
   },
   "media": {
-    "plural": "",
+    "plural": "מדיה",
     "search": "",
     "field": {
       "name": "שם",
@@ -1989,7 +1989,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "הצגת כל הלוחות",
         "notice": ""
       },
       "homeBoard": {
@@ -2029,8 +2029,8 @@
         "boards": "לוחות",
         "apps": "אפליקציות",
         "integrations": "אינטגרציות",
-        "searchEngies": "",
-        "medias": "",
+        "searchEngies": "מנועי חיפוש",
+        "medias": "מדיה",
         "users": {
           "label": "משתמשים",
           "items": {
@@ -2564,7 +2564,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "מנועי חיפוש",
         "new": {
           "label": ""
         },
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "מדיה"
       },
       "apps": {
         "label": "אפליקציות",
@@ -2721,7 +2721,7 @@
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "מנועי חיפוש",
             "children": {
               "action": {
                 "search": {
@@ -2828,7 +2828,7 @@
                 "label": ""
               },
               "manageLog": {
-                "label": ""
+                "label": "הצג לוגים"
               },
               "manageTask": {
                 "label": ""
@@ -2905,7 +2905,7 @@
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "מנועי חיפוש",
           "noResults": {
             "title": "",
             "action": ""
