@@ -1038,8 +1038,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       '@ctrl/transmission':
-        specifier: ^7.1.0
-        version: 7.1.0
+        specifier: ^7.2.0
+        version: 7.2.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -2067,10 +2067,6 @@ packages:
     resolution: {integrity: sha512-95hcrot7lRPZ/HpDwjDS0qNIDBk015uPX/RastT1AWFGWfZmN/TijUfvwEXHHh6lHziZE2pdT2NQMgvrE1Gg4g==}
     engines: {node: '>=18'}
 
-  '@ctrl/shared-torrent@6.1.0':
-    resolution: {integrity: sha512-LWhAH6C5Ekp3co8tyRVxAOZhlhHqQmuvc5GXoHcAetIFYbPaKhsqdGEACHtGl549cVO676gQjmvLEgzQnsn56g==}
-    engines: {node: '>=18'}
-
   '@ctrl/shared-torrent@6.2.1':
     resolution: {integrity: sha512-0ouXQnBEik6B3LXByiXnDZ6MAj8r9oMEE09q2MkifqSRmGImhZKq7iNbzcGzTn9BI1TU/anwjSOrxjmYV4T5eQ==}
     engines: {node: '>=18'}
@@ -2079,8 +2075,8 @@ packages:
     resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
     engines: {node: '>=18'}
 
-  '@ctrl/transmission@7.1.0':
-    resolution: {integrity: sha512-jABXDuyfPWXkX4unhAQRW0cExvcWrI52YsxxO0BseFZHfDwsoOUmHGVln2ODbjqAaTqyKK0Wm+BFfwTOpI5K/w==}
+  '@ctrl/transmission@7.2.0':
+    resolution: {integrity: sha512-l0iPcyWxzu0CadILil8s2UGq6EOjkGsFrJCY++4ndJsU0Dw/Cgej/tUkEIu+eKckjylUvVJ/ojVhMpMB8TEhsA==}
     engines: {node: '>=18'}
 
   '@dabh/diagnostics@2.0.3':
@@ -9755,19 +9751,18 @@ snapshots:
       ufo: 1.5.4
       uint8array-extras: 1.4.0
 
-  '@ctrl/shared-torrent@6.1.0': {}
-
   '@ctrl/shared-torrent@6.2.1': {}
 
   '@ctrl/torrent-file@4.1.0':
     dependencies:
       uint8array-extras: 1.4.0
 
-  '@ctrl/transmission@7.1.0':
+  '@ctrl/transmission@7.2.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.1.0
+      '@ctrl/shared-torrent': 6.2.1
       ofetch: 1.4.1
+      type-fest: 4.30.2
       ufo: 1.5.4
       uint8array-extras: 1.4.0
 
