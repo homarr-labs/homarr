@@ -1032,8 +1032,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       '@ctrl/qbittorrent':
         specifier: ^9.2.0
         version: 9.2.0
@@ -2055,8 +2055,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@ctrl/deluge@7.0.0':
-    resolution: {integrity: sha512-9vnBa2UdYKKC8BXMjLB349LiXL98oyhr8lVGmQq/QhT8RtuB9qzVXHsHPnWjZH1nD24dZM/vOvoG46VWRtRghA==}
+  '@ctrl/deluge@7.1.0':
+    resolution: {integrity: sha512-A7MUxhVDpblfUloUYCtQTZJXWDUQ6V5oQnWvtNTDhzGjQU4vez2b0uQqzpywyrAkiBtdjWFgm61cESaivJGNXA==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
@@ -9727,13 +9727,14 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@ctrl/deluge@7.0.0':
+  '@ctrl/deluge@7.1.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.1.0
+      '@ctrl/shared-torrent': 6.2.1
       node-fetch-native: 1.6.4
       ofetch: 1.4.1
       tough-cookie: 5.0.0
+      type-fest: 4.30.2
       ufo: 1.5.4
       uint8array-extras: 1.4.0
 
@@ -15616,7 +15617,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.26.2
       index-to-position: 0.1.2
-      type-fest: 4.28.0
+      type-fest: 4.30.2
 
   parse-ms@3.0.0: {}
 
@@ -16177,14 +16178,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.0
       read-pkg: 9.0.1
-      type-fest: 4.28.0
+      type-fest: 4.30.2
 
   read-pkg@9.0.1:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 6.0.2
       parse-json: 8.1.0
-      type-fest: 4.28.0
+      type-fest: 4.30.2
       unicorn-magic: 0.1.0
 
   readable-stream@2.3.8:
