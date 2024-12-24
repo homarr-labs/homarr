@@ -19,46 +19,46 @@
         },
         "fileInfo": {
           "action": {
-            "change": "Dosyayı değiştir"
+            "change": "Dosyayı Değiştir"
           }
         },
         "importSettings": {
-          "title": "İçe aktarma ayarları",
-          "description": "İçe aktarma işlevlerini yapılandırın"
+          "title": "İçe Aktarma Ayarları",
+          "description": "İçe Aktarma İşlevlerini Yapılandırın"
         },
         "boardSelection": {
-          "title": "{count} panel bulundu",
-          "description": "İçe aktarılacak tüm panellerin boyutlarını seçin",
+          "title": "{count} Panel Bulundu",
+          "description": "İçe Aktarılacak Tüm Panellerin Boyutlarını Seçin",
           "action": {
-            "selectAll": "Tümünü seç",
-            "unselectAll": "Tüm seçimi kaldır"
+            "selectAll": "Tümünü Seç",
+            "unselectAll": "Tüm Seçimi Kaldır"
           }
         },
         "summary": {
-          "title": "İçe aktarma özeti",
-          "description": "Aşağıdaki özeti kontrol ederek içe aktarılacak işlevleri görebilirsiniz",
+          "title": "İçe Aktarma Özeti",
+          "description": "Aşağıdaki Özeti Kontrol Ederek İçe Aktarılacak İşlevleri Görebilirsiniz",
           "action": {
-            "import": "İçe aktarmayı onayla ve devam et"
+            "import": "İçe Aktarmayı Onayla ve Devam Et"
           },
           "entities": {
             "apps": "Uygulamalar",
             "boards": "Paneller",
             "integrations": "Entegrasyonlar",
-            "credentialUsers": "Kullanıcı kimlik Bilgileri"
+            "credentialUsers": "Kullanıcı Kimlik Bilgileri"
           }
         },
         "tokenModal": {
-          "title": "İçe aktarma token'ını girin",
+          "title": "İçe Aktarma Token'ını Girin",
           "field": {
             "token": {
               "label": "Erişim Anahtarı",
-              "description": "Önceki homarr örneğinizden aldığınız içe aktarma Token'ını girin"
+              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Token'ını girin"
             }
           },
           "notification": {
             "error": {
-              "title": "Geçersiz token",
-              "message": "Girdiğiniz token geçersiz"
+              "title": "Geçersiz Token",
+              "message": "Girdiğiniz Token Geçersiz"
             }
           }
         }
@@ -92,24 +92,24 @@
       },
       "finish": {
         "title": "Kurulumu Bitir",
-        "subtitle": "Başlamaya hazırsınız!",
+        "subtitle": "Başlamaya Hazırsınız!",
         "description": "Kurulum sürecini başarıyla tamamladınız. Artık Homarr'ı kullanmaya başlayabilirsiniz. Sonraki eyleminizi seçin:",
         "action": {
-          "goToBoard": "{name} paneline git",
-          "createBoard": "İlk panelinizi oluşturun",
-          "inviteUser": "Yeni kullanıcı davet et",
-          "docs": "Dökümanları okuyun"
+          "goToBoard": "{name} Paneline Git",
+          "createBoard": "İlk Panelinizi Oluşturun",
+          "inviteUser": "Yeni Kullanıcı Davet Et",
+          "docs": "Dökümanları Oku"
         }
       }
     },
-    "backToStart": "Başlangıca geri dön"
+    "backToStart": "Başlangıca Geri Dön"
   },
   "user": {
     "title": "Kullanıcılar",
     "name": "Kullanıcı",
     "page": {
       "login": {
-        "title": "Hesabınıza giriş yapın",
+        "title": "Hesabınıza Giriş Yapın",
         "subtitle": "Tekrar hoş geldiniz! Lütfen kimlik bilgilerinizi girin"
       },
       "invite": {
@@ -118,7 +118,7 @@
         "description": "{username} tarafından davet edildiniz"
       },
       "init": {
-        "title": "Yeni Homarr kurulumu",
+        "title": "Yeni Homarr Kurulumu",
         "subtitle": "Lütfen yönetici kullanıcısını oluşturun"
       }
     },
@@ -141,20 +141,20 @@
         }
       },
       "passwordConfirm": {
-        "label": "Şifreyi onayla"
+        "label": "Şifreyi Onayla"
       },
       "previousPassword": {
         "label": "Eski Şifre"
       },
       "homeBoard": {
-        "label": "Varsayılan panel"
+        "label": "Varsayılan Panel"
       },
       "pingIconsEnabled": {
-        "label": "Pingler için simgeler kullanın"
+        "label": "Pingler İçin Simgeler Kullanın"
       }
     },
     "error": {
-      "usernameTaken": "Kullanıcı adı önceden alındı"
+      "usernameTaken": "Kullanıcı Adı Önceden Alındı"
     },
     "action": {
       "login": {
@@ -391,7 +391,7 @@
         }
       },
       "search-engine": {
-        "title": "Arama motorları",
+        "title": "Arama Motorları",
         "item": {
           "create": {
             "label": "Arama motorları oluşturun",
@@ -2025,11 +2025,11 @@
     },
     "navbar": {
       "items": {
-        "home": "Ana sayfa",
+        "home": "Ana Sayfa",
         "boards": "Paneller",
         "apps": "Uygulamalar",
         "integrations": "Entegrasyonlar",
-        "searchEngies": "Arama motorları",
+        "searchEngies": "Arama Motorları",
         "medias": "Medyalar",
         "users": {
           "label": "Kullanıcılar",
@@ -2093,7 +2093,7 @@
           "setHomeBoard": {
             "label": "Varsayılan Panel Olarak Ata",
             "badge": {
-              "label": "Ana sayfa",
+              "label": "Ana Sayfa",
               "tooltip": "Bu panel sizin varsayılan paneliniz olarak görüntülenecektir"
             }
           },
@@ -2180,7 +2180,7 @@
           }
         },
         "invite": {
-          "title": "Kullanıcı davetlerini yönet",
+          "title": "Kullanıcı Davetlerini Yönet",
           "action": {
             "new": {
               "title": "Yeni davet",
@@ -2288,7 +2288,7 @@
           "board": {
             "title": "Paneller",
             "homeBoard": {
-              "label": "Küresel ana sayfa paneli",
+              "label": "Genel Varsayılan Panel",
               "description": "Seçim için yalnızca herkese açık paneller kullanılabilir"
             }
           },
@@ -2795,7 +2795,7 @@
             "title": "Sayfalar",
             "option": {
               "manageHome": {
-                "label": "Ana sayfayı yönet"
+                "label": "Ana Sayfayı Yönet"
               },
               "manageBoard": {
                 "label": "Panelleri yönet"
@@ -2905,7 +2905,7 @@
       },
       "page": {
         "list": {
-          "title": "Arama motorları",
+          "title": "Arama Motorları",
           "noResults": {
             "title": "Henüz bir arama motoru yok",
             "action": "İlk arama motorunuzu oluşturun"
