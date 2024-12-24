@@ -704,9 +704,6 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.0.0
-      tldts:
-        specifier: ^6.1.69
-        version: 6.1.69
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
