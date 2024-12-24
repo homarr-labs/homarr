@@ -50,14 +50,14 @@
     "drizzle-kit": "^0.30.1",
     "drizzle-orm": "^0.38.2",
     "drizzle-zod": "^0.6.0",
-    "mysql2": "3.11.5"
+    "mysql2": "3.12.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.12",
-    "dotenv-cli": "^7.4.4",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.17.0",
     "prettier": "^3.4.2",
     "tsx": "4.19.2",

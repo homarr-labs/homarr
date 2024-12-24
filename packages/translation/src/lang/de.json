@@ -893,11 +893,11 @@
     "dynamic": {
       "action": {
         "create": "Neuer dynamischer Abschnitt",
-        "remove": ""
+        "remove": "Dynamischen Abschnitt entfernen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Dynamischen Abschnitt entfernen",
+        "message": "Möchten Sie diesen dynamischen Abschnitt wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Abschnitt verschoben."
       }
     },
     "category": {
@@ -907,29 +907,29 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Neue Kategorie",
+        "edit": "Kategorie umbenennen",
+        "remove": "Kategorie entfernen",
         "moveUp": "Nach oben bewegen",
         "moveDown": "Nach unten bewegen",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Neue Kategorie oben",
+        "createBelow": "Neue Kategorie unten"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Neue Kategorie",
+        "submit": "Kategorie hinzufügen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Kategorie entfernen",
+        "message": "Möchten Sie die Kategorie {name} wirklich entfernen?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Kategorie umbenennen",
+        "submit": "Kategorie umbenennen"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Neue Kategorie",
           "changePosition": "Position wechseln"
         }
       }
@@ -937,12 +937,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Neues Element",
+      "import": "Element importieren",
+      "edit": "Element bearbeiten",
+      "moveResize": "Element verschieben/Größe ändern",
+      "duplicate": "Element duplizieren",
+      "remove": "Element löschen"
     },
     "menu": {
       "label": {
@@ -950,11 +950,11 @@
       }
     },
     "create": {
-      "title": "",
-      "addToBoard": ""
+      "title": "Wählen Sie das hinzuzufügende Element aus",
+      "addToBoard": "Zum Board hinzufügen"
     },
     "moveResize": {
-      "title": "",
+      "title": "Element verschieben/Größe ändern",
       "field": {
         "width": {
           "label": "Breite"
@@ -963,67 +963,67 @@
           "label": "Höhe"
         },
         "xOffset": {
-          "label": ""
+          "label": "X Versatz"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y Versatz"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Element bearbeiten",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Erweiterte Optionen",
+        "title": "Erweiterte Element Optionen"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrationen"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Benutzerdefinierte CSS Klassen"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Element löschen",
+      "message": "Soll dieses Element wirklich entfernt werden?"
     }
   },
   "widget": {
     "app": {
       "name": "",
-      "description": "",
+      "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "App auswählen"
         },
         "openInNewTab": {
           "label": "In neuem Tab öffnen"
         },
         "showTitle": {
-          "label": ""
+          "label": "App Namen anzeigen"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Beschreibungs Tooltip anzeigen"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Einfachen Ping aktivieren"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Keine App",
+          "tooltip": "Sie haben keine gültige App ausgewählt"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Lesezeichen",
+      "description": "Zeigt mehrere App Links an",
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "layout": {
           "label": "Ansicht",
@@ -1040,7 +1040,7 @@
           }
         },
         "items": {
-          "label": "",
+          "label": "Lesezeichen",
           "add": ""
         }
       }
@@ -1376,16 +1376,16 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
+        "information": "Informationen",
+        "processor": "Prozessor: {cpuModelName}",
+        "memory": "Speicher: {memory}GiB",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
         "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "uptime": "Betriebszeit: {days} Tage, {hours} Stunden, {minutes} Minuten",
+        "loadAverage": "Durchschnittliche Last:",
+        "minute": "1 Minute",
+        "minutes": "{count} Minuten",
+        "used": "Belegt",
         "available": "Verfügbar",
         "lastSeen": ""
       },
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Keine App gefunden",
         "description": ""
       },
       "error": {
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "Änderungen erfolgreich angewendet",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Änderungen konnten nicht angewendet werden",
             "message": ""
           }
         },
@@ -1981,15 +1981,15 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Willkommen bei Homarr",
         "description": "",
-        "link": "",
+        "link": "Erstellen Sie Ihr erstes Board",
         "notice": ""
       },
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Alle Boards anzeigen",
         "notice": ""
       },
       "homeBoard": {
@@ -2013,7 +2013,7 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Verwaltung",
     "title": {
       "morning": "",
       "afternoon": "",
@@ -2028,15 +2028,15 @@
         "home": "Startseite",
         "boards": "",
         "apps": "",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Integrationen",
+        "searchEngies": "Suchmaschinen",
+        "medias": "Medien",
         "users": {
           "label": "Benutzer",
           "items": {
             "manage": "Verwalten",
             "invites": "Einladungen",
-            "groups": ""
+            "groups": "Gruppen"
           }
         },
         "tools": {
@@ -2067,9 +2067,9 @@
           "board": "",
           "user": "Benutzer",
           "invite": "Einladungen",
-          "integration": "",
+          "integration": "Integrationen",
           "app": "",
-          "group": ""
+          "group": "Gruppen"
         },
         "statisticLabel": {
           "boards": "",
@@ -2160,7 +2160,7 @@
               "label": "Sicherheit"
             },
             "groups": {
-              "label": "",
+              "label": "Gruppen",
               "title": "",
               "description": ""
             },
@@ -2168,10 +2168,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Benutzer erstellt"
             },
             "error": {
-              "title": ""
+              "title": "Benutzer anlegen fehlgeschlagen"
             }
           },
           "action": {
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "Mitglieder",
             "search": "",
             "notFound": ""
           },
@@ -2297,8 +2297,8 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Hell",
+                "dark": "Dunkel"
               }
             }
           },
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "Benutzer",
-      "group": "",
+      "group": "Gruppen",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "Benutzer"
       },
       "group": {
-        "label": ""
+        "label": "Gruppe"
       },
       "permission": {
         "label": ""
@@ -2555,7 +2555,7 @@
         "label": ""
       },
       "integrations": {
-        "label": "",
+        "label": "Integrationen",
         "edit": {
           "label": "Bearbeiten"
         },
@@ -2564,7 +2564,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Suchmaschinen",
         "new": {
           "label": ""
         },
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Medien"
       },
       "apps": {
         "label": "",
@@ -2593,7 +2593,7 @@
         "security": "Sicherheit",
         "board": "",
         "groups": {
-          "label": ""
+          "label": "Gruppen"
         },
         "invites": {
           "label": "Einladungen"
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "App bearbeiten"
                 }
               },
               "detail": {
@@ -2662,7 +2662,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integrationen"
           }
         }
       },
@@ -2676,8 +2676,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Zum hellen Design wechseln",
+                "dark": "Zum dunklen Design wechseln"
               },
               "language": {
                 "label": "",
@@ -2721,7 +2721,7 @@
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Suchmaschinen",
             "children": {
               "action": {
                 "search": {
@@ -2828,7 +2828,7 @@
                 "label": ""
               },
               "manageLog": {
-                "label": ""
+                "label": "Logs anzeigen"
               },
               "manageTask": {
                 "label": ""
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Gruppen",
             "children": {
               "action": {
                 "detail": {
@@ -2900,12 +2900,12 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Beschreibung"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Suchmaschinen",
           "noResults": {
             "title": "",
             "action": ""
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Änderungen erfolgreich angewendet",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Änderungen konnten nicht angewendet werden",
               "message": ""
             }
           },

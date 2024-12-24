@@ -4,7 +4,6 @@ import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledBu
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 
 import type { WidgetComponentProps } from "../definition";
@@ -19,18 +18,22 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
 
   useRegisterSpotlightContextResults(
     `bookmark-${itemId}`,
-    data.map((app) => ({
-      id: app.id,
-      name: app.name,
-      icon: app.iconUrl,
-      interaction() {
-        return {
-          type: "link",
-          href: parseAppHrefWithVariablesClient(app.href ?? ""),
-          newTab: false,
-        };
-      },
-    })),
+    data
+      .filter((app) => app.href !== null)
+      .map((app) => ({
+        id: app.id,
+        name: app.name,
+        icon: app.iconUrl,
+        interaction() {
+          return {
+            type: "link",
+            // We checked above that app.href is defined
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            href: app.href!,
+            newTab: false,
+          };
+        },
+      })),
     [data],
   );
 
