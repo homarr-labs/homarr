@@ -10,6 +10,12 @@ import { useSectionContext } from "./section-context";
 export const SectionContent = () => {
   const { section, innerSections, refs } = useSectionContext();
   const board = useRequiredBoard();
+
+  /**
+   * IMPORTANT: THE ORDER OF THE BELOW ITEMS HAS TO MATCH THE ORDER OF
+   * THE ITEMS RENDERED WITH GRIDSTACK, OTHERWISE THE ITEMS WILL BE MIXED UP
+   * @see https://github.com/homarr-labs/homarr/pull/1770
+   */
   const sortedItems = useMemo(() => {
     return [
       ...section.items.map((item) => ({ ...item, type: "item" as const })),
