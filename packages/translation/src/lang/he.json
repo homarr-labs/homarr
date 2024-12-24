@@ -483,8 +483,8 @@
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "בחר קבוצה",
+        "notFound": "לא נמצאה קבוצה"
       }
     }
   },
@@ -493,47 +493,47 @@
       "list": {
         "title": "אפליקציות",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "עדיין אין אפליקציות",
+          "action": "צור את האפליקציה הראשונה שלך"
         }
       },
       "create": {
-        "title": "",
+        "title": "אפליקציה חדשה",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "היצירה הצליחה",
+            "message": "האפליקציה נוצרה בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "היצירה נכשלה",
+            "message": "לא ניתן ליצור את האפליקציה"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "ערוך אפליקציה",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "השינויים הוחלו בהצלחה",
+            "message": "האפליקציה נשמרה בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "לא ניתן להחיל שינויים",
+            "message": "לא ניתן היה לשמור את האפליקציה"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "מחק אפליקציה",
+        "message": "האם אתה בטוח שברצונך למחוק את האפליקציה {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "המחיקה הצליחה",
+            "message": "האפליקציה נמחקה בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "המחיקה נכשלה",
+            "message": "לא ניתן למחוק את האפליקציה"
           }
         }
       }
@@ -543,16 +543,16 @@
         "label": "שם"
       },
       "description": {
-        "label": ""
+        "label": "תיאור"
       },
       "url": {
-        "label": ""
+        "label": "כתובת אתר"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "בחר אפליקציה",
+        "notFound": "לא נמצאה אפליקציה"
       }
     }
   },
@@ -560,48 +560,48 @@
     "page": {
       "list": {
         "title": "אינטגרציות",
-        "search": "",
+        "search": "חיפוש אינטגרציות",
         "noResults": {
-          "title": ""
+          "title": "עדיין אין אינטגרציות"
         }
       },
       "create": {
-        "title": "",
+        "title": "אינטגרציה {name} חדשה",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "היצירה הצליחה",
+            "message": "האינטגרציה נוצרה בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "היצירה נכשלה",
+            "message": "לא ניתן ליצור את האינטגרציה"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "ערוך אינטגרציה {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "השינויים הוחלו בהצלחה",
+            "message": "האינטגרציה נשמרה בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "לא ניתן להחיל שינויים",
+            "message": "לא ניתן היה לשמור את האינטגרציה"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "מחק אינטגרציה",
+        "message": "האם אתה בטוח שברצונך למחוק את האינטגרציה {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "המחיקה הצליחה",
+            "message": "האינטגרציה נמחקה בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "המחיקה נכשלה",
+            "message": "לא ניתן למחוק את האינטגרציה"
           }
         }
       }
@@ -611,29 +611,29 @@
         "label": "שם"
       },
       "url": {
-        "label": ""
+        "label": "כתובת אתר"
       }
     },
     "action": {
-      "create": ""
+      "create": "אינטגרציה חדשה"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "בדוק חיבור וצור",
+        "edit": "בדוק את החיבור ושמור"
       },
-      "alertNotice": "",
+      "alertNotice": "הלחצן שמור מופעל לאחר יצירת חיבור מוצלח",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "החיבור הצליח",
+          "message": "החיבור נוצר בהצלחה"
         },
         "invalidUrl": {
           "title": "קישור לא תקין",
-          "message": ""
+          "message": "כתובת האתר אינה חוקית"
         },
         "secretNotDefined": {
-          "title": "",
+          "title": "חסרים פרטי התחברות",
           "message": ""
         },
         "invalidCredentials": {
@@ -811,16 +811,16 @@
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "היצירה הצליחה",
+        "error": "היצירה נכשלה"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "המחיקה הצליחה",
+        "error": "המחיקה נכשלה"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "השינויים הוחלו בהצלחה",
+        "error": "לא ניתן להחיל שינויים"
       },
       "transfer": {
         "success": "",
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "לא נמצאה אפליקציה",
         "description": ""
       },
       "error": {
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "השינויים הוחלו בהצלחה",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "לא ניתן להחיל שינויים",
             "message": ""
           }
         },
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "ערוך אפליקציה"
                 }
               },
               "detail": {
@@ -2900,7 +2900,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "תיאור"
         }
       },
       "page": {
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "השינויים הוחלו בהצלחה",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "לא ניתן להחיל שינויים",
               "message": ""
             }
           },
