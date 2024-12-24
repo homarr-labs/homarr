@@ -1,3 +1,27 @@
+## [1.0.0-beta.7](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2024-12-24)
+
+### Features
+
+* **apps:** remove url variables ([#1771](https://github.com/homarr-labs/homarr/issues/1771)) ([8df398c](https://github.com/homarr-labs/homarr/commit/8df398c3c706369f6990719603a357c161606f81))
+
+### Bug Fixes
+
+* **auth:** oidc redirect does not respect https protocol ([#1763](https://github.com/homarr-labs/homarr/issues/1763)) ([0336803](https://github.com/homarr-labs/homarr/commit/033680355044b1ebfa5d8fe07b59929bbcfcb3a0))
+* **board:** item background and border overridden by mantine card styles ([#1769](https://github.com/homarr-labs/homarr/issues/1769)) ([425359b](https://github.com/homarr-labs/homarr/commit/425359be02f66242f7db0dc77bed0355495e21d5))
+* **board:** tiles order not respected on firefox ([#1770](https://github.com/homarr-labs/homarr/issues/1770)) ([8893b72](https://github.com/homarr-labs/homarr/commit/8893b72fe363691b91b6aca75d4ad37f4b8e9f6a))
+* copy media link ([#1750](https://github.com/homarr-labs/homarr/issues/1750)) ([d78c6ed](https://github.com/homarr-labs/homarr/commit/d78c6ed5299e1f975c2e85ec3ecad38e00457677))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.2.0 ([#1768](https://github.com/homarr-labs/homarr/issues/1768)) ([8b416a6](https://github.com/homarr-labs/homarr/commit/8b416a6dd354b22a3e4f527b793dde2c538b1e6a))
+* **deps:** update dependency eslint-plugin-react to ^7.37.3 ([#1767](https://github.com/homarr-labs/homarr/issues/1767)) ([fe95334](https://github.com/homarr-labs/homarr/commit/fe95334aa70c95faefcf904591fa9d33159b0905))
+* **deps:** update dependency jotai to ^2.11.0 ([#1756](https://github.com/homarr-labs/homarr/issues/1756)) ([4e85bbb](https://github.com/homarr-labs/homarr/commit/4e85bbbad034f08ab84e331d376b7a9c6f54e507))
+* **deps:** update dependency mysql2 to v3.12.0 ([#1758](https://github.com/homarr-labs/homarr/issues/1758)) ([d02ded5](https://github.com/homarr-labs/homarr/commit/d02ded5511aa2d54307db0ac7f4e0a5dee5a707d))
+* **deps:** update dependency react-error-boundary to v5 ([#1748](https://github.com/homarr-labs/homarr/issues/1748)) ([01db27c](https://github.com/homarr-labs/homarr/commit/01db27c34f3daf6e67e35bbd357df31dcb154b41))
+* **deps:** update dependency typescript-eslint to ^8.18.2 ([#1762](https://github.com/homarr-labs/homarr/issues/1762)) ([9223dd0](https://github.com/homarr-labs/homarr/commit/9223dd06ee0c2b51e036f607d7b3252c61ab77ea))
+* **deps:** update mantine monorepo to ^7.15.2 ([#1757](https://github.com/homarr-labs/homarr/issues/1757)) ([dfacb08](https://github.com/homarr-labs/homarr/commit/dfacb08dbddb6864646ece2fca6978207f0c58ac))
+* **deps:** update tanstack-query monorepo to ^5.62.10 ([#1772](https://github.com/homarr-labs/homarr/issues/1772)) ([c410b06](https://github.com/homarr-labs/homarr/commit/c410b06a15ed5426931ad764cc861f66f11a40da))
+* **deps:** update tanstack-query monorepo to ^5.62.9 ([#1761](https://github.com/homarr-labs/homarr/issues/1761)) ([42da2b9](https://github.com/homarr-labs/homarr/commit/42da2b9b062bd8a08c37e45ab129953e8b0e3624))
+* **icons:** local icon repository does not work with medias ([#1765](https://github.com/homarr-labs/homarr/issues/1765)) ([e220087](https://github.com/homarr-labs/homarr/commit/e220087e96c7096303b1d245ccf3941118e692f3))
+* **onboard:** missing admin permission assignment for external group ([#1764](https://github.com/homarr-labs/homarr/issues/1764)) ([b948337](https://github.com/homarr-labs/homarr/commit/b9483379dd56a8dab2b9b636b66b970da4cf9d83))
+
 ## [1.0.0-beta.6](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2024-12-20)
 
 ### Bug Fixes
