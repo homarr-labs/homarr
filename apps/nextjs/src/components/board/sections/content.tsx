@@ -19,7 +19,7 @@ export const SectionContent = () => {
         return itemA.xOffset - itemB.xOffset;
       }
 
-      return itemA.yOffset - itemB.xOffset;
+      return itemA.yOffset - itemB.yOffset;
     });
   }, [section.items, innerSections]);
 
