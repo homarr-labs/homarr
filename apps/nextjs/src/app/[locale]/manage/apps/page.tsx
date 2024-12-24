@@ -6,7 +6,6 @@ import { IconBox, IconPencil } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { parseAppHrefWithVariablesServer } from "@homarr/common/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import { ManageContainer } from "~/components/manage/manage-container";
@@ -82,8 +81,8 @@ const AppCard = async ({ app }: AppCardProps) => {
               </Text>
             )}
             {app.href && (
-              <Anchor href={parseAppHrefWithVariablesServer(app.href)} lineClamp={1} size="sm" w="min-content">
-                {parseAppHrefWithVariablesServer(app.href)}
+              <Anchor href={app.href} lineClamp={1} size="sm" w="min-content">
+                {app.href}
               </Anchor>
             )}
           </Stack>
