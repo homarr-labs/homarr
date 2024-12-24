@@ -634,55 +634,55 @@
         },
         "secretNotDefined": {
           "title": "חסרים פרטי התחברות",
-          "message": ""
+          "message": "לא סופקו כל פרטי ההתחברות"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "פרטי התחברות שגויים",
+          "message": "פרטי ההתחברות אינם חוקיים"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "החיבור נכשל",
+          "message": "לא ניתן היה ליצור את החיבור"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "בקשה שגויה",
+          "message": "הבקשה הייתה שגויה"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "לא מורשה",
+          "message": "כנראה פרטי התחברות שגויים"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "אסור",
+          "message": "כנראה חסרות הרשאות"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "לא נמצא",
+          "message": "כנראה כתובת אתר או נתיב שגויים"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "שגיאת שרת פנימית",
+          "message": "השרת נתקל בשגיאה"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "השירות אינו זמין",
+          "message": "השרת אינו זמין כרגע"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "החיבור הופסק",
+          "message": "החיבור בוטל"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "הדומיין לא נמצא",
+          "message": "לא ניתן למצוא את הדומיין"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "החיבור נדחה",
+          "message": "החיבור נדחה"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "JSON לא חוקי",
+          "message": "התגובה לא הייתה JSON חוקי"
         },
         "wrongPath": {
           "title": "",
@@ -692,9 +692,9 @@
     },
     "secrets": {
       "title": "",
-      "lastUpdated": "",
+      "lastUpdated": "עדכון אחרון {date}",
       "notSet": {
-        "label": "",
+        "label": "לא הוגדר ערך",
         "tooltip": ""
       },
       "secureNotice": "",
@@ -709,11 +709,11 @@
       "kind": {
         "username": {
           "label": "שם משתמש",
-          "newLabel": ""
+          "newLabel": "שם משתמש חדש"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "מפתח API",
+          "newLabel": "מפתח API חדש"
         },
         "password": {
           "label": "סיסמה",
