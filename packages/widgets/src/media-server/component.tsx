@@ -1,15 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { startTransition, useMemo, useState } from "react";
 import type { MantineStyleProp } from "@mantine/core";
-import { Avatar, Box, Center, Flex, Group, Image, Modal, Stack, Text, Title } from "@mantine/core";
+import { Avatar, Box, Center, Flex, Group, Modal, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconDeviceAudioTape, IconDeviceTv, IconMovie, IconVideo } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
-import { integrationDefs } from "@homarr/definitions";
+import { getIconUrl, integrationDefs } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
@@ -17,7 +17,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 import type { WidgetComponentProps } from "../definition";
 
 export default function MediaServerWidget({ integrationIds, isEditMode }: WidgetComponentProps<"mediaServer">) {
-  const [clickedIndex, setClickedIndex] = useState<number>(0);
+  const [clickedIndex, setClickedIndex] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
   const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
     {
@@ -99,6 +99,8 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
         pair.sessions.map((session) => ({
           ...session,
           integrationKind: pair.integrationKind,
+          integrationName: integrationDefs[pair.integrationKind].name,
+          integrationIcon: getIconUrl(pair.integrationKind),
         })),
       ),
     [currentStreams],
@@ -149,38 +151,45 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     },
     mantineTableBodyCellProps: ({ row }) => ({
       onClick: () => {
-        setClickedIndex(row.index);
-        open();
+        startTransition(() => {
+          setClickedIndex(row.index);
+          open();
+        });
       },
     }),
+  });
+
+  const uniqueIntegrations = Array.from(new Set(flatSessions.map((session) => session.integrationKind))).map((kind) => {
+    const session = flatSessions.find((session) => session.integrationKind === kind);
+    return {
+      integrationKind: kind,
+      integrationIcon: session?.integrationIcon,
+      integrationName: session?.integrationName,
+    };
   });
 
   return (
     <Stack gap={0} h="100%" display="flex" style={baseStyle}>
       <MantineReactTable table={table} />
-      {flatSessions[0]?.integrationKind && (
-        <Group
-          gap="1cqmin"
-          h="var(--ratio-width)"
-          px="var(--space-size)"
-          pr="5cqmin"
-          justify="flex-end"
-          style={{
-            borderTop: "0.0625rem solid var(--border-color)",
-          }}
-        >
-          <Image
-            className="media-server-icon"
-            src={integrationDefs[flatSessions[0].integrationKind].iconUrl}
-            w="sm"
-            h="sm"
-            fit="contain"
-          />
-          <Text className="media-server-name" size="sm">
-            {integrationDefs[flatSessions[0].integrationKind].name}
-          </Text>
-        </Group>
-      )}
+      <Group
+        gap="1cqmin"
+        h="var(--ratio-width)"
+        px="var(--space-size)"
+        pr="5cqmin"
+        justify="flex-end"
+        style={{
+          borderTop: "0.0625rem solid var(--border-color)",
+        }}
+      >
+        {uniqueIntegrations.map((integration) => (
+          <Group key={integration.integrationKind} gap="1cqmin" align="center">
+            <Avatar className="media-server-icon" src={integration.integrationIcon} size="xs" />
+            <Text className="media-server-name" size="sm">
+              {integration.integrationName}
+            </Text>
+          </Group>
+        ))}
+      </Group>
       <ItemInfoModal items={flatSessions} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
   );
@@ -196,6 +205,7 @@ interface ItemInfoModalProps {
 const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalProps) => {
   const t = useScopedI18n("widget.mediaServer.items");
   const item = useMemo<StreamSession | undefined>(() => items[currentIndex], [items, currentIndex]);
+
   const currentlyPlayingType =
     item?.currentlyPlaying?.type === "movie" ? (
       <IconMovie size={20} />
@@ -210,14 +220,14 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
   return (
     <Modal opened={opened} onClose={onClose} centered title={currentlyPlayingType} size="auto">
       {item === undefined ? (
-        <Center>{"No item found"}</Center>
+        <Center>{t("noItem")}</Center>
       ) : (
         <Stack align="center">
           <Flex direction="column" gap="xs" align="center">
             <Title>{item.currentlyPlaying?.name}</Title>
             <Title order={3}>
-              {item.currentlyPlaying?.episodeName} (
-              {item.currentlyPlaying?.seasonName && item.currentlyPlaying.seasonName})
+              {item.currentlyPlaying?.episodeName}
+              {item.currentlyPlaying?.seasonName && ` (${item.currentlyPlaying.seasonName})`}
             </Title>
           </Flex>
           <NormalizedLine itemKey={t("user")} value={item.user.username} />
@@ -232,7 +242,7 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
 const NormalizedLine = ({ itemKey, value }: { itemKey: string; value: string }) => {
   return (
     <Group w="100%" align="top" justify="space-between">
-      <Text>{itemKey}</Text>
+      <Text>{itemKey}:</Text>
       <Text>{value}</Text>
     </Group>
   );

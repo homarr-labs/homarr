@@ -1459,9 +1459,10 @@
       "description": "Show the current streams on your media servers",
       "option": {},
       "items": {
-        "user": "User:",
-        "name": "Name:",
-        "id": "Id:"
+        "noItem": "No item found",
+        "user": "User",
+        "name": "Name",
+        "id": "Id"
       }
     },
     "downloads": {
