@@ -1,3 +1,13 @@
+## [1.0.0-beta.8](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2024-12-25)
+
+### Bug Fixes
+
+* **deps:** update dependency @ctrl/deluge to ^7.1.0 ([#1776](https://github.com/homarr-labs/homarr/issues/1776)) ([ecae80d](https://github.com/homarr-labs/homarr/commit/ecae80d741213f12ff08f87992cc4d906cbe0085))
+* **deps:** update dependency @ctrl/transmission to ^7.2.0 ([#1777](https://github.com/homarr-labs/homarr/issues/1777)) ([3e2ffbd](https://github.com/homarr-labs/homarr/commit/3e2ffbd7bf2793ff58136ed75b38e0d96b4a5ca8))
+* **deps:** update dependency drizzle-orm to ^0.38.3 ([#1783](https://github.com/homarr-labs/homarr/issues/1783)) ([82c6ce7](https://github.com/homarr-labs/homarr/commit/82c6ce7b77023881bd4c74fb43437e777f9b219e))
+* **deps:** update dependency drizzle-zod to ^0.6.1 ([#1782](https://github.com/homarr-labs/homarr/issues/1782)) ([555212e](https://github.com/homarr-labs/homarr/commit/555212e2dc82c4b71b8c25a5f20964b3441b5ab9))
+* oldmarr import user casing wrong ([#1784](https://github.com/homarr-labs/homarr/issues/1784)) ([e37279f](https://github.com/homarr-labs/homarr/commit/e37279fe8071773f1a9773e3233bc81cbb336798))
+
 ## [1.0.0-beta.7](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2024-12-24)
 
 ### Features
