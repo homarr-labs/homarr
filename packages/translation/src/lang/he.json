@@ -634,55 +634,55 @@
         },
         "secretNotDefined": {
           "title": "חסרים פרטי התחברות",
-          "message": ""
+          "message": "לא סופקו כל פרטי ההתחברות"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "פרטי התחברות שגויים",
+          "message": "פרטי ההתחברות אינם חוקיים"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "החיבור נכשל",
+          "message": "לא ניתן היה ליצור את החיבור"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "בקשה שגויה",
+          "message": "הבקשה הייתה שגויה"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "לא מורשה",
+          "message": "כנראה פרטי התחברות שגויים"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "אסור",
+          "message": "כנראה חסרות הרשאות"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "לא נמצא",
+          "message": "כנראה כתובת אתר או נתיב שגויים"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "שגיאת שרת פנימית",
+          "message": "השרת נתקל בשגיאה"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "השירות אינו זמין",
+          "message": "השרת אינו זמין כרגע"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "החיבור הופסק",
+          "message": "החיבור בוטל"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "הדומיין לא נמצא",
+          "message": "לא ניתן למצוא את הדומיין"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "החיבור נדחה",
+          "message": "החיבור נדחה"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "JSON לא חוקי",
+          "message": "התגובה לא הייתה JSON חוקי"
         },
         "wrongPath": {
           "title": "",
@@ -691,10 +691,10 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "סודות",
+      "lastUpdated": "עדכון אחרון {date}",
       "notSet": {
-        "label": "",
+        "label": "לא הוגדר ערך",
         "tooltip": ""
       },
       "secureNotice": "",
@@ -709,11 +709,11 @@
       "kind": {
         "username": {
           "label": "שם משתמש",
-          "newLabel": ""
+          "newLabel": "שם משתמש חדש"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "מפתח API",
+          "newLabel": "מפתח API חדש"
         },
         "password": {
           "label": "סיסמה",
@@ -722,14 +722,14 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
+      "use": "בחר אינטגרציות בפריטים",
+      "interact": "אינטראקציה עם אינטגרציות",
       "full": "גישת אינטגרציה מלאה"
     }
   },
   "media": {
     "plural": "מדיה",
-    "search": "",
+    "search": "מצא מדיה",
     "field": {
       "name": "שם",
       "size": "גודל",
@@ -737,20 +737,20 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "העלה מדיה",
+        "file": "בחר קובץ",
         "notification": {
           "success": {
-            "message": ""
+            "message": "המדיה הועלתה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן היה להעלות את המדיה"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "מחק מדיה",
+        "description": "האם אתה בטוח שברצונך למחוק את המדיה <bName></bName>?",
         "notification": {
           "success": {
             "message": ""
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "",
+    "beta": "בטא",
     "error": "שגיאה",
     "action": {
       "add": "הוסף",
@@ -774,38 +774,38 @@
       "backToOverview": "",
       "create": "צור",
       "edit": "עריכה",
-      "import": "",
+      "import": "לייבא",
       "insert": "הוספה",
       "remove": "הסר",
       "save": "שמור",
       "saveChanges": "שמור שינויים",
       "cancel": "בטל",
       "delete": "מחיקה",
-      "discard": "",
+      "discard": "ביטול",
       "confirm": "לאשר",
-      "continue": "",
+      "continue": "המשך",
       "previous": "הקודם",
       "next": "הבא",
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "נא לנסות שוב",
-      "loading": ""
+      "loading": "טוען"
     },
-    "here": "",
+    "here": "כאן",
     "iconPicker": {
-      "label": "",
+      "label": "URL של האייקון",
       "header": ""
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "בהיר",
+        "dark": "כהה"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "מינימום",
+      "max": "מקסימום",
+      "days": "ימים",
       "hours": "שעות",
       "minutes": "דקות"
     },
@@ -823,41 +823,41 @@
         "error": "לא ניתן להחיל שינויים"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "הועבר בהצלחה",
+        "error": "ההעברה נכשלה"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "בחר ערך אחד או יותר"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "הוסף עוד ערכים",
+      "addLabel": "הוסף {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "בחר ערך",
       "badge": {
-        "recommended": ""
+        "recommended": "מומלץ"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "עבור למצב כהה",
+        "switchToLightMode": "עבור למצב בהיר",
+        "management": "ניהול",
         "preferences": "העדפות שלך",
-        "logout": "",
+        "logout": "התנתק/י",
         "login": "התחבר/י",
         "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "loggedOut": "התנתקת בהצלחה",
+        "updateAvailable": "{countUpdates} עדכונים זמינים: {tag}"
       }
     },
     "dangerZone": "אזור מסוכן",
     "noResults": "לא נמצאו תוצאות",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "הצג תצוגה מקדימה",
+      "hide": "הסתר תצוגה המקדימה"
     },
     "zod": {
       "errors": {
@@ -867,7 +867,7 @@
           "startsWith": "שדה זה חייב להתחיל עם {startsWith}",
           "endsWith": "שדה זה חייב להסתיים עם {endsWith}",
           "includes": "שדה זה חייב להכיל {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "שדה זה חייב להיות דוא\"ל חוקי"
         },
         "tooSmall": {
           "string": "שדה זה חייב להיות באורך של {minimum} תווים לפחות",
@@ -878,13 +878,13 @@
           "number": "שדה זה חייב להיות קטן או שווה ל {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "סיסמאות לא תואמות",
+          "passwordRequirements": "הסיסמה אינה עומדת בדרישות",
+          "boardAlreadyExists": "לוח בשם זה כבר קיים",
+          "invalidFileType": "סוג קובץ לא חוקי, צפוי {expected}",
+          "fileTooLarge": "הקובץ גדול מדי, הגודל המרבי הוא {maxSize}",
+          "invalidConfiguration": "תצורה לא חוקית",
+          "groupNameTaken": "שם הקבוצה כבר תפוס"
         }
       }
     }
@@ -892,12 +892,12 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "מדור דינמי חדש",
+        "remove": "הסר קטע דינמי"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "הסר קטע דינמי",
+        "message": "האם אתה בטוח שברצונך להסיר את הקטע הדינמי הזה? פריטים יועברו לאותו מיקום במדור האב."
       }
     },
     "category": {
@@ -907,29 +907,29 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "קטגוריה חדשה",
+        "edit": "שנה את שם הקטגוריה",
+        "remove": "הסר קטגוריה",
         "moveUp": "הזזה למעלה",
         "moveDown": "הזזה למטה",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "קטגוריה חדשה למעלה",
+        "createBelow": "קטגוריה חדשה למטה"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "קטגוריה חדשה",
+        "submit": "הוסף קטגוריה"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "הסר קטגוריה",
+        "message": "האם אתה בטוח שברצונך להסיר את הקטגוריה {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "שנה את שם הקטגוריה",
+        "submit": "שנה את שם הקטגוריה"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "קטגוריה חדשה",
           "changePosition": "שנה מיקום"
         }
       }
@@ -937,12 +937,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "פריט חדש",
+      "import": "ייבוא פריט",
+      "edit": "ערוך פריט",
+      "moveResize": "הזז/שנה גודל פריט",
+      "duplicate": "שכפול פריט",
+      "remove": "הסרת פריט"
     },
     "menu": {
       "label": {
@@ -950,11 +950,11 @@
       }
     },
     "create": {
-      "title": "",
-      "addToBoard": ""
+      "title": "בחירת פריט להוספה",
+      "addToBoard": "הוספה ללוח"
     },
     "moveResize": {
-      "title": "",
+      "title": "הזז/שנה גודל פריט",
       "field": {
         "width": {
           "label": "רוחב"
@@ -963,18 +963,18 @@
           "label": "גובה"
         },
         "xOffset": {
-          "label": ""
+          "label": "היסט X"
         },
         "yOffset": {
-          "label": ""
+          "label": "היסט Y"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "ערוך פריט",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "אפשרויות מתקדמות",
+        "title": "אפשרויות פריט מתקדמות"
       },
       "field": {
         "integrations": {
@@ -986,7 +986,7 @@
       }
     },
     "remove": {
-      "title": "",
+      "title": "הסרת פריט",
       "message": ""
     }
   },
@@ -1129,24 +1129,24 @@
           "label": ""
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "פורמט 24 שעות",
+          "description": "השתמש בפורמט של 24 שעות במקום בפורמט של 12 שעות"
         },
         "showSeconds": {
-          "label": ""
+          "label": "הצג שניות"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "השתמש באזור זמן קבוע"
         },
         "timezone": {
           "label": "אזור זמן",
-          "description": ""
+          "description": "בחר את אזור הזמן בהתאם לתקן IANA"
         },
         "showDate": {
-          "label": ""
+          "label": "הצג את התאריך"
         },
         "dateFormat": {
-          "label": "",
+          "label": "פורמט תאריך",
           "description": ""
         }
       }
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -1245,7 +1245,7 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "לא סופקה כתובת URL של הiFrame",
         "noBrowerSupport": "הדפדפן שלך אינו תומך ב-iframes. נא עדכן את הדפדפן שלך."
       }
     },
@@ -1257,19 +1257,19 @@
           "label": "מזהה ישות"
         },
         "displayName": {
-          "label": ""
+          "label": "שם תצוגה"
         },
         "entityUnit": {
           "label": ""
         },
         "clickable": {
-          "label": ""
+          "label": "ניתן ללחיצה"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "הפעל אוטומציה",
+      "description": "הפעל אוטומציה בלחיצה אחת",
       "option": {
         "displayName": {
           "label": "הצג שם"
@@ -1279,7 +1279,7 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "הפעל {name}"
       }
     },
     "calendar": {
@@ -1289,16 +1289,16 @@
         "releaseType": {
           "label": "סוג שחרור של Radarr",
           "options": {
-            "inCinemas": "",
+            "inCinemas": "בבתי קולנוע",
             "digitalRelease": "",
             "physicalRelease": ""
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "התחל מ"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "סיים ב"
         }
       }
     },
@@ -1307,23 +1307,23 @@
       "description": "מציג את מידע מזג האוויר הנוכחי של מיקום מוגדר.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "טמפרטורה בפרנהייט"
         },
         "location": {
           "label": "מיקום מזג האוויר"
         },
         "showCity": {
-          "label": ""
+          "label": "הצג עיר"
         },
         "hasForecast": {
-          "label": ""
+          "label": "הצג תחזית"
         },
         "forecastDayCount": {
           "label": "",
           "description": ""
         },
         "dateFormat": {
-          "label": "",
+          "label": "פורמט תאריך",
           "description": ""
         }
       },
@@ -2013,7 +2013,7 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "ניהול",
     "title": {
       "morning": "",
       "afternoon": "",
@@ -2297,8 +2297,8 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "בהיר",
+                "dark": "כהה"
               }
             }
           },
@@ -2676,8 +2676,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "עבור למצב בהיר",
+                "dark": "עבור למצב כהה"
               },
               "language": {
                 "label": "",
