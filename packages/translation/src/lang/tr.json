@@ -703,7 +703,7 @@
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "Hiçbir Gizli anahtar yok",
+        "segmentTitle": "Hiçbir Gizli Anahtar Bulunamadı",
         "text": "Bu entegrasyon için gizli anahtar gerekmiyor"
       },
       "kind": {
@@ -1013,7 +1013,7 @@
       },
       "error": {
         "notFound": {
-          "label": "Uygulama yok",
+          "label": "Uygulama Eklenmedi",
           "tooltip": "Geçerli bir uygulama seçmediniz"
         }
       }
@@ -1069,7 +1069,7 @@
       },
       "error": {
         "internalServerError": "DNS Çözümleyici Özeti alınamadı",
-        "integrationsDisconnected": "Veri yok, tüm entegrasyonların bağlantısı kesildi"
+        "integrationsDisconnected": "Veri Bulunamadı, Tüm Entegrasyonların Bağlantısı Kesildi"
       },
       "data": {
         "adsBlockedToday": "Bugün engellenenler",
@@ -1379,14 +1379,14 @@
         "information": "Bilgi",
         "processor": "İşlemci: {cpuModelName}",
         "memory": "Bellek: {memory}GiB",
-        "memoryAvailable": "Mevcut: {memoryAvailable}GiB ({percent}%)",
+        "memoryAvailable": "Kullanılabilir: {memoryAvailable} GiB ({percent}%)",
         "version": "Sürüm: {version}",
         "uptime": "Çalışma Süresi: {days} Gün, {hours} Saat, {minutes} Dakika",
         "loadAverage": "Ortalama yük:",
         "minute": "1 dakika",
         "minutes": "{count} dakika",
         "used": "Kullanılan",
-        "available": "Mevcut",
+        "available": "Kullanılabilir",
         "lastSeen": "Son durum güncellemesi: {lastSeen}"
       },
       "memory": {},
@@ -1651,7 +1651,7 @@
           "label": "Varsayılan görünüm"
         },
         "queuePageSize": {
-          "label": "Sıra sayfa boyutu"
+          "label": "Kuyruk Sayfa Boyutu"
         }
       },
       "tab": {
@@ -1842,7 +1842,7 @@
             "description": "Görsel, tüm arka plan alanını kaplayacak kadar tekrarlanır."
           },
           "no-repeat": {
-            "label": "Tekrarlama yok",
+            "label": "Tekrarlama Yok",
             "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
@@ -1993,7 +1993,7 @@
         "notice": "Bağlantıyı kontrol edin veya erişilebilir olması gerektiğini düşünüyorsanız bir yöneticiyle iletişime geçin"
       },
       "homeBoard": {
-        "title": "Ana panel yok",
+        "title": "Varsayılan Panel Yapılandırılmadı",
         "admin": {
           "description": "Sunucu için henüz bir ana sayfa paneli belirlemediniz.",
           "link": "Sunucu geneli için ana panel yapılandırın",
@@ -2269,7 +2269,7 @@
             "title": "Tarama ve Dizinleme",
             "warning": "Burada herhangi bir ayarı etkinleştirmek veya devre dışı bırakmak, arama motorlarının sayfanızı nasıl dizine ekleyeceğini ve tarayacağını ciddi şekilde etkileyecektir. Herhangi bir ayar bir istektir ve bu ayarları uygulamak tarayıcıya bağlıdır. Herhangi bir değişikliğin uygulanması birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özgü olabilir.",
             "noIndex": {
-              "title": "İndeks yok",
+              "title": "İndeks bulunamadı",
               "text": "Web sitesini arama motorlarında indekslemeyin ve hiçbir arama sonucunda göstermeyin"
             },
             "noFollow": {
@@ -2281,7 +2281,7 @@
               "text": "Site dilinin kullanıcının okumak isteyeceği bir dil olmaması durumunda Google, arama sonuçlarında bir çeviri bağlantısı gösterecektir"
             },
             "noSiteLinksSearchBox": {
-              "title": "Site bağlantıları arama kutusu yok",
+              "title": "Site bağlantıları arama kutusu yapılandırılmadı",
               "text": "Google, taranan bağlantıların yanı sıra diğer doğrudan bağlantılarla bir arama kutusu oluşturacaktır. Bunu etkinleştirmek Google'dan bu kutuyu devre dışı bırakmasını isteyecektir."
             }
           },
@@ -2894,7 +2894,7 @@
           "label": "İsim"
         },
         "short": {
-          "label": "Kısa Ad"
+          "label": "Kısa Yol"
         },
         "urlTemplate": {
           "label": "URL arama şablonu"
@@ -2907,7 +2907,7 @@
         "list": {
           "title": "Arama Motorları",
           "noResults": {
-            "title": "Henüz bir arama motoru yok",
+            "title": "Henüz bir arama motoru yapılandırılmadı",
             "action": "İlk arama motorunuzu oluşturun"
           },
           "interactive": "Etkileşimli, entegrasyon kullanır"
