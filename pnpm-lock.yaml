@@ -914,8 +914,8 @@ importers:
         specifier: ^0.38.2
         version: 0.38.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.2)(better-sqlite3@11.7.0)(mysql2@3.12.0)(react@19.0.0)
       drizzle-zod:
-        specifier: ^0.6.0
-        version: 0.6.0(drizzle-orm@0.38.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.2)(better-sqlite3@11.7.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1)
+        specifier: ^0.6.1
+        version: 0.6.1(drizzle-orm@0.38.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.2)(better-sqlite3@11.7.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1)
       mysql2:
         specifier: 3.12.0
         version: 3.12.0
@@ -5381,8 +5381,8 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zod@0.6.0:
-    resolution: {integrity: sha512-7K1k7Y/5Jw9D4cTlrHL3mRTLg3oaglbi4VvBIYmSAtMvYkgqvusPtra7cnntMCe1r1cBcwxhlEkfiNdU23lp2g==}
+  drizzle-zod@0.6.1:
+    resolution: {integrity: sha512-huEbUgnsuR8tupnmLiyB2F1I2H9dswI3GfM36IbIqx9i0YUeYjRsDpJVyFVeziUvI1ogT9JHRL2Q03cC4QmvxA==}
     peerDependencies:
       drizzle-orm: '>=0.36.0'
       zod: '>=3.0.0'
@@ -13196,7 +13196,7 @@ snapshots:
       mysql2: 3.12.0
       react: 19.0.0
 
-  drizzle-zod@0.6.0(drizzle-orm@0.38.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.2)(better-sqlite3@11.7.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1):
+  drizzle-zod@0.6.1(drizzle-orm@0.38.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.2)(better-sqlite3@11.7.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1):
     dependencies:
       drizzle-orm: 0.38.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.2)(better-sqlite3@11.7.0)(mysql2@3.12.0)(react@19.0.0)
       zod: 3.24.1
