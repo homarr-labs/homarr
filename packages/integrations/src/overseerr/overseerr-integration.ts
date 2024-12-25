@@ -6,11 +6,19 @@ import type { ISearchableIntegration } from "../base/searchable-integration";
 import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request";
 import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request";
 
+interface OverseerrSearchResult {
+  name: string;
+  link: string;
+  image?: string;
+  text?: string;
+  type: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number]["mediaType"];
+}
+
 /**
  * Overseerr Integration. See https://api-docs.overseerr.dev
  */
-export class OverseerrIntegration extends Integration implements ISearchableIntegration {
-  public async searchAsync(query: string): Promise<{ image?: string; name: string; link: string; text?: string }[]> {
+export class OverseerrIntegration extends Integration implements ISearchableIntegration<OverseerrSearchResult> {
+  public async searchAsync(query: string) {
     const response = await fetch(this.url("/api/v1/search", { query }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -27,6 +35,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
       link: this.url(`/${result.mediaType}/${result.id}`).toString(),
       image: constructSearchResultImage(result),
       text: "overview" in result ? result.overview : undefined,
+      type: result.mediaType,
     }));
   }
 

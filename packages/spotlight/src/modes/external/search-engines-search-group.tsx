@@ -1,8 +1,10 @@
 import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconDownload, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
@@ -10,6 +12,78 @@ import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 
 type SearchEngine = RouterOutputs["searchEngine"]["search"][number];
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type MediaRequestChildrenProps = {
+  result: {
+    image?: string;
+    name: string;
+    link: string;
+    text?: string;
+    type: "tv" | "movie";
+  };
+  integration: {
+    kind: IntegrationKind;
+    url: string;
+  };
+};
+
+const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenProps>({
+  useActions(options, query) {
+    return [
+      {
+        key: "request",
+        Component(option) {
+          return (
+            <Group mx="md" my="sm" wrap="nowrap">
+              <IconDownload stroke={1.5} />
+              <Text>Request {option.result.type === "tv" ? "series" : "movie"}</Text>
+            </Group>
+          );
+        },
+        // TODO: Open modal for serie or request directly
+        useInteraction: interaction.link(() => ({ href: options.result.link, newTab: true })),
+      },
+      {
+        key: "open",
+        Component({ integration }) {
+          return (
+            <Group mx="md" my="sm" wrap="nowrap">
+              <IconSearch stroke={1.5} />
+              <Text>Open in {integration.kind}</Text>
+            </Group>
+          );
+        },
+        useInteraction({ result }) {
+          return {
+            type: "link",
+            href: result.link,
+            newTab: true,
+          };
+        },
+      },
+    ];
+  },
+  DetailComponent({ options }) {
+    return (
+      <Group mx="md" my="sm" wrap="nowrap">
+        {options.result.image ? (
+          <Image src={options.result.image} w={35} h={50} fit="cover" radius={"md"} />
+        ) : (
+          <IconSearch stroke={1.5} size={35} />
+        )}
+        <Stack gap={2}>
+          <Text>{options.result.name}</Text>
+          {options.result.text && (
+            <Text c="dimmed" size="sm" lineClamp={2}>
+              {options.result.text}
+            </Text>
+          )}
+        </Stack>
+      </Group>
+    );
+  },
+});
 
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
   useActions: (searchEngine, query) => {
@@ -64,10 +138,48 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
           </Group>
         );
       },
-      useInteraction: interaction.link(() => ({
-        href: searchResult.link,
-        newTab: true,
-      })),
+      useInteraction(searchEngine) {
+        if (searchEngine.type !== "fromIntegration") {
+          throw new Error("Invalid search engine type");
+        }
+
+        if (!searchEngine.integration) {
+          throw new Error("Invalid search engine integration");
+        }
+
+        if (
+          getIntegrationKindsByCategory("mediaRequest").some(
+            (categoryKind) => categoryKind === searchEngine.integration?.kind,
+          ) &&
+          "type" in searchResult
+        ) {
+          const type = searchResult.type;
+          if (type === "person") {
+            return {
+              type: "link",
+              href: searchResult.link,
+              newTab: true,
+            };
+          }
+
+          return {
+            type: "children",
+            ...mediaRequestsChildrenOptions({
+              result: {
+                ...searchResult,
+                type,
+              },
+              integration: searchEngine.integration,
+            }),
+          };
+        }
+
+        return {
+          type: "link",
+          href: searchResult.link,
+          newTab: true,
+        };
+      },
     }));
   },
   DetailComponent({ options }) {
