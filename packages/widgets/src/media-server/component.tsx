@@ -1,24 +1,21 @@
 "use client";
 
-import { startTransition, useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { MantineStyleProp } from "@mantine/core";
-import { Avatar, Box, Center, Flex, Group, Modal, Stack, Text, Title } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconDeviceAudioTape, IconDeviceTv, IconMovie, IconVideo } from "@tabler/icons-react";
+import { Avatar, Box, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import { getIconUrl, integrationDefs } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
+import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
 export default function MediaServerWidget({ integrationIds, isEditMode }: WidgetComponentProps<"mediaServer">) {
-  const [clickedIndex, setClickedIndex] = useState(0);
-  const [opened, { open, close }] = useDisclosure(false);
   const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
     {
       integrationIds,
@@ -113,7 +110,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     "--text-fz": "calc(var(--ratio-width) * 0.45)", //General Font Size
     "--mrt-base-background-color": "transparent",
   };
-
+  const { openModal } = useModalAction(itemInfoModal);
   const table = useTranslatedMantineReactTable({
     columns,
     data: flatSessions,
@@ -151,9 +148,8 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     },
     mantineTableBodyCellProps: ({ row }) => ({
       onClick: () => {
-        startTransition(() => {
-          setClickedIndex(row.index);
-          open();
+        openModal({
+          item: row.original,
         });
       },
     }),
@@ -190,54 +186,39 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
           </Group>
         ))}
       </Group>
-      <ItemInfoModal items={flatSessions} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
   );
 }
 
-interface ItemInfoModalProps {
-  items: StreamSession[];
-  currentIndex: number;
-  opened: boolean;
-  onClose: () => void;
-}
-
-const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalProps) => {
+const itemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
   const t = useScopedI18n("widget.mediaServer.items");
-  const item = useMemo<StreamSession | undefined>(() => items[currentIndex], [items, currentIndex]);
-
-  const currentlyPlayingType =
-    item?.currentlyPlaying?.type === "movie" ? (
-      <IconMovie size={20} />
-    ) : item?.currentlyPlaying?.type === "tv" ? (
-      <IconDeviceTv size={20} />
-    ) : item?.currentlyPlaying?.type === "video" ? (
-      <IconVideo size={20} />
-    ) : item?.currentlyPlaying?.type === "audio" ? (
-      <IconDeviceAudioTape size={20} />
-    ) : null;
 
   return (
-    <Modal opened={opened} onClose={onClose} centered title={currentlyPlayingType} size="auto">
-      {item === undefined ? (
-        <Center>{t("noItem")}</Center>
-      ) : (
-        <Stack align="center">
-          <Flex direction="column" gap="xs" align="center">
-            <Title>{item.currentlyPlaying?.name}</Title>
-            <Title order={3}>
-              {item.currentlyPlaying?.episodeName}
-              {item.currentlyPlaying?.seasonName && ` (${item.currentlyPlaying.seasonName})`}
-            </Title>
-          </Flex>
-          <NormalizedLine itemKey={t("user")} value={item.user.username} />
-          <NormalizedLine itemKey={t("name")} value={item.sessionName} />
-          <NormalizedLine itemKey={t("id")} value={item.sessionId} />
-        </Stack>
-      )}
-    </Modal>
+    <Stack align="center">
+      <Flex direction="column" gap="xs" align="center">
+        <Title>{innerProps.item.currentlyPlaying?.name}</Title>
+        <Group display="flex">
+          <Title order={3}>{innerProps.item.currentlyPlaying?.episodeName}</Title>
+          {innerProps.item.currentlyPlaying?.seasonName && (
+            <>
+              {" - "}
+              <Title order={3}>{innerProps.item.currentlyPlaying.seasonName}</Title>
+            </>
+          )}
+        </Group>
+      </Flex>
+      <NormalizedLine itemKey={t("user")} value={innerProps.item.user.username} />
+      <NormalizedLine itemKey={t("name")} value={innerProps.item.sessionName} />
+      <NormalizedLine itemKey={t("id")} value={innerProps.item.sessionId} />
+    </Stack>
   );
-};
+}).withOptions({
+  defaultTitle() {
+    return "";
+  },
+  size: "auto",
+  centered: true,
+});
 
 const NormalizedLine = ({ itemKey, value }: { itemKey: string; value: string }) => {
   return (
