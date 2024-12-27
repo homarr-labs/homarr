@@ -1268,7 +1268,7 @@
       }
     },
     "smartHome-executeAutomation": {
-      "name": "Otomasyonu Yürüt",
+      "name": "Otomasyon Yürüt",
       "description": "Tek tıklamayla otomasyonu tetikleyin",
       "option": {
         "displayName": {
@@ -2266,23 +2266,23 @@
             }
           },
           "crawlingAndIndexing": {
-            "title": "Tarama ve Dizinleme",
-            "warning": "Burada herhangi bir ayarı etkinleştirmek veya devre dışı bırakmak, arama motorlarının sayfanızı nasıl dizine ekleyeceğini ve tarayacağını ciddi şekilde etkileyecektir. Herhangi bir ayar bir istektir ve bu ayarları uygulamak tarayıcıya bağlıdır. Herhangi bir değişikliğin uygulanması birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özgü olabilir.",
+            "title": "Arama ve İndeksleme",
+            "warning": "Buradaki ayarların etkinleştirilmesi veya devre dışı bırakılması, arama motorlarının sayfanızı arama ve indekleme şeklini ciddi şekilde etkileyecektir. Her ayar bir istek başlatır ve bu ayarları almak tarayıcının görevidir. Değişiklikler birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özel olabilir.",
             "noIndex": {
-              "title": "İndeks bulunamadı",
-              "text": "Web sitesini arama motorlarında indekslemeyin ve hiçbir arama sonucunda göstermeyin"
+              "title": "İndeksleme Yapma",
+              "text": "Web sitesini arama motorlarında indekslemeyin veya herhangi bir arama sonucunda görüntülemeyin"
             },
             "noFollow": {
-              "title": "Takip yok",
-              "text": "Dizinleme sırasında hiçbir bağlantıyı takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların Homarr'daki tüm bağlantıları takip etmeye çalışmasına yol açacaktır."
+              "title": "Bağlantıları Takip Etme",
+              "text": "İndeksleme sırasında bağlantıları takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların Homarr'daki tüm bağlantıları izlemeye çalışmasına neden olur."
             },
             "noTranslate": {
-              "title": "Çeviri yok",
-              "text": "Site dilinin kullanıcının okumak isteyeceği bir dil olmaması durumunda Google, arama sonuçlarında bir çeviri bağlantısı gösterecektir"
+              "title": "Çeviri Yapma",
+              "text": "Kullanıcının site üzerinde okumak isteyeceği dilin olmaması durumunda Google, arama sonuçlarında bir çeviri bağlantısı gösterecektir"
             },
             "noSiteLinksSearchBox": {
-              "title": "Site bağlantıları arama kutusu yapılandırılmadı",
-              "text": "Google, taranan bağlantıların yanı sıra diğer doğrudan bağlantılarla bir arama kutusu oluşturacaktır. Bunu etkinleştirmek Google'dan bu kutuyu devre dışı bırakmasını isteyecektir."
+              "title": "Site arama alanını gösterme",
+              "text": "Google, aranan bağlantıların yanı sıra diğer doğrudan bağlantılardan oluşan bir arama kutusu oluşturur. Bu seçenek etkinleştirildiğinde Google'dan bu alanı devre dışı bırakması istenecektir."
             }
           },
           "board": {
