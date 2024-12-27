@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1050,13 +1050,13 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1083,13 +1083,13 @@
       "description": "Controle o PiHole ou o AdGuard em seu painel de controle",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1183,7 +1183,7 @@
         "checkList": "Lista de verificação",
         "increaseIndent": "Aumentar recuo",
         "decreaseIndent": "Diminuir recuo",
-        "link": "",
+        "link": "Link",
         "unlink": "Remover link",
         "image": "Incorporar imagem",
         "addTable": "Adicionar tabela",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incorporar qualquer conteúdo da internet. Alguns sites podem restringir o acesso.",
       "option": {
         "embedUrl": {
@@ -1635,7 +1635,7 @@
           "available": "",
           "tv": "Solicitações de TV",
           "movie": "Solicitações de filmes",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Principais usuários",
@@ -1677,7 +1677,7 @@
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "",
+          "videoCodecs": "Codecs",
           "videoContainers": "",
           "videoResolutions": ""
         },
@@ -1907,7 +1907,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": ""
+          "title": "Layout"
         },
         "background": {
           "title": "Antecedentes"
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Ferramentas",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Criador"
@@ -2208,7 +2208,7 @@
               "label": "Data de expiração"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Ferramentas",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
