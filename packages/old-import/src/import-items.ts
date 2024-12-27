@@ -55,7 +55,7 @@ export const insertItemsAsync = async (
       xOffset: screenSizeShape.location.x,
       yOffset: screenSizeShape.location.y,
       kind,
-      options: SuperJSON.stringify(mapOptions(kind, widget.properties, appsMap)),
+      options: SuperJSON.stringify(mapOptions(widget.type, widget.properties, appsMap)),
     });
 
     logger.debug(`Inserted widget id=${widget.id} sectionId=${sectionId}`);

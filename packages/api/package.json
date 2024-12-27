@@ -41,10 +41,11 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
-    "next": "^14.2.21",
+    "lodash.clonedeep": "^4.5.0",
+    "next": "^14.2.22",
     "react": "^19.0.0",
     "superjson": "2.2.2",
-    "trpc-to-openapi": "^2.1.0"
+    "trpc-to-openapi": "^2.1.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
