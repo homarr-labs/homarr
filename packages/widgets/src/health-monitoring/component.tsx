@@ -66,7 +66,7 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
           }
           const newData = prevData.map((item) =>
             item.integrationId === data.integrationId
-              ? { ...item, healthInfo: data.healthInfo, timestamp: data.timestamp }
+              ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp }
               : item,
           );
           return newData;
@@ -272,11 +272,12 @@ export default function HealthMonitoringWidget({ options, integrationIds }: Widg
 
 export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) => {
   const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");
+  const months = uptimeDuration.months();
   const days = uptimeDuration.days();
   const hours = uptimeDuration.hours();
   const minutes = uptimeDuration.minutes();
 
-  return t("widget.healthMonitoring.popover.uptime", { days, hours, minutes });
+  return t("widget.healthMonitoring.popover.uptime", { months, days, hours, minutes });
 };
 
 export const progressColor = (percentage: number) => {
