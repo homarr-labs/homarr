@@ -685,26 +685,26 @@
           "message": "התגובה לא הייתה JSON חוקי"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "נתיב שגוי",
+          "message": "כנראה שהנתיב שגוי"
         }
       }
     },
     "secrets": {
-      "title": "סודות",
+      "title": "נתוני גישה",
       "lastUpdated": "עדכון אחרון {date}",
       "notSet": {
         "label": "לא הוגדר ערך",
-        "tooltip": ""
+        "tooltip": "נתון הגישה הנדרש עדיין לא נקבע"
       },
-      "secureNotice": "",
+      "secureNotice": "לא ניתן לאחזר את נתון הגישה לאחר היצירה",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "איפוס נתון גישה",
+        "message": "האם את/ה בטוח/ה שברצונך למחוק את נתון הגישה הזה?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "אין נתוני גישה",
+        "text": "לא נדרשים נתוני גישה לאינטגרציה זו"
       },
       "kind": {
         "username": {
@@ -753,15 +753,15 @@
         "description": "האם אתה בטוח שברצונך למחוק את המדיה <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "המדיה נמחקה בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן למחוק את המדיה"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "העתק קישור"
       }
     }
   },
@@ -771,10 +771,10 @@
     "action": {
       "add": "הוסף",
       "apply": "החל",
-      "backToOverview": "",
+      "backToOverview": "חזרה לסקירה כללית",
       "create": "צור",
       "edit": "עריכה",
-      "import": "לייבא",
+      "import": "ייבוא",
       "insert": "הוספה",
       "remove": "הסר",
       "save": "שמור",
@@ -786,15 +786,15 @@
       "continue": "המשך",
       "previous": "הקודם",
       "next": "הבא",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "בדוק את התיעוד",
+      "checkLogs": "בדוק לוגים לפרטים נוספים",
       "tryAgain": "נא לנסות שוב",
       "loading": "טוען"
     },
     "here": "כאן",
     "iconPicker": {
-      "label": "URL של האייקון",
-      "header": ""
+      "label": "קישור של הסמל",
+      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} ."
     },
     "colorScheme": {
       "options": {
@@ -848,8 +848,8 @@
         "preferences": "העדפות שלך",
         "logout": "התנתק/י",
         "login": "התחבר/י",
-        "homeBoard": "",
-        "loggedOut": "התנתקת בהצלחה",
+        "homeBoard": "לוח הבית שלך",
+        "loggedOut": "נותקת מהמערכת",
         "updateAvailable": "{countUpdates} עדכונים זמינים: {tag}"
       }
     },
@@ -1378,39 +1378,39 @@
       "popover": {
         "information": "",
         "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "memory": "זיכרון: {memory}GiB",
+        "memoryAvailable": "זמין: {memoryAvailable}GiB ({percent}%)",
+        "version": "גרסה: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "loadAverage": "ממוצע עומס:",
+        "minute": "דקה אחת",
+        "minutes": "{count} דקות",
+        "used": "בשימוש",
         "available": "זמין",
-        "lastSeen": ""
+        "lastSeen": "עדכון סטטוס אחרון: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "נכשל בעדכון סטטוס בריאות המערכת"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "עיר / מיקוד",
+        "latitude": "קו רוחב",
+        "longitude": "קו אורך",
+        "disabledTooltip": "אנא הזן עיר או מיקוד",
+        "unknownLocation": "מיקום לא ידוע",
         "search": "חיפוש",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "עיר",
+            "country": "מדינה",
+            "coordinates": "קואורדינטות",
+            "population": "אוכלוסיה"
           },
           "action": {
-            "select": ""
+            "select": "בחר {city}, {countryCode}"
           },
           "population": {
             "fallback": "לא ידוע"
@@ -1418,16 +1418,16 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "לא נמצא אינטגרציה",
+        "description": "לחץ על <here></here> כדי ליצור אינטגרציה חדשה"
       },
       "app": {
         "noData": "לא נמצאה אפליקציה",
-        "description": ""
+        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "לא נבחרה אינטגרציה",
+        "noData": "אין נתוני אינטגרציה זמינים"
       },
       "option": {}
     },
