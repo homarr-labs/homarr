@@ -1,3 +1,10 @@
+## [1.0.0-beta.9](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2024-12-27)
+
+### Bug Fixes
+
+* **deps:** update nextjs monorepo to ^14.2.22 ([#1787](https://github.com/homarr-labs/homarr/issues/1787)) ([3d66ff9](https://github.com/homarr-labs/homarr/commit/3d66ff914883a665c0329c8fc4fd087f4d220692))
+* **deps:** update tanstack-query monorepo to ^5.62.11 ([#1791](https://github.com/homarr-labs/homarr/issues/1791)) ([e9870e7](https://github.com/homarr-labs/homarr/commit/e9870e7ee78227d3be773d9d93aa732760cc8e21))
+
 ## [1.0.0-beta.8](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2024-12-25)
 
 ### Bug Fixes
