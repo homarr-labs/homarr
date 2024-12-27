@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Iegult jebkuru saturu no interneta. Dažas vietnes var ierobežot piekļuvi.",
       "option": {
         "embedUrl": {
@@ -1528,7 +1528,7 @@
           "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "",
+          "columnTitle": "Progress",
           "detailsTitle": ""
         },
         "ratio": {
@@ -1685,8 +1685,8 @@
           "empty": "Tukšs",
           "table": {
             "file": "",
-            "eta": "",
-            "progress": "",
+            "eta": "ETA",
+            "progress": "Progress",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Rīki",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Izveidotājs"
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2445,7 +2445,7 @@
         "label": "Attēls"
       },
       "ports": {
-        "label": ""
+        "label": "Ports"
       }
     },
     "action": {
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Rīki",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
