@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Nhúng bất kỳ nội dung nào từ internet. Một số trang web có thể hạn chế quyền truy cập.",
       "option": {
         "embedUrl": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Công cụ",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Công cụ",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
