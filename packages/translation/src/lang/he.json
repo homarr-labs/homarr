@@ -92,7 +92,7 @@
       },
       "finish": {
         "title": "סיים את ההגדרה",
-        "subtitle": "",
+        "subtitle": "המערכת מוכנה לפעולה!",
         "description": "השלמת בהצלחה את תהליך ההגדרה. כעת תוכל להתחיל להשתמש ב-Homarr. בחר את הפעולה הבאה שלך:",
         "action": {
           "goToBoard": "עבור ללוח {name}",
@@ -449,7 +449,7 @@
       },
       "delete": {
         "label": "מחק קבוצה",
-        "description": "",
+        "description": "ברגע שתמחק/י קבוצה, לא ניתן יהיה לחזור אחורה. אנא ודא/י זאת בוודאות.",
         "confirm": "האם אתה בטוח שברצונך למחוק את הקבוצה {name}?",
         "notification": {
           "success": {
@@ -981,49 +981,49 @@
           "label": "אינטגרציות"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "מחלקות עיצוב מותאמות אישית"
         }
       }
     },
     "remove": {
       "title": "הסרת פריט",
-      "message": ""
+      "message": "האם אתה בטוח שברצונך להסיר פריט זה?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "אפליקציה",
+      "description": "הטמעת אפליקציה בלוח.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "בחר אפליקציה"
         },
         "openInNewTab": {
           "label": "פתיחה בכרטיסיה חדשה"
         },
         "showTitle": {
-          "label": ""
+          "label": "הצג את שם האפליקציה"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "הצג תיאור"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "אפשר פינג פשוט"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "אין אפליקציה",
+          "tooltip": "לא נבחרה אפליקציה חוקית"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "סימניות",
+      "description": "מציג קישורי אפליקציות מרובים",
       "option": {
         "title": {
-          "label": ""
+          "label": "כותרת"
         },
         "layout": {
           "label": "פריסה",
@@ -1035,19 +1035,19 @@
               "label": "אנכי"
             },
             "grid": {
-              "label": ""
+              "label": "רשת"
             }
           }
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "סימניות",
+          "add": "הוסף סימניה"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "סיכום חור אבטחה DNS",
+      "description": "מציג את הסיכום חור אבטחת DNS שלך",
       "option": {
         "layout": {
           "label": "פריסה",
@@ -1059,27 +1059,27 @@
               "label": "אנכי"
             },
             "grid": {
-              "label": ""
+              "label": "רשת"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "השתמש בצבעי Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "אחזור סיכום החור אבטחת DNS נכשל",
+        "integrationsDisconnected": "אין נתונים זמינים, כל האינטגרציות מנותקות"
       },
       "data": {
         "adsBlockedToday": "נחסמו היום",
         "adsBlockedTodayPercentage": "נחסמו היום",
         "dnsQueriesToday": "שאילתות היום",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "דומיינים ברשימת החסימה"
       }
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "בקרות חור אבטחת DNS",
       "description": "שלוט ב-PiHole או ב-AdGuard מלוח המחוונים שלך",
       "option": {
         "layout": {
@@ -1092,41 +1092,41 @@
               "label": "אנכי"
             },
             "grid": {
-              "label": ""
+              "label": "רשת"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "הצג את כל הלחצנים"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "השליטה בחור אבטחת DNS נכשלה"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
+        "enableAll": "אפשר הכל",
+        "disableAll": "השבת הכל",
+        "setTimer": "הגדר טיימר",
         "set": "הגדר",
         "enabled": "מאופשר",
         "disabled": "מושבת",
-        "processing": "",
-        "disconnected": "",
+        "processing": "מעבד",
+        "disconnected": "מנותק",
         "hours": "שעות",
         "minutes": "דקות",
-        "unlimited": ""
+        "unlimited": "השאר ריק עבור ללא הגבלה"
       }
     },
     "clock": {
-      "name": "",
+      "name": "תאריך ושעה",
       "description": "מציג את התאריך והשעה הנוכחיים.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "תצוגת כותרת/עיר מותאמת אישית",
+          "description": "הצג כותרת מותאמת אישית או שם העיר/המדינה על גבי השעון."
         },
         "customTitle": {
-          "label": ""
+          "label": "כותרת"
         },
         "is24HourFormat": {
           "label": "פורמט 24 שעות",
@@ -1147,13 +1147,13 @@
         },
         "dateFormat": {
           "label": "פורמט תאריך",
-          "description": ""
+          "description": "איך צריך להיראות התאריך"
         }
       }
     },
     "notebook": {
       "name": "פנקס רשימות",
-      "description": "",
+      "description": "ווידג'ט פשוט של מחברת התומך ב-markdown",
       "option": {
         "showToolbar": {
           "label": "הצג את סרגל הכלים לסיוע כתיבת סימון"
@@ -1245,13 +1245,13 @@
         }
       },
       "error": {
-        "noUrl": "לא סופקה כתובת URL של הiFrame",
+        "noUrl": "לא סופק קישור של iFrame",
         "noBrowerSupport": "הדפדפן שלך אינו תומך ב-iframes. נא עדכן את הדפדפן שלך."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "מצב ישות",
+      "description": "הצג את המצב של ישות והחלף אותו באופן אופציונלי",
       "option": {
         "entityId": {
           "label": "מזהה ישות"
@@ -1260,7 +1260,7 @@
           "label": "שם תצוגה"
         },
         "entityUnit": {
-          "label": ""
+          "label": "יחידת ישות"
         },
         "clickable": {
           "label": "ניתן ללחיצה"
@@ -1284,14 +1284,14 @@
     },
     "calendar": {
       "name": "לוח שנה",
-      "description": "",
+      "description": "הצג אירועים מהאינטגרציות שלך בתצוגת לוח שנה בתוך פרק זמן יחסי מסוים",
       "option": {
         "releaseType": {
           "label": "סוג שחרור של Radarr",
           "options": {
             "inCinemas": "בבתי קולנוע",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "digitalRelease": "שחרור דיגיטלי",
+            "physicalRelease": "שחרור פיזי"
           }
         },
         "filterPastMonths": {
@@ -1319,12 +1319,12 @@
           "label": "הצג תחזית"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "כמות ימי התחזית",
+          "description": "כאשר הווידג'ט אינו רחב מספיק, פחות ימים מוצגים"
         },
         "dateFormat": {
           "label": "פורמט תאריך",
-          "description": ""
+          "description": "איך צריך להיראות התאריך"
         }
       },
       "kind": {
@@ -1346,16 +1346,16 @@
     },
     "indexerManager": {
       "name": "סטטוס מנהל אינדקס",
-      "description": "",
+      "description": "מצב האינדקסים שלך",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "פתח את אתר האינדקס בכרטיסייה חדשה"
         }
       },
       "title": "מנהל אינדקס",
       "testAll": "בדוק הכל",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "נכשל באחזור סטטוס האינדקסים"
       }
     },
     "healthMonitoring": {
@@ -1376,8 +1376,8 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
+        "information": "מידע",
+        "processor": "מעבד: {cpuModelName}",
         "memory": "זיכרון: {memory}GiB",
         "memoryAvailable": "זמין: {memoryAvailable}GiB ({percent}%)",
         "version": "גרסה: {version}",
@@ -1570,7 +1570,7 @@
         "paused": "מושהה",
         "completed": "הושלם",
         "failed": "",
-        "processing": "",
+        "processing": "מעבד",
         "leeching": "",
         "stalled": "",
         "unknown": "לא ידוע",
@@ -1615,7 +1615,7 @@
       "availability": {
         "unknown": "לא ידוע",
         "pending": "",
-        "processing": "",
+        "processing": "מעבד",
         "partiallyAvailable": "חלקי",
         "available": "זמין"
       },
