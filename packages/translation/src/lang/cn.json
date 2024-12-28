@@ -546,13 +546,13 @@
         "label": "描述"
       },
       "url": {
-        "label": ""
+        "label": "网址"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "选择应用",
+        "notFound": "未找到应用"
       }
     }
   },
@@ -560,48 +560,48 @@
     "page": {
       "list": {
         "title": "组件",
-        "search": "",
+        "search": "搜索组件",
         "noResults": {
-          "title": ""
+          "title": "尚无组件"
         }
       },
       "create": {
-        "title": "",
+        "title": "新的组件 {name}",
         "notification": {
           "success": {
             "title": "",
-            "message": ""
+            "message": "组件已成功创建"
           },
           "error": {
             "title": "创建失败",
-            "message": ""
+            "message": "无法创建组件"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "编辑组件 {name}",
         "notification": {
           "success": {
             "title": "更改应用成功",
-            "message": ""
+            "message": "组件已成功保存"
           },
           "error": {
             "title": "无法应用更改",
-            "message": ""
+            "message": "无法保存此组件"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "删除组件",
+        "message": "确认删除组件 {name} 吗?",
         "notification": {
           "success": {
             "title": "删除成功",
-            "message": ""
+            "message": "组件已成功删除"
           },
           "error": {
             "title": "删除失败",
-            "message": ""
+            "message": "无法删除组件"
           }
         }
       }
@@ -611,54 +611,54 @@
         "label": "名称"
       },
       "url": {
-        "label": ""
+        "label": "网址"
       }
     },
     "action": {
-      "create": ""
+      "create": "新建组件"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "测试连接并创建",
+        "edit": "测试连接并保存"
       },
-      "alertNotice": "",
+      "alertNotice": "成功建立连接后，“保存”按钮将启用",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "连接成功",
+          "message": "连接已成功建立"
         },
         "invalidUrl": {
           "title": "无效链接",
-          "message": ""
+          "message": "URL 无效"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "缺少凭证",
+          "message": "未提供所有凭证"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "凭证无效",
+          "message": "凭证无效"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "连接失败",
+          "message": "无法建立连接"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "错误请求",
+          "message": "请求格式不正确"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "未授权",
+          "message": "可能是凭证错误"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "禁止访问",
+          "message": "可能缺少权限"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "未找到",
+          "message": "可能是错误的 URL 或路径"
         },
         "internalServerError": {
           "title": "",
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "未找到应用",
         "description": ""
       },
       "error": {
