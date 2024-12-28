@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -1199,7 +1199,7 @@
       },
       "align": {
         "left": "Leva stran",
-        "center": "Center",
+        "center": "",
         "right": "Desno"
       },
       "popover": {
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Vstavite katero koli vsebino iz interneta. Nekatera spletna mesta lahko omejijo dostop.",
       "option": {
         "embedUrl": {
@@ -1685,7 +1685,7 @@
           "empty": "Prazno",
           "table": {
             "file": "",
-            "eta": "ETA",
+            "eta": "",
             "progress": "Napredek",
             "transcode": "",
             "healthCheck": ""
@@ -2042,7 +2042,7 @@
         "tools": {
           "label": "Orodja",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Ustvarjalec"
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Orodja",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""

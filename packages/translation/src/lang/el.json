@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "E-Mail",
+        "label": "",
         "verified": ""
       },
       "username": {
@@ -1678,7 +1678,7 @@
           "savedSpace": "",
           "healthChecks": "",
           "videoCodecs": "Κωδικοποιητές",
-          "videoContainers": "Containers",
+          "videoContainers": "",
           "videoResolutions": "Αναλύσεις"
         },
         "workers": {
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Εργαλεία",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2208,7 +2208,7 @@
               "label": "Ημερομηνία λήξης"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "Containers",
+    "title": "",
     "table": {
       "updated": "",
       "search": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Εργαλεία",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
