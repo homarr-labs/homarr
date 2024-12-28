@@ -34,28 +34,53 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
       {
         accessorKey: "sessionName",
         header: "Name",
+        mantineTableHeadCellProps: {
+          style: {
+            fontSize: "7cqmin",
+            padding: "2cqmin",
+            width: "30%",
+          },
+        },
         Cell: ({ row }) => (
-          <Text style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{row.original.sessionName}</Text>
+          <Text size="7cqmin" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+            {row.original.sessionName}
+          </Text>
         ),
       },
       {
         accessorKey: "user.username",
         header: "User",
+        mantineTableHeadCellProps: {
+          style: {
+            fontSize: "7cqmin",
+            padding: "2cqmin",
+            width: "25%",
+          },
+        },
         Cell: ({ row }) => (
           <Group gap={"2cqmin"}>
-            <Avatar src={row.original.user.profilePictureUrl} size={"sm"} />
-            <Text>{row.original.user.username}</Text>
+            <Avatar src={row.original.user.profilePictureUrl} size={"10cqmin"} />
+            <Text size="7cqmin">{row.original.user.username}</Text>
           </Group>
         ),
       },
       {
         accessorKey: "currentlyPlaying", // currentlyPlaying.name can be undefined which results in a warning. This is why we use currentlyPlaying instead of currentlyPlaying.name
         header: "Currently playing",
+        mantineTableHeadCellProps: {
+          style: {
+            fontSize: "7cqmin",
+            padding: "2cqmin",
+            width: "45%",
+          },
+        },
         Cell: ({ row }) => {
           if (row.original.currentlyPlaying) {
             return (
               <Box>
-                <Text style={{ whiteSpace: "normal" }}>{row.original.currentlyPlaying.name}</Text>
+                <Text size="7cqmin" style={{ whiteSpace: "normal" }}>
+                  {row.original.currentlyPlaying.name}
+                </Text>
               </Box>
             );
           }
@@ -109,6 +134,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     "--ratio-width": "calc(100cqw / var(--total-width))",
     "--space-size": "calc(var(--ratio-width) * 0.1)", //Standard gap and spacing value
     "--text-fz": "calc(var(--ratio-width) * 0.45)", //General Font Size
+    "--icon-size": "calc(var(--ratio-width) * 2 / 3)", //Normal icon size
     "--mrt-base-background-color": "transparent",
   };
   const { openModal } = useModalAction(itemInfoModal);
