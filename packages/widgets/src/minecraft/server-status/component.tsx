@@ -43,7 +43,11 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
       </Group>
       {data.online && (
         <>
-          <img style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }} src={data.icon} />
+          <img
+            style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }}
+            alt={`minecraft icon ${options.domain}`}
+            src={data.icon}
+          />
           <Group gap="2cqmin" c="gray.6" align="center">
             <IconUsersGroup style={{ width: "10cqmin", height: "10cqmin" }} />
             <Text size="10cqmin">

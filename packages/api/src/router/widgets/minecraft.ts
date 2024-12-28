@@ -16,7 +16,7 @@ export const minecraftRouter = createTRPCRouter({
       isBedrockServer: input.isBedrockServer,
       domain: input.domain,
     });
-    return innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
+    return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
   }),
   subscribeServerStatus: publicProcedure.input(serverStatusInputSchema).subscription(({ input }) => {
     return observable<MinecraftServerStatus>((emit) => {
