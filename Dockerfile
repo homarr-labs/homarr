@@ -36,8 +36,8 @@ VOLUME /secrets
 # the ownership of all files in /app directory when starting the container as it will take a long time
 # But the user will be added as a member of the group with the same GID as the user with the specified PUID
 ENV INTERNAL_PUID=1001
-ENV PUID=1001
-ENV PGID=1001
+ENV PUID=1975
+ENV PGID=1975
 
 # Enable homarr cli
 COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
