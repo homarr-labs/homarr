@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Osadzaj dowolne treści z internetu. Niektóre strony internetowe mogą ograniczać dostęp.",
       "option": {
         "embedUrl": {
@@ -1685,7 +1685,7 @@
           "empty": "Puste",
           "table": {
             "file": "",
-            "eta": "ETA",
+            "eta": "",
             "progress": "Postęp",
             "transcode": "",
             "healthCheck": ""
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Narzędzia",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Twórca"
@@ -2208,7 +2208,7 @@
               "label": "Wygasa"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Narzędzia",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""

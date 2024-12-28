@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Інструменти",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Інструменти",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""

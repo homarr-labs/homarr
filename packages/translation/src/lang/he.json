@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {

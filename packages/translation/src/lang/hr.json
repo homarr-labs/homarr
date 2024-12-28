@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Ugradite bilo koji sadržaj s interneta. Neke web stranice mogu ograničiti pristup.",
       "option": {
         "embedUrl": {
@@ -1432,7 +1432,7 @@
       "option": {}
     },
     "video": {
-      "name": "Video Stream",
+      "name": "",
       "description": "Ugradi video stream ili video sa kamere i/ili web stranice",
       "option": {
         "feedUrl": {
@@ -1685,7 +1685,7 @@
           "empty": "Isprazni",
           "table": {
             "file": "",
-            "eta": "ETA",
+            "eta": "",
             "progress": "Napredak",
             "transcode": "",
             "healthCheck": ""
@@ -2042,7 +2042,7 @@
         "tools": {
           "label": "Alati",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Alati",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
