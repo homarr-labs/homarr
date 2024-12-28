@@ -1597,10 +1597,10 @@
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "יחס גלובלי"
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "רשימת בקשות מדיה",
       "description": "ראה רשימה של כל בקשות המדיה ממופע Overseerr או Jellyseerr שלך",
       "option": {
         "linksTargetNewTab": {
@@ -1608,21 +1608,21 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "אשר בקשה",
+        "approving": "מאשר את הבקשה...",
+        "decline": "דחה בקשה"
       },
       "availability": {
         "unknown": "לא ידוע",
-        "pending": "",
+        "pending": "בהמתנה",
         "processing": "מעבד",
         "partiallyAvailable": "חלקי",
         "available": "זמין"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "ייקבע בהמשך"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "מצב בקשות מדיה",
       "description": "סטטיסטיקה לגבי בקשות המדיה",
       "option": {},
       "titles": {
@@ -1630,9 +1630,9 @@
           "main": "סטטיסטיקות מדיה",
           "approved": "כבר אושר",
           "pending": "ממתין לאישור",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "בעיבוד",
+          "declined": "נדחה כבר",
+          "available": "כבר זמין",
           "tv": "בקשות סדרות",
           "movie": "בקשות סרטים",
           "total": "סך הכל"
@@ -1713,7 +1713,7 @@
           "label": "אפשר RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "חיתוך שורות טקסט"
         },
         "maximumAmountPosts": {
           "label": "הגבלת כמות הודעות"
@@ -1736,52 +1736,52 @@
         "notification": {
           "success": {
             "title": "השינויים הוחלו בהצלחה",
-            "message": ""
+            "message": "הלוח נשמר בהצלחה"
           },
           "error": {
             "title": "לא ניתן להחיל שינויים",
-            "message": ""
+            "message": "לא ניתן היה לשמור את הלוח"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "שינויים שלא נשמרו",
+          "message": "יש לך שינויים שלא נשמרו, האם אתה בטוח שברצונך לעזוב?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "יבוא מ- homarr לפני 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "הייבוא הצליח",
+            "message": "הלוח יובא בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "הייבוא נכשל",
+            "message": "לא ניתן לייבא את הלוח, בדוק את לוגים לפרטים נוספים"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "בחר קובץ JSON",
+            "invalidError": "קובץ תצורה לא חוקי"
           },
           "apps": {
             "label": "אפליקציות",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "הימנע מכפילויות",
+              "description": "מתעלם מאפליקציות שבהן כבר קיימת אפליקציה עם אותה כתובת רשת"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "ייבוא רק אפליקציות",
+              "description": "רק מוסיף את האפליקציות, יש ליצור מחדש את הלוח באופן ידני"
             }
           },
           "name": {
-            "label": ""
+            "label": "שם הלוח"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "גודל מסך",
+            "description": "בגרסאות שלפני 1.0 היו קיימים שלושה מצבים שונים, כך שניתן היה לבחור את כמות העמודות עבור כל גודל מסך.",
             "option": {
               "sm": "קטן",
               "md": "בינוני",
@@ -1789,7 +1789,7 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
+            "label": "התנהגות סרגל הצד",
             "description": "סרגלי צד הוסרו ב- 1.0, אתה יכול לבחור מה צריך לקרות עם הפריטים שבתוכם.",
             "option": {
               "lastSection": {
