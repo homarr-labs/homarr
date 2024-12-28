@@ -1443,83 +1443,83 @@
           "description": ""
         },
         "isMuted": {
-          "label": ""
+          "label": "מושתק"
         },
         "hasControls": {
-          "label": ""
+          "label": "הצג פקדים"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "לא סופק קישור של סרטון",
+        "forYoutubeUseIframe": "עבור סרטוני YouTube השתמש באפשרות iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "זרמי שרת מדיה נוכחיים",
+      "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {}
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "הורדת לקוח",
+      "description": "מאפשר לך להציג ולנהל את ההורדות שלך הן מלקוחות Torrent והן מלקוחות Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "עמודות להצגה"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "אפשר מיון פריטים"
         },
         "defaultSort": {
-          "label": ""
+          "label": "עמודה המשמשת למיון כברירת מחדל"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "מיון הפוך"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "הצג ערכי usenet שסומנו כהשלמה"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "הצג ערכי טורנט שסומנו כהשלמה"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "הסתר טורנט שהושלם מתחת לסף הזה (בקיB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "קטגוריות/תוויות לסינון"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "סנן כרשימת היתרים"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "השתמש במסנן כדי לחשב יחס"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "בחר עמודות בפריטים",
+        "noCommunications": "לא ניתן לטעון נתונים מהאינטגרציה"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "פקדים"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "נוסף",
           "detailsTitle": "נוסף בתאריך"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "תוספות",
+          "detailsTitle": "קטגוריות (או מידע נוסף)"
         },
         "downSpeed": {
           "columnTitle": "הורדה",
           "detailsTitle": "מהירות הורדה"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "מזהה"
         },
         "integration": {
           "columnTitle": "אינטגרציה"
@@ -1529,39 +1529,39 @@
         },
         "progress": {
           "columnTitle": "התקדמות",
-          "detailsTitle": ""
+          "detailsTitle": "התקדמות ההורדה"
         },
         "ratio": {
           "columnTitle": "יחס",
-          "detailsTitle": ""
+          "detailsTitle": "יחס טורנט (התקבל/נשלח)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "סך הכל הורדה",
+          "detailsTitle": "הורדה כוללת"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "סך הכל העלאה",
+          "detailsTitle": "העלאה כוללת"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "גודל קובץ",
+          "detailsTitle": "גודל כולל של בחירה/קבצים"
         },
         "state": {
           "columnTitle": "מצב",
           "detailsTitle": ""
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "זמן סיום",
+          "detailsTitle": "זמן מאז/עד סיום"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "סוּג",
+          "detailsTitle": "סוג לקוח הורדה"
         },
         "upSpeed": {
           "columnTitle": "העלאה",
-          "detailsTitle": ""
+          "detailsTitle": "קצב העלאה"
         }
       },
       "states": {
@@ -1569,7 +1569,7 @@
         "queued": "בתור",
         "paused": "מושהה",
         "completed": "הושלם",
-        "failed": "",
+        "failed": "נכשל",
         "processing": "מעבד",
         "leeching": "",
         "stalled": "",

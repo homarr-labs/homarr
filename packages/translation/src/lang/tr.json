@@ -2254,7 +2254,7 @@
             },
             "widgetData": {
               "title": "Widget verileri",
-              "text": "Widget (ve sayıları) yapılandırma verilerini gönder. URL'leri, adları veya başka herhangi bir veriyi içermez."
+              "text": "Widget (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
             },
             "integrationData": {
               "title": "Entegrasyon verileri",
