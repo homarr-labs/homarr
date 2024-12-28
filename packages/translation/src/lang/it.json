@@ -323,14 +323,14 @@
         }
       },
       "board": {
-        "title": "",
+        "title": "Board",
         "item": {
           "create": {
-            "label": "Creare schede",
-            "description": "Consenti ai membri di creare schede"
+            "label": "Creare board",
+            "description": "Consenti ai membri di creare board"
           },
           "view-all": {
-            "label": "Visualizzare tutte le schede",
+            "label": "Visualizzare tutte le board",
             "description": "Consenti ai membri di visualizzare tutte le schede"
           },
           "modify-all": {
@@ -402,50 +402,50 @@
             "description": "Consenti ai membri di modificare tutti i motori di ricerca"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accesso completo al motore di ricerca",
+            "description": "Consenti ai membri di gestire ed eliminare qualsiasi motore di ricerca"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Alcuni membri provengono da fornitori esterni e non possono essere gestiti qui",
+      "external": "Tutti i membri provengono da fornitori esterni e non possono essere gestiti qui"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Questo gruppo è riservato all'uso del sistema e limita alcune azioni. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nuovo gruppo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppo creato"
           },
           "error": {
-            "message": ""
+            "message": "Impossibile creare il gruppo"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Trasferisci ownership",
+        "description": "Trasferisci l'ownership di questo gruppo a un altro utente.",
+        "confirm": "Hai la certezza di voler trasferire l'ownership del gruppo {name} a {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppo {group} trasferito a {user}"
           },
           "error": {
-            "message": ""
+            "message": "Impossibile trasferire l'ownership"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Aggiungi membro"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Rimuovi membro",
+        "confirm": "Hai la certezza di voler rimuovere {user} da questo gruppo?"
       },
       "delete": {
         "label": "Elimina gruppo",
@@ -506,34 +506,34 @@
           },
           "error": {
             "title": "Creazione fallita",
-            "message": ""
+            "message": "Impossibile creare l'app"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Modifica app",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Modifiche applicate",
+            "message": "App salvata"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Impossibile applicare le modifiche",
+            "message": "Impossibile salvare l'app"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Elimina app",
+        "message": "Hai la certezza di voler eliminare l'app {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Eliminato",
+            "message": "App eliminata"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Eliminazione non riuscita",
+            "message": "Impossibile eliminare l'app"
           }
         }
       }
@@ -543,15 +543,15 @@
         "label": "Nome"
       },
       "description": {
-        "label": ""
+        "label": "Descrizione"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
       "select": {
-        "label": "",
+        "label": "Seleziona App",
         "notFound": "Nessuna app trovata"
       }
     }
@@ -569,11 +569,11 @@
         "title": "Nuova integrazione di {name}",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Creazione riuscita",
             "message": "L'integrazione è stata creata con successo"
           },
           "error": {
-            "title": "",
+            "title": "Creazione fallita",
             "message": "Non è stato possibile creare l'integrazione"
           }
         }
@@ -582,11 +582,11 @@
         "title": "Modifica integrazione {name}",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Modifiche applicate",
             "message": "L'integrazione è stata salvata correttamente"
           },
           "error": {
-            "title": "",
+            "title": "Impossibile applicare le modifiche",
             "message": "Non è stato possibile salvare l'integrazione"
           }
         }
@@ -596,11 +596,11 @@
         "message": "Hai la certezza di voler eliminare l'integrazione {name}?",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Eliminato",
             "message": "L'integrazione è stata eliminata correttamente"
           },
           "error": {
-            "title": "",
+            "title": "Eliminazione non riuscita",
             "message": "Impossibile eliminare l'integrazione"
           }
         }
@@ -611,7 +611,7 @@
         "label": "Nome"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -645,7 +645,7 @@
           "message": "La connessione non è stata stabilita"
         },
         "badRequest": {
-          "title": "",
+          "title": "Bad request",
           "message": "La richiesta era malformata"
         },
         "unauthorized": {
@@ -653,11 +653,11 @@
           "message": "Probabilmente le credenziali sono sbagliate"
         },
         "forbidden": {
-          "title": "",
+          "title": "Forbidden",
           "message": "Probabilmente mancano i permessi"
         },
         "notFound": {
-          "title": "",
+          "title": "Not found",
           "message": "Probabilmente url o percorso errati"
         },
         "internalServerError": {
@@ -691,11 +691,11 @@
       }
     },
     "secrets": {
-      "title": "",
+      "title": "Secrets",
       "lastUpdated": "Ultimo aggiornamento {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Nessun valore impostato",
+        "tooltip": "Il secret richiesto non è stato ancora impostato"
       },
       "secureNotice": "",
       "reset": {

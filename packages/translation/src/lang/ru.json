@@ -1381,7 +1381,7 @@
         "memory": "Память: {memory}GiB",
         "memoryAvailable": "Доступно: {memoryAvailable}GiB ({percent}%)",
         "version": "Версия: {version}",
-        "uptime": "Время работы: {days} дн., {hours} ч., {minutes} мин.",
+        "uptime": "Время работы: {months} мес., {days} дн., {hours} ч., {minutes} мин.",
         "loadAverage": "Средняя нагрузка:",
         "minute": "1 минута",
         "minutes": "{count} минут",

@@ -1254,7 +1254,7 @@
       "description": "",
       "option": {
         "entityId": {
-          "label": "ID encji"
+          "label": "ID obiektu"
         },
         "displayName": {
           "label": ""
