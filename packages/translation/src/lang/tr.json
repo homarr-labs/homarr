@@ -856,8 +856,8 @@
     "dangerZone": "Tehlikeli bölge",
     "noResults": "Sonuç bulunamadı",
     "preview": {
-      "show": "Önizlemeyi göster",
-      "hide": "Önizlemeyi Gizle"
+      "show": "Ara Renkleri Göster",
+      "hide": "Ara Renkleri Gizle"
     },
     "zod": {
       "errors": {
@@ -1013,13 +1013,13 @@
       },
       "error": {
         "notFound": {
-          "label": "Uygulama yok",
+          "label": "Uygulama Eklenmedi",
           "tooltip": "Geçerli bir uygulama seçmediniz"
         }
       }
     },
     "bookmarks": {
-      "name": "Yer imleri",
+      "name": "Yer İmleri",
       "description": "Birden fazla uygulama bağlantısını görüntüler",
       "option": {
         "title": {
@@ -1040,7 +1040,7 @@
           }
         },
         "items": {
-          "label": "Yer imleri",
+          "label": "Yer İmleri",
           "add": "Yer imi ekle"
         }
       }
@@ -1079,7 +1079,7 @@
       }
     },
     "dnsHoleControls": {
-      "name": "DNS çözümleyici kontrolleri",
+      "name": "DNS Çözümleyici Kontrolleri",
       "description": "Kontrol panelinizden PiHole veya AdGuard'ı kontrol edin",
       "option": {
         "layout": {
@@ -1345,7 +1345,7 @@
       }
     },
     "indexerManager": {
-      "name": "İndeksleyici Yönetim Durumu",
+      "name": "Dizin oluşturucu yöneticisi statüsü",
       "description": "İndeksleyicilerinizin durumu",
       "option": {
         "openIndexerSiteInNewTab": {
@@ -1455,7 +1455,7 @@
       }
     },
     "mediaServer": {
-      "name": "Güncel medya sunucusu akışları",
+      "name": "Güncel Medya Sunucusu Akışları",
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
       "option": {}
     },
@@ -1644,7 +1644,7 @@
       }
     },
     "mediaTranscoding": {
-      "name": "Medya kod dönüştürme",
+      "name": "Medya Kod Dönüştürme",
       "description": "Medya kod dönüştürmenizin istatistikleri, geçerli kuyruğu ve çalışan durumu",
       "option": {
         "defaultView": {
@@ -1703,7 +1703,7 @@
       }
     },
     "rssFeed": {
-      "name": "RSS beslemeleri",
+      "name": "RSS Beslemeleri",
       "description": "Bir veya daha fazla RSS, ATOM veya JSON beslemesini takip edin ve görüntüleyin",
       "option": {
         "feedUrls": {
@@ -1807,19 +1807,19 @@
     },
     "field": {
       "pageTitle": {
-        "label": "Sayfa başlığı"
+        "label": "Sayfa Başlığı"
       },
       "metaTitle": {
-        "label": "Meta başlığı"
+        "label": "Meta Başlığı"
       },
       "logoImageUrl": {
-        "label": "Logo görsel URL'si"
+        "label": "Logo Görseli URL'si"
       },
       "faviconImageUrl": {
-        "label": "Favicon görsel URL'si"
+        "label": "Favicon Görseli URL'si"
       },
       "backgroundImageUrl": {
-        "label": "Arkaplan görsel URL'si"
+        "label": "Arkaplan Görseli URL'si"
       },
       "backgroundImageAttachment": {
         "label": "Arkaplan görsel yerleştirme",
@@ -1882,11 +1882,11 @@
         "description": "Kontrol panelinizi yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak özelleştirin",
         "customClassesAlert": {
           "title": "Özel sınıflar",
-          "description": "Her öğenin gelişmiş seçeneklerinde panel örneklerinize özel sınıflar ekleyebilir ve bunları yukarıdaki özel CSS'de kullanabilirsiniz."
+          "description": "Her öğenin gelişmiş seçeneklerinde panel örneklerinize özel sınıflar ekleyebilir ve bunları yukarıdaki özel CSS alanında kullanabilirsiniz."
         }
       },
       "columnCount": {
-        "label": "Sütun sayısı"
+        "label": "Sütun Sayısı"
       },
       "name": {
         "label": "İsim"
@@ -2347,7 +2347,7 @@
               "label": "Medya Talep Listesi"
             },
             "rssFeeds": {
-              "label": "RSS beslemeleri"
+              "label": "RSS Beslemeleri"
             },
             "indexerManager": {
               "label": "İndeksleyici Yöneticisi"
@@ -2365,7 +2365,7 @@
               "label": "Güncelleme denetleyicisi"
             },
             "mediaTranscoding": {
-              "label": "Medya kod dönüştürme"
+              "label": "Medya Kod Dönüştürme"
             }
           }
         },
