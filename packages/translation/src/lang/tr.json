@@ -147,7 +147,7 @@
         "label": "Eski Şifre"
       },
       "homeBoard": {
-        "label": "Varsayılan panel"
+        "label": "Öntanımlı panel"
       },
       "pingIconsEnabled": {
         "label": "Pingler için simgeler kullanın"
@@ -203,10 +203,10 @@
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": "Varsayılan panel başarıyla değiştirildi"
+            "message": "Öntanımlı panel başarıyla değiştirildi"
           },
           "error": {
-            "message": "Varsayılan panel değiştirilemiyor"
+            "message": "Öntanımlı panel değiştirilemiyor"
           }
         }
       },
@@ -848,7 +848,7 @@
         "preferences": "Tercihleriniz",
         "logout": "Oturumu kapat",
         "login": "Giriş",
-        "homeBoard": "Varsayılan Panel",
+        "homeBoard": "Öntanımlı Panel",
         "loggedOut": "Oturum kapatıldı",
         "updateAvailable": "{countUpdates} güncelleme mevcut: {tag}"
       }
@@ -1381,7 +1381,7 @@
         "memory": "Bellek: {memory}GiB",
         "memoryAvailable": "Mevcut: {memoryAvailable}GiB ({percent}%)",
         "version": "Sürüm: {version}",
-        "uptime": "",
+        "uptime": "Çalışma Süresi: {days} Gün, {hours} Saat, {minutes} Dakika",
         "loadAverage": "Ortalama yük:",
         "minute": "1 dakika",
         "minutes": "{count} dakika",
@@ -1648,7 +1648,7 @@
       "description": "Medya kod dönüştürmenizin istatistikleri, geçerli kuyruğu ve çalışan durumu",
       "option": {
         "defaultView": {
-          "label": "Varsayılan görünüm"
+          "label": "Öntanımlı görünüm"
         },
         "queuePageSize": {
           "label": "Sıra sayfa boyutu"
@@ -2001,13 +2001,13 @@
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
-          "link": "Varsayılan paneli yapılandır",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden varsayılan panel seçin"
+          "link": "Öntanımlı paneli yapılandır",
+          "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden öntanımlı panel seçin"
         },
         "anonymous": {
-          "description": "Sunucu yöneticiniz henüz bir varsayılan panel belirlemedi.",
+          "description": "Sunucu yöneticiniz henüz bir öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden varsayılan panel ayarlamasını isteyin"
+          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
         }
       }
     }
@@ -2091,10 +2091,10 @@
             "label": "Ayarlar"
           },
           "setHomeBoard": {
-            "label": "Varsayılan panel olarak ayarlayın",
+            "label": "Öntanımlı panel olarak ayarlayın",
             "badge": {
               "label": "Ana sayfa",
-              "tooltip": "Bu panel sizin varsayılan paneliniz olarak görüntülenecektir"
+              "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
             }
           },
           "delete": {
@@ -2130,7 +2130,7 @@
             "title": "Genel",
             "item": {
               "language": "Dil & Bölge",
-              "board": "Varsayılan panel",
+              "board": "Öntanımlı panel",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
@@ -2295,7 +2295,7 @@
           "appearance": {
             "title": "Görünüş",
             "defaultColorScheme": {
-              "label": "Varsayılan renk şeması",
+              "label": "Öntanımlı renk düzeni",
               "options": {
                 "light": "Aydınlık",
                 "dark": "Koyu"
@@ -2305,7 +2305,7 @@
           "culture": {
             "title": "Kültür",
             "defaultLocale": {
-              "label": "Varsayılan dil"
+              "label": "Öntanımlı dil"
             }
           }
         }
@@ -2408,7 +2408,7 @@
           },
           "translators": {
             "title": "Çevirmenler",
-            "subtitle": "{count} dilde birçok kişi çevirilere katkıda bulunuyor"
+            "subtitle": "Birçok kişi Homarr'ın {count} dile çevrilmesine katkı sağlıyor"
           },
           "libraries": {
             "title": "Kütüphaneler",
@@ -2650,7 +2650,7 @@
                   "label": "Panel'i aç"
                 },
                 "homeBoard": {
-                  "label": "Varsayılan panel olarak ayarla"
+                  "label": "Öntanımlı panel olarak ata"
                 },
                 "settings": {
                   "label": "Ayarları aç"
@@ -2840,7 +2840,7 @@
                 "label": "Hakkında"
               },
               "homeBoard": {
-                "label": "Varsayılan panel"
+                "label": "Öntanımlı panel"
               },
               "preferences": {
                 "label": "Tercihleriniz"
