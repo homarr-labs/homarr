@@ -2258,7 +2258,7 @@
             },
             "integrationData": {
               "title": "Entegrasyon verileri",
-              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, adları veya başka herhangi bir veriyi içermez."
+              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
             },
             "usersData": {
               "title": "Kullanıcı verileri",
@@ -2288,7 +2288,7 @@
           "board": {
             "title": "Paneller",
             "homeBoard": {
-              "label": "Genel Öntanımlı Panel",
+              "label": "Genel Ana Sayfa Paneli",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             }
           },
@@ -2408,7 +2408,7 @@
           },
           "translators": {
             "title": "Çevirmenler",
-            "subtitle": "{count} kişi Homarr'ın bir çok dile çevrilmesine katkı sağlıyor"
+            "subtitle": "Birçok kişi Homarr'ın {count} dile çevrilmesine katkı sağlıyor"
           },
           "libraries": {
             "title": "Kütüphaneler",
