@@ -1704,7 +1704,7 @@
     },
     "rssFeed": {
       "name": "RSS beslemeleri",
-      "description": "Bir veya daha fazla genel RSS, ATOM veya JSON beslemesini izleyin ve görüntüleyin",
+      "description": "Bir veya daha fazla RSS, ATOM veya JSON beslemesini takip edin ve görüntüleyin",
       "option": {
         "feedUrls": {
           "label": "Besleme URL'leri"
@@ -2254,11 +2254,11 @@
             },
             "widgetData": {
               "title": "Widget verileri",
-              "text": "Widget (ve sayıları) yapılandırma verilerini gönder. URL'leri, adları veya başka herhangi bir veriyi içermez."
+              "text": "Widget (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
             },
             "integrationData": {
               "title": "Entegrasyon verileri",
-              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, adları veya başka herhangi bir veriyi içermez."
+              "text": "Entegrasyon (ve sayıları) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
             },
             "usersData": {
               "title": "Kullanıcı verileri",
@@ -2266,36 +2266,36 @@
             }
           },
           "crawlingAndIndexing": {
-            "title": "Tarama ve Dizinleme",
-            "warning": "Burada herhangi bir ayarı etkinleştirmek veya devre dışı bırakmak, arama motorlarının sayfanızı nasıl dizine ekleyeceğini ve tarayacağını ciddi şekilde etkileyecektir. Herhangi bir ayar bir istektir ve bu ayarları uygulamak tarayıcıya bağlıdır. Herhangi bir değişikliğin uygulanması birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özgü olabilir.",
+            "title": "Arama ve İndeksleme",
+            "warning": "Buradaki ayarların etkinleştirilmesi veya devre dışı bırakılması, arama motorlarının sayfanızı arama ve indekleme şeklini ciddi şekilde etkileyecektir. Her ayar bir istek başlatır ve bu ayarları almak tarayıcının görevidir. Değişiklikler birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özel olabilir.",
             "noIndex": {
-              "title": "İndeks yok",
-              "text": "Web sitesini arama motorlarında indekslemeyin ve hiçbir arama sonucunda göstermeyin"
+              "title": "İndeksleme Yapma",
+              "text": "Web sitesini arama motorlarında indekslemeyin veya herhangi bir arama sonucunda görüntülemeyin"
             },
             "noFollow": {
-              "title": "Takip yok",
-              "text": "Dizinleme sırasında hiçbir bağlantıyı takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların Homarr'daki tüm bağlantıları takip etmeye çalışmasına yol açacaktır."
+              "title": "Bağlantıları Takip Etme",
+              "text": "İndeksleme sırasında bağlantıları takip etmeyin. Bunu devre dışı bırakmak, tarayıcıların Homarr'daki tüm bağlantıları izlemeye çalışmasına neden olur."
             },
             "noTranslate": {
-              "title": "Çeviri yok",
-              "text": "Site dilinin kullanıcının okumak isteyeceği bir dil olmaması durumunda Google, arama sonuçlarında bir çeviri bağlantısı gösterecektir"
+              "title": "Çeviri Yapma",
+              "text": "Kullanıcının site üzerinde okumak isteyeceği dilin olmaması durumunda Google, arama sonuçlarında bir çeviri bağlantısı gösterecektir"
             },
             "noSiteLinksSearchBox": {
-              "title": "Site bağlantıları arama kutusu yok",
-              "text": "Google, taranan bağlantıların yanı sıra diğer doğrudan bağlantılarla bir arama kutusu oluşturacaktır. Bunu etkinleştirmek Google'dan bu kutuyu devre dışı bırakmasını isteyecektir."
+              "title": "Site Arama Alanını Gösterme",
+              "text": "Google, aranan bağlantıların yanı sıra diğer doğrudan bağlantılardan oluşan bir arama kutusu oluşturur. Bu seçenek etkinleştirildiğinde Google'dan bu alanı devre dışı bırakması istenecektir."
             }
           },
           "board": {
             "title": "Paneller",
             "homeBoard": {
-              "label": "Küresel ana sayfa paneli",
-              "description": "Seçim için yalnızca herkese açık paneller kullanılabilir"
+              "label": "Genel Ana Sayfa Paneli",
+              "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             }
           },
           "appearance": {
             "title": "Görünüş",
             "defaultColorScheme": {
-              "label": "Öntanımlı renk düzeni",
+              "label": "Öntanımlı Renk Düzeni",
               "options": {
                 "light": "Aydınlık",
                 "dark": "Koyu"
@@ -2305,7 +2305,7 @@
           "culture": {
             "title": "Kültür",
             "defaultLocale": {
-              "label": "Öntanımlı dil"
+              "label": "Öntanımlı Dil"
             }
           }
         }
