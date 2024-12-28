@@ -27,7 +27,7 @@
           "description": "Konfigurovat chování importu"
         },
         "boardSelection": {
-          "title": "",
+          "title": "Nalezeno {count} ploch",
           "description": "Vyberte všechny plochy s velikostmi, které chcete importovat",
           "action": {
             "selectAll": "Vybrat vše",
@@ -38,17 +38,17 @@
           "title": "Přehled importu",
           "description": "",
           "action": {
-            "import": ""
+            "import": "Potvrdit import a pokračovat"
           },
           "entities": {
             "apps": "Aplikace",
             "boards": "Plochy",
-            "integrations": "",
+            "integrations": "Integrace",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Zadejte token pro import",
           "field": {
             "token": {
               "label": "Token",
@@ -57,14 +57,14 @@
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Neplatný token",
+              "message": "Token, který jste zadali je neplatný"
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Správce",
         "subtitle": "",
         "notification": {
           "success": {
@@ -1213,11 +1213,11 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Vložte jakýkoli obsah z internetu. Některé webové stránky mohou omezit přístup.",
       "option": {
         "embedUrl": {
-          "label": "Embed URL"
+          "label": ""
         },
         "allowFullScreen": {
           "label": "Povolit celou obrazovku"
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Nástroje",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Vytvořil/a"
@@ -2208,7 +2208,7 @@
               "label": "Datum konce platnosti"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Nástroje",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
