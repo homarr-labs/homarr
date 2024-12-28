@@ -1345,7 +1345,7 @@
       }
     },
     "indexerManager": {
-      "name": "Dizin oluşturucu yöneticisi statüsü",
+      "name": "İndeksleyici Yönetim Durumu",
       "description": "İndeksleyicilerinizin durumu",
       "option": {
         "openIndexerSiteInNewTab": {
