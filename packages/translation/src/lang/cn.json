@@ -51,7 +51,7 @@
           "title": "输入导入密钥",
           "field": {
             "token": {
-              "label": "令牌",
+              "label": "Token",
               "description": "输入您之前的 homarr 实例中显示的导入秘钥"
             }
           },
@@ -125,7 +125,7 @@
     "field": {
       "email": {
         "label": "邮箱",
-        "verified": "已验证"
+        "verified": ""
       },
       "username": {
         "label": "用户名"
@@ -133,7 +133,7 @@
       "password": {
         "label": "密码",
         "requirement": {
-          "length": "包含至少8个字符",
+          "length": "至少包含 8 个字符",
           "lowercase": "包括小写字母",
           "uppercase": "包含大写字母",
           "number": "包含数字",
@@ -144,17 +144,17 @@
         "label": "确认密码"
       },
       "previousPassword": {
-        "label": "先前的密码"
+        "label": "以前的密码"
       },
       "homeBoard": {
-        "label": "首页"
+        "label": "主面板"
       },
       "pingIconsEnabled": {
-        "label": "用于ping的图标"
+        "label": "为ping使用图标"
       }
     },
     "error": {
-      "usernameTaken": "用户名称已被占用"
+      "usernameTaken": "用户名已存在"
     },
     "action": {
       "login": {
@@ -167,12 +167,12 @@
           },
           "error": {
             "title": "登录失败",
-            "message": "您登录失败"
+            "message": "您的登录失败"
           }
         },
         "forgotPassword": {
-          "label": "忘记密码？",
-          "description": "管理员可以使用以下命令重置您的密码："
+          "label": "忘记了你的密码？",
+          "description": "管理员可以使用以下命令重置密码："
         }
       },
       "register": {
@@ -180,11 +180,11 @@
         "notification": {
           "success": {
             "title": "账号已创建",
-            "message": "请登录以继续"
+            "message": "请登录后继续"
           },
           "error": {
-            "title": "创建账户失败",
-            "message": "无法创建您的帐户"
+            "title": "账户创建失败",
+            "message": "无法创建您的账户"
           }
         }
       },
@@ -271,7 +271,7 @@
       },
       "delete": {
         "label": "永久删除用户",
-        "description": "删除此用户及其偏好设置。这将不会删除任何看板。用户将不会收到通知。",
+        "description": "删除此用户（包括其偏好设置）。这不会删除任何面板。用户不会收到通知。",
         "confirm": "您确定要删除用户 {username} 及其偏好设置吗？"
       },
       "select": {
@@ -279,17 +279,17 @@
         "notFound": "找不到用户"
       },
       "transfer": {
-        "label": "选择新的所有者"
+        "label": ""
       }
     }
   },
   "group": {
-    "title": "组",
-    "name": "组",
-    "search": "查找组",
+    "title": "群组",
+    "name": "群组",
+    "search": "查找群组",
     "field": {
       "name": "名称",
-      "members": "成员列表"
+      "members": "成员"
     },
     "permission": {
       "admin": {
@@ -310,15 +310,15 @@
           },
           "use-all": {
             "label": "使用全部应用",
-            "description": "允许成员将任何应用添加到他们的看板"
+            "description": "允许成员将任何应用添加到他们的面板"
           },
           "modify-all": {
-            "label": "修改全部应用",
+            "label": "修改所有应用",
             "description": "允许成员修改全部应用"
           },
           "full-all": {
             "label": "完整应用访问权限",
-            "description": "允许成员管理、使用和删除全部应用"
+            "description": "允许成员管理、使用和删除任意应用"
           }
         }
       },
@@ -327,19 +327,19 @@
         "item": {
           "create": {
             "label": "创建面板",
-            "description": "允许成员创建看板"
+            "description": "允许成员创建面板"
           },
           "view-all": {
-            "label": "查看全部面板",
-            "description": "允许成员查看全部看板"
+            "label": "查看所有面板",
+            "description": "允许成员查看全部面板"
           },
           "modify-all": {
-            "label": "修改全部看板",
-            "description": "允许成员修改全部看板 (不包括访问控制和危险区)"
+            "label": "修改全部面板",
+            "description": "允许成员修改全部面板 (不包括访问控制和危险区域)"
           },
           "full-all": {
-            "label": "完整的看板访问权限",
-            "description": "允许成员查看、修改和删除全部看板 (包括访问控制和危险区)"
+            "label": "完整的面板访问权限",
+            "description": "允许成员查看、修改和删除全部面板 (包括访问控制和危险区域)"
           }
         }
       },
@@ -352,15 +352,15 @@
           },
           "use-all": {
             "label": "使用全部组件",
-            "description": "允许成员将任何组件添加到他们的看板"
+            "description": "允许成员将任何组件添加到他们的面板"
           },
           "interact-all": {
-            "label": "与任何组件互动",
-            "description": "允许成员与任何组件互动"
+            "label": "与任意组件进行交互",
+            "description": "允许成员与任意组件进行交互"
           },
           "full-all": {
-            "label": "完全的组件访问权限",
-            "description": "允许成员管理、使用并与任何组件交互"
+            "label": "完整的组件访问权限",
+            "description": "允许成员管理、使用并与任意组件交互"
           }
         }
       },
@@ -368,123 +368,123 @@
         "title": "媒体",
         "item": {
           "upload": {
-            "label": "上传媒体",
-            "description": "允许成员上传媒体"
+            "label": "",
+            "description": ""
           },
           "view-all": {
-            "label": "查看全部媒体",
-            "description": "允许成员查看全部媒体"
+            "label": "",
+            "description": ""
           },
           "full-all": {
-            "label": "完全的媒体访问权限",
-            "description": "允许成员管理和删除任何媒体"
+            "label": "",
+            "description": ""
           }
         }
       },
       "other": {
-        "title": "其它",
+        "title": "",
         "item": {
           "view-logs": {
-            "label": "查看日志",
-            "description": "允许成员查看日志"
+            "label": "",
+            "description": ""
           }
         }
       },
       "search-engine": {
-        "title": "搜索引擎",
+        "title": "",
         "item": {
           "create": {
-            "label": "创建搜索引擎",
-            "description": "允许成员创建搜索引擎"
+            "label": "",
+            "description": ""
           },
           "modify-all": {
-            "label": "修改全部搜索引擎",
-            "description": "允许成员修改全部搜索引擎"
+            "label": "",
+            "description": ""
           },
           "full-all": {
-            "label": "完整的搜索引擎访问权限",
-            "description": "允许成员管理和删除任何搜索引擎"
+            "label": "",
+            "description": ""
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "部分成员来自外部提供者，无法在此处管理",
-      "external": "所有成员都来自外部提供者，无法在此处管理"
+      "mixed": "",
+      "external": ""
     },
     "reservedNotice": {
-      "message": "此用户组保留供系统使用并限制部分操作 <checkoutDocs></checkoutDocs>"
+      "message": ""
     },
     "action": {
       "create": {
-        "label": "新建用户组",
+        "label": "",
         "notification": {
           "success": {
-            "message": "用户组已成功创建"
+            "message": ""
           },
           "error": {
-            "message": "无法创建用户组"
+            "message": ""
           }
         }
       },
       "transfer": {
-        "label": "转移所有权",
-        "description": "将此用户组的所有权转移给另一个用户。",
-        "confirm": "确定将用户组 {name} 的所有权转移给 {username} 吗?",
+        "label": "",
+        "description": "",
+        "confirm": "",
         "notification": {
           "success": {
-            "message": "成功将用户组 {group} 的所有权转移给 {user}"
+            "message": ""
           },
           "error": {
-            "message": "无法转移所有权"
+            "message": ""
           }
         }
       },
       "addMember": {
-        "label": "添加成员"
+        "label": ""
       },
       "removeMember": {
-        "label": "删除成员",
-        "confirm": "确定将 {user} 从此用户组移除吗?"
+        "label": "",
+        "confirm": ""
       },
       "delete": {
-        "label": "删除用户组",
-        "description": "用户组一旦删除就无法恢复. 请谨慎操作.",
-        "confirm": "确认删除用户组 {name} 吗?",
+        "label": "",
+        "description": "",
+        "confirm": "",
         "notification": {
           "success": {
-            "message": "成功删除用户组 {name}"
+            "message": ""
           },
           "error": {
-            "message": "无法删除用户组 {name}"
+            "message": ""
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "权限已保存",
-            "message": "权限保存成功"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "权限未保存",
-            "message": "权限尚未保存"
+            "title": "",
+            "message": ""
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": "用户组 {name} 保存成功"
+            "message": ""
           },
           "error": {
-            "message": "无法保存用户组 {name}"
+            "message": ""
           }
         }
       },
       "select": {
-        "label": "选择用户组",
-        "notFound": "未找到用户组"
+        "label": "",
+        "notFound": ""
       }
     }
   },
@@ -493,20 +493,20 @@
       "list": {
         "title": "应用",
         "noResults": {
-          "title": "尚无应用",
-          "action": "创建您的第一个应用"
+          "title": "",
+          "action": ""
         }
       },
       "create": {
-        "title": "新建应用",
+        "title": "",
         "notification": {
           "success": {
-            "title": "创建成功",
-            "message": "应用已成功创建"
+            "title": "",
+            "message": ""
           },
           "error": {
             "title": "创建失败",
-            "message": "无法创建此应用"
+            "message": "无法创建应用"
           }
         }
       },
@@ -519,7 +519,7 @@
           },
           "error": {
             "title": "无法应用更改",
-            "message": "无法保存此应用"
+            "message": "应用无法保存"
           }
         }
       },
@@ -528,7 +528,7 @@
         "message": "确认删除应用 {name} 吗?",
         "notification": {
           "success": {
-            "title": "成功删除",
+            "title": "删除成功",
             "message": "应用已成功删除"
           },
           "error": {
@@ -546,13 +546,13 @@
         "label": "描述"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
       "select": {
-        "label": "选择应用",
-        "notFound": "未找到应用"
+        "label": "",
+        "notFound": ""
       }
     }
   },
@@ -560,48 +560,48 @@
     "page": {
       "list": {
         "title": "组件",
-        "search": "搜索组件",
+        "search": "",
         "noResults": {
-          "title": "尚无组件"
+          "title": ""
         }
       },
       "create": {
-        "title": "新的组件 {name}",
+        "title": "",
         "notification": {
           "success": {
-            "title": "创建成功",
-            "message": "组件已成功创建"
+            "title": "",
+            "message": ""
           },
           "error": {
             "title": "创建失败",
-            "message": "无法创建组件"
+            "message": ""
           }
         }
       },
       "edit": {
-        "title": "编辑组件 {name}",
+        "title": "",
         "notification": {
           "success": {
             "title": "更改应用成功",
-            "message": "组件已成功保存"
+            "message": ""
           },
           "error": {
             "title": "无法应用更改",
-            "message": "无法保存此组件"
+            "message": ""
           }
         }
       },
       "delete": {
-        "title": "删除组件",
-        "message": "确认删除组件 {name} 吗?",
+        "title": "",
+        "message": "",
         "notification": {
           "success": {
-            "title": "成功删除",
-            "message": "组件已成功删除"
+            "title": "删除成功",
+            "message": ""
           },
           "error": {
             "title": "删除失败",
-            "message": "无法删除组件"
+            "message": ""
           }
         }
       }
@@ -611,21 +611,21 @@
         "label": "名称"
       },
       "url": {
-        "label": "Url"
+        "label": ""
       }
     },
     "action": {
-      "create": "新建组件"
+      "create": ""
     },
     "testConnection": {
       "action": {
-        "create": "测试连接并创建",
-        "edit": "测试连接并保存"
+        "create": "",
+        "edit": ""
       },
-      "alertNotice": "成功建立连接后保存按钮将启用",
+      "alertNotice": "",
       "notification": {
         "success": {
-          "title": "连接成功",
+          "title": "",
           "message": ""
         },
         "invalidUrl": {
@@ -724,11 +724,11 @@
     "permission": {
       "use": "",
       "interact": "",
-      "full": ""
+      "full": "完整的组件访问权限"
     }
   },
   "media": {
-    "plural": "",
+    "plural": "媒体",
     "search": "",
     "field": {
       "name": "名称",
@@ -812,15 +812,15 @@
     "notification": {
       "create": {
         "success": "",
-        "error": ""
+        "error": "创建失败"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "删除成功",
+        "error": "删除失败"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "更改应用成功",
+        "error": "无法应用更改"
       },
       "transfer": {
         "success": "",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "嵌入互联网上的任何内容。某些网站可能限制访问。",
       "option": {
         "embedUrl": {
@@ -1735,11 +1735,11 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
+            "title": "更改应用成功",
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "无法应用更改",
             "message": ""
           }
         },
@@ -1989,7 +1989,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "查看全部面板",
+        "link": "查看所有面板",
         "notice": ""
       },
       "homeBoard": {
@@ -2030,21 +2030,21 @@
         "apps": "应用",
         "integrations": "组件",
         "searchEngies": "",
-        "medias": "",
+        "medias": "媒体",
         "users": {
           "label": "用户",
           "items": {
             "manage": "管理中心",
             "invites": "邀请",
-            "groups": ""
+            "groups": "群组"
           }
         },
         "tools": {
           "label": "工具",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2069,7 +2069,7 @@
           "invite": "邀请",
           "integration": "组件",
           "app": "应用",
-          "group": ""
+          "group": "群组"
         },
         "statisticLabel": {
           "boards": "面板",
@@ -2130,7 +2130,7 @@
             "title": "通用",
             "item": {
               "language": "",
-              "board": "",
+              "board": "主面板",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }
@@ -2160,7 +2160,7 @@
               "label": "安全"
             },
             "groups": {
-              "label": "",
+              "label": "群组",
               "title": "",
               "description": ""
             },
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "创建者"
@@ -2208,7 +2208,7 @@
               "label": "过期时间"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2223,7 +2223,7 @@
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "成员",
             "search": "",
             "notFound": ""
           },
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2529,7 +2529,7 @@
     },
     "tab": {
       "user": "用户",
-      "group": "",
+      "group": "群组",
       "inherited": ""
     },
     "field": {
@@ -2537,7 +2537,7 @@
         "label": "用户"
       },
       "group": {
-        "label": ""
+        "label": "群组"
       },
       "permission": {
         "label": ""
@@ -2573,7 +2573,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "媒体"
       },
       "apps": {
         "label": "应用",
@@ -2593,7 +2593,7 @@
         "security": "安全",
         "board": "面板",
         "groups": {
-          "label": ""
+          "label": "群组"
         },
         "invites": {
           "label": "邀请"
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "工具",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2634,7 +2634,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "编辑应用"
                 }
               },
               "detail": {
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
+                "name": "Torrents",
                 "description": ""
               },
               "youTube": {
@@ -2840,7 +2840,7 @@
                 "label": "关于"
               },
               "homeBoard": {
-                "label": ""
+                "label": "主面板"
               },
               "preferences": {
                 "label": "您的首选项"
@@ -2866,7 +2866,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "群组",
             "children": {
               "action": {
                 "detail": {
@@ -2900,7 +2900,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "描述"
         }
       },
       "page": {
@@ -2929,11 +2929,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "更改应用成功",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "无法应用更改",
               "message": ""
             }
           },
