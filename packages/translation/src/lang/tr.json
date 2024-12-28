@@ -1345,17 +1345,17 @@
       }
     },
     "indexerManager": {
-      "name": "Dizinleyici Yönetim Durumu",
-      "description": "Dizinleyicilerinizin durumu",
+      "name": "İndeksleyici Yönetim Durumu",
+      "description": "İndeksleyicilerinizin durumu",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": "Dizinleyici Sitesini Yeni Sekmede Aç"
+          "label": "İndeksleyici Sitesini Yeni Sekmede Aç"
         }
       },
       "title": "Dizin oluşturucu yöneticisi",
       "testAll": "Tümünü test et",
       "error": {
-        "internalServerError": "Dizinleyicilerin durumu alınamadı"
+        "internalServerError": "İndeksleyicilerin durumu alınamadı"
       }
     },
     "healthMonitoring": {
@@ -2350,7 +2350,7 @@
               "label": "RSS Beslemeleri"
             },
             "indexerManager": {
-              "label": "Dizinleyici Yöneticisi"
+              "label": "İndeksleyici Yöneticisi"
             },
             "healthMonitoring": {
               "label": "Sağlık İzleme"
