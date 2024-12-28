@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -1381,7 +1381,7 @@
         "memory": "זיכרון: {memory}GiB",
         "memoryAvailable": "זמין: {memoryAvailable}GiB ({percent}%)",
         "version": "גרסה: {version}",
-        "uptime": "",
+        "uptime": "זמן פעילות: {months} חודשים, {days} ימים, {hours} שעות, {minutes} דקות",
         "loadAverage": "ממוצע עומס:",
         "minute": "דקה אחת",
         "minutes": "{count} דקות",
@@ -1440,7 +1440,7 @@
         },
         "hasAutoPlay": {
           "label": "הפעלה אוטומטית",
-          "description": ""
+          "description": "הפעלה אוטומטית פועלת רק כשהיא מושתקת בגלל הגבלות הדפדפן"
         },
         "isMuted": {
           "label": "מושתק"
@@ -1516,7 +1516,7 @@
         },
         "index": {
           "columnTitle": "#",
-          "detailsTitle": ""
+          "detailsTitle": "מדד נוכחי בתוך הלקוח"
         },
         "id": {
           "columnTitle": "מזהה"
@@ -1574,23 +1574,23 @@
         "leeching": "",
         "stalled": "",
         "unknown": "לא ידוע",
-        "seeding": ""
+        "seeding": "זריעה"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "רשימת לקוחות הורדה",
+          "pause": "השהה את כל הלקוחות/פריטים",
+          "resume": "המשך כל הלקוחות/פריטים"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "השהה לקוח",
+          "resume": "המשך לקוח"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "השהה פריט",
+          "resume": "המשך פריט",
           "delete": {
-            "title": "",
+            "title": "מחק פריט",
             "modalTitle": "",
             "entry": "",
             "entryAndFiles": ""
@@ -1639,19 +1639,19 @@
         },
         "users": {
           "main": "משתמשים מובילים",
-          "requests": ""
+          "requests": "בקשות"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "המרת קידוד מדיה",
+      "description": "סטטיסטיקה, תור נוכחי וסטטוס עיבוד של המרת המדיה שלך",
       "option": {
         "defaultView": {
           "label": "תצוגת ברירת מחדל"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "גודל העמוד בתור"
         }
       },
       "tab": {
@@ -1659,9 +1659,9 @@
         "queue": "תור",
         "statistics": "סטָטִיסטִיקָה"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} מתוך {total}",
       "healthCheck": {
-        "title": "",
+        "title": "בדיקת תקינות",
         "queued": "בתור",
         "status": {
           "healthy": "בָּרִיא",
@@ -1672,11 +1672,11 @@
         "statistics": {
           "empty": "ריק",
           "transcodes": "קידודים",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
+          "transcodesCount": "קידודים: {value}",
+          "healthChecksCount": "בדיקות בריאות: {value}",
+          "filesCount": "קבצים: {value}",
+          "savedSpace": "שטח שמור: {value}",
+          "healthChecks": "בדיקות בריאות",
           "videoCodecs": "קודקים",
           "videoContainers": "מיכלים",
           "videoResolutions": "רזולוציות"
@@ -1688,7 +1688,7 @@
             "eta": "זמן סיום משוער",
             "progress": "התקדמות",
             "transcode": "קידוד",
-            "healthCheck": ""
+            "healthCheck": "בדיקת תקינות"
           }
         },
         "queue": {
@@ -1697,37 +1697,37 @@
             "file": "קוֹבֶץ",
             "size": "גודל",
             "transcode": "קידוד",
-            "healthCheck": ""
+            "healthCheck": "בדיקת תקינות"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "הזנות RSS",
+      "description": "מעקב והצג עדכוני RSS, ATOM או JSON גנרי אחד או יותר",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "כתובות אתרים של הזנה"
         },
         "enableRtl": {
-          "label": ""
+          "label": "אפשר RTL"
         },
         "textLinesClamp": {
           "label": ""
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "הגבלת כמות הודעות"
         }
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "מצב עריכה מופעל",
+      "disabled": "מצב עריכה מושבת"
     },
     "dimensions": {
-      "title": ""
+      "title": "שנה מידות"
     }
   },
   "board": {
@@ -1790,15 +1790,15 @@
           },
           "sidebarBehavior": {
             "label": "",
-            "description": "",
+            "description": "סרגלי צד הוסרו ב- 1.0, אתה יכול לבחור מה צריך לקרות עם הפריטים שבתוכם.",
             "option": {
               "lastSection": {
                 "label": "",
-                "description": ""
+                "description": "סרגל צד יוצג מתחת לקטע האחרון"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "הסרת פריטים",
+                "description": "פריטים הכלולים בסרגל הצד יוסרו"
               }
             }
           }
@@ -1807,51 +1807,51 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "כותרת העמוד"
       },
       "metaTitle": {
-        "label": ""
+        "label": "כותרת מטא"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "כתובת אתר של תמונת לוגו"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "כתובת אתר של תמונת Favicon"
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "כתובת אתר של תמונת רקע"
       },
       "backgroundImageAttachment": {
         "label": "צירוף תמונת רקע",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "קבוע",
+            "description": "הרקע נשאר באותו מיקום."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "גלילה",
+            "description": "גלילה ברקע עם העכבר."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "חזרה על תמונת רקע",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "חזור",
+            "description": "התמונה חוזרת על עצמה ככל הנדרש כדי לכסות את כל אזור ציור תמונת הרקע."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "ללא חזרה",
+            "description": "התמונה אינה חוזרת על עצמה וייתכן שלא תמלא את כל החלל."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "חזור על ציר X",
+            "description": "זהה ל'חזרה' אבל רק על הציר האופקי."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "חזור על ציר Y",
+            "description": "זהה ל'חזרה' אבל רק על הציר האנכי."
           }
         }
       },
@@ -1859,12 +1859,12 @@
         "label": "גודל תמונת רקע",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "כיסוי",
+            "description": "קנה קנה מידה קטן ככל האפשר של התמונה כדי לכסות את כל החלון על ידי חיתוך שטח מוגזם."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "מכיל",
+            "description": "קנה מידה גדול ככל האפשר של התמונה בתוך המיכל שלה מבלי לחתוך או למתוח את התמונה."
           }
         }
       },
@@ -1875,36 +1875,36 @@
         "label": "צבע משני"
       },
       "opacity": {
-        "label": ""
+        "label": "אטימות"
       },
       "customCss": {
-        "label": "",
+        "label": "עיצוב מותאם אישית עבור הלוח הזה",
         "description": "יתר על כן, התאם את לוח המחוונים שלך באמצעות CSS, מומלץ רק למשתמשים מנוסים",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "מחלקות מתאמות אישית",
+          "description": "אתה יכול להוסיף מחלקות מותאמות אישית לפריטי הלוח שלך באפשרויות המתקדמות של כל פריט ולהשתמש בהן בעיצוב המותאם אישית למעלה."
         }
       },
       "columnCount": {
-        "label": ""
+        "label": "ספירת עמודות"
       },
       "name": {
         "label": "שם"
       },
       "isPublic": {
         "label": "ציבורי",
-        "description": ""
+        "description": "לוחות ציבוריים נגישים לכולם, גם ללא חשבון."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "לוח {boardName}"
     },
     "setting": {
-      "title": "",
+      "title": "הגדרות עבור לוח {boardName}",
       "section": {
         "general": {
           "title": "כללי",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "הקישור שסופק אינו מזוהה ולא יוצג בתצוגה מקדימה, ייתכן שהוא עדיין יעבוד."
         },
         "layout": {
           "title": "פריסה"
@@ -1913,23 +1913,23 @@
           "title": "רקע"
         },
         "color": {
-          "title": ""
+          "title": "צבעים"
         },
         "customCss": {
-          "title": ""
+          "title": "עיצוב מותאם אישית"
         },
         "access": {
-          "title": "",
+          "title": "בקרת גישה",
           "permission": {
             "item": {
               "view": {
                 "label": "צפייה בלוח"
               },
               "modify": {
-                "label": ""
+                "label": "שנה לוח"
               },
               "full": {
-                "label": ""
+                "label": "גישה מלאה"
               }
             }
           }
@@ -1938,15 +1938,15 @@
           "title": "אזור מסוכן",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "שנה את שם הלוח",
+              "description": "שינוי השם ישבור כל קישור ללוח זה.",
+              "button": "שנה שם",
               "modal": {
-                "title": ""
+                "title": "שנה את שם הלוח"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "שנה את נראות הלוח",
               "description": {
                 "public": "",
                 "private": ""
@@ -2347,7 +2347,7 @@
               "label": ""
             },
             "rssFeeds": {
-              "label": ""
+              "label": "הזנות RSS"
             },
             "indexerManager": {
               "label": ""
@@ -2365,7 +2365,7 @@
               "label": ""
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "המרת קידוד מדיה"
             }
           }
         },
