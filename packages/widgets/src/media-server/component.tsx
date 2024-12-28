@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { MantineStyleProp } from "@mantine/core";
 import { Avatar, Box, Flex, Group, Stack, Text, Title } from "@mantine/core";
+import { IconDeviceAudioTape, IconDeviceTv, IconMovie, IconVideo } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -150,6 +151,16 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
       onClick: () => {
         openModal({
           item: row.original,
+          title:
+            row.original.currentlyPlaying?.type === "movie" ? (
+              <IconMovie size={36} />
+            ) : row.original.currentlyPlaying?.type === "tv" ? (
+              <IconDeviceTv size={36} />
+            ) : row.original.currentlyPlaying?.type === "video" ? (
+              <IconVideo size={36} />
+            ) : (
+              <IconDeviceAudioTape size={36} />
+            ),
         });
       },
     }),
@@ -190,12 +201,13 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
   );
 }
 
-const itemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
+const itemInfoModal = createModal<{ item: StreamSession; title: React.ReactNode }>(({ innerProps }) => {
   const t = useScopedI18n("widget.mediaServer.items");
 
   return (
     <Stack align="center">
       <Flex direction="column" gap="xs" align="center">
+        <Title>{innerProps.title}</Title>
         <Title>{innerProps.item.currentlyPlaying?.name}</Title>
         <Group display="flex">
           <Title order={3}>{innerProps.item.currentlyPlaying?.episodeName}</Title>
