@@ -391,7 +391,7 @@
         }
       },
       "search-engine": {
-        "title": "Arama motorları",
+        "title": "Arama Motorları",
         "item": {
           "create": {
             "label": "Arama motorları oluşturun",
@@ -703,7 +703,7 @@
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "Hiçbir Gizli anahtar yok",
+        "segmentTitle": "Gizli anahtar yok",
         "text": "Bu entegrasyon için gizli anahtar gerekmiyor"
       },
       "kind": {
@@ -803,8 +803,8 @@
       }
     },
     "information": {
-      "min": "Asgari",
-      "max": "Azami",
+      "min": "En Düşük",
+      "max": "En Yüksek",
       "days": "Gün",
       "hours": "Saat",
       "minutes": "Dakika"
@@ -866,7 +866,7 @@
         "string": {
           "startsWith": "Bu alan {startsWith} ile başlamalıdır",
           "endsWith": "Bu alan {endsWith} ile bitmelidir",
-          "includes": "Bu alan {includes} adresini içermelidir",
+          "includes": "Bu alan {includes} içermelidir",
           "invalidEmail": "Bu alanda geçerli bir e-posta olmalıdır"
         },
         "tooSmall": {
@@ -981,7 +981,7 @@
           "label": "Entegrasyonlar"
         },
         "customCssClasses": {
-          "label": "Özel css sınıfları"
+          "label": "Özel CSS Alanı"
         }
       }
     },
@@ -1320,7 +1320,7 @@
         },
         "forecastDayCount": {
           "label": "Tahmin edilen gün sayısı",
-          "description": "Widget yeterince geniş olmadığında daha az gün gösterilir"
+          "description": "Araç yeterince geniş olmadığında daha az gün gösterilir"
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
@@ -1352,7 +1352,7 @@
           "label": "İndeksleyici Sitesini Yeni Sekmede Aç"
         }
       },
-      "title": "Dizin oluşturucu yöneticisi",
+      "title": "İndeksleyici Yöneticisi",
       "testAll": "Tümünü test et",
       "error": {
         "internalServerError": "İndeksleyicilerin durumu alınamadı"
@@ -1532,7 +1532,7 @@
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "Ratio",
+          "columnTitle": "Oran",
           "detailsTitle": "Torrent oranı (alınan/gönderilen)"
         },
         "received": {
@@ -1819,10 +1819,10 @@
         "label": "Favicon Görseli URL'si"
       },
       "backgroundImageUrl": {
-        "label": "Arkaplan Görseli URL'si"
+        "label": "Arkaplan Resim URL'si"
       },
       "backgroundImageAttachment": {
-        "label": "Arkaplan görsel yerleştirme",
+        "label": "Arka Plan Yerleşimi",
         "option": {
           "fixed": {
             "label": "Sabit",
@@ -1830,12 +1830,12 @@
           },
           "scroll": {
             "label": "Kaydır",
-            "description": "Arkaplan farenizle birlikte kayar."
+            "description": "Arkaplan Farenizle Birlikte Kayar."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "Arkaplan görüntüsünü Tekrarla",
+        "label": "Arkaplan Resmini Tekrarla",
         "option": {
           "repeat": {
             "label": "Tekrarla",
@@ -1856,7 +1856,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Arkaplan görsel boyutu",
+        "label": "Arkaplan Resmi Boyutu",
         "option": {
           "cover": {
             "label": "Kapak",
@@ -1879,10 +1879,10 @@
       },
       "customCss": {
         "label": "Bu panel için özel css",
-        "description": "Kontrol panelinizi yalnızca deneyimli kullanıcılar için önerilen CSS kullanarak özelleştirin",
+        "description": "CSS kullanarak panelizi özelleştirin, sadece tecrübeli kullanıcılar için tavsiye edilir",
         "customClassesAlert": {
           "title": "Özel sınıflar",
-          "description": "Her öğenin gelişmiş seçeneklerinde panel örneklerinize özel sınıflar ekleyebilir ve bunları yukarıdaki özel CSS alanında kullanabilirsiniz."
+          "description": "Düzenlenen her aracın gelişmiş seçenekler sekmesinde bulunan alanı kullanarak panel öğelerinizi CSS ile özelleştirebilir ve ya yukarıdaki özel CSS alanını kullanabilirsiniz."
         }
       },
       "columnCount": {
@@ -2029,7 +2029,7 @@
         "boards": "Paneller",
         "apps": "Uygulamalar",
         "integrations": "Entegrasyonlar",
-        "searchEngies": "Arama motorları",
+        "searchEngies": "Arama Motorları",
         "medias": "Medyalar",
         "users": {
           "label": "Kullanıcılar",
@@ -2564,7 +2564,7 @@
         }
       },
       "search-engines": {
-        "label": "Arama motorları",
+        "label": "Arama Motorları",
         "new": {
           "label": "Yeni"
         },
@@ -2721,7 +2721,7 @@
         "help": "Harici bir arama motoru kullanın",
         "group": {
           "searchEngine": {
-            "title": "Arama motorları",
+            "title": "Arama Motorları",
             "children": {
               "action": {
                 "search": {
@@ -2894,7 +2894,7 @@
           "label": "İsim"
         },
         "short": {
-          "label": "Kısa"
+          "label": "Kısa Yol"
         },
         "urlTemplate": {
           "label": "URL arama şablonu"
@@ -2905,9 +2905,9 @@
       },
       "page": {
         "list": {
-          "title": "Arama motorları",
+          "title": "Arama Motorları",
           "noResults": {
-            "title": "Henüz bir arama motoru yok",
+            "title": "Henüz bir arama motoru yapılandırılmadı",
             "action": "İlk arama motorunuzu oluşturun"
           },
           "interactive": "Etkileşimli, entegrasyon kullanır"
