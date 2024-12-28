@@ -6,59 +6,59 @@
         "subtitle": "Homarr örneğinizi kurmaya başlayalım.",
         "description": "Başlamak için lütfen Homarr örneğinizi nasıl kurmak istediğinizi seçin.",
         "action": {
-          "scratch": "Sıfırdan Başla",
-          "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın"
+          "scratch": "Sıfırdan başlayın",
+          "importOldmarr": "Homarr 1.0'dan önceki yedeğinizi içe aktarın"
         }
       },
       "import": {
-        "title": "Verileri İçe Aktar",
-        "subtitle": "Mevcut Homarr Örneğinden Alınan Verileri İçe Aktarabilirsiniz.",
+        "title": "Verileri içe aktar",
+        "subtitle": "Mevcut bir Homarr örneğinden alınan verileri içe aktarabilirsiniz.",
         "dropzone": {
           "title": "Zip dosyasını buraya sürükleyin veya göz atmak için tıklayın",
           "description": "Seçtiğiniz zip işlenecek ve içe aktarmak istediğiniz verileri seçebileceksiniz"
         },
         "fileInfo": {
           "action": {
-            "change": "Dosyayı Değiştir"
+            "change": "Dosyayı değiştir"
           }
         },
         "importSettings": {
-          "title": "İçe Aktarma Ayarları",
-          "description": "İçe Aktarma İşlevlerini Yapılandırın"
+          "title": "İçe aktarma ayarları",
+          "description": "İçe aktarma işlevlerini yapılandırın"
         },
         "boardSelection": {
-          "title": "{count} Panel Bulundu",
-          "description": "İçe Aktarılacak Tüm Panellerin Boyutlarını Seçin",
+          "title": "{count} panel bulundu",
+          "description": "İçe aktarılacak tüm panellerin boyutlarını seçin",
           "action": {
-            "selectAll": "Tümünü Seç",
-            "unselectAll": "Tüm Seçimi Kaldır"
+            "selectAll": "Tümünü seç",
+            "unselectAll": "Tüm seçimi kaldır"
           }
         },
         "summary": {
-          "title": "İçe Aktarma Özeti",
-          "description": "Aşağıdaki Özeti Kontrol Ederek İçe Aktarılacak İşlevleri Görebilirsiniz",
+          "title": "İçe aktarma özeti",
+          "description": "Aşağıdaki özeti kontrol ederek içe aktarılacak işlevleri görebilirsiniz",
           "action": {
-            "import": "İçe Aktarmayı Onayla ve Devam Et"
+            "import": "İçe aktarmayı onayla ve devam et"
           },
           "entities": {
             "apps": "Uygulamalar",
             "boards": "Paneller",
             "integrations": "Entegrasyonlar",
-            "credentialUsers": "Kullanıcı Kimlik Bilgileri"
+            "credentialUsers": "Kullanıcı kimlik Bilgileri"
           }
         },
         "tokenModal": {
-          "title": "İçe Aktarma Token'ını Girin",
+          "title": "İçe aktarma token'ını girin",
           "field": {
             "token": {
               "label": "Erişim Anahtarı",
-              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Token'ını girin"
+              "description": "Önceki homarr örneğinizden aldığınız içe aktarma Token'ını girin"
             }
           },
           "notification": {
             "error": {
-              "title": "Geçersiz Token",
-              "message": "Girdiğiniz Token Geçersiz"
+              "title": "Geçersiz token",
+              "message": "Girdiğiniz token geçersiz"
             }
           }
         }
@@ -92,24 +92,24 @@
       },
       "finish": {
         "title": "Kurulumu Bitir",
-        "subtitle": "Başlamaya Hazırsınız!",
+        "subtitle": "Başlamaya hazırsınız!",
         "description": "Kurulum sürecini başarıyla tamamladınız. Artık Homarr'ı kullanmaya başlayabilirsiniz. Sonraki eyleminizi seçin:",
         "action": {
-          "goToBoard": "{name} Paneline Git",
-          "createBoard": "İlk Panelinizi Oluşturun",
-          "inviteUser": "Yeni Kullanıcı Davet Et",
-          "docs": "Dökümanları Oku"
+          "goToBoard": "{name} paneline git",
+          "createBoard": "İlk panelinizi oluşturun",
+          "inviteUser": "Yeni kullanıcı davet et",
+          "docs": "Dökümanları okuyun"
         }
       }
     },
-    "backToStart": "Başlangıca Geri Dön"
+    "backToStart": "Başlangıca geri dön"
   },
   "user": {
     "title": "Kullanıcılar",
     "name": "Kullanıcı",
     "page": {
       "login": {
-        "title": "Hesabınıza Giriş Yapın",
+        "title": "Hesabınıza giriş yapın",
         "subtitle": "Tekrar hoş geldiniz! Lütfen kimlik bilgilerinizi girin"
       },
       "invite": {
@@ -118,7 +118,7 @@
         "description": "{username} tarafından davet edildiniz"
       },
       "init": {
-        "title": "Yeni Homarr Kurulumu",
+        "title": "Yeni Homarr kurulumu",
         "subtitle": "Lütfen yönetici kullanıcısını oluşturun"
       }
     },
@@ -141,20 +141,20 @@
         }
       },
       "passwordConfirm": {
-        "label": "Şifreyi Onayla"
+        "label": "Şifreyi onayla"
       },
       "previousPassword": {
         "label": "Eski Şifre"
       },
       "homeBoard": {
-        "label": "Öntanımlı Panel"
+        "label": "Öntanımlı panel"
       },
       "pingIconsEnabled": {
-        "label": "Pingler İçin Simgeler Kullanın"
+        "label": "Pingler için simgeler kullanın"
       }
     },
     "error": {
-      "usernameTaken": "Kullanıcı Adı Önceden Alındı"
+      "usernameTaken": "Kullanıcı adı önceden alındı"
     },
     "action": {
       "login": {
@@ -391,7 +391,7 @@
         }
       },
       "search-engine": {
-        "title": "Arama Motorları",
+        "title": "Arama motorları",
         "item": {
           "create": {
             "label": "Arama motorları oluşturun",
@@ -498,7 +498,7 @@
         }
       },
       "create": {
-        "title": "Yeni Uygulama",
+        "title": "Yeni uygulama",
         "notification": {
           "success": {
             "title": "Oluşturma başarılı",
@@ -566,7 +566,7 @@
         }
       },
       "create": {
-        "title": "Yeni {name} Entegrasyonu",
+        "title": "Yeni {name} entegrasyonu",
         "notification": {
           "success": {
             "title": "Oluşturma başarılı",
@@ -615,7 +615,7 @@
       }
     },
     "action": {
-      "create": "Yeni Entegrasyon"
+      "create": "Yeni entegrasyon"
     },
     "testConnection": {
       "action": {
@@ -703,13 +703,13 @@
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "Hiçbir Gizli Anahtar Bulunamadı",
+        "segmentTitle": "Hiçbir Gizli anahtar yok",
         "text": "Bu entegrasyon için gizli anahtar gerekmiyor"
       },
       "kind": {
         "username": {
           "label": "Kullanıcı adı",
-          "newLabel": "Yeni Kullanıcı Adı"
+          "newLabel": "Yeni kullanıcı adı"
         },
         "apiKey": {
           "label": "API Anahtarı",
@@ -717,7 +717,7 @@
         },
         "password": {
           "label": "Şifre",
-          "newLabel": "Yeni Parola"
+          "newLabel": "Yeni parola"
         }
       }
     },
@@ -766,7 +766,7 @@
     }
   },
   "common": {
-    "beta": "Test",
+    "beta": "Beta",
     "error": "Hata",
     "action": {
       "add": "Ekle",
@@ -803,8 +803,8 @@
       }
     },
     "information": {
-      "min": "En Düşük",
-      "max": "En Yüksek",
+      "min": "Asgari",
+      "max": "Azami",
       "days": "Gün",
       "hours": "Saat",
       "minutes": "Dakika"
@@ -842,8 +842,8 @@
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "Koyu Temaya Geç",
-        "switchToLightMode": "Aydınlık Temaya Geç",
+        "switchToDarkMode": "Koyu moda geç",
+        "switchToLightMode": "Aydınlık moda geç",
         "management": "Yönetim",
         "preferences": "Tercihleriniz",
         "logout": "Oturumu kapat",
@@ -853,11 +853,11 @@
         "updateAvailable": "{countUpdates} güncelleme mevcut: {tag}"
       }
     },
-    "dangerZone": "Tehlikeli Bölge",
+    "dangerZone": "Tehlikeli bölge",
     "noResults": "Sonuç bulunamadı",
     "preview": {
-      "show": "Ara Renkleri Göster",
-      "hide": "Ara Renkleri Gizle"
+      "show": "Önizlemeyi göster",
+      "hide": "Önizlemeyi Gizle"
     },
     "zod": {
       "errors": {
@@ -866,16 +866,16 @@
         "string": {
           "startsWith": "Bu alan {startsWith} ile başlamalıdır",
           "endsWith": "Bu alan {endsWith} ile bitmelidir",
-          "includes": "Bu alan {includes} içermelidir",
+          "includes": "Bu alan {includes} adresini içermelidir",
           "invalidEmail": "Bu alanda geçerli bir e-posta olmalıdır"
         },
         "tooSmall": {
           "string": "Bu alan en az {minimum} karakter uzunluğunda olmalıdır",
-          "number": "Bu alan {minimum} değerinden uzun veya eşit olmalıdır"
+          "number": "Bu alan {minimum} adresinden uzun veya eşit olmalıdır"
         },
         "tooBig": {
           "string": "Bu alan en fazla {maximum} karakter uzunluğunda olmalıdır",
-          "number": "Bu alan {maximum} değerinden kısa veya eşit olmalıdır"
+          "number": "Bu alan {maximum} adresinden kısa veya eşit olmalıdır"
         },
         "custom": {
           "passwordsDoNotMatch": "Parolalar uyuşmuyor",
@@ -892,7 +892,7 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "Yeni Dinamik Bölüm",
+        "create": "Yeni dinamik bölüm",
         "remove": "Dinamik bölümü kaldır"
       },
       "remove": {
@@ -907,16 +907,16 @@
         }
       },
       "action": {
-        "create": "Yeni Kategori",
-        "edit": "Kategoriyi Yeniden Adlandır",
+        "create": "Yeni kategori",
+        "edit": "Kategoriyi yeniden adlandır",
         "remove": "Kategoriyi kaldır",
         "moveUp": "Yukarı taşı",
         "moveDown": "Aşağı taşı",
-        "createAbove": "Yukarı Yeni Kategori",
-        "createBelow": "Aşağı Yeni Kategori"
+        "createAbove": "Yukarı yeni kategori",
+        "createBelow": "Aşağı yeni kategori"
       },
       "create": {
-        "title": "Yeni Kategori",
+        "title": "Yeni kategori",
         "submit": "Kategori ekle"
       },
       "remove": {
@@ -924,12 +924,12 @@
         "message": "{name} kategorisini kaldırmak istediğinizden emin misiniz?"
       },
       "edit": {
-        "title": "Kategoriyi Yeniden Adlandır",
-        "submit": "Kategoriyi Yeniden Adlandır"
+        "title": "Kategoriyi yeniden adlandır",
+        "submit": "Kategoriyi yeniden adlandır"
       },
       "menu": {
         "label": {
-          "create": "Yeni Kategori",
+          "create": "Yeni kategori",
           "changePosition": "Pozisyonu değiştir"
         }
       }
@@ -937,10 +937,10 @@
   },
   "item": {
     "action": {
-      "create": "Yeni Öğe",
+      "create": "Yeni öğe",
       "import": "Öğeleri İçe Aktar",
       "edit": "Öğeyi Düzenle",
-      "moveResize": "Öğeyi Taşı / Yeniden Boyutlandır",
+      "moveResize": "Öğeyi taşı / yeniden boyutlandır",
       "duplicate": "Öğeyi Çoğalt",
       "remove": "Öğeyi kaldır"
     },
@@ -954,7 +954,7 @@
       "addToBoard": "Panele Ekle"
     },
     "moveResize": {
-      "title": "Öğeyi Taşı / Yeniden Boyutlandır",
+      "title": "Öğeyi taşı / yeniden boyutlandır",
       "field": {
         "width": {
           "label": "Genişlik"
@@ -999,7 +999,7 @@
           "label": "Uygulama seç"
         },
         "openInNewTab": {
-          "label": "Yeni Sekmede Aç"
+          "label": "Yeni sekmede aç"
         },
         "showTitle": {
           "label": "Uygulama adını göster"
@@ -1013,13 +1013,13 @@
       },
       "error": {
         "notFound": {
-          "label": "Uygulama Eklenmedi",
+          "label": "Uygulama yok",
           "tooltip": "Geçerli bir uygulama seçmediniz"
         }
       }
     },
     "bookmarks": {
-      "name": "Yer İmleri",
+      "name": "Yer imleri",
       "description": "Birden fazla uygulama bağlantısını görüntüler",
       "option": {
         "title": {
@@ -1040,7 +1040,7 @@
           }
         },
         "items": {
-          "label": "Yer İmleri",
+          "label": "Yer imleri",
           "add": "Yer imi ekle"
         }
       }
@@ -1069,7 +1069,7 @@
       },
       "error": {
         "internalServerError": "DNS Çözümleyici Özeti alınamadı",
-        "integrationsDisconnected": "Veri Bulunamadı, Tüm Entegrasyonların Bağlantısı Kesildi"
+        "integrationsDisconnected": "Veri yok, tüm entegrasyonların bağlantısı kesildi"
       },
       "data": {
         "adsBlockedToday": "Bugün engellenenler",
@@ -1079,7 +1079,7 @@
       }
     },
     "dnsHoleControls": {
-      "name": "DNS Çözümleyici Kontrolleri",
+      "name": "DNS çözümleyici kontrolleri",
       "description": "Kontrol panelinizden PiHole veya AdGuard'ı kontrol edin",
       "option": {
         "layout": {
@@ -1110,7 +1110,7 @@
         "set": "Ayarla",
         "enabled": "Etkin",
         "disabled": "Pasif",
-        "processing": "İşlemde",
+        "processing": "İşleniyor",
         "disconnected": "Bağlantısı kesildi",
         "hours": "Saat",
         "minutes": "Dakika",
@@ -1118,7 +1118,7 @@
       }
     },
     "clock": {
-      "name": "Tarih ve Saat",
+      "name": "Tarih ve saat",
       "description": "Geçerli tarih ve saati görüntüler.",
       "option": {
         "customTitleToggle": {
@@ -1152,7 +1152,7 @@
       }
     },
     "notebook": {
-      "name": "Not Defteri",
+      "name": "Not defteri",
       "description": "Markdown'ı destekleyen basit bir not defteri bileşeni",
       "option": {
         "showToolbar": {
@@ -1268,7 +1268,7 @@
       }
     },
     "smartHome-executeAutomation": {
-      "name": "Otomasyon Yürüt",
+      "name": "Otomasyonu Yürüt",
       "description": "Tek tıklamayla otomasyonu tetikleyin",
       "option": {
         "displayName": {
@@ -1295,10 +1295,10 @@
           }
         },
         "filterPastMonths": {
-          "label": "Başlangıç"
+          "label": "Başla"
         },
         "filterFutureMonths": {
-          "label": "Bitiş"
+          "label": "Bitir"
         }
       }
     },
@@ -1379,14 +1379,14 @@
         "information": "Bilgi",
         "processor": "İşlemci: {cpuModelName}",
         "memory": "Bellek: {memory}GiB",
-        "memoryAvailable": "Kullanılabilir: {memoryAvailable} GiB ({percent}%)",
+        "memoryAvailable": "Mevcut: {memoryAvailable}GiB ({percent}%)",
         "version": "Sürüm: {version}",
         "uptime": "Çalışma Süresi: {days} Gün, {hours} Saat, {minutes} Dakika",
         "loadAverage": "Ortalama yük:",
         "minute": "1 dakika",
         "minutes": "{count} dakika",
         "used": "Kullanılan",
-        "available": "Kullanılabilir",
+        "available": "Mevcut",
         "lastSeen": "Son durum güncellemesi: {lastSeen}"
       },
       "memory": {},
@@ -1455,7 +1455,7 @@
       }
     },
     "mediaServer": {
-      "name": "Güncel Medya Sunucusu Akışları",
+      "name": "Güncel medya sunucusu akışları",
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
       "option": {}
     },
@@ -1470,7 +1470,7 @@
           "label": "Öğelerin sıralanmasını etkinleştir"
         },
         "defaultSort": {
-          "label": "Öntanımlı olarak sıralama için kullanılan sütun"
+          "label": "Varsayılan olarak sıralama için kullanılan sütun"
         },
         "descendingDefaultSort": {
           "label": "Ters sıralama"
@@ -1503,7 +1503,7 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Ekleme",
+          "columnTitle": "Eklendi",
           "detailsTitle": "Ekleme Tarihi"
         },
         "category": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "Oran",
+          "columnTitle": "Ratio",
           "detailsTitle": "Torrent oranı (alınan/gönderilen)"
         },
         "received": {
@@ -1570,7 +1570,7 @@
         "paused": "Duraklatıldı",
         "completed": "Tamamlanan",
         "failed": "Başarısız",
-        "processing": "İşlemde",
+        "processing": "İşleniyor",
         "leeching": "Leechleme",
         "stalled": "Durduruldu",
         "unknown": "Bilinmeyen",
@@ -1615,7 +1615,7 @@
       "availability": {
         "unknown": "Bilinmeyen",
         "pending": "Bekleyen",
-        "processing": "İşlemde",
+        "processing": "İşleniyor",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut"
       },
@@ -1631,8 +1631,8 @@
           "approved": "Onaylanan",
           "pending": "Onay bekleyen",
           "processing": "İşleniyor",
-          "declined": "Reddedilen",
-          "available": "Mevcut",
+          "declined": "Zaten reddedildi",
+          "available": "Zaten Mevcut",
           "tv": "Dizi talepleri",
           "movie": "Film talepleri",
           "total": "Toplam"
@@ -1644,14 +1644,14 @@
       }
     },
     "mediaTranscoding": {
-      "name": "Medya Kod Dönüştürme",
+      "name": "Medya kod dönüştürme",
       "description": "Medya kod dönüştürmenizin istatistikleri, geçerli kuyruğu ve çalışan durumu",
       "option": {
         "defaultView": {
-          "label": "Öntanımlı Görünüm"
+          "label": "Öntanımlı görünüm"
         },
         "queuePageSize": {
-          "label": "Kuyruk Sayfa Boyutu"
+          "label": "Sıra sayfa boyutu"
         }
       },
       "tab": {
@@ -1703,7 +1703,7 @@
       }
     },
     "rssFeed": {
-      "name": "RSS Beslemeleri",
+      "name": "RSS beslemeleri",
       "description": "Bir veya daha fazla RSS, ATOM veya JSON beslemesini takip edin ve görüntüleyin",
       "option": {
         "feedUrls": {
@@ -1713,10 +1713,10 @@
           "label": "RTL'yi etkinleştir"
         },
         "textLinesClamp": {
-          "label": "Açıklamalarda satır sınırı"
+          "label": "Açıklamalar satır sınırı"
         },
         "maximumAmountPosts": {
-          "label": "Gönderi sayısı sınırı"
+          "label": "Gönderi değer sınırı"
         }
       }
     }
@@ -1842,7 +1842,7 @@
             "description": "Görsel, tüm arka plan alanını kaplayacak kadar tekrarlanır."
           },
           "no-repeat": {
-            "label": "Tekrarlama Yok",
+            "label": "Tekrarlama yok",
             "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
@@ -1919,7 +1919,7 @@
           "title": "Özel Css"
         },
         "access": {
-          "title": "Erişim Kontrolü",
+          "title": "Erişim kontrolü",
           "permission": {
             "item": {
               "view": {
@@ -1935,14 +1935,14 @@
           }
         },
         "dangerZone": {
-          "title": "Tehlikeli Bölge",
+          "title": "Tehlikeli bölge",
           "action": {
             "rename": {
-              "label": "Panelin ismini değiştir",
+              "label": "Panelin adını değiştir",
               "description": "İsmin değiştirilmesi bu panele olan tüm bağlantıların kopmasına neden olacaktır.",
               "button": "İsmi değiştir",
               "modal": {
-                "title": "Panelin ismini değiştir"
+                "title": "Panelin adını değiştir"
               }
             },
             "visibility": {
@@ -1993,7 +1993,7 @@
         "notice": "Bağlantıyı kontrol edin veya erişilebilir olması gerektiğini düşünüyorsanız bir yöneticiyle iletişime geçin"
       },
       "homeBoard": {
-        "title": "Öntanımlı Panel Yapılandırılmadı",
+        "title": "Ana panel yok",
         "admin": {
           "description": "Sunucu için henüz bir ana sayfa paneli belirlemediniz.",
           "link": "Sunucu geneli için ana panel yapılandırın",
@@ -2001,13 +2001,13 @@
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
-          "link": "Öntanımlı Paneli Yapılandır",
-          "notice": "Bu Sayfanın Kaybolmasını Sağlamak İçin Tercihlerden Öntanımlı Panel Atayın"
+          "link": "Öntanımlı paneli yapılandır",
+          "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden öntanımlı panel seçin"
         },
         "anonymous": {
-          "description": "Sunucu Yöneticiniz Henüz Bir Öntanımlı Panel Atamadı.",
+          "description": "Sunucu yöneticiniz henüz bir öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
-          "notice": "Bu Sayfanın Kaybolmasını Sağlamak İçin Sunucu Yöneticisinden Öntanımlı Panel Atamasını İsteyin"
+          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
         }
       }
     }
@@ -2025,11 +2025,11 @@
     },
     "navbar": {
       "items": {
-        "home": "Ana Sayfa",
+        "home": "Ana sayfa",
         "boards": "Paneller",
         "apps": "Uygulamalar",
         "integrations": "Entegrasyonlar",
-        "searchEngies": "Arama Motorları",
+        "searchEngies": "Arama motorları",
         "medias": "Medyalar",
         "users": {
           "label": "Kullanıcılar",
@@ -2082,7 +2082,7 @@
         "title": "Panelleriniz",
         "action": {
           "new": {
-            "label": "Yeni Panel"
+            "label": "Yeni panel"
           },
           "open": {
             "label": "Panel'i aç"
@@ -2091,9 +2091,9 @@
             "label": "Ayarlar"
           },
           "setHomeBoard": {
-            "label": "Öntanımlı Panel Olarak Ata",
+            "label": "Öntanımlı panel olarak ayarlayın",
             "badge": {
-              "label": "Ana Sayfa",
+              "label": "Ana sayfa",
               "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
             }
           },
@@ -2130,7 +2130,7 @@
             "title": "Genel",
             "item": {
               "language": "Dil & Bölge",
-              "board": "Öntanımlı Panel",
+              "board": "Öntanımlı panel",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
@@ -2151,7 +2151,7 @@
         },
         "create": {
           "metaTitle": "Kullanıcı ekle",
-          "title": "Yeni Kullanıcı Oluştur",
+          "title": "Yeni kullanıcı oluştur",
           "step": {
             "personalInformation": {
               "label": "Kişisel bilgiler"
@@ -2180,10 +2180,10 @@
           }
         },
         "invite": {
-          "title": "Kullanıcı Davetlerini Yönet",
+          "title": "Kullanıcı davetlerini yönet",
           "action": {
             "new": {
-              "title": "Yeni Davet",
+              "title": "Yeni davet",
               "description": "Süre sona erdikten sonra davet artık geçerli olmayacak ve daveti alan kişi bir hesap oluşturamayacaktır."
             },
             "copy": {
@@ -2347,7 +2347,7 @@
               "label": "Medya Talep Listesi"
             },
             "rssFeeds": {
-              "label": "RSS Beslemeleri"
+              "label": "RSS beslemeleri"
             },
             "indexerManager": {
               "label": "İndeksleyici Yöneticisi"
@@ -2365,7 +2365,7 @@
               "label": "Güncelleme denetleyicisi"
             },
             "mediaTranscoding": {
-              "label": "Medya Kod Dönüştürme"
+              "label": "Medya kod dönüştürme"
             }
           }
         },
@@ -2400,7 +2400,7 @@
       },
       "about": {
         "version": "Sürüm {version}",
-        "text": "Homarr, gönüllüler tarafından sürdürülen topluluk odaklı bir açık kaynak projesidir. Bu kişiler sayesinde Homarr, 2021'den bugüne büyüyerek ilerleyen bir projedir. Ekibimiz, boş zamanlarında Homarr üzerinde birçok farklı ülkeden tamamen uzaktan, hiçbir ücret almadan çalışmaktadır.",
+        "text": "Homarr, gönüllüler tarafından sürdürülen topluluk odaklı bir açık kaynak projesidir. Bu kişiler sayesinde Homarr, 2021'den beri büyüyen bir projedir. Ekibimiz, boş zamanlarında Homarr üzerinde birçok farklı ülkeden tamamen uzaktan, hiçbir ücret almadan çalışmaktadır.",
         "accordion": {
           "contributors": {
             "title": "Katkıda Bulunanlar",
@@ -2435,7 +2435,7 @@
           "created": "Oluşturuldu",
           "running": "Çalışıyor",
           "paused": "Duraklatıldı",
-          "restarting": "Yeniden Başlatılıyor",
+          "restarting": "Yeniden başlatılıyor",
           "exited": "Çıkıldı",
           "removing": "Kaldırılıyor",
           "dead": "Ölü"
@@ -2650,7 +2650,7 @@
                   "label": "Panel'i aç"
                 },
                 "homeBoard": {
-                  "label": "Öntanımlı Panel Olarak Ata"
+                  "label": "Öntanımlı panel olarak ata"
                 },
                 "settings": {
                   "label": "Ayarları aç"
@@ -2676,8 +2676,8 @@
             "title": "Genel komutlar",
             "option": {
               "colorScheme": {
-                "light": "Aydınlık Temaya Geç",
-                "dark": "Koyu Temaya Geç"
+                "light": "Aydınlık moda geç",
+                "dark": "Koyu moda geç"
               },
               "language": {
                 "label": "Dili değiştir",
@@ -2688,16 +2688,16 @@
                 }
               },
               "newBoard": {
-                "label": "Yeni Panel Oluştur"
+                "label": "Yeni bir panel oluştur"
               },
               "importBoard": {
                 "label": "Bir paneli içe aktar"
               },
               "newApp": {
-                "label": "Yeni Uygulama Oluştur"
+                "label": "Yeni bir uygulama oluştur"
               },
               "newIntegration": {
-                "label": "Yeni Entegrasyon Oluştur",
+                "label": "Yeni bir entegrasyon oluşturun",
                 "children": {
                   "detail": {
                     "title": "Oluşturmak istediğiniz entegrasyon türünü seçin"
@@ -2705,13 +2705,13 @@
                 }
               },
               "newUser": {
-                "label": "Yeni Kullanıcı Oluştur"
+                "label": "Yeni bir kullanıcı oluştur"
               },
               "newInvite": {
-                "label": "Yeni Davet Oluştur"
+                "label": "Yeni bir davet oluştur"
               },
               "newGroup": {
-                "label": "Yeni Grup Oluştur"
+                "label": "Yeni bir grup oluştur"
               }
             }
           }
@@ -2795,7 +2795,7 @@
             "title": "Sayfalar",
             "option": {
               "manageHome": {
-                "label": "Ana Sayfayı Yönet"
+                "label": "Ana sayfayı yönet"
               },
               "manageBoard": {
                 "label": "Panelleri yönet"
@@ -2825,7 +2825,7 @@
                 "label": "Docker'ı yönet"
               },
               "manageApi": {
-                "label": "Swagger API'si"
+                "label": "Swagger API"
               },
               "manageLog": {
                 "label": "Günlükleri görüntüle"
@@ -2840,7 +2840,7 @@
                 "label": "Hakkında"
               },
               "homeBoard": {
-                "label": "Öntanımlı Panel"
+                "label": "Öntanımlı panel"
               },
               "preferences": {
                 "label": "Tercihleriniz"
@@ -2894,7 +2894,7 @@
           "label": "İsim"
         },
         "short": {
-          "label": "Kısa Yol"
+          "label": "Kısa"
         },
         "urlTemplate": {
           "label": "URL arama şablonu"
@@ -2905,15 +2905,15 @@
       },
       "page": {
         "list": {
-          "title": "Arama Motorları",
+          "title": "Arama motorları",
           "noResults": {
-            "title": "Henüz bir arama motoru yapılandırılmadı",
+            "title": "Henüz bir arama motoru yok",
             "action": "İlk arama motorunuzu oluşturun"
           },
           "interactive": "Etkileşimli, entegrasyon kullanır"
         },
         "create": {
-          "title": "Yeni Arama Motoru",
+          "title": "Yeni arama motoru",
           "notification": {
             "success": {
               "title": "Arama motoru oluşturuldu",
