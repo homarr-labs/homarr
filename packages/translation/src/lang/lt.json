@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Įterpkite bet kokį turinį iš interneto. Kai kuriose svetainėse prieiga gali būti ribojama.",
       "option": {
         "embedUrl": {
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Vartotojas",
+        "name": "Pavadinimas",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -2042,9 +2047,9 @@
         "tools": {
           "label": "Įrankiai",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2199,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Kūrėjas"
@@ -2370,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2602,7 +2607,7 @@
       "tools": {
         "label": "Įrankiai",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
