@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Benutzer",
+        "name": "Name",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
