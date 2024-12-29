@@ -1,15 +1,16 @@
 import { Group, Text } from "@mantine/core";
-import { IconCaretUpDown } from "@tabler/icons-react";
 import type { TablerIcon } from "@tabler/icons-react";
+import { IconCaretUpDown } from "@tabler/icons-react";
 
 import { createGroup } from "../../lib/group";
-import { interaction } from "../../lib/interaction";
+import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type GroupItem = {
   id: string;
   name: string;
   icon: TablerIcon | string;
+  interaction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
 };
 
 export const homeSearchEngineGroup = createGroup<GroupItem>({
@@ -30,26 +31,36 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       </Group>
     );
   },
-  useInteraction: interaction.javaScript(() => ({
-    onSelect() {
-      console.log("Selected");
-    },
-  })),
+  useInteraction(item, query) {
+    return item.interaction(query);
+  },
   filter() {
     return true;
   },
-  useOptions(query) {
+  useOptions() {
     // TODO: Load default search engines from settings
     return [
       {
         id: "default",
-        name: `Search for '${query}' with Google`,
+        name: `Search with Google`,
         icon: "https://www.google.com/favicon.ico",
+        interaction(query) {
+          return {
+            type: "link",
+            href: `https://www.google.com/search?q=${query}`,
+          };
+        },
       },
       {
         id: "other",
-        name: "Search with other search engine",
+        name: "Search with another search engine",
         icon: IconCaretUpDown,
+        interaction() {
+          return {
+            type: "mode",
+            mode: "external",
+          };
+        },
       },
     ];
   },
