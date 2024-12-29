@@ -64,7 +64,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
 COPY scripts/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
-COPY --chown=nextjs:nodejs scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
 
