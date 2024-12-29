@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "Güncel Medya Sunucusu Akışları",
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Kullanıcı",
+        "name": "İsim",
+        "id": "İd"
+      }
     },
     "downloads": {
       "name": "İndirme İstemcisi",
