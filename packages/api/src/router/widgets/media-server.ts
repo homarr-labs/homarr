@@ -21,6 +21,7 @@ export const mediaServerRouter = createTRPCRouter({
           const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
           return {
             integrationId: integration.id,
+            integrationKind: integration.kind,
             sessions: data,
           };
         }),
