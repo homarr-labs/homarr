@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -767,7 +767,7 @@
   },
   "common": {
     "beta": "",
-    "error": "",
+    "error": "Error",
     "action": {
       "add": "Añadir",
       "apply": "Aplicar",
@@ -1029,10 +1029,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1053,10 +1053,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1086,10 +1086,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incrusta cualquier contenido de Internet. Algunos sitios web pueden restringir el acceso.",
       "option": {
         "embedUrl": {
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Usuario",
+        "name": "Nombre",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1532,7 +1537,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Ratio",
           "detailsTitle": ""
         },
         "received": {
@@ -1635,7 +1640,7 @@
           "available": "",
           "tv": "Solicitudes de TV",
           "movie": "Solicitudes de películas",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Mejores usuarios",
@@ -1903,7 +1908,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2042,9 +2047,9 @@
         "tools": {
           "label": "Herramientas",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2127,7 +2132,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "item": {
               "language": "",
               "board": "",
@@ -2199,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Creador"
@@ -2208,7 +2213,7 @@
               "label": "Fecha de caducidad"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2217,7 +2222,7 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "owner": "Propietario",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
@@ -2316,7 +2321,7 @@
           "status": {
             "idle": "",
             "running": "En ejecución",
-            "error": ""
+            "error": "Error"
           },
           "job": {
             "iconsUpdater": {
@@ -2370,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2589,7 +2594,7 @@
         "create": {
           "label": "Crear"
         },
-        "general": "",
+        "general": "General",
         "security": "Seguridad",
         "board": "Tableros",
         "groups": {
@@ -2602,7 +2607,7 @@
       "tools": {
         "label": "Herramientas",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2749,7 +2754,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
+                "name": "Torrents",
                 "description": ""
               },
               "youTube": {
