@@ -29,8 +29,6 @@ WORKDIR /app
 RUN apk add --no-cache redis nginx bash gettext su-exec
 RUN mkdir /appdata
 VOLUME /appdata
-RUN mkdir /secrets
-VOLUME /secrets
 
 
 
@@ -43,7 +41,6 @@ RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homa
 RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
-RUN chown -R nextjs:nodejs /secrets
 RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
     mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
     mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \

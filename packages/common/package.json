@@ -8,7 +8,8 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./env.mjs": "./env.mjs"
   },
   "typesVersions": {
     "*": {
