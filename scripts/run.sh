@@ -19,19 +19,6 @@ else
 fi
 export ENCRYPTION_KEY=$encryptionKey
 
-# Generates an auth secret if it doesn't exist and saves it to /secrets/authSecret
-# Also sets the AUTH_SECRET environment variable required for auth.js
-authSecret=""
-if [ -r /secrets/authSecret ]; then
-    echo "Auth secret already exists"
-    authSecret=$(cat /secrets/authSecret)
-else
-    echo "Generating auth secret"
-    authSecret=$(node ./generateRandomSecureKey.js)
-    echo $authSecret > /secrets/authSecret
-fi
-export AUTH_SECRET=$authSecret
-
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file
 # 2. Create the nginx configuration file from the template
