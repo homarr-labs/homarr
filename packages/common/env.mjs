@@ -20,4 +20,9 @@ export const env = createEnv({
         message: `SECRET_ENCRYPTION_KEY must only contain hex characters${errorSuffix}`,
       }),
   },
+  runtimeEnv: {
+    SECRET_ENCRYPTION_KEY: process.env.SECRET_ENCRYPTION_KEY,
+  },
+  skipValidation:
+    Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION) || process.env.npm_lifecycle_event === "lint",
 });
