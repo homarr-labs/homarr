@@ -7,5 +7,8 @@ export const createHomarrContainer = () => {
 
   return new GenericContainer("homarr-e2e")
     .withExposedPorts(7575)
+    .withEnvironment({
+      SECRET_ENCRYPTION_KEY: "0".repeat(64),
+    })
     .withWaitStrategy(Wait.forHttp("/api/health/ready", 7575));
 };
