@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -733,7 +733,7 @@
     "field": {
       "name": "Nume",
       "size": "Mărime",
-      "creator": ""
+      "creator": "Creator"
     },
     "action": {
       "upload": {
@@ -1032,7 +1032,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1056,7 +1056,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1089,7 +1089,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1183,7 +1183,7 @@
         "checkList": "Lista de verificare cu bifă",
         "increaseIndent": "Mărește spațierea",
         "decreaseIndent": "Scade spațierea",
-        "link": "",
+        "link": "Link",
         "unlink": "Șterge link-ul",
         "image": "Încorporează imagine",
         "addTable": "Adaugă tabelă",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Încorporați orice conținut de pe internet. Unele site-uri web pot restricționa accesul.",
       "option": {
         "embedUrl": {
@@ -1283,7 +1283,7 @@
       }
     },
     "calendar": {
-      "name": "",
+      "name": "Calendar",
       "description": "",
       "option": {
         "releaseType": {
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Utilizator",
+        "name": "Nume",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1635,7 +1640,7 @@
           "available": "",
           "tv": "Cereri seriale TV",
           "movie": "Cereri filme",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Top utilizatori",
@@ -1892,7 +1897,7 @@
         "label": "Nume"
       },
       "isPublic": {
-        "label": "",
+        "label": "Public",
         "description": ""
       }
     },
@@ -1903,7 +1908,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2042,9 +2047,9 @@
         "tools": {
           "label": "Unelte",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2127,7 +2132,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "item": {
               "language": "",
               "board": "",
@@ -2199,16 +2204,16 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
-              "label": ""
+              "label": "Creator"
             },
             "expirationDate": {
               "label": "Data expirării"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2217,7 +2222,7 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "owner": "Proprietar",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
@@ -2370,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2589,7 +2594,7 @@
         "create": {
           "label": "Creează"
         },
-        "general": "",
+        "general": "General",
         "security": "Securitate",
         "board": "Planșe",
         "groups": {
@@ -2602,7 +2607,7 @@
       "tools": {
         "label": "Unelte",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
