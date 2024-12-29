@@ -235,7 +235,7 @@
           "label": "Görseli değiştir",
           "notification": {
             "success": {
-              "message": "Görsel başarıyla değiştirildi"
+              "message": "Resim başarıyla değiştirildi"
             },
             "error": {
               "message": "Görsel değiştirilemiyor"
@@ -1185,7 +1185,7 @@
         "decreaseIndent": "Girintiyi Azalt",
         "link": "Bağlantı",
         "unlink": "Bağlantıyı kaldır",
-        "image": "Görsel Göm",
+        "image": "Resim Yerleştir",
         "addTable": "Tablo ekle",
         "deleteTable": "Tablo Sil",
         "colorCell": "Renk Hücresi",
@@ -1839,11 +1839,11 @@
         "option": {
           "repeat": {
             "label": "Tekrarla",
-            "description": "Görsel, tüm arka plan alanını kaplayacak kadar tekrarlanır."
+            "description": "Resim, tüm arka plan kapsama alanını kaplayacak kadar tekrarlanır."
           },
           "no-repeat": {
             "label": "Tekrarlama yok",
-            "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
+            "description": "Resim tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
             "label": "Y tekrarla",
@@ -2320,7 +2320,7 @@
           },
           "job": {
             "iconsUpdater": {
-              "label": "Simge Güncelleyici"
+              "label": "Simge Güncelleme"
             },
             "analytics": {
               "label": "Analiz"
@@ -2617,7 +2617,7 @@
     }
   },
   "search": {
-    "placeholder": "Ara",
+    "placeholder": "Ara (\"!\" İle Başlamalı)",
     "nothingFound": "Hiçbir şey bulunamadı",
     "error": {
       "fetch": "Veriler alınırken bir hata oluştu"
@@ -2729,10 +2729,10 @@
                 }
               },
               "detail": {
-                "title": "Arama motoru için bir eylem seçin"
+                "title": "Arama yapmak istediğiniz terimleri girin"
               },
               "searchResults": {
-                "title": "Eylemler için bir arama sonucu seçin"
+                "title": "Etkileşime geçmek için bir sonuç seçin"
               }
             },
             "option": {
