@@ -1381,7 +1381,7 @@
         "memory": "Pamäť: {memory}GiB",
         "memoryAvailable": "K dispozícii: {memoryAvailable}GiB ({percent}%)",
         "version": "Verzia: {version}",
-        "uptime": "Doba prevádzky: {days} dní, {hours} hodín, {minutes} minút",
+        "uptime": "",
         "loadAverage": "Priemerné zaťaženie:",
         "minute": "1 minúta",
         "minutes": "{count} minút",
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "Aktuálne streamy mediálneho servera",
       "description": "Zobrazte aktuálne streamy na vašich mediálnych serveroch",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Používateľ",
+        "name": "Názov",
+        "id": "Id"
+      }
     },
     "downloads": {
       "name": "Download klient",
