@@ -29,7 +29,7 @@ export type SearchGroup<TOption extends Record<string, unknown> = any> =
       {
         filter: (query: string, option: TOption) => boolean;
         sort?: (query: string, options: [TOption, TOption]) => number;
-        useOptions: () => TOption[];
+        useOptions: (query: string) => TOption[];
       }
     >
   | CommonSearchGroup<TOption, { useQueryOptions: (query: string) => UseTRPCQueryResult<TOption[], unknown> }>;
