@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "",
+        "label": "E-Mail",
         "verified": ""
       },
       "username": {
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Χρήστης",
+        "name": "Όνομα",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1678,7 +1683,7 @@
           "savedSpace": "",
           "healthChecks": "",
           "videoCodecs": "Κωδικοποιητές",
-          "videoContainers": "",
+          "videoContainers": "Containers",
           "videoResolutions": "Αναλύσεις"
         },
         "workers": {
@@ -2042,9 +2047,9 @@
         "tools": {
           "label": "Εργαλεία",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2208,7 +2213,7 @@
               "label": "Ημερομηνία λήξης"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2370,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2419,7 +2424,7 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Containers",
     "table": {
       "updated": "",
       "search": "",
@@ -2602,7 +2607,7 @@
       "tools": {
         "label": "Εργαλεία",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
