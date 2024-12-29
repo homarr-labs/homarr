@@ -4,7 +4,9 @@ import { env } from "../env.mjs";
 
 const algorithm = "aes-256-cbc"; //Using AES encryption
 
-const key = Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex");
+// We fallback to a key of 0s if the key was not provided because env validation was skipped
+// This should only be the case in CI
+const key = Buffer.from(env.SECRET_ENCRYPTION_KEY || "0".repeat(64), "hex");
 
 export function encryptSecret(text: string): `${string}.${string}` {
   const initializationVector = crypto.randomBytes(16);
