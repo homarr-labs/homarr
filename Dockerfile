@@ -25,8 +25,8 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-# gettext is required for envsubst
-RUN apk add --no-cache redis nginx bash gettext su-exec
+# gettext is required for envsubst, openssl for generating AUTH_SECRET, su-exec for running application as non-root
+RUN apk add --no-cache redis nginx bash gettext su-exec openssl
 RUN mkdir /appdata
 VOLUME /appdata
 
