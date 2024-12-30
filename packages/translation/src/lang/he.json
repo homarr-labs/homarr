@@ -1530,7 +1530,7 @@
           "columnTitle": "אינטגרציה"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "שם עבודה"
         },
         "progress": {
           "columnTitle": "התקדמות",
@@ -1597,7 +1597,7 @@
           "delete": {
             "title": "מחק פריט",
             "modalTitle": "",
-            "entry": "",
+            "entry": "מחק ערך",
             "entryAndFiles": ""
           }
         }
@@ -2048,9 +2048,9 @@
           "label": "כלים",
           "items": {
             "docker": "דוקר",
-            "logs": "",
+            "logs": "קבצי יומן",
             "api": "ממשק API",
-            "tasks": ""
+            "tasks": "משימות"
           }
         },
         "settings": "הגדרות",
@@ -2060,7 +2060,7 @@
             "documentation": "תיעוד",
             "submitIssue": "",
             "discord": "קהילת דיסקורד",
-            "sourceCode": ""
+            "sourceCode": "קוד מקור"
           }
         },
         "about": "אודות"
@@ -2078,16 +2078,16 @@
         },
         "statisticLabel": {
           "boards": "לוחות",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "משאבים",
+          "authentication": "הזדהות",
+          "authorization": "אימות"
         }
       },
       "board": {
         "title": "הלוחות שלך",
         "action": {
           "new": {
-            "label": ""
+            "label": "לוח חדש"
           },
           "open": {
             "label": ""
@@ -2096,10 +2096,10 @@
             "label": "הגדרות"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "קביעת לוח ברירת מחדל",
             "badge": {
               "label": "מסך הבית",
-              "tooltip": ""
+              "tooltip": "לוח זה יוצג כלוח הבית שלך"
             }
           },
           "delete": {
@@ -2317,7 +2317,7 @@
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "משימות",
           "status": {
             "idle": "",
             "running": "פועל",
@@ -2388,7 +2388,7 @@
               "label": "תיעוד"
             },
             "apiKey": {
-              "label": "",
+              "label": "הזדהות",
               "title": "",
               "button": {
                 "createApiToken": ""
@@ -2610,7 +2610,7 @@
           "label": "דוקר"
         },
         "logs": {
-          "label": ""
+          "label": "קבצי יומן"
         }
       },
       "settings": {
