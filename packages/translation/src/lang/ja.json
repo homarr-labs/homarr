@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "ユーザー",
+        "name": "名称",
         "id": ""
       }
     },
@@ -1690,7 +1690,7 @@
           "empty": "空",
           "table": {
             "file": "ファイル",
-            "eta": "",
+            "eta": "ETA",
             "progress": "進捗状況",
             "transcode": "トランスコード",
             "healthCheck": ""
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "ツール",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2063,7 +2063,7 @@
             "sourceCode": ""
           }
         },
-        "about": ""
+        "about": "About"
       }
     },
     "page": {
@@ -2204,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "クリエイター"
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "ツール",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2617,7 +2617,7 @@
         "label": "設定"
       },
       "about": {
-        "label": ""
+        "label": "About"
       }
     }
   },
@@ -2842,7 +2842,7 @@
                 "label": ""
               },
               "about": {
-                "label": ""
+                "label": "About"
               },
               "homeBoard": {
                 "label": ""

@@ -235,7 +235,7 @@
           "label": "Görseli değiştir",
           "notification": {
             "success": {
-              "message": "Görsel başarıyla değiştirildi"
+              "message": "Resim başarıyla değiştirildi"
             },
             "error": {
               "message": "Görsel değiştirilemiyor"
@@ -1185,7 +1185,7 @@
         "decreaseIndent": "Girintiyi Azalt",
         "link": "Bağlantı",
         "unlink": "Bağlantıyı kaldır",
-        "image": "Görsel Göm",
+        "image": "Resim Yerleştir",
         "addTable": "Tablo ekle",
         "deleteTable": "Tablo Sil",
         "colorCell": "Renk Hücresi",
@@ -1320,7 +1320,7 @@
         },
         "forecastDayCount": {
           "label": "Tahmin edilen gün sayısı",
-          "description": "Widget yeterince geniş olmadığında daha az gün gösterilir"
+          "description": "Araç yeterince geniş olmadığında daha az gün gösterilir"
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
@@ -1345,7 +1345,7 @@
       }
     },
     "indexerManager": {
-      "name": "İndeksleyici Yönetim Durumu",
+      "name": "Dizin oluşturucu yöneticisi statüsü",
       "description": "İndeksleyicilerinizin durumu",
       "option": {
         "openIndexerSiteInNewTab": {
@@ -1844,7 +1844,7 @@
         "option": {
           "repeat": {
             "label": "Tekrarla",
-            "description": "Görsel, tüm arka plan alanını kaplayacak kadar tekrarlanır."
+            "description": "Resim, tüm arka plan kapsama alanını kaplayacak kadar tekrarlanır."
           },
           "no-repeat": {
             "label": "Tekrarlama Yok",
@@ -2737,7 +2737,7 @@
                 "title": "Arama yapmak istediğiniz terimleri girin"
               },
               "searchResults": {
-                "title": "Eylemler için bir arama sonucu seçin"
+                "title": "Etkileşime geçmek için bir sonuç seçin"
               }
             },
             "option": {

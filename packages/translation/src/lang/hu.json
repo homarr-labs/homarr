@@ -51,7 +51,7 @@
           "title": "Import token megadása",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": "Írja be a megjelenített import tokent az előző homarr példányból"
             }
           },
@@ -546,7 +546,7 @@
         "label": "Leírás"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -611,7 +611,7 @@
         "label": "Név"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Felhasználó",
+        "name": "Név",
         "id": ""
       }
     },
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "Eszközök",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2213,7 +2213,7 @@
               "label": "Lejárati idő"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "Eszközök",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

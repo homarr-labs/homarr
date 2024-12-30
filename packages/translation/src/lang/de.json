@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Benutzer",
+        "name": "Name",
         "id": ""
       }
     },

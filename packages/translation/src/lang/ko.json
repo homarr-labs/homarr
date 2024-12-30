@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "인터넷에서 콘텐츠를 퍼옵니다. 일부 웹사이트는 액세스를 제한할 수 있습니다.",
       "option": {
         "embedUrl": {
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "사용자",
+        "name": "이름",
         "id": ""
       }
     },
@@ -1788,9 +1788,9 @@
             "label": "",
             "description": "",
             "option": {
-              "sm": "",
-              "md": "",
-              "lg": ""
+              "sm": "Small",
+              "md": "Medium",
+              "lg": "Large"
             }
           },
           "sidebarBehavior": {
@@ -2047,7 +2047,7 @@
         "tools": {
           "label": "도구",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2204,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "크리에이터"
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "도구",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""

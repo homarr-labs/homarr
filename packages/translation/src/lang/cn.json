@@ -546,7 +546,7 @@
         "label": "描述"
       },
       "url": {
-        "label": "Url"
+        "label": "网址"
       }
     },
     "action": {
@@ -569,7 +569,7 @@
         "title": "新的组件 {name}",
         "notification": {
           "success": {
-            "title": "创建成功",
+            "title": "",
             "message": "组件已成功创建"
           },
           "error": {
@@ -582,7 +582,7 @@
         "title": "编辑组件 {name}",
         "notification": {
           "success": {
-            "title": "成功应用更改",
+            "title": "更改应用成功",
             "message": "组件已成功保存"
           },
           "error": {
@@ -611,7 +611,7 @@
         "label": "名称"
       },
       "url": {
-        "label": "Url"
+        "label": "网址"
       }
     },
     "action": {
@@ -622,11 +622,11 @@
         "create": "测试连接并创建",
         "edit": "测试连接并保存"
       },
-      "alertNotice": "成功建立连接后保存按钮将启用",
+      "alertNotice": "成功建立连接后，“保存”按钮将启用",
       "notification": {
         "success": {
           "title": "连接成功",
-          "message": ""
+          "message": "连接已成功建立"
         },
         "invalidUrl": {
           "title": "无效链接",
@@ -634,11 +634,11 @@
         },
         "secretNotDefined": {
           "title": "缺少凭证",
-          "message": "并非所有凭证都已提供"
+          "message": "未提供所有凭证"
         },
         "invalidCredentials": {
           "title": "凭证无效",
-          "message": ""
+          "message": "凭证无效"
         },
         "commonError": {
           "title": "连接失败",
@@ -650,15 +650,15 @@
         },
         "unauthorized": {
           "title": "未授权",
-          "message": ""
+          "message": "可能是凭证错误"
         },
         "forbidden": {
-          "title": "",
+          "title": "禁止访问",
           "message": "可能缺少权限"
         },
         "notFound": {
           "title": "未找到",
-          "message": ""
+          "message": "可能是错误的 URL 或路径"
         },
         "internalServerError": {
           "title": "",
@@ -1422,7 +1422,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "未找到应用",
         "description": ""
       },
       "error": {
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "用户",
+        "name": "名称",
         "id": ""
       }
     },
