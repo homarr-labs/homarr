@@ -25,8 +25,8 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-# gettext is required for envsubst, shadow for usermod, su-exec for running as non-root
-RUN apk add --no-cache redis nginx bash gettext su-exec shadow
+# gettext is required for envsubst, su-exec for running as non-root
+RUN apk add --no-cache redis nginx bash gettext su-exec
 RUN mkdir /appdata
 VOLUME /appdata
 RUN mkdir /secrets
@@ -36,9 +36,6 @@ VOLUME /secrets
 COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
 RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 RUN chmod +x /usr/bin/homarr
-
-ENV APPLICATION_PGID=7575
-RUN addgroup --system --gid $APPLICATION_PGID homarr_app
 
 # Don't run production as root
 RUN mkdir -p /var/cache/nginx && \
