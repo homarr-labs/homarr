@@ -29,6 +29,8 @@ WORKDIR /app
 RUN apk add --no-cache redis nginx bash gettext su-exec shadow
 RUN mkdir /appdata
 VOLUME /appdata
+RUN mkdir /secrets
+VOLUME /secrets
 
 # Enable homarr cli
 COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
