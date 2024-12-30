@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -1520,7 +1520,7 @@
           "detailsTitle": "מהירות הורדה"
         },
         "index": {
-          "columnTitle": "#",
+          "columnTitle": "",
           "detailsTitle": "מדד נוכחי בתוך הלקוח"
         },
         "id": {

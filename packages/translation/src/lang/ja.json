@@ -2,16 +2,16 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
+        "title": "Homarrへようこそ",
         "subtitle": "",
         "description": "",
         "action": {
-          "scratch": "",
+          "scratch": "ゼロからスタート",
           "importOldmarr": ""
         }
       },
       "import": {
-        "title": "",
+        "title": "データのインポート",
         "subtitle": "",
         "dropzone": {
           "title": "",

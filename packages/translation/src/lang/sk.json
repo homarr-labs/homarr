@@ -2,9 +2,9 @@
   "init": {
     "step": {
       "start": {
-        "title": "Vitajte na stránke Homarr",
-        "subtitle": "Začnime s nastavením inštancie Homarr.",
-        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homarr.",
+        "title": "Vitajte na Homár",
+        "subtitle": "Začnime s nastavením inštancie Homár.",
+        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
         "action": {
           "scratch": "Začať odznova",
           "importOldmarr": "Import z Homarru pred 1.0"
