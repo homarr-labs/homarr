@@ -375,7 +375,7 @@ export const searchEngines = sqliteTable("search_engine", {
   id: text().notNull().primaryKey(),
   iconUrl: text().notNull(),
   name: text().notNull(),
-  short: text().notNull(),
+  short: text().unique().notNull(),
   description: text(),
   urlTemplate: text(),
   type: text().$type<SearchEngineType>().notNull().default("generic"),
