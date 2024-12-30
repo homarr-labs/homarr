@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "זרמי שרת מדיה נוכחיים",
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "הורדת לקוח",
