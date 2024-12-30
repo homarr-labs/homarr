@@ -344,18 +344,18 @@
         }
       },
       "integration": {
-        "title": "组件",
+        "title": "集成",
         "item": {
           "create": {
-            "label": "创建组件",
-            "description": "允许成员创建组件"
+            "label": "创建集成",
+            "description": "允许成员创建集成"
           },
           "use-all": {
-            "label": "使用全部组件",
+            "label": "使用全部集成",
             "description": "允许成员将任何组件添加到他们的面板"
           },
           "interact-all": {
-            "label": "与任意组件进行交互",
+            "label": "与任意集成进行互动",
             "description": "允许成员与任意组件进行交互"
           },
           "full-all": {
@@ -559,7 +559,7 @@
   "integration": {
     "page": {
       "list": {
-        "title": "组件",
+        "title": "集成",
         "search": "搜索组件",
         "noResults": {
           "title": "尚无组件"
@@ -630,34 +630,34 @@
         },
         "invalidUrl": {
           "title": "无效链接",
-          "message": ""
+          "message": "URL 无效"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "缺少凭证",
+          "message": "并非所有凭证都已提供"
         },
         "invalidCredentials": {
-          "title": "",
+          "title": "凭证无效",
           "message": ""
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "连接失败",
+          "message": "无法建立连接"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "错误请求",
+          "message": "请求格式不正确"
         },
         "unauthorized": {
-          "title": "",
+          "title": "未授权",
           "message": ""
         },
         "forbidden": {
           "title": "",
-          "message": ""
+          "message": "可能缺少权限"
         },
         "notFound": {
-          "title": "",
+          "title": "未找到",
           "message": ""
         },
         "internalServerError": {
@@ -681,12 +681,12 @@
           "message": ""
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "无效的 JSON",
+          "message": "无效的JSON响应"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "路径错误",
+          "message": "该路径可能不正确"
         }
       }
     },
@@ -694,8 +694,8 @@
       "title": "",
       "lastUpdated": "",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "未设置值",
+        "tooltip": "尚未设置此必填的密钥"
       },
       "secureNotice": "",
       "reset": {
@@ -703,17 +703,17 @@
         "message": ""
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "没有密钥",
+        "text": "此集成不需要密钥"
       },
       "kind": {
         "username": {
           "label": "用户名",
-          "newLabel": ""
+          "newLabel": "新用户名"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥",
+          "newLabel": "新 API 密钥"
         },
         "password": {
           "label": "密码",
@@ -729,7 +729,7 @@
   },
   "media": {
     "plural": "媒体",
-    "search": "",
+    "search": "查找媒体",
     "field": {
       "name": "名称",
       "size": "大小",
@@ -737,8 +737,8 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "上传媒体",
+        "file": "选择文件",
         "notification": {
           "success": {
             "message": ""
@@ -749,32 +749,32 @@
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "删除媒体",
+        "description": "您确定要删除媒体 <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "媒体已成功删除"
           },
           "error": {
-            "message": ""
+            "message": "无法删除该媒体"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "复制 URL"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "测试版",
     "error": "错误",
     "action": {
       "add": "添加",
       "apply": "应用",
-      "backToOverview": "",
+      "backToOverview": "返回概览",
       "create": "创建",
       "edit": "编辑",
-      "import": "",
+      "import": "导入",
       "insert": "插入",
       "remove": "删除",
       "save": "保存",
@@ -787,13 +787,13 @@
       "previous": "上一步",
       "next": "下一步",
       "checkoutDocs": "",
-      "checkLogs": "",
-      "tryAgain": "请再试一次",
-      "loading": ""
+      "checkLogs": "检查日志获取更多详情",
+      "tryAgain": "重试",
+      "loading": "正在加载"
     },
-    "here": "",
+    "here": "这里",
     "iconPicker": {
-      "label": "",
+      "label": "图标 URL",
       "header": ""
     },
     "colorScheme": {
@@ -803,15 +803,15 @@
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "最小",
+      "max": "最大",
+      "days": "天",
       "hours": "时",
       "minutes": "分"
     },
     "notification": {
       "create": {
-        "success": "",
+        "success": "创建成功",
         "error": "创建失败"
       },
       "delete": {
@@ -828,14 +828,14 @@
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "选择一个或多个值"
     },
     "multiText": {
-      "placeholder": "",
+      "placeholder": "添加更多值",
       "addLabel": ""
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "选择值",
       "badge": {
         "recommended": ""
       }
@@ -856,8 +856,8 @@
     "dangerZone": "危险",
     "noResults": "未找到结果",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "显示预览",
+      "hide": "隐藏预览"
     },
     "zod": {
       "errors": {
@@ -907,9 +907,9 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "新建分类",
+        "edit": "重命名分类",
+        "remove": "删除分类",
         "moveUp": "上移",
         "moveDown": "下移",
         "createAbove": "",
@@ -937,12 +937,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
+      "create": "新建项目",
+      "import": "导入项目",
+      "edit": "编辑项目",
       "moveResize": "",
       "duplicate": "",
-      "remove": ""
+      "remove": "删除项目"
     },
     "menu": {
       "label": {
@@ -951,7 +951,7 @@
     },
     "create": {
       "title": "",
-      "addToBoard": ""
+      "addToBoard": "添加到面板"
     },
     "moveResize": {
       "title": "",
@@ -963,17 +963,17 @@
           "label": "高度"
         },
         "xOffset": {
-          "label": ""
+          "label": "X 偏移"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y 偏移"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "编辑项目",
       "advancedOptions": {
-        "label": "",
+        "label": "高级选项",
         "title": ""
       },
       "field": {
@@ -986,44 +986,44 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "删除项目",
+      "message": "你确定要删除这个项目吗？"
     }
   },
   "widget": {
     "app": {
-      "name": "",
+      "name": "应用",
       "description": "",
       "option": {
         "appId": {
-          "label": ""
+          "label": "选择应用"
         },
         "openInNewTab": {
           "label": "在新标签页中打开"
         },
         "showTitle": {
-          "label": ""
+          "label": "显示应用名称"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "显示描述提示"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "启用简单的 ping"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
+          "label": "没有应用",
           "tooltip": ""
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "书签",
+      "description": "显示多个应用链接",
       "option": {
         "title": {
-          "label": ""
+          "label": "标题"
         },
         "layout": {
           "label": "显示布局",
@@ -1064,22 +1064,22 @@
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "使用 Pi-Hole 颜色"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "获取 DNS Hole 摘要失败",
+        "integrationsDisconnected": "没有可用的数据，所有集成已断开"
       },
       "data": {
         "adsBlockedToday": "今日屏蔽",
         "adsBlockedTodayPercentage": "今日屏蔽",
         "dnsQueriesToday": "今日查询",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "黑名单上的域"
       }
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole 控制",
       "description": "从您的面板控制 PiHole 或 AdGuard",
       "option": {
         "layout": {
@@ -1097,15 +1097,15 @@
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "显示全部按钮"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "无法控制 DNS Hole"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
+        "enableAll": "全部启用",
+        "disableAll": "全部禁用",
         "setTimer": "",
         "set": "设置",
         "enabled": "已启用",
@@ -1313,18 +1313,18 @@
           "label": "天气位置"
         },
         "showCity": {
-          "label": ""
+          "label": "显示城市"
         },
         "hasForecast": {
           "label": ""
         },
         "forecastDayCount": {
           "label": "",
-          "description": ""
+          "description": "当小部件不够宽时，显示的天数减少"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "日期格式",
+          "description": "日期应该是什么样的"
         }
       },
       "kind": {
@@ -1346,7 +1346,7 @@
     },
     "indexerManager": {
       "name": "索引器管理状态",
-      "description": "",
+      "description": "索引器状态",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": ""
@@ -1396,16 +1396,16 @@
     },
     "common": {
       "location": {
-        "query": "",
+        "query": "城市/邮编",
         "latitude": "",
         "longitude": "",
-        "disabledTooltip": "",
+        "disabledTooltip": "请输入城市或邮编",
         "unknownLocation": "",
         "search": "搜索",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
+            "city": "城市",
+            "country": "国家",
             "coordinates": "",
             "population": ""
           },
@@ -1450,17 +1450,22 @@
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "没有提供视频 URL",
+        "forYoutubeUseIframe": "YouTube 视频使用 iframe 选项"
       }
     },
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
-      "name": "",
+      "name": "下载客户端",
       "description": "",
       "option": {
         "columns": {
@@ -1544,7 +1549,7 @@
           "detailsTitle": ""
         },
         "size": {
-          "columnTitle": "",
+          "columnTitle": "文件大小",
           "detailsTitle": ""
         },
         "state": {
@@ -1556,12 +1561,12 @@
           "detailsTitle": ""
         },
         "type": {
-          "columnTitle": "",
+          "columnTitle": "类型",
           "detailsTitle": ""
         },
         "upSpeed": {
           "columnTitle": "上传",
-          "detailsTitle": ""
+          "detailsTitle": "上传速度"
         }
       },
       "states": {
@@ -1622,7 +1627,7 @@
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "媒体请求状态",
       "description": "您的媒体请求统计",
       "option": {},
       "titles": {
@@ -1644,8 +1649,8 @@
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "媒体转码",
+      "description": "您的媒体转码的统计、当前队列和工作状态",
       "option": {
         "defaultView": {
           "label": "默认视图"
@@ -1710,7 +1715,7 @@
           "label": ""
         },
         "enableRtl": {
-          "label": ""
+          "label": "启用 RTL"
         },
         "textLinesClamp": {
           "label": ""
@@ -1723,8 +1728,8 @@
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "启用编辑模式",
+      "disabled": "禁用编辑模式"
     },
     "dimensions": {
       "title": ""
@@ -1757,7 +1762,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "无法导入面板，请检查日志以获取更多详情"
           }
         },
         "form": {
@@ -1807,7 +1812,7 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "页面标题"
       },
       "metaTitle": {
         "label": ""
@@ -2043,9 +2048,9 @@
           "label": "工具",
           "items": {
             "docker": "",
-            "logs": "",
-            "api": "",
-            "tasks": ""
+            "logs": "日志",
+            "api": "API",
+            "tasks": "任务"
           }
         },
         "settings": "设置",
@@ -2312,70 +2317,70 @@
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "任务",
           "status": {
-            "idle": "",
+            "idle": "空闲",
             "running": "运行中",
             "error": "错误"
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "图标更新"
             },
             "analytics": {
               "label": "分析"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "智能家居实体状态"
             },
             "ping": {
-              "label": ""
+              "label": "Pings"
             },
             "mediaServer": {
               "label": "媒体服务"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "媒体组织者"
             },
             "downloads": {
-              "label": ""
+              "label": "正在下载"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "媒体请求统计"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "媒体请求列表"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "RSS订阅"
             },
             "indexerManager": {
-              "label": ""
+              "label": "索引器管理"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "健康监测"
             },
             "dnsHole": {
-              "label": ""
+              "label": "DNS Hole 数据"
             },
             "sessionCleanup": {
-              "label": ""
+              "label": "会话清理"
             },
             "updateChecker": {
-              "label": ""
+              "label": "更新检查"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "媒体转码"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API 令牌已创建",
+              "description": "已创建API令牌。小心，这个令牌在数据库中是加密的，永远不会再传输给您。如果您丢失了这个令牌，您将无法再检索这个特定的令牌。",
+              "button": "复制并关闭"
             }
           },
           "tab": {
@@ -2383,15 +2388,15 @@
               "label": "文档"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "认证",
+              "title": "API 密钥",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "创建 API 令牌"
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": ""
+                  "id": "ID",
+                  "createdBy": "创建者"
                 }
               }
             }
@@ -2516,7 +2521,7 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "获取 Docker 容器失败"
     }
   },
   "permission": {
@@ -2605,7 +2610,7 @@
           "label": ""
         },
         "logs": {
-          "label": ""
+          "label": "日志"
         }
       },
       "settings": {
@@ -2617,7 +2622,7 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "搜索任意内容",
     "nothingFound": "",
     "error": {
       "fetch": ""
@@ -2825,13 +2830,13 @@
                 "label": ""
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "查看日志"
               },
               "manageTask": {
-                "label": ""
+                "label": "管理任务"
               },
               "manageSettings": {
                 "label": "全局设置"

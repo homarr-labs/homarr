@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "Güncel Medya Sunucusu Akışları",
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Kullanıcı",
+        "name": "İsim",
+        "id": "Kimlik"
+      }
     },
     "downloads": {
       "name": "İndirme İstemcisi",
@@ -1910,7 +1915,7 @@
           "title": "Düzen"
         },
         "background": {
-          "title": "Arkaplan Resim URL'si"
+          "title": "Arkaplan"
         },
         "color": {
           "title": "Renkler"
@@ -2320,7 +2325,7 @@
           },
           "job": {
             "iconsUpdater": {
-              "label": "Simge Güncelleyici"
+              "label": "Simge Güncelleme"
             },
             "analytics": {
               "label": "Analiz"
@@ -2617,7 +2622,7 @@
     }
   },
   "search": {
-    "placeholder": "Ara",
+    "placeholder": "Ara (\"!\" İle Başlamalı)",
     "nothingFound": "Hiçbir şey bulunamadı",
     "error": {
       "fetch": "Veriler alınırken bir hata oluştu"
@@ -2729,7 +2734,7 @@
                 }
               },
               "detail": {
-                "title": "Arama motoru için bir eylem seçin"
+                "title": "Arama yapmak istediğiniz terimleri girin"
               },
               "searchResults": {
                 "title": "Eylemler için bir arama sonucu seçin"
