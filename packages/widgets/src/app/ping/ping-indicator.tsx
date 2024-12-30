@@ -3,7 +3,6 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
 
 import { PingDot } from "./ping-dot";
 
@@ -14,7 +13,7 @@ interface PingIndicatorProps {
 export const PingIndicator = ({ href }: PingIndicatorProps) => {
   const [ping] = clientApi.widget.app.ping.useSuspenseQuery(
     {
-      url: parseAppHrefWithVariablesClient(href),
+      url: href,
     },
     {
       refetchOnMount: false,
@@ -25,7 +24,7 @@ export const PingIndicator = ({ href }: PingIndicatorProps) => {
   const [pingResult, setPingResult] = useState<RouterOutputs["widget"]["app"]["ping"]>(ping);
 
   clientApi.widget.app.updatedPing.useSubscription(
-    { url: parseAppHrefWithVariablesClient(href) },
+    { url: href },
     {
       onData(data) {
         setPingResult(data);

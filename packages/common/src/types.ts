@@ -11,3 +11,8 @@ export type RemoveReadonly<T> = {
 };
 
 export type MaybeArray<T> = T | T[];
+export type Inverse<T extends Invertible> = {
+  [Key in keyof T as T[Key]]: Key;
+};
+
+type Invertible = Record<PropertyKey, PropertyKey>;

@@ -23,7 +23,8 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
   authorization: {
     params: {
       scope: env.AUTH_OIDC_SCOPE_OVERWRITE,
-      redirect_uri: createRedirectUri(headers, "/api/auth/callback/oidc"),
+      // We fallback to https as generally oidc providers require https
+      redirect_uri: createRedirectUri(headers, "/api/auth/callback/oidc", "https"),
     },
   },
   profile(profile) {

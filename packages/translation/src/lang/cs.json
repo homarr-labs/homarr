@@ -27,7 +27,7 @@
           "description": "Konfigurovat chování importu"
         },
         "boardSelection": {
-          "title": "",
+          "title": "Nalezeno {count} ploch",
           "description": "Vyberte všechny plochy s velikostmi, které chcete importovat",
           "action": {
             "selectAll": "Vybrat vše",
@@ -38,33 +38,33 @@
           "title": "Přehled importu",
           "description": "",
           "action": {
-            "import": ""
+            "import": "Potvrdit import a pokračovat"
           },
           "entities": {
             "apps": "Aplikace",
             "boards": "Plochy",
-            "integrations": "",
+            "integrations": "Integrace",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Zadejte token pro import",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Neplatný token",
+              "message": "Token, který jste zadali je neplatný"
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Správce",
         "subtitle": "",
         "notification": {
           "success": {

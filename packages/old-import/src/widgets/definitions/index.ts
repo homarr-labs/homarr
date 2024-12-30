@@ -1,4 +1,5 @@
 import { objectEntries } from "@homarr/common";
+import type { Inverse } from "@homarr/common/types";
 import type { WidgetKind } from "@homarr/definitions";
 
 import type { OldmarrBookmarkDefinition } from "./bookmark";
@@ -49,32 +50,32 @@ export type OldmarrWidgetDefinitions =
   | OldmarrMediaTranscodingDefinition;
 
 export const widgetKindMapping = {
-  app: null, // In oldmarr apps were not widgets
-  clock: "date",
+  date: "clock",
   calendar: "calendar",
-  downloads: "torrents-status",
+  "torrents-status": "downloads",
   weather: "weather",
-  rssFeed: "rss",
-  video: "video-stream",
+  rss: "rssFeed",
+  "video-stream": "video",
   iframe: "iframe",
-  mediaServer: "media-server",
-  dnsHoleSummary: "dns-hole-summary",
-  dnsHoleControls: "dns-hole-controls",
+  "media-server": "mediaServer",
+  "dns-hole-summary": "dnsHoleSummary",
+  "dns-hole-controls": "dnsHoleControls",
   notebook: "notebook",
-  "smartHome-entityState": "smart-home/entity-state",
-  "smartHome-executeAutomation": "smart-home/trigger-automation",
-  "mediaRequests-requestList": "media-requests-list",
-  "mediaRequests-requestStats": "media-requests-stats",
-  indexerManager: "indexer-manager",
-  bookmarks: "bookmark",
-  healthMonitoring: "health-monitoring",
-  mediaTranscoding: "media-transcoding",
-} satisfies Record<WidgetKind, OldmarrWidgetDefinitions["id"] | null>;
-// Use null for widgets that did not exist in oldmarr
-// TODO: revert assignment so that only old widgets are needed in the object,
-// this can be done ones all widgets are implemented
+  "smart-home/entity-state": "smartHome-entityState",
+  "smart-home/trigger-automation": "smartHome-executeAutomation",
+  "media-requests-list": "mediaRequests-requestList",
+  "media-requests-stats": "mediaRequests-requestStats",
+  "indexer-manager": "indexerManager",
+  bookmark: "bookmarks",
+  "health-monitoring": "healthMonitoring",
+  dashdot: "healthMonitoring",
+  "media-transcoding": "mediaTranscoding",
+  dlspeed: null,
+  usenet: "downloads",
+} satisfies Record<OldmarrWidgetDefinitions["id"], WidgetKind | null>;
 
 export type WidgetMapping = typeof widgetKindMapping;
+export type InversedWidgetMapping = Inverse<Omit<typeof widgetKindMapping, "dlspeed">>;
 
-export const mapKind = (kind: OldmarrWidgetDefinitions["id"]): WidgetKind | undefined =>
-  objectEntries(widgetKindMapping).find(([_, value]) => value === kind)?.[0];
+export const mapKind = (kind: OldmarrWidgetDefinitions["id"]): keyof InversedWidgetMapping | null =>
+  objectEntries(widgetKindMapping).find(([key]) => key === kind)?.[1] ?? null;

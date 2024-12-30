@@ -323,14 +323,14 @@
         }
       },
       "board": {
-        "title": "Boards",
+        "title": "Board",
         "item": {
           "create": {
-            "label": "Creare schede",
-            "description": "Consenti ai membri di creare schede"
+            "label": "Creare board",
+            "description": "Consenti ai membri di creare board"
           },
           "view-all": {
-            "label": "Visualizzare tutte le schede",
+            "label": "Visualizzare tutte le board",
             "description": "Consenti ai membri di visualizzare tutte le schede"
           },
           "modify-all": {
@@ -402,50 +402,50 @@
             "description": "Consenti ai membri di modificare tutti i motori di ricerca"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accesso completo al motore di ricerca",
+            "description": "Consenti ai membri di gestire ed eliminare qualsiasi motore di ricerca"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Alcuni membri provengono da fornitori esterni e non possono essere gestiti qui",
+      "external": "Tutti i membri provengono da fornitori esterni e non possono essere gestiti qui"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Questo gruppo è riservato all'uso del sistema e limita alcune azioni. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nuovo gruppo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppo creato"
           },
           "error": {
-            "message": ""
+            "message": "Impossibile creare il gruppo"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Trasferisci ownership",
+        "description": "Trasferisci l'ownership di questo gruppo a un altro utente.",
+        "confirm": "Hai la certezza di voler trasferire l'ownership del gruppo {name} a {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppo {group} trasferito a {user}"
           },
           "error": {
-            "message": ""
+            "message": "Impossibile trasferire l'ownership"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Aggiungi membro"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Rimuovi membro",
+        "confirm": "Hai la certezza di voler rimuovere {user} da questo gruppo?"
       },
       "delete": {
         "label": "Elimina gruppo",
@@ -506,34 +506,34 @@
           },
           "error": {
             "title": "Creazione fallita",
-            "message": ""
+            "message": "Impossibile creare l'app"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Modifica app",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Modifiche applicate",
+            "message": "App salvata"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Impossibile applicare le modifiche",
+            "message": "Impossibile salvare l'app"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Elimina app",
+        "message": "Hai la certezza di voler eliminare l'app {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Eliminato",
+            "message": "App eliminata"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Eliminazione non riuscita",
+            "message": "Impossibile eliminare l'app"
           }
         }
       }
@@ -543,15 +543,15 @@
         "label": "Nome"
       },
       "description": {
-        "label": ""
+        "label": "Descrizione"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
       "select": {
-        "label": "",
+        "label": "Seleziona App",
         "notFound": "Nessuna app trovata"
       }
     }
@@ -569,11 +569,11 @@
         "title": "Nuova integrazione di {name}",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Creazione riuscita",
             "message": "L'integrazione è stata creata con successo"
           },
           "error": {
-            "title": "",
+            "title": "Creazione fallita",
             "message": "Non è stato possibile creare l'integrazione"
           }
         }
@@ -582,11 +582,11 @@
         "title": "Modifica integrazione {name}",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Modifiche applicate",
             "message": "L'integrazione è stata salvata correttamente"
           },
           "error": {
-            "title": "",
+            "title": "Impossibile applicare le modifiche",
             "message": "Non è stato possibile salvare l'integrazione"
           }
         }
@@ -596,11 +596,11 @@
         "message": "Hai la certezza di voler eliminare l'integrazione {name}?",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Eliminato",
             "message": "L'integrazione è stata eliminata correttamente"
           },
           "error": {
-            "title": "",
+            "title": "Eliminazione non riuscita",
             "message": "Impossibile eliminare l'integrazione"
           }
         }
@@ -611,7 +611,7 @@
         "label": "Nome"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -694,8 +694,8 @@
       "title": "Secrets",
       "lastUpdated": "Ultimo aggiornamento {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Nessun valore impostato",
+        "tooltip": "Il secret richiesto non è stato ancora impostato"
       },
       "secureNotice": "",
       "reset": {
@@ -716,7 +716,7 @@
           "newLabel": ""
         },
         "password": {
-          "label": "Password",
+          "label": "",
           "newLabel": "Nuova password"
         }
       }
@@ -853,7 +853,7 @@
         "updateAvailable": ""
       }
     },
-    "dangerZone": "Danger zone",
+    "dangerZone": "",
     "noResults": "Nessun risultato trovato",
     "preview": {
       "show": "",
@@ -1026,7 +1026,7 @@
           "label": ""
         },
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Orizzontale"
@@ -1050,7 +1050,7 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Orizzontale"
@@ -1083,7 +1083,7 @@
       "description": "Controlla PiHole o AdGuard dalla tua dashboard",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Orizzontale"
@@ -1183,7 +1183,7 @@
         "checkList": "Checklist",
         "increaseIndent": "Aumenta indentatura",
         "decreaseIndent": "Diminuisci indentatura",
-        "link": "Link",
+        "link": "",
         "unlink": "Elimina link",
         "image": "Incorpora immagine",
         "addTable": "Aggiungi tabella",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Incorpora qualsiasi contenuto da Internet. Alcuni siti web possono limitare l'accesso.",
       "option": {
         "embedUrl": {
@@ -1511,7 +1511,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "",
           "detailsTitle": "Velocità Di Download"
         },
         "index": {
@@ -1532,7 +1532,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Ratio",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "received": {
@@ -1560,7 +1560,7 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Up",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
@@ -1671,32 +1671,32 @@
       "panel": {
         "statistics": {
           "empty": "Vuoto",
-          "transcodes": "Transcodes",
+          "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "Codecs",
-          "videoContainers": "Containers",
+          "videoCodecs": "",
+          "videoContainers": "",
           "videoResolutions": "Risoluzioni"
         },
         "workers": {
           "empty": "Vuoto",
           "table": {
-            "file": "File",
-            "eta": "ETA",
+            "file": "",
+            "eta": "",
             "progress": "Avanzamento",
-            "transcode": "Transcode",
+            "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
           "empty": "Vuoto",
           "table": {
-            "file": "File",
+            "file": "",
             "size": "Dimensione",
-            "transcode": "Transcode",
+            "transcode": "",
             "healthCheck": ""
           }
         }
@@ -1907,7 +1907,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Layout"
+          "title": ""
         },
         "background": {
           "title": "Background"
@@ -1935,7 +1935,7 @@
           }
         },
         "dangerZone": {
-          "title": "Danger zone",
+          "title": "",
           "action": {
             "rename": {
               "label": "",
@@ -2025,8 +2025,8 @@
     },
     "navbar": {
       "items": {
-        "home": "Home",
-        "boards": "Boards",
+        "home": "",
+        "boards": "",
         "apps": "Applicazioni",
         "integrations": "Integrazioni",
         "searchEngies": "Motori di ricerca",
@@ -2042,9 +2042,9 @@
         "tools": {
           "label": "Strumenti",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2064,7 +2064,7 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Boards",
+          "board": "",
           "user": "Utenti",
           "invite": "Inviti",
           "integration": "Integrazioni",
@@ -2072,7 +2072,7 @@
           "group": "Gruppi"
         },
         "statisticLabel": {
-          "boards": "Boards",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
@@ -2093,7 +2093,7 @@
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "Home",
+              "label": "",
               "tooltip": ""
             }
           },
@@ -2139,7 +2139,7 @@
             "title": "Sicurezza"
           },
           "board": {
-            "title": "Boards"
+            "title": ""
           }
         },
         "list": {
@@ -2199,7 +2199,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Creatore"
@@ -2208,7 +2208,7 @@
               "label": "Data di scadenza"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2286,7 +2286,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "homeBoard": {
               "label": "",
               "description": ""
@@ -2370,7 +2370,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2390,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2419,7 +2419,7 @@
     }
   },
   "docker": {
-    "title": "Containers",
+    "title": "",
     "table": {
       "updated": "",
       "search": "",
@@ -2552,7 +2552,7 @@
     "manage": {
       "label": "Gestisci",
       "boards": {
-        "label": "Boards"
+        "label": ""
       },
       "integrations": {
         "label": "Integrazioni",
@@ -2591,7 +2591,7 @@
         },
         "general": "Generale",
         "security": "Sicurezza",
-        "board": "Boards",
+        "board": "",
         "groups": {
           "label": "Gruppi"
         },
@@ -2602,7 +2602,7 @@
       "tools": {
         "label": "Strumenti",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
@@ -2643,7 +2643,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2749,7 +2749,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": ""
               },
               "youTube": {
