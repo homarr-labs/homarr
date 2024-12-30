@@ -25,53 +25,45 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-# gettext is required for envsubst
-RUN apk add --no-cache redis nginx bash gettext su-exec
+# gettext is required for envsubst, shadow for usermod, su-exec for running as non-root
+RUN apk add --no-cache redis nginx bash gettext su-exec shadow
 RUN mkdir /appdata
 VOLUME /appdata
-RUN mkdir /secrets
-VOLUME /secrets
-
-# The reason why we still use an internal PUID is because we don't want to change
-# the ownership of all files in /app directory when starting the container as it will take a long time
-# But the user will be added as a member of the group with the same GID as the user with the specified PUID
-ENV INTERNAL_PUID=1001
-ENV PUID=1975
-ENV PGID=1975
 
 # Enable homarr cli
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
+COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
 RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 RUN chmod +x /usr/bin/homarr
 
+ENV APPLICATION_PGID=7575
+RUN addgroup --system --gid $APPLICATION_PGID homarr_app
+
 # Don't run production as root
-RUN chown -R $INTERNAL_PUID:$PGID /secrets
-RUN mkdir -p /var/cache/nginx && chown -R $INTERNAL_PUID:$PGID /var/cache/nginx && \
-    mkdir -p /var/log/nginx && chown -R $INTERNAL_PUID:$PGID /var/log/nginx && \
-    mkdir -p /var/lib/nginx && chown -R $INTERNAL_PUID:$PGID /var/lib/nginx && \
-    touch /run/nginx/nginx.pid && chown -R $INTERNAL_PUID:$PGID /run/nginx/nginx.pid && \
-    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs && chown -R $INTERNAL_PUID:$PGID /etc/nginx
+RUN mkdir -p /var/cache/nginx && \
+    mkdir -p /var/log/nginx && \
+    mkdir -p /var/lib/nginx && \
+    touch /run/nginx/nginx.pid && \
+    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
 
 COPY --from=builder /app/apps/nextjs/next.config.mjs .
 COPY --from=builder /app/apps/nextjs/package.json .
 
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
+COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
+COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
+COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/packages/db/migrations ./db/migrations
+COPY --from=builder /app/packages/db/migrations ./db/migrations
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/apps/nextjs/.next/standalone ./
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
-COPY --from=builder --chown=$INTERNAL_PUID:$PGID /app/apps/nextjs/public ./apps/nextjs/public
-COPY --chown=$INTERNAL_PUID:$PGID scripts/run.sh ./run.sh
-COPY scripts/entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
-COPY --chown=$INTERNAL_PUID:$PGID scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
-COPY --chown=$INTERNAL_PUID:$PGID packages/redis/redis.conf /app/redis.conf
-COPY --chown=$INTERNAL_PUID:$PGID nginx.conf /etc/nginx/templates/nginx.conf
+COPY --from=builder /app/apps/nextjs/.next/standalone ./
+COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
+COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+COPY scripts/run.sh ./run.sh
+COPY scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
+COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
+COPY packages/redis/redis.conf /app/redis.conf
+COPY nginx.conf /etc/nginx/templates/nginx.conf
 
 
 ENV DB_URL='/appdata/db/db.sqlite'
