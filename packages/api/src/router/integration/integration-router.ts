@@ -11,6 +11,7 @@ import {
   integrations,
   integrationSecrets,
   integrationUserPermissions,
+  searchEngines,
 } from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
@@ -20,6 +21,7 @@ import {
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
+import { getIconForNameAsync } from "@homarr/icons";
 import { integrationCreator } from "@homarr/integrations";
 import { validation, z } from "@homarr/validation";
 
@@ -191,6 +193,20 @@ export const integrationRouter = createTRPCRouter({
             integrationId,
           })),
         );
+      }
+
+      if (input.attemptSearchEngineCreation) {
+        const icon = await getIconForNameAsync(input.name);
+        await ctx.db.insert(searchEngines).values({
+          id: createId(),
+          name: input.name,
+          integrationId,
+          type: "fromIntegration",
+          iconUrl:
+            icon?.url ??
+            "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/homarr.svg",
+          short: input.name.substring(0, 1),
+        });
       }
     }),
   update: protectedProcedure.input(validation.integration.update).mutation(async ({ ctx, input }) => {
