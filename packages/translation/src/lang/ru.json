@@ -14,7 +14,7 @@
         "title": "Импорт данных",
         "subtitle": "Вы можете импортировать данные из существующего экземпляра Homarr.",
         "dropzone": {
-          "title": "Перетащите ZIP-файл сюда или нажмите для его выбора",
+          "title": "Перетащите ZIP-файл сюда или нажмите для выбора",
           "description": "Загруженный ZIP-файл будет обработан, и вы сможете выбрать, что хотите импортировать"
         },
         "fileInfo": {
@@ -44,7 +44,7 @@
             "apps": "Приложения",
             "boards": "Панели",
             "integrations": "Интеграции",
-            "credentialUsers": "Учетные данные пользователя"
+            "credentialUsers": "Пользователи учетных данных"
           }
         },
         "tokenModal": {
@@ -276,7 +276,7 @@
       },
       "select": {
         "label": "Выбрать пользователя",
-        "notFound": "Пользователь не найден"
+        "notFound": "Пользователи не найдены"
       },
       "transfer": {
         "label": "Выбрать нового владельца"
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Администрирование",
+        "title": "Администратор",
         "item": {
           "admin": {
             "label": "Администратор",
@@ -372,12 +372,12 @@
             "description": "Разрешить участникам загружать медиафайлы"
           },
           "view-all": {
-            "label": "Полный доступ к медиафайлам",
-            "description": "Разрешить участникам управлять и удалять любые медиафайлы"
+            "label": "Просмотр всех медиафайлов",
+            "description": "Разрешить участникам просматривать все медиафайлы"
           },
           "full-all": {
             "label": "Полный доступ к медиафайлам",
-            "description": "Разрешить участникам управлять и удалять любыми медиафайлами"
+            "description": "Разрешить участникам управлять и удалять любые медиафайлы"
           }
         }
       },
@@ -385,8 +385,8 @@
         "title": "Прочее",
         "item": {
           "view-logs": {
-            "label": "Просмотр логов",
-            "description": "Разрешить участникам просматривать логи"
+            "label": "Просмотр журналов",
+            "description": "Разрешить участникам просматривать журналы"
           }
         }
       },
@@ -409,8 +409,8 @@
       }
     },
     "memberNotice": {
-      "mixed": "Некоторыми участниками управляет внешняя система аутентификации, их нельзя настроить здесь",
-      "external": "Всеми участниками управляют внешние системы аутентификации, их нельзя настроить здесь"
+      "mixed": "Некоторые участники используют внешние системы аутентификации и не могут управляться здесь",
+      "external": "Все участники используют внешние системы аутентификации и не могут управляться здесь"
     },
     "reservedNotice": {
       "message": "Эта группа зарезервирована для системных нужд и имеет ограничения на некоторые действия. <checkoutDocs></checkoutDocs>"
@@ -560,48 +560,48 @@
     "page": {
       "list": {
         "title": "Интеграции",
-        "search": "Поиск интеграций",
+        "search": "",
         "noResults": {
-          "title": "Интеграции пока отсутствуют"
+          "title": ""
         }
       },
       "create": {
-        "title": "Новая интеграция {name}",
+        "title": "",
         "notification": {
           "success": {
-            "title": "Интеграция создана",
-            "message": "Интеграция успешно создана"
+            "title": "Приложение создано",
+            "message": ""
           },
           "error": {
             "title": "Не удалось создать",
-            "message": "Не удалось создать интеграцию"
+            "message": ""
           }
         }
       },
       "edit": {
-        "title": "Редактирование интеграции {name}",
+        "title": "",
         "notification": {
           "success": {
             "title": "Изменения сохранены",
-            "message": "Интеграция успешно сохранена"
+            "message": ""
           },
           "error": {
             "title": "Не удалось сохранить",
-            "message": "Не удалось сохранить интеграцию"
+            "message": ""
           }
         }
       },
       "delete": {
-        "title": "Удаление интеграции",
-        "message": "Вы уверены, что хотите удалить интеграцию {name}?",
+        "title": "",
+        "message": "",
         "notification": {
           "success": {
-            "title": "Интеграция удалена",
-            "message": "Интеграция успешно удалена"
+            "title": "Приложение удалено",
+            "message": ""
           },
           "error": {
             "title": "Не удалось удалить",
-            "message": "Не удалось удалить интеграцию"
+            "message": ""
           }
         }
       }
@@ -615,105 +615,105 @@
       }
     },
     "action": {
-      "create": "Новая интеграция"
+      "create": ""
     },
     "testConnection": {
       "action": {
-        "create": "Проверить подключение и создать",
-        "edit": "Проверить подключение и сохранить"
+        "create": "",
+        "edit": ""
       },
-      "alertNotice": "Кнопка сохранения станет доступна после успешного подключения",
+      "alertNotice": "",
       "notification": {
         "success": {
-          "title": "Подключение установлено",
-          "message": "Подключение успешно установлено"
+          "title": "",
+          "message": ""
         },
         "invalidUrl": {
-          "title": "Недействительный URL-адрес",
-          "message": "Указан недействительный URL-адрес"
+          "title": "Недействительный URL",
+          "message": ""
         },
         "secretNotDefined": {
-          "title": "Отсутствуют учётные данные",
-          "message": "Не все учётные данные были предоставлены"
+          "title": "",
+          "message": ""
         },
         "invalidCredentials": {
-          "title": "Неверные учётные данные",
-          "message": "Предоставлены неверные учётные данные"
+          "title": "",
+          "message": ""
         },
         "commonError": {
-          "title": "Ошибка подключения",
-          "message": "Не удалось установить подключение"
+          "title": "",
+          "message": ""
         },
         "badRequest": {
-          "title": "Неверный запрос",
-          "message": "Запрос сформирован некорректно"
+          "title": "",
+          "message": ""
         },
         "unauthorized": {
-          "title": "Нет доступа",
-          "message": "Возможно, указаны неверные учётные данные"
+          "title": "",
+          "message": ""
         },
         "forbidden": {
-          "title": "Доступ запрещён",
-          "message": "Возможно, недостаточно прав доступа"
+          "title": "",
+          "message": ""
         },
         "notFound": {
-          "title": "Не найдено",
-          "message": "Возможно, указан неверный URL-адрес или путь"
+          "title": "",
+          "message": ""
         },
         "internalServerError": {
-          "title": "Внутренняя ошибка сервера",
-          "message": "На сервере произошла ошибка"
+          "title": "",
+          "message": ""
         },
         "serviceUnavailable": {
-          "title": "Сервис недоступен",
-          "message": "Сервер временно недоступен"
+          "title": "",
+          "message": ""
         },
         "connectionAborted": {
-          "title": "Подключение прервано",
-          "message": "Подключение было прервано"
+          "title": "",
+          "message": ""
         },
         "domainNotFound": {
-          "title": "Домен не найден",
-          "message": "Не удалось найти указанный домен"
+          "title": "",
+          "message": ""
         },
         "connectionRefused": {
-          "title": "В подключении отказано",
-          "message": "В подключении было отказано"
+          "title": "",
+          "message": ""
         },
         "invalidJson": {
-          "title": "Некорректный JSON",
-          "message": "Ответ сервера содержит некорректный JSON"
+          "title": "",
+          "message": ""
         },
         "wrongPath": {
-          "title": "Неверный путь",
-          "message": "Возможно, указан неверный путь"
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
-      "title": "Данные авторизации",
-      "lastUpdated": "Последнее обновление: {date}",
+      "title": "",
+      "lastUpdated": "",
       "notSet": {
-        "label": "Значение не указано",
-        "tooltip": "Обязательное значение ещё не установлено"
+        "label": "",
+        "tooltip": ""
       },
-      "secureNotice": "Эти данные нельзя будет просмотреть после создания",
+      "secureNotice": "",
       "reset": {
-        "title": "Сбросить данные авторизации",
-        "message": "Вы уверены, что хотите сбросить эти данные авторизации?"
+        "title": "",
+        "message": ""
       },
       "noSecretsRequired": {
-        "segmentTitle": "Авторизация не требуется",
-        "text": "Для этой интеграции не требуются данные авторизации"
+        "segmentTitle": "",
+        "text": ""
       },
       "kind": {
         "username": {
           "label": "Имя пользователя",
-          "newLabel": "Новое имя пользователя"
+          "newLabel": ""
         },
         "apiKey": {
-          "label": "API-ключ",
-          "newLabel": "Новый API-ключ"
+          "label": "",
+          "newLabel": ""
         },
         "password": {
           "label": "Пароль",
@@ -722,14 +722,14 @@
       }
     },
     "permission": {
-      "use": "Подключение сторонних сервисов",
-      "interact": "Взаимодействие с подключенными сервисами",
-      "full": "Полное управление интеграциями"
+      "use": "",
+      "interact": "",
+      "full": "Полный доступ к интеграциям"
     }
   },
   "media": {
     "plural": "Медиафайлы",
-    "search": "Поиск медиафайлов",
+    "search": "",
     "field": {
       "name": "Название",
       "size": "Размер",
@@ -737,154 +737,154 @@
     },
     "action": {
       "upload": {
-        "label": "Загрузить медиафайл",
-        "file": "Выбрать файл",
+        "label": "",
+        "file": "",
         "notification": {
           "success": {
-            "message": "Медиафайл успешно загружен"
+            "message": ""
           },
           "error": {
-            "message": "Не удалось загрузить медиафайл"
+            "message": ""
           }
         }
       },
       "delete": {
-        "label": "Удалить медиафайл",
-        "description": "Вы уверены, что хотите удалить медиафайл <bName></bName>?",
+        "label": "",
+        "description": "",
         "notification": {
           "success": {
-            "message": "Медиафайл успешно удалён"
+            "message": ""
           },
           "error": {
-            "message": "Не удалось удалить медиафайл"
+            "message": ""
           }
         }
       },
       "copy": {
-        "label": "Копировать URL"
+        "label": ""
       }
     }
   },
   "common": {
-    "beta": "Бета",
+    "beta": "",
     "error": "Ошибка",
     "action": {
       "add": "Добавить",
       "apply": "Применить",
-      "backToOverview": "Вернуться к обзору",
+      "backToOverview": "",
       "create": "Создать",
       "edit": "Редактировать",
-      "import": "Импортировать",
+      "import": "",
       "insert": "Вставить",
       "remove": "Удалить",
       "save": "Сохранить",
       "saveChanges": "Сохранить изменения",
       "cancel": "Отмена",
       "delete": "Удалить",
-      "discard": "Отменить",
+      "discard": "",
       "confirm": "Подтвердить",
-      "continue": "Продолжить",
+      "continue": "",
       "previous": "Назад",
       "next": "Далее",
-      "checkoutDocs": "Посмотреть документацию",
-      "checkLogs": "Проверить логи для подробностей",
-      "tryAgain": "Попробовать снова",
-      "loading": "Загрузка"
+      "checkoutDocs": "",
+      "checkLogs": "",
+      "tryAgain": "Повторить",
+      "loading": ""
     },
-    "here": "здесь",
+    "here": "",
     "iconPicker": {
-      "label": "URL иконки",
-      "header": "Введите название или объекты для фильтрации иконок... Homarr найдёт для вас среди {countIcons} иконок."
+      "label": "",
+      "header": ""
     },
     "colorScheme": {
       "options": {
-        "light": "Светлая",
-        "dark": "Тёмная"
+        "light": "",
+        "dark": ""
       }
     },
     "information": {
-      "min": "Мин.",
-      "max": "Макс.",
-      "days": "Дней",
-      "hours": "Часов",
-      "minutes": "Минут"
+      "min": "",
+      "max": "",
+      "days": "",
+      "hours": "Часы",
+      "minutes": "Минуты"
     },
     "notification": {
       "create": {
-        "success": "Создание успешно завершено",
+        "success": "Приложение создано",
         "error": "Не удалось создать"
       },
       "delete": {
-        "success": "Удаление успешно завершено",
+        "success": "Приложение удалено",
         "error": "Не удалось удалить"
       },
       "update": {
-        "success": "Изменения успешно применены",
-        "error": "Не удалось применить изменения"
+        "success": "Изменения сохранены",
+        "error": "Не удалось сохранить"
       },
       "transfer": {
-        "success": "Передача успешно завершена",
-        "error": "Не удалось выполнить передачу"
+        "success": "",
+        "error": ""
       }
     },
     "multiSelect": {
-      "placeholder": "Выберите одно или несколько значений"
+      "placeholder": ""
     },
     "multiText": {
-      "placeholder": "Добавить ещё значения",
-      "addLabel": "Добавить {value}"
+      "placeholder": "",
+      "addLabel": ""
     },
     "select": {
-      "placeholder": "Выберите значение",
+      "placeholder": "",
       "badge": {
-        "recommended": "Рекомендуется"
+        "recommended": ""
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "Переключить на тёмную тему",
-        "switchToLightMode": "Переключить на светлую тему",
-        "management": "Управление",
-        "preferences": "Настройки",
-        "logout": "Выйти",
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
+        "preferences": "Ваши настройки",
+        "logout": "",
         "login": "Вход",
-        "homeBoard": "Ваша домашняя панель",
-        "loggedOut": "Выход выполнен",
-        "updateAvailable": "Доступно {countUpdates} обновлений: {tag}"
+        "homeBoard": "",
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Опасная зона",
-    "noResults": "Ничего не найдено",
+    "noResults": "Результаты не найдены",
     "preview": {
-      "show": "Показать предпросмотр",
-      "hide": "Скрыть предпросмотр"
+      "show": "",
+      "hide": ""
     },
     "zod": {
       "errors": {
-        "default": "Поле заполнено неверно",
-        "required": "Это поле обязательно для заполнения",
+        "default": "Недопустимое значение поля",
+        "required": "Это поле обязательно",
         "string": {
-          "startsWith": "Поле должно начинаться с {startsWith}",
-          "endsWith": "Поле должно заканчиваться на {endsWith}",
-          "includes": "Поле должно содержать {includes}",
-          "invalidEmail": "Поле должно содержать корректный email"
+          "startsWith": "Значение данного поля должно начинаться с {startsWith}",
+          "endsWith": "Значение данного поля должно заканчиваться на {endsWith}",
+          "includes": "Значение данного поля должно включать {includes}",
+          "invalidEmail": ""
         },
         "tooSmall": {
-          "string": "Поле должно содержать не менее {minimum} символов",
-          "number": "Значение должно быть больше или равно {minimum}"
+          "string": "Данное поле должно содержать не менее {minimum} символов",
+          "number": "Значение данного поля должно быть больше или равно {minimum}"
         },
         "tooBig": {
-          "string": "Поле должно содержать не более {maximum} символов",
-          "number": "Значение должно быть меньше или равно {maximum}"
+          "string": "Данное поле должно содержать не более {maximum} символов",
+          "number": "Значение этого поля должно быть меньше или равно {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "Пароли не совпадают",
-          "passwordRequirements": "Пароль не соответствует требованиям",
-          "boardAlreadyExists": "Панель с таким именем уже существует",
-          "invalidFileType": "Неверный тип файла, ожидается {expected}",
-          "fileTooLarge": "Файл слишком большой, максимальный размер {maxSize}",
-          "invalidConfiguration": "Неверная конфигурация",
-          "groupNameTaken": "Имя группы уже занято"
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
+          "fileTooLarge": "",
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -892,12 +892,12 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "Новый динамический элемент",
-        "remove": "Удалить динамический элемент"
+        "create": "",
+        "remove": ""
       },
       "remove": {
-        "title": "Удалить динамический элемент",
-        "message": "Вы уверены, что хотите удалить этот динамический элемент? Содержимое будет перемещено в то же место в родительском элементе."
+        "title": "",
+        "message": ""
       }
     },
     "category": {
@@ -907,42 +907,42 @@
         }
       },
       "action": {
-        "create": "Новая категория",
-        "edit": "Переименовать категорию",
-        "remove": "Удалить категорию",
+        "create": "",
+        "edit": "",
+        "remove": "",
         "moveUp": "Переместить вверх",
         "moveDown": "Переместить вниз",
-        "createAbove": "Создать категорию выше",
-        "createBelow": "Создать категорию ниже"
+        "createAbove": "",
+        "createBelow": ""
       },
       "create": {
-        "title": "Новая категория",
-        "submit": "Добавить категорию"
+        "title": "",
+        "submit": ""
       },
       "remove": {
-        "title": "Удалить категорию",
-        "message": "Вы уверены, что хотите удалить категорию {name}?"
+        "title": "",
+        "message": ""
       },
       "edit": {
-        "title": "Переименовать категорию",
-        "submit": "Переименовать категорию"
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
-          "create": "Новая категория",
-          "changePosition": "Изменить позицию"
+          "create": "",
+          "changePosition": "Изменить положение"
         }
       }
     }
   },
   "item": {
     "action": {
-      "create": "Новый элемент",
-      "import": "Импортировать элемент",
-      "edit": "Редактировать элемент",
-      "moveResize": "Переместить / изменить размер",
-      "duplicate": "Дублировать элемент",
-      "remove": "Удалить элемент"
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
     },
     "menu": {
       "label": {
@@ -950,11 +950,11 @@
       }
     },
     "create": {
-      "title": "Выберите тип элемента",
-      "addToBoard": "Добавить на панель"
+      "title": "",
+      "addToBoard": ""
     },
     "moveResize": {
-      "title": "Переместить / изменить размер элемента",
+      "title": "",
       "field": {
         "width": {
           "label": "Ширина"
@@ -963,70 +963,70 @@
           "label": "Высота"
         },
         "xOffset": {
-          "label": "Смещение по X"
+          "label": ""
         },
         "yOffset": {
-          "label": "Смещение по Y"
+          "label": ""
         }
       }
     },
     "edit": {
-      "title": "Редактировать элемент",
+      "title": "",
       "advancedOptions": {
-        "label": "Расширенные настройки",
-        "title": "Расширенные настройки элемента"
+        "label": "",
+        "title": ""
       },
       "field": {
         "integrations": {
           "label": "Интеграции"
         },
         "customCssClasses": {
-          "label": "Пользовательские CSS классы"
+          "label": ""
         }
       }
     },
     "remove": {
-      "title": "Удалить элемент",
-      "message": "Вы уверены, что хотите удалить этот элемент?"
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
-      "name": "Приложение",
-      "description": "Встраивает приложение в панель.",
+      "name": "",
+      "description": "",
       "option": {
         "appId": {
-          "label": "Выберите приложение"
+          "label": ""
         },
         "openInNewTab": {
           "label": "Открывать в новой вкладке"
         },
         "showTitle": {
-          "label": "Показывать название приложения"
+          "label": ""
         },
         "showDescriptionTooltip": {
-          "label": "Показывать всплывающую подсказку с описанием"
+          "label": ""
         },
         "pingEnabled": {
-          "label": "Включить простую проверку доступности"
+          "label": ""
         }
       },
       "error": {
         "notFound": {
-          "label": "Нет приложения",
-          "tooltip": "Не выбрано корректное приложение"
+          "label": "",
+          "tooltip": ""
         }
       }
     },
     "bookmarks": {
-      "name": "Закладки",
-      "description": "Отображает несколько ссылок на приложение",
+      "name": "",
+      "description": "",
       "option": {
         "title": {
-          "label": "Заголовок"
+          "label": ""
         },
         "layout": {
-          "label": "Расположение",
+          "label": "Макет",
           "option": {
             "row": {
               "label": "Горизонтально"
@@ -1035,22 +1035,22 @@
               "label": "Вертикально"
             },
             "grid": {
-              "label": "Сетка"
+              "label": ""
             }
           }
         },
         "items": {
-          "label": "Закладки",
-          "add": "Добавить закладку"
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "Сводка DNS-фильтра",
-      "description": "Отображает сводную информацию о вашем DNS-фильтре",
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
-          "label": "Расположение",
+          "label": "Макет",
           "option": {
             "row": {
               "label": "Горизонтально"
@@ -1059,31 +1059,31 @@
               "label": "Вертикально"
             },
             "grid": {
-              "label": "Сетка"
+              "label": ""
             }
           }
         },
         "usePiHoleColors": {
-          "label": "Использовать цвета Pi-hole"
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Не удалось получить сводку DNS-фильтра",
-        "integrationsDisconnected": "Нет данных, все интеграции отключены"
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
         "adsBlockedToday": "заблокировано сегодня",
         "adsBlockedTodayPercentage": "заблокировано сегодня",
-        "dnsQueriesToday": "DNS-запросов сегодня",
-        "domainsBeingBlocked": "Доменов в списке блокировки"
+        "dnsQueriesToday": "запросов сегодня",
+        "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
-      "name": "Управление DNS-фильтром",
-      "description": "Управляйте PiHole или AdGuard прямо с вашей панели",
+      "name": "",
+      "description": "Управляйте PiHole или AdGuard с панели управления",
       "option": {
         "layout": {
-          "label": "Расположение",
+          "label": "Макет",
           "option": {
             "row": {
               "label": "Горизонтально"
@@ -1092,81 +1092,100 @@
               "label": "Вертикально"
             },
             "grid": {
-              "label": "Сетка"
+              "label": ""
             }
           }
         },
         "showToggleAllButtons": {
-          "label": "Показывать кнопки управления защитой"
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Не удалось управлять DNS-фильтром"
+        "internalServerError": ""
       },
       "controls": {
-        "enableAll": "Включить защиту",
-        "disableAll": "Отключить защиту",
-        "setTimer": "Установить таймер",
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
         "set": "Установить",
         "enabled": "Включено",
         "disabled": "Отключено",
-        "processing": "Обработка",
-        "disconnected": "Отключено",
+        "processing": "",
+        "disconnected": "",
         "hours": "Часы",
         "minutes": "Минуты",
-        "unlimited": "Оставить пустым для неограниченного времени"
+        "unlimited": ""
       }
     },
     "clock": {
-      "name": "Дата и время",
+      "name": "",
       "description": "Отображает текущую дату и время.",
       "option": {
         "customTitleToggle": {
-          "label": "Настроить отображение заголовка/города",
-          "description": "Показывать настраиваемый заголовок или название города/страны над часами."
+          "label": "",
+          "description": ""
         },
         "customTitle": {
-          "label": "Заголовок"
+          "label": ""
         },
         "is24HourFormat": {
-          "label": "24-часовой формат",
-          "description": "Использовать 24-часовой формат вместо 12-часового"
+          "label": "",
+          "description": ""
         },
         "showSeconds": {
-          "label": "Показывать секунды"
+          "label": ""
         },
         "useCustomTimezone": {
-          "label": "Использовать другой часовой пояс"
+          "label": ""
         },
         "timezone": {
           "label": "Часовой пояс",
-          "description": "Выберите часовой пояс согласно стандарту IANA"
+          "description": ""
         },
         "showDate": {
-          "label": "Показывать дату"
+          "label": ""
         },
         "dateFormat": {
-          "label": "Формат даты",
-          "description": "Как должна выглядеть дата"
+          "label": "",
+          "description": ""
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
-      "name": "Заметки",
-      "description": "Простой виджет заметок с поддержкой markdown",
+      "name": "Блокнот",
+      "description": "",
       "option": {
         "showToolbar": {
-          "label": "Показывать панель инструментов для редактирования markdown"
+          "label": "Показывать панель инструментов для работы с Markdown"
         },
         "allowReadOnlyCheck": {
-          "label": "Разрешить отмечать пункты в режиме чтения"
+          "label": "Разрешить отметки в режиме только для чтения"
         },
         "content": {
-          "label": "Содержимое заметок"
+          "label": "Содержимое блокнота"
         }
       },
       "controls": {
-        "bold": "Жирный",
+        "bold": "Полужирный",
         "italic": "Курсив",
         "strikethrough": "Зачёркнутый",
         "underline": "Подчёркнутый",
@@ -1175,16 +1194,16 @@
         "code": "Код",
         "clear": "Очистить форматирование",
         "heading": "Заголовок {level}",
-        "align": "Выравнивание текста: {position}",
+        "align": "Выровнять текст: {position}",
         "blockquote": "Цитата",
         "horizontalLine": "Горизонтальная линия",
         "bulletList": "Маркированный список",
         "orderedList": "Нумерованный список",
-        "checkList": "Список с чекбоксами",
+        "checkList": "Список с галочками",
         "increaseIndent": "Увеличить отступ",
         "decreaseIndent": "Уменьшить отступ",
         "link": "Ссылка",
-        "unlink": "Удалить ссылку",
+        "unlink": "Убрать ссылку",
         "image": "Вставить изображение",
         "addTable": "Добавить таблицу",
         "deleteTable": "Удалить таблицу",
@@ -1198,13 +1217,13 @@
         "deleteRow": "Удалить строку"
       },
       "align": {
-        "left": "По левому краю",
+        "left": "Слева",
         "center": "По центру",
-        "right": "По правому краю"
+        "right": "Справа"
       },
       "popover": {
         "clearColor": "Очистить цвет",
-        "source": "Источник",
+        "source": "Исходный код",
         "widthPlaceholder": "Значение в % или пикселях",
         "columns": "Столбцы",
         "rows": "Строки",
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "Встраиваемый фрейм",
       "description": "Встраивает любой контент из интернета. Некоторые сайты могут ограничивать доступ.",
       "option": {
         "embedUrl": {
@@ -1245,31 +1264,31 @@
         }
       },
       "error": {
-        "noUrl": "URL для iFrame не указан",
-        "noBrowerSupport": "Ваш браузер не поддерживает iframes. Пожалуйста, обновите браузер."
+        "noUrl": "",
+        "noBrowerSupport": "Ваш браузер не поддерживает встраиваемые фреймы. Пожалуйста, обновите браузер."
       }
     },
     "smartHome-entityState": {
-      "name": "Состояние объекта",
-      "description": "Отображает состояние объекта и позволяет управлять им при необходимости",
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
           "label": "ID объекта"
         },
         "displayName": {
-          "label": "Отображаемое имя"
+          "label": ""
         },
         "entityUnit": {
-          "label": "Единица измерения"
+          "label": ""
         },
         "clickable": {
-          "label": "Кликабельный"
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "Запуск автоматизации",
-      "description": "Запускает автоматизацию одним нажатием",
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
           "label": "Отображаемое имя"
@@ -1279,26 +1298,26 @@
         }
       },
       "spotlightAction": {
-        "run": "Запустить {name}"
+        "run": ""
       }
     },
     "calendar": {
       "name": "Календарь",
-      "description": "Отображает события из ваших интеграций в календаре в определённом временном периоде",
+      "description": "",
       "option": {
         "releaseType": {
           "label": "Тип релиза Radarr",
           "options": {
-            "inCinemas": "В кинотеатрах",
-            "digitalRelease": "Цифровой релиз",
-            "physicalRelease": "Физический релиз"
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
           }
         },
         "filterPastMonths": {
-          "label": "Начиная с"
+          "label": ""
         },
         "filterFutureMonths": {
-          "label": "Заканчивая"
+          "label": ""
         }
       }
     },
@@ -1307,24 +1326,24 @@
       "description": "Отображает текущую информацию о погоде для указанного местоположения.",
       "option": {
         "isFormatFahrenheit": {
-          "label": "Температура в градусах Фаренгейта"
+          "label": ""
         },
         "location": {
           "label": "Местоположение"
         },
         "showCity": {
-          "label": "Показывать город"
+          "label": ""
         },
         "hasForecast": {
-          "label": "Показывать прогноз"
+          "label": ""
         },
         "forecastDayCount": {
-          "label": "Количество дней прогноза",
-          "description": "Если виджет недостаточно широкий, будет показано меньше дней"
+          "label": "",
+          "description": ""
         },
         "dateFormat": {
-          "label": "Формат даты",
-          "description": "Как должна отображаться дата"
+          "label": "",
+          "description": ""
         }
       },
       "kind": {
@@ -1332,9 +1351,9 @@
         "mainlyClear": "Преимущественно ясно",
         "fog": "Туман",
         "drizzle": "Морось",
-        "freezingDrizzle": "Изморозь",
+        "freezingDrizzle": "Ледяная морось",
         "rain": "Дождь",
-        "freezingRain": "Моросящий дождь",
+        "freezingRain": "Ледяной дождь",
         "snowFall": "Снегопад",
         "snowGrains": "Снежная крупа",
         "rainShowers": "Ливень",
@@ -1345,28 +1364,28 @@
       }
     },
     "indexerManager": {
-      "name": "Состояние индексаторов",
-      "description": "Статус ваших индексаторов",
+      "name": "Состояние менеджера индексации",
+      "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": "Открывать сайт индексатора в новой вкладке"
+          "label": ""
         }
       },
-      "title": "Индексаторы",
+      "title": "Менеджер индексации",
       "testAll": "Проверить все",
       "error": {
-        "internalServerError": "Не удалось получить статус индексаторов"
+        "internalServerError": ""
       }
     },
     "healthMonitoring": {
       "name": "Мониторинг состояния системы",
-      "description": "Отображает информацию о состоянии и работоспособности вашей системы (систем).",
+      "description": "Отображает информацию о состоянии и работоспособности ваших систем.",
       "option": {
         "fahrenheit": {
           "label": "Температура CPU в градусах Фаренгейта"
         },
         "cpu": {
-          "label": "Показывать информацию о процессоре"
+          "label": "Показывать информацию о CPU"
         },
         "memory": {
           "label": "Показать информацию о памяти"
@@ -1376,41 +1395,41 @@
         }
       },
       "popover": {
-        "information": "Информация",
-        "processor": "Процессор: {cpuModelName}",
-        "memory": "Память: {memory}GiB",
-        "memoryAvailable": "Доступно: {memoryAvailable}GiB ({percent}%)",
-        "version": "Версия: {version}",
-        "uptime": "Время работы: {months} мес., {days} дн., {hours} ч., {minutes} мин.",
-        "loadAverage": "Средняя нагрузка:",
-        "minute": "1 минута",
-        "minutes": "{count} минут",
-        "used": "Использовано",
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
         "available": "Доступно",
-        "lastSeen": "Последнее обновление: {lastSeen}"
+        "lastSeen": ""
       },
       "memory": {},
       "error": {
-        "internalServerError": "Не удалось получить данные о состоянии системы"
+        "internalServerError": ""
       }
     },
     "common": {
       "location": {
-        "query": "Город / Почтовый индекс",
-        "latitude": "Широта",
-        "longitude": "Долгота",
-        "disabledTooltip": "Пожалуйста, введите город или почтовый индекс",
-        "unknownLocation": "Неизвестное местоположение",
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
         "search": "Поиск",
         "table": {
           "header": {
-            "city": "Город",
-            "country": "Страна",
-            "coordinates": "Координаты",
-            "population": "Население"
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
           },
           "action": {
-            "select": "Выбрать {city}, {countryCode}"
+            "select": ""
           },
           "population": {
             "fallback": "Неизвестно"
@@ -1418,216 +1437,216 @@
         }
       },
       "integration": {
-        "noData": "Интеграции не найдены",
-        "description": "Нажмите <here></here>, чтобы создать новую интеграцию"
+        "noData": "",
+        "description": ""
       },
       "app": {
         "noData": "Приложения не найдены",
-        "description": "Нажмите <here></here>, чтобы создать новое приложение"
+        "description": ""
       },
       "error": {
-        "noIntegration": "Интеграция не выбрана",
-        "noData": "Данные интеграции недоступны"
+        "noIntegration": "",
+        "noData": ""
       },
       "option": {}
     },
     "video": {
-      "name": "Видеотрансляция",
-      "description": "Встраивает видео с камеры или трансляцию с веб-сайта",
+      "name": "Видеопоток",
+      "description": "Встраивание видеопотока или видео с камеры или веб-сайта",
       "option": {
         "feedUrl": {
-          "label": "URL трансляции"
+          "label": "URL потока"
         },
         "hasAutoPlay": {
           "label": "Автовоспроизведение",
-          "description": "Автовоспроизведение работает только при отключенном звуке из-за ограничений браузера"
+          "description": ""
         },
         "isMuted": {
-          "label": "Без звука"
+          "label": ""
         },
         "hasControls": {
-          "label": "Показывать элементы управления"
+          "label": ""
         }
       },
       "error": {
-        "noUrl": "URL видео не указан",
-        "forYoutubeUseIframe": "Для видео с YouTube используйте виджет iframe"
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
       }
     },
     "mediaServer": {
-      "name": "Активные просмотры",
-      "description": "Отображает текущие сеансы воспроизведения на медиасерверах",
+      "name": "",
+      "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Пользователь",
+        "name": "Название",
         "id": ""
       }
     },
     "downloads": {
-      "name": "Загрузки",
-      "description": "Позволяет просматривать и управлять загрузками как из торрент-клиентов, так и из Usenet-клиентов.",
+      "name": "",
+      "description": "",
       "option": {
         "columns": {
-          "label": "Отображаемые столбцы"
+          "label": ""
         },
         "enableRowSorting": {
-          "label": "Включить сортировку элементов"
+          "label": ""
         },
         "defaultSort": {
-          "label": "Столбец для сортировки по умолчанию"
+          "label": ""
         },
         "descendingDefaultSort": {
-          "label": "Обратная сортировка"
+          "label": ""
         },
         "showCompletedUsenet": {
-          "label": "Показывать завершённые задачи Usenet"
+          "label": ""
         },
         "showCompletedTorrent": {
-          "label": "Показывать завершённые торренты"
+          "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Скрывать завершённые торренты ниже этого порога (в КиБ/с)"
+          "label": ""
         },
         "categoryFilter": {
-          "label": "Фильтр по категориям/меткам"
+          "label": ""
         },
         "filterIsWhitelist": {
-          "label": "Использовать фильтр как белый список"
+          "label": ""
         },
         "applyFilterToRatio": {
-          "label": "Использовать фильтр при расчёте рейтинга"
+          "label": ""
         }
       },
       "errors": {
-        "noColumns": "Выберите столбцы в настройках элементов",
-        "noCommunications": "Не удалось загрузить данные из интеграции"
+        "noColumns": "",
+        "noCommunications": ""
       },
       "items": {
         "actions": {
-          "columnTitle": "Управление"
+          "columnTitle": ""
         },
         "added": {
-          "columnTitle": "Добавлено",
+          "columnTitle": "",
           "detailsTitle": "Дата добавления"
         },
         "category": {
-          "columnTitle": "Дополнительно",
-          "detailsTitle": "Категории (или дополнительная информация)"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "downSpeed": {
           "columnTitle": "Загрузка",
           "detailsTitle": "Скорость загрузки"
         },
         "index": {
-          "columnTitle": "#",
-          "detailsTitle": "Текущий индекс в клиенте"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": ""
         },
         "integration": {
           "columnTitle": "Интеграция"
         },
         "name": {
-          "columnTitle": "Название задачи"
+          "columnTitle": ""
         },
         "progress": {
           "columnTitle": "Прогресс",
-          "detailsTitle": "Прогресс загрузки"
+          "detailsTitle": ""
         },
         "ratio": {
           "columnTitle": "Рейтинг",
-          "detailsTitle": "Рейтинг торрента (получено/отдано)"
+          "detailsTitle": ""
         },
         "received": {
-          "columnTitle": "Всего загружено",
-          "detailsTitle": "Всего загружено"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "sent": {
-          "columnTitle": "Всего отдано",
-          "detailsTitle": "Всего отдано"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "size": {
-          "columnTitle": "Размер файла",
-          "detailsTitle": "Общий размер выбранного/файлов"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
           "columnTitle": "Состояние",
-          "detailsTitle": "Состояние задачи"
+          "detailsTitle": ""
         },
         "time": {
-          "columnTitle": "Время завершения",
-          "detailsTitle": "Время с/до завершения"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "type": {
-          "columnTitle": "Тип",
-          "detailsTitle": "Тип клиента загрузки"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
           "columnTitle": "Отдача",
-          "detailsTitle": "Скорость отдачи"
+          "detailsTitle": ""
         }
       },
       "states": {
         "downloading": "Загрузка",
-        "queued": "В очереди",
+        "queued": "Очередь",
         "paused": "Приостановлено",
         "completed": "Завершено",
-        "failed": "Ошибка",
-        "processing": "Обработка",
-        "leeching": "Скачивание",
-        "stalled": "Простаивает",
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
         "unknown": "Неизвестно",
-        "seeding": "Раздача"
+        "seeding": ""
       },
       "actions": {
         "clients": {
-          "modalTitle": "Клиенты",
-          "pause": "Приостановить все клиенты/задачи",
-          "resume": "Возобновить все клиенты/задачи"
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
         },
         "client": {
-          "pause": "Приостановить клиент",
-          "resume": "Возобновить клиент"
+          "pause": "",
+          "resume": ""
         },
         "item": {
-          "pause": "Приостановить задачу",
-          "resume": "Возобновить задачу",
+          "pause": "",
+          "resume": "",
           "delete": {
-            "title": "Удалить задачу",
-            "modalTitle": "Вы уверены, что хотите удалить эту задачу?",
-            "entry": "Удалить запись",
-            "entryAndFiles": "Удалить запись и файл(ы)"
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
           }
         }
       },
-      "globalRatio": "Общий рейтинг"
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
-      "name": "Запросы медиаконтента",
-      "description": "Список всех запросов на добавление медиаконтента из вашего экземпляра Overseerr или Jellyseerr",
+      "name": "",
+      "description": "Просмотр списка всех запросов медиаконтента из вашего экземпляра Overseerr или Jellyseerr",
       "option": {
         "linksTargetNewTab": {
           "label": "Открывать ссылки в новой вкладке"
         }
       },
       "pending": {
-        "approve": "Одобрить запрос",
-        "approving": "Одобрение запроса...",
-        "decline": "Отклонить запрос"
+        "approve": "",
+        "approving": "",
+        "decline": ""
       },
       "availability": {
         "unknown": "Неизвестно",
-        "pending": "В ожидании",
-        "processing": "Обработка",
-        "partiallyAvailable": "Частично доступно",
+        "pending": "",
+        "processing": "",
+        "partiallyAvailable": "Частично",
         "available": "Доступно"
       },
-      "toBeDetermined": "Будет определено позже"
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "Статистика запросов медиаконтента",
+      "name": "",
       "description": "Статистика по запросам медиаконтента",
       "option": {},
       "titles": {
@@ -1635,28 +1654,28 @@
           "main": "Статистика медиаконтента",
           "approved": "Уже одобрено",
           "pending": "Ожидает одобрения",
-          "processing": "Обрабатывается",
-          "declined": "Уже отклонено",
-          "available": "Уже доступно",
+          "processing": "",
+          "declined": "",
+          "available": "",
           "tv": "Запросы сериалов",
           "movie": "Запросы фильмов",
           "total": "Всего"
         },
         "users": {
           "main": "Топ пользователей",
-          "requests": "Запросы"
+          "requests": ""
         }
       }
     },
     "mediaTranscoding": {
-      "name": "Перекодирование медиа",
-      "description": "Статистика, текущая очередь и состояние обработчиков перекодирования медиафайлов",
+      "name": "",
+      "description": "",
       "option": {
         "defaultView": {
           "label": "Вид по умолчанию"
         },
         "queuePageSize": {
-          "label": "Размер страницы очереди"
+          "label": ""
         }
       },
       "tab": {
@@ -1664,24 +1683,24 @@
         "queue": "Очередь",
         "statistics": "Статистика"
       },
-      "currentIndex": "{start}-{end} из {total}",
+      "currentIndex": "",
       "healthCheck": {
-        "title": "Проверка работоспособности",
-        "queued": "В очереди",
+        "title": "",
+        "queued": "Очередь",
         "status": {
           "healthy": "Исправно",
-          "unhealthy": "Неисправно"
+          "unhealthy": "Неисправен"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Пусто",
-          "transcodes": "Перекодировано",
-          "transcodesCount": "Перекодировано: {value}",
-          "healthChecksCount": "Проверок: {value}",
-          "filesCount": "Файлов: {value}",
-          "savedSpace": "Сэкономлено места: {value}",
-          "healthChecks": "Проверки работоспособности",
+          "transcodes": "Перекодирования",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
           "videoCodecs": "Кодеки",
           "videoContainers": "Контейнеры",
           "videoResolutions": "Разрешения"
@@ -1693,7 +1712,7 @@
             "eta": "Осталось",
             "progress": "Прогресс",
             "transcode": "Перекодирование",
-            "healthCheck": "Проверка"
+            "healthCheck": ""
           }
         },
         "queue": {
@@ -1702,37 +1721,37 @@
             "file": "Файл",
             "size": "Размер",
             "transcode": "Перекодирование",
-            "healthCheck": "Проверка"
+            "healthCheck": ""
           }
         }
       }
     },
     "rssFeed": {
-      "name": "RSS-ленты",
-      "description": "Отслеживание и отображение одной или нескольких RSS, ATOM или JSON-лент",
+      "name": "",
+      "description": "",
       "option": {
         "feedUrls": {
-          "label": "URL-адреса лент"
+          "label": ""
         },
         "enableRtl": {
-          "label": "Включить режим RTL"
+          "label": ""
         },
         "textLinesClamp": {
-          "label": "Ограничение строк описания"
+          "label": ""
         },
         "maximumAmountPosts": {
-          "label": "Максимальное количество записей"
+          "label": ""
         }
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "Режим редактирования включён",
-      "disabled": "Режим редактирования отключён"
+      "enabled": "",
+      "disabled": ""
     },
     "dimensions": {
-      "title": "Изменить размеры"
+      "title": ""
     }
   },
   "board": {
@@ -1740,53 +1759,53 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "Изменения применены",
-            "message": "Панель успешно сохранена"
+            "title": "Изменения сохранены",
+            "message": ""
           },
           "error": {
-            "title": "Не удалось применить изменения",
-            "message": "Не удалось сохранить панель"
+            "title": "Не удалось сохранить",
+            "message": ""
           }
         },
         "confirmLeave": {
-          "title": "Несохранённые изменения",
-          "message": "У вас есть несохранённые изменения. Вы уверены, что хотите выйти?"
+          "title": "",
+          "message": ""
         }
       },
       "oldImport": {
-        "label": "Импорт из версии Homarr до 1.0.0",
+        "label": "",
         "notification": {
           "success": {
-            "title": "Импорт успешно выполнен",
-            "message": "Панель успешно импортирована"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Импорт не удался",
-            "message": "Не удалось импортировать панель, проверьте логи для дополнительной информации"
+            "title": "",
+            "message": ""
           }
         },
         "form": {
           "file": {
-            "label": "Выберите JSON-файл",
-            "invalidError": "Недействительный файл конфигурации"
+            "label": "",
+            "invalidError": ""
           },
           "apps": {
             "label": "Приложения",
             "avoidDuplicates": {
-              "label": "Избегать дубликатов",
-              "description": "Игнорирует приложения, для которых уже существует приложение с тем же URL-адресом"
+              "label": "",
+              "description": ""
             },
             "onlyImportApps": {
-              "label": "Импортировать только приложения",
-              "description": "Добавляет только приложения, панель нужно будет создать заново вручную"
+              "label": "",
+              "description": ""
             }
           },
           "name": {
-            "label": "Название панели"
+            "label": ""
           },
           "screenSize": {
-            "label": "Размер экрана",
-            "description": "В версиях до 1.0 существовало три разных режима, поэтому вы могли выбрать количество столбцов для каждого размера экрана.",
+            "label": "",
+            "description": "",
             "option": {
               "sm": "Маленький",
               "md": "Средний",
@@ -1794,16 +1813,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "Поведение боковых панелей",
-            "description": "Боковые панели были удалены в версии 1.0, вы можете выбрать, что должно произойти с элементами внутри них.",
+            "label": "",
+            "description": "",
             "option": {
               "lastSection": {
-                "label": "Последний раздел",
-                "description": "Боковая панель будет отображаться под последним разделом"
+                "label": "",
+                "description": ""
               },
               "removeItems": {
-                "label": "Удалить элементы",
-                "description": "Элементы, содержащиеся в боковой панели, будут удалены"
+                "label": "",
+                "description": ""
               }
             }
           }
@@ -1812,64 +1831,64 @@
     },
     "field": {
       "pageTitle": {
-        "label": "Заголовок страницы"
+        "label": ""
       },
       "metaTitle": {
-        "label": "Мета-заголовок"
+        "label": ""
       },
       "logoImageUrl": {
-        "label": "URL изображения логотипа"
+        "label": ""
       },
       "faviconImageUrl": {
-        "label": "URL изображения favicon"
+        "label": ""
       },
       "backgroundImageUrl": {
-        "label": "URL фонового изображения"
+        "label": ""
       },
       "backgroundImageAttachment": {
-        "label": "Поведение фонового изображения",
+        "label": "Закрепление фонового изображения",
         "option": {
           "fixed": {
-            "label": "Фиксированное",
-            "description": "Фон остаётся на одном месте при прокрутке."
+            "label": "",
+            "description": ""
           },
           "scroll": {
-            "label": "Прокручиваемое",
-            "description": "Фон прокручивается вместе со страницей."
+            "label": "",
+            "description": ""
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "Повторение фонового изображения",
+        "label": "",
         "option": {
           "repeat": {
-            "label": "Повторять",
-            "description": "Изображение повторяется столько раз, сколько необходимо для заполнения всей области фона."
+            "label": "",
+            "description": ""
           },
           "no-repeat": {
-            "label": "Не повторять",
-            "description": "Изображение не повторяется и может не заполнить всё пространство."
+            "label": "",
+            "description": ""
           },
           "repeat-x": {
-            "label": "Повторять по горизонтали",
-            "description": "То же, что и 'Повторять', но только по горизонтальной оси."
+            "label": "",
+            "description": ""
           },
           "repeat-y": {
-            "label": "Повторять по вертикали",
-            "description": "То же, что и 'Повторять', но только по вертикальной оси."
+            "label": "",
+            "description": ""
           }
         }
       },
       "backgroundImageSize": {
-        "label": "Размер фонового изображения",
+        "label": "Повторение фонового изображения",
         "option": {
           "cover": {
-            "label": "Заполнение",
-            "description": "Масштабирует изображение с сохранением пропорций так, чтобы оно целиком заполнило область, обрезая излишки."
+            "label": "",
+            "description": ""
           },
           "contain": {
-            "label": "Уместить",
-            "description": "Масштабирует изображение с сохранением пропорций так, чтобы оно полностью поместилось в область без обрезки."
+            "label": "",
+            "description": ""
           }
         }
       },
@@ -1880,61 +1899,61 @@
         "label": "Дополнительный цвет"
       },
       "opacity": {
-        "label": "Прозрачность"
+        "label": ""
       },
       "customCss": {
-        "label": "Пользовательский CSS для этой панели",
-        "description": "Дополнительная настройка вашей панели с помощью CSS, рекомендуется только опытным пользователям",
+        "label": "",
+        "description": "Дополнительная настройка панели управления с помощью CSS (рекомендуется только опытным пользователям)",
         "customClassesAlert": {
-          "title": "Пользовательские классы",
-          "description": "Вы можете добавлять пользовательские классы к элементам панели в расширенных настройках каждого элемента и использовать их в пользовательском CSS выше."
+          "title": "",
+          "description": ""
         }
       },
       "columnCount": {
-        "label": "Количество столбцов"
+        "label": ""
       },
       "name": {
         "label": "Название"
       },
       "isPublic": {
-        "label": "Публичная",
-        "description": "Публичные панели доступны всем, даже без учётной записи."
+        "label": "Публичный",
+        "description": ""
       }
     },
     "content": {
-      "metaTitle": "Панель {boardName}"
+      "metaTitle": ""
     },
     "setting": {
-      "title": "Настройки панели {boardName}",
+      "title": "",
       "section": {
         "general": {
-          "title": "Общие",
-          "unrecognizedLink": "Указанная ссылка не распознана и не будет показана в предпросмотре, но может всё ещё работать."
+          "title": "Основное",
+          "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Компоновка"
+          "title": "Макет"
         },
         "background": {
           "title": "Фон"
         },
         "color": {
-          "title": "Цвета"
+          "title": ""
         },
         "customCss": {
-          "title": "Пользовательский CSS"
+          "title": ""
         },
         "access": {
-          "title": "Управление доступом",
+          "title": "",
           "permission": {
             "item": {
               "view": {
                 "label": "Просмотр панели"
               },
               "modify": {
-                "label": "Изменение панели"
+                "label": ""
               },
               "full": {
-                "label": "Полный доступ"
+                "label": ""
               }
             }
           }
@@ -1943,41 +1962,41 @@
           "title": "Опасная зона",
           "action": {
             "rename": {
-              "label": "Переименовать панель",
-              "description": "Изменение названия нарушит все существующие ссылки на эту панель.",
-              "button": "Изменить название",
+              "label": "",
+              "description": "",
+              "button": "",
               "modal": {
-                "title": "Переименовать панель"
+                "title": ""
               }
             },
             "visibility": {
-              "label": "Изменить видимость панели",
+              "label": "",
               "description": {
-                "public": "Эта панель сейчас публичная.",
-                "private": "Эта панель сейчас приватная."
+                "public": "",
+                "private": ""
               },
               "button": {
-                "public": "Сделать приватной",
-                "private": "Сделать публичной"
+                "public": "",
+                "private": ""
               },
               "confirm": {
                 "public": {
-                  "title": "Сделать панель приватной",
-                  "description": "Вы уверены, что хотите сделать эту панель приватной? Панель будет скрыта от публичного доступа. Ссылки для гостевых пользователей перестанут работать."
+                  "title": "",
+                  "description": ""
                 },
                 "private": {
-                  "title": "Сделать панель публичной",
-                  "description": "Вы уверены, что хотите сделать эту панель публичной? Панель станет доступной для всех."
+                  "title": "",
+                  "description": ""
                 }
               }
             },
             "delete": {
-              "label": "Удалить эту панель",
-              "description": "После удаления панели восстановление будет невозможно. Пожалуйста, будьте уверены в своём решении.",
-              "button": "Удалить эту панель",
+              "label": "",
+              "description": "",
+              "button": "",
               "confirm": {
-                "title": "Удалить панель",
-                "description": "Вы уверены, что хотите удалить эту панель? Действие навсегда удалит панель и всё её содержимое."
+                "title": "Удаление панели",
+                "description": ""
               }
             }
           }
@@ -1987,46 +2006,46 @@
     "error": {
       "noBoard": {
         "title": "Добро пожаловать в Homarr",
-        "description": "Современная панель управления для удобного доступа к вашим приложениям и сервисам.",
+        "description": "",
         "link": "Создать первую панель",
-        "notice": "Чтобы убрать эту страницу, создайте панель и установите её как домашнюю"
+        "notice": ""
       },
       "notFound": {
-        "title": "Панель не найдена",
-        "description": "Указанная панель не найдена или у вас нет к ней доступа.",
+        "title": "",
+        "description": "",
         "link": "Просмотр всех панелей",
-        "notice": "Проверьте ссылку или обратитесь к администратору, если считаете, что она должна быть доступна"
+        "notice": ""
       },
       "homeBoard": {
-        "title": "Нет домашней панели",
+        "title": "",
         "admin": {
-          "description": "Домашняя панель для сервера ещё не установлена.",
-          "link": "Настроить общесерверную домашнюю панель",
-          "notice": "Чтобы убрать эту страницу для всех пользователей, установите домашнюю панель для сервера"
+          "description": "",
+          "link": "",
+          "notice": ""
         },
         "user": {
-          "description": "Вы ещё не установили домашнюю панель.",
-          "link": "Настроить вашу домашнюю панель",
-          "notice": "Чтобы убрать эту страницу, укажите домашнюю панель в настройках"
+          "description": "",
+          "link": "",
+          "notice": ""
         },
         "anonymous": {
-          "description": "Администратор сервера ещё не установил домашнюю панель.",
-          "link": "Просмотр публичных панелей",
-          "notice": "Чтобы убрать эту страницу, попросите администратора сервера установить домашнюю панель"
+          "description": "",
+          "link": "",
+          "notice": ""
         }
       }
     }
   },
   "management": {
-    "metaTitle": "Управление",
+    "metaTitle": "",
     "title": {
-      "morning": "Доброе утро, {username}",
-      "afternoon": "Добрый день, {username}",
-      "evening": "Добрый вечер, {username}"
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
     },
     "notFound": {
-      "title": "Не найдено",
-      "text": "Запрошенный ресурс не найден"
+      "title": "",
+      "text": ""
     },
     "navbar": {
       "items": {
@@ -2048,9 +2067,9 @@
           "label": "Инструменты",
           "items": {
             "docker": "Docker",
-            "logs": "Логи",
+            "logs": "",
             "api": "API",
-            "tasks": "Задачи"
+            "tasks": ""
           }
         },
         "settings": "Настройки",
@@ -2058,9 +2077,9 @@
           "label": "Справка",
           "items": {
             "documentation": "Документация",
-            "submitIssue": "Сообщить о проблеме",
+            "submitIssue": "",
             "discord": "Сообщество Discord",
-            "sourceCode": "Исходный код"
+            "sourceCode": ""
           }
         },
         "about": "О программе"
@@ -2078,41 +2097,41 @@
         },
         "statisticLabel": {
           "boards": "Панели",
-          "resources": "Ресурсы",
-          "authentication": "Аутентификация",
-          "authorization": "Авторизация"
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "Ваши панели",
         "action": {
           "new": {
-            "label": "Новая панель"
+            "label": ""
           },
           "open": {
-            "label": "Открыть панель"
+            "label": ""
           },
           "settings": {
             "label": "Настройки"
           },
           "setHomeBoard": {
-            "label": "Сделать домашней панелью",
+            "label": "",
             "badge": {
               "label": "Главная",
-              "tooltip": "Эта панель будет показываться как ваша домашняя панель"
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "Удалить навсегда",
             "confirm": {
               "title": "Удаление панели",
-              "description": "Вы уверены, что хотите удалить панель {name}?"
+              "description": ""
             }
           }
         },
         "visibility": {
-          "public": "Эта панель публичная",
-          "private": "Эта панель приватная"
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -2125,16 +2144,16 @@
         }
       },
       "media": {
-        "includeFromAllUsers": "Включая медиафайлы от всех пользователей"
+        "includeFromAllUsers": ""
       },
       "user": {
-        "back": "Вернуться к пользователям",
-        "fieldsDisabledExternalProvider": "Некоторые поля отключены, так как ими управляет внешняя система аутентификации.",
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "Общие",
+            "title": "Основное",
             "item": {
-              "language": "Язык и регион",
+              "language": "",
               "board": "Домашняя панель",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
@@ -2152,25 +2171,25 @@
           "title": "Пользователи"
         },
         "edit": {
-          "metaTitle": "Редактирование пользователя {username}"
+          "metaTitle": ""
         },
         "create": {
           "metaTitle": "Создание пользователя",
-          "title": "Создать нового пользователя",
+          "title": "",
           "step": {
             "personalInformation": {
-              "label": "Личные данные"
+              "label": ""
             },
             "security": {
               "label": "Безопасность"
             },
             "groups": {
               "label": "Группы",
-              "title": "Выберите все группы, в которые должен входить пользователь",
-              "description": "Группа {everyoneGroup} назначается всем пользователям и не может быть удалена."
+              "title": "",
+              "description": ""
             },
             "review": {
-              "label": "Проверка"
+              "label": ""
             },
             "completed": {
               "title": "Пользователь создан"
@@ -2180,22 +2199,22 @@
             }
           },
           "action": {
-            "createAnother": "Создать ещё одного пользователя",
-            "back": "Вернуться к списку пользователей"
+            "createAnother": "",
+            "back": ""
           }
         },
         "invite": {
           "title": "Управление приглашениями",
           "action": {
             "new": {
-              "title": "Новое приглашение",
+              "title": "",
               "description": "После истечения срока действия приглашение станет недействительным, и получатель не сможет создать учётную запись."
             },
             "copy": {
-              "title": "Копировать приглашение",
-              "description": "Приглашение сгенерировано. После закрытия этого окна <b>вы больше не сможете скопировать эту ссылку.</b> Если вы передумали приглашать пользователя, вы можете удалить это приглашение в любое время.",
-              "link": "Ссылка для приглашения",
-              "button": "Копировать и закрыть"
+              "title": "",
+              "description": "",
+              "link": "Ссылка приглашения",
+              "button": ""
             },
             "delete": {
               "title": "Удалить приглашение",
@@ -2210,7 +2229,7 @@
               "label": "Создатель"
             },
             "expirationDate": {
-              "label": "Срок действия"
+              "label": "Дата истечения срока"
             },
             "token": {
               "label": "Токен"
@@ -2219,23 +2238,23 @@
         }
       },
       "group": {
-        "back": "Вернуться к группам",
+        "back": "",
         "setting": {
           "general": {
-            "title": "Общие",
+            "title": "Основное",
             "owner": "Владелец",
-            "ownerOfGroup": "Владелец этой группы",
-            "ownerOfGroupDeleted": "Владелец этой группы был удалён. В данный момент у группы нет владельца."
+            "ownerOfGroup": "",
+            "ownerOfGroupDeleted": ""
           },
           "members": {
             "title": "Участники",
-            "search": "Найти участника",
-            "notFound": "Участники не найдены"
+            "search": "",
+            "notFound": ""
           },
           "permissions": {
-            "title": "Разрешения",
+            "title": "",
             "form": {
-              "unsavedChanges": "У вас есть несохранённые изменения!"
+              "unsavedChanges": ""
             }
           }
         }
@@ -2244,133 +2263,136 @@
         "title": "Настройки",
         "notification": {
           "success": {
-            "message": "Настройки успешно сохранены"
+            "message": ""
           },
           "error": {
-            "message": "Не удалось сохранить настройки"
+            "message": ""
           }
         },
         "section": {
           "analytics": {
-            "title": "Аналитика",
+            "title": "",
             "general": {
-              "title": "Отправлять анонимную аналитику",
-              "text": "Homarr использует открытое программное обеспечение Umami для сбора обезличенных данных об использовании. Сбор данных никогда не включает личную информацию и полностью соответствует GDPR и CCPA. Мы рекомендуем включить аналитику, так как это помогает нашей команде выявлять проблемы и определять приоритеты в разработке."
+              "title": "",
+              "text": ""
             },
             "widgetData": {
-              "title": "Данные о виджетах",
-              "text": "Отправлять информацию о настроенных виджетах (и их количестве). Не включает URL-адреса, названия или другие данные."
+              "title": "",
+              "text": ""
             },
             "integrationData": {
-              "title": "Данные об интеграциях",
-              "text": "Отправлять информацию о настроенных интеграциях (и их количестве). Не включает URL-адреса, названия или другие данные."
+              "title": "",
+              "text": ""
             },
             "usersData": {
-              "title": "Данные о пользователях",
-              "text": "Отправлять количество пользователей и информацию об использовании единого входа"
+              "title": "",
+              "text": ""
             }
           },
           "crawlingAndIndexing": {
-            "title": "Сканирование и индексация",
-            "warning": "Включение или отключение любых настроек здесь существенно повлияет на то, как поисковые системы будут индексировать и сканировать вашу страницу. Все настройки носят рекомендательный характер, и поисковые системы могут учитывать их по своему усмотрению. Изменения могут вступить в силу через несколько дней или недель. Некоторые настройки могут быть специфичны для конкретных поисковых систем.",
+            "title": "",
+            "warning": "",
             "noIndex": {
-              "title": "Не индексировать",
-              "text": "Не индексировать сайт в поисковых системах и не показывать его в результатах поиска"
+              "title": "",
+              "text": ""
             },
             "noFollow": {
-              "title": "Не следовать по ссылкам",
-              "text": "Не переходить по ссылкам при индексации. Отключение приведёт к тому, что поисковые роботы будут пытаться перейти по всем ссылкам в Homarr."
+              "title": "",
+              "text": ""
             },
             "noTranslate": {
-              "title": "Не предлагать перевод",
-              "text": "Когда язык сайта отличается от предпочитаемого пользователем, Google будет показывать ссылку на перевод в результатах поиска"
+              "title": "",
+              "text": ""
             },
             "noSiteLinksSearchBox": {
-              "title": "Не показывать поле поиска по сайту",
-              "text": "Google создаст поле поиска с найденными ссылками вместе с другими прямыми ссылками. Включение этой опции попросит Google отключить это поле."
+              "title": "",
+              "text": ""
             }
           },
           "board": {
             "title": "Панели",
             "homeBoard": {
-              "label": "Общая домашняя панель",
-              "description": "Для выбора доступны только публичные панели"
+              "label": "",
+              "description": ""
             }
           },
           "appearance": {
             "title": "Внешний вид",
             "defaultColorScheme": {
-              "label": "Цветовая схема по умолчанию",
+              "label": "",
               "options": {
-                "light": "Светлая",
-                "dark": "Тёмная"
+                "light": "",
+                "dark": ""
               }
             }
           },
           "culture": {
-            "title": "Локализация",
+            "title": "",
             "defaultLocale": {
-              "label": "Язык по умолчанию"
+              "label": ""
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "Задачи",
+          "title": "",
           "status": {
-            "idle": "Ожидание",
-            "running": "Выполняется",
+            "idle": "",
+            "running": "Работает",
             "error": "Ошибка"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
-              "label": "Обновление иконок"
+              "label": ""
             },
             "analytics": {
-              "label": "Аналитика"
+              "label": ""
             },
             "smartHomeEntityState": {
-              "label": "Состояние объектов умного дома"
+              "label": ""
             },
             "ping": {
-              "label": "Проверка доступности"
+              "label": ""
             },
             "mediaServer": {
               "label": "Медиасервер"
             },
             "mediaOrganizer": {
-              "label": "Организация медиафайлов"
+              "label": ""
             },
             "downloads": {
-              "label": "Загрузки"
+              "label": ""
             },
             "mediaRequestStats": {
-              "label": "Статистика запросов медиаконтента"
+              "label": ""
             },
             "mediaRequestList": {
-              "label": "Список запросов медиаконтента"
+              "label": ""
             },
             "rssFeeds": {
-              "label": "RSS-ленты"
+              "label": ""
             },
             "indexerManager": {
-              "label": "Управление индексаторами"
+              "label": ""
             },
             "healthMonitoring": {
-              "label": "Мониторинг состояния"
+              "label": ""
             },
             "dnsHole": {
-              "label": "Данные DNS-фильтра"
+              "label": ""
             },
             "sessionCleanup": {
-              "label": "Очистка сессий"
+              "label": ""
             },
             "updateChecker": {
-              "label": "Проверка обновлений"
+              "label": ""
             },
             "mediaTranscoding": {
-              "label": "Перекодирование медиафайлов"
+              "label": ""
             }
           }
         },
@@ -2378,9 +2400,9 @@
           "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "API-токен создан",
-              "description": "API-токен создан. Этот токен зашифрован в базе данных и будет показан только один раз. После закрытия окна его нельзя будет восстановить.",
-              "button": "Копировать и закрыть"
+              "title": "",
+              "description": "",
+              "button": ""
             }
           },
           "tab": {
@@ -2388,15 +2410,15 @@
               "label": "Документация"
             },
             "apiKey": {
-              "label": "Аутентификация",
-              "title": "API-ключи",
+              "label": "",
+              "title": "",
               "button": {
-                "createApiToken": "Создать API-токен"
+                "createApiToken": ""
               },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Создан пользователем"
+                  "createdBy": ""
                 }
               }
             }
@@ -2404,20 +2426,20 @@
         }
       },
       "about": {
-        "version": "Версия {version}",
-        "text": "Homarr — это проект с открытым исходным кодом, поддерживаемый сообществом и развиваемый добровольцами. Благодаря этим людям Homarr остаётся растущим проектом с 2021 года. Наша команда работает над Homarr полностью удалённо из разных стран в своё свободное время без какой-либо компенсации.",
+        "version": "",
+        "text": "",
         "accordion": {
           "contributors": {
-            "title": "Участники проекта",
-            "subtitle": "{count} поддерживают код и Homarr"
+            "title": "",
+            "subtitle": ""
           },
           "translators": {
-            "title": "Переводчики",
-            "subtitle": "{count} помогают с переводами на разные языки"
+            "title": "",
+            "subtitle": ""
           },
           "libraries": {
-            "title": "Библиотеки",
-            "subtitle": "{count} используются в коде Homarr"
+            "title": "",
+            "subtitle": ""
           }
         }
       }
@@ -2426,9 +2448,9 @@
   "docker": {
     "title": "Контейнеры",
     "table": {
-      "updated": "Обновлено {when}",
-      "search": "Поиск среди {count} контейнеров",
-      "selected": "Выбрано {selectCount} из {totalCount} контейнеров"
+      "updated": "",
+      "search": "",
+      "selected": ""
     },
     "field": {
       "name": {
@@ -2439,11 +2461,11 @@
         "option": {
           "created": "Создан",
           "running": "Работает",
-          "paused": "Приостановлен",
-          "restarting": "Перезапускается",
-          "exited": "Остановлен",
-          "removing": "Удаляется",
-          "dead": "Нерабочий"
+          "paused": "Приостановлено",
+          "restarting": "Перезапуск",
+          "exited": "",
+          "removing": "Удаление",
+          "dead": ""
         }
       },
       "containerImage": {
@@ -2458,12 +2480,12 @@
         "label": "Запустить",
         "notification": {
           "success": {
-            "title": "Контейнеры запущены",
-            "message": "Контейнеры успешно запущены"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Не удалось запустить контейнеры",
-            "message": "Не удалось запустить контейнеры"
+            "title": "",
+            "message": ""
           }
         }
       },
@@ -2471,12 +2493,12 @@
         "label": "Остановить",
         "notification": {
           "success": {
-            "title": "Контейнеры остановлены",
-            "message": "Контейнеры успешно остановлены"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Не удалось остановить контейнеры",
-            "message": "Не удалось остановить контейнеры"
+            "title": "",
+            "message": ""
           }
         }
       },
@@ -2484,12 +2506,12 @@
         "label": "Перезапустить",
         "notification": {
           "success": {
-            "title": "Контейнеры перезапущены",
-            "message": "Контейнеры успешно перезапущены"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Не удалось перезапустить контейнеры",
-            "message": "Не удалось перезапустить контейнеры"
+            "title": "",
+            "message": ""
           }
         }
       },
@@ -2497,45 +2519,45 @@
         "label": "Удалить",
         "notification": {
           "success": {
-            "title": "Контейнеры удалены",
-            "message": "Контейнеры успешно удалены"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Не удалось удалить контейнеры",
-            "message": "Не удалось удалить контейнеры"
+            "title": "",
+            "message": ""
           }
         }
       },
       "refresh": {
-        "label": "Обновить",
+        "label": "",
         "notification": {
           "success": {
-            "title": "Контейнеры обновлены",
-            "message": "Отображаются актуальные данные"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Не удалось обновить контейнеры",
-            "message": "Произошла ошибка при обновлении данных о контейнерах"
+            "title": "",
+            "message": ""
           }
         }
       }
     },
     "error": {
-      "internalServerError": "Произошла ошибка при обновлении данных о контейнерах"
+      "internalServerError": ""
     }
   },
   "permission": {
-    "title": "Права доступа",
+    "title": "",
     "userSelect": {
-      "title": "Добавить права для пользователя"
+      "title": ""
     },
     "groupSelect": {
-      "title": "Добавить права для группы"
+      "title": ""
     },
     "tab": {
       "user": "Пользователи",
       "group": "Группы",
-      "inherited": "Унаследованные группы"
+      "inherited": ""
     },
     "field": {
       "user": {
@@ -2545,12 +2567,12 @@
         "label": "Группа"
       },
       "permission": {
-        "label": "Права доступа"
+        "label": ""
       }
     },
     "action": {
-      "saveUser": "Сохранить права пользователя",
-      "saveGroup": "Сохранить права группы"
+      "saveUser": "",
+      "saveGroup": ""
     }
   },
   "navigationStructure": {
@@ -2565,13 +2587,13 @@
           "label": "Редактировать"
         },
         "new": {
-          "label": "Новая"
+          "label": ""
         }
       },
       "search-engines": {
         "label": "Поисковые системы",
         "new": {
-          "label": "Новая"
+          "label": ""
         },
         "edit": {
           "label": "Редактировать"
@@ -2583,7 +2605,7 @@
       "apps": {
         "label": "Приложения",
         "new": {
-          "label": "Новое"
+          "label": ""
         },
         "edit": {
           "label": "Редактировать"
@@ -2594,7 +2616,7 @@
         "create": {
           "label": "Создать"
         },
-        "general": "Общие",
+        "general": "Основное",
         "security": "Безопасность",
         "board": "Панели",
         "groups": {
@@ -2610,7 +2632,7 @@
           "label": "Docker"
         },
         "logs": {
-          "label": "Логи"
+          "label": ""
         }
       },
       "settings": {
@@ -2622,28 +2644,28 @@
     }
   },
   "search": {
-    "placeholder": "Найдётся все",
-    "nothingFound": "Ничего не найдено",
+    "placeholder": "",
+    "nothingFound": "",
     "error": {
-      "fetch": "Произошла ошибка при получении данных"
+      "fetch": ""
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "Поиск приложений, интеграций или панелей",
+        "help": "",
         "group": {
           "app": {
             "title": "Приложения",
             "children": {
               "action": {
                 "open": {
-                  "label": "Открыть URL приложения"
+                  "label": ""
                 },
                 "edit": {
-                  "label": "Редактировать приложение"
+                  "label": "Редактирование приложения"
                 }
               },
               "detail": {
-                "title": "Выберите действие для приложения"
+                "title": ""
               }
             }
           },
@@ -2652,17 +2674,17 @@
             "children": {
               "action": {
                 "open": {
-                  "label": "Открыть панель"
+                  "label": ""
                 },
                 "homeBoard": {
-                  "label": "Сделать домашней панелью"
+                  "label": ""
                 },
                 "settings": {
-                  "label": "Открыть настройки"
+                  "label": ""
                 }
               },
               "detail": {
-                "title": "Выберите действие для панели"
+                "title": ""
               }
             }
           },
@@ -2672,94 +2694,94 @@
         }
       },
       "command": {
-        "help": "Активировать режим команд",
+        "help": "",
         "group": {
           "localCommand": {
-            "title": "Локальные команды"
+            "title": ""
           },
           "globalCommand": {
-            "title": "Глобальные команды",
+            "title": "",
             "option": {
               "colorScheme": {
-                "light": "Переключить на светлую тему",
-                "dark": "Переключить на тёмную тему"
+                "light": "",
+                "dark": ""
               },
               "language": {
-                "label": "Изменить язык",
+                "label": "",
                 "children": {
                   "detail": {
-                    "title": "Выберите предпочитаемый язык"
+                    "title": ""
                   }
                 }
               },
               "newBoard": {
-                "label": "Создать новую панель"
+                "label": ""
               },
               "importBoard": {
-                "label": "Импортировать панель"
+                "label": ""
               },
               "newApp": {
-                "label": "Создать новое приложение"
+                "label": ""
               },
               "newIntegration": {
-                "label": "Создать новую интеграцию",
+                "label": "",
                 "children": {
                   "detail": {
-                    "title": "Выберите тип интеграции для создания"
+                    "title": ""
                   }
                 }
               },
               "newUser": {
-                "label": "Создать нового пользователя"
+                "label": ""
               },
               "newInvite": {
-                "label": "Создать новое приглашение"
+                "label": ""
               },
               "newGroup": {
-                "label": "Создать новую группу"
+                "label": ""
               }
             }
           }
         }
       },
       "external": {
-        "help": "Использовать внешнюю поисковую систему",
+        "help": "",
         "group": {
           "searchEngine": {
             "title": "Поисковые системы",
             "children": {
               "action": {
                 "search": {
-                  "label": "Искать через {name}"
+                  "label": ""
                 }
               },
               "detail": {
-                "title": "Выберите действие для поисковой системы"
+                "title": ""
               },
               "searchResults": {
-                "title": "Выберите результат поиска для действий"
+                "title": ""
               }
             },
             "option": {
               "google": {
-                "name": "Google",
-                "description": "Поиск в интернете через Google"
+                "name": "",
+                "description": ""
               },
               "bing": {
-                "name": "Bing",
-                "description": "Поиск в интернете через Bing"
+                "name": "",
+                "description": ""
               },
               "duckduckgo": {
-                "name": "DuckDuckGo",
-                "description": "Поиск в интернете через DuckDuckGo"
+                "name": "",
+                "description": ""
               },
               "torrent": {
                 "name": "Торренты",
-                "description": "Поиск торрентов на torrentdownloads.pro"
+                "description": ""
               },
               "youTube": {
-                "name": "YouTube",
-                "description": "Поиск видео на YouTube"
+                "name": "",
+                "description": ""
               }
             }
           }
@@ -2768,7 +2790,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": "Режимы"
+            "title": ""
           },
           "help": {
             "title": "Справка",
@@ -2777,7 +2799,7 @@
                 "label": "Документация"
               },
               "submitIssue": {
-                "label": "Сообщить о проблеме"
+                "label": ""
               },
               "discord": {
                 "label": "Сообщество Discord"
@@ -2789,57 +2811,57 @@
       "home": {
         "group": {
           "local": {
-            "title": "Локальные результаты"
+            "title": ""
           }
         }
       },
       "page": {
-        "help": "Поиск по страницам",
+        "help": "",
         "group": {
           "page": {
-            "title": "Страницы",
+            "title": "",
             "option": {
               "manageHome": {
-                "label": "Управление главной страницей"
+                "label": ""
               },
               "manageBoard": {
-                "label": "Управление панелями"
+                "label": ""
               },
               "manageApp": {
-                "label": "Управление приложениями"
+                "label": ""
               },
               "manageIntegration": {
-                "label": "Управление интеграциями"
+                "label": ""
               },
               "manageSearchEngine": {
-                "label": "Управление поисковыми системами"
+                "label": ""
               },
               "manageMedia": {
-                "label": "Управление медиафайлами"
+                "label": ""
               },
               "manageUser": {
                 "label": "Управление пользователями"
               },
               "manageInvite": {
-                "label": "Управление приглашениями"
+                "label": ""
               },
               "manageGroup": {
-                "label": "Управление группами"
+                "label": ""
               },
               "manageDocker": {
-                "label": "Управление Docker"
+                "label": ""
               },
               "manageApi": {
-                "label": "Swagger API"
+                "label": ""
               },
               "manageLog": {
-                "label": "Просмотр логов"
+                "label": "Просмотр журналов"
               },
               "manageTask": {
-                "label": "Управление задачами"
+                "label": ""
               },
               "manageSettings": {
-                "label": "Глобальные настройки"
+                "label": ""
               },
               "about": {
                 "label": "О программе"
@@ -2855,18 +2877,18 @@
         }
       },
       "userGroup": {
-        "help": "Поиск пользователей или групп",
+        "help": "",
         "group": {
           "user": {
             "title": "Пользователи",
             "children": {
               "action": {
                 "detail": {
-                  "label": "Показать сведения о пользователе"
+                  "label": ""
                 }
               },
               "detail": {
-                "title": "Выберите действие для пользователя"
+                "title": ""
               }
             }
           },
@@ -2875,17 +2897,17 @@
             "children": {
               "action": {
                 "detail": {
-                  "label": "Показать сведения о группе"
+                  "label": ""
                 },
                 "manageMember": {
-                  "label": "Управление участниками"
+                  "label": ""
                 },
                 "managePermission": {
-                  "label": "Управление разрешениями"
+                  "label": ""
                 }
               },
               "detail": {
-                "title": "Выберите действие для группы"
+                "title": ""
               }
             }
           }
@@ -2893,16 +2915,16 @@
       }
     },
     "engine": {
-      "search": "Найти поисковую систему",
+      "search": "",
       "field": {
         "name": {
           "label": "Название"
         },
         "short": {
-          "label": "Краткое название"
+          "label": ""
         },
         "urlTemplate": {
-          "label": "Шаблон URL поиска"
+          "label": ""
         },
         "description": {
           "label": "Описание"
@@ -2912,53 +2934,53 @@
         "list": {
           "title": "Поисковые системы",
           "noResults": {
-            "title": "Поисковые системы пока отсутствуют",
-            "action": "Создать первую поисковую систему"
+            "title": "",
+            "action": ""
           },
-          "interactive": "Интерактивная, использует интеграцию"
+          "interactive": ""
         },
         "create": {
-          "title": "Новая поисковая система",
+          "title": "",
           "notification": {
             "success": {
-              "title": "Поисковая система создана",
-              "message": "Поисковая система успешно создана"
+              "title": "",
+              "message": ""
             },
             "error": {
-              "title": "Не удалось создать",
-              "message": "Не удалось создать поисковую систему"
+              "title": "",
+              "message": ""
             }
           }
         },
         "edit": {
-          "title": "Редактирование поисковой системы",
+          "title": "",
           "notification": {
             "success": {
               "title": "Изменения сохранены",
-              "message": "Поисковая система успешно сохранена"
+              "message": ""
             },
             "error": {
               "title": "Не удалось сохранить",
-              "message": "Не удалось сохранить поисковую систему"
+              "message": ""
             }
           },
-          "configControl": "Настройка",
+          "configControl": "",
           "searchEngineType": {
-            "generic": "Обычная",
-            "fromIntegration": "Из интеграции"
+            "generic": "",
+            "fromIntegration": ""
           }
         },
         "delete": {
-          "title": "Удаление поисковой системы",
-          "message": "Вы уверены, что хотите удалить поисковую систему '{name}'?",
+          "title": "",
+          "message": "",
           "notification": {
             "success": {
-              "title": "Поисковая система удалена",
-              "message": "Поисковая система успешно удалена"
+              "title": "",
+              "message": ""
             },
             "error": {
-              "title": "Не удалось удалить",
-              "message": "Не удалось удалить поисковую систему"
+              "title": "",
+              "message": ""
             }
           }
         }
