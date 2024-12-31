@@ -22,7 +22,6 @@ import {
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
-import { getIconForNameAsync } from "@homarr/icons";
 import { integrationCreator } from "@homarr/integrations";
 import { validation, z } from "@homarr/validation";
 
@@ -434,7 +433,7 @@ const getNextValidShortNameForSearchEngineAsync = async (db: Database, integrati
     },
   });
 
-  const usedShortNames = searchEngines.flatMap((searchEngine) => searchEngine.short);
+  const usedShortNames = searchEngines.flatMap((searchEngine) => searchEngine.short.toLowerCase());
   const nameByIntegrationName = integrationName.slice(0, 1).toLowerCase();
 
   if (!usedShortNames.includes(nameByIntegrationName)) {

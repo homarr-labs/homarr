@@ -111,7 +111,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           <Checkbox
             label={t("integration.field.attemptSearchEngineCreation.label")}
             description={t("integration.field.attemptSearchEngineCreation.description", {
-              kind: searchParams.kind.substring(0, 1).toUpperCase() + searchParams.kind.substring(1),
+              kind: getIntegrationName(searchParams.kind),
             })}
             {...form.getInputProps("attemptSearchEngineCreation", { type: "checkbox" })}
           />

@@ -239,7 +239,9 @@ describe("create should create a new integration", () => {
     expect(dbSearchEngine!.integrationId).toBe(dbIntegration!.id);
     expect(dbSearchEngine!.short).toBe("j");
     expect(dbSearchEngine!.name).toBe(input.name);
-    expect(dbSearchEngine!.iconUrl).toBe("https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/homarr.svg");
+    expect(dbSearchEngine!.iconUrl).toBe(
+      "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyseerr.png",
+    );
   });
 
   test("without create integration access should throw permission error", async () => {
