@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "crwdns5810:0crwdne5810:0",
       "description": "crwdns5812:0crwdne5812:0",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "crwdns7010:0crwdne7010:0",
+        "name": "crwdns7012:0crwdne7012:0",
+        "id": "crwdns7014:0crwdne7014:0"
+      }
     },
     "downloads": {
       "name": "crwdns5814:0crwdne5814:0",

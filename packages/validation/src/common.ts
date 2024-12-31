@@ -15,8 +15,21 @@ const searchSchema = z.object({
   limit: z.number().int().positive().default(10),
 });
 
+const mediaRequestOptionsSchema = z.object({
+  mediaId: z.number(),
+  mediaType: z.enum(["tv", "movie"]),
+});
+
+const requestMediaSchema = z.object({
+  mediaType: z.enum(["tv", "movie"]),
+  mediaId: z.number(),
+  seasons: z.array(z.number().min(0)).optional(),
+});
+
 export const commonSchemas = {
   paginated: paginatedSchema,
   byId: byIdSchema,
   search: searchSchema,
+  mediaRequestOptions: mediaRequestOptionsSchema,
+  requestMedia: requestMediaSchema,
 };

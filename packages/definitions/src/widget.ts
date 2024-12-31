@@ -15,6 +15,7 @@ export const widgetKinds = [
   "mediaRequests-requestList",
   "mediaRequests-requestStats",
   "mediaTranscoding",
+  "minecraftServerStatus",
   "rssFeed",
   "bookmarks",
   "indexerManager",

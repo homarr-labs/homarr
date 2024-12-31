@@ -25,12 +25,10 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-# gettext is required for envsubst, su-exec for running as non-root
-RUN apk add --no-cache redis nginx bash gettext su-exec
+# gettext is required for envsubst, openssl for generating AUTH_SECRET, su-exec for running application as non-root
+RUN apk add --no-cache redis nginx bash gettext su-exec openssl
 RUN mkdir /appdata
 VOLUME /appdata
-RUN mkdir /secrets
-VOLUME /secrets
 
 # Enable homarr cli
 COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
@@ -59,7 +57,6 @@ COPY --from=builder /app/apps/nextjs/.next/standalone ./
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
 COPY scripts/run.sh ./run.sh
-COPY scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
 COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf

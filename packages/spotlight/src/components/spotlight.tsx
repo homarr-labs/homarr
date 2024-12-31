@@ -140,7 +140,11 @@ const SpotlightWithActiveMode = ({ modeState, activeMode, defaultMode }: Spotlig
 
       <MantineSpotlight.ActionsList>
         {childrenOptions ? (
-          <SpotlightChildrenActions childrenOptions={childrenOptions} query={query} />
+          <SpotlightChildrenActions
+            childrenOptions={childrenOptions}
+            query={query}
+            setChildrenOptions={setChildrenOptions}
+          />
         ) : (
           <SpotlightActionGroups
             setMode={(mode) => {

@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "Minecraft Server Status",
+      "description": "Displays the status of a Minecraft server",
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "domain": {
+          "label": "Server address"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock server"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline"
+      }
+    },
     "notebook": {
       "name": "Notebook",
       "description": "A simple notebook widget that supports markdown",
@@ -2324,6 +2343,9 @@
             "error": "Error"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft server status"
+            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
@@ -2722,6 +2744,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Request movie",
+        "requestSeries": "Request series",
+        "openIn": "Open in {kind}"
+      },
       "external": {
         "help": "Use an external search engine",
         "group": {
@@ -2959,6 +2986,22 @@
             "error": {
               "title": "Search engine not deleted",
               "message": "The search engine could not be deleted"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Request \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Season",
+                "episodes": "Episodes"
+              }
+            },
+            "button": {
+              "send": "Send request"
             }
           }
         }
