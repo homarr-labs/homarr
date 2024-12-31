@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -767,7 +767,7 @@
   },
   "common": {
     "beta": "",
-    "error": "",
+    "error": "Error",
     "action": {
       "add": "Añadir",
       "apply": "Aplicar",
@@ -1029,10 +1029,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1053,10 +1053,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1086,10 +1086,10 @@
           "label": "Diseño",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -1149,6 +1149,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incrusta cualquier contenido de Internet. Algunos sitios web pueden restringir el acceso.",
       "option": {
         "embedUrl": {
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Usuario",
+        "name": "Nombre",
         "id": ""
       }
     },
@@ -1537,7 +1556,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "",
+          "columnTitle": "Ratio",
           "detailsTitle": ""
         },
         "received": {
@@ -1640,7 +1659,7 @@
           "available": "",
           "tv": "Solicitudes de TV",
           "movie": "Solicitudes de películas",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Mejores usuarios",
@@ -1908,7 +1927,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2047,9 +2066,9 @@
         "tools": {
           "label": "Herramientas",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2132,7 +2151,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "item": {
               "language": "",
               "board": "",
@@ -2204,7 +2223,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Creador"
@@ -2213,7 +2232,7 @@
               "label": "Fecha de caducidad"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2222,7 +2241,7 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "",
+            "title": "General",
             "owner": "Propietario",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
@@ -2321,9 +2340,12 @@
           "status": {
             "idle": "",
             "running": "En ejecución",
-            "error": ""
+            "error": "Error"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2375,7 +2397,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2417,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2594,7 +2616,7 @@
         "create": {
           "label": "Crear"
         },
-        "general": "",
+        "general": "General",
         "security": "Seguridad",
         "board": "Tableros",
         "groups": {
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Herramientas",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
@@ -2754,7 +2776,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "",
+                "name": "Torrents",
                 "description": ""
               },
               "youTube": {
