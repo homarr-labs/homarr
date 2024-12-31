@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": "כותרת"
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "פנקס רשימות",
       "description": "ווידג'ט פשוט של מחברת התומך ב-markdown",
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "הטמע כל תוכן מהאינטרנט. חלק מהאתרים עשויים להגביל את הגישה.",
       "option": {
         "embedUrl": {
@@ -1459,9 +1478,9 @@
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "משתמש",
+        "name": "שם",
+        "id": "מזהה"
       }
     },
     "downloads": {
@@ -1520,7 +1539,7 @@
           "detailsTitle": "מהירות הורדה"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": "מדד נוכחי בתוך הלקוח"
         },
         "id": {
@@ -1530,7 +1549,7 @@
           "columnTitle": "אינטגרציה"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "שם המשימה"
         },
         "progress": {
           "columnTitle": "התקדמות",
@@ -1554,7 +1573,7 @@
         },
         "state": {
           "columnTitle": "מצב",
-          "detailsTitle": ""
+          "detailsTitle": "מצב משימה"
         },
         "time": {
           "columnTitle": "זמן סיום",
@@ -1597,7 +1616,7 @@
           "delete": {
             "title": "מחק פריט",
             "modalTitle": "",
-            "entry": "",
+            "entry": "מחק רשומה",
             "entryAndFiles": ""
           }
         }
@@ -2025,8 +2044,8 @@
       "evening": ""
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "לא נמצא",
+      "text": "לא ניתן היה למצוא את המשאב המבוקש"
     },
     "navbar": {
       "items": {
@@ -2048,9 +2067,9 @@
           "label": "כלים",
           "items": {
             "docker": "דוקר",
-            "logs": "",
+            "logs": "קובצי לוג",
             "api": "ממשק API",
-            "tasks": ""
+            "tasks": "משימות"
           }
         },
         "settings": "הגדרות",
@@ -2058,9 +2077,9 @@
           "label": "עזרה",
           "items": {
             "documentation": "תיעוד",
-            "submitIssue": "",
+            "submitIssue": "שלח בעיה",
             "discord": "קהילת דיסקורד",
-            "sourceCode": ""
+            "sourceCode": "קוד מקור"
           }
         },
         "about": "אודות"
@@ -2078,41 +2097,41 @@
         },
         "statisticLabel": {
           "boards": "לוחות",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "מקורות",
+          "authentication": "אימות",
+          "authorization": "הרשאה"
         }
       },
       "board": {
         "title": "הלוחות שלך",
         "action": {
           "new": {
-            "label": ""
+            "label": "לוח חדש"
           },
           "open": {
-            "label": ""
+            "label": "פתח לוח"
           },
           "settings": {
             "label": "הגדרות"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "הגדר כלוח הבית שלך",
             "badge": {
               "label": "מסך הבית",
-              "tooltip": ""
+              "tooltip": "לוח זה יוצג כלוח הבית שלך"
             }
           },
           "delete": {
             "label": "מחיקה לצמיתות",
             "confirm": {
               "title": "מחיקת לוח",
-              "description": ""
+              "description": "האם אתה בטוח שברצונך למחוק את הלוח {name} ?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "לוח זה הוא ציבורי",
+          "private": "לוח זה הוא פרטי"
         },
         "modal": {
           "createBoard": {
@@ -2125,16 +2144,16 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "כלול מדיה מכל המשתמשים"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "חזרה למשתמשים",
+        "fieldsDisabledExternalProvider": "שדות מסוימים מושבתים מכיוון שהם מנוהלים על ידי ספק אימות חיצוני.",
         "setting": {
           "general": {
             "title": "כללי",
             "item": {
-              "language": "",
+              "language": "שפה ואזור",
               "board": "לוח בית",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
@@ -2152,21 +2171,21 @@
           "title": "משתמשים"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "ערוך משתמש {username}"
         },
         "create": {
           "metaTitle": "צור משתמש",
-          "title": "",
+          "title": "צור משתמש חדש",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "מידע אישי"
             },
             "security": {
               "label": "אבטחה"
             },
             "groups": {
               "label": "קבוצות",
-              "title": "",
+              "title": "בחר את כל הקבוצות שהמשתמש צריך להיות חבר בהן",
               "description": ""
             },
             "review": {
@@ -2244,41 +2263,41 @@
         "title": "הגדרות",
         "notification": {
           "success": {
-            "message": ""
+            "message": "ההגדרות נשמרו בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "שמירת ההגדרות נכשלה"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "ניתוח",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "שלח ניתוח אנונימי",
+              "text": "Homarr ישלח ניתוחים אנונימיים באמצעות התוכנה בקוד פתוח Umami. הוא לעולם אינו אוסף מידע אישי ולכן תואם לחלוטין לדרישות ה-GDPR וה-CCPA. אנו מעודדים אותך להפעיל ניתוחים, כיוון שזה מסייע לצוות הקוד הפתוח שלנו לזהות בעיות ולהעניק עדיפות למשימות שברשימת העדיפויות שלנו."
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "נתוני ווידג'ט",
+              "text": "שלח אילו ווידג'טים (וכמותם) הוגדרו. אינו כולל כתובות URL, שמות או כל מידע נוסף אחר."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "נתוני אינטגרציה",
+              "text": "שלח אילו אינטגרציות (וכמותן) הגדרת. אינו כולל כתובות URL, שמות או כל מידע אחר."
             },
             "usersData": {
-              "title": "",
-              "text": ""
+              "title": "נתוני משתמשים",
+              "text": "שלח את כמות המשתמשים והאם הפעלת SSO"
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "סריקה והוספה לאינדקס",
+            "warning": "הפעלה או השבתה של הגדרות כלשהן כאן תשפיע קשות על האופן שבו מנועי החיפוש יכנסו לאינדקס ויסרקו את הדף שלך. כל הגדרה היא בקשה ותלוית הסורק להחיל את ההגדרות הללו. היישום של כל שינוי עשוי להימשך עד מספר ימים או שבועות. הגדרות מסוימות עשויות להיות ספציפיות למנועי חיפוש.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "אין אינדקס",
+              "text": "אל תוסיף את האתר לאינדקס במנועי חיפוש ואל תציג אותו בתוצאות חיפוש"
             },
             "noFollow": {
-              "title": "",
+              "title": "אין מעקב",
               "text": ""
             },
             "noTranslate": {
@@ -2317,18 +2336,21 @@
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "משימות",
           "status": {
             "idle": "",
             "running": "פועל",
             "error": "שגיאה"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
-              "label": ""
+              "label": "ניתוח"
             },
             "smartHomeEntityState": {
               "label": ""
@@ -2388,7 +2410,7 @@
               "label": "תיעוד"
             },
             "apiKey": {
-              "label": "",
+              "label": "אימות",
               "title": "",
               "button": {
                 "createApiToken": ""
@@ -2610,7 +2632,7 @@
           "label": "דוקר"
         },
         "logs": {
-          "label": ""
+          "label": "קובצי לוג"
         }
       },
       "settings": {
@@ -2652,7 +2674,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "פתח לוח"
                 },
                 "homeBoard": {
                   "label": ""
@@ -2777,7 +2799,7 @@
                 "label": "תיעוד"
               },
               "submitIssue": {
-                "label": ""
+                "label": "שלח בעיה"
               },
               "discord": {
                 "label": "קהילת דיסקורד"
