@@ -57,7 +57,7 @@ export default async function InviteUsagePage({ params, searchParams }: InviteUs
             {t("subtitle")}
           </Text>
         </Stack>
-        <Card bg="dark.8" w={64 * 6} maw="90vw">
+        <Card withBorder w={64 * 6} maw="90vw">
           <RegistrationForm invite={invite} />
         </Card>
         <Text size="xs" c="gray.5" ta="center">
