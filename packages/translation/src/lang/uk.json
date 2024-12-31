@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Блокнот",
       "description": "",
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Користувач",
+        "name": "Ім’я",
         "id": ""
       }
     },
@@ -2047,9 +2066,9 @@
         "tools": {
           "label": "Інструменти",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2324,6 +2343,9 @@
             "error": "Помилка"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2375,7 +2397,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Інструменти",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
