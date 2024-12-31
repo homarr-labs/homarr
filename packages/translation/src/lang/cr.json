@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "crwdns7016:0crwdne7016:0",
+      "description": "crwdns7018:0crwdne7018:0",
+      "option": {
+        "title": {
+          "label": "crwdns7020:0crwdne7020:0"
+        },
+        "domain": {
+          "label": "crwdns7022:0crwdne7022:0"
+        },
+        "isBedrockServer": {
+          "label": "crwdns7024:0crwdne7024:0"
+        }
+      },
+      "status": {
+        "online": "crwdns7026:0crwdne7026:0",
+        "offline": "crwdns7028:0crwdne7028:0"
+      }
+    },
     "notebook": {
       "name": "crwdns5504:0crwdne5504:0",
       "description": "crwdns5506:0crwdne5506:0",
@@ -2324,6 +2343,9 @@
             "error": "crwdns6574:0crwdne6574:0"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "crwdns7030:0crwdne7030:0"
+            },
             "iconsUpdater": {
               "label": "crwdns6576:0crwdne6576:0"
             },
