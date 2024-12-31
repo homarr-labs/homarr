@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Ghi chú",
       "description": "",
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Nhúng bất kỳ nội dung nào từ internet. Một số trang web có thể hạn chế quyền truy cập.",
       "option": {
         "embedUrl": {
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Người dùng",
+        "name": "Tên",
         "id": ""
       }
     },
@@ -2047,9 +2066,9 @@
         "tools": {
           "label": "Công cụ",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2324,6 +2343,9 @@
             "error": "Lỗi"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2375,7 +2397,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Công cụ",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
