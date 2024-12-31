@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "Apps",
-            "boards": "Boards",
+            "apps": "",
+            "boards": "",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -302,7 +302,7 @@
         }
       },
       "app": {
-        "title": "Apps",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -323,7 +323,7 @@
         }
       },
       "board": {
-        "title": "Boards",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -491,7 +491,7 @@
   "app": {
     "page": {
       "list": {
-        "title": "Apps",
+        "title": "",
         "noResults": {
           "title": "",
           "action": ""
@@ -1026,7 +1026,7 @@
           "label": ""
         },
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
@@ -1050,7 +1050,7 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
@@ -1083,7 +1083,7 @@
       "description": "Kontroller PiHole eller AdGuard fra dit dashboard",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
               "label": "Horisontal"
@@ -1183,7 +1183,7 @@
         "checkList": "Tjekliste",
         "increaseIndent": "Forøg indrykning",
         "decreaseIndent": "Formindsk indrykning",
-        "link": "Link",
+        "link": "",
         "unlink": "Fjern link",
         "image": "Integrer billede",
         "addTable": "Tilføj tabel",
@@ -1432,11 +1432,11 @@
       "option": {}
     },
     "video": {
-      "name": "Video Stream",
+      "name": "",
       "description": "Indlejr en video stream eller video fra et kamera eller et website",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
           "label": "Auto-afspilning",
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "Bruger",
-        "name": "Navn",
+        "user": "",
+        "name": "",
         "id": ""
       }
     },
@@ -1516,7 +1516,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "",
           "detailsTitle": "Download hastighed"
         },
         "index": {
@@ -1527,7 +1527,7 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
@@ -1565,7 +1565,7 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Up",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
@@ -1640,7 +1640,7 @@
           "available": "",
           "tv": "TV-anmodninger",
           "movie": "Film anmodninger",
-          "total": "Total"
+          "total": ""
         },
         "users": {
           "main": "Topbrugere",
@@ -1690,7 +1690,7 @@
           "empty": "Tom",
           "table": {
             "file": "Fil",
-            "eta": "ETA",
+            "eta": "",
             "progress": "Fremskridt",
             "transcode": "Transkod",
             "healthCheck": ""
@@ -1771,7 +1771,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Apps",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -1912,7 +1912,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Layout"
+          "title": ""
         },
         "background": {
           "title": "Baggrund"
@@ -2031,8 +2031,8 @@
     "navbar": {
       "items": {
         "home": "Hjem",
-        "boards": "Boards",
-        "apps": "Apps",
+        "boards": "",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "Værktøjer",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2069,15 +2069,15 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Boards",
+          "board": "",
           "user": "Brugere",
           "invite": "Invitationer",
           "integration": "",
-          "app": "Apps",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "Boards",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
@@ -2144,7 +2144,7 @@
             "title": "Sikkerhed"
           },
           "board": {
-            "title": "Boards"
+            "title": ""
           }
         },
         "list": {
@@ -2204,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Skaber"
@@ -2213,7 +2213,7 @@
               "label": "Udløbsdato"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2291,7 +2291,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "homeBoard": {
               "label": "",
               "description": ""
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2447,7 +2447,7 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
         "label": "Porte"
@@ -2455,7 +2455,7 @@
     },
     "action": {
       "start": {
-        "label": "Start",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2468,7 +2468,7 @@
         }
       },
       "stop": {
-        "label": "Stop",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2557,7 +2557,7 @@
     "manage": {
       "label": "Administrer",
       "boards": {
-        "label": "Boards"
+        "label": ""
       },
       "integrations": {
         "label": "",
@@ -2581,7 +2581,7 @@
         "label": ""
       },
       "apps": {
-        "label": "Apps",
+        "label": "",
         "new": {
           "label": ""
         },
@@ -2596,7 +2596,7 @@
         },
         "general": "Generelt",
         "security": "Sikkerhed",
-        "board": "Boards",
+        "board": "",
         "groups": {
           "label": ""
         },
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "Værktøjer",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
@@ -2632,7 +2632,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Apps",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2648,7 +2648,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2754,7 +2754,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": ""
               },
               "youTube": {

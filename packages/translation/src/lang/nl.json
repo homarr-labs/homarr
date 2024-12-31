@@ -136,7 +136,7 @@
           "length": "Bevat ten minste 8 tekens",
           "lowercase": "Inclusief kleine letter",
           "uppercase": "Inclusief hoofdletter",
-          "number": "Inclusief aantal",
+          "number": "Inclusief getal",
           "special": "Inclusief speciaal teken"
         }
       },
@@ -773,7 +773,7 @@
       "apply": "Toepassen",
       "backToOverview": "Terug naar overzicht",
       "create": "Aanmaken",
-      "edit": "Wijzigen",
+      "edit": "Bewerken",
       "import": "Importeren",
       "insert": "Invoegen",
       "remove": "Verwijderen",
@@ -788,7 +788,7 @@
       "next": "Volgende",
       "checkoutDocs": "De documentatie bekijken",
       "checkLogs": "Controleer logs voor meer details",
-      "tryAgain": "Probeer het opnieuw",
+      "tryAgain": "Probeer opnieuw",
       "loading": "Laden"
     },
     "here": "hier",
@@ -803,8 +803,8 @@
       }
     },
     "information": {
-      "min": "Min",
-      "max": "Max",
+      "min": "Min.",
+      "max": "Max.",
       "days": "Dagen",
       "hours": "Uren",
       "minutes": "Minuten"
@@ -999,7 +999,7 @@
           "label": "App kiezen"
         },
         "openInNewTab": {
-          "label": "Open in nieuw tabblad"
+          "label": "In nieuw tabblad openen"
         },
         "showTitle": {
           "label": "App naam weergeven"
@@ -1026,7 +1026,7 @@
           "label": "Titel"
         },
         "layout": {
-          "label": "Indeling",
+          "label": "Lay-out",
           "option": {
             "row": {
               "label": "Horizontaal"
@@ -1050,7 +1050,7 @@
       "description": "Toont het overzicht van je DNS-hole",
       "option": {
         "layout": {
-          "label": "Indeling",
+          "label": "Lay-out",
           "option": {
             "row": {
               "label": "Horizontaal"
@@ -1074,7 +1074,7 @@
       "data": {
         "adsBlockedToday": "Vandaag geblokkeerd",
         "adsBlockedTodayPercentage": "Vandaag geblokkeerd",
-        "dnsQueriesToday": "Queries vandaag",
+        "dnsQueriesToday": "Aanvragen vandaag",
         "domainsBeingBlocked": "Domeinen op blokkadelijst"
       }
     },
@@ -1083,7 +1083,7 @@
       "description": "Bedien PiHole of AdGuard vanaf je dashboard",
       "option": {
         "layout": {
-          "label": "Indeling",
+          "label": "Lay-out",
           "option": {
             "row": {
               "label": "Horizontaal"
@@ -1156,7 +1156,7 @@
       "description": "Een eenvoudige notitie widget die markdown ondersteunt",
       "option": {
         "showToolbar": {
-          "label": "Toon de werkbalk om je te helpen markdown te schrijven"
+          "label": "De werkbalk weergeven om je te helpen markdown te schrijven"
         },
         "allowReadOnlyCheck": {
           "label": "Controle in alleen-lezen modus toestaan"
@@ -1170,7 +1170,7 @@
         "italic": "Schuingedrukt",
         "strikethrough": "Doorgestreept",
         "underline": "Onderstreept",
-        "colorText": "Kleur tekst",
+        "colorText": "Tekstkleur",
         "colorHighlight": "Gekleurde tekst markeren",
         "code": "Code",
         "clear": "Opmaak wissen",
@@ -1179,19 +1179,19 @@
         "blockquote": "Blokquote",
         "horizontalLine": "Horizontale lijn",
         "bulletList": "Opsommingslijst",
-        "orderedList": "Geordende lijst",
+        "orderedList": "Gerangschikte lijst",
         "checkList": "Controlelijst",
-        "increaseIndent": "Inspringen vergroten",
+        "increaseIndent": "Inspringing vergroten",
         "decreaseIndent": "Inspringen verminderen",
         "link": "Link",
         "unlink": "Link verwijderen",
         "image": "Afbeelding insluiten",
         "addTable": "Tabel toevoegen",
         "deleteTable": "Tabel verwijderen",
-        "colorCell": "Kleur cel",
-        "mergeCell": "Cellen samenvoegen togglen",
-        "addColumnLeft": "Kolom toevoegen vóór",
-        "addColumnRight": "Kolom toevoegen ná",
+        "colorCell": "Celkleur",
+        "mergeCell": "Cellen samenvoegen schakelen",
+        "addColumnLeft": "Kolom ervoor toevoegen",
+        "addColumnRight": "Kolom erna toevoegen",
         "deleteColumn": "Kolom verwijderen",
         "addRowTop": "Rij toevoegen vóór",
         "addRowBelow": "Rij toevoegen ná",
@@ -1214,7 +1214,7 @@
     },
     "iframe": {
       "name": "iFrame",
-      "description": "Insluiten van alle inhoud van het internet. Sommige websites kunnen de toegang beperken.",
+      "description": "Elke inhoud van het internet insluiten. Sommige websites kunnen de toegang beperken.",
       "option": {
         "embedUrl": {
           "label": "URL insluiten"
@@ -1254,7 +1254,7 @@
       "description": "Status van een entiteit weergeven en optioneel omschakelen",
       "option": {
         "entityId": {
-          "label": "Entiteit-ID"
+          "label": "Entiteits-ID"
         },
         "displayName": {
           "label": "Weergavenaam"
@@ -1287,7 +1287,7 @@
       "description": "Gebeurtenissen van je integraties weergeven in een kalenderweergave binnen een bepaalde relatieve tijdsperiode",
       "option": {
         "releaseType": {
-          "label": "Radarr release type",
+          "label": "Radarr uitgavetype",
           "options": {
             "inCinemas": "In bioscopen",
             "digitalRelease": "Digitale uitgave",
@@ -1310,7 +1310,7 @@
           "label": "Temperatuur in fahrenheit"
         },
         "location": {
-          "label": "Weerslocatie"
+          "label": "Weerlocatie"
         },
         "showCity": {
           "label": "Stad weergeven"
@@ -1328,7 +1328,7 @@
         }
       },
       "kind": {
-        "clear": "Helder",
+        "clear": "Wissen",
         "mainlyClear": "Overwegend helder",
         "fog": "Mist",
         "drizzle": "Motregen",
@@ -1345,14 +1345,14 @@
       }
     },
     "indexerManager": {
-      "name": "Indexeer beheerder status",
+      "name": "Indexeringsbeheerder status",
       "description": "Status van je indexers",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": "Indexersite in nieuw tabblad openen"
         }
       },
-      "title": "Indexeer beheerder",
+      "title": "Indexeringsbeheerder",
       "testAll": "Alles testen",
       "error": {
         "internalServerError": "Indexersstatus ophalen mislukt"
@@ -1381,7 +1381,7 @@
         "memory": "Geheugen: {memory}GiB",
         "memoryAvailable": "Beschikbaar: {memoryAvailable}GiB ({percent}%)",
         "version": "Versie: {version}",
-        "uptime": "",
+        "uptime": "Uptime: {days} Dagen, {hours} Uren, {minutes} Minuten",
         "loadAverage": "Gemiddelde belasting:",
         "minute": "1 minuut",
         "minutes": "{count} minuten",
@@ -1433,10 +1433,10 @@
     },
     "video": {
       "name": "Video stream",
-      "description": "Een videostream of video van een camera of een website insluiten",
+      "description": "Een videostream of video van een camera of website insluiten",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": "Feed-URL"
         },
         "hasAutoPlay": {
           "label": "Automatisch afspelen",
@@ -1459,9 +1459,9 @@
       "description": "De huidige streams op je mediaservers weergeven",
       "option": {},
       "items": {
-        "user": "Gebruiker",
-        "name": "Naam",
-        "id": "ID"
+        "user": "",
+        "name": "",
+        "id": ""
       }
     },
     "downloads": {
@@ -1516,7 +1516,7 @@
           "detailsTitle": "Categorieën (of extra informatie)"
         },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "Omlaag",
           "detailsTitle": "Downloadsnelheid"
         },
         "index": {
@@ -1565,12 +1565,12 @@
           "detailsTitle": "Client type downloaden"
         },
         "upSpeed": {
-          "columnTitle": "Up",
+          "columnTitle": "Omhoog",
           "detailsTitle": "Uploadsnelheid"
         }
       },
       "states": {
-        "downloading": "Bezig met downloaden",
+        "downloading": "Downloaden",
         "queued": "In wachtrij",
         "paused": "Gepauzeerd",
         "completed": "Voltooid",
@@ -1606,7 +1606,7 @@
     },
     "mediaRequests-requestList": {
       "name": "Media-aanvragen lijst",
-      "description": "Bekijk een lijst met alle mediaverzoeken van je Overseerr of Jellyseerr instantie",
+      "description": "Bekijk een lijst met alle media-aanvragen van je Overseerr of Jellyseerr instantie",
       "option": {
         "linksTargetNewTab": {
           "label": "Links in nieuw tabblad openen"
@@ -1628,18 +1628,18 @@
     },
     "mediaRequests-requestStats": {
       "name": "Media-aanvragen statistieken",
-      "description": "Statistieken over je mediaverzoeken",
+      "description": "Statistieken over je media-aanvragen",
       "option": {},
       "titles": {
         "stats": {
-          "main": "Media statistieken",
+          "main": "Mediastatistieken",
           "approved": "Reeds goedgekeurd",
           "pending": "In afwachting van goedkeuring",
           "processing": "Wordt verwerkt",
           "declined": "Reeds geweigerd",
           "available": "Reeds beschikbaar",
-          "tv": "TV verzoeken",
-          "movie": "Film verzoeken",
+          "tv": "TV aanvragen",
+          "movie": "Film aanvragen",
           "total": "Totaal"
         },
         "users": {
@@ -1670,7 +1670,7 @@
         "queued": "In wachtrij",
         "status": {
           "healthy": "Gezond",
-          "unhealthy": "Ongezond"
+          "unhealthy": "Niet-gezond"
         }
       },
       "panel": {
@@ -1789,7 +1789,7 @@
             "description": "In versies vóór 1.0 bestonden drie verschillende modi, zodat je het aantal kolommen voor elke schermgrootte kon kiezen.",
             "option": {
               "sm": "Klein",
-              "md": "Middel",
+              "md": "Gemiddeld",
               "lg": "Groot"
             }
           },
@@ -1912,7 +1912,7 @@
           "unrecognizedLink": "De opgegeven link wordt niet herkend en geeft geen voorbeeld, maar werkt misschien nog wel."
         },
         "layout": {
-          "title": "Indeling"
+          "title": "Lay-out"
         },
         "background": {
           "title": "Achtergrond"
@@ -2298,7 +2298,7 @@
             }
           },
           "appearance": {
-            "title": "Opmaak",
+            "title": "Weergave",
             "defaultColorScheme": {
               "label": "Standaard kleurenschema",
               "options": {
@@ -2337,7 +2337,7 @@
               "label": "Pings"
             },
             "mediaServer": {
-              "label": "Media server"
+              "label": "Mediaserver"
             },
             "mediaOrganizer": {
               "label": "Media organisatoren"
@@ -2440,9 +2440,9 @@
           "created": "Aangemaakt",
           "running": "Actief",
           "paused": "Gepauzeerd",
-          "restarting": "Bezig met herstarten",
+          "restarting": "Herstarten",
           "exited": "Verlaten",
-          "removing": "Bezig met verwijderen",
+          "removing": "Verwijderen",
           "dead": "Dood"
         }
       },
@@ -2468,7 +2468,7 @@
         }
       },
       "stop": {
-        "label": "Stop",
+        "label": "Stoppen",
         "notification": {
           "success": {
             "title": "Containers gestopt",
@@ -2481,7 +2481,7 @@
         }
       },
       "restart": {
-        "label": "Herstart",
+        "label": "Herstarten",
         "notification": {
           "success": {
             "title": "Containers herstart",
@@ -2562,7 +2562,7 @@
       "integrations": {
         "label": "Integraties",
         "edit": {
-          "label": "Wijzigen"
+          "label": "Bewerken"
         },
         "new": {
           "label": "Nieuw"
@@ -2574,7 +2574,7 @@
           "label": "Nieuw"
         },
         "edit": {
-          "label": "Wijzigen"
+          "label": "Bewerken"
         }
       },
       "medias": {
@@ -2586,7 +2586,7 @@
           "label": "Nieuw"
         },
         "edit": {
-          "label": "Wijzigen"
+          "label": "Bewerken"
         }
       },
       "users": {
@@ -2754,7 +2754,7 @@
                 "description": "Zoeken op het web met DuckDuckGo"
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "Verouderde torrents weergeven",
                 "description": "Zoeken naar torrents op torrentdownloads.pro"
               },
               "youTube": {

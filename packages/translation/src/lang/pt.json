@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -1026,13 +1026,13 @@
           "label": ""
         },
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
-              "label": "Vertical"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1050,13 +1050,13 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
-              "label": "Vertical"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1083,13 +1083,13 @@
       "description": "Controle o PiHole ou o AdGuard em seu painel de controle",
       "option": {
         "layout": {
-          "label": "Layout",
+          "label": "",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
-              "label": "Vertical"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1183,7 +1183,7 @@
         "checkList": "Lista de verificação",
         "increaseIndent": "Aumentar recuo",
         "decreaseIndent": "Diminuir recuo",
-        "link": "Link",
+        "link": "",
         "unlink": "Remover link",
         "image": "Incorporar imagem",
         "addTable": "Adicionar tabela",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Incorporar qualquer conteúdo da internet. Alguns sites podem restringir o acesso.",
       "option": {
         "embedUrl": {
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "Usuário",
-        "name": "Nome",
+        "user": "",
+        "name": "",
         "id": ""
       }
     },
@@ -1640,7 +1640,7 @@
           "available": "",
           "tv": "Solicitações de TV",
           "movie": "Solicitações de filmes",
-          "total": "Total"
+          "total": ""
         },
         "users": {
           "main": "Principais usuários",
@@ -1682,7 +1682,7 @@
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "Codecs",
+          "videoCodecs": "",
           "videoContainers": "",
           "videoResolutions": ""
         },
@@ -1912,7 +1912,7 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Layout"
+          "title": ""
         },
         "background": {
           "title": "Antecedentes"
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "Ferramentas",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2204,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Criador"
@@ -2213,7 +2213,7 @@
               "label": "Data de expiração"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "Ferramentas",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""

@@ -1381,7 +1381,7 @@
         "memory": "Pamäť: {memory}GiB",
         "memoryAvailable": "K dispozícii: {memoryAvailable}GiB ({percent}%)",
         "version": "Verzia: {version}",
-        "uptime": "",
+        "uptime": "Doba prevádzky: {days} dní, {hours} hodín, {minutes} minút",
         "loadAverage": "Priemerné zaťaženie:",
         "minute": "1 minúta",
         "minutes": "{count} minút",

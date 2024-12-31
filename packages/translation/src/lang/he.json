@@ -1459,9 +1459,9 @@
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {},
       "items": {
-        "user": "משתמש",
-        "name": "שם",
-        "id": "מזהה"
+        "user": "",
+        "name": "",
+        "id": ""
       }
     },
     "downloads": {
@@ -1530,7 +1530,7 @@
           "columnTitle": "אינטגרציה"
         },
         "name": {
-          "columnTitle": "שם המשימה"
+          "columnTitle": ""
         },
         "progress": {
           "columnTitle": "התקדמות",
@@ -1554,7 +1554,7 @@
         },
         "state": {
           "columnTitle": "מצב",
-          "detailsTitle": "מצב משימה"
+          "detailsTitle": ""
         },
         "time": {
           "columnTitle": "זמן סיום",
@@ -1597,7 +1597,7 @@
           "delete": {
             "title": "מחק פריט",
             "modalTitle": "",
-            "entry": "מחק רשומה",
+            "entry": "",
             "entryAndFiles": ""
           }
         }
@@ -2025,8 +2025,8 @@
       "evening": ""
     },
     "notFound": {
-      "title": "לא נמצא",
-      "text": "לא ניתן היה למצוא את המשאב המבוקש"
+      "title": "",
+      "text": ""
     },
     "navbar": {
       "items": {
@@ -2048,9 +2048,9 @@
           "label": "כלים",
           "items": {
             "docker": "דוקר",
-            "logs": "קובצי לוג",
+            "logs": "",
             "api": "ממשק API",
-            "tasks": "משימות"
+            "tasks": ""
           }
         },
         "settings": "הגדרות",
@@ -2058,9 +2058,9 @@
           "label": "עזרה",
           "items": {
             "documentation": "תיעוד",
-            "submitIssue": "שלח בעיה",
+            "submitIssue": "",
             "discord": "קהילת דיסקורד",
-            "sourceCode": "קוד מקור"
+            "sourceCode": ""
           }
         },
         "about": "אודות"
@@ -2078,41 +2078,41 @@
         },
         "statisticLabel": {
           "boards": "לוחות",
-          "resources": "מקורות",
-          "authentication": "אימות",
-          "authorization": "הרשאה"
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "הלוחות שלך",
         "action": {
           "new": {
-            "label": "לוח חדש"
+            "label": ""
           },
           "open": {
-            "label": "פתח לוח"
+            "label": ""
           },
           "settings": {
             "label": "הגדרות"
           },
           "setHomeBoard": {
-            "label": "הגדר כלוח הבית שלך",
+            "label": "",
             "badge": {
               "label": "מסך הבית",
-              "tooltip": "לוח זה יוצג כלוח הבית שלך"
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "מחיקה לצמיתות",
             "confirm": {
               "title": "מחיקת לוח",
-              "description": "האם אתה בטוח שברצונך למחוק את הלוח {name} ?"
+              "description": ""
             }
           }
         },
         "visibility": {
-          "public": "לוח זה הוא ציבורי",
-          "private": "לוח זה הוא פרטי"
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -2125,16 +2125,16 @@
         }
       },
       "media": {
-        "includeFromAllUsers": "כלול מדיה מכל המשתמשים"
+        "includeFromAllUsers": ""
       },
       "user": {
-        "back": "חזרה למשתמשים",
-        "fieldsDisabledExternalProvider": "שדות מסוימים מושבתים מכיוון שהם מנוהלים על ידי ספק אימות חיצוני.",
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
             "title": "כללי",
             "item": {
-              "language": "שפה ואזור",
+              "language": "",
               "board": "לוח בית",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
@@ -2152,21 +2152,21 @@
           "title": "משתמשים"
         },
         "edit": {
-          "metaTitle": "ערוך משתמש {username}"
+          "metaTitle": ""
         },
         "create": {
           "metaTitle": "צור משתמש",
-          "title": "צור משתמש חדש",
+          "title": "",
           "step": {
             "personalInformation": {
-              "label": "מידע אישי"
+              "label": ""
             },
             "security": {
               "label": "אבטחה"
             },
             "groups": {
               "label": "קבוצות",
-              "title": "בחר את כל הקבוצות שהמשתמש צריך להיות חבר בהן",
+              "title": "",
               "description": ""
             },
             "review": {
@@ -2244,41 +2244,41 @@
         "title": "הגדרות",
         "notification": {
           "success": {
-            "message": "ההגדרות נשמרו בהצלחה"
+            "message": ""
           },
           "error": {
-            "message": "שמירת ההגדרות נכשלה"
+            "message": ""
           }
         },
         "section": {
           "analytics": {
-            "title": "ניתוח",
+            "title": "",
             "general": {
-              "title": "שלח ניתוח אנונימי",
-              "text": "Homarr ישלח ניתוחים אנונימיים באמצעות התוכנה בקוד פתוח Umami. הוא לעולם אינו אוסף מידע אישי ולכן תואם לחלוטין לדרישות ה-GDPR וה-CCPA. אנו מעודדים אותך להפעיל ניתוחים, כיוון שזה מסייע לצוות הקוד הפתוח שלנו לזהות בעיות ולהעניק עדיפות למשימות שברשימת העדיפויות שלנו."
+              "title": "",
+              "text": ""
             },
             "widgetData": {
-              "title": "נתוני ווידג'ט",
-              "text": "שלח אילו ווידג'טים (וכמותם) הוגדרו. אינו כולל כתובות URL, שמות או כל מידע נוסף אחר."
+              "title": "",
+              "text": ""
             },
             "integrationData": {
-              "title": "נתוני אינטגרציה",
-              "text": "שלח אילו אינטגרציות (וכמותן) הגדרת. אינו כולל כתובות URL, שמות או כל מידע אחר."
+              "title": "",
+              "text": ""
             },
             "usersData": {
-              "title": "נתוני משתמשים",
-              "text": "שלח את כמות המשתמשים והאם הפעלת SSO"
+              "title": "",
+              "text": ""
             }
           },
           "crawlingAndIndexing": {
-            "title": "סריקה והוספה לאינדקס",
-            "warning": "הפעלה או השבתה של הגדרות כלשהן כאן תשפיע קשות על האופן שבו מנועי החיפוש יכנסו לאינדקס ויסרקו את הדף שלך. כל הגדרה היא בקשה ותלוית הסורק להחיל את ההגדרות הללו. היישום של כל שינוי עשוי להימשך עד מספר ימים או שבועות. הגדרות מסוימות עשויות להיות ספציפיות למנועי חיפוש.",
+            "title": "",
+            "warning": "",
             "noIndex": {
-              "title": "אין אינדקס",
-              "text": "אל תוסיף את האתר לאינדקס במנועי חיפוש ואל תציג אותו בתוצאות חיפוש"
+              "title": "",
+              "text": ""
             },
             "noFollow": {
-              "title": "אין מעקב",
+              "title": "",
               "text": ""
             },
             "noTranslate": {
@@ -2317,7 +2317,7 @@
       },
       "tool": {
         "tasks": {
-          "title": "משימות",
+          "title": "",
           "status": {
             "idle": "",
             "running": "פועל",
@@ -2328,7 +2328,7 @@
               "label": ""
             },
             "analytics": {
-              "label": "ניתוח"
+              "label": ""
             },
             "smartHomeEntityState": {
               "label": ""
@@ -2388,7 +2388,7 @@
               "label": "תיעוד"
             },
             "apiKey": {
-              "label": "אימות",
+              "label": "",
               "title": "",
               "button": {
                 "createApiToken": ""
@@ -2610,7 +2610,7 @@
           "label": "דוקר"
         },
         "logs": {
-          "label": "קובצי לוג"
+          "label": ""
         }
       },
       "settings": {
@@ -2652,7 +2652,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": "פתח לוח"
+                  "label": ""
                 },
                 "homeBoard": {
                   "label": ""
@@ -2777,7 +2777,7 @@
                 "label": "תיעוד"
               },
               "submitIssue": {
-                "label": "שלח בעיה"
+                "label": ""
               },
               "discord": {
                 "label": "קהילת דיסקורד"

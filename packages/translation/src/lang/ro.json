@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -733,7 +733,7 @@
     "field": {
       "name": "Nume",
       "size": "Mărime",
-      "creator": "Creator"
+      "creator": ""
     },
     "action": {
       "upload": {
@@ -1032,7 +1032,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": "Vertical"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1056,7 +1056,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": "Vertical"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1089,7 +1089,7 @@
               "label": "Orizontal"
             },
             "column": {
-              "label": "Vertical"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1183,7 +1183,7 @@
         "checkList": "Lista de verificare cu bifă",
         "increaseIndent": "Mărește spațierea",
         "decreaseIndent": "Scade spațierea",
-        "link": "Link",
+        "link": "",
         "unlink": "Șterge link-ul",
         "image": "Încorporează imagine",
         "addTable": "Adaugă tabelă",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Încorporați orice conținut de pe internet. Unele site-uri web pot restricționa accesul.",
       "option": {
         "embedUrl": {
@@ -1283,7 +1283,7 @@
       }
     },
     "calendar": {
-      "name": "Calendar",
+      "name": "",
       "description": "",
       "option": {
         "releaseType": {
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "Utilizator",
-        "name": "Nume",
+        "user": "",
+        "name": "",
         "id": ""
       }
     },
@@ -1640,7 +1640,7 @@
           "available": "",
           "tv": "Cereri seriale TV",
           "movie": "Cereri filme",
-          "total": "Total"
+          "total": ""
         },
         "users": {
           "main": "Top utilizatori",
@@ -1897,7 +1897,7 @@
         "label": "Nume"
       },
       "isPublic": {
-        "label": "Public",
+        "label": "",
         "description": ""
       }
     },
@@ -1908,7 +1908,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "General",
+          "title": "",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "Unelte",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2132,7 +2132,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "General",
+            "title": "",
             "item": {
               "language": "",
               "board": "",
@@ -2204,16 +2204,16 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
-              "label": "Creator"
+              "label": ""
             },
             "expirationDate": {
               "label": "Data expirării"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2222,7 +2222,7 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "General",
+            "title": "",
             "owner": "Proprietar",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2594,7 +2594,7 @@
         "create": {
           "label": "Creează"
         },
-        "general": "General",
+        "general": "",
         "security": "Securitate",
         "board": "Planșe",
         "groups": {
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "Unelte",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""

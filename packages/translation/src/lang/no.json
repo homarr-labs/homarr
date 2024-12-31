@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Token",
+              "label": "",
               "description": ""
             }
           },
@@ -1183,7 +1183,7 @@
         "checkList": "Sjekkliste",
         "increaseIndent": "Øk innrykk",
         "decreaseIndent": "Reduser innrykk",
-        "link": "Link",
+        "link": "",
         "unlink": "Fjern lenke",
         "image": "Bygg inn bilde",
         "addTable": "Legg til tabell",
@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Bygg inn innhold fra Internett. Noen nettsteder kan begrense adgang.",
       "option": {
         "embedUrl": {
@@ -1436,7 +1436,7 @@
       "description": "Bygg inn en videostrøm eller video fra et kamera eller et nettsted",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
           "label": "Autospill",
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "Bruker",
-        "name": "Navn",
+        "user": "",
+        "name": "",
         "id": ""
       }
     },
@@ -1789,7 +1789,7 @@
             "description": "",
             "option": {
               "sm": "Liten",
-              "md": "Medium",
+              "md": "",
               "lg": "Stor"
             }
           },
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "Verktøy",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2204,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Skaper"
@@ -2213,7 +2213,7 @@
               "label": "Utløpsdato"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2447,7 +2447,7 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
         "label": "Porter"
@@ -2455,7 +2455,7 @@
     },
     "action": {
       "start": {
-        "label": "Start",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "Verktøy",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
