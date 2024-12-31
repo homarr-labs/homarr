@@ -1,3 +1,3 @@
-export interface ISearchableIntegration {
-  searchAsync(query: string): Promise<{ image?: string; name: string; link: string }[]>;
+export interface ISearchableIntegration<TResult extends { image?: string; name: string; link: string }> {
+  searchAsync(query: string): Promise<TResult[]>;
 }

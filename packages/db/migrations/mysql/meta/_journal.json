@@ -127,6 +127,13 @@
       "when": 1733777544067,
       "tag": "0017_tired_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1735593853768,
+      "tag": "0018_mighty_shaman",
+      "breakpoints": true
     }
   ]
 }

@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Create Search Engine",
+        "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
       }
     },
     "action": {
@@ -1151,6 +1155,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "Minecraft Server Status",
+      "description": "Displays the status of a Minecraft server",
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "domain": {
+          "label": "Server address"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock server"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline"
+      }
+    },
     "notebook": {
       "name": "Notebook",
       "description": "A simple notebook widget that supports markdown",
@@ -1381,7 +1404,7 @@
         "memory": "Memory: {memory}GiB",
         "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
         "version": "Version: {version}",
-        "uptime": "Uptime: {days} Days, {hours} Hours, {minutes} Minutes",
+        "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
         "loadAverage": "Load average:",
         "minute": "1 minute",
         "minutes": "{count} minutes",
@@ -1457,7 +1480,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "User",
+        "name": "Name",
+        "id": "Id"
+      }
     },
     "downloads": {
       "name": "Download Client",
@@ -2319,6 +2347,9 @@
             "error": "Error"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft server status"
+            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
@@ -2717,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Request movie",
+        "requestSeries": "Request series",
+        "openIn": "Open in {kind}"
+      },
       "external": {
         "help": "Use an external search engine",
         "group": {
@@ -2954,6 +2990,22 @@
             "error": {
               "title": "Search engine not deleted",
               "message": "The search engine could not be deleted"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Request \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Season",
+                "episodes": "Episodes"
+              }
+            },
+            "button": {
+              "send": "Send request"
             }
           }
         }

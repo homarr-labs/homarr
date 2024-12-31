@@ -1381,7 +1381,7 @@
         "memory": "crwdns5734:0{memory}crwdne5734:0",
         "memoryAvailable": "crwdns5736:0{memoryAvailable}crwdnd5736:0{percent}crwdne5736:0",
         "version": "crwdns5738:0{version}crwdne5738:0",
-        "uptime": "crwdns5740:0{days}crwdnd5740:0{hours}crwdnd5740:0{minutes}crwdne5740:0",
+        "uptime": "crwdns7008:0{months}crwdnd7008:0{days}crwdnd7008:0{hours}crwdnd7008:0{minutes}crwdne7008:0",
         "loadAverage": "crwdns5742:0crwdne5742:0",
         "minute": "crwdns5744:0crwdne5744:0",
         "minutes": "crwdns5746:0{count}crwdne5746:0",
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "crwdns5810:0crwdne5810:0",
       "description": "crwdns5812:0crwdne5812:0",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "crwdns7010:0crwdne7010:0",
+        "name": "crwdns7012:0crwdne7012:0",
+        "id": "crwdns7014:0crwdne7014:0"
+      }
     },
     "downloads": {
       "name": "crwdns5814:0crwdne5814:0",

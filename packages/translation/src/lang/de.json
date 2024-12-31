@@ -1381,7 +1381,7 @@
         "memory": "Speicher: {memory}GiB",
         "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
         "version": "",
-        "uptime": "Betriebszeit: {days} Tage, {hours} Stunden, {minutes} Minuten",
+        "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
         "minute": "1 Minute",
         "minutes": "{count} Minuten",
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",

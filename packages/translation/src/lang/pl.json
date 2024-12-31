@@ -1254,7 +1254,7 @@
       "description": "",
       "option": {
         "entityId": {
-          "label": "ID encji"
+          "label": "ID obiektu"
         },
         "displayName": {
           "label": ""
@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
