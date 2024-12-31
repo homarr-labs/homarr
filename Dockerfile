@@ -30,42 +30,36 @@ RUN apk add --no-cache redis nginx bash gettext su-exec openssl
 RUN mkdir /appdata
 VOLUME /appdata
 
-
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
 # Enable homarr cli
-COPY --from=builder --chown=nextjs:nodejs /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
+COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
 RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
-RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
-    mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
-    mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
-    touch /run/nginx/nginx.pid && chown -R nextjs:nodejs /run/nginx/nginx.pid && \
-    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs && chown -R nextjs:nodejs /etc/nginx
+RUN mkdir -p /var/cache/nginx && \
+    mkdir -p /var/log/nginx && \
+    mkdir -p /var/lib/nginx && \
+    touch /run/nginx/nginx.pid && \
+    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
 
 COPY --from=builder /app/apps/nextjs/next.config.mjs .
 COPY --from=builder /app/apps/nextjs/package.json .
 
-COPY --from=builder --chown=nextjs:nodejs /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
-COPY --from=builder --chown=nextjs:nodejs /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
+COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
+COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
+COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
-COPY --from=builder --chown=nextjs:nodejs /app/packages/db/migrations ./db/migrations
+COPY --from=builder /app/packages/db/migrations ./db/migrations
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
-COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
-COPY scripts/entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
-COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
-COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
+COPY --from=builder /app/apps/nextjs/.next/standalone ./
+COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
+COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+COPY scripts/run.sh ./run.sh
+COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
+COPY packages/redis/redis.conf /app/redis.conf
+COPY nginx.conf /etc/nginx/templates/nginx.conf
 
 
 ENV DB_URL='/appdata/db/db.sqlite'
