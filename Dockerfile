@@ -25,12 +25,10 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
-# gettext is required for envsubst
-RUN apk add --no-cache redis nginx bash gettext su-exec
+# gettext is required for envsubst, openssl for generating AUTH_SECRET, su-exec for running application as non-root
+RUN apk add --no-cache redis nginx bash gettext su-exec openssl
 RUN mkdir /appdata
 VOLUME /appdata
-RUN mkdir /secrets
-VOLUME /secrets
 
 
 
@@ -43,7 +41,6 @@ RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homa
 RUN chmod +x /usr/bin/homarr
 
 # Don't run production as root
-RUN chown -R nextjs:nodejs /secrets
 RUN mkdir -p /var/cache/nginx && chown -R nextjs:nodejs /var/cache/nginx && \
     mkdir -p /var/log/nginx && chown -R nextjs:nodejs /var/log/nginx && \
     mkdir -p /var/lib/nginx && chown -R nextjs:nodejs /var/lib/nginx && \
@@ -67,7 +64,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/
 COPY --chown=nextjs:nodejs scripts/run.sh ./run.sh
 COPY scripts/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
-COPY --chown=nextjs:nodejs scripts/generateRandomSecureKey.js ./generateRandomSecureKey.js
 COPY --chown=nextjs:nodejs packages/redis/redis.conf /app/redis.conf
 COPY --chown=nextjs:nodejs nginx.conf /etc/nginx/templates/nginx.conf
 
