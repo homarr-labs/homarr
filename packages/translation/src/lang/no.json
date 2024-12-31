@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Notisbok",
       "description": "",
@@ -1183,7 +1202,7 @@
         "checkList": "Sjekkliste",
         "increaseIndent": "Øk innrykk",
         "decreaseIndent": "Reduser innrykk",
-        "link": "",
+        "link": "Link",
         "unlink": "Fjern lenke",
         "image": "Bygg inn bilde",
         "addTable": "Legg til tabell",
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Bygg inn innhold fra Internett. Noen nettsteder kan begrense adgang.",
       "option": {
         "embedUrl": {
@@ -1436,7 +1455,7 @@
       "description": "Bygg inn en videostrøm eller video fra et kamera eller et nettsted",
       "option": {
         "feedUrl": {
-          "label": ""
+          "label": "Feed URL"
         },
         "hasAutoPlay": {
           "label": "Autospill",
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Bruker",
+        "name": "Navn",
         "id": ""
       }
     },
@@ -1789,7 +1808,7 @@
             "description": "",
             "option": {
               "sm": "Liten",
-              "md": "",
+              "md": "Medium",
               "lg": "Stor"
             }
           },
@@ -2047,9 +2066,9 @@
         "tools": {
           "label": "Verktøy",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2204,7 +2223,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Skaper"
@@ -2213,7 +2232,7 @@
               "label": "Utløpsdato"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2324,6 +2343,9 @@
             "error": "Feil"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2375,7 +2397,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2417,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2447,7 +2469,7 @@
         }
       },
       "containerImage": {
-        "label": ""
+        "label": "Image"
       },
       "ports": {
         "label": "Porter"
@@ -2455,7 +2477,7 @@
     },
     "action": {
       "start": {
-        "label": "",
+        "label": "Start",
         "notification": {
           "success": {
             "title": "",
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Verktøy",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
