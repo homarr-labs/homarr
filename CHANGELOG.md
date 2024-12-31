@@ -1,3 +1,22 @@
+## [1.0.0-beta.10](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2024-12-31)
+
+### Features
+
+* add request media ([#1811](https://github.com/homarr-labs/homarr/issues/1811)) ([91e1cef](https://github.com/homarr-labs/homarr/commit/91e1cef611a47d57b42c91c0c6d49fcf2e6a10bb))
+* **docker:** add support for pgid and puid env variables ([#1759](https://github.com/homarr-labs/homarr/issues/1759)) ([aeb681a](https://github.com/homarr-labs/homarr/commit/aeb681a85839e31284e8f1566adc4191a68ea385))
+* **integration:** add search engine creation ([#1816](https://github.com/homarr-labs/homarr/issues/1816)) ([f507645](https://github.com/homarr-labs/homarr/commit/f5076454cd644a99439b697f24bb0b1f871b2205))
+* **widget:** add minecraft server status widget ([#1801](https://github.com/homarr-labs/homarr/issues/1801)) ([0ebf4bc](https://github.com/homarr-labs/homarr/commit/0ebf4bc55e62caf5917340496abb350d564df255))
+
+### Bug Fixes
+
+* **deps:** update dependency octokit to ^4.0.3 ([#1806](https://github.com/homarr-labs/homarr/issues/1806)) ([75aefcb](https://github.com/homarr-labs/homarr/commit/75aefcb0d5210a53e8a00b675dbbce847aa8add4))
+* **deps:** update dependency trpc-to-openapi to ^2.1.1 ([#1788](https://github.com/homarr-labs/homarr/issues/1788)) ([4943e7b](https://github.com/homarr-labs/homarr/commit/4943e7b851cd29291b5e8f2f9d0e084b4deeffc0))
+* **deps:** update dependency typescript-eslint to ^8.19.0 ([#1814](https://github.com/homarr-labs/homarr/issues/1814)) ([598f004](https://github.com/homarr-labs/homarr/commit/598f0047eb13d6d0d6b68c9032a7a6648f4b6aa3))
+* **deps:** update tiptap monorepo to v2.11.0 ([#1813](https://github.com/homarr-labs/homarr/issues/1813)) ([eacda4c](https://github.com/homarr-labs/homarr/commit/eacda4c397cb384a35e9eec0305f9b26f2a22a4a))
+* **docker:** replace anonymous docker volume with env variable for encrypting secrets ([#1809](https://github.com/homarr-labs/homarr/issues/1809)) ([56b57ad](https://github.com/homarr-labs/homarr/commit/56b57ad171da170c2d8edd6112092cef0b586852))
+* **health-monitoring:** add months to uptime, fix status update ([#1792](https://github.com/homarr-labs/homarr/issues/1792)) ([c91aae5](https://github.com/homarr-labs/homarr/commit/c91aae53acf27eab96a9150281f98a2156e9e2af))
+* **media-server:** redesign widget ([#1775](https://github.com/homarr-labs/homarr/issues/1775)) ([23c7d0b](https://github.com/homarr-labs/homarr/commit/23c7d0bbf01215b680f346e7eef8072d8b9db09e))
+
 ## [1.0.0-beta.9](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2024-12-27)
 
 ### Bug Fixes
