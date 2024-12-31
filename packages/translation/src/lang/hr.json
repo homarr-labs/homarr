@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Bilježnica",
       "description": "",
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Ugradite bilo koji sadržaj s interneta. Neke web stranice mogu ograničiti pristup.",
       "option": {
         "embedUrl": {
@@ -1432,7 +1451,7 @@
       "option": {}
     },
     "video": {
-      "name": "",
+      "name": "Video Stream",
       "description": "Ugradi video stream ili video sa kamere i/ili web stranice",
       "option": {
         "feedUrl": {
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Korisnik",
+        "name": "Naziv",
         "id": ""
       }
     },
@@ -1690,7 +1709,7 @@
           "empty": "Isprazni",
           "table": {
             "file": "",
-            "eta": "",
+            "eta": "ETA",
             "progress": "Napredak",
             "transcode": "",
             "healthCheck": ""
@@ -2047,7 +2066,7 @@
         "tools": {
           "label": "Alati",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
             "api": "",
             "tasks": ""
@@ -2324,6 +2343,9 @@
             "error": "Pogreška"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Alati",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
