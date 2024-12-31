@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "",
+        "label": "E-Mail",
         "verified": ""
       },
       "username": {
@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Σημειωματάριο",
       "description": "",
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Χρήστης",
+        "name": "Όνομα",
         "id": ""
       }
     },
@@ -1683,7 +1702,7 @@
           "savedSpace": "",
           "healthChecks": "",
           "videoCodecs": "Κωδικοποιητές",
-          "videoContainers": "",
+          "videoContainers": "Containers",
           "videoResolutions": "Αναλύσεις"
         },
         "workers": {
@@ -2047,9 +2066,9 @@
         "tools": {
           "label": "Εργαλεία",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2213,7 +2232,7 @@
               "label": "Ημερομηνία λήξης"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2324,6 +2343,9 @@
             "error": "Σφάλμα"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2375,7 +2397,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2424,7 +2446,7 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Containers",
     "table": {
       "updated": "",
       "search": "",
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Εργαλεία",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
