@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
@@ -293,7 +293,7 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
             "label": "",
@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Notatnik",
       "description": "",
@@ -1213,7 +1232,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Osadzaj dowolne treści z internetu. Niektóre strony internetowe mogą ograniczać dostęp.",
       "option": {
         "embedUrl": {
@@ -1459,8 +1478,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
+        "user": "Użytkownik",
+        "name": "Nazwa",
         "id": ""
       }
     },
@@ -1690,7 +1709,7 @@
           "empty": "Puste",
           "table": {
             "file": "",
-            "eta": "",
+            "eta": "ETA",
             "progress": "Postęp",
             "transcode": "",
             "healthCheck": ""
@@ -2047,9 +2066,9 @@
         "tools": {
           "label": "Narzędzia",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "",
-            "api": "",
+            "api": "API",
             "tasks": ""
           }
         },
@@ -2204,7 +2223,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Twórca"
@@ -2213,7 +2232,7 @@
               "label": "Wygasa"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2324,6 +2343,9 @@
             "error": "Błąd"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2375,7 +2397,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2417,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": ""
                 }
               }
@@ -2607,7 +2629,7 @@
       "tools": {
         "label": "Narzędzia",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": ""
