@@ -2744,6 +2744,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Request movie",
+        "requestSeries": "Request series",
+        "openIn": "Open in {kind}"
+      },
       "external": {
         "help": "Use an external search engine",
         "group": {
@@ -2981,6 +2986,22 @@
             "error": {
               "title": "Search engine not deleted",
               "message": "The search engine could not be deleted"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Request \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Season",
+                "episodes": "Episodes"
+              }
+            },
+            "button": {
+              "send": "Send request"
             }
           }
         }
