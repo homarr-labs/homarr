@@ -1213,7 +1213,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Iegult jebkuru saturu no interneta. Dažas vietnes var ierobežot piekļuvi.",
       "option": {
         "embedUrl": {
@@ -1459,8 +1459,8 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "Lietotājs",
-        "name": "Nosaukums",
+        "user": "",
+        "name": "",
         "id": ""
       }
     },
@@ -1533,7 +1533,7 @@
           "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "Progress",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "ratio": {
@@ -1690,8 +1690,8 @@
           "empty": "Tukšs",
           "table": {
             "file": "",
-            "eta": "ETA",
-            "progress": "Progress",
+            "eta": "",
+            "progress": "",
             "transcode": "",
             "healthCheck": ""
           }
@@ -2047,9 +2047,9 @@
         "tools": {
           "label": "Rīki",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2204,7 +2204,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Izveidotājs"
@@ -2375,7 +2375,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2395,7 +2395,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2450,7 +2450,7 @@
         "label": "Attēls"
       },
       "ports": {
-        "label": "Ports"
+        "label": ""
       }
     },
     "action": {
@@ -2607,7 +2607,7 @@
       "tools": {
         "label": "Rīki",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
