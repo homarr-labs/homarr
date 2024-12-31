@@ -2,9 +2,9 @@
   "init": {
     "step": {
       "start": {
-        "title": "Vitajte na Homár",
-        "subtitle": "Začnime s nastavením inštancie Homár.",
-        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
+        "title": "Vitajte na stránke Homarr",
+        "subtitle": "Začnime s nastavením inštancie Homarr.",
+        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homarr.",
         "action": {
           "scratch": "Začať odznova",
           "importOldmarr": "Import z Homarru pred 1.0"
@@ -1151,6 +1151,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": "Názov"
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Poznámkový blok",
       "description": "Jednoduchý widget poznámkového bloku, ktorý podporuje markdown",
@@ -1381,7 +1400,7 @@
         "memory": "Pamäť: {memory}GiB",
         "memoryAvailable": "K dispozícii: {memoryAvailable}GiB ({percent}%)",
         "version": "Verzia: {version}",
-        "uptime": "Doba prevádzky: {days} dní, {hours} hodín, {minutes} minút",
+        "uptime": "",
         "loadAverage": "Priemerné zaťaženie:",
         "minute": "1 minúta",
         "minutes": "{count} minút",
@@ -2324,6 +2343,9 @@
             "error": "Chyba"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
             },
