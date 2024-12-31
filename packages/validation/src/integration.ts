@@ -15,6 +15,7 @@ const integrationCreateSchema = z.object({
       value: z.string().nonempty(),
     }),
   ),
+  attemptSearchEngineCreation: z.boolean(),
 });
 
 const integrationUpdateSchema = z.object({
