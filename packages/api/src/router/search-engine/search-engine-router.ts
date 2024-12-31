@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
 import { createId, eq, like, sql } from "@homarr/db";
-import { searchEngines } from "@homarr/db/schema";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import { searchEngines, users } from "@homarr/db/schema";
 import { validation } from "@homarr/validation";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const searchEngineRouter = createTRPCRouter({
   getPaginated: protectedProcedure.input(validation.common.paginated).query(async ({ input, ctx }) => {
@@ -52,6 +53,36 @@ export const searchEngineRouter = createTRPCRouter({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           urlTemplate: searchEngine.urlTemplate!,
         };
+  }),
+  getDefaultSearchEngine: publicProcedure.query(async ({ ctx }) => {
+    const userDefaultId = ctx.session?.user.id
+      ? ((await ctx.db.query.users
+          .findFirst({
+            where: eq(users.id, ctx.session.user.id),
+            columns: {
+              defaultSearchEngineId: true,
+            },
+          })
+          .then((user) => user?.defaultSearchEngineId)) ?? null)
+      : null;
+
+    if (userDefaultId) {
+      return await ctx.db.query.searchEngines.findFirst({
+        where: eq(searchEngines.id, userDefaultId),
+      });
+    }
+
+    const serverDefaultId = await getServerSettingByKeyAsync(ctx.db, "search").then(
+      (setting) => setting.defaultSearchEngineId,
+    );
+
+    if (serverDefaultId) {
+      return await ctx.db.query.searchEngines.findFirst({
+        where: eq(searchEngines.id, serverDefaultId),
+      });
+    }
+
+    return null;
   }),
   search: protectedProcedure.input(validation.common.search).query(async ({ ctx, input }) => {
     return await ctx.db.query.searchEngines.findMany({
