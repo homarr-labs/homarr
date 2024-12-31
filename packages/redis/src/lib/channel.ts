@@ -183,6 +183,16 @@ export const createIntegrationOptionsChannel = <TData>(
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 
+export const createWidgetOptionsChannel = <TData>(
+  widgetKind: WidgetKind,
+  queryKey: string,
+  options: Record<string, unknown>,
+) => {
+  const optionsKey = hashObjectBase64(options);
+  const channelName = `widget:${widgetKind}:${queryKey}:options:${optionsKey}`;
+  return createChannelWithLatestAndEvents<TData>(channelName);
+};
+
 export const createItemChannel = <TData>(itemId: string) => {
   return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
 };

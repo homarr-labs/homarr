@@ -22,6 +22,7 @@ import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as mediaTranscoding from "./media-transcoding";
+import * as minecraftServerStatus from "./minecraft/server-status";
 import * as notebook from "./notebook";
 import type { WidgetOptionDefinition } from "./options";
 import * as rssFeed from "./rssFeed";
@@ -54,6 +55,7 @@ export const widgetImports = {
   indexerManager,
   healthMonitoring,
   mediaTranscoding,
+  minecraftServerStatus,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

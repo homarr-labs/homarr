@@ -3,8 +3,10 @@ import { TRPCError } from "@trpc/server";
 import { createId, eq, like, sql } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
+import { integrationCreator } from "@homarr/integrations";
 import { validation } from "@homarr/validation";
 
+import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const searchEngineRouter = createTRPCRouter({
@@ -87,9 +89,32 @@ export const searchEngineRouter = createTRPCRouter({
   search: protectedProcedure.input(validation.common.search).query(async ({ ctx, input }) => {
     return await ctx.db.query.searchEngines.findMany({
       where: like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
+      with: {
+        integration: {
+          columns: {
+            kind: true,
+            url: true,
+            id: true,
+          },
+        },
+      },
       limit: input.limit,
     });
   }),
+  getMediaRequestOptions: protectedProcedure
+    .unstable_concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
+    .input(validation.common.mediaRequestOptions)
+    .query(async ({ ctx, input }) => {
+      const integration = integrationCreator(ctx.integration);
+      return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
+    }),
+  requestMedia: protectedProcedure
+    .unstable_concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
+    .input(validation.common.requestMedia)
+    .mutation(async ({ ctx, input }) => {
+      const integration = integrationCreator(ctx.integration);
+      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+    }),
   create: permissionRequiredProcedure
     .requiresPermission("search-engine-create")
     .input(validation.searchEngine.manage)

@@ -8,6 +8,7 @@ import { indexerManagerRouter } from "./indexer-manager";
 import { mediaRequestsRouter } from "./media-requests";
 import { mediaServerRouter } from "./media-server";
 import { mediaTranscodingRouter } from "./media-transcoding";
+import { minecraftRouter } from "./minecraft";
 import { notebookRouter } from "./notebook";
 import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
@@ -27,4 +28,5 @@ export const widgetRouter = createTRPCRouter({
   indexerManager: indexerManagerRouter,
   healthMonitoring: healthMonitoringRouter,
   mediaTranscoding: mediaTranscodingRouter,
+  minecraft: minecraftRouter,
 });

@@ -1457,7 +1457,12 @@
     "mediaServer": {
       "name": "Huidige mediaserver streams",
       "description": "De huidige streams op je mediaservers weergeven",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "Client downloaden",

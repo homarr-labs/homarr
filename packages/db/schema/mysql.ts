@@ -392,7 +392,7 @@ export const searchEngines = mysqlTable("search_engine", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   iconUrl: text().notNull(),
   name: varchar({ length: 64 }).notNull(),
-  short: varchar({ length: 8 }).notNull(),
+  short: varchar({ length: 8 }).unique().notNull(),
   description: text(),
   urlTemplate: text(),
   type: varchar({ length: 64 }).$type<SearchEngineType>().notNull().default("generic"),
