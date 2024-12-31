@@ -71,6 +71,15 @@ export const searchEngineRouter = createTRPCRouter({
     if (userDefaultId) {
       return await ctx.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, userDefaultId),
+        with: {
+          integration: {
+            columns: {
+              kind: true,
+              url: true,
+              id: true,
+            },
+          },
+        },
       });
     }
 
@@ -81,6 +90,15 @@ export const searchEngineRouter = createTRPCRouter({
     if (serverDefaultId) {
       return await ctx.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, serverDefaultId),
+        with: {
+          integration: {
+            columns: {
+              kind: true,
+              url: true,
+              id: true,
+            },
+          },
+        },
       });
     }
 

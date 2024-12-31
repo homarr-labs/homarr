@@ -11,9 +11,11 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
+import type { inferSearchInteractionDefinition } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
 
 type SearchEngine = RouterOutputs["searchEngine"]["search"][number];
+type FromIntegrationSearchResult = RouterOutputs["integration"]["searchInIntegration"][number];
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type MediaRequestChildrenProps = {
@@ -30,6 +32,52 @@ type MediaRequestChildrenProps = {
     kind: IntegrationKind;
     url: string;
     id: string;
+  };
+};
+
+export const useFromIntegrationSearchInteraction = (
+  searchEngine: SearchEngine,
+  searchResult: FromIntegrationSearchResult,
+): inferSearchInteractionDefinition<"link" | "javaScript" | "children"> => {
+  if (searchEngine.type !== "fromIntegration") {
+    throw new Error("Invalid search engine type");
+  }
+
+  if (!searchEngine.integration) {
+    throw new Error("Invalid search engine integration");
+  }
+
+  if (
+    getIntegrationKindsByCategory("mediaRequest").some(
+      (categoryKind) => categoryKind === searchEngine.integration?.kind,
+    ) &&
+    "type" in searchResult
+  ) {
+    const type = searchResult.type;
+    if (type === "person") {
+      return {
+        type: "link",
+        href: searchResult.link,
+        newTab: true,
+      };
+    }
+
+    return {
+      type: "children",
+      ...mediaRequestsChildrenOptions({
+        result: {
+          ...searchResult,
+          type,
+        },
+        integration: searchEngine.integration,
+      }),
+    };
+  }
+
+  return {
+    type: "link",
+    href: searchResult.link,
+    newTab: true,
   };
 };
 
@@ -162,47 +210,8 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
           </Group>
         );
       },
-      useInteraction(searchEngine) {
-        if (searchEngine.type !== "fromIntegration") {
-          throw new Error("Invalid search engine type");
-        }
-
-        if (!searchEngine.integration) {
-          throw new Error("Invalid search engine integration");
-        }
-
-        if (
-          getIntegrationKindsByCategory("mediaRequest").some(
-            (categoryKind) => categoryKind === searchEngine.integration?.kind,
-          ) &&
-          "type" in searchResult
-        ) {
-          const type = searchResult.type;
-          if (type === "person") {
-            return {
-              type: "link",
-              href: searchResult.link,
-              newTab: true,
-            };
-          }
-
-          return {
-            type: "children",
-            ...mediaRequestsChildrenOptions({
-              result: {
-                ...searchResult,
-                type,
-              },
-              integration: searchEngine.integration,
-            }),
-          };
-        }
-
-        return {
-          type: "link",
-          href: searchResult.link,
-          newTab: true,
-        };
+      useInteraction() {
+        return useFromIntegrationSearchInteraction(searchEngine, searchResult);
       },
     }));
   },

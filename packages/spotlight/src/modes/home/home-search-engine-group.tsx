@@ -1,18 +1,23 @@
-import { Group, Text } from "@mantine/core";
+import { Box, Group, Stack, Text } from "@mantine/core";
 import type { TablerIcon } from "@tabler/icons-react";
-import { IconCaretUpDown } from "@tabler/icons-react";
+import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import type { Session } from "@homarr/auth";
+import { useSession } from "@homarr/auth/client";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
+import { useFromIntegrationSearchInteraction } from "../external/search-engines-search-group";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type GroupItem = {
   id: string;
   name: string;
+  description?: string;
   icon: TablerIcon | string;
-  interaction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
+  useInteraction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
 };
 
 export const homeSearchEngineGroup = createGroup<GroupItem>({
@@ -23,56 +28,60 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       typeof item.icon !== "string" ? (
         <item.icon size={24} />
       ) : (
-        <img width={24} height={24} src={item.icon} alt={item.name} />
+        <Box w={24} h={24}>
+          <img src={item.icon} alt={item.name} style={{ maxWidth: 24 }} />
+        </Box>
       );
 
     return (
       <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
         {icon}
-        <Text>{item.name}</Text>
+        <Stack gap={0}>
+          <Text>{item.name}</Text>
+          {item.description && (
+            <Text c="gray.6" size="sm">
+              {item.description}
+            </Text>
+          )}
+        </Stack>
       </Group>
     );
   },
   useInteraction(item, query) {
-    return item.interaction(query);
+    return item.useInteraction(query);
   },
   filter() {
     return true;
   },
-  useQueryOptions() {
-    const { data: defaultSearchEngine, ...query } = clientApi.searchEngine.getDefaultSearchEngine.useQuery();
+  useQueryOptions(query) {
+    const { data: session, status } = useSession();
+    const { data: defaultSearchEngine, ...defaultSearchEngineQuery } =
+      clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
+        enabled: status !== "loading",
+      });
+    const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && query.length > 0;
+    const { data: results, ...resultQuery } = clientApi.integration.searchInIntegration.useQuery(
+      {
+        query,
+        integrationId: defaultSearchEngine?.integrationId ?? "",
+      },
+      {
+        enabled: fromIntegrationEnabled,
+        select: (data) => data.slice(0, 5),
+      },
+    );
 
     return {
-      ...query,
+      isLoading:
+        defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
+      isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
       data: [
-        defaultSearchEngine
-          ? {
-              id: "default",
-              name: `Search with Google`,
-              icon: defaultSearchEngine.iconUrl,
-              interaction(query) {
-                return {
-                  type: "link",
-                  href: defaultSearchEngine.urlTemplate.replace("%s", query),
-                };
-              },
-            }
-          : {
-              id: "default",
-              name: `Search with Google`,
-              icon: "https://www.google.com/favicon.ico",
-              interaction(query) {
-                return {
-                  type: "link",
-                  href: `https://www.google.com/search?q=${query}`,
-                };
-              },
-            },
+        ...createDefaultSearchEntries(defaultSearchEngine, results, session),
         {
           id: "other",
           name: "Search with another search engine",
           icon: IconCaretUpDown,
-          interaction() {
+          useInteraction() {
             return {
               type: "mode",
               mode: "external",
@@ -82,31 +91,75 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       ],
     };
   },
-  /*useOptions() {
-    // TODO: Load default search engines from settings
+});
+
+const createDefaultSearchEntries = (
+  defaultSearchEngine: RouterOutputs["searchEngine"]["getDefaultSearchEngine"] | null,
+  results: RouterOutputs["integration"]["searchInIntegration"] | undefined,
+  session: Session | null,
+): GroupItem[] => {
+  if (!session?.user && !defaultSearchEngine) {
+    console.log("fuck this code!");
+    return [];
+  }
+
+  if (!defaultSearchEngine) {
     return [
       {
-        id: "default",
-        name: `Search with Google`,
-        icon: "https://www.google.com/favicon.ico",
-        interaction(query) {
+        id: "no-default",
+        name: "No default search engine",
+        description: "Set a default search engine in settings",
+        icon: IconSearchOff,
+        useInteraction() {
           return {
             type: "link",
-            href: `https://www.google.com/search?q=${query}`,
-          };
-        },
-      },
-      {
-        id: "other",
-        name: "Search with another search engine",
-        icon: IconCaretUpDown,
-        interaction() {
-          return {
-            type: "mode",
-            mode: "external",
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            href: `/manage/users/${session!.user.id}/general`,
           };
         },
       },
     ];
-  },*/
-});
+  }
+
+  if (defaultSearchEngine.type === "generic") {
+    return [
+      {
+        id: "search",
+        name: `Search with ${defaultSearchEngine.name}`,
+        icon: defaultSearchEngine.iconUrl,
+        useInteraction(query) {
+          return {
+            type: "link",
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            href: defaultSearchEngine.urlTemplate!.replace("%s", query),
+          };
+        },
+      },
+    ];
+  }
+
+  if (!results) {
+    return [
+      {
+        id: "from-integration-tip",
+        name: "Start typing to search",
+        icon: defaultSearchEngine.iconUrl,
+        useInteraction() {
+          return {
+            type: "none",
+          };
+        },
+      },
+    ];
+  }
+
+  return results.map((result) => ({
+    id: `search-${result.id}`,
+    name: result.name,
+    description: result.text,
+    icon: result.image ?? IconSearch,
+    useInteraction() {
+      return useFromIntegrationSearchInteraction(defaultSearchEngine, result);
+    },
+  }));
+};
