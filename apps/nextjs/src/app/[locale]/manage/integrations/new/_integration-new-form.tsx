@@ -79,7 +79,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     );
   };
 
-  const supportsSearchEngine = integrationDefs[searchParams.kind].category.flatMap((cat) => cat).includes("search");
+  const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
