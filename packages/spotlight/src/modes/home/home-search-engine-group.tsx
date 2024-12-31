@@ -2,6 +2,8 @@ import { Group, Text } from "@mantine/core";
 import type { TablerIcon } from "@tabler/icons-react";
 import { IconCaretUpDown } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
+
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 
@@ -37,7 +39,50 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
   filter() {
     return true;
   },
-  useOptions() {
+  useQueryOptions() {
+    const { data: defaultSearchEngine, ...query } = clientApi.searchEngine.getDefaultSearchEngine.useQuery();
+
+    return {
+      ...query,
+      data: [
+        defaultSearchEngine
+          ? {
+              id: "default",
+              name: `Search with Google`,
+              icon: defaultSearchEngine.iconUrl,
+              interaction(query) {
+                return {
+                  type: "link",
+                  href: defaultSearchEngine.urlTemplate.replace("%s", query),
+                };
+              },
+            }
+          : {
+              id: "default",
+              name: `Search with Google`,
+              icon: "https://www.google.com/favicon.ico",
+              interaction(query) {
+                return {
+                  type: "link",
+                  href: `https://www.google.com/search?q=${query}`,
+                };
+              },
+            },
+        {
+          id: "other",
+          name: "Search with another search engine",
+          icon: IconCaretUpDown,
+          interaction() {
+            return {
+              type: "mode",
+              mode: "external",
+            };
+          },
+        },
+      ],
+    };
+  },
+  /*useOptions() {
     // TODO: Load default search engines from settings
     return [
       {
@@ -63,5 +108,5 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
         },
       },
     ];
-  },
+  },*/
 });
