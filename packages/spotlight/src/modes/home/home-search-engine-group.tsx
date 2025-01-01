@@ -6,6 +6,8 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { Session } from "@homarr/auth";
 import { useSession } from "@homarr/auth/client";
+import type { TranslationFunction } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
@@ -21,7 +23,7 @@ type GroupItem = {
 };
 
 export const homeSearchEngineGroup = createGroup<GroupItem>({
-  title: "Search",
+  title: (t) => t("search.mode.home.group.search.title"),
   keyPath: "id",
   Component(item) {
     const icon =
@@ -54,6 +56,7 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
     return true;
   },
   useQueryOptions(query) {
+    const t = useI18n();
     const { data: session, status } = useSession();
     const { data: defaultSearchEngine, ...defaultSearchEngineQuery } =
       clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
@@ -76,10 +79,10 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
         defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
       isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
       data: [
-        ...createDefaultSearchEntries(defaultSearchEngine, results, session),
+        ...createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
         {
           id: "other",
-          name: "Search with another search engine",
+          name: t("search.mode.home.group.search.option.other.label"),
           icon: IconCaretUpDown,
           useInteraction() {
             return {
@@ -97,9 +100,10 @@ const createDefaultSearchEntries = (
   defaultSearchEngine: RouterOutputs["searchEngine"]["getDefaultSearchEngine"] | null,
   results: RouterOutputs["integration"]["searchInIntegration"] | undefined,
   session: Session | null,
+  query: string,
+  t: TranslationFunction,
 ): GroupItem[] => {
   if (!session?.user && !defaultSearchEngine) {
-    console.log("fuck this code!");
     return [];
   }
 
@@ -107,8 +111,8 @@ const createDefaultSearchEntries = (
     return [
       {
         id: "no-default",
-        name: "No default search engine",
-        description: "Set a default search engine in settings",
+        name: t("search.mode.home.group.search.option.no-default.label"),
+        description: t("search.mode.home.group.search.option.no-default.description"),
         icon: IconSearchOff,
         useInteraction() {
           return {
@@ -125,7 +129,10 @@ const createDefaultSearchEntries = (
     return [
       {
         id: "search",
-        name: `Search with ${defaultSearchEngine.name}`,
+        name: t("search.mode.home.group.search.option.search.label", {
+          query,
+          name: defaultSearchEngine.name,
+        }),
         icon: defaultSearchEngine.iconUrl,
         useInteraction(query) {
           return {
@@ -141,9 +148,10 @@ const createDefaultSearchEntries = (
   if (!results) {
     return [
       {
-        id: "from-integration-tip",
-        name: "Start typing to search",
+        id: "from-integration",
+        name: defaultSearchEngine.name,
         icon: defaultSearchEngine.iconUrl,
+        description: t("search.mode.home.group.search.option.from-integration.description"),
         useInteraction() {
           return {
             type: "none",

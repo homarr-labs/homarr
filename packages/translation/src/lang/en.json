@@ -2837,6 +2837,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Search",
+            "option": {
+              "other": {
+                "label": "Search with another search engine"
+              },
+              "no-default": {
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
+              },
+              "search": {
+                "label": "Search for '{query}' with {name}"
+              },
+              "from-integration": {
+                "description": "Start typing to search"
+              }
+            }
+          },
           "local": {
             "title": "Local results"
           }
