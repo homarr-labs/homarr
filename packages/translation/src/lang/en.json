@@ -2331,6 +2331,13 @@
               "description": "Only public boards are available for selection"
             }
           },
+          "search": {
+            "title": "Search",
+            "defaultSearchEngine": {
+              "label": "Global default search engine",
+              "description": "Integration search engines can not be selected here"
+            }
+          },
           "appearance": {
             "title": "Appearance",
             "defaultColorScheme": {

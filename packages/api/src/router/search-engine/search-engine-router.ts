@@ -4,7 +4,7 @@ import { asc, createId, eq, like, sql } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { integrationCreator } from "@homarr/integrations";
-import { validation } from "@homarr/validation";
+import { validation, z } from "@homarr/validation";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -30,17 +30,20 @@ export const searchEngineRouter = createTRPCRouter({
       totalCount: searchEngineCount[0]?.count ?? 0,
     };
   }),
-  getSelectable: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.searchEngines
-      .findMany({
-        orderBy: asc(searchEngines.name),
-        columns: {
-          id: true,
-          name: true,
-        },
-      })
-      .then((engines) => engines.map((engine) => ({ value: engine.id, label: engine.name })));
-  }),
+  getSelectable: protectedProcedure
+    .input(z.object({ withIntegrations: z.boolean() }).default({ withIntegrations: true }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.searchEngines
+        .findMany({
+          orderBy: asc(searchEngines.name),
+          where: input.withIntegrations ? undefined : eq(searchEngines.type, "generic"),
+          columns: {
+            id: true,
+            name: true,
+          },
+        })
+        .then((engines) => engines.map((engine) => ({ value: engine.id, label: engine.name })));
+    }),
 
   byId: protectedProcedure.input(validation.common.byId).query(async ({ ctx, input }) => {
     const searchEngine = await ctx.db.query.searchEngines.findFirst({
