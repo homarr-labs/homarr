@@ -2,130 +2,130 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Ласкаво просимо до Homarr",
+        "subtitle": "Почнемо з налаштування вашого Homarr.",
+        "description": "Щоб почати, будь ласка, виберіть спосіб налаштування Вашого Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Почати з нуля",
+          "importOldmarr": "Імпорт з Homarr пре-1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Імпорт даних",
+        "subtitle": "Ви можете імпортувати дані з наявного екземпляра Homarr.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Перетягніть zip-файл сюди або клікніть для пошуку",
+          "description": "Завантажений zip буде оброблений і ви зможете вибрати що ви хочете імпортувати"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Змінити файл"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Імпортувати налаштування",
+          "description": "Конфігурація імпорту"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Знайдено {count} дощок",
+          "description": "Оберіть всі дошки з розміром які ви хочете імпортувати",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Вибрати все",
+            "unselectAll": "Прибрати всі"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Підсумок імпорту",
+          "description": "У наведеному нижче розділі ви можете побачити, що буде імпортовано",
           "action": {
-            "import": ""
+            "import": "Підтвердить імпорт та продовжуйте"
           },
           "entities": {
             "apps": "Додатки",
             "boards": "Дошки",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Інтеграції",
+            "credentialUsers": "Облікові записи"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Введіть токен імпорту",
           "field": {
             "token": {
               "label": "Токен.",
-              "description": ""
+              "description": "Введіть показаний токен імпорту з вашого попереднього екземпляра homarr"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Невірний токен",
+              "message": "Введений вами токен невірний"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Адміністратор",
+        "subtitle": "Вкажіть облікові дані для вашого адміністратора.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Користувача створено",
+            "message": "Користувача успішно створено"
           },
           "error": {
-            "title": ""
+            "title": "Не вдалося створити користувача"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Зовнішня група",
+        "subtitle": "Вкажіть групу, яку слід використовувати для зовнішніх користувачів.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Назва групи",
+            "description": "Ім'я має відповідати групі адміністраторів зовнішнього провайдера"
           }
         }
       },
       "settings": {
         "title": "Налаштування",
-        "subtitle": ""
+        "subtitle": "Налаштування сервера."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Завершити налаштування",
+        "subtitle": "Все готово!",
+        "description": "Ви завершили процес налаштування. Тепер ви можете почати використовувати Homarr. Виберіть наступну дію:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Перейти на {name} дошку",
+          "createBoard": "Створіть свою першу дошку",
+          "inviteUser": "Запросити інших користувачів",
+          "docs": "Ознайомитися з документацією"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "На початок"
   },
   "user": {
     "title": "Користувачі",
     "name": "Користувач",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Увійти до облікового запису",
+        "subtitle": "З поверненням! Будь ласка, введіть свої облікові дані"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Приєднатися до Homarr",
+        "subtitle": "Ласкаво просимо до Homarr! Створіть обліковий запис",
+        "description": "Вас запросив {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Нова інсталяція Homarr",
+        "subtitle": "Будь ласка, створіть користувача-адміністратора"
       }
     },
     "field": {
       "email": {
         "label": "Електронна пошта",
-        "verified": ""
+        "verified": "Підтверджено"
       },
       "username": {
         "label": "Логін"
@@ -133,46 +133,46 @@
       "password": {
         "label": "Пароль",
         "requirement": {
-          "length": "",
+          "length": "Включає принаймні 8 символів",
           "lowercase": "Включає малу літеру",
           "uppercase": "Включає велику літеру",
           "number": "Включає кількість",
-          "special": ""
+          "special": "Включає спеціальні символи"
         }
       },
       "passwordConfirm": {
         "label": "Підтвердити пароль"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Старий пароль"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Домашня дошка"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Використовувати значки для ping"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Це ім'я користувача вже зайнято"
     },
     "action": {
       "login": {
         "label": "Логін",
-        "labelWith": "",
+        "labelWith": "Увійти через {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Вхід успішний",
+            "message": "Ви ввійшли в систему"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося увійти",
+            "message": "Помилка входу"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Забули пароль?",
+          "description": "Адміністратор може використовувати наступну команду для відновлення пароля:"
         }
       },
       "register": {
@@ -180,81 +180,81 @@
         "notification": {
           "success": {
             "title": "Обліковий запис створено",
-            "message": ""
+            "message": "Увійдіть, щоб продовжити"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося створити обліковий запис",
+            "message": "Не вдалося створити ваш обліковий запис"
           }
         }
       },
       "create": "Створити користувача",
       "changePassword": {
-        "label": "",
+        "label": "Змінити пароль",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Пароль змінено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося змінити пароль"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Домашню дошку змінено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося змінити домашню дошку"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Початок тижня успішно змінено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдається змінити перший день тижня"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Іконки ping перемкнуто успішно"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося перемикнути ping-значки"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Змінити зображення",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Зображення змінено"
             },
             "error": {
-              "message": ""
+              "message": "Не вдалося змінити зображення"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Зображення занадто велике",
+              "message": "Максимальний розмір зображення {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Видалити зображення",
+          "confirm": "Ви впевнені, що хочете видалити зображення?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Зображення видалено"
             },
             "error": {
-              "message": ""
+              "message": "Не вдалося видалити зображення"
             }
           }
         }
@@ -262,42 +262,42 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Профіль оновлено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося оновити профіль"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Видалити користувача назавжди",
+        "description": "Видаляє цього користувача, включаючи його налаштування. Не буде видалено жодної дошки. Користувач не буде сповіщений.",
+        "confirm": "Ви впевнені, що хочете видалити користувача {username} разом з налаштуваннями?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Вибрати користувача",
+        "notFound": "Користувача не знайдено"
       },
       "transfer": {
-        "label": ""
+        "label": "Виберіть нового власника"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Групи",
+    "name": "Група",
+    "search": "Знайти групу",
     "field": {
       "name": "Ім’я",
-      "members": ""
+      "members": "Учасники"
     },
     "permission": {
       "admin": {
         "title": "Адміністратор",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Адміністратор",
+            "description": "Учасники з цим дозволом мають повний доступ до всіх функцій і налаштувань"
           }
         }
       },
@@ -305,7 +305,7 @@
         "title": "Додатки",
         "item": {
           "create": {
-            "label": "",
+            "label": "Створення додатків",
             "description": ""
           },
           "use-all": {
@@ -433,58 +433,58 @@
         "confirm": "",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Група {group} перенесена до {user}"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося передати право власності"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Додати учасника"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Видалити учасника",
+        "confirm": "Ви впевнені, що хочете видалити {user} з цієї групи?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Видалити групу",
+        "description": "Як тільки ви видалите групу, то вже не зможете її відновити. Впевніться у своєму рішенні.",
+        "confirm": "Ви дійсно бажаєте видалити групу {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Групу {name} видалено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося видалити групу {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Дозволи збережено",
+            "message": "Дозволи збережено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Дозволи не збережено",
+            "message": "Дозволи не збережено"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Групу {name} збережено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося зберегти групу {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Виберіть групу",
+        "notFound": "Груп не знайдено"
       }
     }
   },
@@ -493,47 +493,47 @@
       "list": {
         "title": "Додатки",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Поки що немає додатків",
+          "action": "Створити свій перший додаток"
         }
       },
       "create": {
-        "title": "",
+        "title": "Новий додаток",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Успішно",
+            "message": "Додаток створено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося створити",
+            "message": "Не вдалося створити додаток"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Редагувати додаток",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Зміни застосовано",
+            "message": "Додаток збережено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося застосувати зміни",
+            "message": "Не вдалося зберегти додаток"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Видалити додаток",
+        "message": "Ви дійсно бажаєте видалити додаток {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Успішно видалено",
+            "message": "Додаток видалено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося видалити",
+            "message": "Неможливо видалити додаток"
           }
         }
       }
@@ -543,46 +543,46 @@
         "label": "Ім’я"
       },
       "description": {
-        "label": ""
+        "label": "Опис"
       },
       "url": {
-        "label": ""
+        "label": "URL-адреса"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Оберіть додаток",
+        "notFound": "Додатків не знайдено"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Інтеграції",
+        "search": "Пошук інтеграцій",
         "noResults": {
-          "title": ""
+          "title": "Тут ще немає інтеграції"
         }
       },
       "create": {
-        "title": "",
+        "title": "Нова інтеграція з {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Успішно створено",
+            "message": "Інтеграцію створено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося створити",
+            "message": "Не вдалося створити інтеграцію"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Редагування інтеграцію {name}",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Зміни застосовано",
             "message": ""
           },
           "error": {
@@ -612,6 +612,10 @@
       },
       "url": {
         "label": ""
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -695,21 +699,21 @@
       "lastUpdated": "",
       "notSet": {
         "label": "",
-        "tooltip": ""
+        "tooltip": "Обов’язковий ключ ще не був встановлений"
       },
-      "secureNotice": "",
+      "secureNotice": "Цей секрет неможливо буде побачити після створення",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Скинути секрет",
+        "message": "Ви впевнені, що хочете скинути цей секрет?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Немає секретів",
+        "text": "Для цієї інтеграції не потрібні секрети"
       },
       "kind": {
         "username": {
           "label": "Логін",
-          "newLabel": ""
+          "newLabel": "Нове ім'я користувача"
         },
         "apiKey": {
           "label": "",
@@ -1149,6 +1153,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -2324,6 +2347,9 @@
             "error": "Помилка"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2722,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
@@ -2959,6 +2990,22 @@
             "error": {
               "title": "",
               "message": ""
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

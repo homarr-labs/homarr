@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Arama Motoru Oluştur",
+        "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
       }
     },
     "action": {
@@ -1149,6 +1153,25 @@
           "label": "Tarih Biçimi",
           "description": "Tarihin nasıl görüneceği"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "Minecraft Sunucu Durumu",
+      "description": "Minecraft sunucusunuzun durumunu görüntüler",
+      "option": {
+        "title": {
+          "label": "Başlık"
+        },
+        "domain": {
+          "label": "Sunucu adresi"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock sunucusu"
+        }
+      },
+      "status": {
+        "online": "Çevrimiçi",
+        "offline": "Çevrimdışı"
       }
     },
     "notebook": {
@@ -2324,6 +2347,9 @@
             "error": "Hata"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft sunucu durumu"
+            },
             "iconsUpdater": {
               "label": "Simge Güncelleme"
             },
@@ -2424,10 +2450,10 @@
     }
   },
   "docker": {
-    "title": "Konteyner",
+    "title": "Konteynerler",
     "table": {
-      "updated": "Güncellendi {when}",
-      "search": "{count} konteyner ara",
+      "updated": "{when} Güncellendi",
+      "search": "{count} konteyner içinde ara",
       "selected": "{selectCount} / {totalCount} konteyner seçildi"
     },
     "field": {
@@ -2441,7 +2467,7 @@
           "running": "Çalışıyor",
           "paused": "Duraklatıldı",
           "restarting": "Yeniden Başlatılıyor",
-          "exited": "Çıkıldı",
+          "exited": "Durduruldu",
           "removing": "Kaldırılıyor",
           "dead": "Ölü"
         }
@@ -2722,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Filmi Talep Et",
+        "requestSeries": "Diziyi Talep Et",
+        "openIn": "{kind} üzerinde göster"
+      },
       "external": {
         "help": "Harici bir arama motoru kullanın",
         "group": {
@@ -2959,6 +2990,22 @@
             "error": {
               "title": "Arama motoru silinmedi",
               "message": "Arama motoru silinemedi"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Talep Et \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Sezon",
+                "episodes": "Bölüm"
+              }
+            },
+            "button": {
+              "send": "Talep Gönder"
             }
           }
         }
