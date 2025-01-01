@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Default search engine changed successfully"
+          },
+          "error": {
+            "message": "Unable to change default search engine"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -2159,6 +2169,7 @@
             "item": {
               "language": "Language & Region",
               "board": "Home board",
+              "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }

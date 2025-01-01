@@ -109,6 +109,10 @@ const changeHomeBoardSchema = z.object({
   homeBoardId: z.string().min(1),
 });
 
+const changeDefaultSearchEngineSchema = z.object({
+  defaultSearchEngineId: z.string().min(1),
+});
+
 const changeColorSchemeSchema = z.object({
   colorScheme: zodEnumFromArray(colorSchemes),
 });
@@ -132,6 +136,7 @@ export const userSchemas = {
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,
   changeHomeBoard: changeHomeBoardSchema,
+  changeDefaultSearchEngine: changeDefaultSearchEngineSchema,
   changePasswordApi: changePasswordApiSchema,
   changeColorScheme: changeColorSchemeSchema,
   firstDayOfWeek: firstDayOfWeekSchema,
