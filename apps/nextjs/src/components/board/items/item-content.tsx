@@ -36,6 +36,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         root: {
           "--opacity": board.opacity / 100,
           containerType: "size",
+          overflow: item.kind === "iframe" ? "hidden" : undefined,
         },
       }}
       p={0}
