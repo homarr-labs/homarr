@@ -2562,6 +2562,22 @@
             "message": "Something went wrong while refreshing the containers"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Add to Homarr",
+        "notification": {
+          "success": {
+            "title": "Added to Homarr",
+            "message": "Selected apps have been added to Homarr"
+          },
+          "error": {
+            "title": "Could not add to Homarr",
+            "message": "Selected apps could not be added to Homarr"
+          }
+        },
+        "modal": {
+          "title": "Add docker container(-s) to Homarr"
+        }
       }
     },
     "error": {
