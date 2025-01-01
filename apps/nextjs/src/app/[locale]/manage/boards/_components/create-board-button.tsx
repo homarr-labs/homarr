@@ -1,12 +1,11 @@
 "use client";
 
-import { Affix, Button, Group, Menu } from "@mantine/core";
+import { Affix, Button, Menu } from "@mantine/core";
 import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
 
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, ImportBoardModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
-import { BetaBadge } from "@homarr/ui";
 
 export const CreateBoardButton = () => {
   const t = useI18n();
@@ -26,10 +25,7 @@ export const CreateBoardButton = () => {
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Item onClick={openImportModal} leftSection={<IconFileImport size="1rem" />}>
-            <Group>
-              {t("board.action.oldImport.label")}
-              <BetaBadge size="xs" />
-            </Group>
+            {t("board.action.oldImport.label")}
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
