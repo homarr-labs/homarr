@@ -54,9 +54,7 @@ describe("LLDAP authorization", () => {
     await page.locator("css=button[type='submit']").click();
 
     // Wait for redirect
-    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`, {
-      timeout: 10000,
-    });
+    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
 
     // Assert
     const users = await db.query.users.findMany({
