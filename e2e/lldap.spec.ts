@@ -2,7 +2,7 @@ import { chromium } from "playwright";
 import { GenericContainer } from "testcontainers";
 import { describe, expect, test } from "vitest";
 
-import * as sqliteSchema from "../packages/db/schema/sqlite";
+import { OnboardingActions } from "./shared/actions/onboarding-actions";
 import { createHomarrContainer, withLogs } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
 
@@ -33,30 +33,23 @@ describe("LLDAP authorization", () => {
       },
     }).start();
 
-    // Skip onboarding
-    await db.update(sqliteSchema.onboarding).set({
-      step: "finish",
-    });
-    await db.insert(sqliteSchema.groups).values({
-      id: "1",
-      name: defaultCredentials.group,
-    });
-
-    // Act
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    // Login
+    const onboardingActions = new OnboardingActions(page, db);
+    await onboardingActions.skipOnboardingAsync({
+      group: defaultCredentials.group,
+    });
+
+    // Act
     await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/auth/login`);
     await page.getByLabel("Username").fill(defaultCredentials.username);
     await page.getByLabel("Password").fill(defaultCredentials.password);
     await page.locator("css=button[type='submit']").click();
 
-    // Wait for redirect
-    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
-
     // Assert
+    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
     const users = await db.query.users.findMany({
       with: {
         groups: {

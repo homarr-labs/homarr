@@ -1,8 +1,8 @@
 import { chromium } from "playwright";
 import { describe, expect, test } from "vitest";
 
-import * as sqliteSchema from "../packages/db/schema/sqlite";
 import { e2eEnv } from "./env.mjs";
+import { OnboardingActions } from "./shared/actions/onboarding-actions";
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
 
@@ -26,21 +26,14 @@ describe("OIDC authorization", () => {
       },
     }).start();
 
-    // Skip onboarding
-    await db.update(sqliteSchema.onboarding).set({
-      step: "finish",
-    });
-    await db.insert(sqliteSchema.groups).values({
-      id: "1",
-      name: azureRole,
-    });
-
-    // Act
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    // Login
+    const onboardingActions = new OnboardingActions(page, db);
+    await onboardingActions.skipOnboardingAsync({ group: azureRole });
+
+    // Act
     await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/auth/login`);
     await page.locator("css=button").click();
 
@@ -70,12 +63,10 @@ describe("OIDC authorization", () => {
       console.log("Permissions not requested");
     }
 
-    // Wait for redirect
+    // Assert
     await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`, {
       timeout: 10000,
     });
-
-    // Assert
     const users = await db.query.users.findMany({
       with: {
         groups: {
