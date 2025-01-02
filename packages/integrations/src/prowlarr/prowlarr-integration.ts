@@ -45,7 +45,7 @@ export class ProwlarrIntegration extends Integration {
       );
     }
 
-    const inactiveIndexerIds = new Set(statusResult.data.map((status: { id: number }) => status.id));
+    const inactiveIndexerIds = new Set(statusResult.data.map((status: { indexerId: number }) => status.indexerId));
 
     const indexers: Indexer[] = indexersResult.data.map((indexer) => ({
       id: indexer.id,
