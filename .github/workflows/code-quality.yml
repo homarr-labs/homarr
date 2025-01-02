@@ -95,13 +95,6 @@ jobs:
         run: pnpm exec playwright install chromium
       - name: Run E2E Tests
         shell: bash
-        env:
-          E2E_AZURE_OIDC_CLIENT_ID: ${{vars.E2E_AZURE_OIDC_CLIENT_ID}}
-          E2E_AZURE_OIDC_CLIENT_SECRET: ${{secrets.E2E_AZURE_OIDC_CLIENT_SECRET}}
-          E2E_AZURE_OIDC_TENANT_ID: ${{vars.E2E_AZURE_OIDC_TENANT_ID}}
-          E2E_AZURE_OIDC_PASSWORD: ${{secrets.E2E_AZURE_OIDC_PASSWORD}}
-          E2E_AZURE_OIDC_EMAIL: ${{vars.E2E_AZURE_OIDC_EMAIL}}
-          E2E_AZURE_OIDC_NAME: ${{vars.E2E_AZURE_OIDC_NAME}}
         run: pnpm test:e2e
 
   build:
