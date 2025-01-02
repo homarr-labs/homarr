@@ -64,9 +64,7 @@ describe("OIDC authorization", () => {
     }
 
     // Assert
-    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`, {
-      timeout: 10000,
-    });
+    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
     const users = await db.query.users.findMany({
       with: {
         groups: {
