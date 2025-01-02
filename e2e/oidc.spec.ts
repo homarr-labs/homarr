@@ -37,7 +37,7 @@ describe("OIDC authorization", () => {
     await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/auth/login`);
     await page.locator("css=button").click();
 
-    await page.waitForSelector("text=No account?");
+    await page.waitForURL("https://login.microsoftonline.com/**");
     await page.locator("css=input[type='email']").fill(e2eEnv.E2E_AZURE_OIDC_EMAIL);
     await page.locator("css=input[type='submit']").click();
 
