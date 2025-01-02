@@ -31,6 +31,7 @@ export const createHomarrContainer = (
     .withWaitStrategy(Wait.forHttp("/api/health/ready", 7575))
     .withExtraHosts([
       {
+        // This enabled the usage of host.docker.internal as hostname in the container
         host: "host.docker.internal",
         ipAddress: "host-gateway",
       },

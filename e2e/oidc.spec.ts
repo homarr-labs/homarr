@@ -52,7 +52,6 @@ describe("OIDC authorization", () => {
     await page.locator("css=input[type='password']").fill(e2eEnv.E2E_AZURE_OIDC_PASSWORD);
     await page.locator("css=[type='submit']").click();
 
-    // Will probably not work because of 'VERIFY YOUR IDENTITY' page (MFA) maybe with fake account can be tested?
     try {
       await page.waitForSelector("text=Stay signed in?", { timeout: 5000 });
       await page
