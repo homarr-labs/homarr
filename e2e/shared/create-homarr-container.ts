@@ -28,7 +28,13 @@ export const createHomarrContainer = (
           target: container,
         })),
     )
-    .withWaitStrategy(Wait.forHttp("/api/health/ready", 7575));
+    .withWaitStrategy(Wait.forHttp("/api/health/ready", 7575))
+    .withExtraHosts([
+      {
+        host: "host.docker.internal",
+        ipAddress: "host-gateway",
+      },
+    ]);
 
   return withLogs(container);
 };
