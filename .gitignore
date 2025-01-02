@@ -58,6 +58,8 @@ apps/websocket/wssServer.cjs
 apps/nextjs/.million/
 packages/cli/cli.cjs
 
+# e2e mounts
+e2e/shared/tmp
 
 #personal backgrounds
 apps/nextjs/public/images/background.png
