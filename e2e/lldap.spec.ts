@@ -48,7 +48,7 @@ describe("LLDAP authorization", () => {
     const page = await context.newPage();
 
     // Login
-    page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/auth/login`);
+    await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/auth/login`);
     await page.getByLabel("Username").fill(defaultCredentials.username);
     await page.getByLabel("Password").fill(defaultCredentials.password);
     await page.locator("css=button[type='submit']").click();
