@@ -238,7 +238,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
 
     // Assert
-    expect(cookies().set).toHaveBeenCalledWith(
+    expect((await cookies()).set).toHaveBeenCalledWith(
       colorSchemeCookieKey,
       "dark",
       expect.objectContaining({

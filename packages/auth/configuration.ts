@@ -1,5 +1,5 @@
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
-import { cookies } from "next/headers";
+import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -74,7 +74,7 @@ export const createConfiguration = (
           userId: user.id,
         });
 
-        cookies().set(sessionTokenCookieName, sessionToken, {
+        (await cookies()).set(sessionTokenCookieName, sessionToken, {
           path: "/",
           expires: expires,
           httpOnly: true,
@@ -100,7 +100,7 @@ export const createConfiguration = (
     },
     jwt: {
       encode() {
-        const cookie = cookies().get(sessionTokenCookieName)?.value;
+        const cookie = (cookies() as unknown as UnsafeUnwrappedCookies).get(sessionTokenCookieName)?.value;
         return cookie ?? "";
       },
 
