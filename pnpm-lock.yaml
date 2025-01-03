@@ -1298,11 +1298,14 @@ importers:
         specifier: 0.5.16
         version: 0.5.16
       next:
-        specifier: ^14.2.22
-        version: 14.2.22(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.0)
+        specifier: 15.1.3
+        version: 15.1.3(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.0)
       react:
-        specifier: ^19.0.0
+        specifier: 19.0.0
         version: 19.0.0
+      react-dom:
+        specifier: 19.0.0
+        version: 19.0.0(react@19.0.0)
       superjson:
         specifier: 2.2.2
         version: 2.2.2
