@@ -55,7 +55,8 @@ export function createHeadersCallbackForSource(source: string) {
  */
 async function importCookiesAsync() {
   if (typeof window === "undefined") {
-    return await import("next/headers").then(({ cookies }) =>
+    return await /* @next-codemod-error The APIs under 'next/headers' are async now, need to be manually awaited. */
+    import("next/headers").then(({ cookies }) =>
       cookies()
         .getAll()
         .map(({ name, value }) => `${name}=${value}`)
