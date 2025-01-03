@@ -1139,7 +1139,7 @@ importers:
         specifier: ^7.15.2
         version: 7.15.2(react@19.0.0)
       react:
-        specifier: ^19.0.0
+        specifier: 19.0.0
         version: 19.0.0
     devDependencies:
       '@homarr/eslint-config':
