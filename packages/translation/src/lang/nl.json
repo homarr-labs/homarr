@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "URL"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -1151,6 +1155,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
+      }
+    },
     "notebook": {
       "name": "Notitieboek",
       "description": "Een eenvoudige notitie widget die markdown ondersteunt",
@@ -1381,7 +1404,7 @@
         "memory": "Geheugen: {memory}GiB",
         "memoryAvailable": "Beschikbaar: {memoryAvailable}GiB ({percent}%)",
         "version": "Versie: {version}",
-        "uptime": "Uptime: {days} Dagen, {hours} Uren, {minutes} Minuten",
+        "uptime": "Uptime: {months} maanden, {days} dagen, {hours} uren, {minutes} minuten",
         "loadAverage": "Gemiddelde belasting:",
         "minute": "1 minuut",
         "minutes": "{count} minuten",
@@ -2324,6 +2347,9 @@
             "error": "Fout"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "Icoon updater"
             },
@@ -2722,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "Gebruik een externe zoekmachine",
         "group": {
@@ -2959,6 +2990,22 @@
             "error": {
               "title": "Zoekmachine niet verwijderd",
               "message": "De zoekmachine kon niet worden verwijderd"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

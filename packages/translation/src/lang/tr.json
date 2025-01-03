@@ -147,7 +147,7 @@
         "label": "Eski Şifre"
       },
       "homeBoard": {
-        "label": "Öntanımlı panel"
+        "label": "Ana panel"
       },
       "pingIconsEnabled": {
         "label": "Pingler İçin Simgeler Kullanın"
@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Arama Motoru Oluştur",
+        "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
       }
     },
     "action": {
@@ -1151,6 +1155,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "Minecraft Sunucu Durumu",
+      "description": "Minecraft sunucusunuzun durumunu görüntüler",
+      "option": {
+        "title": {
+          "label": "Başlık"
+        },
+        "domain": {
+          "label": "Sunucu adresi"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock sunucusu"
+        }
+      },
+      "status": {
+        "online": "Çevrimiçi",
+        "offline": "Çevrimdışı"
+      }
+    },
     "notebook": {
       "name": "Not Defteri",
       "description": "Markdown'ı destekleyen basit bir not defteri bileşeni",
@@ -1185,7 +1208,7 @@
         "decreaseIndent": "Girintiyi Azalt",
         "link": "Bağlantı",
         "unlink": "Bağlantıyı kaldır",
-        "image": "Görsel Göm",
+        "image": "Görsel Yerleştir",
         "addTable": "Tablo ekle",
         "deleteTable": "Tablo Sil",
         "colorCell": "Renk Hücresi",
@@ -1653,7 +1676,7 @@
       "description": "Medya kod dönüştürmenizin istatistikleri, geçerli kuyruğu ve çalışan durumu",
       "option": {
         "defaultView": {
-          "label": "Öntanımlı görünüm"
+          "label": "Varsayılan Görünüm"
         },
         "queuePageSize": {
           "label": "Kuyruk Sayfa Boyutu"
@@ -2324,6 +2347,9 @@
             "error": "Hata"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft sunucu durumu"
+            },
             "iconsUpdater": {
               "label": "Simge Güncelleme"
             },
@@ -2424,10 +2450,10 @@
     }
   },
   "docker": {
-    "title": "Konteyner",
+    "title": "Konteynerler",
     "table": {
-      "updated": "Güncellendi {when}",
-      "search": "{count} konteyner ara",
+      "updated": "{when} Güncellendi",
+      "search": "{count} konteyner içinde ara",
       "selected": "{selectCount} / {totalCount} konteyner seçildi"
     },
     "field": {
@@ -2441,7 +2467,7 @@
           "running": "Çalışıyor",
           "paused": "Duraklatıldı",
           "restarting": "Yeniden Başlatılıyor",
-          "exited": "Çıkıldı",
+          "exited": "Durduruldu",
           "removing": "Kaldırılıyor",
           "dead": "Ölü"
         }
@@ -2722,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Filmi Talep Et",
+        "requestSeries": "Diziyi Talep Et",
+        "openIn": "{kind} üzerinde göster"
+      },
       "external": {
         "help": "Harici bir arama motoru kullanın",
         "group": {
@@ -2737,7 +2768,7 @@
                 "title": "Arama yapmak istediğiniz terimleri girin"
               },
               "searchResults": {
-                "title": "Eylemler için bir arama sonucu seçin"
+                "title": "Etkileşime geçmek için bir sonuç seçin"
               }
             },
             "option": {
@@ -2959,6 +2990,22 @@
             "error": {
               "title": "Arama motoru silinmedi",
               "message": "Arama motoru silinemedi"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Talep Et \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Sezon",
+                "episodes": "Bölüm"
+              }
+            },
+            "button": {
+              "send": "Talep Gönder"
             }
           }
         }

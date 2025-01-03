@@ -172,7 +172,7 @@
         },
         "forgotPassword": {
           "label": "Zapomněli jste Vaše heslo?",
-          "description": ""
+          "description": "Administrátor může použít následující příkaz k obnovení Vašeho hesla:"
         }
       },
       "register": {
@@ -216,33 +216,33 @@
             "message": "První den v týdnu byl úspěšně změněn"
           },
           "error": {
-            "message": ""
+            "message": "Nelze změnit první den v týdnu"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ikony pingu byly úspěšně přepnuty"
           },
           "error": {
-            "message": ""
+            "message": "Nelze přepnout ikony pingu"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Změnit obrázek",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Obrázek byl úspěšně změněn"
             },
             "error": {
-              "message": ""
+              "message": "Nepodařilo se změnit obrázek"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Obrázek je příliš velký",
+              "message": "Maximální velikost obrázku je {size}"
             }
           }
         },
@@ -338,8 +338,8 @@
             "description": "Umožňuje členům upravovat všechny plochy (nezahrnuje kontrolu přístupu a nebezpečnou zónu)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Úplný přístup k plochám",
+            "description": "Umožňuje členům zobrazit, upravit a odstranit všechny plochy (včetně kontroly přístupu a nebezpečné zóny)"
           }
         }
       },
@@ -377,7 +377,7 @@
           },
           "full-all": {
             "label": "Úplný přístup k médiím",
-            "description": ""
+            "description": "Umožňuje členům spravovat a mazat všechny mediální soubory"
           }
         }
       },
@@ -423,20 +423,20 @@
             "message": "Skupina byla úspěšně vytvořena"
           },
           "error": {
-            "message": ""
+            "message": "Skupinu se nepodařilo vytvořit"
           }
         }
       },
       "transfer": {
         "label": "",
         "description": "",
-        "confirm": "",
+        "confirm": "Jste si jisti, že chcete převést vlastnictví skupiny {name} na {username}?",
         "notification": {
           "success": {
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Nelze převést vlastnictví"
           }
         }
       },
@@ -445,18 +445,18 @@
       },
       "removeMember": {
         "label": "",
-        "confirm": ""
+        "confirm": "Jste si jisti, že chcete odstranit {user} z této skupiny?"
       },
       "delete": {
         "label": "",
         "description": "",
-        "confirm": "",
+        "confirm": "Jste si jisti, že chcete odstranit skupinu {name}?",
         "notification": {
           "success": {
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Nelze odstranit skupinu {name}"
           }
         }
       },
@@ -478,7 +478,7 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Nelze uložit skupinu {name}"
           }
         }
       },
@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -674,7 +678,7 @@
         },
         "domainNotFound": {
           "title": "",
-          "message": ""
+          "message": "Doména nebyla nalezena"
         },
         "connectionRefused": {
           "title": "",
@@ -691,29 +695,29 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Tajné klíče",
+      "lastUpdated": "Naposledy aktualizováno {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Žádná hodnota není nenastavena",
+        "tooltip": "Tento požadovaný tajný klíč ještě nebyl nastaven"
       },
-      "secureNotice": "",
+      "secureNotice": "Tento tajný klíč nelze získat po vytvoření",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Resetovat tajný klíč",
+        "message": "Jste si jisti, že chcete resetovat tento tajný klíč?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Žádné tajné klíče",
+        "text": "Pro tuto integraci nejsou vyžadovány žádné tajné klíče"
       },
       "kind": {
         "username": {
           "label": "Uživatelské jméno",
-          "newLabel": ""
+          "newLabel": "Nové uživatelské jméno"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API klíč",
+          "newLabel": "Nový API klíč"
         },
         "password": {
           "label": "Heslo",
@@ -728,8 +732,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Média",
+    "search": "Najít mediální soubor",
     "field": {
       "name": "Název",
       "size": "Velikost",
@@ -737,31 +741,31 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Nahrát mediální soubor",
+        "file": "Vybrat soubor",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mediální soubor byl úspěšně nahrán"
           },
           "error": {
-            "message": ""
+            "message": "Nepodařilo se nahrát mediální soubor"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Vymazat mediální soubor",
+        "description": "Jste si jisti, že chcete vymazat mediální soubor <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mediální soubor byl úspěšně odstraněn"
           },
           "error": {
-            "message": ""
+            "message": "Nepodařilo se vymazat mediální soubor"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Zkopírovat URL"
       }
     }
   },
@@ -897,7 +901,7 @@
       },
       "remove": {
         "title": "Odstranit dynamickou sekci",
-        "message": ""
+        "message": "Jste si jisti, že chcete odstranit tuto dynamickou sekci? Položky budou přesunuty na stejné místo v nadřazené sekci."
       }
     },
     "category": {
@@ -921,7 +925,7 @@
       },
       "remove": {
         "title": "",
-        "message": ""
+        "message": "Jste si jisti, že chcete odstranit kategorii {name}?"
       },
       "edit": {
         "title": "",
@@ -987,7 +991,7 @@
     },
     "remove": {
       "title": "",
-      "message": ""
+      "message": "Jste si jisti, že chcete tuto položku odstranit?"
     }
   },
   "widget": {
@@ -1149,6 +1153,25 @@
           "label": "Formát data",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1596,7 +1619,7 @@
           "resume": "",
           "delete": {
             "title": "",
-            "modalTitle": "",
+            "modalTitle": "Jsou si jisti, že chcete smazat tento úkol?",
             "entry": "",
             "entryAndFiles": ""
           }
@@ -1744,13 +1767,13 @@
             "message": ""
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nelze uložit změny",
+            "message": "Plochu se nepodařilo uložit"
           }
         },
         "confirmLeave": {
           "title": "",
-          "message": ""
+          "message": "Máte neuložené změny, jste si jistí, že chcete odejít?"
         }
       },
       "oldImport": {
@@ -1762,7 +1785,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Plochu se nepodařilo importovat, zkontrolujte logy pro více informací"
           }
         },
         "form": {
@@ -1963,11 +1986,11 @@
               "confirm": {
                 "public": {
                   "title": "",
-                  "description": ""
+                  "description": "Jste si jisti, že chcete tuto plochu učinit soukromou? Toto skryje tuto plochu před veřejností. Odkazy pro hosty přestanou fungovat."
                 },
                 "private": {
                   "title": "",
-                  "description": ""
+                  "description": "Jste si jisti, že chcete tuto plochu učinit veřejnou? Toto plochu zpřístupní všem."
                 }
               }
             },
@@ -1977,7 +2000,7 @@
               "button": "",
               "confirm": {
                 "title": "Odstranit plochu",
-                "description": ""
+                "description": "Jste si jisti, že chcete odstranit tuto plochu? Toto trvale odstraní plochu a veškerý její obsah."
               }
             }
           }
@@ -2026,7 +2049,7 @@
     },
     "notFound": {
       "title": "",
-      "text": ""
+      "text": "Nepodařilo se nalézt požadovaný zdroj"
     },
     "navbar": {
       "items": {
@@ -2106,7 +2129,7 @@
             "label": "Trvale smazat",
             "confirm": {
               "title": "Odstranit plochu",
-              "description": ""
+              "description": "Jste si jisti, že chcete vymazat plochu {name}?"
             }
           }
         },
@@ -2134,7 +2157,7 @@
           "general": {
             "title": "Obecné",
             "item": {
-              "language": "",
+              "language": "Jazyk & oblast",
               "board": "",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost"
@@ -2199,12 +2222,12 @@
             },
             "delete": {
               "title": "Odstranit pozvánku",
-              "description": "Jste si jisti, že chcete tuto pozvánku smazat? Uživatelé s tímto odkazem již nebudou moci pomocí tohoto odkazu vytvořit účet."
+              "description": "Jste si jisti, že chcete tuto pozvánku smazat? Uživatelé s tímto odkazem si již nebudou moci pomocí tohoto odkazu vytvořit účet."
             }
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Vytvořil/a"
@@ -2310,7 +2333,7 @@
           "culture": {
             "title": "",
             "defaultLocale": {
-              "label": ""
+              "label": "Výchozí jazyk"
             }
           }
         }
@@ -2324,6 +2347,9 @@
             "error": "Chyba"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2405,15 +2431,15 @@
       },
       "about": {
         "version": "",
-        "text": "",
+        "text": "Homarr je komunitou řízený open source projekt, který je udržován dobrovolníky. Díky těmto lidem je Homarr od roku 2021 neustále rostoucím projektem. Náš tým na Homarru pracuje zcela na dálku z mnoha různých zemí ve svém volném čase bez jakékoli kompenzace.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Přispěvatelé",
+            "subtitle": "{count} udržuje kód & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Překladatelé",
+            "subtitle": "{count} přispívá překladem do mnoha jazyků"
           },
           "libraries": {
             "title": "",
@@ -2463,7 +2489,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se spustit kontejnery"
           }
         }
       },
@@ -2476,7 +2502,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se zastavit kontejnery"
           }
         }
       },
@@ -2489,7 +2515,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se restartovat kontejnery"
           }
         }
       },
@@ -2502,7 +2528,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se odstranit kontejnery"
           }
         }
       },
@@ -2685,10 +2711,10 @@
                 "dark": ""
               },
               "language": {
-                "label": "",
+                "label": "Změnit jazyk",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Vyberte si preferovaný jazyk"
                   }
                 }
               },
@@ -2721,6 +2747,11 @@
             }
           }
         }
+      },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
       },
       "external": {
         "help": "",
@@ -2926,7 +2957,7 @@
             },
             "error": {
               "title": "",
-              "message": ""
+              "message": "Nepodařilo se vytvořit vyhledávač"
             }
           }
         },
@@ -2938,8 +2969,8 @@
               "message": ""
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Nelze uložit změny",
+              "message": "Nepodařilo se uložit vyhledávač"
             }
           },
           "configControl": "",
@@ -2950,7 +2981,7 @@
         },
         "delete": {
           "title": "",
-          "message": "",
+          "message": "Jste si jisti, že chcete odstranit vyhledávač '{name}'?",
           "notification": {
             "success": {
               "title": "",
@@ -2958,7 +2989,23 @@
             },
             "error": {
               "title": "",
-              "message": ""
+              "message": "Nepodařilo se odstranit vyhledávač"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

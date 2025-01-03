@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "URL-адрес"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -1149,6 +1153,25 @@
           "label": "Формат даты",
           "description": "Как должна выглядеть дата"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -2324,6 +2347,9 @@
             "error": "Ошибка"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "Обновление иконок"
             },
@@ -2722,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "Использовать внешнюю поисковую систему",
         "group": {
@@ -2959,6 +2990,22 @@
             "error": {
               "title": "Не удалось удалить",
               "message": "Не удалось удалить поисковую систему"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

@@ -612,6 +612,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Vytvorte vyhľadávače",
+        "description": ""
       }
     },
     "action": {
@@ -1149,6 +1153,25 @@
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "Minecraft Server Stav",
+      "description": "",
+      "option": {
+        "title": {
+          "label": "Názov"
+        },
+        "domain": {
+          "label": "Adresa servera"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock server"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Odpojené"
       }
     },
     "notebook": {
@@ -2324,6 +2347,9 @@
             "error": "Chyba"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft Server Stav"
+            },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
             },
@@ -2722,6 +2748,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "Používanie externého vyhľadávača",
         "group": {
@@ -2959,6 +2990,22 @@
             "error": {
               "title": "Vyhľadávač nebol odstránený",
               "message": "Vyhľadávací nástroj sa nepodarilo odstrániť"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }
