@@ -104,8 +104,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/form
       '@homarr/gridstack':
-        specifier: ^1.11.2
-        version: 1.11.2
+        specifier: ^1.11.3
+        version: 1.11.3
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../../packages/integrations
@@ -2919,8 +2919,8 @@ packages:
   '@hapi/bourne@3.0.0':
     resolution: {integrity: sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==}
 
-  '@homarr/gridstack@1.11.2':
-    resolution: {integrity: sha512-WhoXMJtwE7N64Yajn1eoFZ+9JNZpE+6+Eea0uo8sAvVRbEKkJ0kirOK0QL1DW4j16wkvnyHZoxPfdx1DO+hRpQ==}
+  '@homarr/gridstack@1.11.3':
+    resolution: {integrity: sha512-7qVEH8DfLBQRJNHBMUTsrt1C1QwPRYcv9hq2vrQ/0M4bZXlxRxMEyUamDNJ1aBMtjDoiOkvirTUJUrZVZV6XBg==}
 
   '@hono/node-server@1.13.0':
     resolution: {integrity: sha512-kz323qIQkNQElEGroo/E9MKPDuIR5pkuk/XEWd50K+cSEKdmdiYx0PKWUdaNY2ecJYngtF+njDMsMKplL6zfEg==}
@@ -10408,7 +10408,7 @@ snapshots:
 
   '@hapi/bourne@3.0.0': {}
 
-  '@homarr/gridstack@1.11.2': {}
+  '@homarr/gridstack@1.11.3': {}
 
   '@hono/node-server@1.13.0(hono@4.6.1)':
     dependencies:
