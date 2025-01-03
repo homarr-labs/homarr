@@ -1,3 +1,17 @@
+## [1.0.0-beta.11](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2025-01-03)
+
+### Features
+
+* remove import beta badge ([#1829](https://github.com/homarr-labs/homarr/issues/1829)) ([6305c74](https://github.com/homarr-labs/homarr/commit/6305c74f90d943722c915ffbf54b5fd7e68a7dca))
+
+### Bug Fixes
+
+* **deps:** update dependency zod-form-data to ^2.0.5 ([#1822](https://github.com/homarr-labs/homarr/issues/1822)) ([a234fc8](https://github.com/homarr-labs/homarr/commit/a234fc844e5edcef9935efb0725b6ccceadfe69d))
+* **deps:** update tanstack-query monorepo to ^5.62.12 ([#1843](https://github.com/homarr-labs/homarr/issues/1843)) ([bc5e25e](https://github.com/homarr-labs/homarr/commit/bc5e25e9cd3269a3d8cc8ef521ae75aff50088be))
+* **icons:** picker does not allow multiple words ([#1827](https://github.com/homarr-labs/homarr/issues/1827)) ([6e21863](https://github.com/homarr-labs/homarr/commit/6e21863d04f7d0598e7e7ca3fb707f9beb09d7ef))
+* login page in light mode is always black ([#1821](https://github.com/homarr-labs/homarr/issues/1821)) ([cc7d53e](https://github.com/homarr-labs/homarr/commit/cc7d53e84ec8c2dd3698a178ca6f35099194b5d7))
+* prowlarr integration indexers status changed from id to indexerId ([#1837](https://github.com/homarr-labs/homarr/issues/1837)) ([ee8831a](https://github.com/homarr-labs/homarr/commit/ee8831affe34a33b80a0993aa538c2b16c035f11))
+
 ## [1.0.0-beta.10](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2024-12-31)
 
 ### Features
