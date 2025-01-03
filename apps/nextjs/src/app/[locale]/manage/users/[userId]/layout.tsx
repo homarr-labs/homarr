@@ -15,15 +15,13 @@ import { NavigationLink } from "../groups/[id]/_navigation";
 import { canAccessUserEditPage } from "./access";
 
 interface LayoutProps {
-  params: { userId: string };
+  params: Promise<{ userId: string }>;
 }
 
 export default async function Layout(props: PropsWithChildren<LayoutProps>) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const session = await auth();
   const t = await getI18n();

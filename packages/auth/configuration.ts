@@ -1,5 +1,6 @@
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
+import { cookies } from "next/headers";
+import type { UnsafeUnwrappedCookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 

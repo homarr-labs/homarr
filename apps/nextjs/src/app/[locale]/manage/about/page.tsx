@@ -1,4 +1,5 @@
-import { headers, type UnsafeUnwrappedHeaders } from "next/headers";
+import { headers } from "next/headers";
+import type { UnsafeUnwrappedHeaders } from "next/headers";
 import Image from "next/image";
 import {
   Accordion,

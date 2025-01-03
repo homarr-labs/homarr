@@ -14,6 +14,7 @@ import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SpotlightProvider } from "@homarr/spotlight";
+import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { getI18nMessages } from "@homarr/translation/server";
 
@@ -63,7 +64,10 @@ export const viewport: Viewport = {
   ],
 };
 
-export default async function Layout(props: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+export default async function Layout(props: {
+  children: React.ReactNode;
+  params: Promise<{ locale: SupportedLanguage }>;
+}) {
   if (!isLocaleSupported((await props.params).locale)) {
     notFound();
   }
@@ -88,7 +92,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
-    (<html
+    <html
       lang={(await props.params).locale}
       dir={direction}
       data-mantine-color-scheme={colorScheme}
@@ -107,6 +111,6 @@ export default async function Layout(props: { children: React.ReactNode; params:
           {props.children}
         </StackedProvider>
       </body>
-    </html>)
+    </html>
   );
 }

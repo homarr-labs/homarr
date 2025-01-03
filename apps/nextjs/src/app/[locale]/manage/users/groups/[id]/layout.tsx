@@ -10,15 +10,13 @@ import { ManageContainer } from "~/components/manage/manage-container";
 import { NavigationLink } from "./_navigation";
 
 interface LayoutProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function Layout(props: PropsWithChildren<LayoutProps>) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const t = await getI18n();
   const tGroup = await getScopedI18n("management.page.group");

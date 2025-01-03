@@ -29,7 +29,7 @@ vi.mock("next/headers", async (importOriginal) => {
 
   vi.spyOn(result, "set");
 
-  const cookies = () => result;
+  const cookies = () => Promise.resolve(result);
 
   return { ...mod, cookies } satisfies HeadersExport;
 });

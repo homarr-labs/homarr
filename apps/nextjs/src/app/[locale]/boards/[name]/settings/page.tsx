@@ -39,7 +39,7 @@ interface Props {
   }>;
 }
 
-const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
+const getBoardAndPermissionsAsync = async (params: Awaited<Props["params"]>) => {
   try {
     const board = await api.board.getBoardByName({ name: params.name });
     const { hasFullAccess } = await getBoardPermissionsAsync(board);
