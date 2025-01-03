@@ -9,7 +9,7 @@ interface Profile {
   name: string;
   email: string;
   groups: string[];
-  preferred_username: string;
+  preferred_username?: string;
   email_verified: boolean;
 }
 
@@ -28,12 +28,25 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
     },
   },
   profile(profile) {
+    const name = extractName(profile);
+    if (!name) {
+      throw new Error(`OIDC provider did not return a name properties='${Object.keys(profile).join(",")}'`);
+    }
+
     return {
       id: profile.sub,
-      // Use the name as the username if the preferred_username is an email address
-      name: profile.preferred_username.includes("@") ? profile.name : profile.preferred_username,
+      name,
       email: profile.email,
       provider: "oidc",
     };
   },
 });
+
+const extractName = (profile: Profile) => {
+  if (!env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE) {
+    // Use the name as the username if the preferred_username is an email address
+    return profile.preferred_username?.includes("@") ? profile.name : profile.preferred_username;
+  }
+
+  return profile[env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE as keyof typeof profile] as string;
+};
