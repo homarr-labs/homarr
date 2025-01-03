@@ -13,7 +13,7 @@ import { logger } from "@homarr/log";
 
 const handlerAsync = async (req: NextRequest) => {
   const apiKeyHeaderValue = req.headers.get("ApiKey");
-  const ipAddress = req.ip ?? headers().get("x-forwarded-for");
+  const ipAddress = req.ip ?? (await headers()).get("x-forwarded-for");
   const { ua } = userAgent(req);
   const session: Session | null = await getSessionOrDefaultFromHeadersAsync(apiKeyHeaderValue, ipAddress, ua);
 

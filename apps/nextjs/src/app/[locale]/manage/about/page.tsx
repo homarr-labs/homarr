@@ -1,4 +1,4 @@
-import { headers } from "next/headers";
+import { headers, type UnsafeUnwrappedHeaders } from "next/headers";
 import Image from "next/image";
 import {
   Accordion,
@@ -42,7 +42,7 @@ const getHost = () => {
     return `${process.env.HOSTNAME}:3000`;
   }
 
-  return headers().get("host");
+  return (headers() as unknown as UnsafeUnwrappedHeaders).get("host");
 };
 
 export default async function AboutPage() {

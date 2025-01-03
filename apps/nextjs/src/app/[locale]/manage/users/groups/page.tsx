@@ -24,7 +24,7 @@ type SearchParamsSchemaInputFromSchema<TSchema extends Record<string, unknown>> 
 }>;
 
 interface GroupsListPageProps {
-  searchParams: SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>;
+  searchParams: Promise<SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>>;
 }
 
 export default async function GroupsListPage(props: GroupsListPageProps) {
@@ -35,7 +35,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
   }
 
   const t = await getI18n();
-  const searchParams = searchParamsSchema.parse(props.searchParams);
+  const searchParams = searchParamsSchema.parse((await props.searchParams));
   const { items: groups, totalCount } = await api.group.getPaginated(searchParams);
 
   return (

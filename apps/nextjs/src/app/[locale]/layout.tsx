@@ -63,14 +63,14 @@ export const viewport: Viewport = {
   ],
 };
 
-export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
-  if (!isLocaleSupported(props.params.locale)) {
+export default async function Layout(props: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  if (!isLocaleSupported((await props.params).locale)) {
     notFound();
   }
 
   const session = await auth();
   const colorScheme = await getCurrentColorSchemeAsync();
-  const direction = isLocaleRTL(props.params.locale) ? "rtl" : "ltr";
+  const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
   const i18nMessages = await getI18nMessages();
 
   const StackedProvider = composeWrappers([
@@ -88,8 +88,8 @@ export default async function Layout(props: { children: React.ReactNode; params:
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
-    <html
-      lang={props.params.locale}
+    (<html
+      lang={(await props.params).locale}
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{
@@ -107,6 +107,6 @@ export default async function Layout(props: { children: React.ReactNode; params:
           {props.children}
         </StackedProvider>
       </body>
-    </html>
+    </html>)
   );
 }

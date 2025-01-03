@@ -13,7 +13,13 @@ interface LayoutProps {
   params: { id: string };
 }
 
-export default async function Layout({ children, params }: PropsWithChildren<LayoutProps>) {
+export default async function Layout(props: PropsWithChildren<LayoutProps>) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const t = await getI18n();
   const tGroup = await getScopedI18n("management.page.group");
   const group = await api.group.getById({ id: params.id });
