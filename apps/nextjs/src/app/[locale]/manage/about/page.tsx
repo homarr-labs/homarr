@@ -1,5 +1,4 @@
 import { headers } from "next/headers";
-import type { UnsafeUnwrappedHeaders } from "next/headers";
 import Image from "next/image";
 import {
   Accordion,
@@ -38,16 +37,16 @@ export async function generateMetadata() {
   };
 }
 
-const getHost = () => {
+const getHostAsync = async () => {
   if (process.env.HOSTNAME) {
     return `${process.env.HOSTNAME}:3000`;
   }
 
-  return (headers() as unknown as UnsafeUnwrappedHeaders).get("host");
+  return (await headers()).get("host");
 };
 
 export default async function AboutPage() {
-  const baseServerUrl = `http://${getHost()}`;
+  const baseServerUrl = `http://${await getHostAsync()}`;
   const t = await getScopedI18n("management.page.about");
   const attributes = await getPackageAttributesAsync();
   const githubContributors = (await fetch(`${baseServerUrl}/api/about/contributors/github`).then((res) =>

@@ -1,16 +1,17 @@
 import { NextRequest } from "next/server";
 
-import { createHandlers } from "@homarr/auth";
+import { createHandlersAsync } from "@homarr/auth";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 export const GET = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req), isSecureCookieEnabled(req)).handlers.GET(reqWithTrustedOrigin(req));
+  const { handlers } = await createHandlersAsync(extractProvider(req), isSecureCookieEnabled(req));
+
+  return await handlers.GET(reqWithTrustedOrigin(req));
 };
 export const POST = async (req: NextRequest) => {
-  return await createHandlers(extractProvider(req), isSecureCookieEnabled(req)).handlers.POST(
-    reqWithTrustedOrigin(req),
-  );
+  const { handlers } = await createHandlersAsync(extractProvider(req), isSecureCookieEnabled(req));
+  return await handlers.POST(reqWithTrustedOrigin(req));
 };
 
 /**

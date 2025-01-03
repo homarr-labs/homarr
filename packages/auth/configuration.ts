@@ -1,6 +1,5 @@
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { cookies } from "next/headers";
-import type { UnsafeUnwrappedCookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -100,8 +99,9 @@ export const createConfiguration = (
       error: "/auth/login",
     },
     jwt: {
-      encode() {
-        const cookie = (cookies() as unknown as UnsafeUnwrappedCookies).get(sessionTokenCookieName)?.value;
+      // eslint-disable-next-line no-restricted-syntax
+      async encode() {
+        const cookie = (await cookies()).get(sessionTokenCookieName)?.value;
         return cookie ?? "";
       },
 
