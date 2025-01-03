@@ -13,9 +13,11 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NewIntegrationForm } from "./_integration-new-form";
 
 interface NewIntegrationPageProps {
-  searchParams: Promise<Partial<z.infer<typeof validation.integration.create>> & {
-    kind: IntegrationKind;
-  }>;
+  searchParams: Promise<
+    Partial<z.infer<typeof validation.integration.create>> & {
+      kind: IntegrationKind;
+    }
+  >;
 }
 
 export default async function IntegrationsNewPage(props: NewIntegrationPageProps) {

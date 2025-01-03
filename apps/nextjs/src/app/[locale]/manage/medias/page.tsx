@@ -45,7 +45,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
   }
 
   const t = await getI18n();
-  const searchParams = searchParamsSchema.parse((await props.searchParams));
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
 
   return (

@@ -64,8 +64,8 @@
     "mantine-react-table": "2.0.0-beta.7",
     "next": "15.1.3",
     "react": "19.0.0",
-    "video.js": "^8.21.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "video.js": "^8.21.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

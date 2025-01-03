@@ -37,7 +37,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
     redirect("/auth/login");
   }
 
-  const searchParams = searchParamsSchema.parse((await props.searchParams));
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
 
   const tEngine = await getScopedI18n("search.engine");

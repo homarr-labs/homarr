@@ -35,7 +35,7 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
   }
 
   const t = await getI18n();
-  const searchParams = searchParamsSchema.parse((await props.searchParams));
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: groups, totalCount } = await api.group.getPaginated(searchParams);
 
   return (
