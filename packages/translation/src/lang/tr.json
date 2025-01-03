@@ -147,7 +147,7 @@
         "label": "Eski Şifre"
       },
       "homeBoard": {
-        "label": "Öntanımlı panel"
+        "label": "Ana panel"
       },
       "pingIconsEnabled": {
         "label": "Pingler İçin Simgeler Kullanın"
@@ -1208,7 +1208,7 @@
         "decreaseIndent": "Girintiyi Azalt",
         "link": "Bağlantı",
         "unlink": "Bağlantıyı kaldır",
-        "image": "Görsel Göm",
+        "image": "Görsel Yerleştir",
         "addTable": "Tablo ekle",
         "deleteTable": "Tablo Sil",
         "colorCell": "Renk Hücresi",
@@ -1676,7 +1676,7 @@
       "description": "Medya kod dönüştürmenizin istatistikleri, geçerli kuyruğu ve çalışan durumu",
       "option": {
         "defaultView": {
-          "label": "Öntanımlı görünüm"
+          "label": "Varsayılan Görünüm"
         },
         "queuePageSize": {
           "label": "Kuyruk Sayfa Boyutu"
@@ -2768,7 +2768,7 @@
                 "title": "Arama yapmak istediğiniz terimleri girin"
               },
               "searchResults": {
-                "title": "Eylemler için bir arama sonucu seçin"
+                "title": "Etkileşime geçmek için bir sonuç seçin"
               }
             },
             "option": {
