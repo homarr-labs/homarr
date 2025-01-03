@@ -1404,7 +1404,7 @@
         "memory": "Geheugen: {memory}GiB",
         "memoryAvailable": "Beschikbaar: {memoryAvailable}GiB ({percent}%)",
         "version": "Versie: {version}",
-        "uptime": "Uptime: {days} Dagen, {hours} Uren, {minutes} Minuten",
+        "uptime": "Uptime: {months} maanden, {days} dagen, {hours} uren, {minutes} minuten",
         "loadAverage": "Gemiddelde belasting:",
         "minute": "1 minuut",
         "minutes": "{count} minuten",
