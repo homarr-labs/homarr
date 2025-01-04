@@ -16,7 +16,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CopyMedia } from "./_actions/copy-media";
 import { DeleteMedia } from "./_actions/delete-media";
 import { IncludeFromAllUsersSwitch } from "./_actions/show-all";
-import { UploadMedia } from "./_actions/upload-media";
+import { UploadMediaButton } from "./_actions/upload-media";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
@@ -61,7 +61,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
             )}
           </Group>
 
-          {session.user.permissions.includes("media-upload") && <UploadMedia />}
+          {session.user.permissions.includes("media-upload") && <UploadMediaButton />}
         </Group>
         <Table striped highlightOnHover>
           <TableThead>
