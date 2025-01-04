@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "Find an app",
     "page": {
       "list": {
         "title": "Apps",

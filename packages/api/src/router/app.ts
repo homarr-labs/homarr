@@ -10,6 +10,26 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 import { canUserSeeAppAsync } from "./app/app-access-control";
 
 export const appRouter = createTRPCRouter({
+  getPaginated: protectedProcedure
+    .input(validation.common.paginated)
+    .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
+    .meta({ openapi: { method: "GET", path: "/api/apps/paginated", tags: ["apps"], protect: true } })
+    .query(async ({ input, ctx }) => {
+      const whereQuery = input.search ? like(apps.name, `%${input.search.trim()}%`) : undefined;
+      const totalCount = await ctx.db.$count(apps, whereQuery);
+
+      const dbApps = await ctx.db.query.apps.findMany({
+        limit: input.pageSize,
+        offset: (input.page - 1) * input.pageSize,
+        where: whereQuery,
+        orderBy: asc(apps.name),
+      });
+
+      return {
+        items: dbApps,
+        totalCount,
+      };
+    }),
   all: protectedProcedure
     .input(z.void())
     .output(z.array(selectAppSchema))
