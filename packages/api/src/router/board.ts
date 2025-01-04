@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import type { Database, SQL } from "@homarr/db";
+import type { Database, InferInsertModel, SQL } from "@homarr/db";
 import { and, createId, eq, inArray, like, or } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
@@ -11,7 +11,9 @@ import {
   boardUserPermissions,
   groupMembers,
   groupPermissions,
+  integrationGroupPermissions,
   integrationItems,
+  integrationUserPermissions,
   items,
   sections,
   users,
@@ -214,6 +216,111 @@ export const boardRouter = createTRPCRouter({
           yOffset: 0,
           boardId,
         });
+      });
+    }),
+  duplicateBoard: permissionRequiredProcedure
+    .requiresPermission("board-create")
+    .input(validation.board.duplicate)
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
+      await noBoardWithSimilarNameAsync(ctx.db, input.name);
+
+      const board = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.id),
+        with: {
+          sections: {
+            with: {
+              items: {
+                with: {
+                  integrations: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!board) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Board not found",
+        });
+      }
+
+      const { sections: boardSections, ...boardProps } = board;
+
+      const newBoardId = createId();
+      const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
+      const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(({ items: _, ...section }) => ({
+        ...section,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: sectionMap.get(section.id)!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        parentSectionId: section.parentSectionId ? sectionMap.get(section.parentSectionId)! : null,
+        boardId: newBoardId,
+      }));
+      const flatItems = boardSections.flatMap((section) => section.items);
+      const itemMap = new Map<string, string>(flatItems.map((item) => [item.id, createId()]));
+      const itemsToInsert: InferInsertModel<typeof items>[] = flatItems.map(({ integrations: _, ...item }) => ({
+        ...item,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: itemMap.get(item.id)!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        sectionId: sectionMap.get(item.sectionId)!,
+      }));
+
+      // Creates a list with all integration ids the user has access to
+      const hasAccessForAll = ctx.session.user.permissions.includes("integration-use-all");
+      const integrationIdsWithAccess = hasAccessForAll
+        ? []
+        : await ctx.db
+            .selectDistinct({
+              id: integrationGroupPermissions.integrationId,
+            })
+            .from(integrationGroupPermissions)
+            .leftJoin(groupMembers, eq(integrationGroupPermissions.groupId, groupMembers.groupId))
+            .where(eq(groupMembers.userId, ctx.session.user.id))
+            .union(
+              ctx.db
+                .selectDistinct({ id: integrationUserPermissions.integrationId })
+                .from(integrationUserPermissions)
+                .where(eq(integrationUserPermissions.userId, ctx.session.user.id)),
+            )
+            .then((result) => result.map((row) => row.id));
+
+      const itemIntegrationsToInsert = flatItems.flatMap((item) =>
+        item.integrations
+          // Restrict integrations to only those the user has access to
+          .filter(({ integrationId }) => integrationIdsWithAccess.includes(integrationId) || hasAccessForAll)
+          .map((integration) => ({
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            itemId: itemMap.get(item.id)!,
+            integrationId: integration.integrationId,
+          })),
+      );
+
+      ctx.db.transaction((transaction) => {
+        transaction
+          .insert(boards)
+          .values({
+            ...boardProps,
+            id: newBoardId,
+            name: input.name,
+            creatorId: ctx.session.user.id,
+          })
+          .run();
+
+        if (sectionsToInsert.length > 0) {
+          transaction.insert(sections).values(sectionsToInsert).run();
+        }
+
+        if (itemsToInsert.length > 0) {
+          transaction.insert(items).values(itemsToInsert).run();
+        }
+
+        if (itemIntegrationsToInsert.length > 0) {
+          transaction.insert(integrationItems).values(itemIntegrationsToInsert).run();
+        }
       });
     }),
   renameBoard: protectedProcedure.input(validation.board.rename).mutation(async ({ ctx, input }) => {
