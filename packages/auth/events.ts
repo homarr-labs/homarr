@@ -9,6 +9,7 @@ import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import { env } from "./env.mjs";
+import { extractProfileName } from "./providers/oidc/oidc-provider";
 
 export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {
   return async ({ user, profile }) => {
@@ -43,12 +44,18 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
       );
     }
 
-    const profileUsername = profile?.preferred_username?.includes("@") ? profile.name : profile?.preferred_username;
-    if (profileUsername && dbUser.name !== profileUsername) {
-      await db.update(users).set({ name: profileUsername }).where(eq(users.id, user.id));
-      logger.info(
-        `Username for user of oidc provider has changed. user=${user.id} old='${dbUser.name}' new='${profileUsername}'`,
-      );
+    if (profile) {
+      const profileUsername = extractProfileName(profile);
+      if (!profileUsername) {
+        throw new Error(`OIDC provider did not return a name properties='${Object.keys(profile).join(",")}'`);
+      }
+
+      if (dbUser.name !== profileUsername) {
+        await db.update(users).set({ name: profileUsername }).where(eq(users.id, user.id));
+        logger.info(
+          `Username for user of oidc provider has changed. user=${user.id} old='${dbUser.name}' new='${profileUsername}'`,
+        );
+      }
     }
 
     logger.info(`User '${dbUser.name}' logged in at ${dayjs().format()}`);
