@@ -42,7 +42,7 @@
     "@trpc/server": "next",
     "dockerode": "^4.0.2",
     "lodash.clonedeep": "^4.5.0",
-    "next": "^14.2.22",
+    "next": "^15.1.3",
     "react": "^19.0.0",
     "superjson": "2.2.2",
     "trpc-to-openapi": "^2.1.1"
