@@ -74,7 +74,7 @@ export const createConfiguration = (
           userId: user.id,
         });
 
-        cookies().set(sessionTokenCookieName, sessionToken, {
+        (await cookies()).set(sessionTokenCookieName, sessionToken, {
           path: "/",
           expires: expires,
           httpOnly: true,
@@ -99,8 +99,9 @@ export const createConfiguration = (
       error: "/auth/login",
     },
     jwt: {
-      encode() {
-        const cookie = cookies().get(sessionTokenCookieName)?.value;
+      // eslint-disable-next-line no-restricted-syntax
+      async encode() {
+        const cookie = (await cookies()).get(sessionTokenCookieName)?.value;
         return cookie ?? "";
       },
 

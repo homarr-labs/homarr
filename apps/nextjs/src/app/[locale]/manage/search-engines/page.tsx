@@ -27,7 +27,7 @@ type SearchParamsSchemaInputFromSchema<TSchema extends Record<string, unknown>> 
 }>;
 
 interface SearchEnginesPageProps {
-  searchParams: SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>;
+  searchParams: Promise<SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>>;
 }
 
 export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
@@ -37,7 +37,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
     redirect("/auth/login");
   }
 
-  const searchParams = searchParamsSchema.parse(props.searchParams);
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
 
   const tEngine = await getScopedI18n("search.engine");

@@ -34,7 +34,7 @@ type SearchParamsSchemaInputFromSchema<TSchema extends Record<string, unknown>> 
 }>;
 
 interface MediaListPageProps {
-  searchParams: SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>;
+  searchParams: Promise<SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>>;
 }
 
 export default async function GroupsListPage(props: MediaListPageProps) {
@@ -45,7 +45,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
   }
 
   const t = await getI18n();
-  const searchParams = searchParamsSchema.parse(props.searchParams);
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
 
   return (

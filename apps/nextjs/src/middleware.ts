@@ -4,7 +4,7 @@ import { createTRPCClient, httpLink } from "@trpc/client";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@homarr/api";
-import { createHeadersCallbackForSource } from "@homarr/api/client";
+import { createHeadersCallbackForSource } from "@homarr/api/shared";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 export async function middleware(request: NextRequest) {

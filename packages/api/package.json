@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./server": "./src/server.ts",
-    "./websocket": "./src/websocket.ts"
+    "./websocket": "./src/websocket.ts",
+    "./shared": "./src/shared.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
@@ -42,8 +43,9 @@
     "@trpc/server": "next",
     "dockerode": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
-    "next": "^14.2.22",
-    "react": "^19.0.0",
+    "next": "15.1.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "superjson": "2.2.2",
     "trpc-to-openapi": "^2.1.1"
   },

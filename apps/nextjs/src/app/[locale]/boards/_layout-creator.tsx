@@ -28,9 +28,9 @@ export const createBoardLayout = <TParams extends Params>({
     params,
     children,
   }: PropsWithChildren<{
-    params: TParams;
+    params: Promise<TParams>;
   }>) => {
-    const initialBoard = await getInitialBoard(params).catch((error) => {
+    const initialBoard = await getInitialBoard(await params).catch((error) => {
       if (error instanceof TRPCError && error.code === "NOT_FOUND") {
         logger.warn(error);
         notFound();

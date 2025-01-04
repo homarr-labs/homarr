@@ -19,12 +19,13 @@ import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
 
 interface Props {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata(props: Props) {
+  const params = await props.params;
   const session = await auth();
   const user = await api.user
     .getById({
@@ -43,7 +44,8 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function EditUserPage({ params }: Props) {
+export default async function EditUserPage(props: Props) {
+  const params = await props.params;
   const t = await getI18n();
   const tGeneral = await getScopedI18n("management.page.user.setting.general");
   const session = await auth();
