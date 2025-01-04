@@ -1760,6 +1760,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplicate board",
+        "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
+        "notification": {
+          "success": {
+            "title": "Board duplicated",
+            "message": "The board was successfully duplicated"
+          },
+          "error": {
+            "title": "Unable to duplicate board",
+            "message": "The board could not be duplicated"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2138,9 @@
               "label": "Home",
               "tooltip": "This board will show as your home board"
             }
+          },
+          "duplicate": {
+            "label": "Duplicate board"
           },
           "delete": {
             "label": "Delete permanently",

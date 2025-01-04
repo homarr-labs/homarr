@@ -3,12 +3,14 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { Menu } from "@mantine/core";
-import { IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useConfirmModal } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { DuplicateBoardModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
@@ -30,8 +32,10 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
   const tCommon = useScopedI18n("common");
 
   const { hasFullAccess, hasChangeAccess } = useBoardPermissions(board);
+  const { data: session } = useSession();
 
   const { openConfirmModal } = useConfirmModal();
+  const { openModal: openDuplicateModal } = useModalAction(DuplicateBoardModal);
 
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
@@ -64,11 +68,28 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     await setHomeBoardMutation.mutateAsync({ id: board.id });
   }, [board.id, setHomeBoardMutation]);
 
+  const handleDuplicateBoard = useCallback(() => {
+    openDuplicateModal({
+      board: {
+        id: board.id,
+        name: board.name,
+      },
+      onSuccess: async () => {
+        await revalidatePathActionAsync("/manage/boards");
+      },
+    });
+  }, [board.id, board.name, openDuplicateModal]);
+
   return (
     <Menu.Dropdown>
       <Menu.Item onClick={handleSetHomeBoard} leftSection={<IconHome {...iconProps} />}>
         {t("setHomeBoard.label")}
       </Menu.Item>
+      {session?.user.permissions.includes("board-create") && (
+        <Menu.Item onClick={handleDuplicateBoard} leftSection={<IconCopy {...iconProps} />}>
+          {t("duplicate.label")}
+        </Menu.Item>
+      )}
       {hasChangeAccess && (
         <>
           <Menu.Divider />
