@@ -6,6 +6,7 @@ import { IconPencil, IconSearch } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination } from "@homarr/ui";
 import { z } from "@homarr/validation";
@@ -22,12 +23,8 @@ const searchParamsSchema = z.object({
   page: z.string().regex(/\d+/).transform(Number).catch(1),
 });
 
-type SearchParamsSchemaInputFromSchema<TSchema extends Record<string, unknown>> = Partial<{
-  [K in keyof TSchema]: Exclude<TSchema[K], undefined> extends unknown[] ? string[] : string;
-}>;
-
 interface SearchEnginesPageProps {
-  searchParams: Promise<SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>>;
+  searchParams: Promise<inferSearchParamsFromSchema<typeof searchParamsSchema>>;
 }
 
 export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
