@@ -1762,7 +1762,7 @@
     "action": {
       "duplicate": {
         "title": "Duplicate board",
-        "message": "This will duplicate the board {name} with all its content. If widgets on it contains certain integrations, you are not allowed to use, they will be removed.",
+        "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
         "notification": {
           "success": {
             "title": "Board duplicated",
