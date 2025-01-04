@@ -40,7 +40,7 @@
     "@trpc/client": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
-    "dockerode": "^4.0.2",
+    "dockerode": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
     "next": "^14.2.22",
     "react": "^19.0.0",
