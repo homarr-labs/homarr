@@ -12,9 +12,6 @@ COPY . .
 
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
 
-# Install sharp for image optimization
-RUN corepack enable pnpm && pnpm install sharp -w
-
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
