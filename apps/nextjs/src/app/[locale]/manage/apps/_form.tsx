@@ -49,7 +49,7 @@ export const AppForm = ({
     <form onSubmit={form.onSubmit((values) => originalHandleSubmit(values, true))}>
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
-        <IconPicker initialValue={initialValues?.iconUrl} {...form.getInputProps("iconUrl")} />
+        <IconPicker {...form.getInputProps("iconUrl")} />
         <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
         <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
