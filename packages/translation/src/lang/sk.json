@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Aplikácie",
@@ -615,7 +616,7 @@
       },
       "attemptSearchEngineCreation": {
         "label": "Vytvorte vyhľadávače",
-        "description": ""
+        "description": "Integrácia \"{kind}\" môže byť použitá s vyhľadávačmi.  Toto začiarknite, ak chcete automaticky nakonfigurovať vyhľadávací nástroj."
       }
     },
     "action": {
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplikovať dosku",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": "Doska bola úspešne duplikovaná"
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2139,9 @@
               "label": "Domovská stránka",
               "tooltip": "Táto tabuľa sa zobrazí ako vaša domovská tabuľa"
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Odstrániť natrvalo",
