@@ -1,5 +1,5 @@
 import type { FocusEventHandler } from "react";
-import { startTransition, useState } from "react";
+import { startTransition } from "react";
 import {
   ActionIcon,
   Box,
@@ -28,19 +28,28 @@ import { UploadMedia } from "~/app/[locale]/manage/medias/_actions/upload-media"
 import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
-  initialValue?: string;
+  value?: string;
   onChange: (iconUrl: string) => void;
   error?: string | null;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
 }
 
-export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: IconPickerProps) => {
-  const [value, setValue] = useState<string>(initialValue ?? "");
-  const [search, setSearch] = useState(initialValue ?? "");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue ?? null);
+export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur }: IconPickerProps) => {
+  const [value, setValue] = useUncontrolled({
+    value: propsValue,
+    onChange,
+  });
+  const [search, setSearch] = useUncontrolled({
+    value: value,
+    onChange: (value) => {
+      setValue(value);
+    },
+  });
+  const [previewUrl, setPreviewUrl] = useUncontrolled({
+    value: propsValue ?? null,
+  });
   const { data: session } = useSession();
-  const [a, b] = useUncontrolled({ value, onChange, defaultValue: initialValue });
 
   const tCommon = useScopedI18n("common");
 
@@ -69,10 +78,9 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
           onClick={() => {
             const value = item.url;
             startTransition(() => {
-              setValue(value);
               setPreviewUrl(value);
               setSearch(value);
-              onChange(value);
+              setValue(value);
               combobox.closeDropdown();
             });
           }}
@@ -129,7 +137,6 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
               setSearch(event.currentTarget.value);
               setValue(event.currentTarget.value);
               setPreviewUrl(null);
-              onChange(event.currentTarget.value);
             }}
             onClick={() => combobox.openDropdown()}
             onFocus={(event) => {
@@ -155,7 +162,6 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
                   setValue(url);
                   setPreviewUrl(url);
                   setSearch(url);
-                  onChange(url);
                 });
               }}
             >
