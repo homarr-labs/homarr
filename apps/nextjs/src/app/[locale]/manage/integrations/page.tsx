@@ -44,6 +44,7 @@ import { NoResults } from "~/components/no-results";
 import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 import { IntegrationCreateDropdownContent } from "./new/_integration-new-dropdown";
+import classes from "./page.module.css";
 
 interface IntegrationsPageProps {
   searchParams: Promise<{
@@ -133,7 +134,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
     return <NoResults icon={IconPlugX} title={t("page.list.noResults.title")} />;
   }
 
-  const grouppedIntegrations = integrations.reduce(
+  const groupedIntegrations = integrations.reduce(
     (acc, integration) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[integration.kind]) {
@@ -148,10 +149,15 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
   );
 
   return (
-    <ActiveTabAccordion defaultValue={activeTab} variant="separated">
-      {objectEntries(grouppedIntegrations).map(([kind, integrations]) => (
-        <AccordionItem key={kind} value={kind}>
-          <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} />}>
+    <ActiveTabAccordion defaultValue={activeTab} radius="lg" classNames={classes}>
+      {objectEntries(groupedIntegrations).map(([kind, integrations], index) => (
+        <AccordionItem
+          key={kind}
+          value={kind}
+          data-first={index === 0}
+          data-last={index === objectEntries(groupedIntegrations).length - 1}
+        >
+          <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} radius="sm" />}>
             <Group>
               <Text>{getIntegrationName(kind)}</Text>
               <CountBadge count={integrations.length} />
