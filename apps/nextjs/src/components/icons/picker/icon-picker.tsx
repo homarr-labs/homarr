@@ -17,7 +17,7 @@ import {
   UnstyledButton,
   useCombobox,
 } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useUncontrolled } from "@mantine/hooks";
 import { IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -40,6 +40,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const [search, setSearch] = useState(initialValue ?? "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue ?? null);
   const { data: session } = useSession();
+  const [a, b] = useUncontrolled({ value, onChange, defaultValue: initialValue });
 
   const tCommon = useScopedI18n("common");
 
