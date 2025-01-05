@@ -36,7 +36,7 @@
         },
         "summary": {
           "title": "Přehled importu",
-          "description": "",
+          "description": "V následujícím přehledu můžete vidět, co bude importováno",
           "action": {
             "import": "Potvrdit import a pokračovat"
           },
@@ -88,7 +88,7 @@
       },
       "settings": {
         "title": "Nastavení",
-        "subtitle": ""
+        "subtitle": "Konfigurace nastavení serveru."
       },
       "finish": {
         "title": "Dokončit nastavení",
@@ -113,7 +113,7 @@
         "subtitle": "Vítejte zpět! Zadejte prosím Vaše přihlašovací údaje"
       },
       "invite": {
-        "title": "",
+        "title": "Připojit se k Homarrovi",
         "subtitle": "Vítejte v Homarru! Vytvořte si prosím svůj účet",
         "description": "Byli jste pozváni {username}"
       },
@@ -125,7 +125,7 @@
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Ověřeno"
       },
       "username": {
         "label": "Uživatelské jméno"
@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Aplikace",
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2139,9 @@
               "label": "Domovská stránka",
               "tooltip": ""
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Trvale smazat",

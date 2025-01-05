@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Uygulamalar",
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2139,9 @@
               "label": "Ana Sayfa",
               "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Kalıcı olarak sil",
@@ -2648,7 +2666,7 @@
     }
   },
   "search": {
-    "placeholder": "Ara (\"!\" İle Başlamalı)",
+    "placeholder": "Aramak için yaz",
     "nothingFound": "Hiçbir şey bulunamadı",
     "error": {
       "fetch": "Veriler alınırken bir hata oluştu"

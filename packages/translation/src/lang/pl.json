@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Aplikacje",
@@ -698,7 +699,7 @@
       "title": "Sekrety",
       "lastUpdated": "Data ostatniej aktualizacji: {date}",
       "notSet": {
-        "label": "",
+        "label": "Nie ustawiono wartości",
         "tooltip": "Ten wymagany sekret nie został jeszcze ustawiony"
       },
       "secureNotice": "Ten sekret nie może zostać pobrany po utworzeniu",
@@ -835,7 +836,7 @@
       "placeholder": "Wybierz jedną lub więcej wartości"
     },
     "multiText": {
-      "placeholder": "",
+      "placeholder": "Dodaj więcej wartości",
       "addLabel": "Dodaj {value}"
     },
     "select": {
@@ -982,7 +983,7 @@
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integracje"
         },
         "customCssClasses": {
           "label": "Niestandardowe klasy CSS"
@@ -1157,26 +1158,26 @@
     },
     "minecraftServerStatus": {
       "name": "Status serwera Minecraft",
-      "description": "",
+      "description": "Wyświetla status serwera Minecraft",
       "option": {
         "title": {
-          "label": ""
+          "label": "Tytuł"
         },
         "domain": {
-          "label": ""
+          "label": "Adres serwera"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Serwer Bedrock"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Dostępny",
+        "offline": "Niedostępny"
       }
     },
     "notebook": {
       "name": "Notatnik",
-      "description": "",
+      "description": "Prosty widżet notatnika obsługujący markdown",
       "option": {
         "showToolbar": {
           "label": "Pokaż pasek narzędzi ułatwiający pisanie w markdown"
@@ -1236,7 +1237,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Osadzaj dowolne treści z internetu. Niektóre strony internetowe mogą ograniczać dostęp.",
       "option": {
         "embedUrl": {
@@ -1268,31 +1269,31 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Adres URL iFrame nie został podany",
         "noBrowerSupport": "Twoja przeglądarka nie obsługuje ramek iframe. Zaktualizuj przeglądarkę."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Stan obiektu",
+      "description": "Wyświetl stan obiektu i przełącz go opcjonalnie",
       "option": {
         "entityId": {
           "label": "ID obiektu"
         },
         "displayName": {
-          "label": ""
+          "label": "Wyświetlana nazwa"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Jednostka"
         },
         "clickable": {
-          "label": ""
+          "label": "Element klikalny"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Wykonaj automatyzację",
+      "description": "Uruchom automatyzację jednym kliknięciem",
       "option": {
         "displayName": {
           "label": "Nazwa wyświetlana"
@@ -1302,26 +1303,26 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Uruchom {name}"
       }
     },
     "calendar": {
       "name": "Kalendarz",
-      "description": "",
+      "description": "Wyświetlaj zdarzenia z integracji w widoku kalendarza w określonym okresie czasowym",
       "option": {
         "releaseType": {
           "label": "Rodzaj premiery w Radarr",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "W kinach",
+            "digitalRelease": "Wydanie cyfrowe",
+            "physicalRelease": "Wydanie fizyczne"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Początek od"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Koniec o"
         }
       }
     },
@@ -1330,24 +1331,24 @@
       "description": "Wyświetla aktualne informacje o pogodzie w ustawionej lokalizacji.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatura w Fahrenheit"
         },
         "location": {
           "label": "Lokalizacja pogody"
         },
         "showCity": {
-          "label": ""
+          "label": "Pokaż miasto"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Pokaż Prognozę"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Liczba dni prognozy",
+          "description": "Kiedy widżet nie jest wystarczająco szeroki, mniej dni jest wyświetlane"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Format daty",
+          "description": "Jak powinna wyglądać data"
         }
       },
       "kind": {
@@ -1368,72 +1369,72 @@
       }
     },
     "indexerManager": {
-      "name": "",
-      "description": "",
+      "name": "Status menedżera indeksu",
+      "description": "Status Twoich indeksów",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Otwórz stronę indeksującą w nowej karcie"
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Menedżer indeksów",
+      "testAll": "Przetestuj wszystkie",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać statusu indeksów"
       }
     },
     "healthMonitoring": {
-      "name": "",
-      "description": "",
+      "name": "Monitorowanie zdrowia  systemu",
+      "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "Temperatura procesora w Fahrenheit"
         },
         "cpu": {
-          "label": ""
+          "label": "Pokaż informacje o procesorze"
         },
         "memory": {
-          "label": ""
+          "label": "Pokaż informacje o pamięci"
         },
         "fileSystem": {
-          "label": ""
+          "label": "Pokaż informacje o systemie plików"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "information": "Informacja",
+        "processor": "Procesor: {cpuModelName}",
+        "memory": "Pamięć: {memory}GiB",
+        "memoryAvailable": "Dostępna pamięć {memoryAvailable} GB ({percent}%)",
+        "version": "Wersja: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "loadAverage": "Średnie obciążenie",
+        "minute": "1 minuta",
+        "minutes": "{count} minut",
+        "used": "Używane",
+        "available": "Dostępne",
+        "lastSeen": "Ostatnia aktualizacja statusu: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać stanu zdrowia"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "Miasto / kod pocztowy",
+        "latitude": "Szerokość geograficzna (Latitude)",
+        "longitude": "Długość geograficzna (Longitude)",
+        "disabledTooltip": "Podaj miasto lub kod pocztowy.",
+        "unknownLocation": "Nieznana lokalizacja",
         "search": "Szukaj",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Miasto",
+            "country": "Kraj",
+            "coordinates": "Współrzędne",
+            "population": "Populacja"
           },
           "action": {
-            "select": ""
+            "select": "Wybierz {city}, {countryCode}"
           },
           "population": {
             "fallback": "Nieznany"
@@ -1441,16 +1442,16 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Nie znaleziono integracji",
+        "description": "Kliknij <here></here> aby utworzyć nową integrację"
       },
       "app": {
-        "noData": "",
-        "description": ""
+        "noData": "Nie znaleziono aplikacji",
+        "description": "Kliknij <here></here> aby utworzyć nową aplikację"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Nie wybrano integracji",
+        "noData": "Brak danych dotyczących integracji"
       },
       "option": {}
     },
@@ -1463,79 +1464,79 @@
         },
         "hasAutoPlay": {
           "label": "Autoodtwarzanie",
-          "description": ""
+          "description": "Automatyczne odtwarzanie działa tylko po wyciszeniu odtwarzacza z powodu ograniczeń przeglądarki"
         },
         "isMuted": {
-          "label": ""
+          "label": "Wyciszono"
         },
         "hasControls": {
-          "label": ""
+          "label": "Pokaż klawisze nawigacyjne"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Nie podano adresu URL wideo",
+        "forYoutubeUseIframe": "Dla filmów YouTube użyj opcji iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Bieżące strumienie serwera multimediów",
+      "description": "Pokaż bieżące strumienie na serwerach multimedialnych",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "Użytkownik",
+        "name": "Nazwa",
+        "id": "ID"
       }
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Klient pobierania",
+      "description": "Pozwala na oglądanie i zarządzanie pobieraniem zarówno przez klientów Torrent, jak i Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Kolumny do pokazania"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Włącz sortowanie przedmiotów"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Kolumna używana do sortowania domyślnie"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Odwróć sortowanie"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Pokaż wpisy usenet oznaczone jako zakończone"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Pokaż wpisy torrent oznaczone jako ukończone"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Ukryj ukończony torrent poniżej tego progu (w kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Kategorie/etykiety do filtrowania"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtruj jako białą listę"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Użyj filtra do obliczenia współczynnika"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Wybierz kolumny w elementach",
+        "noCommunications": "Nie można załadować danych z integracji"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Sterowanie"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Dodano",
           "detailsTitle": "Data dodania"
         },
         "category": {
-          "columnTitle": "",
+          "columnTitle": "Dodatki",
           "detailsTitle": ""
         },
         "downSpeed": {
@@ -1543,66 +1544,66 @@
           "detailsTitle": "Prędkość pobierania"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Bieżący indeks w ramach klienta"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID"
         },
         "integration": {
           "columnTitle": "Integracja"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Nazwa zlecenia"
         },
         "progress": {
           "columnTitle": "Postęp",
-          "detailsTitle": ""
+          "detailsTitle": "Postęp pobierania"
         },
         "ratio": {
           "columnTitle": "Proporcja",
-          "detailsTitle": ""
+          "detailsTitle": "Współczynnik torrenta (otrzymany/wysłany)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Łączne pobieranie",
+          "detailsTitle": "Łącznie pobrano"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Łączne wysyłanie",
+          "detailsTitle": "Łącznie wysłano"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Rozmiar pliku",
+          "detailsTitle": "Całkowity rozmiar zaznaczenia/plików"
         },
         "state": {
           "columnTitle": "Status",
-          "detailsTitle": ""
+          "detailsTitle": "Stan pracy"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Czas zakończenia",
+          "detailsTitle": "Czas od/do zakończenia"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Typ",
+          "detailsTitle": "Pobierz typ klienta"
         },
         "upSpeed": {
           "columnTitle": "Udostępnianie",
-          "detailsTitle": ""
+          "detailsTitle": "Prędkość wysyłania"
         }
       },
       "states": {
         "downloading": "Pobieranie",
-        "queued": "",
+        "queued": "W kolejce",
         "paused": "Zatrzymane",
         "completed": "Zakończono",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Nieudane",
+        "processing": "Przetwarzanie",
+        "leeching": "Leeching",
+        "stalled": "Zatrzymano",
         "unknown": "Nieznany",
-        "seeding": ""
+        "seeding": "Wysyłanie"
       },
       "actions": {
         "clients": {
@@ -1689,7 +1690,7 @@
       },
       "currentIndex": "",
       "healthCheck": {
-        "title": "",
+        "title": "Ocena stanu zdrowia",
         "queued": "",
         "status": {
           "healthy": "",
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1800,7 +1815,7 @@
               "description": ""
             },
             "onlyImportApps": {
-              "label": "",
+              "label": "Import tylko aplikacje",
               "description": ""
             }
           },
@@ -1928,7 +1943,7 @@
       "metaTitle": ""
     },
     "setting": {
-      "title": "",
+      "title": "Ustawienia tablicy {boardName}",
       "section": {
         "general": {
           "title": "Ogólne",
@@ -1986,7 +2001,7 @@
               "confirm": {
                 "public": {
                   "title": "",
-                  "description": ""
+                  "description": "Czy na pewno chcesz sprawić, by ta tablica była prywatna? Tablica nie będzie publiczna. Linki dla gości nie będą działać."
                 },
                 "private": {
                   "title": "",
@@ -2124,6 +2139,9 @@
               "label": "Strona główna",
               "tooltip": ""
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Usuń trwale",

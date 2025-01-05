@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Apper",
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2139,9 @@
               "label": "Hjem",
               "tooltip": ""
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Slett permanent",

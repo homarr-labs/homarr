@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Εφαρμογές",
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2139,9 @@
               "label": "Αρχική",
               "tooltip": ""
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Οριστική διαγραφή",

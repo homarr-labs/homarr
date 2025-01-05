@@ -489,6 +489,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "应用",
@@ -1760,6 +1761,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2124,6 +2139,9 @@
               "label": "首页",
               "tooltip": "此面板将显示为您的主面板"
             }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "永久删除",
