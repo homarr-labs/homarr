@@ -42,7 +42,7 @@ RUN mkdir -p /var/cache/nginx && \
     touch /run/nginx/nginx.pid && \
     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
 
-COPY --from=builder /app/apps/nextjs/next.config.mjs .
+COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
 
 COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
