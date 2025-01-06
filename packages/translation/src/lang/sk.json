@@ -2,12 +2,12 @@
   "init": {
     "step": {
       "start": {
-        "title": "Vitajte na Homár",
+        "title": "Víta Vás Homár",
         "subtitle": "Začnime s nastavením inštancie Homár.",
         "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
         "action": {
           "scratch": "Začať odznova",
-          "importOldmarr": "Import z Homarru pred 1.0"
+          "importOldmarr": "Import z Homarr pred 1.0"
         }
       },
       "import": {
@@ -114,7 +114,7 @@
       },
       "invite": {
         "title": "Pridajte sa k Homarrovi",
-        "subtitle": "Vitajte v Homarr! Prosím, vytvorte si účet",
+        "subtitle": "Vítajte v Homarr! Prosím, vytvorte si účet",
         "description": "Pozval vás {username}"
       },
       "init": {
@@ -489,7 +489,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "Vyhľadať aplikáciu",
     "page": {
       "list": {
         "title": "Aplikácie",
@@ -1158,7 +1158,7 @@
     },
     "minecraftServerStatus": {
       "name": "Minecraft Server Stav",
-      "description": "",
+      "description": "Zobraziť status Minecraft servera",
       "option": {
         "title": {
           "label": "Názov"
@@ -1763,15 +1763,15 @@
     "action": {
       "duplicate": {
         "title": "Duplikovať dosku",
-        "message": "",
+        "message": "Tým sa duplikuje nástenka {name} s celým jej obsahom. Ak widgety odkazujú na integrácie, ktoré nemáte povolené používať, budú odstránené.",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Doska duplikovaná",
             "message": "Doska bola úspešne duplikovaná"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nieje možné duplikovať dosku",
+            "message": "Tabuľu nebolo možné duplikovať"
           }
         }
       },
@@ -2141,7 +2141,7 @@
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Duplikovať dosku"
           },
           "delete": {
             "label": "Odstrániť natrvalo",
@@ -2767,9 +2767,9 @@
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Vyžiadať film",
+        "requestSeries": "Vyžiadať seriál",
+        "openIn": "Otvoriť v {kind}"
       },
       "external": {
         "help": "Používanie externého vyhľadávača",
@@ -3015,15 +3015,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Vyžiadať \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Séria",
+                "episodes": "Epizódy"
               }
             },
             "button": {
-              "send": ""
+              "send": "Poslať požiadavku"
             }
           }
         }
