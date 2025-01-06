@@ -489,7 +489,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "尋找應用程式",
     "page": {
       "list": {
         "title": "應用程式",
@@ -1762,16 +1762,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "複製面板",
+        "message": "這將複製看板 {name} 及其所有內容。如果小工具引用了無法使用的集成，它們將被移除",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "面板已複製",
+            "message": "面板已複製成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "面板無法複製",
+            "message": "此面板無法被複製"
           }
         }
       },
@@ -2141,7 +2141,7 @@
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "複製面板"
           },
           "delete": {
             "label": "永久移除",
