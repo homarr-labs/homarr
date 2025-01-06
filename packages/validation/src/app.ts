@@ -11,5 +11,8 @@ const editAppSchema = manageAppSchema.and(z.object({ id: z.string() }));
 
 export const appSchemas = {
   manage: manageAppSchema,
+  createMany: z
+    .array(manageAppSchema.omit({ iconUrl: true }).and(z.object({ iconUrl: z.string().min(1).nullable() })))
+    .min(1),
   edit: editAppSchema,
 };

@@ -3,11 +3,14 @@ import { TRPCError } from "@trpc/server";
 import { asc, createId, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
+import { getIconForName } from "@homarr/icons";
 import { validation, z } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { canUserSeeAppAsync } from "./app/app-access-control";
+
+const defaultIcon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
   getPaginated: protectedProcedure
@@ -117,6 +120,21 @@ export const appRouter = createTRPCRouter({
         iconUrl: input.iconUrl,
         href: input.href,
       });
+    }),
+  createMany: permissionRequiredProcedure
+    .requiresPermission("app-create")
+    .input(validation.app.createMany)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.insert(apps).values(
+        input.map((app) => ({
+          id: createId(),
+          name: app.name,
+          description: app.description,
+          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
+          href: app.href,
+        })),
+      );
     }),
   update: permissionRequiredProcedure
     .requiresPermission("app-modify-all")
