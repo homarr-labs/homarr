@@ -408,7 +408,7 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  changeDefaultSearchEngineId: protectedProcedure
+  changeDefaultSearchEngine: protectedProcedure
     .input(
       convertIntersectionToZodObject(validation.user.changeDefaultSearchEngine.and(z.object({ userId: z.string() }))),
     )

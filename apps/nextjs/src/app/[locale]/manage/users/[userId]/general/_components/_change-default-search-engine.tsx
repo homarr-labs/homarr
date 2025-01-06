@@ -18,7 +18,7 @@ interface ChangeDefaultSearchEngineFormProps {
 
 export const ChangeDefaultSearchEngineForm = ({ user, searchEnginesData }: ChangeDefaultSearchEngineFormProps) => {
   const t = useI18n();
-  const { mutate, isPending } = clientApi.user.changeDefaultSearchEngineId.useMutation({
+  const { mutate, isPending } = clientApi.user.changeDefaultSearchEngine.useMutation({
     async onSettled() {
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
     },
