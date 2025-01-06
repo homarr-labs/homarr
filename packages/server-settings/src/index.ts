@@ -7,6 +7,7 @@ export const defaultServerSettingsKeys = [
   "board",
   "appearance",
   "culture",
+  "search",
 ] as const;
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
@@ -32,6 +33,9 @@ export const defaultServerSettings = {
   },
   culture: {
     defaultLocale: "en" as SupportedLanguage,
+  },
+  search: {
+    defaultSearchEngineId: null as string | null,
   },
 } satisfies ServerSettingsRecord;
 

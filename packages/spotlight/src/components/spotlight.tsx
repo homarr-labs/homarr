@@ -1,10 +1,10 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
-import { IconSearch, IconX } from "@tabler/icons-react";
+import { IconQuestionMark, IconSearch, IconX } from "@tabler/icons-react";
 
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -12,53 +12,32 @@ import { useI18n } from "@homarr/translation/client";
 import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
 import { searchModes } from "../modes";
-import { useSpotlightContextResults } from "../modes/home/context";
 import { selectAction, spotlightStore } from "../spotlight-store";
 import { SpotlightChildrenActions } from "./actions/children-actions";
 import { SpotlightActionGroups } from "./actions/groups/action-group";
 
 type SearchModeKey = keyof TranslationObject["search"]["mode"];
 
+const defaultMode = "home";
 export const Spotlight = () => {
-  const items = useSpotlightContextResults();
-  // We fallback to help if no context results are available
-  const defaultMode = items.length >= 1 ? "home" : "help";
   const searchModeState = useState<SearchModeKey>(defaultMode);
   const mode = searchModeState[0];
   const activeMode = useMemo(() => searchModes.find((searchMode) => searchMode.modeKey === mode), [mode]);
-
-  /**
-   * The below logic is used to switch to home page if any context results are registered
-   * or to help page if context results are unregistered
-   */
-  const previousLengthRef = useRef(items.length);
-  useEffect(() => {
-    if (items.length >= 1 && previousLengthRef.current === 0) {
-      searchModeState[1]("home");
-    } else if (items.length === 0 && previousLengthRef.current >= 1) {
-      searchModeState[1]("help");
-    }
-
-    previousLengthRef.current = items.length;
-  }, [items.length, searchModeState]);
 
   if (!activeMode) {
     return null;
   }
 
   // We use the "key" below to prevent the 'Different amounts of hooks' error
-  return (
-    <SpotlightWithActiveMode key={mode} modeState={searchModeState} activeMode={activeMode} defaultMode={defaultMode} />
-  );
+  return <SpotlightWithActiveMode key={mode} modeState={searchModeState} activeMode={activeMode} />;
 };
 
 interface SpotlightWithActiveModeProps {
   modeState: [SearchModeKey, Dispatch<SetStateAction<SearchModeKey>>];
   activeMode: SearchMode;
-  defaultMode: SearchModeKey;
 }
 
-const SpotlightWithActiveMode = ({ modeState, activeMode, defaultMode }: SpotlightWithActiveModeProps) => {
+const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveModeProps) => {
   const [query, setQuery] = useState("");
   const [mode, setMode] = modeState;
   const [childrenOptions, setChildrenOptions] = useState<inferSearchInteractionOptions<"children"> | null>(null);
@@ -77,7 +56,7 @@ const SpotlightWithActiveMode = ({ modeState, activeMode, defaultMode }: Spotlig
       }}
       query={query}
       onQueryChange={(query) => {
-        if ((mode !== "help" && mode !== "home") || query.length !== 1) {
+        if (mode !== "help" || query.length !== 1) {
           setQuery(query);
         }
 
@@ -110,7 +89,17 @@ const SpotlightWithActiveMode = ({ modeState, activeMode, defaultMode }: Spotlig
           },
         }}
         rightSection={
-          mode === defaultMode ? undefined : (
+          mode === defaultMode ? (
+            <ActionIcon
+              onClick={() => {
+                setMode("help");
+                inputRef.current?.focus();
+              }}
+              variant="subtle"
+            >
+              <IconQuestionMark stroke={1.5} />
+            </ActionIcon>
+          ) : (
             <ActionIcon
               onClick={() => {
                 setMode(defaultMode);

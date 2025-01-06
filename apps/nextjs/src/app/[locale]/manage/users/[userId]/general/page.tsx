@@ -11,6 +11,7 @@ import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone"
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
+import { ChangeDefaultSearchEngineForm } from "./_components/_change-default-search-engine";
 import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { FirstDayOfWeek } from "./_components/_first-day-of-week";
@@ -60,6 +61,7 @@ export default async function EditUserPage(props: Props) {
   }
 
   const boards = await api.board.getAllBoards();
+  const searchEngines = await api.searchEngine.getSelectable();
 
   const isCredentialsUser = user.provider === "credentials";
 
@@ -95,6 +97,11 @@ export default async function EditUserPage(props: Props) {
             label: board.name,
           }))}
         />
+      </Stack>
+
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.defaultSearchEngine")}</Title>
+        <ChangeDefaultSearchEngineForm user={user} searchEnginesData={searchEngines} />
       </Stack>
 
       <Stack mb="lg">

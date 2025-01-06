@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Default search engine changed successfully"
+          },
+          "error": {
+            "message": "Unable to change default search engine"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -2177,6 +2187,7 @@
             "item": {
               "language": "Language & Region",
               "board": "Home board",
+              "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }
@@ -2336,6 +2347,13 @@
             "homeBoard": {
               "label": "Global home board",
               "description": "Only public boards are available for selection"
+            }
+          },
+          "search": {
+            "title": "Search",
+            "defaultSearchEngine": {
+              "label": "Global default search engine",
+              "description": "Integration search engines can not be selected here"
             }
           },
           "appearance": {
@@ -2853,6 +2871,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Search",
+            "option": {
+              "other": {
+                "label": "Search with another search engine"
+              },
+              "no-default": {
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
+              },
+              "search": {
+                "label": "Search for '{query}' with {name}"
+              },
+              "from-integration": {
+                "description": "Start typing to search"
+              }
+            }
+          },
           "local": {
             "title": "Local results"
           }
