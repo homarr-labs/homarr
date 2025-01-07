@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Stack, Text, Title } from "@mantine/core";
-import { IconBrowserOff } from "@tabler/icons-react";
+import { IconBrowserOff, IconProtocol } from "@tabler/icons-react";
 
 import { objectEntries } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
@@ -61,7 +61,7 @@ const UnsupportedProtocol = () => {
 
   return (
     <Stack align="center" justify="center" h="100%">
-      <IconBrowserOff />
+      <IconProtocol />
       <Title order={4} ta="center">
         {t("widget.iframe.error.unsupportedProtocol", {
           supportedProtocols: supportedProtocols.map((protocol) => protocol).join(", "),
