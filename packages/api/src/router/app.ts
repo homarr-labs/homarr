@@ -10,7 +10,7 @@ import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { canUserSeeAppAsync } from "./app/app-access-control";
 
-const defaultIcon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/svg/homarr.svg";
+const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
   getPaginated: protectedProcedure
