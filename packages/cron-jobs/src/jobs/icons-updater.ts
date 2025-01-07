@@ -69,7 +69,7 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
         checksum: icon.checksum,
         name: icon.fileNameWithExtension,
         url: icon.imageUrl,
-        iconRepositoryId: iconRepositoryId,
+        iconRepositoryId,
       });
       countInserted++;
     }
