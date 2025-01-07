@@ -15,6 +15,9 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
   const allowedPermissions = getAllowedPermissions(permissions);
 
   if (embedUrl.trim() === "") return <NoUrl />;
+  if (!isSupportedProtocol(embedUrl)) {
+    return <UnsupportedProtocol />;
+  }
 
   return (
     <Box h="100%" w="100%">
@@ -31,6 +34,17 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
   );
 }
 
+const supportedProtocols = ["http", "https"];
+
+const isSupportedProtocol = (url: string) => {
+  try {
+    const parsedUrl = new URL(url);
+    return supportedProtocols.map((protocol) => `${protocol}:`).includes(`${parsedUrl.protocol}`);
+  } catch {
+    return false;
+  }
+};
+
 const NoUrl = () => {
   const t = useI18n();
 
@@ -38,6 +52,21 @@ const NoUrl = () => {
     <Stack align="center" justify="center" h="100%">
       <IconBrowserOff />
       <Title order={4}>{t("widget.iframe.error.noUrl")}</Title>
+    </Stack>
+  );
+};
+
+const UnsupportedProtocol = () => {
+  const t = useI18n();
+
+  return (
+    <Stack align="center" justify="center" h="100%">
+      <IconBrowserOff />
+      <Title order={4} ta="center">
+        {t("widget.iframe.error.unsupportedProtocol", {
+          supportedProtocols: supportedProtocols.map((protocol) => protocol).join(", "),
+        })}
+      </Title>
     </Stack>
   );
 };
