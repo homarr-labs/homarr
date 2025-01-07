@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -232,10 +242,10 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "更改图像",
+          "label": "更改头像",
           "notification": {
             "success": {
-              "message": "图像修改成功"
+              "message": "头像修改成功"
             },
             "error": {
               "message": "无法更改图像"
@@ -284,9 +294,9 @@
     }
   },
   "group": {
-    "title": "用户组",
+    "title": "群组",
     "name": "组",
-    "search": "查找用户组",
+    "search": "查找群组",
     "field": {
       "name": "名称",
       "members": "成员"
@@ -417,13 +427,13 @@
     },
     "action": {
       "create": {
-        "label": "新建用户组",
+        "label": "新建群组",
         "notification": {
           "success": {
-            "message": "用户组已成功创建"
+            "message": "群组已成功创建"
           },
           "error": {
-            "message": "无法创建用户组"
+            "message": "无法创建群组"
           }
         }
       },
@@ -489,7 +499,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "查找应用",
     "page": {
       "list": {
         "title": "应用",
@@ -1533,7 +1543,7 @@
         },
         "added": {
           "columnTitle": "已添加",
-          "detailsTitle": "日期已添加"
+          "detailsTitle": "添加日期"
         },
         "category": {
           "columnTitle": "扩展的",
@@ -1574,7 +1584,7 @@
         },
         "size": {
           "columnTitle": "文件大小",
-          "detailsTitle": "选择/文件的总大小"
+          "detailsTitle": "文件大小"
         },
         "state": {
           "columnTitle": "状态",
@@ -1582,7 +1592,7 @@
         },
         "time": {
           "columnTitle": "完成时间",
-          "detailsTitle": "结束/结束时间"
+          "detailsTitle": "完成时间"
         },
         "type": {
           "columnTitle": "类型",
@@ -1762,16 +1772,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "复制面板",
+        "message": "这将复制面板{name}及其所有内容。如果组件引用了不允许使用的集成，它们将被删除。",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "面板已复制",
+            "message": "面板已成功复制"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "无法复制面板",
+            "message": "无法复制面板"
           }
         }
       },
@@ -1853,7 +1863,7 @@
         "label": "页面标题"
       },
       "metaTitle": {
-        "label": "Meta标题"
+        "label": "Meta 标题"
       },
       "logoImageUrl": {
         "label": "Logo 图像 URL"
@@ -1868,7 +1878,7 @@
         "label": "背景图片附件",
         "option": {
           "fixed": {
-            "label": "已修复",
+            "label": "固定",
             "description": "背景保持不变。"
           },
           "scroll": {
@@ -1950,7 +1960,7 @@
           "unrecognizedLink": "提供的链接未被识别，无法预览，但它可能仍然有效。"
         },
         "layout": {
-          "title": "显示布局"
+          "title": "布局"
         },
         "background": {
           "title": "背景"
@@ -2072,7 +2082,7 @@
         "boards": "面板",
         "apps": "应用",
         "integrations": "集成",
-        "searchEngies": "搜索引擎",
+        "searchEngies": "搜索",
         "medias": "媒体",
         "users": {
           "label": "用户",
@@ -2095,10 +2105,10 @@
         "help": {
           "label": "帮助",
           "items": {
-            "documentation": "文档",
+            "documentation": "帮助文档",
             "submitIssue": "提交问题",
             "discord": "Discord 社区",
-            "sourceCode": "源码"
+            "sourceCode": "源码仓库"
           }
         },
         "about": "关于"
@@ -2141,7 +2151,7 @@
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "复制面板"
           },
           "delete": {
             "label": "永久删除",
@@ -2177,6 +2187,7 @@
             "item": {
               "language": "语言与地区",
               "board": "主面板",
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }
@@ -2338,6 +2349,13 @@
               "description": "只有公共面板可供选择"
             }
           },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
+            }
+          },
           "appearance": {
             "title": "外观",
             "defaultColorScheme": {
@@ -2453,15 +2471,15 @@
         "accordion": {
           "contributors": {
             "title": "贡献人员",
-            "subtitle": "{count} 维护代码和 Homarr"
+            "subtitle": "{count} 人在维护代码和 Homarr"
           },
           "translators": {
             "title": "翻译人员",
-            "subtitle": "{count}翻译了许多语言"
+            "subtitle": "{count} 名人员翻译了许多语言"
           },
           "libraries": {
-            "title": "资源库",
-            "subtitle": "{count} 在 Homarr 代码中使用"
+            "title": "相关的库",
+            "subtitle": "{count} 个相关的库在 Homarr 代码中被使用"
           }
         }
       }
@@ -2561,6 +2579,22 @@
             "title": "容器未刷新",
             "message": "刷新容器时出现错误"
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
         }
       }
     },
@@ -2837,6 +2871,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": "本地结果"
           }
@@ -2948,7 +3000,7 @@
           "label": "名称"
         },
         "short": {
-          "label": "不足"
+          "label": "短的"
         },
         "urlTemplate": {
           "label": "URL搜索模板"

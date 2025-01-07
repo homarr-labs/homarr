@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -2177,6 +2187,7 @@
             "item": {
               "language": "語言與地區",
               "board": "主面板",
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }
@@ -2336,6 +2347,13 @@
             "homeBoard": {
               "label": "全局主面板",
               "description": "只有公開面板可供選擇"
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
             }
           },
           "appearance": {
@@ -2561,6 +2579,22 @@
             "title": "容器未刷新",
             "message": "刷新容器時出現錯誤"
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
         }
       }
     },
@@ -2837,6 +2871,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": "本地結果"
           }
