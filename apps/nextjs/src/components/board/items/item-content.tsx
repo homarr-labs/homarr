@@ -88,7 +88,14 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             isEditMode={isEditMode}
             boardId={board.id}
             itemId={item.id}
-            setOptions={updateOptions}
+            setOptions={(partialNewOptions) =>
+              updateOptions({
+                newOptions: {
+                  ...partialNewOptions.newOptions,
+                  ...options,
+                },
+              })
+            }
             {...dimensions}
           />
         </ErrorBoundary>
