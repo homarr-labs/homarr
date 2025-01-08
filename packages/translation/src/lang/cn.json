@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "默认搜索引擎更改成功"
           },
           "error": {
-            "message": ""
+            "message": "无法更改默认的搜索引擎"
           }
         }
       },
@@ -2187,7 +2187,7 @@
             "item": {
               "language": "语言与地区",
               "board": "主面板",
-              "defaultSearchEngine": "",
+              "defaultSearchEngine": "默认搜索引擎",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }
@@ -2350,10 +2350,10 @@
             }
           },
           "search": {
-            "title": "",
+            "title": "搜索",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "全局默认搜索引擎",
+              "description": "无法在这里选择集成搜索引擎"
             }
           },
           "appearance": {
@@ -2582,19 +2582,19 @@
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "添加到 Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "已添加到 Homarr",
+            "message": "所选应用已被添加到 Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "无法添加到 Homarr",
+            "message": "所选应用无法添加到 Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "将 docker 容器添加到 Homarr"
         }
       }
     },
@@ -2872,20 +2872,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "搜索",
             "option": {
               "other": {
-                "label": ""
+                "label": "使用另一个搜索引擎搜索"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "没有默认的搜索引擎",
+                "description": "在首选项中设置默认搜索引擎"
               },
               "search": {
-                "label": ""
+                "label": "用{name}搜索“{query}”"
               },
               "from-integration": {
-                "description": ""
+                "description": "输入内容以搜索"
               }
             }
           },
