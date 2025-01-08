@@ -2882,7 +2882,7 @@
                 "description": "Set a default search engine in preferences"
               },
               "search": {
-                "label": "Search for '{query}' with {name}"
+                "label": "Search for \"{query}\" with {name}"
               },
               "from-integration": {
                 "description": "Start typing to search"
