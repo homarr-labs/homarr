@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Öntanımlı arama motoru başarıyla değiştirildi"
           },
           "error": {
-            "message": ""
+            "message": "Öntanımlı arama motoru değiştirilemiyor"
           }
         }
       },
@@ -877,7 +877,7 @@
     "zod": {
       "errors": {
         "default": "Bu alan geçersiz",
-        "required": "Bu alan gereklidir",
+        "required": "Bu alan gerekli",
         "string": {
           "startsWith": "Bu alan {startsWith} ile başlamalıdır",
           "endsWith": "Bu alan {endsWith} ile bitmelidir",
@@ -1773,7 +1773,7 @@
     "action": {
       "duplicate": {
         "title": "Paneli Kopyala",
-        "message": "Bu, {name} panelini tüm içeriğiyle birlikte kopyalayacaktır. Kullanmanıza izin verilmeyen entegrasyonları içeren widget'lar kaldırılacaklardır.",
+        "message": "{name} panelini tüm içerikleri ile birlikte kopyalamayı seçtiniz. Kullanım yetkiniz olmayan entegrasyonlar ve bunları içeren araçlar dahil edilmeyecektir.",
         "notification": {
           "success": {
             "title": "Panel Kopyalandı",
@@ -2144,7 +2144,7 @@
             "label": "Ayarlar"
           },
           "setHomeBoard": {
-            "label": "Öntanımlı panel olarak ayarlayın",
+            "label": "Öntanımlı Panel Olarak Ata",
             "badge": {
               "label": "Ana Sayfa",
               "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
@@ -2187,7 +2187,7 @@
             "item": {
               "language": "Dil & Bölge",
               "board": "Öntanımlı panel",
-              "defaultSearchEngine": "",
+              "defaultSearchEngine": "Öntanımlı arama motoru",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
@@ -2350,10 +2350,10 @@
             }
           },
           "search": {
-            "title": "",
+            "title": "Ara",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Genel öntanımlı arama motoru",
+              "description": "Entegrasyona bağlı arama motorları burada seçilemez"
             }
           },
           "appearance": {
@@ -2872,20 +2872,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Ara",
             "option": {
               "other": {
-                "label": ""
+                "label": "Farklı bir arama motoruyla arama yap"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Öntanımlı arama motoru yapılandırılmadı",
+                "description": "Tercihlerde öntanımlı arama motoru belirleyin"
               },
               "search": {
-                "label": ""
+                "label": "{name} ile '{query}' ifadesini arayın"
               },
               "from-integration": {
-                "description": ""
+                "description": "Aramak için yazmaya başla"
               }
             }
           },

@@ -144,7 +144,7 @@
         "label": "確認密碼"
       },
       "previousPassword": {
-        "label": "以前的密碼"
+        "label": "過去的密碼"
       },
       "homeBoard": {
         "label": "主面板"
@@ -172,7 +172,7 @@
         },
         "forgotPassword": {
           "label": "忘記密碼嗎？",
-          "description": "管理員可以使用已下命令重設密碼"
+          "description": "管理員可以使用以下命令重設密碼"
         }
       },
       "register": {
@@ -213,20 +213,20 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "預設搜尋引擎已變更成功"
           },
           "error": {
-            "message": ""
+            "message": "預設搜尋引擎無法變更"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": "成功修改一周的第一天"
+            "message": "成功編輯一周的第一天"
           },
           "error": {
-            "message": "無法修改一周的第一天"
+            "message": "無法編輯一周的第一天"
           }
         }
       },
@@ -245,7 +245,7 @@
           "label": "更改圖案",
           "notification": {
             "success": {
-              "message": "圖案修改成功"
+              "message": "圖案編輯成功"
             },
             "error": {
               "message": "無法更改圖案"
@@ -289,14 +289,14 @@
         "notFound": "使用者不存在"
       },
       "transfer": {
-        "label": "選擇新所有者"
+        "label": "選擇新的所有者"
       }
     }
   },
   "group": {
     "title": "用戶組",
     "name": "組",
-    "search": "查找用戶組",
+    "search": "尋找用戶組",
     "field": {
       "name": "名稱",
       "members": "成員"
@@ -320,15 +320,15 @@
           },
           "use-all": {
             "label": "使用全部應用程式",
-            "description": "允許成員修改全部應用程式"
+            "description": "允許成員編輯全部應用程式"
           },
           "modify-all": {
-            "label": "修改全部應用程式",
-            "description": "允許成員修改全部應用程式"
+            "label": "編輯全部應用程式",
+            "description": "允許成員編輯全部應用程式"
           },
           "full-all": {
             "label": "完整應用程式權限",
-            "description": "允許成員修改全部應用程式"
+            "description": "允許成員編輯全部應用程式"
           }
         }
       },
@@ -344,12 +344,12 @@
             "description": "允許成員查看全部面板"
           },
           "modify-all": {
-            "label": "修改全部面板",
-            "description": "允許成員修改全部面板，不包括訪問控制和危險區域"
+            "label": "編輯全部面板",
+            "description": "允許成員編輯全部面板，不包括訪問控制和危險區域"
           },
           "full-all": {
             "label": "完整面板權限",
-            "description": "允許成員查看、修改和移除全部面板，包括訪問控制和危險區域"
+            "description": "允許成員查看、編輯和移除全部面板，包括訪問控制和危險區域"
           }
         }
       },
@@ -408,8 +408,8 @@
             "description": "允許使用者創建搜尋引擎"
           },
           "modify-all": {
-            "label": "修改全部搜尋引擎",
-            "description": "允許使用者修改全部搜尋引擎"
+            "label": "編輯全部搜尋引擎",
+            "description": "允許使用者編輯全部搜尋引擎"
           },
           "full-all": {
             "label": "完整搜尋引擎的訪問權限",
@@ -522,10 +522,10 @@
         }
       },
       "edit": {
-        "title": "修改應用程式",
+        "title": "編輯應用程式",
         "notification": {
           "success": {
-            "title": "應用程式修改成功",
+            "title": "應用程式編輯成功",
             "message": "應用程式儲存成功"
           },
           "error": {
@@ -590,10 +590,10 @@
         }
       },
       "edit": {
-        "title": "修改 {name} 集成",
+        "title": "編輯 {name} 集成",
         "notification": {
           "success": {
-            "title": "修改成功",
+            "title": "編輯成功",
             "message": "集成已儲存成功"
           },
           "error": {
@@ -744,7 +744,7 @@
   },
   "media": {
     "plural": "多媒體",
-    "search": "查找多媒體",
+    "search": "尋找多媒體",
     "field": {
       "name": "名稱",
       "size": "大小",
@@ -788,7 +788,7 @@
       "apply": "應用",
       "backToOverview": "返回總覽",
       "create": "創建",
-      "edit": "修改",
+      "edit": "編輯",
       "import": "匯入",
       "insert": "插入",
       "remove": "移除",
@@ -954,7 +954,7 @@
     "action": {
       "create": "創建項目",
       "import": "匯入項目",
-      "edit": "修改項目",
+      "edit": "編輯項目",
       "moveResize": "移動 / 調整大小項目",
       "duplicate": "複製項目",
       "remove": "移除項目"
@@ -986,7 +986,7 @@
       }
     },
     "edit": {
-      "title": "修改項目",
+      "title": "編輯項目",
       "advancedOptions": {
         "label": "進階選項",
         "title": "進階項目選項"
@@ -1466,8 +1466,8 @@
       "option": {}
     },
     "video": {
-      "name": "串流影視",
-      "description": "崁入來自攝影機或網站的影視",
+      "name": "串流影音",
+      "description": "崁入來自攝影機或網站的影音",
       "option": {
         "feedUrl": {
           "label": "訂閱網址"
@@ -1484,8 +1484,8 @@
         }
       },
       "error": {
-        "noUrl": "無提供影視網址",
-        "forYoutubeUseIframe": "Youtube 影視使用 iFrame 選項"
+        "noUrl": "無提供影音網址",
+        "forYoutubeUseIframe": "Youtube 影音使用 iFrame 選項"
       }
     },
     "mediaServer": {
@@ -1762,11 +1762,11 @@
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "啟用修改模式",
-      "disabled": "停用修改模式"
+      "enabled": "啟用編輯模式",
+      "disabled": "停用編輯模式"
     },
     "dimensions": {
-      "title": "更改尺寸"
+      "title": "編輯尺寸"
     }
   },
   "board": {
@@ -1788,17 +1788,17 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "成功應用修改",
+            "title": "成功應用編輯",
             "message": "面板儲存成功"
           },
           "error": {
-            "title": "無法應用修改",
+            "title": "無法應用編輯",
             "message": "面板無法儲存"
           }
         },
         "confirmLeave": {
-          "title": "未儲存修改",
-          "message": "尚未保存修改，確認要離開嗎？"
+          "title": "未儲存編輯",
+          "message": "尚未保存編輯，確認要離開嗎？"
         }
       },
       "oldImport": {
@@ -1979,7 +1979,7 @@
                 "label": "查看面板"
               },
               "modify": {
-                "label": "修改面板"
+                "label": "編輯面板"
               },
               "full": {
                 "label": "完全訪問"
@@ -2187,7 +2187,7 @@
             "item": {
               "language": "語言與地區",
               "board": "主面板",
-              "defaultSearchEngine": "",
+              "defaultSearchEngine": "預設搜尋引擎",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }
@@ -2204,7 +2204,7 @@
           "title": "使用者"
         },
         "edit": {
-          "metaTitle": "修改使用者 {username}"
+          "metaTitle": "編輯使用者 {username}"
         },
         "create": {
           "metaTitle": "創建使用者",
@@ -2281,7 +2281,7 @@
           },
           "members": {
             "title": "成員",
-            "search": "查找成員",
+            "search": "尋找成員",
             "notFound": "不存在的成員"
           },
           "permissions": {
@@ -2324,7 +2324,7 @@
           },
           "crawlingAndIndexing": {
             "title": "爬取和索引",
-            "warning": "啟用或禁用這裡的任何設定將嚴重影響搜尋引擎如何索引或抓取頁面，任何設定都是一個請求，是否應用這些設定取決於爬蟲，任何修改可能需要數天或數周才能申請，某設定可能是搜尋引擎特定的",
+            "warning": "啟用或禁用這裡的任何設定將嚴重影響搜尋引擎如何索引或抓取頁面，任何設定都是一個請求，是否應用這些設定取決於爬蟲，任何編輯可能需要數天或數周才能申請，某設定可能是搜尋引擎特定的",
             "noIndex": {
               "title": "不要索引",
               "text": "不要在搜尋引擎上索引網址，也不要在任何搜尋結果中顯示"
@@ -2350,10 +2350,10 @@
             }
           },
           "search": {
-            "title": "",
+            "title": "搜尋",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "全局預設搜尋引擎",
+              "description": "舞法在此選擇極盛的搜尋引擎"
             }
           },
           "appearance": {
@@ -2520,7 +2520,7 @@
         "label": "啟動",
         "notification": {
           "success": {
-            "title": "榮起已啟動",
+            "title": "容器已啟動",
             "message": "容器已成功啟動"
           },
           "error": {
@@ -2582,19 +2582,19 @@
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "新增至 Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "已新增至 Homarr",
+            "message": "已選擇的應用程式已新增至 Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "無法新增至 Homarr",
+            "message": "已選擇的應用程式無法新增至 Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "新增 Docker 容器至 Homarr"
         }
       }
     },
@@ -2640,7 +2640,7 @@
       "integrations": {
         "label": "集成",
         "edit": {
-          "label": "修改"
+          "label": "編輯"
         },
         "new": {
           "label": "創建"
@@ -2652,7 +2652,7 @@
           "label": "創建"
         },
         "edit": {
-          "label": "修改"
+          "label": "編輯"
         }
       },
       "medias": {
@@ -2664,7 +2664,7 @@
           "label": "創建"
         },
         "edit": {
-          "label": "修改"
+          "label": "編輯"
         }
       },
       "users": {
@@ -2717,7 +2717,7 @@
                   "label": "開啟應用程式網址"
                 },
                 "edit": {
-                  "label": "修改應用程式"
+                  "label": "編輯應用程式"
                 }
               },
               "detail": {
@@ -2763,7 +2763,7 @@
                 "dark": "切換暗黑模式"
               },
               "language": {
-                "label": "修改語言",
+                "label": "編輯語言",
                 "children": {
                   "detail": {
                     "title": "選擇主要語言"
@@ -2842,7 +2842,7 @@
               },
               "youTube": {
                 "name": "YouTube",
-                "description": "使用 YouTube 搜尋影視"
+                "description": "使用 YouTube 搜尋影音"
               }
             }
           }
@@ -2872,20 +2872,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "搜尋",
             "option": {
               "other": {
-                "label": ""
+                "label": "使用其他搜尋引擎進行搜尋"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "無預設搜尋引擎",
+                "description": "於偏好設定中設定預設搜尋引擎"
               },
               "search": {
-                "label": ""
+                "label": "使用 {name} 搜尋 {query}"
               },
               "from-integration": {
-                "description": ""
+                "description": "開始輸入以進行搜尋"
               }
             }
           },
@@ -3032,10 +3032,10 @@
           }
         },
         "edit": {
-          "title": "修改搜尋引擎",
+          "title": "編輯搜尋引擎",
           "notification": {
             "success": {
-              "title": "應用修改成功",
+              "title": "應用編輯成功",
               "message": "搜尋引擎已儲存成功"
             },
             "error": {
