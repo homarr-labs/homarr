@@ -625,8 +625,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       ldapts:
-        specifier: 7.3.0
-        version: 7.3.0
+        specifier: 7.3.1
+        version: 7.3.1
       next:
         specifier: 15.1.4
         version: 15.1.4(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.1)
@@ -6867,8 +6867,8 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@7.3.0:
-    resolution: {integrity: sha512-hj+cOy50uwu496x66IrqeY0WY35pMnkKrOgdYtZFu0uii4Xzw39Wng1hgzmGYWmzK9On4jYiiYyz1ZdVc857XA==}
+  ldapts@7.3.1:
+    resolution: {integrity: sha512-g8mxobOSeuxVkXRT9JZBGUvfDjXIpQPEHH5kYG9UjrIlWV5Rqxq+MMmqzlSh4OqSXh+3lFvzyYu+lsJldoZvvA==}
     engines: {node: '>=18'}
 
   levn@0.4.1:
@@ -9356,8 +9356,8 @@ packages:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
     hasBin: true
 
-  uuid@11.0.3:
-    resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
+  uuid@11.0.4:
+    resolution: {integrity: sha512-IzL6VtTTYcAhA/oghbFJ1Dkmqev+FpQWnCBaKq/gUluLxliWvO8DPFWfIviRmYbtaavtSQe4WBL++rFjdcGWEg==}
     hasBin: true
 
   uuid@8.3.2:
@@ -13260,7 +13260,7 @@ snapshots:
   data-urls@5.0.0:
     dependencies:
       whatwg-mimetype: 4.0.0
-      whatwg-url: 14.0.0
+      whatwg-url: 14.1.0
 
   data-view-buffer@1.0.1:
     dependencies:
@@ -15157,13 +15157,13 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@7.3.0:
+  ldapts@7.3.1:
     dependencies:
       '@types/asn1': 0.2.4
       asn1: 0.2.6
       debug: 4.4.0
       strict-event-emitter-types: 2.0.0
-      uuid: 11.0.3
+      uuid: 11.0.4
       whatwg-url: 14.1.0
     transitivePeerDependencies:
       - supports-color
@@ -17896,7 +17896,7 @@ snapshots:
 
   uuid@10.0.0: {}
 
-  uuid@11.0.3: {}
+  uuid@11.0.4: {}
 
   uuid@8.3.2: {}
 
