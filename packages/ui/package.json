@@ -33,7 +33,7 @@
     "@mantine/dates": "^7.15.3",
     "@mantine/hooks": "^7.15.3",
     "@tabler/icons-react": "^3.28.1",
-    "mantine-react-table": "2.0.0-beta.7",
+    "mantine-react-table": "2.0.0-beta.8",
     "next": "15.1.4",
     "react": "19.0.0",
     "react-dom": "19.0.0"
