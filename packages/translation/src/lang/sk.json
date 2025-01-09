@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Predvolený vyhľadávací nástroj sa úspešne zmenil"
           },
           "error": {
-            "message": ""
+            "message": "Nie je možné zmeniť predvolený vyhľadávací nástroj"
           }
         }
       },
@@ -2187,7 +2187,7 @@
             "item": {
               "language": "Jazyk a región",
               "board": "Domáca doska",
-              "defaultSearchEngine": "",
+              "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
             }
@@ -2350,10 +2350,10 @@
             }
           },
           "search": {
-            "title": "",
+            "title": "Hladať",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Predvolený vyhľadávací nástroj",
+              "description": "Integračné vyhľadávače tu nie je možné vybrať"
             }
           },
           "appearance": {
@@ -2582,19 +2582,19 @@
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Pridať do Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Pridané do Homarr",
+            "message": "Vybrané aplikácie boli pridané do Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nepodarilo sa pridať do Homarr",
+            "message": "Vybrané aplikácie nebolo možné pridať do Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Pridajte docker kontajner/y do Homarr"
         }
       }
     },
@@ -2872,20 +2872,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Hladať",
             "option": {
               "other": {
-                "label": ""
+                "label": "Hľadajte pomocou iného vyhľadávača"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Žiadny predvolený vyhľadávací nástroj",
+                "description": "Nastavte predvolený vyhľadávací nástroj v preferenciách"
               },
               "search": {
-                "label": ""
+                "label": "Hľadať '{query}' s {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Ak chcete hľadať, začnite písať"
               }
             }
           },
