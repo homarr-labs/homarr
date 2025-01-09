@@ -567,8 +567,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       trpc-to-openapi:
-        specifier: ^2.1.1
-        version: 2.1.1(@trpc/server@11.0.0-rc.688(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1)
+        specifier: ^2.1.2
+        version: 2.1.2(@trpc/server@11.0.0-rc.688(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -9031,8 +9031,8 @@ packages:
     resolution: {integrity: sha512-aZbgViZrg1QNcG+LULa7nhZpJTZSLm/mXnHXnbAbjmN5aSa0y7V+wvv6+4WaBtpISJzThKy+PIPxc1Nq1EJ9mg==}
     engines: {node: '>= 14.0.0'}
 
-  trpc-to-openapi@2.1.1:
-    resolution: {integrity: sha512-61VvDOSLHk7+vZnjswvD4yPThvCo+4ymZ2NbOqYQPbkbr5qRyyfVPdBV5YaJCUcCsIzxxgjq46DELxKYXlM6uA==}
+  trpc-to-openapi@2.1.2:
+    resolution: {integrity: sha512-v6GmrXchDdHUGtPz0foviSYZBkNQePmZF4fvnw8TPhdyDFdiMpVHbkz8QNIWVeqPOG6qKAyCVAvXTO+14/dHWw==}
     peerDependencies:
       '@trpc/server': ^11.0.0-rc.648
       zod: ^3.23.8
@@ -17616,7 +17616,7 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-to-openapi@2.1.1(@trpc/server@11.0.0-rc.688(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1):
+  trpc-to-openapi@2.1.2(@trpc/server@11.0.0-rc.688(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1):
     dependencies:
       '@trpc/server': 11.0.0-rc.688(typescript@5.7.3)
       co-body: 6.2.0
