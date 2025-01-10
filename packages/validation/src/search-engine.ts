@@ -5,7 +5,7 @@ import type { SearchEngineType } from "@homarr/definitions";
 
 const genericSearchEngine = z.object({
   type: z.literal("generic" satisfies SearchEngineType),
-  urlTemplate: z.string().min(1).startsWith("http").includes("%s"),
+  urlTemplate: z.string().min(1).startsWith("http").includes("%s"), // Only allow http and https for security reasons (javascript: is not allowed)
 });
 
 const fromIntegrationSearchEngine = z.object({

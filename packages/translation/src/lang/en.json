@@ -1280,6 +1280,7 @@
       },
       "error": {
         "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
         "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },

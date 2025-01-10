@@ -4,7 +4,11 @@ const manageAppSchema = z.object({
   name: z.string().min(1).max(64),
   description: z.string().max(512).nullable(),
   iconUrl: z.string().min(1),
-  href: z.string().nullable(),
+  href: z
+    .string()
+    .url()
+    .regex(/^https?:\/\//) // Only allow http and https for security reasons (javascript: is not allowed)
+    .nullable(),
 });
 
 const editAppSchema = manageAppSchema.and(z.object({ id: z.string() }));
