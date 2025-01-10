@@ -45,7 +45,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
         leftSection={<IconSearch />}
-        placeholder="Filter items..."
+        placeholder={`${t("item.create.search")}...`}
         data-autofocus
         onKeyDown={(event) => {
           // Add item if there is only one item in the list and user presses Enter
