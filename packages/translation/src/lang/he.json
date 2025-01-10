@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "אפליקציות",
@@ -1171,7 +1182,7 @@
       },
       "status": {
         "online": "",
-        "offline": ""
+        "offline": "לא מקוון"
       }
     },
     "notebook": {
@@ -1482,9 +1493,9 @@
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "משתמש",
+        "name": "שם",
+        "id": "מזהה"
       }
     },
     "downloads": {
@@ -1543,7 +1554,7 @@
           "detailsTitle": "מהירות הורדה"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": "מדד נוכחי בתוך הלקוח"
         },
         "id": {
@@ -1553,7 +1564,7 @@
           "columnTitle": "אינטגרציה"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "שם המשימה"
         },
         "progress": {
           "columnTitle": "התקדמות",
@@ -1577,7 +1588,7 @@
         },
         "state": {
           "columnTitle": "מצב",
-          "detailsTitle": ""
+          "detailsTitle": "מצב המשימה"
         },
         "time": {
           "columnTitle": "זמן סיום",
@@ -1599,8 +1610,8 @@
         "completed": "הושלם",
         "failed": "נכשל",
         "processing": "מעבד",
-        "leeching": "",
-        "stalled": "",
+        "leeching": "בשיתוף",
+        "stalled": "נתקע",
         "unknown": "לא ידוע",
         "seeding": "זריעה"
       },
@@ -1619,9 +1630,9 @@
           "resume": "המשך פריט",
           "delete": {
             "title": "מחק פריט",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "modalTitle": "האם את/ה בטוח/ה שברצונך למחוק את העבודה הזו?",
+            "entry": "מחיקת רשומה",
+            "entryAndFiles": "מחיקת רשומה וקבצים"
           }
         }
       },
@@ -1760,6 +1771,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "שכפול לוח",
+        "message": "פעולה זו תשכפל את הלוח {name} עם כל התוכן שלו. אם ווידג'טים מתייחסים לאינטגרציות שאינך מורשה להשתמש בהן, הם יוסרו.",
+        "notification": {
+          "success": {
+            "title": "הלוח שוכפל",
+            "message": "הלוח שוכפל בהצלחה"
+          },
+          "error": {
+            "title": "לא ניתן לשכפל את הלוח",
+            "message": "לא ניתן לשכפל את הלוח"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1821,7 +1846,7 @@
             "description": "סרגלי צד הוסרו ב- 1.0, אתה יכול לבחור מה צריך לקרות עם הפריטים שבתוכם.",
             "option": {
               "lastSection": {
-                "label": "",
+                "label": "החלק האחרון",
                 "description": "סרגל צד יוצג מתחת לקטע האחרון"
               },
               "removeItems": {
@@ -1976,31 +2001,31 @@
             "visibility": {
               "label": "שנה את נראות הלוח",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "הלוח הזה כרגע ציבורי.",
+                "private": "הלוח הזה כרגע פרטי."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "הפוך לפרטי",
+                "private": "הפוך לציבורי"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "הפיכת לוח לפרטי",
+                  "description": "האם את/ה בטוח/ה להפוך את הלוח הזה לפרטי? פעולה זו תסתיר את הלוח מציבורי. קישורים למשתמשים אורחים יוסרו."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "הפיכת לוח לציבורי",
+                  "description": "האם את/ה בטוח/ה להפוך את הלוח הזה לציבורי? הפעולה תהפוך את הלוח נגיש לכולם."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "מחיקת לוח זה",
+              "description": "ברגע שהלוח נמחק, אין דרך חזרה. אנא וודא/י זאת בוודאות.",
+              "button": "מחיקת לוח זה",
               "confirm": {
                 "title": "מחיקת לוח",
-                "description": ""
+                "description": "האם את/ה בטוח/ה שברצונך למחוק לוח זה? הלוח ותוכנו יימחקו לצמיתות."
               }
             }
           }
@@ -2010,22 +2035,22 @@
     "error": {
       "noBoard": {
         "title": "ברוכים הבאים ל- Homarr",
-        "description": "",
+        "description": "לוח בקרה מעוצב ומודרני שמביא את כל האפליקציות והשירותים שלך בהישג יד.",
         "link": "צור את הלוח הראשון שלך",
-        "notice": ""
+        "notice": "כדי להעלים דף זה, יש ליצור לוח ולקבוע אותו כלוח בית"
       },
       "notFound": {
-        "title": "",
-        "description": "",
+        "title": "לא נמצא לוח",
+        "description": "הלוח לא נמצא או שאין לך הרשאה לגשת אליו.",
         "link": "הצגת כל הלוחות",
-        "notice": ""
+        "notice": "בדוק את הקישור או צור קשר עם מנהל אם אתה סבור שהוא אמור להיות נגיש"
       },
       "homeBoard": {
-        "title": "",
+        "title": "אין לוח בית",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "לא הוגדר לוח בית לשרת עדיין.",
+          "link": "הגדר לוח בית לשרת",
+          "notice": "כדי לגרום לדף זה להעלם עבור כל המשתמש, יש להגדיר לוח בית עבור השרת"
         },
         "user": {
           "description": "",
@@ -2048,7 +2073,7 @@
       "evening": ""
     },
     "notFound": {
-      "title": "",
+      "title": "לא נמצא",
       "text": ""
     },
     "navbar": {
@@ -2071,9 +2096,9 @@
           "label": "כלים",
           "items": {
             "docker": "דוקר",
-            "logs": "",
+            "logs": "קובצי לוג",
             "api": "ממשק API",
-            "tasks": ""
+            "tasks": "משימות"
           }
         },
         "settings": "הגדרות",
@@ -2113,29 +2138,32 @@
             "label": ""
           },
           "open": {
-            "label": ""
+            "label": "פתיחת לוח"
           },
           "settings": {
             "label": "הגדרות"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "קביעה כלוח בית",
             "badge": {
               "label": "מסך הבית",
-              "tooltip": ""
+              "tooltip": "הלוח הזה יוצג כלוח הבית שלך"
             }
+          },
+          "duplicate": {
+            "label": "שכפול לוח"
           },
           "delete": {
             "label": "מחיקה לצמיתות",
             "confirm": {
               "title": "מחיקת לוח",
-              "description": ""
+              "description": "האם את/ה בטוח/ה שברצונך למחוק את הלוח {name}?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "הלוח הזה ציבורי",
+          "private": "הלוח הזה פרטי"
         },
         "modal": {
           "createBoard": {
@@ -2148,10 +2176,10 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "כלול מדיה מכל המשתמשים"
       },
       "user": {
-        "back": "",
+        "back": "חזרה למשתמשים",
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
@@ -2159,6 +2187,7 @@
             "item": {
               "language": "",
               "board": "לוח בית",
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
             }
@@ -2211,14 +2240,14 @@
           "title": "נהל הזמנות משתמש",
           "action": {
             "new": {
-              "title": "",
+              "title": "הזמנה חדשה",
               "description": "לאחר התפוגה, הזמנה לא תהיה תקפה יותר ומקבל ההזמנה לא יוכל ליצור חשבון."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "העתקת הזמנה",
+              "description": "ההזמנה שלך נוצרה. לאחר שחלון זה ייסגר, <b>לא תוכל להעתיק את הקישור הזה יותר.</b> אם אינך מעוניין להזמין את האדם הנ\"ל, תוכל למחוק את ההזמנה בכל זמן.",
               "link": "קישור הזמנה",
-              "button": ""
+              "button": "העתקה וסגירה"
             },
             "delete": {
               "title": "מחיקת הזמנה",
@@ -2242,23 +2271,23 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "חזרה לקבוצות",
         "setting": {
           "general": {
             "title": "כללי",
             "owner": "בעלים",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "בעלים של קבוצה זו",
+            "ownerOfGroupDeleted": "הבעלים של קבוצה זו נמחק. כרגע אין בעלים."
           },
           "members": {
             "title": "חברים",
-            "search": "",
-            "notFound": ""
+            "search": "חיפוש חבר בקבוצה",
+            "notFound": "לא נמצא חברים בקבוצה"
           },
           "permissions": {
-            "title": "",
+            "title": "הרשאות",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "ישנם שינויים שלא נשמרו!"
             }
           }
         }
@@ -2267,15 +2296,15 @@
         "title": "הגדרות",
         "notification": {
           "success": {
-            "message": ""
+            "message": "ההגדרות נשמרו בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "נכשל בשמירת הגדרות"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "ניתוחים",
             "general": {
               "title": "",
               "text": ""
@@ -2316,6 +2345,13 @@
           "board": {
             "title": "לוחות",
             "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
@@ -2543,6 +2579,22 @@
             "title": "",
             "message": ""
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
         }
       }
     },
@@ -2819,6 +2871,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }

@@ -211,6 +211,7 @@ export const userRouter = createTRPCRouter({
         homeBoardId: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
+        defaultSearchEngineId: true,
       }),
     )
     .meta({ openapi: { method: "GET", path: "/api/users/{userId}", tags: ["users"], protect: true } })
@@ -233,6 +234,7 @@ export const userRouter = createTRPCRouter({
           homeBoardId: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
+          defaultSearchEngineId: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -403,6 +405,43 @@ export const userRouter = createTRPCRouter({
         .update(users)
         .set({
           homeBoardId: input.homeBoardId,
+        })
+        .where(eq(users.id, input.userId));
+    }),
+  changeDefaultSearchEngine: protectedProcedure
+    .input(
+      convertIntersectionToZodObject(validation.user.changeDefaultSearchEngine.and(z.object({ userId: z.string() }))),
+    )
+    .output(z.void())
+    .meta({ openapi: { method: "PATCH", path: "/api/users/changeSearchEngine", tags: ["users"], protect: true } })
+    .mutation(async ({ input, ctx }) => {
+      const user = ctx.session.user;
+      // Only admins can change other users passwords
+      if (!user.permissions.includes("admin") && user.id !== input.userId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          defaultSearchEngineId: input.defaultSearchEngineId,
         })
         .where(eq(users.id, input.userId));
     }),

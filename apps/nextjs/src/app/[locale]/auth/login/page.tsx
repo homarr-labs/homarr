@@ -9,12 +9,13 @@ import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { LoginForm } from "./_login-form";
 
 interface LoginProps {
-  searchParams: {
+  searchParams: Promise<{
     callbackUrl?: string;
-  };
+  }>;
 }
 
-export default async function Login({ searchParams }: LoginProps) {
+export default async function Login(props: LoginProps) {
+  const searchParams = await props.searchParams;
   const session = await auth();
 
   if (session) {

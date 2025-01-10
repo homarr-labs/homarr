@@ -1,21 +1,67 @@
-import { Button, Card, Center, Grid, Stack, Text } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
 
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { widgetImports } from "@homarr/widgets";
-import type { WidgetDefinition } from "@homarr/widgets";
 
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<void>(({ actions }) => {
+  const [search, setSearch] = useState("");
+  const t = useI18n();
+  const { createItem } = useItemActions();
+
+  const items = useMemo(
+    () =>
+      objectEntries(widgetImports)
+        .map(([kind, value]) => ({
+          kind,
+          icon: value.definition.icon,
+          name: t(`widget.${kind}.name`),
+          description: t(`widget.${kind}.description`),
+        }))
+        .sort((itemA, itemB) => itemA.name.localeCompare(itemB.name)),
+    [t],
+  );
+
+  const filteredItems = useMemo(
+    () => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())),
+    [items, search],
+  );
+
+  const handleAdd = (kind: WidgetKind) => {
+    createItem({ kind });
+    actions.closeModal();
+  };
+
   return (
-    <Grid>
-      {objectEntries(widgetImports).map(([key, value]) => {
-        return <WidgetItem key={key} kind={key} definition={value.definition} closeModal={actions.closeModal} />;
-      })}
-    </Grid>
+    <Stack>
+      <Input
+        value={search}
+        onChange={(event) => setSearch(event.currentTarget.value)}
+        leftSection={<IconSearch />}
+        placeholder={`${t("item.create.search")}...`}
+        data-autofocus
+        onKeyDown={(event) => {
+          // Add item if there is only one item in the list and user presses Enter
+          if (event.key === "Enter" && filteredItems.length === 1) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            handleAdd(filteredItems[0]!.kind);
+          }
+        }}
+      />
+
+      <Grid>
+        {filteredItems.map((item) => (
+          <WidgetItem key={item.kind} item={item} onSelect={() => handleAdd(item.kind)} />
+        ))}
+      </Grid>
+    </Stack>
   );
 }).withOptions({
   defaultTitle: (t) => t("item.create.title"),
@@ -23,20 +69,18 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
 });
 
 const WidgetItem = ({
-  kind,
-  definition,
-  closeModal,
+  item,
+  onSelect,
 }: {
-  kind: WidgetKind;
-  definition: WidgetDefinition;
-  closeModal: () => void;
+  item: {
+    kind: WidgetKind;
+    name: string;
+    description: string;
+    icon: TablerIcon;
+  };
+  onSelect: () => void;
 }) => {
   const t = useI18n();
-  const { createItem } = useItemActions();
-  const handleAdd = (kind: WidgetKind) => {
-    createItem({ kind });
-    closeModal();
-  };
 
   return (
     <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
@@ -44,25 +88,16 @@ const WidgetItem = ({
         <Stack justify="space-between" h="100%">
           <Stack gap="xs">
             <Center>
-              <definition.icon />
+              <item.icon />
             </Center>
             <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-              {t(`widget.${kind}.name`)}
+              {item.name}
             </Text>
             <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
-              {t(`widget.${kind}.description`)}
+              {item.description}
             </Text>
           </Stack>
-          <Button
-            onClick={() => {
-              handleAdd(kind);
-            }}
-            variant="light"
-            size="xs"
-            mt="auto"
-            radius="md"
-            fullWidth
-          >
+          <Button onClick={onSelect} variant="light" size="xs" mt="auto" radius="md" fullWidth>
             {t(`item.create.addToBoard`)}
           </Button>
         </Stack>

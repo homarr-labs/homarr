@@ -2,12 +2,12 @@
   "init": {
     "step": {
       "start": {
-        "title": "Vitajte na Homár",
+        "title": "Víta Vás Homár",
         "subtitle": "Začnime s nastavením inštancie Homár.",
         "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
         "action": {
           "scratch": "Začať odznova",
-          "importOldmarr": "Import z Homarru pred 1.0"
+          "importOldmarr": "Import z Homarr pred 1.0"
         }
       },
       "import": {
@@ -114,7 +114,7 @@
       },
       "invite": {
         "title": "Pridajte sa k Homarrovi",
-        "subtitle": "Vitajte v Homarr! Prosím, vytvorte si účet",
+        "subtitle": "Vítajte v Homarr! Prosím, vytvorte si účet",
         "description": "Pozval vás {username}"
       },
       "init": {
@@ -207,6 +207,16 @@
           },
           "error": {
             "message": "Nie je možné zmeniť domovskú dosku"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Predvolený vyhľadávací nástroj sa úspešne zmenil"
+          },
+          "error": {
+            "message": "Nie je možné zmeniť predvolený vyhľadávací nástroj"
           }
         }
       },
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Vyhľadať aplikáciu",
     "page": {
       "list": {
         "title": "Aplikácie",
@@ -615,7 +626,7 @@
       },
       "attemptSearchEngineCreation": {
         "label": "Vytvorte vyhľadávače",
-        "description": ""
+        "description": "Integrácia \"{kind}\" môže byť použitá s vyhľadávačmi.  Toto začiarknite, ak chcete automaticky nakonfigurovať vyhľadávací nástroj."
       }
     },
     "action": {
@@ -1157,7 +1168,7 @@
     },
     "minecraftServerStatus": {
       "name": "Minecraft Server Stav",
-      "description": "",
+      "description": "Zobraziť status Minecraft servera",
       "option": {
         "title": {
           "label": "Názov"
@@ -1760,6 +1771,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplikovať dosku",
+        "message": "Tým sa duplikuje nástenka {name} s celým jej obsahom. Ak widgety odkazujú na integrácie, ktoré nemáte povolené používať, budú odstránené.",
+        "notification": {
+          "success": {
+            "title": "Doska duplikovaná",
+            "message": "Doska bola úspešne duplikovaná"
+          },
+          "error": {
+            "title": "Nieje možné duplikovať dosku",
+            "message": "Tabuľu nebolo možné duplikovať"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2125,6 +2150,9 @@
               "tooltip": "Táto tabuľa sa zobrazí ako vaša domovská tabuľa"
             }
           },
+          "duplicate": {
+            "label": "Duplikovať dosku"
+          },
           "delete": {
             "label": "Odstrániť natrvalo",
             "confirm": {
@@ -2159,6 +2187,7 @@
             "item": {
               "language": "Jazyk a región",
               "board": "Domáca doska",
+              "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
             }
@@ -2318,6 +2347,13 @@
             "homeBoard": {
               "label": "Globálna domovská nástenka",
               "description": "Na výber sú k dispozícii iba verejné tabule"
+            }
+          },
+          "search": {
+            "title": "Hladať",
+            "defaultSearchEngine": {
+              "label": "Predvolený vyhľadávací nástroj",
+              "description": "Integračné vyhľadávače tu nie je možné vybrať"
             }
           },
           "appearance": {
@@ -2544,6 +2580,22 @@
             "message": "Pri obnovovaní kontajnerov sa niečo pokazilo"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Pridať do Homarr",
+        "notification": {
+          "success": {
+            "title": "Pridané do Homarr",
+            "message": "Vybrané aplikácie boli pridané do Homarr"
+          },
+          "error": {
+            "title": "Nepodarilo sa pridať do Homarr",
+            "message": "Vybrané aplikácie nebolo možné pridať do Homarr"
+          }
+        },
+        "modal": {
+          "title": "Pridajte docker kontajner/y do Homarr"
+        }
       }
     },
     "error": {
@@ -2749,9 +2801,9 @@
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Vyžiadať film",
+        "requestSeries": "Vyžiadať seriál",
+        "openIn": "Otvoriť v {kind}"
       },
       "external": {
         "help": "Používanie externého vyhľadávača",
@@ -2819,6 +2871,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Hladať",
+            "option": {
+              "other": {
+                "label": "Hľadajte pomocou iného vyhľadávača"
+              },
+              "no-default": {
+                "label": "Žiadny predvolený vyhľadávací nástroj",
+                "description": "Nastavte predvolený vyhľadávací nástroj v preferenciách"
+              },
+              "search": {
+                "label": "Hľadať '{query}' s {name}"
+              },
+              "from-integration": {
+                "description": "Ak chcete hľadať, začnite písať"
+              }
+            }
+          },
           "local": {
             "title": "Miestne výsledky"
           }
@@ -2997,15 +3067,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Vyžiadať \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Séria",
+                "episodes": "Epizódy"
               }
             },
             "button": {
-              "send": ""
+              "send": "Poslať požiadavku"
             }
           }
         }

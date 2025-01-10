@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Default search engine changed successfully"
+          },
+          "error": {
+            "message": "Unable to change default search engine"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Find an app",
     "page": {
       "list": {
         "title": "Apps",
@@ -955,6 +966,7 @@
     },
     "create": {
       "title": "Choose item to add",
+      "search": "Filter items",
       "addToBoard": "Add to board"
     },
     "moveResize": {
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Blocked today",
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
-      }
+      },
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -1269,6 +1282,7 @@
       },
       "error": {
         "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
         "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplicate board",
+        "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
+        "notification": {
+          "success": {
+            "title": "Board duplicated",
+            "message": "The board was successfully duplicated"
+          },
+          "error": {
+            "title": "Unable to duplicate board",
+            "message": "The board could not be duplicated"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2125,6 +2153,9 @@
               "tooltip": "This board will show as your home board"
             }
           },
+          "duplicate": {
+            "label": "Duplicate board"
+          },
           "delete": {
             "label": "Delete permanently",
             "confirm": {
@@ -2159,6 +2190,7 @@
             "item": {
               "language": "Language & Region",
               "board": "Home board",
+              "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }
@@ -2318,6 +2350,13 @@
             "homeBoard": {
               "label": "Global home board",
               "description": "Only public boards are available for selection"
+            }
+          },
+          "search": {
+            "title": "Search",
+            "defaultSearchEngine": {
+              "label": "Global default search engine",
+              "description": "Integration search engines can not be selected here"
             }
           },
           "appearance": {
@@ -2543,6 +2582,22 @@
             "title": "Containers not refreshed",
             "message": "Something went wrong while refreshing the containers"
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "Add to Homarr",
+        "notification": {
+          "success": {
+            "title": "Added to Homarr",
+            "message": "Selected apps have been added to Homarr"
+          },
+          "error": {
+            "title": "Could not add to Homarr",
+            "message": "Selected apps could not be added to Homarr"
+          }
+        },
+        "modal": {
+          "title": "Add docker container(-s) to Homarr"
         }
       }
     },
@@ -2819,6 +2874,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Search",
+            "option": {
+              "other": {
+                "label": "Search with another search engine"
+              },
+              "no-default": {
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
+              },
+              "search": {
+                "label": "Search for \"{query}\" with {name}"
+              },
+              "from-integration": {
+                "description": "Start typing to search"
+              }
+            }
+          },
           "local": {
             "title": "Local results"
           }

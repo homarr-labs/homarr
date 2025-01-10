@@ -11,10 +11,11 @@ import { IntegrationAccessSettings } from "../../_components/integration-access-
 import { EditIntegrationForm } from "./_integration-edit-form";
 
 interface EditIntegrationPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function EditIntegrationPage({ params }: EditIntegrationPageProps) {
+export default async function EditIntegrationPage(props: EditIntegrationPageProps) {
+  const params = await props.params;
   const editT = await getScopedI18n("integration.page.edit");
   const t = await getI18n();
   const integration = await api.integration.byId({ id: params.id }).catch(catchTrpcNotFound);

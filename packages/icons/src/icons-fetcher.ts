@@ -5,12 +5,12 @@ import type { RepositoryIconGroup } from "./types";
 
 const repositories = [
   new GitHubIconRepository(
-    "Walkxcode",
-    "walkxcode/dashboard-icons",
+    "Dashboard Icons",
+    "homarr-labs/dashboard-icons",
     undefined,
-    new URL("https://github.com/walkxcode/dashboard-icons"),
-    new URL("https://api.github.com/repos/walkxcode/dashboard-icons/git/trees/main?recursive=true"),
-    "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/{0}",
+    new URL("https://github.com/homarr-labs/dashboard-icons"),
+    new URL("https://api.github.com/repos/homarr-labs/dashboard-icons/git/trees/main?recursive=true"),
+    "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/{0}",
   ),
   new GitHubIconRepository(
     "selfh.st",

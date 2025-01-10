@@ -17,15 +17,17 @@ import { AddGroupMember } from "./_add-group-member";
 import { RemoveGroupMember } from "./_remove-group-member";
 
 interface GroupsDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     search: string | undefined;
-  };
+  }>;
 }
 
-export default async function GroupsDetailPage({ params, searchParams }: GroupsDetailPageProps) {
+export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user.permissions.includes("admin")) {

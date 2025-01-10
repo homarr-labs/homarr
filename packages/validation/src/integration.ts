@@ -7,7 +7,10 @@ import { createSavePermissionsSchema } from "./permissions";
 
 const integrationCreateSchema = z.object({
   name: z.string().nonempty().max(127),
-  url: z.string().url(),
+  url: z
+    .string()
+    .url()
+    .regex(/^https?:\/\//), // Only allow http and https for security reasons (javascript: is not allowed)
   kind: zodEnumFromArray(integrationKinds),
   secrets: z.array(
     z.object({

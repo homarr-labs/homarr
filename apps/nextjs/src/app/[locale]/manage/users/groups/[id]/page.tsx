@@ -14,12 +14,13 @@ import { ReservedGroupAlert } from "./_reserved-group-alert";
 import { TransferGroupOwnership } from "./_transfer-group-ownership";
 
 interface GroupsDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function GroupsDetailPage({ params }: GroupsDetailPageProps) {
+export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user.permissions.includes("admin")) {

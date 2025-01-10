@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Öntanımlı arama motoru başarıyla değiştirildi"
+          },
+          "error": {
+            "message": "Öntanımlı arama motoru değiştirilemiyor"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Uygulama Bulun",
     "page": {
       "list": {
         "title": "Uygulamalar",
@@ -866,7 +877,7 @@
     "zod": {
       "errors": {
         "default": "Bu alan geçersiz",
-        "required": "Bu alan gereklidir",
+        "required": "Bu alan gerekli",
         "string": {
           "startsWith": "Bu alan {startsWith} ile başlamalıdır",
           "endsWith": "Bu alan {endsWith} ile bitmelidir",
@@ -1280,7 +1291,7 @@
           "label": "Varlık Kimliği"
         },
         "displayName": {
-          "label": "Ekran adı"
+          "label": "Görünen isim"
         },
         "entityUnit": {
           "label": "Varlık Birimi"
@@ -1295,7 +1306,7 @@
       "description": "Tek tıklamayla otomasyonu tetikleyin",
       "option": {
         "displayName": {
-          "label": "Ekran adı"
+          "label": "Görünen isim"
         },
         "automationId": {
           "label": "Otomasyon Kimliği"
@@ -1760,6 +1771,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Paneli Kopyala",
+        "message": "{name} panelini tüm içerikleri ile birlikte kopyalamayı seçtiniz. Kullanım yetkiniz olmayan entegrasyonlar ve bunları içeren araçlar dahil edilmeyecektir.",
+        "notification": {
+          "success": {
+            "title": "Panel Kopyalandı",
+            "message": "Panel başarıyla kopyalandı"
+          },
+          "error": {
+            "title": "Panel Kopyalanamıyor",
+            "message": "Panel kopyalanamadı"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2119,11 +2144,14 @@
             "label": "Ayarlar"
           },
           "setHomeBoard": {
-            "label": "Öntanımlı panel olarak ayarlayın",
+            "label": "Öntanımlı Panel Olarak Ata",
             "badge": {
               "label": "Ana Sayfa",
               "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
             }
+          },
+          "duplicate": {
+            "label": "Paneli Kopyala"
           },
           "delete": {
             "label": "Kalıcı olarak sil",
@@ -2159,6 +2187,7 @@
             "item": {
               "language": "Dil & Bölge",
               "board": "Öntanımlı panel",
+              "defaultSearchEngine": "Öntanımlı arama motoru",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
@@ -2318,6 +2347,13 @@
             "homeBoard": {
               "label": "Genel Ana Sayfa Paneli",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
+            }
+          },
+          "search": {
+            "title": "Ara",
+            "defaultSearchEngine": {
+              "label": "Genel öntanımlı arama motoru",
+              "description": "Entegrasyona bağlı arama motorları burada seçilemez"
             }
           },
           "appearance": {
@@ -2544,6 +2580,22 @@
             "message": "Konteynerler yenilenirken bir şeyler ters gitti"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Homarr'a Ekle",
+        "notification": {
+          "success": {
+            "title": "Homarr'a Eklendi",
+            "message": "Seçili uygulamalar Homarr'a eklendi"
+          },
+          "error": {
+            "title": "Homarr'a Eklenemedi",
+            "message": "Seçilen uygulamalar Homarr'a eklenemedi"
+          }
+        },
+        "modal": {
+          "title": "Homarr'a docker konteyner(-ler)i ekleyin"
+        }
       }
     },
     "error": {
@@ -2648,7 +2700,7 @@
     }
   },
   "search": {
-    "placeholder": "Ara (\"!\" İle Başlamalı)",
+    "placeholder": "Aramak için yaz",
     "nothingFound": "Hiçbir şey bulunamadı",
     "error": {
       "fetch": "Veriler alınırken bir hata oluştu"
@@ -2819,6 +2871,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Ara",
+            "option": {
+              "other": {
+                "label": "Farklı bir arama motoruyla arama yap"
+              },
+              "no-default": {
+                "label": "Öntanımlı arama motoru yapılandırılmadı",
+                "description": "Tercihlerde öntanımlı arama motoru belirleyin"
+              },
+              "search": {
+                "label": "{name} ile '{query}' ifadesini arayın"
+              },
+              "from-integration": {
+                "description": "Aramak için yazmaya başla"
+              }
+            }
+          },
           "local": {
             "title": "Yerel sonuçlar"
           }

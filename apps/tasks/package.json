@@ -38,7 +38,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "superjson": "2.2.2",
-    "undici": "7.2.0"
+    "undici": "7.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -49,6 +49,6 @@
     "eslint": "^9.17.0",
     "prettier": "^3.4.2",
     "tsx": "4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
