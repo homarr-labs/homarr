@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like } from "@homarr/db";
-import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
+import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
@@ -18,6 +18,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
+import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
@@ -209,6 +210,7 @@ export const userRouter = createTRPCRouter({
         image: true,
         provider: true,
         homeBoardId: true,
+        mobileHomeBoardId: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
         defaultSearchEngineId: true,
@@ -232,6 +234,7 @@ export const userRouter = createTRPCRouter({
           image: true,
           provider: true,
           homeBoardId: true,
+          mobileHomeBoardId: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
           defaultSearchEngineId: true,
@@ -373,8 +376,8 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  changeHomeBoardId: protectedProcedure
-    .input(convertIntersectionToZodObject(validation.user.changeHomeBoard.and(z.object({ userId: z.string() }))))
+  changeHomeBoards: protectedProcedure
+    .input(convertIntersectionToZodObject(validation.user.changeHomeBoards.and(z.object({ userId: z.string() }))))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/changeHome", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
@@ -401,10 +404,13 @@ export const userRouter = createTRPCRouter({
         });
       }
 
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.userId), "view");
+
       await ctx.db
         .update(users)
         .set({
           homeBoardId: input.homeBoardId,
+          mobileHomeBoardId: input.mobileHomeBoardId,
         })
         .where(eq(users.id, input.userId));
     }),

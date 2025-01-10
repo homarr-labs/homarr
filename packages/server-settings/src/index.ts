@@ -27,6 +27,7 @@ export const defaultServerSettings = {
   },
   board: {
     homeBoardId: null as string | null,
+    mobileHomeBoardId: null as string | null,
   },
   appearance: {
     defaultColorScheme: "light" as ColorScheme,

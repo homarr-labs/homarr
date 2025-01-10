@@ -101,7 +101,11 @@ export default async function BoardSettingsPage(props: Props) {
                 <BoardAccessSettings board={board} initialPermissions={permissions} />
               </AccordionItemFor>
               <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
-                <DangerZoneSettingsContent hideVisibility={boardSettings.homeBoardId === board.id} />
+                <DangerZoneSettingsContent
+                  hideVisibility={
+                    boardSettings.homeBoardId === board.id || boardSettings.mobileHomeBoardId === board.id
+                  }
+                />
               </AccordionItemFor>
             </>
           )}

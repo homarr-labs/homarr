@@ -1,5 +1,5 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
+import { IconDeviceMobile, IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
@@ -49,6 +49,30 @@ const boardChildrenOptions = createChildrenOptions<Board>({
         },
         useInteraction(option) {
           const { mutateAsync } = clientApi.board.setHomeBoard.useMutation();
+
+          return {
+            type: "javaScript",
+            // eslint-disable-next-line no-restricted-syntax
+            async onSelect() {
+              await mutateAsync({ id: option.id });
+            },
+          };
+        },
+      },
+      {
+        key: "mobileBoard",
+        Component: () => {
+          const t = useI18n();
+
+          return (
+            <Group mx="md" my="sm">
+              <IconDeviceMobile stroke={1.5} />
+              <Text>{t("search.mode.appIntegrationBoard.group.board.children.action.mobileBoard.label")}</Text>
+            </Group>
+          );
+        },
+        useInteraction(option) {
+          const { mutateAsync } = clientApi.board.setMobileHomeBoard.useMutation();
 
           return {
             type: "javaScript",

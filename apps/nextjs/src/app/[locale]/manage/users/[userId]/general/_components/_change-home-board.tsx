@@ -18,13 +18,14 @@ interface ChangeHomeBoardFormProps {
 
 export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormProps) => {
   const t = useI18n();
-  const { mutate, isPending } = clientApi.user.changeHomeBoardId.useMutation({
+  const { mutate, isPending } = clientApi.user.changeHomeBoards.useMutation({
     async onSettled() {
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
     },
     onSuccess(_, variables) {
       form.setInitialValues({
         homeBoardId: variables.homeBoardId,
+        mobileHomeBoardId: variables.mobileHomeBoardId,
       });
       showSuccessNotification({
         message: t("user.action.changeHomeBoard.notification.success.message"),
@@ -36,9 +37,10 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
       });
     },
   });
-  const form = useZodForm(validation.user.changeHomeBoard, {
+  const form = useZodForm(validation.user.changeHomeBoards, {
     initialValues: {
       homeBoardId: user.homeBoardId ?? "",
+      mobileHomeBoardId: user.mobileHomeBoardId ?? "",
     },
   });
 
@@ -52,7 +54,8 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Select w="100%" data={boardsData} {...form.getInputProps("homeBoardId")} />
+        <Select label="Desktop" w="100%" data={boardsData} {...form.getInputProps("homeBoardId")} />
+        <Select label="Mobile" w="100%" data={boardsData} {...form.getInputProps("mobileHomeBoardId")} />
 
         <Group justify="end">
           <Button type="submit" color="teal" loading={isPending}>
@@ -64,4 +67,4 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   );
 };
 
-type FormType = z.infer<typeof validation.user.changeHomeBoard>;
+type FormType = z.infer<typeof validation.user.changeHomeBoards>;

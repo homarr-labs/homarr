@@ -1,0 +1,2 @@
+ALTER TABLE `user` ADD `mobile_home_board_id` text;--> statement-breakpoint
+ALTER TABLE `user` ADD CONSTRAINT `user_mobile_home_board_id_board_id_fk` FOREIGN KEY (`mobile_home_board_id`) REFERENCES `board`(`id`) ON DELETE set null ON UPDATE no action;
