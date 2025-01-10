@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
