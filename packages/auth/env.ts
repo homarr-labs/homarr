@@ -1,10 +1,9 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-const trueStrings = ["1", "yes", "t", "true"];
-const falseStrings = ["0", "no", "f", "false"];
+import { createBooleanSchema, createDurationSchema, shouldSkipEnvValidation } from "@homarr/common/env-validation";
+import { supportedAuthProviders } from "@homarr/definitions";
 
-const supportedAuthProviders = ["credentials", "oidc", "ldap"];
 const authProvidersSchema = z
   .string()
   .min(1)
@@ -14,7 +13,7 @@ const authProvidersSchema = z
       .toLowerCase()
       .split(",")
       .filter((provider) => {
-        if (supportedAuthProviders.includes(provider)) return true;
+        if (supportedAuthProviders.some((supportedProvider) => supportedProvider === provider)) return true;
         else if (!provider)
           console.log("One or more of the entries for AUTH_PROVIDER could not be parsed and/or returned null.");
         else console.log(`The value entered for AUTH_PROVIDER "${provider}" is incorrect.`);
@@ -23,41 +22,7 @@ const authProvidersSchema = z
   )
   .default("credentials");
 
-const createDurationSchema = (defaultValue) =>
-  z
-    .string()
-    .regex(/^\d+[smhd]?$/)
-    .default(defaultValue)
-    .transform((duration) => {
-      const lastChar = duration[duration.length - 1];
-      if (!isNaN(Number(lastChar))) {
-        return Number(defaultValue);
-      }
-
-      const multipliers = {
-        s: 1,
-        m: 60,
-        h: 60 * 60,
-        d: 60 * 60 * 24,
-      };
-      const numberDuration = Number(duration.slice(0, -1));
-      const multiplier = multipliers[lastChar];
-
-      return numberDuration * multiplier;
-    });
-
-const booleanSchema = z
-  .string()
-  .default("false")
-  .transform((value, ctx) => {
-    const normalized = value.trim().toLowerCase();
-    if (trueStrings.includes(normalized)) return true;
-    if (falseStrings.includes(normalized)) return false;
-
-    throw new Error(`Invalid boolean value for ${ctx.path.join(".")}`);
-  });
-
-const skipValidation = Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION);
+const skipValidation = shouldSkipEnvValidation();
 const authProviders = skipValidation ? [] : authProvidersSchema.parse(process.env.AUTH_PROVIDERS);
 
 export const env = createEnv({
@@ -71,7 +36,7 @@ export const env = createEnv({
           AUTH_OIDC_CLIENT_ID: z.string().min(1),
           AUTH_OIDC_CLIENT_SECRET: z.string().min(1),
           AUTH_OIDC_CLIENT_NAME: z.string().min(1).default("OIDC"),
-          AUTH_OIDC_AUTO_LOGIN: booleanSchema,
+          AUTH_OIDC_AUTO_LOGIN: createBooleanSchema(false),
           AUTH_OIDC_SCOPE_OVERWRITE: z.string().min(1).default("openid email profile groups"),
           AUTH_OIDC_GROUPS_ATTRIBUTE: z.string().default("groups"), // Is used in the signIn event to assign the correct groups, key is from object of decoded id_token
           AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: z.string().optional(),

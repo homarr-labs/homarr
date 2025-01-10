@@ -8,7 +8,7 @@ import { groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
-import { env } from "./env.mjs";
+import { env } from "./env";
 import { extractProfileName } from "./providers/oidc/oidc-provider";
 
 export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {

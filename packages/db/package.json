@@ -11,7 +11,7 @@
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
     "./validationSchemas": "./validationSchemas.ts",
-    "./env.mjs": "./env.mjs"
+    "./env": "./env.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",

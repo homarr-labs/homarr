@@ -28,7 +28,7 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { useEditMode, useRequiredBoard } from "./_context";
 
 export const BoardContentHeaderActions = () => {

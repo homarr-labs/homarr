@@ -1,13 +1,13 @@
 // Importing env files here to validate on build
-import "@homarr/auth/env.mjs";
-import "@homarr/db/env.mjs";
-import "@homarr/common/env.mjs";
+import "@homarr/auth/env";
+import "@homarr/db/env";
+import "@homarr/common/env";
 
 import type { NextConfig } from "next";
 import MillionLint from "@million/lint";
 import createNextIntlPlugin from "next-intl/plugin";
 
-import "./src/env.mjs";
+import "./src/env.ts";
 
 // Package path does not work... so we need to use relative path
 const withNextIntl = createNextIntlPlugin("../../packages/translation/src/request.ts");

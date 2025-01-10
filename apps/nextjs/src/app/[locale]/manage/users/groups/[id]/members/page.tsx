@@ -5,7 +5,7 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { env } from "@homarr/auth/env.mjs";
+import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
