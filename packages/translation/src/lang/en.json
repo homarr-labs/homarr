@@ -1091,7 +1091,8 @@
         "adsBlockedTodayPercentage": "Blocked today",
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
-      }
+      },
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
