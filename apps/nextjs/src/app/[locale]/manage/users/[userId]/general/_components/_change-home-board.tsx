@@ -54,8 +54,18 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Select label="Desktop" w="100%" data={boardsData} {...form.getInputProps("homeBoardId")} />
-        <Select label="Mobile" w="100%" data={boardsData} {...form.getInputProps("mobileHomeBoardId")} />
+        <Select
+          label={t("management.page.user.setting.general.item.board.type.general")}
+          w="100%"
+          data={boardsData}
+          {...form.getInputProps("homeBoardId")}
+        />
+        <Select
+          label={t("management.page.user.setting.general.item.board.type.mobile")}
+          w="100%"
+          data={boardsData}
+          {...form.getInputProps("mobileHomeBoardId")}
+        />
 
         <Group justify="end">
           <Button type="submit" color="teal" loading={isPending}>

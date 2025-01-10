@@ -2193,7 +2193,13 @@
             "title": "General",
             "item": {
               "language": "Language & Region",
-              "board": "Home board",
+              "board": {
+                "title": "Home board",
+                "type": {
+                  "general": "General",
+                  "mobile": "Mobile"
+                }
+              },
               "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
