@@ -62,7 +62,7 @@ export const users = mysqlTable("user", {
   homeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),
-  mobileHomeBoardId: text().references((): AnyMySqlColumn => boards.id, {
+  mobileHomeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),
   defaultSearchEngineId: varchar({ length: 64 }).references(() => searchEngines.id, {
