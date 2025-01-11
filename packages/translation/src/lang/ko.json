@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "",
         "dnsQueriesToday": "오늘 쿼리",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "브라우저가 iframe을 지원하지 않습니다. 브라우저를 업데이트하세요."
       }
     },

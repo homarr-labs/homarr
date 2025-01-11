@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Eklenecek öğeyi seçin",
+      "search": "",
       "addToBoard": "Panele Ekle"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Bugün engellenenler",
         "dnsQueriesToday": "Bugünkü Sorgular",
         "domainsBeingBlocked": "Engelleme listesindeki alan adları"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "DNS Çözümleyici Kontrolleri",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "IFrame URL'si sağlanmadı",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Tarayıcınız iframe'leri desteklemiyor. Lütfen tarayıcınızı güncelleyin."
       }
     },

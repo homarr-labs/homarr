@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Kies een item om toe te voegen",
+      "search": "",
       "addToBoard": "Toevoegen aan bord"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Vandaag geblokkeerd",
         "dnsQueriesToday": "Aanvragen vandaag",
         "domainsBeingBlocked": "Domeinen op blokkadelijst"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "DNS-hole bedieningen",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Geen iFrame URL opgegeven",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Je browser ondersteunt geen iframes. Update je browser."
       }
     },
