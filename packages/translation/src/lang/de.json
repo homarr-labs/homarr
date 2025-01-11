@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Wählen Sie das hinzuzufügende Element aus",
+      "search": "",
       "addToBoard": "Zum Board hinzufügen"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Heute blockiert",
         "dnsQueriesToday": "Abfragen heute",
         "domainsBeingBlocked": "Domänen auf der Sperrliste"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "DNS Hole Steuerung",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Keine iFrame URL angegeben",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Ihr Browser unterstützt keine iframes. Bitte aktualisieren Sie Ihren Browser."
       }
     },

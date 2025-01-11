@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Zablokováno dnes",
         "dnsQueriesToday": "Dotazů dnes",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Nebyla zadána URL adresa iFrame",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Váš prohlížeč nepodporuje iFrame. Aktualizujte, prosím, svůj prohlížeč."
       }
     },
