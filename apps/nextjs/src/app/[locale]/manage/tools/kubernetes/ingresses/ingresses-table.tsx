@@ -1,0 +1,102 @@
+"use client";
+
+import React from "react";
+import { Anchor, Flex } from "@mantine/core";
+import { IconArrowRight } from "@tabler/icons-react";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+import { nanoid } from "nanoid";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import type { KubernetesIngress } from "@homarr/definitions";
+import type { ScopedTranslationFunction } from "@homarr/translation";
+import { useScopedI18n } from "@homarr/translation/client";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+
+interface IngressesTableComponentProps {
+  initialIngresses: RouterOutputs["kubernetes"]["getIngresses"];
+}
+
+const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MRT_ColumnDef<KubernetesIngress>[] => [
+  {
+    accessorKey: "name",
+    header: t("field.name.label"),
+    enableClickToCopy: true,
+  },
+  {
+    accessorKey: "namespace",
+    header: t("field.namespace.label"),
+    enableClickToCopy: true,
+  },
+  {
+    accessorKey: "className",
+    header: t("field.className.label"),
+    enableClickToCopy: true,
+  },
+  {
+    accessorKey: "rulesAndPaths",
+    header: t("field.rulesAndPaths.label"),
+    Cell({ cell }) {
+      const getAbsoluteUrl = (host: string) =>
+        host.startsWith("http://") || host.startsWith("https://") ? host : `https://${host}`;
+      return (
+        <>
+          {cell.row.original.rulesAndPaths.map((ruleAndPaths) => (
+            <div key={ruleAndPaths.host}>
+              <Flex align="flex-end">
+                <Anchor href={getAbsoluteUrl(ruleAndPaths.host)} target="_blank">
+                  {getAbsoluteUrl(ruleAndPaths.host)}
+                </Anchor>
+                <IconArrowRight size={22} stroke={2} />
+              </Flex>
+              {ruleAndPaths.paths.map((path) => (
+                <div key={nanoid()}>
+                  {path.serviceName}:{path.port}
+                </div>
+              ))}
+            </div>
+          ))}
+        </>
+      );
+    },
+  },
+  {
+    accessorKey: "creationTimestamp",
+    header: t("field.creationTimestamp.label"),
+  },
+];
+
+export function IngressesTable(initialData: IngressesTableComponentProps) {
+  const tIngresses = useScopedI18n("kubernetes.ingresses");
+
+  const { data } = clientApi.kubernetes.getIngresses.useQuery(undefined, {
+    initialData: initialData.initialIngresses,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const table = useTranslatedMantineReactTable({
+    data,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableRowSelection: true,
+    positionToolbarAlertBanner: "top",
+    enableTableFooter: false,
+    enableBottomToolbar: false,
+    positionGlobalFilter: "right",
+    initialState: { density: "xs", showGlobalFilter: true },
+    mantineSearchTextInputProps: {
+      placeholder: tIngresses("table.search", { count: data.length }),
+      style: { minWidth: 300 },
+      autoFocus: true,
+    },
+
+    columns: createColumns(tIngresses),
+  });
+
+  return <MantineReactTable table={table} />;
+}

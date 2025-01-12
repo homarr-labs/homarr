@@ -6,11 +6,12 @@ import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { env } from "~/env";
 import { DockerTable } from "./docker-table";
 
 export default async function DockerPage() {
   const session = await auth();
-  if (!session?.user || !session.user.permissions.includes("admin")) {
+  if (!(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER)) {
     notFound();
   }
 
