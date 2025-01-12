@@ -35,6 +35,7 @@ import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
+import { env } from "~/env";
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
   const t = await getScopedI18n("management.navbar");
@@ -113,7 +114,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.docker"),
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
-          hidden: !session?.user.permissions.includes("admin"),
+          hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER),
+        },
+        {
+          label: t("items.tools.items.kubernetes"),
+          icon: IconBox,
+          href: "/manage/tools/kubernetes",
+          hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES),
         },
         {
           label: t("items.tools.items.api"),
