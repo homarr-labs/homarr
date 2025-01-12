@@ -4,6 +4,7 @@ export * from "./section";
 export * from "./widget";
 export * from "./permissions";
 export * from "./docker";
+export * from "./kubernetes";
 export * from "./auth";
 export * from "./user";
 export * from "./group";
