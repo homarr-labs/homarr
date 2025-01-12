@@ -213,7 +213,7 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Стандартну систему пошуку змінено успішно"
           },
           "error": {
             "message": ""
