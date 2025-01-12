@@ -2176,6 +2176,7 @@
           "label": "Tools",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
             "certificates": "Certificates",
@@ -2697,6 +2698,35 @@
       "internalServerError": "Failed to fetch Docker containers"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "Cluster Dashboard",
+      "providers": "Providers",
+      "version": "Version",
+      "architecture": "Architecture",
+      "capacity": {
+        "title": "Capacity",
+        "resource": {
+          "reserved": "Reserved",
+          "used": "Used"
+        }
+      },
+      "resources": {
+        "title": "Resources",
+        "nodes": "Nodes",
+        "namespaces": "Namespaces",
+        "ingresses": "Ingresses",
+        "services": "Services",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Secrets",
+        "volumes": "Volumes"
+      }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Kubernetes data"
+    }
+  },
   "permission": {
     "title": "Permissions",
     "userSelect": {
@@ -2781,6 +2811,12 @@
         "label": "Tools",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "node-dashboard": {
+            "label": "Node dashboard"
+          }
         },
         "logs": {
           "label": "Logs"
