@@ -2099,6 +2099,7 @@
           "label": "Tools",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
             "tasks": "Tasks"
@@ -2689,6 +2690,12 @@
         "label": "Tools",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "node-dashboard": {
+            "label": "Node dashboard"
+          }
         },
         "logs": {
           "label": "Logs"
