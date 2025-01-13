@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  proxmox-api>undici: 7.2.1
+
 patchedDependencies:
   pretty-print-error:
     hash: 4arrfgbz7em6s4gqywse7esg4u
@@ -9297,10 +9300,6 @@ packages:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
 
-  undici@6.21.0:
-    resolution: {integrity: sha512-BUgJXc752Kou3oOIuU1i+yZZypyZRqNPW0vqoMPl8VaoalSfeR0D8/t4iAS3yirs79SSMTxTag+ZC86uswv+Cw==}
-    engines: {node: '>=18.17'}
-
   undici@7.2.1:
     resolution: {integrity: sha512-U2k0XHLJfaciARRxDcqTk2AZQsGXerHzdvfCZcy1hNhSf5KCAF4jIQQxL+apQviOekhRFPqED6Of5/+LcUSLzQ==}
     engines: {node: '>=20.18.1'}
@@ -16423,7 +16422,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 6.21.0
+      undici: 7.2.1
 
   proxy-agent@6.4.0:
     dependencies:
@@ -17948,8 +17947,6 @@ snapshots:
   undici@5.28.4:
     dependencies:
       '@fastify/busboy': 2.1.1
-
-  undici@6.21.0: {}
 
   undici@7.2.1: {}
 
