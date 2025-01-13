@@ -23,6 +23,7 @@ export const mapAndDecryptUsers = (importUsers: OldmarrImportUser[], encryptionT
       ...user,
       oldId: id,
       id: createId(),
+      name: user.name.toLowerCase(),
       colorScheme: settings?.colorScheme === "environment" ? undefined : settings?.colorScheme,
       firstDayOfWeek: settings?.firstDayOfWeek === "sunday" ? 0 : settings?.firstDayOfWeek === "monday" ? 1 : 6,
       provider: "credentials",

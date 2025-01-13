@@ -45,6 +45,9 @@ export const users = sqliteTable("user", {
   homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
+  defaultSearchEngineId: text().references(() => searchEngines.id, {
+    onDelete: "set null",
+  }),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
@@ -375,7 +378,7 @@ export const searchEngines = sqliteTable("search_engine", {
   id: text().notNull().primaryKey(),
   iconUrl: text().notNull(),
   name: text().notNull(),
-  short: text().notNull(),
+  short: text().unique().notNull(),
   description: text(),
   urlTemplate: text(),
   type: text().$type<SearchEngineType>().notNull().default("generic"),
@@ -395,7 +398,7 @@ export const accountRelations = relations(accounts, ({ one }) => ({
   }),
 }));
 
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ one, many }) => ({
   accounts: many(accounts),
   boards: many(boards),
   boardPermissions: many(boardUserPermissions),
@@ -403,6 +406,10 @@ export const userRelations = relations(users, ({ many }) => ({
   ownedGroups: many(groups),
   invites: many(invites),
   medias: many(medias),
+  defaultSearchEngine: one(searchEngines, {
+    fields: [users.defaultSearchEngineId],
+    references: [searchEngines.id],
+  }),
 }));
 
 export const mediaRelations = relations(medias, ({ one }) => ({
@@ -560,9 +567,10 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   }),
 }));
 
-export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
+export const searchEngineRelations = relations(searchEngines, ({ one, many }) => ({
   integration: one(integrations, {
     fields: [searchEngines.integrationId],
     references: [integrations.id],
   }),
+  usersWithDefault: many(users),
 }));

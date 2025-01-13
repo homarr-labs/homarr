@@ -1,18 +1,18 @@
 import { objectEntries } from "@homarr/common";
-import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
-import type { OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
+import { mapKind } from "./definitions";
+import type { InversedWidgetMapping, OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
 
 // This type enforces, that for all widget mappings there is a corresponding option mapping,
 // each option of newmarr can be mapped from the value of the oldmarr options
 type OptionMapping = {
-  [WidgetKey in keyof WidgetMapping]: WidgetMapping[WidgetKey] extends null
+  [WidgetKey in keyof InversedWidgetMapping]: InversedWidgetMapping[WidgetKey] extends null
     ? null
     : {
         [OptionsKey in keyof WidgetComponentProps<WidgetKey>["options"]]: (
-          oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[WidgetKey] }>["options"],
+          oldOptions: Extract<OldmarrWidgetDefinitions, { id: InversedWidgetMapping[WidgetKey] }>["options"],
           appsMap: Map<string, string>,
         ) => WidgetComponentProps<WidgetKey>["options"][OptionsKey] | undefined;
       };
@@ -55,12 +55,16 @@ const optionMapping: OptionMapping = {
     useCustomTimezone: () => true,
   },
   downloads: {
-    activeTorrentThreshold: (oldOptions) => oldOptions.speedLimitOfActiveTorrents,
-    applyFilterToRatio: (oldOptions) => oldOptions.displayRatioWithFilter,
-    categoryFilter: (oldOptions) => oldOptions.labelFilter,
-    filterIsWhitelist: (oldOptions) => oldOptions.labelFilterIsWhitelist,
-    enableRowSorting: (oldOptions) => oldOptions.rowSorting,
-    showCompletedTorrent: (oldOptions) => oldOptions.displayCompletedTorrents,
+    activeTorrentThreshold: (oldOptions) =>
+      "speedLimitOfActiveTorrents" in oldOptions ? oldOptions.speedLimitOfActiveTorrents : undefined,
+    applyFilterToRatio: (oldOptions) =>
+      "displayRatioWithFilter" in oldOptions ? oldOptions.displayRatioWithFilter : undefined,
+    categoryFilter: (oldOptions) => ("labelFilter" in oldOptions ? oldOptions.labelFilter : undefined),
+    filterIsWhitelist: (oldOptions) =>
+      "labelFilterIsWhitelist" in oldOptions ? oldOptions.labelFilterIsWhitelist : undefined,
+    enableRowSorting: (oldOptions) => ("rowSorting" in oldOptions ? oldOptions.rowSorting : undefined),
+    showCompletedTorrent: (oldOptions) =>
+      "displayCompletedTorrents" in oldOptions ? oldOptions.displayCompletedTorrents : undefined,
     columns: () => ["integration", "name", "progress", "time", "actions"],
     defaultSort: () => "type",
     descendingDefaultSort: () => false,
@@ -124,45 +128,54 @@ const optionMapping: OptionMapping = {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
   },
   healthMonitoring: {
-    cpu: (oldOptions) => oldOptions.cpu,
-    memory: (oldOptions) => oldOptions.memory,
-    fahrenheit: (oldOptions) => oldOptions.fahrenheit,
-    fileSystem: (oldOptions) => oldOptions.fileSystem,
+    cpu: (oldOptions) =>
+      "cpu" in oldOptions
+        ? oldOptions.cpu
+        : oldOptions.graphsOrder.some((graph) => graph.key === "cpu" && graph.subValues.enabled),
+    memory: (oldOptions) =>
+      "memory" in oldOptions
+        ? oldOptions.memory
+        : oldOptions.graphsOrder.some((graph) => graph.key === "ram" && graph.subValues.enabled),
+    fahrenheit: (oldOptions) => ("fahrenheit" in oldOptions ? oldOptions.fahrenheit : undefined),
+    fileSystem: (oldOptions) =>
+      "fileSystem" in oldOptions
+        ? oldOptions.fileSystem
+        : oldOptions.graphsOrder.some((graph) => graph.key === "storage" && graph.subValues.enabled),
   },
   mediaTranscoding: {
     defaultView: (oldOptions) => oldOptions.defaultView,
     queuePageSize: (oldOptions) => oldOptions.queuePageSize,
   },
-  app: null,
 };
 
 /**
  * Maps the oldmarr options to the newmarr options
- * @param kind item kind to map
+ * @param type old widget type
  * @param oldOptions oldmarr options for this item
  * @param appsMap map of old app ids to new app ids
  * @returns newmarr options for this item or null if the item did not exist in oldmarr
  */
-export const mapOptions = <K extends WidgetKind>(
-  kind: K,
-  oldOptions: Extract<OldmarrWidgetDefinitions, { id: WidgetMapping[K] }>["options"],
+export const mapOptions = <K extends OldmarrWidgetDefinitions["id"]>(
+  type: K,
+  oldOptions: Extract<OldmarrWidgetDefinitions, { id: K }>["options"],
   appsMap: Map<string, string>,
 ) => {
-  logger.debug(`Mapping old homarr options for widget kind=${kind} options=${JSON.stringify(oldOptions)}`);
-  if (optionMapping[kind] === null) {
+  logger.debug(`Mapping old homarr options for widget type=${type} options=${JSON.stringify(oldOptions)}`);
+  const kind = mapKind(type);
+  if (!kind) {
     return null;
   }
 
   const mapping = optionMapping[kind];
   return objectEntries(mapping).reduce(
-    (acc, [key, value]) => {
-      const newValue = value(oldOptions as never, appsMap);
-      logger.debug(`Mapping old homarr option kind=${kind} key=${key as string} newValue=${newValue as string}`);
+    (acc, [key, value]: [string, (oldOptions: Record<string, unknown>, appsMap: Map<string, string>) => unknown]) => {
+      const newValue = value(oldOptions, appsMap);
+      logger.debug(`Mapping old homarr option kind=${kind} key=${key} newValue=${newValue as string}`);
       if (newValue !== undefined) {
-        acc[key as string] = newValue;
+        acc[key] = newValue;
       }
       return acc;
     },
     {} as Record<string, unknown>,
-  ) as WidgetComponentProps<K>["options"];
+  ) as WidgetComponentProps<Exclude<WidgetMapping[K], null>>["options"];
 };

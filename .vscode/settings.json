@@ -39,5 +39,5 @@
   "i18n-ally.localesPaths": [
     "packages/translation/src/lang",
   ],
-  "i18n-ally.keystyle": "auto",
+  "i18n-ally.keystyle": "nested",
 }

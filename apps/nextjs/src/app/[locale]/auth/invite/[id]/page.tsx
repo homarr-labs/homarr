@@ -11,15 +11,17 @@ import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { RegistrationForm } from "./_registration-form";
 
 interface InviteUsagePageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     token: string;
-  };
+  }>;
 }
 
-export default async function InviteUsagePage({ params, searchParams }: InviteUsagePageProps) {
+export default async function InviteUsagePage(props: InviteUsagePageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!isProviderEnabled("credentials")) notFound();
 
   const session = await auth();
@@ -57,7 +59,7 @@ export default async function InviteUsagePage({ params, searchParams }: InviteUs
             {t("subtitle")}
           </Text>
         </Stack>
-        <Card bg="dark.8" w={64 * 6} maw="90vw">
+        <Card withBorder w={64 * 6} maw="90vw">
           <RegistrationForm invite={invite} />
         </Card>
         <Text size="xs" c="gray.5" ta="center">

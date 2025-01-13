@@ -11,6 +11,7 @@ import { AnalyticsSettings } from "./_components/analytics.settings";
 import { AppearanceSettingsForm } from "./_components/appearance-settings-form";
 import { BoardSettingsForm } from "./_components/board-settings-form";
 import { CultureSettingsForm } from "./_components/culture-settings-form";
+import { SearchSettingsForm } from "./_components/search-settings-form";
 
 export async function generateMetadata() {
   const t = await getScopedI18n("management");
@@ -40,6 +41,10 @@ export default async function SettingsPage() {
         <Stack>
           <Title order={2}>{tSettings("section.board.title")}</Title>
           <BoardSettingsForm defaultValues={serverSettings.board} />
+        </Stack>
+        <Stack>
+          <Title order={2}>{tSettings("section.search.title")}</Title>
+          <SearchSettingsForm defaultValues={serverSettings.search} />
         </Stack>
         <Stack>
           <Title order={2}>{tSettings("section.appearance.title")}</Title>

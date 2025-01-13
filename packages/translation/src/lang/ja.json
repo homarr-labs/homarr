@@ -2,16 +2,16 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
+        "title": "Homarrへようこそ",
         "subtitle": "",
         "description": "",
         "action": {
-          "scratch": "",
+          "scratch": "ゼロからスタート",
           "importOldmarr": ""
         }
       },
       "import": {
-        "title": "",
+        "title": "データのインポート",
         "subtitle": "",
         "dropzone": {
           "title": "",
@@ -201,6 +201,16 @@
         }
       },
       "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
         "notification": {
           "success": {
             "message": ""
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "アプリ",
@@ -612,6 +623,10 @@
       },
       "url": {
         "label": ""
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -951,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -1076,7 +1092,8 @@
         "adsBlockedTodayPercentage": "今日のブロック",
         "dnsQueriesToday": "今日のクエリ",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1149,6 +1166,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1246,6 +1282,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "お使いのブラウザは iframe をサポートしていません。ブラウザを更新してください。"
       }
     },
@@ -1457,7 +1494,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1732,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2097,6 +2153,9 @@
               "tooltip": ""
             }
           },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "永久削除",
             "confirm": {
@@ -2131,6 +2190,7 @@
             "item": {
               "language": "",
               "board": "",
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "週の初日",
               "accessibility": "アクセシビリティ"
             }
@@ -2292,6 +2352,13 @@
               "description": ""
             }
           },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
+            }
+          },
           "appearance": {
             "title": "外観",
             "defaultColorScheme": {
@@ -2319,6 +2386,9 @@
             "error": "エラー"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2512,6 +2582,22 @@
             "title": "",
             "message": ""
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
         }
       }
     },
@@ -2717,6 +2803,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
@@ -2783,6 +2874,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2954,6 +3063,22 @@
             "error": {
               "title": "",
               "message": ""
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

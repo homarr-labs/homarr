@@ -28,6 +28,11 @@ const renameSchema = z.object({
   name: boardNameSchema,
 });
 
+const duplicateSchema = z.object({
+  id: z.string(),
+  name: boardNameSchema,
+});
+
 const changeVisibilitySchema = z.object({
   id: z.string(),
   visibility: z.enum(["public", "private"]),
@@ -85,6 +90,7 @@ export const boardSchemas = {
   savePartialSettings: savePartialSettingsSchema,
   save: saveSchema,
   create: createSchema,
+  duplicate: duplicateSchema,
   rename: renameSchema,
   changeVisibility: changeVisibilitySchema,
   permissions: permissionsSchema,

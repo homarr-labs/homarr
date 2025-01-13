@@ -5,6 +5,7 @@ export {
   createItemAndIntegrationChannel,
   createItemChannel,
   createIntegrationOptionsChannel,
+  createWidgetOptionsChannel,
   createChannelWithLatestAndEvents,
   handshakeAsync,
   createSubPubChannel,

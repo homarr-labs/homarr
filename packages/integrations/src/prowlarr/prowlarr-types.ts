@@ -9,6 +9,6 @@ export const indexerResponseSchema = z.object({
 
 export const statusResponseSchema = z.array(
   z.object({
-    id: z.number(),
+    indexerId: z.number(),
   }),
 );

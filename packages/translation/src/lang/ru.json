@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Приложения",
@@ -612,6 +623,10 @@
       },
       "url": {
         "label": "URL-адрес"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -951,6 +966,7 @@
     },
     "create": {
       "title": "Выберите тип элемента",
+      "search": "",
       "addToBoard": "Добавить на панель"
     },
     "moveResize": {
@@ -1076,7 +1092,8 @@
         "adsBlockedTodayPercentage": "заблокировано сегодня",
         "dnsQueriesToday": "DNS-запросов сегодня",
         "domainsBeingBlocked": "Доменов в списке блокировки"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "Управление DNS-фильтром",
@@ -1149,6 +1166,25 @@
           "label": "Формат даты",
           "description": "Как должна выглядеть дата"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1246,6 +1282,7 @@
       },
       "error": {
         "noUrl": "URL для iFrame не указан",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Ваш браузер не поддерживает iframes. Пожалуйста, обновите браузер."
       }
     },
@@ -1381,7 +1418,7 @@
         "memory": "Память: {memory}GiB",
         "memoryAvailable": "Доступно: {memoryAvailable}GiB ({percent}%)",
         "version": "Версия: {version}",
-        "uptime": "Время работы: {days} дн., {hours} ч., {minutes} мин.",
+        "uptime": "Время работы: {months} мес., {days} дн., {hours} ч., {minutes} мин.",
         "loadAverage": "Средняя нагрузка:",
         "minute": "1 минута",
         "minutes": "{count} минут",
@@ -1457,7 +1494,12 @@
     "mediaServer": {
       "name": "Активные просмотры",
       "description": "Отображает текущие сеансы воспроизведения на медиасерверах",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "Загрузки",
@@ -1732,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2097,6 +2153,9 @@
               "tooltip": "Эта панель будет показываться как ваша домашняя панель"
             }
           },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Удалить навсегда",
             "confirm": {
@@ -2131,6 +2190,7 @@
             "item": {
               "language": "Язык и регион",
               "board": "Домашняя панель",
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
@@ -2292,6 +2352,13 @@
               "description": "Для выбора доступны только публичные панели"
             }
           },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
+            }
+          },
           "appearance": {
             "title": "Внешний вид",
             "defaultColorScheme": {
@@ -2319,6 +2386,9 @@
             "error": "Ошибка"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": "Обновление иконок"
             },
@@ -2512,6 +2582,22 @@
             "title": "Не удалось обновить контейнеры",
             "message": "Произошла ошибка при обновлении данных о контейнерах"
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
         }
       }
     },
@@ -2717,6 +2803,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "Использовать внешнюю поисковую систему",
         "group": {
@@ -2783,6 +2874,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": "Локальные результаты"
           }
@@ -2954,6 +3063,22 @@
             "error": {
               "title": "Не удалось удалить",
               "message": "Не удалось удалить поисковую систему"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

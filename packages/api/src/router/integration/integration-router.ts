@@ -11,9 +11,11 @@ import {
   integrations,
   integrationSecrets,
   integrationUserPermissions,
+  searchEngines,
 } from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
+  getIconUrl,
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
   integrationDefs,
@@ -191,6 +193,18 @@ export const integrationRouter = createTRPCRouter({
             integrationId,
           })),
         );
+      }
+
+      if (input.attemptSearchEngineCreation) {
+        const icon = getIconUrl(input.kind);
+        await ctx.db.insert(searchEngines).values({
+          id: createId(),
+          name: input.name,
+          integrationId,
+          type: "fromIntegration",
+          iconUrl: icon,
+          short: await getNextValidShortNameForSearchEngineAsync(ctx.db, input.name),
+        });
       }
     }),
   update: protectedProcedure.input(validation.integration.update).mutation(async ({ ctx, input }) => {
@@ -411,6 +425,36 @@ interface AddSecretInput {
   value: string;
   kind: IntegrationSecretKind;
 }
+
+const getNextValidShortNameForSearchEngineAsync = async (db: Database, integrationName: string) => {
+  const searchEngines = await db.query.searchEngines.findMany({
+    columns: {
+      short: true,
+    },
+  });
+
+  const usedShortNames = searchEngines.flatMap((searchEngine) => searchEngine.short.toLowerCase());
+  const nameByIntegrationName = integrationName.slice(0, 1).toLowerCase();
+
+  if (!usedShortNames.includes(nameByIntegrationName)) {
+    return nameByIntegrationName;
+  }
+
+  // 8 is max length constraint
+  for (let i = 2; i < 9999999; i++) {
+    const generatedName = `${nameByIntegrationName}${i}`;
+    if (usedShortNames.includes(generatedName)) {
+      continue;
+    }
+
+    return generatedName;
+  }
+
+  throw new Error(
+    "Unable to automatically generate a short name. All possible variations were exhausted. Please disable the automatic creation and choose one later yourself.",
+  );
+};
+
 const addSecretAsync = async (db: Database, input: AddSecretInput) => {
   await db.insert(integrationSecrets).values({
     kind: input.kind,

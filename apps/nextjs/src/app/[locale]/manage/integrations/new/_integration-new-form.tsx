@@ -3,13 +3,13 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Fieldset, Group, SegmentedControl, Stack, Text, TextInput } from "@mantine/core";
+import { Alert, Button, Checkbox, Fieldset, Group, SegmentedControl, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, getIntegrationName } from "@homarr/definitions";
+import { getAllSecretKindOptions, getIntegrationName, integrationDefs } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
@@ -38,6 +38,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         kind,
         value: "",
       })),
+      attemptSearchEngineCreation: true,
     },
   });
   const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
@@ -78,6 +79,8 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     );
   };
 
+  const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
+
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
       <Stack>
@@ -103,6 +106,16 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             )}
           </Stack>
         </Fieldset>
+
+        {supportsSearchEngine && (
+          <Checkbox
+            label={t("integration.field.attemptSearchEngineCreation.label")}
+            description={t("integration.field.attemptSearchEngineCreation.description", {
+              kind: getIntegrationName(searchParams.kind),
+            })}
+            {...form.getInputProps("attemptSearchEngineCreation", { type: "checkbox" })}
+          />
+        )}
 
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">

@@ -27,7 +27,7 @@
           "description": "Konfigurovat chování importu"
         },
         "boardSelection": {
-          "title": "",
+          "title": "Nalezeno {count} ploch",
           "description": "Vyberte všechny plochy s velikostmi, které chcete importovat",
           "action": {
             "selectAll": "Vybrat vše",
@@ -36,96 +36,96 @@
         },
         "summary": {
           "title": "Přehled importu",
-          "description": "",
+          "description": "V následujícím přehledu můžete vidět, co bude importováno",
           "action": {
-            "import": ""
+            "import": "Potvrdit import a pokračovat"
           },
           "entities": {
             "apps": "Aplikace",
             "boards": "Plochy",
-            "integrations": "",
+            "integrations": "Integrace",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Zadejte token pro import",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": ""
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Neplatný token",
+              "message": "Token, který jste zadali je neplatný"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Správce",
+        "subtitle": "Zadejte přihlašovací údaje pro administrátora.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Uživatel byl vytvořen",
+            "message": "Uživatel byl úspěšně vytvořen"
           },
           "error": {
-            "title": ""
+            "title": "Vytvoření uživatele se nezdařilo"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Externí skupina",
+        "subtitle": "Zadejte skupinu, která by měla být použita pro externí uživatele.",
         "form": {
           "name": {
-            "label": "",
+            "label": "Název skupiny",
             "description": ""
           }
         }
       },
       "settings": {
         "title": "Nastavení",
-        "subtitle": ""
+        "subtitle": "Konfigurace nastavení serveru."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Dokončit nastavení",
+        "subtitle": "Jste připraveni začít!",
+        "description": "Úspěšně jste dokončili proces nastavení. Nyní můžete začít používat Homarr. Vyberte další akci:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Přejít na plochu {name}",
+          "createBoard": "Vytvořte svou první plochu",
+          "inviteUser": "Pozvat ostatní uživatele",
+          "docs": "Přečtěte si dokumentaci"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Zpět na začátek"
   },
   "user": {
     "title": "Uživatelé",
     "name": "Uživatel",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Přihlaste se ke svému účtu",
+        "subtitle": "Vítejte zpět! Zadejte prosím Vaše přihlašovací údaje"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Připojit se k Homarrovi",
+        "subtitle": "Vítejte v Homarru! Vytvořte si prosím svůj účet",
+        "description": "Byli jste pozváni {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nová instalace Homarru",
+        "subtitle": "Vytvořte prosím původního administrátora"
       }
     },
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Ověřeno"
       },
       "username": {
         "label": "Uživatelské jméno"
@@ -133,46 +133,46 @@
       "password": {
         "label": "Heslo",
         "requirement": {
-          "length": "",
+          "length": "Obsahuje alespoň 8 znaků",
           "lowercase": "Obsahuje malé písmeno",
           "uppercase": "Obsahuje velké písmeno",
           "number": "Obsahuje číslo",
-          "special": ""
+          "special": "Obsahuje speciální symbol"
         }
       },
       "passwordConfirm": {
         "label": "Potvrďte heslo"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Původní heslo"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Domovská plocha"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Používat ikony pro pingy"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Uživatelské jméno je již používáno"
     },
     "action": {
       "login": {
         "label": "Přihlásit se",
-        "labelWith": "",
+        "labelWith": "Přihlaste se pomocí {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Přihlášení bylo úspěšné",
+            "message": "Nyní jste přihlášeni"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Příhlášení selhalo",
+            "message": "Vaše přihlášení se nezdařilo"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Zapomněli jste Vaše heslo?",
+          "description": "Administrátor může použít následující příkaz k obnovení Vašeho hesla:"
         }
       },
       "register": {
@@ -180,27 +180,37 @@
         "notification": {
           "success": {
             "title": "Účet byl vytvořen",
-            "message": ""
+            "message": "Chcete-li pokračovat, přihlaste se"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Vytvoření účtu se nezdařilo",
+            "message": "Váš účet se nepodařilo vytvořit"
           }
         }
       },
       "create": "Vytvořit uživatele",
       "changePassword": {
-        "label": "",
+        "label": "Změnit heslo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Heslo bylo úspěšně změněno"
           },
           "error": {
-            "message": ""
+            "message": "Nepodařilo se změnit heso"
           }
         }
       },
       "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": "Domovská plocha byla úspěšně změněna"
+          },
+          "error": {
+            "message": "Nepodařilo se změnit domovskou plochu"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
         "notification": {
           "success": {
             "message": ""
@@ -213,48 +223,48 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "První den v týdnu byl úspěšně změněn"
           },
           "error": {
-            "message": ""
+            "message": "Nelze změnit první den v týdnu"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ikony pingu byly úspěšně přepnuty"
           },
           "error": {
-            "message": ""
+            "message": "Nelze přepnout ikony pingu"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Změnit obrázek",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Obrázek byl úspěšně změněn"
             },
             "error": {
-              "message": ""
+              "message": "Nepodařilo se změnit obrázek"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Obrázek je příliš velký",
+              "message": "Maximální velikost obrázku je {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Odebrat obrázek",
+          "confirm": "Opravdu chcete odstranit tento obrázek?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Obrázek byl úspěšně odstraněn"
             },
             "error": {
-              "message": ""
+              "message": "Obrázek nelze odstranit"
             }
           }
         }
@@ -262,42 +272,42 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profil byl úspěšně aktualizován"
           },
           "error": {
-            "message": ""
+            "message": "Profil nelze aktualizovat"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Trvale smazat uživatele",
+        "description": "Smaže tohoto uživatele včetně jeho nastavení. Neodstraní žádné plochy. Uživatel nebude upozorněn.",
+        "confirm": "Jste si jisti, že chcete odstranit uživatele {username} včetně jejich nastavení?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Vybrat uživatele",
+        "notFound": "Nebyl nalezen žádný uživatel"
       },
       "transfer": {
-        "label": ""
+        "label": "Vyberte nového vlastníka"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Skupiny",
+    "name": "Skupina",
+    "search": "Najít skupinu",
     "field": {
       "name": "Název",
-      "members": ""
+      "members": "Členové"
     },
     "permission": {
       "admin": {
         "title": "Administrátor",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrátor",
+            "description": "Uživatelé s tímto oprávněním mají plný přístup ke všem funkcím a nastavením"
           }
         }
       },
@@ -305,20 +315,20 @@
         "title": "Aplikace",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Vytvořit aplikace",
+            "description": "Povolit členům vytvářet aplikace"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Používat všechny aplikace",
+            "description": "Umožňuje členům přidávat do jejich ploch jakékoli aplikace"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Upravit všechny aplikace",
+            "description": "Umožňuje členům upravovat všechny aplikace"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Úplný přístup k aplikacím",
+            "description": "Umožňuje členům spravovat, používat a mazat jakoukoli aplikaci"
           }
         }
       },
@@ -326,169 +336,170 @@
         "title": "Plochy",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tvorba ploch",
+            "description": "Umožňuje členům vytvářet plochy"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Zobrazit všechny plochy",
+            "description": "Umožňuje členům zobrazit všechny plochy"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Upravit všechny plochy",
+            "description": "Umožňuje členům upravovat všechny plochy (nezahrnuje kontrolu přístupu a nebezpečnou zónu)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Úplný přístup k plochám",
+            "description": "Umožňuje členům zobrazit, upravit a odstranit všechny plochy (včetně kontroly přístupu a nebezpečné zóny)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrace",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Vytvořit integrace",
+            "description": "Povolit členům vytvářet integrace"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Použít všechny integrace",
+            "description": "Umožňuje členům přidávat do jejich ploch jakékoli integrace"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interakce s jakoukoli integrací",
+            "description": "Umožnit členům interagovat s jakoukoli integrací"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Plný přístup k integraci",
+            "description": "Umožňuje členům spravovat, používat a interagovat s jakoukoli integrací"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Média",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Nahrávat média",
+            "description": "Povolit členům nahrávat média"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Zobrazit všechna média",
+            "description": "Umožňuje členům nahrávat média"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Úplný přístup k médiím",
+            "description": "Umožňuje členům spravovat a mazat všechny mediální soubory"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Ostatní",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Zobrazit logy",
+            "description": "Umožňuje členům prohlížet logy"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Vyhledávače",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Vytvořit vyhledávače",
+            "description": "Umožňuje členům vytvářet vyhledávače"
           },
           "modify-all": {
             "label": "",
-            "description": ""
+            "description": "Umožňuje členům upravovat všechny vyhledávače"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Úplný přístup k vyhledávačům",
+            "description": "Umožňuje členům spravovat a mazat jakýkoliv vyhledávač"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Někteří členové jsou od externích poskytovatelů a nelze je spravovat zde",
+      "external": "Všichni členové jsou od externích poskytovatelů a nelze je spravovat zde"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Tato skupina je vyhrazena pro používání systému a omezuje některé akce. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nová skupina",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina byla úspěšně vytvořena"
           },
           "error": {
-            "message": ""
+            "message": "Skupinu se nepodařilo vytvořit"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Převést vlastnictví",
+        "description": "Převést vlastnictví této skupiny na jiného uživatele.",
+        "confirm": "Jste si jisti, že chcete převést vlastnictví skupiny {name} na {username}?",
         "notification": {
           "success": {
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Nelze převést vlastnictví"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Přidat člena"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Odebrat člena",
+        "confirm": "Jste si jisti, že chcete odstranit {user} z této skupiny?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Vymazat skupinu",
+        "description": "Jakmile smažete skupinu, není možné se vrátit zpět. Prosím, buďte si jistí.",
+        "confirm": "Jste si jisti, že chcete odstranit skupinu {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina {name} byla úspěšně smazána"
           },
           "error": {
-            "message": ""
+            "message": "Nelze odstranit skupinu {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Oprávnění byla uložena",
+            "message": "Oprávnění byla úspěšně uložena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Oprávnění nebyla uložena",
+            "message": "Oprávnění nebyla uložena"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina {name} byla úspěšně uložena"
           },
           "error": {
-            "message": ""
+            "message": "Nelze uložit skupinu {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Vyberte skupinu",
+        "notFound": "Nebyla nalezena žádná skupina"
       }
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Aplikace",
@@ -506,34 +517,34 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Aplikaci nelze vytvořit"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Upravit aplikaci",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Změny úspěšně aplikovány",
+            "message": "Aplikace byla úspěšně uložena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nepodařilo se uložit změny",
+            "message": "Aplikaci se nepodařilo uložit"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Vymazat aplikaci",
+        "message": "Jste si jisti, že chcete vymazat aplikaci {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Úspěšně odstraněno",
+            "message": "Aplikace byla úspěšně odstraněna"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Smazání se nezdařilo",
+            "message": "Nelze odstranit aplikaci"
           }
         }
       }
@@ -543,15 +554,15 @@
         "label": "Název"
       },
       "description": {
-        "label": ""
+        "label": "Popis"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
       "select": {
-        "label": "",
+        "label": "Vybrat aplikaci",
         "notFound": ""
       }
     }
@@ -559,49 +570,49 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integrace",
+        "search": "Prohledat integrace",
         "noResults": {
-          "title": ""
+          "title": "Zatím nejsou žádné integrace"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nová integrace {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Vytvoření bylo úspěšné",
+            "message": "Integrace byla úspěšně vytvořena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Vytvoření se nezdařilo",
+            "message": "Integraci se nepodařilo vytvořit"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Upravit integraci {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Změny byly úspěšně aplikovány",
+            "message": "Integrace byla úspěšně uložena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nepodařilo se uložit změny",
+            "message": "Integraci se nepodařilo uložit"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Smazat integraci",
+        "message": "Jste si jisti, že chcete vymazat integraci {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Odstránění bylo úspěšné",
+            "message": "Integrace byla úspěšně smazána"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Smazání se nezdařilo",
+            "message": "Nepodařilo se odstranit integraci"
           }
         }
       }
@@ -611,58 +622,62 @@
         "label": "Název"
       },
       "url": {
-        "label": ""
+        "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
-      "create": ""
+      "create": "Nová integrace"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Otestovat připojení a vytvořit",
+        "edit": "Otestovat připojení a uložit"
       },
       "alertNotice": "",
       "notification": {
         "success": {
-          "title": "",
+          "title": "Spojení bylo úspěšné",
           "message": ""
         },
         "invalidUrl": {
           "title": "Neplatná URL adresa",
-          "message": ""
+          "message": "URL adresa je neplatná"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Chybějící přihlašovací údaje",
+          "message": "Nebyly poskytnuty všechny přihlašovací údaje"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Neplatné přihlašovací údaje",
+          "message": "Přihlašovací údaje jsou neplatné"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Spojení selhalo",
+          "message": "Spojení nelze navázat"
         },
         "badRequest": {
-          "title": "",
+          "title": "Chybný požadavek",
           "message": ""
         },
         "unauthorized": {
           "title": "",
-          "message": ""
+          "message": "Pravděpodobně špatné přihlašovací údaje"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Zakázáno",
+          "message": "Pravděpodobně chybějící oprávnění"
         },
         "notFound": {
           "title": "",
-          "message": ""
+          "message": "Pravděpodobně špatná adresa URL nebo cesta"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Interní chyba serveru",
+          "message": "Server zaznamenal chybu"
         },
         "serviceUnavailable": {
           "title": "",
@@ -674,7 +689,7 @@
         },
         "domainNotFound": {
           "title": "",
-          "message": ""
+          "message": "Doména nebyla nalezena"
         },
         "connectionRefused": {
           "title": "",
@@ -686,34 +701,34 @@
         },
         "wrongPath": {
           "title": "",
-          "message": ""
+          "message": "Cesta pravděpodobně není správná"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Tajné klíče",
+      "lastUpdated": "Naposledy aktualizováno {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Žádná hodnota není nenastavena",
+        "tooltip": "Tento požadovaný tajný klíč ještě nebyl nastaven"
       },
-      "secureNotice": "",
+      "secureNotice": "Tento tajný klíč nelze získat po vytvoření",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Resetovat tajný klíč",
+        "message": "Jste si jisti, že chcete resetovat tento tajný klíč?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Žádné tajné klíče",
+        "text": "Pro tuto integraci nejsou vyžadovány žádné tajné klíče"
       },
       "kind": {
         "username": {
           "label": "Uživatelské jméno",
-          "newLabel": ""
+          "newLabel": "Nové uživatelské jméno"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API klíč",
+          "newLabel": "Nový API klíč"
         },
         "password": {
           "label": "Heslo",
@@ -728,8 +743,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Média",
+    "search": "Najít mediální soubor",
     "field": {
       "name": "Název",
       "size": "Velikost",
@@ -737,118 +752,118 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Nahrát mediální soubor",
+        "file": "Vybrat soubor",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mediální soubor byl úspěšně nahrán"
           },
           "error": {
-            "message": ""
+            "message": "Nepodařilo se nahrát mediální soubor"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Vymazat mediální soubor",
+        "description": "Jste si jisti, že chcete vymazat mediální soubor <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mediální soubor byl úspěšně odstraněn"
           },
           "error": {
-            "message": ""
+            "message": "Nepodařilo se vymazat mediální soubor"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Zkopírovat URL"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Chyba",
     "action": {
       "add": "Přidat",
       "apply": "Použít",
-      "backToOverview": "",
+      "backToOverview": "Zpět na přehled",
       "create": "Vytvořit",
       "edit": "Upravit",
-      "import": "",
+      "import": "Importovat",
       "insert": "Vložit",
       "remove": "Odstranit",
       "save": "Uložit",
       "saveChanges": "Uložit změny",
       "cancel": "Zrušit",
       "delete": "Odstranit",
-      "discard": "",
+      "discard": "Zahodit",
       "confirm": "Potvrdit",
-      "continue": "",
+      "continue": "Pokračovat",
       "previous": "Zpět",
       "next": "Další",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "Přečtěte si dokumentaci",
+      "checkLogs": "Pro více podrobností zkontrolujte logy",
       "tryAgain": "Zkusit znovu",
-      "loading": ""
+      "loading": "Načítání"
     },
-    "here": "",
+    "here": "zde",
     "iconPicker": {
-      "label": "",
+      "label": "URL ikony",
       "header": ""
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Světlý",
+        "dark": "Tmavý"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "Min",
+      "max": "Max",
+      "days": "Dnů",
       "hours": "Hodin",
       "minutes": "Minut"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Vytvoření bylo úspěšné",
+        "error": "Vytvoření se nezdařilo"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Odstranění bylo úspěšné",
+        "error": "Odstranění se nezdařilo"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Změny byly úspěšně aplikovány",
+        "error": "Nepodařilo se uložit změny"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Přenos úspěšný",
+        "error": "Přenos se nezdařil"
       }
     },
     "multiSelect": {
       "placeholder": ""
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Přidat více hodnot",
+      "addLabel": "Přidat {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Vybrat hodnotu",
       "badge": {
-        "recommended": ""
+        "recommended": "Doporučeno"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Přepnout do tmavého režimu",
+        "switchToLightMode": "Přepnout do světlého režimu",
+        "management": "Správa",
         "preferences": "Vaše předvolby",
-        "logout": "",
+        "logout": "Odhlásit se",
         "login": "Přihlásit se",
-        "homeBoard": "",
+        "homeBoard": "Vaše domácí plocha",
         "loggedOut": "",
         "updateAvailable": ""
       }
@@ -856,8 +871,8 @@
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nebyly nalezeny žádné výsledky",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Zobrazit náhled",
+      "hide": "Skrýt náhled"
     },
     "zod": {
       "errors": {
@@ -867,7 +882,7 @@
           "startsWith": "Toto pole musí začínat {startsWith}",
           "endsWith": "Toto pole musí končit {endsWith}",
           "includes": "Toto pole musí obsahovat {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "Toto pole musí být platný e-mail"
         },
         "tooSmall": {
           "string": "Toto pole musí obsahovat alespoň {minimum} znaků",
@@ -878,13 +893,13 @@
           "number": "Toto pole musí být menší nebo rovno {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "Hesla se neshodují",
+          "passwordRequirements": "Heslo nesplňuje požadavky",
+          "boardAlreadyExists": "Plocha s tímto názvem již existuje",
+          "invalidFileType": "Neplatný typ souboru, očekáván {expected}",
+          "fileTooLarge": "Soubor je příliš velký, maximální velikost je {maxSize}",
+          "invalidConfiguration": "Neplatná konfigurace",
+          "groupNameTaken": "Název skupiny je již používán"
         }
       }
     }
@@ -892,12 +907,12 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Nová dynamická sekce",
+        "remove": "Odstranit dynamickou sekci"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Odstranit dynamickou sekci",
+        "message": "Jste si jisti, že chcete odstranit tuto dynamickou sekci? Položky budou přesunuty na stejné místo v nadřazené sekci."
       }
     },
     "category": {
@@ -907,29 +922,29 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Nová kategorie",
+        "edit": "Přejmenovat kategorii",
+        "remove": "Odstranit kategorii",
         "moveUp": "Posunout nahoru",
         "moveDown": "Posunout dolů",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Nová kategorie nad",
+        "createBelow": "Nová kategorie pod"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Nová kategorie",
+        "submit": "Přidat kategorii"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Odstranit kategorii",
+        "message": "Jste si jisti, že chcete odstranit kategorii {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Přejmenovat kategorii",
+        "submit": "Přejmenovat kategorii"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Nová kategorie",
           "changePosition": "Změnit pozici"
         }
       }
@@ -939,10 +954,10 @@
     "action": {
       "create": "",
       "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "edit": "Upravit položku",
+      "moveResize": "Přesunout / změnit velikost položky",
+      "duplicate": "Duplikovat položku",
+      "remove": "Odstranit položku"
     },
     "menu": {
       "label": {
@@ -951,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -973,7 +989,7 @@
     "edit": {
       "title": "",
       "advancedOptions": {
-        "label": "",
+        "label": "Pokročilé možnosti",
         "title": ""
       },
       "field": {
@@ -987,7 +1003,7 @@
     },
     "remove": {
       "title": "",
-      "message": ""
+      "message": "Jste si jisti, že chcete tuto položku odstranit?"
     }
   },
   "widget": {
@@ -1047,7 +1063,7 @@
     },
     "dnsHoleSummary": {
       "name": "",
-      "description": "",
+      "description": "Zobrazí shrnutí vaší DNS Hole",
       "option": {
         "layout": {
           "label": "Rozložení",
@@ -1059,16 +1075,16 @@
               "label": "Vertikální"
             },
             "grid": {
-              "label": ""
+              "label": "Mřížka"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Používat barvy Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Nepodařilo se načíst souhrn DNS Hole",
         "integrationsDisconnected": ""
       },
       "data": {
@@ -1076,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Zablokováno dnes",
         "dnsQueriesToday": "Dotazů dnes",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1092,7 +1109,7 @@
               "label": "Vertikální"
             },
             "grid": {
-              "label": ""
+              "label": "Mřížka"
             }
           }
         },
@@ -1104,21 +1121,21 @@
         "internalServerError": ""
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
+        "enableAll": "Povolit vše",
+        "disableAll": "Zakázat vše",
+        "setTimer": "Nastavit časovač",
         "set": "Nastavit",
         "enabled": "Zapnuto",
         "disabled": "Vypnuto",
-        "processing": "",
+        "processing": "Zpracovávání",
         "disconnected": "",
         "hours": "Hodin",
         "minutes": "Minut",
-        "unlimited": ""
+        "unlimited": "Ponechte prázdné pro neomezené"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Datum a čas",
       "description": "Zobrazuje aktuální datum a čas.",
       "option": {
         "customTitleToggle": {
@@ -1126,17 +1143,17 @@
           "description": ""
         },
         "customTitle": {
-          "label": ""
+          "label": "Název"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24hodinový formát",
+          "description": "Použít 24hodinový formát místo 12hodinového formátu"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Zobrazit vteřiny"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Použít pevné časové pásmo"
         },
         "timezone": {
           "label": "Časové pásmo",
@@ -1146,9 +1163,28 @@
           "label": ""
         },
         "dateFormat": {
-          "label": "",
+          "label": "Formát data",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1213,11 +1249,11 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Vložte jakýkoli obsah z internetu. Některé webové stránky mohou omezit přístup.",
       "option": {
         "embedUrl": {
-          "label": ""
+          "label": "Embed URL"
         },
         "allowFullScreen": {
           "label": "Povolit celou obrazovku"
@@ -1245,12 +1281,13 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nebyla zadána URL adresa iFrame",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Váš prohlížeč nepodporuje iFrame. Aktualizujte, prosím, svůj prohlížeč."
       }
     },
     "smartHome-entityState": {
-      "name": "",
+      "name": "Stav entity",
       "description": "",
       "option": {
         "entityId": {
@@ -1289,7 +1326,7 @@
         "releaseType": {
           "label": "Typ vydání filmu pro Radarr",
           "options": {
-            "inCinemas": "",
+            "inCinemas": "V kinech",
             "digitalRelease": "",
             "physicalRelease": ""
           }
@@ -1307,24 +1344,24 @@
       "description": "Zobrazuje aktuální informace o počasí na nastaveném místě.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Teplota ve Fahrenheitech"
         },
         "location": {
           "label": "Lokalita pro počasí"
         },
         "showCity": {
-          "label": ""
+          "label": "Zobrazit město"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Zobrazit předpověď"
         },
         "forecastDayCount": {
           "label": "",
-          "description": ""
+          "description": "Když widget není dostatečně široký, zobrazí se méně dní"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formát data",
+          "description": "Jak by datum mělo vypadat"
         }
       },
       "kind": {
@@ -1346,16 +1383,16 @@
     },
     "indexerManager": {
       "name": "Stav správce indexeru",
-      "description": "",
+      "description": "Stav Vašich indexerů",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Otevřít stránku indexeru v nové kartě"
         }
       },
       "title": "Správce indexeru",
       "testAll": "Otestovat vše",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepodařilo se načíst stav indexerů"
       }
     },
     "healthMonitoring": {
@@ -1400,14 +1437,14 @@
         "latitude": "",
         "longitude": "",
         "disabledTooltip": "",
-        "unknownLocation": "",
+        "unknownLocation": "Neznámá poloha",
         "search": "Vyhledat",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Město",
+            "country": "Státy",
+            "coordinates": "Souřadnice",
+            "population": "Populace"
           },
           "action": {
             "select": ""
@@ -1418,16 +1455,16 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Nebyla nalezena žádná integrace",
+        "description": "Klikněte na <here></here> pro vytvoření nové integrace"
       },
       "app": {
         "noData": "",
-        "description": ""
+        "description": "Klikněte na <here></here> pro vytvoření nové aplikace"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Nebyla vybrána žádná integrace",
+        "noData": "Nejsou k dispozici žádná data o integraci"
       },
       "option": {}
     },
@@ -1440,7 +1477,7 @@
         },
         "hasAutoPlay": {
           "label": "Automatické přehrávání",
-          "description": ""
+          "description": "Automatické přehrávání funguje pouze když je ztlumeno kvůli omezením prohlížeče"
         },
         "isMuted": {
           "label": ""
@@ -1457,7 +1494,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Uživatel",
+        "name": "Jméno",
+        "id": "Id"
+      }
     },
     "downloads": {
       "name": "",
@@ -1485,7 +1527,7 @@
           "label": ""
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Kategorie/štítky k filtrování"
         },
         "filterIsWhitelist": {
           "label": ""
@@ -1507,19 +1549,19 @@
           "detailsTitle": "Datum přidání"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Doplňky",
+          "detailsTitle": "Kategorie (nebo další informace)"
         },
         "downSpeed": {
           "columnTitle": "Stahování",
           "detailsTitle": "Rychlost stahování"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integrace"
@@ -1536,12 +1578,12 @@
           "detailsTitle": ""
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Celkem staženo",
+          "detailsTitle": "Celkem staženo"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Celkem nahráno",
+          "detailsTitle": "Celkem nahráno"
         },
         "size": {
           "columnTitle": "",
@@ -1591,7 +1633,7 @@
           "resume": "",
           "delete": {
             "title": "",
-            "modalTitle": "",
+            "modalTitle": "Jsou si jisti, že chcete smazat tento úkol?",
             "entry": "",
             "entryAndFiles": ""
           }
@@ -1639,7 +1681,7 @@
         },
         "users": {
           "main": "Top uživatelé",
-          "requests": ""
+          "requests": "Žádosti"
         }
       }
     },
@@ -1732,7 +1774,9 @@
   },
   "board": {
     "action": {
-      "edit": {
+      "duplicate": {
+        "title": "",
+        "message": "",
         "notification": {
           "success": {
             "title": "",
@@ -1742,10 +1786,22 @@
             "title": "",
             "message": ""
           }
+        }
+      },
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "Nelze uložit změny",
+            "message": "Plochu se nepodařilo uložit"
+          }
         },
         "confirmLeave": {
           "title": "",
-          "message": ""
+          "message": "Máte neuložené změny, jste si jistí, že chcete odejít?"
         }
       },
       "oldImport": {
@@ -1757,7 +1813,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Plochu se nepodařilo importovat, zkontrolujte logy pro více informací"
           }
         },
         "form": {
@@ -1807,19 +1863,19 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Nadpis strany"
       },
       "metaTitle": {
         "label": ""
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "URL adresa loga"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL obrázku Favicon"
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "Adresa URL obrázku na pozadí"
       },
       "backgroundImageAttachment": {
         "label": "Příloha obrázku na pozadí",
@@ -1838,8 +1894,8 @@
         "label": "",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Opakovat",
+            "description": "Obrázek se opakuje tak často, jak je potřeba, aby pokryl celou oblast obrazu na pozadí."
           },
           "no-repeat": {
             "label": "",
@@ -1929,7 +1985,7 @@
                 "label": ""
               },
               "full": {
-                "label": ""
+                "label": "Plný přístup"
               }
             }
           }
@@ -1958,11 +2014,11 @@
               "confirm": {
                 "public": {
                   "title": "",
-                  "description": ""
+                  "description": "Jste si jisti, že chcete tuto plochu učinit soukromou? Toto skryje tuto plochu před veřejností. Odkazy pro hosty přestanou fungovat."
                 },
                 "private": {
                   "title": "",
-                  "description": ""
+                  "description": "Jste si jisti, že chcete tuto plochu učinit veřejnou? Toto plochu zpřístupní všem."
                 }
               }
             },
@@ -1972,7 +2028,7 @@
               "button": "",
               "confirm": {
                 "title": "Odstranit plochu",
-                "description": ""
+                "description": "Jste si jisti, že chcete odstranit tuto plochu? Toto trvale odstraní plochu a veškerý její obsah."
               }
             }
           }
@@ -1997,12 +2053,12 @@
         "admin": {
           "description": "",
           "link": "",
-          "notice": ""
+          "notice": "Chcete-li tuto stránku schovat pro všechny uživatele, nastavte domovskou plochu pro server"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Zatím jste nenastavili domovskou plochu.",
+          "link": "Nastavit Vaší domovskou plochu",
+          "notice": "Chcete-li tuto stránku schovat, nastavte si domovskou plochu ve vašich preferencích"
         },
         "anonymous": {
           "description": "",
@@ -2015,13 +2071,13 @@
   "management": {
     "metaTitle": "",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "Dobré ráno, {username}",
+      "afternoon": "Dobré odpoledne, {username}",
+      "evening": "Dobrý večer, {username}"
     },
     "notFound": {
       "title": "",
-      "text": ""
+      "text": "Nepodařilo se nalézt požadovaný zdroj"
     },
     "navbar": {
       "items": {
@@ -2036,7 +2092,7 @@
           "items": {
             "manage": "Spravovat",
             "invites": "Pozvánky",
-            "groups": ""
+            "groups": "Skupiny"
           }
         },
         "tools": {
@@ -2069,7 +2125,7 @@
           "invite": "Pozvánky",
           "integration": "",
           "app": "Aplikace",
-          "group": ""
+          "group": "Skupiny"
         },
         "statisticLabel": {
           "boards": "Plochy",
@@ -2097,11 +2153,14 @@
               "tooltip": ""
             }
           },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Trvale smazat",
             "confirm": {
               "title": "Odstranit plochu",
-              "description": ""
+              "description": "Jste si jisti, že chcete vymazat plochu {name}?"
             }
           }
         },
@@ -2123,14 +2182,15 @@
         "includeFromAllUsers": ""
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "Zpět na uživatele",
+        "fieldsDisabledExternalProvider": "Některá pole jsou vypnuta, protože jsou spravována externím poskytovatelem ověřování.",
         "setting": {
           "general": {
             "title": "Obecné",
             "item": {
-              "language": "",
-              "board": "",
+              "language": "Jazyk & oblast",
+              "board": "Domovská plocha",
+              "defaultSearchEngine": "Výchozí vyhledávač",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost"
             }
@@ -2147,59 +2207,59 @@
           "title": "Uživatelé"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Upravit uživatele {username}"
         },
         "create": {
           "metaTitle": "Vytvořit uživatele",
-          "title": "",
+          "title": "Vytvořit nového uživatele",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Osobní údaje"
             },
             "security": {
               "label": "Bezpečnost"
             },
             "groups": {
-              "label": "",
-              "title": "",
-              "description": ""
+              "label": "Skupiny",
+              "title": "Vyberte všechny skupiny, jejichž členem by měl uživatel být",
+              "description": "Skupina {everyoneGroup} je přiřazena všem uživatelům a nemůže být odstraněna."
             },
             "review": {
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Uživatel byl vytvořen"
             },
             "error": {
-              "title": ""
+              "title": "Vytvoření uživatele se nezdařilo"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Vytvořit nového uživatele",
+            "back": "Zpět na seznam uživatelů"
           }
         },
         "invite": {
           "title": "Správa pozvánek uživatelů",
           "action": {
             "new": {
-              "title": "",
+              "title": "Nová pozvánka",
               "description": "Po vypršení platnosti pozvánka přestane být platná a příjemce pozvánky si nebude moci vytvořit účet."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Zkopírovat pozvánku",
+              "description": "Vaše pozvánka byla vygenerována. Po zavření tohoto okna <b>již nebude možné tento odkaz zkopírovat</b>. Pokud si již nepřejete uvedenou osobu pozvat, můžete tuto pozvánku kdykoli smazat.",
               "link": "Odkaz na pozvánku",
-              "button": ""
+              "button": "Zkopírovat a zavřít"
             },
             "delete": {
               "title": "Odstranit pozvánku",
-              "description": "Jste si jisti, že chcete tuto pozvánku smazat? Uživatelé s tímto odkazem již nebudou moci pomocí tohoto odkazu vytvořit účet."
+              "description": "Jste si jisti, že chcete tuto pozvánku smazat? Uživatelé s tímto odkazem si již nebudou moci pomocí tohoto odkazu vytvořit účet."
             }
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Vytvořil/a"
@@ -2208,29 +2268,29 @@
               "label": "Datum konce platnosti"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
       },
       "group": {
-        "back": "",
+        "back": "Zpět na skupiny",
         "setting": {
           "general": {
             "title": "Obecné",
             "owner": "Vlastník",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Vlastník této skupiny",
+            "ownerOfGroupDeleted": "Vlastník této skupiny byl odstraněn. V současné době nemá žádného vlastníka."
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "Členové",
+            "search": "Najít člena",
+            "notFound": "Žádný člen nebyl nenalezen"
           },
           "permissions": {
-            "title": "",
+            "title": "Oprávnění",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "Máte neuložené změny!"
             }
           }
         }
@@ -2261,7 +2321,7 @@
               "text": ""
             },
             "usersData": {
-              "title": "",
+              "title": "Uživatelská data",
               "text": ""
             }
           },
@@ -2292,6 +2352,13 @@
               "description": ""
             }
           },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
+            }
+          },
           "appearance": {
             "title": "Vzhled",
             "defaultColorScheme": {
@@ -2305,7 +2372,7 @@
           "culture": {
             "title": "",
             "defaultLocale": {
-              "label": ""
+              "label": "Výchozí jazyk"
             }
           }
         }
@@ -2319,6 +2386,9 @@
             "error": "Chyba"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2350,7 +2420,7 @@
               "label": ""
             },
             "indexerManager": {
-              "label": ""
+              "label": "Správce indexeru"
             },
             "healthMonitoring": {
               "label": ""
@@ -2400,15 +2470,15 @@
       },
       "about": {
         "version": "",
-        "text": "",
+        "text": "Homarr je komunitou řízený open source projekt, který je udržován dobrovolníky. Díky těmto lidem je Homarr od roku 2021 neustále rostoucím projektem. Náš tým na Homarru pracuje zcela na dálku z mnoha různých zemí ve svém volném čase bez jakékoli kompenzace.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Přispěvatelé",
+            "subtitle": "{count} udržuje kód & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Překladatelé",
+            "subtitle": "{count} přispívá překladem do mnoha jazyků"
           },
           "libraries": {
             "title": "",
@@ -2458,7 +2528,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se spustit kontejnery"
           }
         }
       },
@@ -2471,7 +2541,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se zastavit kontejnery"
           }
         }
       },
@@ -2484,7 +2554,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se restartovat kontejnery"
           }
         }
       },
@@ -2497,7 +2567,7 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Nepodařilo se odstranit kontejnery"
           }
         }
       },
@@ -2513,6 +2583,22 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
     },
     "error": {
@@ -2520,32 +2606,32 @@
     }
   },
   "permission": {
-    "title": "",
+    "title": "Oprávnění",
     "userSelect": {
-      "title": ""
+      "title": "Přidat oprávnění uživatele"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Přidat oprávnění ke skupině"
     },
     "tab": {
       "user": "Uživatelé",
-      "group": "",
-      "inherited": ""
+      "group": "Skupiny",
+      "inherited": "Zděděné skupiny"
     },
     "field": {
       "user": {
         "label": "Uživatel"
       },
       "group": {
-        "label": ""
+        "label": "Skupina"
       },
       "permission": {
-        "label": ""
+        "label": "Oprávnění"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Uložit oprávnění uživatele",
+      "saveGroup": "Uložit oprávnění skupiny"
     }
   },
   "navigationStructure": {
@@ -2593,7 +2679,7 @@
         "security": "Bezpečnost",
         "board": "Plochy",
         "groups": {
-          "label": ""
+          "label": "Skupiny"
         },
         "invites": {
           "label": "Pozvánky"
@@ -2680,15 +2766,15 @@
                 "dark": ""
               },
               "language": {
-                "label": "",
+                "label": "Změnit jazyk",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Vyberte si preferovaný jazyk"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Vytvořit novou plochu"
               },
               "importBoard": {
                 "label": ""
@@ -2705,7 +2791,7 @@
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Vytvořit nového uživatele"
               },
               "newInvite": {
                 "label": ""
@@ -2716,6 +2802,11 @@
             }
           }
         }
+      },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
       },
       "external": {
         "help": "",
@@ -2783,6 +2874,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2850,37 +2959,37 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Hledat uživatele nebo skupiny",
         "group": {
           "user": {
             "title": "Uživatelé",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Zobrazit detaily uživatele"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vyberte akci pro uživatele"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Skupiny",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Zobrazit detaily skupiny"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Spravovat členy"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Spravovat oprávnění"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vyberte akci pro uživatele"
               }
             }
           }
@@ -2921,7 +3030,7 @@
             },
             "error": {
               "title": "",
-              "message": ""
+              "message": "Nepodařilo se vytvořit vyhledávač"
             }
           }
         },
@@ -2933,8 +3042,8 @@
               "message": ""
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Nelze uložit změny",
+              "message": "Nepodařilo se uložit vyhledávač"
             }
           },
           "configControl": "",
@@ -2945,7 +3054,7 @@
         },
         "delete": {
           "title": "",
-          "message": "",
+          "message": "Jste si jisti, že chcete odstranit vyhledávač '{name}'?",
           "notification": {
             "success": {
               "title": "",
@@ -2953,7 +3062,23 @@
             },
             "error": {
               "title": "",
-              "message": ""
+              "message": "Nepodařilo se odstranit vyhledávač"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

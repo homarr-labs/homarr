@@ -64,7 +64,6 @@ export const env = createEnv({
   server: {
     AUTH_LOGOUT_REDIRECT_URL: z.string().url().optional(),
     AUTH_SESSION_EXPIRY_TIME: createDurationSchema("30d"),
-    AUTH_SECRET: process.env.NODE_ENV === "production" ? z.string().min(1) : z.string().min(1).optional(),
     AUTH_PROVIDERS: authProvidersSchema,
     ...(authProviders.includes("oidc")
       ? {
@@ -75,6 +74,7 @@ export const env = createEnv({
           AUTH_OIDC_AUTO_LOGIN: booleanSchema,
           AUTH_OIDC_SCOPE_OVERWRITE: z.string().min(1).default("openid email profile groups"),
           AUTH_OIDC_GROUPS_ATTRIBUTE: z.string().default("groups"), // Is used in the signIn event to assign the correct groups, key is from object of decoded id_token
+          AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: z.string().optional(),
         }
       : {}),
     ...(authProviders.includes("ldap")
@@ -98,7 +98,6 @@ export const env = createEnv({
   runtimeEnv: {
     AUTH_LOGOUT_REDIRECT_URL: process.env.AUTH_LOGOUT_REDIRECT_URL,
     AUTH_SESSION_EXPIRY_TIME: process.env.AUTH_SESSION_EXPIRY_TIME,
-    AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_PROVIDERS: process.env.AUTH_PROVIDERS,
     AUTH_LDAP_BASE: process.env.AUTH_LDAP_BASE,
     AUTH_LDAP_BIND_DN: process.env.AUTH_LDAP_BIND_DN,
@@ -119,6 +118,7 @@ export const env = createEnv({
     AUTH_LDAP_USER_MAIL_ATTRIBUTE: process.env.AUTH_LDAP_USER_MAIL_ATTRIBUTE,
     AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG: process.env.AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG,
     AUTH_OIDC_AUTO_LOGIN: process.env.AUTH_OIDC_AUTO_LOGIN,
+    AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: process.env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE,
   },
   skipValidation,
 });

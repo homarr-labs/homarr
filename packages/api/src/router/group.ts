@@ -152,9 +152,15 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
+      const groupId = createId();
       await ctx.db.insert(groups).values({
-        id: createId(),
+        id: groupId,
         name: input.name,
+      });
+
+      await ctx.db.insert(groupPermissions).values({
+        groupId,
+        permission: "admin",
       });
 
       await nextOnboardingStepAsync(ctx.db, undefined);

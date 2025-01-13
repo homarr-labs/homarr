@@ -83,7 +83,11 @@ export const mapWidget = (
     yOffset: shapeForSize.location.y,
     kind,
     options: SuperJSON.stringify(
-      mapOptions(kind, widget.properties, new Map([...appsMap.entries()].map(([key, value]) => [key, value.id]))),
+      mapOptions(
+        widget.type,
+        widget.properties,
+        new Map([...appsMap.entries()].map(([key, value]) => [key, value.id])),
+      ),
     ),
   };
 };

@@ -179,6 +179,7 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
     };
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
@@ -201,6 +202,48 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
   });
 
+  test("with create integration access should create a new integration when creating search engine", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+    const input = {
+      name: "Jellyseerr",
+      kind: "jellyseerr" as const,
+      url: "http://jellyseerr.local",
+      secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: true,
+    };
+
+    const fakeNow = new Date("2023-07-01T00:00:00Z");
+    vi.useFakeTimers();
+    vi.setSystemTime(fakeNow);
+    await caller.create(input);
+    vi.useRealTimers();
+
+    const dbIntegration = await db.query.integrations.findFirst();
+    const dbSecret = await db.query.integrationSecrets.findFirst();
+    const dbSearchEngine = await db.query.searchEngines.findFirst();
+    expect(dbIntegration).toBeDefined();
+    expect(dbIntegration!.name).toBe(input.name);
+    expect(dbIntegration!.kind).toBe(input.kind);
+    expect(dbIntegration!.url).toBe(input.url);
+
+    expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
+    expect(dbSecret).toBeDefined();
+    expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
+    expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
+    expect(dbSecret!.updatedAt).toEqual(fakeNow);
+
+    expect(dbSearchEngine!.integrationId).toBe(dbIntegration!.id);
+    expect(dbSearchEngine!.short).toBe("j");
+    expect(dbSearchEngine!.name).toBe(input.name);
+    expect(dbSearchEngine!.iconUrl).toBe(
+      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/jellyseerr.png",
+    );
+  });
+
   test("without create integration access should throw permission error", async () => {
     // Arrange
     const db = createDb();
@@ -213,6 +256,7 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
     };
 
     // Act

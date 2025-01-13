@@ -88,7 +88,7 @@ export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuPro
         </Menu.Item>
         <Menu.Divider />
 
-        <Menu.Item p={0} closeMenuOnClick={false}>
+        <Menu.Item p={0} closeMenuOnClick={false} component="div">
           <CurrentLanguageCombobox />
         </Menu.Item>
         <Menu.Divider />
@@ -113,7 +113,7 @@ export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuPro
             {t("logout")}
           </Menu.Item>
         ) : (
-          <Menu.Item onClick={() => router.push("/auth/login")} leftSection={<IconLogin size="1rem" />}>
+          <Menu.Item component={Link} href="/auth/login" leftSection={<IconLogin size="1rem" />}>
             {t("login")}
           </Menu.Item>
         )}

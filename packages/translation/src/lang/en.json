@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Default search engine changed successfully"
+          },
+          "error": {
+            "message": "Unable to change default search engine"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Find an app",
     "page": {
       "list": {
         "title": "Apps",
@@ -612,6 +623,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Create Search Engine",
+        "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
       }
     },
     "action": {
@@ -959,6 +974,7 @@
     },
     "create": {
       "title": "Choose item to add",
+      "search": "Filter items",
       "addToBoard": "Add to board"
     },
     "moveResize": {
@@ -1084,7 +1100,8 @@
         "adsBlockedTodayPercentage": "Blocked today",
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
-      }
+      },
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -1157,6 +1174,25 @@
           "label": "Date Format",
           "description": "How the date should look like"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "Minecraft Server Status",
+      "description": "Displays the status of a Minecraft server",
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "domain": {
+          "label": "Server address"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock server"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "notebook": {
@@ -1254,6 +1290,7 @@
       },
       "error": {
         "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
         "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
@@ -1389,7 +1426,7 @@
         "memory": "Memory: {memory}GiB",
         "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
         "version": "Version: {version}",
-        "uptime": "Uptime: {days} Days, {hours} Hours, {minutes} Minutes",
+        "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
         "loadAverage": "Load average:",
         "minute": "1 minute",
         "minutes": "{count} minutes",
@@ -1465,7 +1502,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "User",
+        "name": "Name",
+        "id": "Id"
+      }
     },
     "downloads": {
       "name": "Download Client",
@@ -1740,6 +1782,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplicate board",
+        "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
+        "notification": {
+          "success": {
+            "title": "Board duplicated",
+            "message": "The board was successfully duplicated"
+          },
+          "error": {
+            "title": "Unable to duplicate board",
+            "message": "The board could not be duplicated"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2105,6 +2161,9 @@
               "tooltip": "This board will show as your home board"
             }
           },
+          "duplicate": {
+            "label": "Duplicate board"
+          },
           "delete": {
             "label": "Delete permanently",
             "confirm": {
@@ -2139,6 +2198,7 @@
             "item": {
               "language": "Language & Region",
               "board": "Home board",
+              "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }
@@ -2300,6 +2360,13 @@
               "description": "Only public boards are available for selection"
             }
           },
+          "search": {
+            "title": "Search",
+            "defaultSearchEngine": {
+              "label": "Global default search engine",
+              "description": "Integration search engines can not be selected here"
+            }
+          },
           "appearance": {
             "title": "Appearance",
             "defaultColorScheme": {
@@ -2327,6 +2394,9 @@
             "error": "Error"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft server status"
+            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
@@ -2520,6 +2590,22 @@
             "title": "Containers not refreshed",
             "message": "Something went wrong while refreshing the containers"
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "Add to Homarr",
+        "notification": {
+          "success": {
+            "title": "Added to Homarr",
+            "message": "Selected apps have been added to Homarr"
+          },
+          "error": {
+            "title": "Could not add to Homarr",
+            "message": "Selected apps could not be added to Homarr"
+          }
+        },
+        "modal": {
+          "title": "Add docker container(-s) to Homarr"
         }
       }
     },
@@ -2725,6 +2811,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Request movie",
+        "requestSeries": "Request series",
+        "openIn": "Open in {kind}"
+      },
       "external": {
         "help": "Use an external search engine",
         "group": {
@@ -2791,6 +2882,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Search",
+            "option": {
+              "other": {
+                "label": "Search with another search engine"
+              },
+              "no-default": {
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
+              },
+              "search": {
+                "label": "Search for \"{query}\" with {name}"
+              },
+              "from-integration": {
+                "description": "Start typing to search"
+              }
+            }
+          },
           "local": {
             "title": "Local results"
           }
@@ -2962,6 +3071,22 @@
             "error": {
               "title": "Search engine not deleted",
               "message": "The search engine could not be deleted"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Request \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Season",
+                "episodes": "Episodes"
+              }
+            },
+            "button": {
+              "send": "Send request"
             }
           }
         }

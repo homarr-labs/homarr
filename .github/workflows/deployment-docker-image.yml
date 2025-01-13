@@ -13,11 +13,6 @@ on:
         required: false
         default: true
         description: Send notifications
-      push-image:
-        type: boolean
-        required: false
-        default: true
-        description: Push Docker Image
 
 permissions:
   contents: write
@@ -99,6 +94,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
+          git config user.name "Releases Homarr"
+          git config user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
           git fetch origin dev
           git checkout dev
           git pull origin dev
@@ -112,7 +109,6 @@ jobs:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
       DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
-      PUSH_IMAGE: ${{ github.event_name != 'workflow_dispatch' || github.events.inputs.push-image == true }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -143,13 +139,13 @@ jobs:
             ${{ env.DEPLOY_LATEST == 'true' && 'type=raw,value=latest' || null }}
             ${{ env.DEPLOY_BETA == 'true' && 'type=raw,value=beta' || null }}
             type=raw,value=${{ env.NEXT_VERSION }}
-      - name: Build and maybe push
+      - name: Build and push
         id: buildPushAction
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
           context: .
-          push: ${{ env.PUSH_IMAGE}}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           network: host
@@ -160,4 +156,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'. ${{ env.PUSH_IMAGE == 'true' && '' || 'This was a dry run' }}"
+          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."

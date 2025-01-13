@@ -4,7 +4,7 @@ import type { TranslationObject } from "@homarr/translation";
 import type { CreateChildrenOptionsProps } from "./children";
 
 const createSearchInteraction = <TType extends string>(type: TType) => ({
-  optionsType: <TOption extends Record<string, unknown>>() => ({ type, _inferOptions: {} as TOption }),
+  optionsType: <TOption extends Record<string, unknown> | undefined>() => ({ type, _inferOptions: {} as TOption }),
 });
 
 // This is used to define search interactions with their options
@@ -20,20 +20,23 @@ const searchInteractions = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     option: any;
   }>(),
+  createSearchInteraction("none").optionsType<never>(),
 ] as const;
 
 // Union of all search interactions types
 export type SearchInteraction = (typeof searchInteractions)[number]["type"];
 
 // Infer the options for the specified search interaction
-export type inferSearchInteractionOptions<TInteraction extends SearchInteraction> = Extract<
-  (typeof searchInteractions)[number],
-  { type: TInteraction }
->["_inferOptions"];
+export type inferSearchInteractionOptions<TInteraction extends SearchInteraction> = Exclude<
+  Extract<(typeof searchInteractions)[number], { type: TInteraction }>["_inferOptions"],
+  undefined
+>;
 
 // Infer the search interaction definition (type + options) for the specified search interaction
 export type inferSearchInteractionDefinition<TInteraction extends SearchInteraction> = {
-  [interactionKey in TInteraction]: { type: interactionKey } & inferSearchInteractionOptions<interactionKey>;
+  [interactionKey in TInteraction]: inferSearchInteractionOptions<interactionKey> extends never
+    ? { type: interactionKey }
+    : { type: interactionKey } & inferSearchInteractionOptions<interactionKey>;
 }[TInteraction];
 
 // Type used for helper functions to define basic search interactions

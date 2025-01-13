@@ -2,12 +2,12 @@
   "init": {
     "step": {
       "start": {
-        "title": "Vitajte na stránke Homarr",
-        "subtitle": "Začnime s nastavením inštancie Homarr.",
-        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homarr.",
+        "title": "Víta Vás Homár",
+        "subtitle": "Začnime s nastavením inštancie Homár.",
+        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
         "action": {
           "scratch": "Začať odznova",
-          "importOldmarr": "Import z Homarru pred 1.0"
+          "importOldmarr": "Import z Homarr pred 1.0"
         }
       },
       "import": {
@@ -51,7 +51,7 @@
           "title": "Zadajte token importu",
           "field": {
             "token": {
-              "label": "",
+              "label": "Token",
               "description": "Zadajte zobrazený token importu z predchádzajúcej inštancie homarr"
             }
           },
@@ -114,7 +114,7 @@
       },
       "invite": {
         "title": "Pridajte sa k Homarrovi",
-        "subtitle": "Vitajte v Homarr! Prosím, vytvorte si účet",
+        "subtitle": "Vítajte v Homarr! Prosím, vytvorte si účet",
         "description": "Pozval vás {username}"
       },
       "init": {
@@ -207,6 +207,16 @@
           },
           "error": {
             "message": "Nie je možné zmeniť domovskú dosku"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Predvolený vyhľadávací nástroj sa úspešne zmenil"
+          },
+          "error": {
+            "message": "Nie je možné zmeniť predvolený vyhľadávací nástroj"
           }
         }
       },
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Vyhľadať aplikáciu",
     "page": {
       "list": {
         "title": "Aplikácie",
@@ -546,7 +557,7 @@
         "label": "Popis"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
@@ -611,7 +622,11 @@
         "label": "Názov"
       },
       "url": {
-        "label": ""
+        "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Vytvorte vyhľadávače",
+        "description": "Integrácia \"{kind}\" môže byť použitá s vyhľadávačmi.  Toto začiarknite, ak chcete automaticky nakonfigurovať vyhľadávací nástroj."
       }
     },
     "action": {
@@ -766,7 +781,7 @@
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Chyba",
     "action": {
       "add": "Pridať",
@@ -803,8 +818,8 @@
       }
     },
     "information": {
-      "min": "",
-      "max": "",
+      "min": "Min",
+      "max": "Max",
       "days": "Dni",
       "hours": "Hodiny",
       "minutes": "Minúty"
@@ -951,6 +966,7 @@
     },
     "create": {
       "title": "Vyberte položku, ktorú chcete pridať",
+      "search": "",
       "addToBoard": "Pridať na dosku"
     },
     "moveResize": {
@@ -963,10 +979,10 @@
           "label": "Výška"
         },
         "xOffset": {
-          "label": ""
+          "label": "X offset"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y offset"
         }
       }
     },
@@ -1076,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Zablokované dnes",
         "dnsQueriesToday": "Poziadavky dnes",
         "domainsBeingBlocked": "Domény na adlistoch"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "Kontrola diery DNS",
@@ -1151,6 +1168,25 @@
         }
       }
     },
+    "minecraftServerStatus": {
+      "name": "Minecraft Server Stav",
+      "description": "Zobraziť status Minecraft servera",
+      "option": {
+        "title": {
+          "label": "Názov"
+        },
+        "domain": {
+          "label": "Adresa servera"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock server"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Odpojené"
+      }
+    },
     "notebook": {
       "name": "Poznámkový blok",
       "description": "Jednoduchý widget poznámkového bloku, ktorý podporuje markdown",
@@ -1213,7 +1249,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Vložte akýkoľvek obsah z internetu. Niektoré webové stránky môžu obmedziť prístup.",
       "option": {
         "embedUrl": {
@@ -1246,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Nie je uvedená žiadna adresa URL iFrame",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Váš prehliadač nepodporuje iframe. Aktualizujte svoj prehliadač."
       }
     },
@@ -1457,7 +1494,12 @@
     "mediaServer": {
       "name": "Aktuálne streamy mediálneho servera",
       "description": "Zobrazte aktuálne streamy na vašich mediálnych serveroch",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "Používateľ",
+        "name": "Názov",
+        "id": "Id"
+      }
     },
     "downloads": {
       "name": "Download klient",
@@ -1515,11 +1557,11 @@
           "detailsTitle": "Rýchlosť sťahovania"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": "Aktuálny index v rámci klienta"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integrácia"
@@ -1619,7 +1661,7 @@
         "partiallyAvailable": "Čiastočný",
         "available": "K dispozícii"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
       "name": "Štatistiky mediálnych žiadostí",
@@ -1732,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplikovať dosku",
+        "message": "Tým sa duplikuje nástenka {name} s celým jej obsahom. Ak widgety odkazujú na integrácie, ktoré nemáte povolené používať, budú odstránené.",
+        "notification": {
+          "success": {
+            "title": "Doska duplikovaná",
+            "message": "Doska bola úspešne duplikovaná"
+          },
+          "error": {
+            "title": "Nieje možné duplikovať dosku",
+            "message": "Tabuľu nebolo možné duplikovať"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2042,9 +2098,9 @@
         "tools": {
           "label": "Nástroje",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "logs": "Záznamy",
-            "api": "",
+            "api": "API",
             "tasks": "Úlohy"
           }
         },
@@ -2097,6 +2153,9 @@
               "tooltip": "Táto tabuľa sa zobrazí ako vaša domovská tabuľa"
             }
           },
+          "duplicate": {
+            "label": "Duplikovať dosku"
+          },
           "delete": {
             "label": "Odstrániť natrvalo",
             "confirm": {
@@ -2131,6 +2190,7 @@
             "item": {
               "language": "Jazyk a región",
               "board": "Domáca doska",
+              "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
             }
@@ -2199,7 +2259,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Autor"
@@ -2208,7 +2268,7 @@
               "label": "Dátum vypršania"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -2292,6 +2352,13 @@
               "description": "Na výber sú k dispozícii iba verejné tabule"
             }
           },
+          "search": {
+            "title": "Hladať",
+            "defaultSearchEngine": {
+              "label": "Predvolený vyhľadávací nástroj",
+              "description": "Integračné vyhľadávače tu nie je možné vybrať"
+            }
+          },
           "appearance": {
             "title": "Vzhľad",
             "defaultColorScheme": {
@@ -2319,6 +2386,9 @@
             "error": "Chyba"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft Server Stav"
+            },
             "iconsUpdater": {
               "label": "Aktualizátor ikon"
             },
@@ -2370,7 +2440,7 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "Vytvorený token API",
@@ -2390,7 +2460,7 @@
               },
               "table": {
                 "header": {
-                  "id": "",
+                  "id": "ID",
                   "createdBy": "Vytvoril/a"
                 }
               }
@@ -2513,6 +2583,22 @@
             "message": "Pri obnovovaní kontajnerov sa niečo pokazilo"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Pridať do Homarr",
+        "notification": {
+          "success": {
+            "title": "Pridané do Homarr",
+            "message": "Vybrané aplikácie boli pridané do Homarr"
+          },
+          "error": {
+            "title": "Nepodarilo sa pridať do Homarr",
+            "message": "Vybrané aplikácie nebolo možné pridať do Homarr"
+          }
+        },
+        "modal": {
+          "title": "Pridajte docker kontajner/y do Homarr"
+        }
       }
     },
     "error": {
@@ -2602,7 +2688,7 @@
       "tools": {
         "label": "Nástroje",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
           "label": "Záznamy"
@@ -2717,6 +2803,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "Vyžiadať film",
+        "requestSeries": "Vyžiadať seriál",
+        "openIn": "Otvoriť v {kind}"
+      },
       "external": {
         "help": "Používanie externého vyhľadávača",
         "group": {
@@ -2737,15 +2828,15 @@
             },
             "option": {
               "google": {
-                "name": "",
+                "name": "Google",
                 "description": "Hľadajte na webe pomocou Google"
               },
               "bing": {
-                "name": "",
+                "name": "Bing",
                 "description": "Vyhľadávajte na webe pomocou Bingu"
               },
               "duckduckgo": {
-                "name": "",
+                "name": "DuckDuckGo",
                 "description": "Vyhľadávajte na webe pomocou DuckDuckGo"
               },
               "torrent": {
@@ -2753,7 +2844,7 @@
                 "description": "Vyhľadajte torrenty na torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
+                "name": "YouTube",
                 "description": "Hľadajte videá na YouTube"
               }
             }
@@ -2783,6 +2874,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Hladať",
+            "option": {
+              "other": {
+                "label": "Hľadajte pomocou iného vyhľadávača"
+              },
+              "no-default": {
+                "label": "Žiadny predvolený vyhľadávací nástroj",
+                "description": "Nastavte predvolený vyhľadávací nástroj v preferenciách"
+              },
+              "search": {
+                "label": "Hľadať '{query}' s {name}"
+              },
+              "from-integration": {
+                "description": "Ak chcete hľadať, začnite písať"
+              }
+            }
+          },
           "local": {
             "title": "Miestne výsledky"
           }
@@ -2825,7 +2934,7 @@
                 "label": "Spravovať docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
                 "label": "Zobraziť denníky"
@@ -2954,6 +3063,22 @@
             "error": {
               "title": "Vyhľadávač nebol odstránený",
               "message": "Vyhľadávací nástroj sa nepodarilo odstrániť"
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Vyžiadať \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Séria",
+                "episodes": "Epizódy"
+              }
+            },
+            "button": {
+              "send": "Poslať požiadavku"
             }
           }
         }

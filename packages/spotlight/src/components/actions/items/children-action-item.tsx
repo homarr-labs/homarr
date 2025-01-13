@@ -8,9 +8,10 @@ interface ChildrenActionItemProps {
   childrenOptions: inferSearchInteractionOptions<"children">;
   query: string;
   action: ReturnType<inferSearchInteractionOptions<"children">["useActions"]>[number];
+  setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
 
-export const ChildrenActionItem = ({ childrenOptions, action, query }: ChildrenActionItemProps) => {
+export const ChildrenActionItem = ({ childrenOptions, action, query, setChildrenOptions }: ChildrenActionItemProps) => {
   const interaction = action.useInteraction(childrenOptions.option, query);
 
   const renderRoot =
@@ -20,10 +21,20 @@ export const ChildrenActionItem = ({ childrenOptions, action, query }: ChildrenA
         }
       : undefined;
 
-  const onClick = interaction.type === "javaScript" ? interaction.onSelect : undefined;
+  const onClick =
+    interaction.type === "javaScript"
+      ? interaction.onSelect
+      : interaction.type === "children"
+        ? () => setChildrenOptions(interaction)
+        : undefined;
 
   return (
-    <Spotlight.Action renderRoot={renderRoot} onClick={onClick} className={classes.spotlightAction}>
+    <Spotlight.Action
+      renderRoot={renderRoot}
+      onClick={onClick}
+      closeSpotlightOnTrigger={interaction.type !== "children"}
+      className={classes.spotlightAction}
+    >
       <action.Component {...childrenOptions.option} />
     </Spotlight.Action>
   );

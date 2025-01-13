@@ -3,19 +3,19 @@
     "step": {
       "start": {
         "title": "Willkommen bei Homarr",
-        "subtitle": "Beginnen wir mit der Einrichtung Ihrer Homarr-Instanz.",
-        "description": "Um zu beginnen, wählen Sie bitte aus, wie Sie Ihre Homarr-Instanz einrichten möchten.",
+        "subtitle": "Lass uns mit der Einrichtung deiner Homarr-Instanz beginnen.",
+        "description": "Um loszulegen, wähle bitte wie du deine Homarr Instanz einrichten möchtest.",
         "action": {
           "scratch": "Von vorne beginnen",
-          "importOldmarr": "Import von Homarr vor Version 1.0"
+          "importOldmarr": "Import von Homarr vor 1.0"
         }
       },
       "import": {
-        "title": "Importieren von Daten",
-        "subtitle": "Sie können Daten aus einer vorhandenen Homarr-Instanz importieren.",
+        "title": "Daten importieren",
+        "subtitle": "Sie können Daten aus einer bestehenden Homarr-Instanz importieren.",
         "dropzone": {
           "title": "Ziehen Sie die Zip-Datei hierher oder klicken Sie zum Durchsuchen",
-          "description": "Die hochgeladene Zip-Datei wird verarbeitet und Sie können auswählen, was Sie importieren möchten"
+          "description": "Die hochgeladene Zip-Datei wird bearbeitet und Sie können wählen, was Sie importieren möchten"
         },
         "fileInfo": {
           "action": {
@@ -23,8 +23,8 @@
           }
         },
         "importSettings": {
-          "title": "Einstellungen importieren",
-          "description": "Konfigurieren des Importverhaltens"
+          "title": "Importeinstellungen",
+          "description": "Importverhalten konfigurieren"
         },
         "boardSelection": {
           "title": "{count} Boards gefunden",
@@ -36,12 +36,12 @@
         },
         "summary": {
           "title": "Zusammenfassung des Imports",
-          "description": "In der folgenden Übersicht können Sie sehen, was importiert wird",
+          "description": "In der folgenden Zusammenfassung sehen Sie, was importiert wird",
           "action": {
             "import": "Import bestätigen und fortfahren"
           },
           "entities": {
-            "apps": "Apps",
+            "apps": "Applikationen",
             "boards": "Boards",
             "integrations": "Integrationen",
             "credentialUsers": "Benutzer mit Zugangsdaten"
@@ -51,28 +51,28 @@
           "title": "Importschlüssel eingeben",
           "field": {
             "token": {
-              "label": "Token",
-              "description": "Gib den angezeigten Importschlüssel von der vorherigen Homarr Instanz ein"
+              "label": "Schlüssel",
+              "description": "Gib den angezeigten Importschlüssel von der vorherigen Homarr-Instanz ein"
             }
           },
           "notification": {
             "error": {
-              "title": "Token ungültig",
+              "title": "Ungültiger Schlüssel",
               "message": "Der eingegebene Schlüssel ist ungültig"
             }
           }
         }
       },
       "user": {
-        "title": "Admin Benutzer",
-        "subtitle": "Geben Sie die Anmeldeinformationen für Ihren Administratorbenutzer an.",
+        "title": "Administrator",
+        "subtitle": "Geben Sie die Zugangsdaten für Ihren Administrator-Benutzer an.",
         "notification": {
           "success": {
             "title": "Benutzer erstellt",
             "message": "Der Benutzer wurde erfolgreich erstellt"
           },
           "error": {
-            "title": "Benutzer anlegen fehlgeschlagen"
+            "title": "Erstellung des Benutzers fehlgeschlagen"
           }
         }
       },
@@ -82,13 +82,13 @@
         "form": {
           "name": {
             "label": "Gruppenname",
-            "description": "Name muss mit der Admin-Gruppe der externen Anmeldeoption übereinstimmen"
+            "description": "Name muss mit der Admin-Gruppe des externen Anbieters übereinstimmen"
           }
         }
       },
       "settings": {
         "title": "Einstellungen",
-        "subtitle": "Server Einstellungen konfigurieren."
+        "subtitle": "Server-Einstellungen konfigurieren."
       },
       "finish": {
         "title": "Einrichtung abschließen",
@@ -96,9 +96,9 @@
         "description": "Du hast die Einrichtung erfolgreich abgeschlossen. Du kannst jetzt mit der Nutzung von Homarr beginnen. Wähle deine nächste Aktion:",
         "action": {
           "goToBoard": "Gehe zu {name} Board",
-          "createBoard": "Erstellen Sie Ihr erstes Board",
-          "inviteUser": "Weitere Personen einladen",
-          "docs": "Lesen Sie die Dokumentation"
+          "createBoard": "Erstelle dein erstes Board",
+          "inviteUser": "Andere Benutzer einladen",
+          "docs": "Lese die Dokumentation"
         }
       }
     },
@@ -109,11 +109,11 @@
     "name": "Benutzer",
     "page": {
       "login": {
-        "title": "Melden Sie sich in Ihrem Konto an",
+        "title": "Melde dich bei deinem Konto an",
         "subtitle": "Willkommen zurück! Bitte gib deine Zugangsdaten ein"
       },
       "invite": {
-        "title": "Trete Homarr bei",
+        "title": "Homarr beitreten",
         "subtitle": "Willkommen bei Homarr! Bitte erstelle dein Konto",
         "description": "Du wurdest von {username} eingeladen"
       },
@@ -147,7 +147,7 @@
         "label": "Vorheriges Passwort"
       },
       "homeBoard": {
-        "label": "Home board"
+        "label": "Home Board"
       },
       "pingIconsEnabled": {
         "label": "Symbole für Pings verwenden"
@@ -210,13 +210,23 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
             "message": "Erster Wochentag erfolgreich geändert"
           },
           "error": {
-            "message": "Der erste Wochentag konnte nicht geändert werden"
+            "message": "Konnte den ersten Wochentag nicht ändern"
           }
         }
       },
@@ -226,7 +236,7 @@
             "message": "Ping Icons erfolgreich umgeschaltet"
           },
           "error": {
-            "message": "Ping Icons konnten nicht umgeschaltet werden"
+            "message": "Konnte Ping-Icons nicht umschalten"
           }
         }
       },
@@ -242,19 +252,19 @@
             },
             "toLarge": {
               "title": "Bild ist zu groß",
-              "message": "Die maximale Bildgröße beträgt {size}"
+              "message": "Maximale Bildgröße ist {size}"
             }
           }
         },
         "removeImage": {
           "label": "Bild entfernen",
-          "confirm": "Sind Sie sicher, dass Sie dieses Bild entfernen möchten?",
+          "confirm": "Wollen Sie wirklich dieses Bild entfernen?",
           "notification": {
             "success": {
               "message": "Bild erfolgreich entfernt"
             },
             "error": {
-              "message": "Bild konnte nicht entfernt werden"
+              "message": "Bild kann nicht entfernt werden"
             }
           }
         }
@@ -271,7 +281,7 @@
       },
       "delete": {
         "label": "Benutzer dauerhaft löschen",
-        "description": "Löscht diesen Benutzer einschließlich seiner Einstellungen. Es werden keine Boards gelöscht. Der Benutzer wird nicht benachrichtigt.",
+        "description": "Löscht diesen Benutzer einschließlich seiner Einstellungen. Wird keine Boards löschen. Benutzer wird nicht benachrichtigt.",
         "confirm": "Sind Sie sicher, dass Sie den Benutzer {username} mit seinen Einstellungen löschen möchten?"
       },
       "select": {
@@ -284,9 +294,9 @@
     }
   },
   "group": {
-    "title": "Gruppen",
-    "name": "Gruppe",
-    "search": "Finde eine Gruppe",
+    "title": "Benutzergruppen",
+    "name": "Benutzergruppe",
+    "search": "Finde eine Benutzergruppe",
     "field": {
       "name": "Name",
       "members": "Mitglieder"
@@ -305,20 +315,20 @@
         "title": "Apps",
         "item": {
           "create": {
-            "label": "Anwendung erstellen",
-            "description": "Mitgliedern erlauben, Apps zu erstellen"
+            "label": "Apps erstellen",
+            "description": "Mitgliedern das Erstellen von Apps erlauben"
           },
           "use-all": {
             "label": "Alle Apps verwenden",
-            "description": ""
+            "description": "Mitgliedern erlauben, Apps zu ihren Boards hinzuzufügen"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Apps ändern",
+            "description": "Mitgliedern das Erstellen von Apps erlauben"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Voller App Zugriff",
+            "description": "Mitgliedern das Benutzen, Verwalten und Löschen von Apps erlauben"
           }
         }
       },
@@ -326,20 +336,20 @@
         "title": "Boards",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Boards erstellen",
+            "description": "Mitgliedern das Erstellen von Boards erlauben"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Boards anzeigen",
+            "description": "Mitgliedern das Ansehen von Boards erlauben"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Boards ändern",
+            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Voller Board Zugriff",
+            "description": "Erlaube Mitgliedern alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -347,37 +357,37 @@
         "title": "Integrationen",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Integrationen erstellen",
+            "description": "Mitgliedern erlauben, Integrationen zu erstellen"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Alle Integrationen nutzen",
+            "description": "Erlaubt Mitgliedern Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Mit jeder Integration interagieren",
+            "description": "Mitgliedern erlauben, mit jeder Integration zu interagieren"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Voller Zugriff auf Integrationen",
+            "description": "Erlaube Mitgliedern jede Integration zu verwalten, zu nutzen und zu interagieren"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Medien",
         "item": {
           "upload": {
-            "label": "",
-            "description": "Erlaubt Mitgliedern Medien hochzuladen"
+            "label": "Medien Hochladen",
+            "description": "Erlaube Mitgliedern Medien hochzuladen"
           },
           "view-all": {
             "label": "Alle Medien anzeigen",
             "description": "Erlaubt Mitgliedern alle Medien anzusehen"
           },
           "full-all": {
-            "label": "Voller Zugriff auf alle Medien",
-            "description": "Erlaubt Mitglieder die Verwaltung und das Entfernen jeglicher Medien"
+            "label": "Vollständiger Medienzugriff",
+            "description": "Mitgliedern das Verwalten und Löschen von Medien erlauben"
           }
         }
       },
@@ -399,10 +409,10 @@
           },
           "modify-all": {
             "label": "Alle Suchmaschinen ändern",
-            "description": "Erlaubt es den Mitgliedern die Suchmaschinen zu ändern"
+            "description": "Mitgliedern erlauben alle Suchmaschinen zu ändern"
           },
           "full-all": {
-            "label": "Vollständiger Suchmaschinenzugriff",
+            "label": "Voller Zugriff auf Suchmaschinen",
             "description": "Mitgliedern das Verwalten und Löschen von Suchmaschinen erlauben"
           }
         }
@@ -413,7 +423,7 @@
       "external": "Alle Mitglieder haben externe Anmeldeoptionen genutzt und können von hier aus nicht verwaltet werden"
     },
     "reservedNotice": {
-      "message": "Diese Gruppe ist für die Systemnutzung reserviert und schränkt einige Aktionen ein. <checkoutDocs></checkoutDocs>"
+      "message": "Diese Gruppe ist für die Systemnutzung reserviert und beschränkt einige Aktionen. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
@@ -428,7 +438,7 @@
         }
       },
       "transfer": {
-        "label": "Übertrage Eigentum",
+        "label": "Eigentum übertragen",
         "description": "Übertrage den Eigentümer dieser Gruppe an einen anderen Benutzer.",
         "confirm": "Bist du sicher, dass du das Eigentum für die Gruppe {name} an {username} übertragen möchtest?",
         "notification": {
@@ -436,20 +446,20 @@
             "message": "Gruppe {group} erfolgreich an {user} übertragen"
           },
           "error": {
-            "message": "Eigentumsübertragung nicht möglich"
+            "message": "Übertragung des Eigentums nicht möglich"
           }
         }
       },
       "addMember": {
-        "label": "Benutzer hinzufügen"
+        "label": "Mitglied hinzufügen"
       },
       "removeMember": {
-        "label": "Benutzer entfernen",
+        "label": "Mitglied entfernen",
         "confirm": "Bist du sicher, dass du {user} aus dieser Gruppe entfernen möchtest?"
       },
       "delete": {
         "label": "Gruppe löschen",
-        "description": "Sobald Sie eine Gruppe gelöscht haben, gibt es kein Zurück mehr. Bitte seien Sie sich dessen bewusst.",
+        "description": "Sobald Sie einen Arbeitsbereich löschen, gibt es keinen Weg sie wiederherzustellen. Bitte seien Sie sich dessen bewusst.",
         "confirm": "Sind Sie sicher, dass Sie die Gruppe {name} löschen möchten?",
         "notification": {
           "success": {
@@ -463,7 +473,7 @@
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "Die Berechtigungen wurden gespeichert",
+            "title": "Berechtigungen gespeichert",
             "message": "Berechtigungen wurden erfolgreich gespeichert"
           },
           "error": {
@@ -489,11 +499,12 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Apps",
         "noResults": {
-          "title": "Es gibt noch keine Apps",
+          "title": "Noch keine Apps vorhanden",
           "action": "Erstelle deine erste App"
         }
       },
@@ -506,7 +517,7 @@
           },
           "error": {
             "title": "Erstellung fehlgeschlagen",
-            "message": "Die App konnte nicht erstellt werden"
+            "message": "Die App konnte nicht angelegt werden"
           }
         }
       },
@@ -514,26 +525,26 @@
         "title": "App bearbeiten",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen erfolgreich angewendet",
+            "message": "Die App wurde erfolgreich gespeichert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen konnten nicht angewendet werden",
+            "message": "Die App konnte nicht gespeichert werden"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "App löschen",
+        "message": "Sind Sie sicher, dass Sie die App {name} löschen möchten?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Löschen erfolgreich",
+            "message": "Die App wurde erfolgreich gelöscht"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Löschen fehlgeschlagen",
+            "message": "App konnte nicht gelöscht werden"
           }
         }
       }
@@ -543,16 +554,16 @@
         "label": "Name"
       },
       "description": {
-        "label": ""
+        "label": "Beschreibung"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "App auswählen",
+        "notFound": "Keine App gefunden"
       }
     }
   },
@@ -560,48 +571,48 @@
     "page": {
       "list": {
         "title": "Integrationen",
-        "search": "",
+        "search": "Integrationen durchsuchen",
         "noResults": {
-          "title": ""
+          "title": "Es gibt noch keine Integrationen"
         }
       },
       "create": {
-        "title": "",
+        "title": "Neue {name} Integration",
         "notification": {
           "success": {
             "title": "Erstellung erfolgreich",
-            "message": ""
+            "message": "Die Integration wurde erfolgreich erstellt"
           },
           "error": {
             "title": "Erstellung fehlgeschlagen",
-            "message": ""
+            "message": "Die Integration konnte nicht erstellt werden"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "{name} Integration bearbeiten",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen erfolgreich angewendet",
+            "message": "Die Integration wurde erfolgreich gespeichert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Änderungen konnten nicht angewendet werden",
+            "message": "Die Integration konnte nicht gespeichert werden"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Integration löschen",
+        "message": "Sind Sie sicher, dass Sie die Integration {name} löschen möchten?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Löschen erfolgreich",
+            "message": "Die Integration wurde erfolgreich erstellt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Löschen fehlgeschlagen",
+            "message": "Integration konnte nicht gelöscht werden"
           }
         }
       }
@@ -611,109 +622,113 @@
         "label": "Name"
       },
       "url": {
-        "label": ""
+        "label": "URL"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
-      "create": ""
+      "create": "Neue Integration"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Verbindung erstellen und testen",
+        "edit": "Verbindung erstellen und speichern"
       },
-      "alertNotice": "",
+      "alertNotice": "Der Speichern Button ist verfügbar, sobald eine erfolgreiche Verbindung hergestellt wurde",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Verbindung hergestellt",
+          "message": "Die Verbindung wurde erfolgreich hergestellt"
         },
         "invalidUrl": {
           "title": "Ungültige URL",
-          "message": ""
+          "message": "Die Adresse ist ungültig"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Fehlende Anmeldedaten",
+          "message": "Nicht alle Zugangsdaten wurden angegeben"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Ungültige Zugangsdaten",
+          "message": "Die Zugangsdaten sind ungültig"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Verbindungsaufbau fehlgeschlagen",
+          "message": "Die Verbindung konnte nicht hergestellt werden"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Fehlerhafte Anfrage",
+          "message": "Die Anfrage war fehlerhaft"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Nicht autorisiert",
+          "message": "Wahrscheinlich falsche Anmeldeinformationen"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Verweigert",
+          "message": "Vermutlich fehlende Berechtigungen"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Nicht gefunden",
+          "message": "Wahrscheinlich falsche URL oder Pfad"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Interner Serverfehler",
+          "message": "Auf dem Server ist ein Fehler aufgetreten"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Dienst nicht verfügbar",
+          "message": "Der Server ist derzeit nicht erreichbar"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Verbindung abgebrochen",
+          "message": "Die Verbindung wurde abgebrochen"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domain nicht gefunden",
+          "message": "Die Domain konnte nicht gefunden werden"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Verbindung verweigert",
+          "message": "Die Verbindung wurde abgelehnt"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Ungültiges JSON",
+          "message": "Die Antwort war ungültig JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Falscher Pfad",
+          "message": "Der Pfad ist vermutlich nicht korrekt"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Secrets",
+      "lastUpdated": "Zuletzt aktualisiert am {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Kein Wert festgelegt",
+        "tooltip": "Das erforderliche Secret wurde noch nicht festgelegt"
       },
-      "secureNotice": "",
+      "secureNotice": "Das Secret kann nicht nach der Erstellung abgerufen werden",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Secret zurücksetzen",
+        "message": "Bist du sicher, dass du dieses Secret zurücksetzen möchtest?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Keine Secrets",
+        "text": "Kein Secret für diese Integration erforderlich"
       },
       "kind": {
         "username": {
           "label": "Benutzername",
-          "newLabel": ""
+          "newLabel": "Neuer Benutzername"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Schlüssel",
+          "newLabel": "neuer API Schlüssel"
         },
         "password": {
           "label": "Passwort",
@@ -722,14 +737,14 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Integrationen in Elementen auswählen",
+      "interact": "Mit Integrationen interagieren",
+      "full": "Voller Zugriff auf Integrationen"
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Medien",
+    "search": "Medien suchen",
     "field": {
       "name": "Name",
       "size": "Größe",
@@ -737,75 +752,75 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Medien Hochladen",
+        "file": "Datei auswählen",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Das Medium wurde erfolgreich hochgeladen"
           },
           "error": {
-            "message": ""
+            "message": "Das Medium konnte nicht hochgeladen werden"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Medium löschen",
+        "description": "Sind Sie sicher, dass Sie die Medien <bName></bName> löschen möchten?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Das Medium wurde erfolgreich gelöscht"
           },
           "error": {
-            "message": ""
+            "message": "Die Medien konnten nicht gelöscht werden"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "URL in Zwischenablage kopieren"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Fehler",
     "action": {
       "add": "Hinzufügen",
       "apply": "Übernehmen",
-      "backToOverview": "",
+      "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
       "edit": "Bearbeiten",
-      "import": "",
+      "import": "Import",
       "insert": "Einfügen",
       "remove": "Entfernen",
       "save": "Speichern",
       "saveChanges": "Änderungen speichern",
       "cancel": "Abbrechen",
       "delete": "Löschen",
-      "discard": "",
+      "discard": "Verwerfen",
       "confirm": "Bestätigen",
-      "continue": "",
+      "continue": "Fortfahren",
       "previous": "Zurück",
       "next": "Weiter",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "Die Dokumentation ansehen",
+      "checkLogs": "Logs für weitere Details prüfen",
       "tryAgain": "Erneut versuchen",
-      "loading": ""
+      "loading": "Wird geladen"
     },
-    "here": "",
+    "here": "Hier",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "Icon URL",
+      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Hell",
+        "dark": "Dunkel"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "Min",
+      "max": "Max",
+      "days": "Tage",
       "hours": "Stunden",
       "minutes": "Minuten"
     },
@@ -815,49 +830,49 @@
         "error": "Erstellung fehlgeschlagen"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Löschen erfolgreich",
+        "error": "Löschen fehlgeschlagen"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Änderungen erfolgreich angewendet",
+        "error": "Änderungen konnten nicht angewendet werden"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Übertragung erfolgreich",
+        "error": "Übertragung ist fehlgeschlagen"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Wählen Sie einen oder mehrere Werte"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Weitere Werte hinzufügen",
+      "addLabel": "{value} hinzufügen"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Wert auswählen",
       "badge": {
-        "recommended": ""
+        "recommended": "Empfohlen"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Zum dunklen Design wechseln",
+        "switchToLightMode": "Zum hellen Design wechseln",
+        "management": "Verwaltung",
         "preferences": "Ihre Einstellungen",
-        "logout": "",
+        "logout": "Abmelden",
         "login": "Anmelden",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "homeBoard": "Ihr Home Board",
+        "loggedOut": "Abgemeldet",
+        "updateAvailable": "{countUpdates} Updates verfügbar: {tag}"
       }
     },
-    "dangerZone": "Gefahrenzone",
+    "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Vorschau ansehen",
+      "hide": "Vorschau ausblenden"
     },
     "zod": {
       "errors": {
@@ -867,7 +882,7 @@
           "startsWith": "Dieses Feld muss mit {startsWith} beginnen",
           "endsWith": "Dieses Feld muss mit {endsWith} enden",
           "includes": "Dieses Feld muss {includes} beinhalten",
-          "invalidEmail": ""
+          "invalidEmail": "Dieses Feld beinhaltet keine gültige E-Mail-Adresse"
         },
         "tooSmall": {
           "string": "Dieses Feld muss mindestens {minimum} Zeichen lang sein",
@@ -878,13 +893,13 @@
           "number": "Dieses Feld muss größer oder gleich {maximum} sein"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+          "passwordRequirements": "Passwort erfüllt nicht alle Anforderungen",
+          "boardAlreadyExists": "Ein Board mit diesem Namen existiert bereits",
+          "invalidFileType": "Ungültiger Dateityp, erwartete {expected}",
+          "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
+          "invalidConfiguration": "Ungültige Konfiguration",
+          "groupNameTaken": "Gruppenname bereits vergeben"
         }
       }
     }
@@ -892,44 +907,44 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Neuer dynamischer Abschnitt",
+        "remove": "Dynamischen Abschnitt entfernen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Dynamischen Abschnitt entfernen",
+        "message": "Möchten Sie diesen dynamischen Abschnitt wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Abschnitt verschoben."
       }
     },
     "category": {
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Neue Kategorie",
+        "edit": "Kategorie umbenennen",
+        "remove": "Kategorie entfernen",
         "moveUp": "Nach oben bewegen",
         "moveDown": "Nach unten bewegen",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Neue Kategorie oben",
+        "createBelow": "Neue Kategorie unten"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Neue Kategorie",
+        "submit": "Kategorie hinzufügen"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Kategorie entfernen",
+        "message": "Möchten Sie die Kategorie {name} wirklich entfernen?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Kategorie umbenennen",
+        "submit": "Kategorie umbenennen"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Neue Kategorie",
           "changePosition": "Position wechseln"
         }
       }
@@ -937,12 +952,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Neues Element",
+      "import": "Element importieren",
+      "edit": "Element bearbeiten",
+      "moveResize": "Element verschieben/Größe ändern",
+      "duplicate": "Element duplizieren",
+      "remove": "Element löschen"
     },
     "menu": {
       "label": {
@@ -950,11 +965,12 @@
       }
     },
     "create": {
-      "title": "",
-      "addToBoard": ""
+      "title": "Wählen Sie das hinzuzufügende Element aus",
+      "search": "",
+      "addToBoard": "Zum Board hinzufügen"
     },
     "moveResize": {
-      "title": "",
+      "title": "Element verschieben/Größe ändern",
       "field": {
         "width": {
           "label": "Breite"
@@ -963,73 +979,73 @@
           "label": "Höhe"
         },
         "xOffset": {
-          "label": ""
+          "label": "X Versatz"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y Versatz"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Element bearbeiten",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Erweiterte Optionen",
+        "title": "Erweiterte Element Optionen"
       },
       "field": {
         "integrations": {
           "label": "Integrationen"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Benutzerdefinierte CSS Klassen"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Element löschen",
+      "message": "Soll dieses Element wirklich entfernt werden?"
     }
   },
   "widget": {
     "app": {
       "name": "",
-      "description": "",
+      "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "App auswählen"
         },
         "openInNewTab": {
           "label": "In neuem Tab öffnen"
         },
         "showTitle": {
-          "label": ""
+          "label": "App Namen anzeigen"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Beschreibungs Tooltip anzeigen"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Einfachen Ping aktivieren"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Keine App",
+          "tooltip": "Sie haben keine gültige App ausgewählt"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Lesezeichen",
+      "description": "Zeigt mehrere App Links an",
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "layout": {
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1040,14 +1056,14 @@
           }
         },
         "items": {
-          "label": "",
+          "label": "Lesezeichen",
           "add": ""
         }
       }
     },
     "dnsHoleSummary": {
       "name": "",
-      "description": "",
+      "description": "Zeigt die Zusammenfassung deines DNS Holes an",
       "option": {
         "layout": {
           "label": "Ansicht",
@@ -1059,27 +1075,28 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Raster"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Pi Hole Farben verwenden"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Fehler beim Abrufen der DNS Hole Zusammenfassung",
+        "integrationsDisconnected": "Keine Daten verfügbar, alle Integrationen getrennt"
       },
       "data": {
         "adsBlockedToday": "Heute blockiert",
         "adsBlockedTodayPercentage": "Heute blockiert",
-        "dnsQueriesToday": "Heutige Anfragen",
-        "domainsBeingBlocked": ""
-      }
+        "dnsQueriesToday": "Abfragen heute",
+        "domainsBeingBlocked": "Domänen auf der Sperrliste"
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole Steuerung",
       "description": "Steuern Sie PiHole oder AdGuard von Ihrem Dashboard aus",
       "option": {
         "layout": {
@@ -1092,68 +1109,87 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Raster"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Alle Schaltflächen anzeigen"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler bei der Kontrolle des DNS Holes"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "Speichern",
+        "enableAll": "Alle aktivieren",
+        "disableAll": "Alle deaktivieren",
+        "setTimer": "Timer setzen",
+        "set": "Übernehmen",
         "enabled": "Aktiviert",
         "disabled": "Deaktiviert",
-        "processing": "",
-        "disconnected": "",
+        "processing": "Wird verarbeitet",
+        "disconnected": "Verbindung getrennt",
         "hours": "Stunden",
         "minutes": "Minuten",
-        "unlimited": ""
+        "unlimited": "Freilassen für unbegrenzt"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Datum und Uhrzeit",
       "description": "Zeigt das aktuelle Datum und die Uhrzeit an.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Eigene Titel/Stadt Anzeige",
+          "description": "Zeige einen benutzerdefinierten Titel oder den Namen der Stadt oder des Landes oben auf der Uhr."
         },
         "customTitle": {
-          "label": ""
+          "label": "Titel"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-Stunden Format",
+          "description": "24-Stunden Format anstelle von 12-Stunden Format verwenden"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Sekunden anzeigen"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Eine feste Zeitzone verwenden"
         },
         "timezone": {
           "label": "Zeitzone",
-          "description": ""
+          "description": "Wählen Sie die Zeitzone nach dem IANA-Standard"
         },
         "showDate": {
-          "label": ""
+          "label": "Datum anzeigen"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datumsformat",
+          "description": "Wie das Datum aussehen sollte"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
       "name": "Notizbuch",
-      "description": "",
+      "description": "Ein einfaches Notizbuch Widget, das Markdown unterstützt",
       "option": {
         "showToolbar": {
           "label": "Zeigt die Symbolleiste an, um Ihnen beim Schreiben der Markdown zu assistieren"
@@ -1183,7 +1219,7 @@
         "checkList": "Checkliste",
         "increaseIndent": "Einzug vergrößern",
         "decreaseIndent": "Einzug verkleinern",
-        "link": "Link",
+        "link": "Verknüpfung",
         "unlink": "Link entfernen",
         "image": "Bild einbetten",
         "addTable": "Tabelle hinzufügen",
@@ -1245,31 +1281,32 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Keine iFrame URL angegeben",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Ihr Browser unterstützt keine iframes. Bitte aktualisieren Sie Ihren Browser."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Zustand der Entität",
+      "description": "Zeigt den Status einer Entität an und schaltet ihn optional ein",
       "option": {
         "entityId": {
           "label": "Eintrag-ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Anzeigename"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Einheit der Entität"
         },
         "clickable": {
-          "label": ""
+          "label": "Anklickbar"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Automatisierung ausführen",
+      "description": "Automatisierung mit einem Klick auslösen",
       "option": {
         "displayName": {
           "label": "Anzeigename"
@@ -1279,26 +1316,26 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "{name} ausführen"
       }
     },
     "calendar": {
       "name": "Kalender",
-      "description": "",
+      "description": "Zeigt Ereignisse aus Ihren Integrationen in einer Kalenderansicht innerhalb eines bestimmten Zeitraums an",
       "option": {
         "releaseType": {
           "label": "Radarr Veröffentlichungs Typ",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "In Kinos",
+            "digitalRelease": "Digitale Veröffentlichung",
+            "physicalRelease": "Physische Veröffentlichung"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Start von"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Endet am"
         }
       }
     },
@@ -1307,24 +1344,24 @@
       "description": "Zeigt die aktuellen Wetterinformationen für einen bestimmten Ort an.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatur in Fahrenheit"
         },
         "location": {
           "label": "Wetterstandort"
         },
         "showCity": {
-          "label": ""
+          "label": "Stadt anzeigen"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Prognose anzeigen"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Anzahl der Prognose Tage",
+          "description": "Wenn das Widget nicht breit genug ist, werden weniger Tage angezeigt"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datumsformat",
+          "description": "Wie das Datum aussehen sollte"
         }
       },
       "kind": {
@@ -1345,17 +1382,17 @@
       }
     },
     "indexerManager": {
-      "name": "Status des Indexer-Managers",
-      "description": "",
+      "name": "Status des Index Managers",
+      "description": "Status des Indexer",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Indexer Seite in neuem Tab öffnen"
         }
       },
-      "title": "Indexer-Manager",
+      "title": "Index Manager",
       "testAll": "Alle testen",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen des Indexer Status"
       }
     },
     "healthMonitoring": {
@@ -1376,16 +1413,16 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
+        "information": "Informationen",
+        "processor": "Prozessor: {cpuModelName}",
+        "memory": "Speicher: {memory}GiB",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
         "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
+        "loadAverage": "Durchschnittliche Last:",
+        "minute": "1 Minute",
+        "minutes": "{count} Minuten",
+        "used": "Belegt",
         "available": "Verfügbar",
         "lastSeen": ""
       },
@@ -1401,7 +1438,7 @@
         "longitude": "",
         "disabledTooltip": "",
         "unknownLocation": "",
-        "search": "Suchen",
+        "search": "Suche",
         "table": {
           "header": {
             "city": "",
@@ -1422,7 +1459,7 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Keine App gefunden",
         "description": ""
       },
       "error": {
@@ -1436,7 +1473,7 @@
       "description": "Einbetten eines Videostreams oder eines Videos von einer Kamera oder einer Website",
       "option": {
         "feedUrl": {
-          "label": "Feed-URL"
+          "label": "Feed URL"
         },
         "hasAutoPlay": {
           "label": "Automatische Wiedergabe",
@@ -1457,7 +1494,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1511,18 +1553,18 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Down",
+          "columnTitle": "",
           "detailsTitle": "Download Geschwindigkeit"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
@@ -1560,12 +1602,12 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Up",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
       "states": {
-        "downloading": "Herunterladen",
+        "downloading": "Wird heruntergeladen",
         "queued": "In der Warteschlange",
         "paused": "Pausiert",
         "completed": "Abgeschlossen",
@@ -1627,18 +1669,18 @@
       "option": {},
       "titles": {
         "stats": {
-          "main": "Medien-Statistiken",
+          "main": "Medien Statistiken",
           "approved": "Bereits genehmigt",
           "pending": "Ausstehende Freigaben",
           "processing": "",
           "declined": "",
           "available": "",
-          "tv": "TV-Anfragen",
-          "movie": "Film-Anfragen",
+          "tv": "TV Anfragen",
+          "movie": "Film Anfragen",
           "total": "Gesamt"
         },
         "users": {
-          "main": "Top-Nutzer",
+          "main": "Top Nutzer",
           "requests": ""
         }
       }
@@ -1655,11 +1697,11 @@
         }
       },
       "tab": {
-        "workers": "Workers",
+        "workers": "",
         "queue": "Warteschlange",
         "statistics": "Statistiken"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} von {total}",
       "healthCheck": {
         "title": "",
         "queued": "In der Warteschlange",
@@ -1677,7 +1719,7 @@
           "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
-          "videoCodecs": "Codecs",
+          "videoCodecs": "",
           "videoContainers": "Container",
           "videoResolutions": "Auflösungen"
         },
@@ -1732,7 +1774,9 @@
   },
   "board": {
     "action": {
-      "edit": {
+      "duplicate": {
+        "title": "",
+        "message": "",
         "notification": {
           "success": {
             "title": "",
@@ -1740,6 +1784,18 @@
           },
           "error": {
             "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "Änderungen erfolgreich angewendet",
+            "message": ""
+          },
+          "error": {
+            "title": "Änderungen konnten nicht angewendet werden",
             "message": ""
           }
         },
@@ -1766,7 +1822,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Apps",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -1889,10 +1945,10 @@
         "label": ""
       },
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "isPublic": {
-        "label": "Öffentlich sichtbar",
+        "label": "Öffentlich",
         "description": ""
       }
     },
@@ -1935,7 +1991,7 @@
           }
         },
         "dangerZone": {
-          "title": "Gefahrenzone",
+          "title": "Gefahrenbereich",
           "action": {
             "rename": {
               "label": "",
@@ -1989,7 +2045,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "Alle Boards anzeigen",
         "notice": ""
       },
       "homeBoard": {
@@ -2013,7 +2069,7 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Verwaltung",
     "title": {
       "morning": "",
       "afternoon": "",
@@ -2026,11 +2082,11 @@
     "navbar": {
       "items": {
         "home": "Startseite",
-        "boards": "Boards",
-        "apps": "Apps",
+        "boards": "",
+        "apps": "",
         "integrations": "Integrationen",
         "searchEngies": "Suchmaschinen",
-        "medias": "",
+        "medias": "Medien",
         "users": {
           "label": "Benutzer",
           "items": {
@@ -2042,9 +2098,9 @@
         "tools": {
           "label": "Werkzeuge",
           "items": {
-            "docker": "Docker",
+            "docker": "",
             "logs": "",
-            "api": "API",
+            "api": "",
             "tasks": ""
           }
         },
@@ -2054,7 +2110,7 @@
           "items": {
             "documentation": "Dokumentation",
             "submitIssue": "",
-            "discord": "Community Discord",
+            "discord": "",
             "sourceCode": ""
           }
         },
@@ -2064,15 +2120,15 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Boards",
+          "board": "",
           "user": "Benutzer",
           "invite": "Einladungen",
           "integration": "Integrationen",
-          "app": "Apps",
+          "app": "",
           "group": "Gruppen"
         },
         "statisticLabel": {
-          "boards": "Boards",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
@@ -2097,6 +2153,9 @@
               "tooltip": ""
             }
           },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Dauerhaft löschen",
             "confirm": {
@@ -2113,7 +2172,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "Name"
+                "label": ""
               }
             }
           }
@@ -2130,7 +2189,8 @@
             "title": "Allgemein",
             "item": {
               "language": "",
-              "board": "Home board",
+              "board": "",
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit"
             }
@@ -2139,7 +2199,7 @@
             "title": "Sicherheit"
           },
           "board": {
-            "title": "Boards"
+            "title": ""
           }
         },
         "list": {
@@ -2184,7 +2244,7 @@
           "action": {
             "new": {
               "title": "",
-              "description": "Nach Ablauf der Frist ist eine Einladung nicht mehr gültig und der Empfänger der Einladung kann kein Konto erstellen."
+              "description": "Nach Ablauf der Frist ist die Einladung nicht mehr gültig und der Empfänger der Einladung kann kein Konto mehr erstellen."
             },
             "copy": {
               "title": "",
@@ -2199,7 +2259,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Ersteller"
@@ -2208,7 +2268,7 @@
               "label": "Ablaufdatum"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2266,28 +2326,35 @@
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Suche und Indexiere",
+            "warning": "Das Aktivieren oder Deaktivieren von Einstellungen hier wird schwerwiegende Auswirkungen haben, wie Suchmaschinen Ihre Seite suchen und indizieren. Jede Einstellung startet eine Anforderung und es ist die Aufgabe des Crawlers, diese Einstellungen zu übernehmen. Änderungen können mehrere Tage oder Wochen dauern. Einige Einstellungen können Suchmaschinenspezifisch sein.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "Kein Index",
+              "text": "Die Webseite nicht in Suchmaschinen indizieren und in keinem Suchergebnis anzeigen"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Keine Folgen",
+              "text": "Folgen Sie keine Links während der Indexierung. Deaktivieren kann dazu führen, dass Crawler versuchen, allen Links auf Homarr zu folgen."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Nicht Übersetzen",
+              "text": "Wenn die Sprache der Seite wahrscheinlich nicht zu lesen ist wird der Benutzer höchstwahrscheinlich wollen das Google einen Übersetzungslink in den Suchergebnissen zeigt"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Kein Suchfeld für Seitenlinks",
+              "text": "Google baut ein Suchfeld mit den gecrawlten Links zusammen mit anderen direkten Links auf. Durch das Aktivieren dieser Option wird Google aufgefordert, dieses Feld zu deaktivieren."
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
@@ -2297,8 +2364,8 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Hell",
+                "dark": "Dunkel"
               }
             }
           },
@@ -2315,10 +2382,13 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "Aktiv",
+            "running": "Wird ausgeführt",
             "error": "Fehler"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2350,7 +2420,7 @@
               "label": ""
             },
             "indexerManager": {
-              "label": ""
+              "label": "Index Manager"
             },
             "healthMonitoring": {
               "label": ""
@@ -2370,7 +2440,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "",
@@ -2390,7 +2460,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": ""
                 }
               }
@@ -2427,7 +2497,7 @@
     },
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "state": {
         "label": "Staat",
@@ -2442,10 +2512,10 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
-        "label": "Ports"
+        "label": ""
       }
     },
     "action": {
@@ -2513,6 +2583,22 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
     },
     "error": {
@@ -2552,7 +2638,7 @@
     "manage": {
       "label": "Verwalten",
       "boards": {
-        "label": "Boards"
+        "label": ""
       },
       "integrations": {
         "label": "Integrationen",
@@ -2573,10 +2659,10 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Medien"
       },
       "apps": {
-        "label": "Apps",
+        "label": "",
         "new": {
           "label": ""
         },
@@ -2591,7 +2677,7 @@
         },
         "general": "Allgemein",
         "security": "Sicherheit",
-        "board": "Boards",
+        "board": "",
         "groups": {
           "label": "Gruppen"
         },
@@ -2602,7 +2688,7 @@
       "tools": {
         "label": "Werkzeuge",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "logs": {
           "label": ""
@@ -2627,7 +2713,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Apps",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2643,7 +2729,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2676,8 +2762,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Zum hellen Design wechseln",
+                "dark": "Zum dunklen Design wechseln"
               },
               "language": {
                 "label": "",
@@ -2717,6 +2803,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
@@ -2749,7 +2840,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2775,7 +2866,7 @@
                 "label": ""
               },
               "discord": {
-                "label": "Community Discord"
+                "label": ""
               }
             }
           }
@@ -2783,6 +2874,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2840,7 +2949,7 @@
                 "label": "Über"
               },
               "homeBoard": {
-                "label": "Home board"
+                "label": ""
               },
               "preferences": {
                 "label": "Ihre Einstellungen"
@@ -2891,7 +3000,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "short": {
           "label": ""
@@ -2900,7 +3009,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Beschreibung"
         }
       },
       "page": {
@@ -2929,11 +3038,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Änderungen erfolgreich angewendet",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Änderungen konnten nicht angewendet werden",
               "message": ""
             }
           },
@@ -2954,6 +3063,22 @@
             "error": {
               "title": "",
               "message": ""
+            }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
             }
           }
         }

@@ -13,10 +13,7 @@ interface CopyMediaProps {
 export const CopyMedia = ({ media }: CopyMediaProps) => {
   const t = useI18n();
 
-  const url =
-    typeof window !== "undefined"
-      ? `${window.location.protocol}://${window.location.hostname}:${window.location.port}/api/user-medias/${media.id}`
-      : "";
+  const url = typeof window !== "undefined" ? `${window.location.origin}/api/user-medias/${media.id}` : "";
 
   return (
     <CopyButton value={url}>

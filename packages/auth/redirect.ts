@@ -8,12 +8,16 @@ import { extractBaseUrlFromHeaders } from "@homarr/common";
  * @param pathname
  * @returns
  */
-export const createRedirectUri = (headers: ReadonlyHeaders | null, pathname: string) => {
+export const createRedirectUri = (
+  headers: ReadonlyHeaders | null,
+  pathname: string,
+  fallbackProtocol: "http" | "https" = "http",
+) => {
   if (!headers) {
     return pathname;
   }
 
-  const baseUrl = extractBaseUrlFromHeaders(headers);
+  const baseUrl = extractBaseUrlFromHeaders(headers, fallbackProtocol);
 
   const path = pathname.startsWith("/") ? pathname : `/${pathname}`;
 

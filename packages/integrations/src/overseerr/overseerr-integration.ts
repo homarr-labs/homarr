@@ -6,11 +6,20 @@ import type { ISearchableIntegration } from "../base/searchable-integration";
 import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request";
 import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request";
 
+interface OverseerrSearchResult {
+  id: number;
+  name: string;
+  link: string;
+  image?: string;
+  text?: string;
+  type: Exclude<z.infer<typeof searchSchema>["results"], undefined>[number]["mediaType"];
+}
+
 /**
  * Overseerr Integration. See https://api-docs.overseerr.dev
  */
-export class OverseerrIntegration extends Integration implements ISearchableIntegration {
-  public async searchAsync(query: string): Promise<{ image?: string; name: string; link: string; text?: string }[]> {
+export class OverseerrIntegration extends Integration implements ISearchableIntegration<OverseerrSearchResult> {
+  public async searchAsync(query: string) {
     const response = await fetch(this.url("/api/v1/search", { query }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -23,11 +32,51 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
     }
 
     return schemaData.results.map((result) => ({
+      id: result.id,
       name: "name" in result ? result.name : result.title,
       link: this.url(`/${result.mediaType}/${result.id}`).toString(),
       image: constructSearchResultImage(result),
       text: "overview" in result ? result.overview : undefined,
+      type: result.mediaType,
+      inLibrary: result.mediaInfo !== undefined,
     }));
+  }
+
+  public async getSeriesInformationAsync(mediaType: "movie" | "tv", id: number) {
+    const url = mediaType === "tv" ? this.url(`/api/v1/tv/${id}`) : this.url(`/api/v1/movie/${id}`);
+    const response = await fetch(url, {
+      headers: {
+        "X-Api-Key": this.getSecretValue("apiKey"),
+      },
+    });
+    return await mediaInformationSchema.parseAsync(await response.json());
+  }
+
+  /**
+   * Request a media. See https://api-docs.overseerr.dev/#/request/post_request
+   * @param mediaType The media type to request. Can be "movie" or "tv".
+   * @param id The Overseerr ID of the media to request.
+   * @param seasons A list of the seasons that should be requested.
+   */
+  public async requestMediaAsync(mediaType: "movie" | "tv", id: number, seasons?: number[]): Promise<void> {
+    const url = this.url("/api/v1/request");
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        mediaType,
+        mediaId: id,
+        seasons,
+      }),
+      headers: {
+        "X-Api-Key": this.getSecretValue("apiKey"),
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status !== 201) {
+      throw new Error(
+        `Status code ${response.status} does not match the expected status code. The request was likely not created. Response: ${await response.text()}`,
+      );
+    }
   }
 
   public async testConnectionAsync(): Promise<void> {
@@ -220,6 +269,27 @@ interface MovieInformation {
   releaseDate: string;
 }
 
+const mediaInformationSchema = z.union([
+  z.object({
+    id: z.number(),
+    overview: z.string(),
+    seasons: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string().min(0),
+        episodeCount: z.number().min(0),
+      }),
+    ),
+    numberOfSeasons: z.number(),
+    posterPath: z.string().startsWith("/"),
+  }),
+  z.object({
+    id: z.number(),
+    overview: z.string(),
+    posterPath: z.string().startsWith("/"),
+  }),
+]);
+
 const searchSchema = z.object({
   results: z
     .array(
@@ -230,6 +300,7 @@ const searchSchema = z.object({
           name: z.string(),
           posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
           overview: z.string(),
+          mediaInfo: z.object({}).optional(),
         }),
         z.object({
           id: z.number(),
@@ -237,12 +308,14 @@ const searchSchema = z.object({
           title: z.string(),
           posterPath: z.string().startsWith("/").endsWith(".jpg").nullable(),
           overview: z.string(),
+          mediaInfo: z.object({}).optional(),
         }),
         z.object({
           id: z.number(),
           mediaType: z.literal("person"),
           name: z.string(),
           profilePath: z.string().startsWith("/").endsWith(".jpg").nullable(),
+          mediaInfo: z.object({}).optional(),
         }),
       ]),
     )
