@@ -47,6 +47,7 @@ export enum MediaRequestStatus {
   PendingApproval = 1,
   Approved = 2,
   Declined = 3,
+  Failed = 4,
 }
 
 export enum MediaAvailability {
@@ -55,4 +56,5 @@ export enum MediaAvailability {
   Processing = 3,
   PartiallyAvailable = 4,
   Available = 5,
+  Blacklisted = 6,
 }

@@ -1,6 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import { shouldSkipEnvValidation } from "@homarr/common/env-validation";
+
 export const env = createEnv({
   shared: {
     PORT: z.coerce.number().default(3000),
@@ -13,7 +15,7 @@ export const env = createEnv({
   server: {
     // Comma separated list of docker hostnames that can be used to connect to query the docker endpoints (localhost:2375,host.docker.internal:2375, ...)
     DOCKER_HOSTNAMES: z.string().optional(),
-    DOCKER_PORTS: z.number().optional(),
+    DOCKER_PORTS: z.string().optional(),
   },
   /**
    * Specify your client-side environment variables schema here.
@@ -32,6 +34,5 @@ export const env = createEnv({
     DOCKER_PORTS: process.env.DOCKER_PORTS,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
-  skipValidation:
-    Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION) || process.env.npm_lifecycle_event === "lint",
+  skipValidation: shouldSkipEnvValidation(),
 });

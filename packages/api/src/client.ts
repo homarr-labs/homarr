@@ -1,6 +1,7 @@
 "use client";
 
-import { createTRPCClient, createTRPCReact, httpLink } from "@trpc/react-query";
+import { createTRPCClient, httpLink } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react-query";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from ".";

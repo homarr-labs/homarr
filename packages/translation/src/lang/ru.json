@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Выберите тип элемента",
+      "search": "",
       "addToBoard": "Добавить на панель"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "заблокировано сегодня",
         "dnsQueriesToday": "DNS-запросов сегодня",
         "domainsBeingBlocked": "Доменов в списке блокировки"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "Управление DNS-фильтром",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "URL для iFrame не указан",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Ваш браузер не поддерживает iframes. Пожалуйста, обновите браузер."
       }
     },

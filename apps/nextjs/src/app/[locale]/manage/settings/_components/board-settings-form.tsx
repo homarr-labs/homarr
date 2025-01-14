@@ -37,6 +37,25 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
             )}
             {...form.getInputProps("homeBoardId")}
           />
+          <SelectWithCustomItems
+            label={tBoard("homeBoard.mobileLabel")}
+            description={tBoard("homeBoard.description")}
+            data={selectableBoards.map((board) => ({
+              value: board.id,
+              label: board.name,
+              image: board.logoImageUrl,
+            }))}
+            SelectOption={({ label, image }: { value: string; label: string; image: string | null }) => (
+              <Group>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {image ? <img width={16} height={16} src={image} alt={label} /> : <IconLayoutDashboard size={16} />}
+                <Text fz="sm" fw={500}>
+                  {label}
+                </Text>
+              </Group>
+            )}
+            {...form.getInputProps("mobileHomeBoardId")}
+          />
         </>
       )}
     </CommonSettingsForm>

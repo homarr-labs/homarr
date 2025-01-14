@@ -21,7 +21,7 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi, getTrpcUrl } from "@homarr/api/client";
 import { createHeadersCallbackForSource } from "@homarr/api/shared";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 
 const getWebSocketProtocol = () => {
   // window is not defined on server side

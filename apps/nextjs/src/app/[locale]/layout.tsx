@@ -9,7 +9,7 @@ import "~/styles/scroll-area.scss";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 
-import { env } from "@homarr/auth/env.mjs";
+import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";

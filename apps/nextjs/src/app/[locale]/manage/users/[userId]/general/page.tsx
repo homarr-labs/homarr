@@ -89,7 +89,7 @@ export default async function EditUserPage(props: Props) {
       </Stack>
 
       <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.board")}</Title>
+        <Title order={2}>{tGeneral("item.board.title")}</Title>
         <ChangeHomeBoardForm
           user={user}
           boardsData={boards.map((board) => ({

@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Domyślna wyszukiwarka zmieniona pomyślnie"
           },
           "error": {
-            "message": ""
+            "message": "Nie można zmienić domyślnej wyszukiwarki"
           }
         }
       },
@@ -499,7 +499,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "Znajdź aplikację",
     "page": {
       "list": {
         "title": "Aplikacje",
@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Wybierz element do dodania",
+      "search": "Filtrowanie elementów",
       "addToBoard": "Dodaj do tablicy"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Zablokowane dzisiaj",
         "dnsQueriesToday": "Zapytania dzisiaj",
         "domainsBeingBlocked": "Domeny na liście blokowanych"
-      }
+      },
+      "domainsTooltip": "Ze względu na wiele integracji, Homarr nie może obliczyć dokładnej liczby zablokowanych domen"
     },
     "dnsHoleControls": {
       "name": "Sterowanie dziurami DNS",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Adres URL iFrame nie został podany",
+        "unsupportedProtocol": "Podany adres URL używa nieobsługiwanego protokołu. Proszę użyć jednego z ({supportedProtocols})",
         "noBrowerSupport": "Twoja przeglądarka nie obsługuje ramek iframe. Zaktualizuj przeglądarkę."
       }
     },
@@ -1547,7 +1550,7 @@
         },
         "category": {
           "columnTitle": "Dodatki",
-          "detailsTitle": ""
+          "detailsTitle": "Kategorie (lub dodatkowe informacje)"
         },
         "downSpeed": {
           "columnTitle": "Pobieranie",
@@ -1617,29 +1620,29 @@
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
+          "modalTitle": "Pobierz listę klientów",
           "pause": "",
           "resume": ""
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Wstrzymaj klienta",
+          "resume": "Wznów klient"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Wstrzymaj element",
+          "resume": "Wznów element",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Usuń przedmiot",
+            "modalTitle": "Czy jesteś pewien, że chcesz skasować to zadanie?",
+            "entry": "Usuń wpis",
+            "entryAndFiles": "Usuń wpis i plik(i)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Wskaźnik globalny"
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Lista żądań multimediów",
       "description": "Zobacz listę wszystkich zapytań o media z Twoich instancji Overseerr lub Jellyseerr",
       "option": {
         "linksTargetNewTab": {
@@ -1647,21 +1650,21 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Zatwierdź prośbę",
+        "approving": "Zatwierdzanie zapytania...",
+        "decline": "Odrzuć prośbę"
       },
       "availability": {
         "unknown": "Nieznany",
-        "pending": "",
-        "processing": "",
+        "pending": "Oczekujący",
+        "processing": "Przetwarzanie",
         "partiallyAvailable": "",
-        "available": ""
+        "available": "Dostępne"
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Statystyki zapytań o media",
       "description": "Statystyki Twoich zapytań o media",
       "option": {},
       "titles": {
@@ -1687,7 +1690,7 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Domyślny widok"
         },
         "queuePageSize": {
           "label": ""
@@ -1698,10 +1701,10 @@
         "queue": "Kolejka",
         "statistics": ""
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} z {total}",
       "healthCheck": {
         "title": "Ocena stanu zdrowia",
-        "queued": "",
+        "queued": "W kolejce",
         "status": {
           "healthy": "",
           "unhealthy": ""
@@ -1713,7 +1716,7 @@
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
-          "filesCount": "",
+          "filesCount": "Pliki: {value}",
           "savedSpace": "",
           "healthChecks": "",
           "videoCodecs": "",

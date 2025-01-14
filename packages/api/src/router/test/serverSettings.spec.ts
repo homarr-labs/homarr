@@ -26,6 +26,7 @@ describe("getAll server settings", () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -44,6 +45,7 @@ describe("getAll server settings", () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -58,6 +60,7 @@ describe("saveSettings", () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 

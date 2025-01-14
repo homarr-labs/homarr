@@ -5,7 +5,7 @@ import { db } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetImports } from "@homarr/widgets";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { WidgetPreviewPageContent } from "./_content";
 
 interface Props {

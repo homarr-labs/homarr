@@ -1,12 +1,14 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import { shouldSkipEnvValidation } from "@homarr/common/env-validation";
+
 const drivers = {
   betterSqlite3: "better-sqlite3",
   mysql2: "mysql2",
-};
+} as const;
 
-const isDriver = (driver) => process.env.DB_DRIVER === driver;
+const isDriver = (driver: (typeof drivers)[keyof typeof drivers]) => process.env.DB_DRIVER === driver;
 const isUsingDbHost = Boolean(process.env.DB_HOST);
 const onlyAllowUrl = isDriver(drivers.betterSqlite3);
 const urlRequired = onlyAllowUrl || !isUsingDbHost;
@@ -55,6 +57,5 @@ export const env = createEnv({
     DB_NAME: process.env.DB_NAME,
     DB_PORT: process.env.DB_PORT,
   },
-  skipValidation:
-    Boolean(process.env.CI) || Boolean(process.env.SKIP_ENV_VALIDATION) || process.env.npm_lifecycle_event === "lint",
+  skipValidation: shouldSkipEnvValidation(),
 });

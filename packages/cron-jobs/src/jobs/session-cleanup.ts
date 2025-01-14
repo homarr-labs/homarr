@@ -1,4 +1,4 @@
-import { env } from "@homarr/auth/env.mjs";
+import { env } from "@homarr/auth/env";
 import { NEVER } from "@homarr/cron-jobs-core/expressions";
 import { db, eq, inArray } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";

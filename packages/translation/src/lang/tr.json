@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Eklenecek öğeyi seçin",
+      "search": "Öğeleri Filtrele",
       "addToBoard": "Panele Ekle"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Bugün engellenenler",
         "dnsQueriesToday": "Bugünkü Sorgular",
         "domainsBeingBlocked": "Engelleme listesindeki alan adları"
-      }
+      },
+      "domainsTooltip": "Birden fazla entegrasyon nedeniyle Homarr, engellenen alan adlarının tam sayısını hesaplayamıyor"
     },
     "dnsHoleControls": {
       "name": "DNS Çözümleyici Kontrolleri",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "IFrame URL'si sağlanmadı",
+        "unsupportedProtocol": "Sağlanan URL, desteklenmeyen bir protokol kullanıyor. Lütfen ({supportedProtocols})'den birini kullanın",
         "noBrowerSupport": "Tarayıcınız iframe'leri desteklemiyor. Lütfen tarayıcınızı güncelleyin."
       }
     },
@@ -2882,7 +2885,7 @@
                 "description": "Tercihlerde öntanımlı arama motoru belirleyin"
               },
               "search": {
-                "label": "{name} ile '{query}' ifadesini arayın"
+                "label": "{name} kullanarak \"{query}\" terimini ara"
               },
               "from-integration": {
                 "description": "Aramak için yazmaya başla"

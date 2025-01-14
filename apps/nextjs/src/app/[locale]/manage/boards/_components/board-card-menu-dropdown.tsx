@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { Menu } from "@mantine/core";
-import { IconCopy, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -43,6 +43,12 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
       await revalidatePathActionAsync("/");
     },
   });
+  const setMobileHomeBoardMutation = clientApi.board.setMobileHomeBoard.useMutation({
+    onSettled: async () => {
+      // Revalidate all as it's part of the user settings, /boards page and board manage page
+      await revalidatePathActionAsync("/");
+    },
+  });
   const deleteBoardMutation = clientApi.board.deleteBoard.useMutation({
     onSettled: async () => {
       await revalidatePathActionAsync("/manage/boards");
@@ -68,6 +74,10 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     await setHomeBoardMutation.mutateAsync({ id: board.id });
   }, [board.id, setHomeBoardMutation]);
 
+  const handleSetMobileHomeBoard = useCallback(async () => {
+    await setMobileHomeBoardMutation.mutateAsync({ id: board.id });
+  }, [board.id, setMobileHomeBoardMutation]);
+
   const handleDuplicateBoard = useCallback(() => {
     openDuplicateModal({
       board: {
@@ -84,6 +94,9 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     <Menu.Dropdown>
       <Menu.Item onClick={handleSetHomeBoard} leftSection={<IconHome {...iconProps} />}>
         {t("setHomeBoard.label")}
+      </Menu.Item>
+      <Menu.Item onClick={handleSetMobileHomeBoard} leftSection={<IconDeviceMobile {...iconProps} />}>
+        {t("setMobileHomeBoard.label")}
       </Menu.Item>
       {session?.user.permissions.includes("board-create") && (
         <Menu.Item onClick={handleDuplicateBoard} leftSection={<IconCopy {...iconProps} />}>
