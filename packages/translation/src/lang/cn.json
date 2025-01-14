@@ -912,7 +912,7 @@
       },
       "remove": {
         "title": "删除动态部分",
-        "message": "您确定要删除这个动态部分吗？项目将在父部分的同一位置移动。"
+        "message": "你确定你要删除这个动态部分？项目将被移动到父节的相同位置。"
       }
     },
     "category": {
@@ -927,8 +927,8 @@
         "remove": "删除分类",
         "moveUp": "上移",
         "moveDown": "下移",
-        "createAbove": "新分类之上",
-        "createBelow": "新分类之下"
+        "createAbove": "上方新建分类",
+        "createBelow": "下方新建分类"
       },
       "create": {
         "title": "新建分类",
@@ -966,7 +966,7 @@
     },
     "create": {
       "title": "选择要添加的项目",
-      "search": "",
+      "search": "筛选项目",
       "addToBoard": "添加到面板"
     },
     "moveResize": {
@@ -1093,7 +1093,7 @@
         "dnsQueriesToday": "今日查询",
         "domainsBeingBlocked": "黑名单上的域"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "由于多个集成，Homarr 无法计算被阻止的域的准确数量"
     },
     "dnsHoleControls": {
       "name": "DNS Hole 控制",
@@ -1282,7 +1282,7 @@
       },
       "error": {
         "noUrl": "没有提供 iFrame 网址",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "提供的URL使用了不支持的协议。请使用（{supportedProtocols}）中的一个",
         "noBrowerSupport": "您的浏览器不支持 iframe。请更新您的浏览器。"
       }
     },

@@ -3,7 +3,7 @@ import { Client } from "ldapts";
 
 import { objectEntries } from "@homarr/common";
 
-import { env } from "../../env.mjs";
+import { env } from "../../env";
 
 export interface BindOptions {
   distinguishedName: string;

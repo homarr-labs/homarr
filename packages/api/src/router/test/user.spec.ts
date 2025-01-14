@@ -28,7 +28,7 @@ vi.mock("@homarr/auth", async () => {
 });
 
 // Mock the env module to return the credentials provider
-vi.mock("@homarr/auth/env.mjs", () => {
+vi.mock("@homarr/auth/env", () => {
   return {
     env: {
       AUTH_PROVIDERS: ["credentials"],

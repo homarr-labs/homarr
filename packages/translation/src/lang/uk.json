@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Стандартну систему пошуку змінено успішно"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося змінити стандартну систему пошуку"
           }
         }
       },
@@ -236,7 +236,7 @@
             "message": "Іконки ping перемкнуто успішно"
           },
           "error": {
-            "message": "Не вдалося перемикнути ping-значки"
+            "message": "Не вдалося перемикнути ping-іконки"
           }
         }
       },
