@@ -1,3 +1,25 @@
+## [1.0.0-beta.13](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2025-01-14)
+
+### Features
+
+* **board:** add mobile home board ([#1910](https://github.com/homarr-labs/homarr/issues/1910)) ([e01d74f](https://github.com/homarr-labs/homarr/commit/e01d74f4f89aee9a122b660e6303c356871c6ebb))
+
+### Bug Fixes
+
+* **app:** missing noreferer attribute for anchor tag ([#1915](https://github.com/homarr-labs/homarr/issues/1915)) ([986e013](https://github.com/homarr-labs/homarr/commit/986e013ca3eaf402d9014c5586536e05d93e9adc))
+* **category:** remove not always working and ignoring dynamic sections ([#1939](https://github.com/homarr-labs/homarr/issues/1939)) ([d4bb014](https://github.com/homarr-labs/homarr/commit/d4bb014a9ba83770fd7880b48a4a5ab5362f6f75))
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.4.1 ([#1936](https://github.com/homarr-labs/homarr/issues/1936)) ([1e406a8](https://github.com/homarr-labs/homarr/commit/1e406a8a58ebdf51f59b5aa0e079baf46c6d02cf))
+* **deps:** update dependency eslint-config-prettier to v10 ([#1937](https://github.com/homarr-labs/homarr/issues/1937)) ([75c7918](https://github.com/homarr-labs/homarr/commit/75c791801e593e88deb3abcacf2b91aade0871d8))
+* **deps:** update dependency eslint-plugin-react to ^7.37.4 ([#1934](https://github.com/homarr-labs/homarr/issues/1934)) ([2ea763c](https://github.com/homarr-labs/homarr/commit/2ea763c23161753619a204f9bb522ab04c37a2ab))
+* **deps:** update dependency sass to ^1.83.3 ([#1945](https://github.com/homarr-labs/homarr/issues/1945)) ([99c69ba](https://github.com/homarr-labs/homarr/commit/99c69ba65ddb5f8cf6bdd61518649fc21405ac87))
+* **deps:** update dependency sass to ^1.83.4 ([#1946](https://github.com/homarr-labs/homarr/issues/1946)) ([ff1a003](https://github.com/homarr-labs/homarr/commit/ff1a00303728b15b8e709ce57d77a78967abab78))
+* **deps:** update dependency typescript-eslint to ^8.20.0 ([#1938](https://github.com/homarr-labs/homarr/issues/1938)) ([feecdd3](https://github.com/homarr-labs/homarr/commit/feecdd36d49890022e8f479efe6cefa3f77d265a))
+* **deps:** update mantine monorepo to ^7.16.0 ([#1948](https://github.com/homarr-labs/homarr/issues/1948)) ([a03a01b](https://github.com/homarr-labs/homarr/commit/a03a01b964e3ab30af6078326b91fb10817b3b98))
+* **deps:** update tanstack-query monorepo to ^5.64.0 ([#1922](https://github.com/homarr-labs/homarr/issues/1922)) ([b399cb6](https://github.com/homarr-labs/homarr/commit/b399cb697945cd1bb3da2ad5222aceb9b0e71d2b))
+* **deps:** update tanstack-query monorepo to ^5.64.1 ([#1935](https://github.com/homarr-labs/homarr/issues/1935)) ([a53e0f7](https://github.com/homarr-labs/homarr/commit/a53e0f7ceed9cf771609be7b04090df9744ec4e6))
+* **media-request:** media and media-request status can have missing values ([#1911](https://github.com/homarr-labs/homarr/issues/1911)) ([ec3bda3](https://github.com/homarr-labs/homarr/commit/ec3bda34e0c1adacf0cfc5d7af272f9f2617fbe5))
+* trpc removed export anything from client in react-query ([#1941](https://github.com/homarr-labs/homarr/issues/1941)) ([56755d1](https://github.com/homarr-labs/homarr/commit/56755d1ab4194de04faeb569020f6d19623bd29a))
+
 ## [1.0.0-beta.12](https://github.com/homarr-labs/homarr/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2025-01-10)
 
 ### Features
