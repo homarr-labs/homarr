@@ -8,7 +8,7 @@ import type { SupportedAuthProvider } from "@homarr/definitions";
 
 import { createAdapter } from "./adapter";
 import { createSessionCallback } from "./callbacks";
-import { env } from "./env.mjs";
+import { env } from "./env";
 import { createSignInEventHandler } from "./events";
 import { createCredentialsConfiguration, createLdapConfiguration } from "./providers/credentials/credentials-provider";
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";

@@ -7,7 +7,7 @@ import mysql from "mysql2";
 
 import { logger } from "@homarr/log";
 
-import { env } from "./env.mjs";
+import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
 import * as sqliteSchema from "./schema/sqlite";
 
