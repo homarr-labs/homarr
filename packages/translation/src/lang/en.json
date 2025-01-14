@@ -897,6 +897,7 @@
           "passwordRequirements": "Password does not meet the requirements",
           "boardAlreadyExists": "A board with this name already exists",
           "invalidFileType": "Invalid file type, expected {expected}",
+          "invalidFileName": "Invalid file name",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
           "invalidConfiguration": "Invalid configuration",
           "groupNameTaken": "Group name already taken"

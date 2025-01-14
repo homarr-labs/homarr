@@ -22,6 +22,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-job-runner": "workspace:^0.1.0",
     "@homarr/cron-job-status": "workspace:^0.1.0",

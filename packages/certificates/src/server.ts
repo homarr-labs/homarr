@@ -1,15 +1,17 @@
-import { X509Certificate } from "node:crypto";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { rootCertificates } from "node:tls";
 import { Agent, fetch } from "undici";
 
+const getCertificateFolder = () => {
+  return process.env.NODE_ENV === "production"
+    ? path.join("/appdata", "trusted-certificates")
+    : process.env.LOCAL_CERTIFICATE_PATH;
+};
+
 export const loadCustomRootCertificatesAsync = async () => {
-  const folder =
-    process.env.NODE_ENV === "production"
-      ? path.join("/appdata", "trusted-certificates")
-      : process.env.LOCAL_CERTIFICATE_PATH;
+  const folder = getCertificateFolder();
 
   if (!folder) {
     return [];
@@ -20,7 +22,7 @@ export const loadCustomRootCertificatesAsync = async () => {
   }
 
   const dirContent = await fs.readdir(folder);
-  const certificates = await Promise.all(
+  return await Promise.all(
     dirContent
       .filter((file) => file.endsWith(".crt"))
       .map(async (file) => ({
@@ -28,11 +30,28 @@ export const loadCustomRootCertificatesAsync = async () => {
         fileName: file,
       })),
   );
-  return certificates.map(({ content, fileName }) => ({
-    base64: content,
-    x509: new X509Certificate(content),
-    fileName,
-  }));
+};
+
+export const removeCustomRootCertificateAsync = async (fileName: string) => {
+  const folder = getCertificateFolder();
+  if (!folder) {
+    return;
+  }
+
+  await fs.rm(path.join(folder, fileName));
+};
+
+export const addCustomRootCertificateAsync = async (fileName: string, content: string) => {
+  const folder = getCertificateFolder();
+  if (!folder) {
+    return;
+  }
+
+  if (fileName.includes("/")) {
+    throw new Error("Invalid file name");
+  }
+
+  await fs.writeFile(path.join(folder, fileName), content);
 };
 
 export const fetchWithTrustedCertificatesAsync: typeof fetch = async (url, options) => {

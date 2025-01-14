@@ -494,6 +494,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
+      '@homarr/certificates':
+        specifier: workspace:^0.1.0
+        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common

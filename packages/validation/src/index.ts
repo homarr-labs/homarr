@@ -1,5 +1,6 @@
 import { appSchemas } from "./app";
 import { boardSchemas } from "./board";
+import { certificateSchemas } from "./certificates";
 import { commonSchemas } from "./common";
 import { groupSchemas } from "./group";
 import { iconsSchemas } from "./icons";
@@ -24,6 +25,7 @@ export const validation = {
   media: mediaSchemas,
   settings: settingsSchemas,
   common: commonSchemas,
+  certificates: certificateSchemas,
 };
 
 export {
@@ -33,6 +35,7 @@ export {
   type BoardItemAdvancedOptions,
   type BoardItemIntegration,
 } from "./shared";
+export { superRefineCertificateFile } from "./certificates";
 export { passwordRequirements } from "./user";
 export { supportedMediaUploadFormats } from "./media";
 export { zodEnumFromArray, zodUnionFromArray } from "./enums";
