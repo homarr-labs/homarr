@@ -1,6 +1,7 @@
 # Create sub directories in volume
 mkdir -p /appdata/db
 mkdir -p /appdata/redis
+mkdir -p /appdata/trusted-certificates
 
 # Run migrations
 if [ $DB_MIGRATIONS_DISABLED = "true" ]; then
