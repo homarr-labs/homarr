@@ -52,6 +52,7 @@ describe("All procedures should only be accessible for users with admin permissi
     // Arrange
     const caller = dockerRouter.createCaller({
       db: null as unknown as Database,
+      deviceType: undefined,
       session: createSessionWithPermissions("admin"),
     });
 
@@ -68,6 +69,7 @@ describe("All procedures should only be accessible for users with admin permissi
     );
     const caller = dockerRouter.createCaller({
       db: null as unknown as Database,
+      deviceType: undefined,
       session: createSessionWithPermissions(...groupPermissionsWithoutAdmin),
     });
 
@@ -81,6 +83,7 @@ describe("All procedures should only be accessible for users with admin permissi
     // Arrange
     const caller = dockerRouter.createCaller({
       db: null as unknown as Database,
+      deviceType: undefined,
       session: null,
     });
 
