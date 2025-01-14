@@ -1,3 +1,4 @@
+import { readFile } from "fs/promises";
 import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
@@ -169,29 +170,34 @@ const nzbGetAddItemAsync = async (
   password: string,
   integration: NzbGetIntegration,
 ) => {
-  // Add nzb file in the watch folder
-  await container.copyFilesToContainer([
-    {
-      source: join(__dirname, "/volumes/usenet/test_download_100MB.nzb"),
-      target: "/downloads/nzb/test_download_100MB.nzb",
-    },
-  ]);
+  const fileContent = await readFile(join(__dirname, "/volumes/usenet/test_download_100MB.nzb"), "base64");
   // Trigger scanning of the watch folder (Only available way to add an item except "append" which is too complex and unnecessary)
   await fetch(`http://${container.getHost()}:${container.getMappedPort(6789)}/${username}:${password}/jsonrpc`, {
     method: "POST",
-    body: JSON.stringify({ method: "scan" }),
+    body: JSON.stringify({
+      method: "append",
+      params: [
+        "/downloads/nzb/test_download_100MB.nzb", // NZBFilename
+        fileContent, // Content
+        "", // Category
+        0, // Priority
+        true, // AddToTop
+        false, // Paused
+        "random", // DupeKey
+        1000, // DupeScore
+        "all", // DupeMode
+        [], // PPParameters
+      ],
+    }),
   });
-  // Retries up to 10000 times to let NzbGet scan and process the nzb (1 retry should suffice tbh but NzbGet is slow)
-  for (let i = 0; i < 10000; i++) {
-    const {
-      items: [item],
-    } = await integration.getClientJobsAndStatusAsync();
-    if (item) {
-      // Remove the added time because NzbGet doesn't return it properly in this specific case
-      const { added: _, ...itemRest } = item;
-      return itemRest;
-    }
+
+  const {
+    items: [item],
+  } = await integration.getClientJobsAndStatusAsync();
+
+  if (!item) {
+    throw new Error("No item found");
   }
-  // Throws if it can't find the item
-  throw new Error("No item found");
+
+  return item;
 };
