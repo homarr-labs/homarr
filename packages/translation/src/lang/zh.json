@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "選擇要新增的項目",
+      "search": "篩選項目",
       "addToBoard": "新增至面板"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "今日封鎖",
         "dnsQueriesToday": "今日查詢",
         "domainsBeingBlocked": "黑名單的網域"
-      }
+      },
+      "domainsTooltip": "由於多個集成，Homarr 無法精準計算被阻擋的網域數量"
     },
     "dnsHoleControls": {
       "name": "DNS Hole 控制",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "未提供 iFrame 網址",
+        "unsupportedProtocol": "提供的網址使用了不支援的協議，請使用以下之一：{supportedProtocols}",
         "noBrowerSupport": "此瀏覽器不支持 iFrame，請使用其他瀏覽器"
       }
     },

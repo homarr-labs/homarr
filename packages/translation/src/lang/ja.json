@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "今日のブロック",
         "dnsQueriesToday": "今日のクエリ",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "お使いのブラウザは iframe をサポートしていません。ブラウザを更新してください。"
       }
     },

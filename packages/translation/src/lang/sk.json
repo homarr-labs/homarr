@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Vyberte položku, ktorú chcete pridať",
+      "search": "",
       "addToBoard": "Pridať na dosku"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Zablokované dnes",
         "dnsQueriesToday": "Poziadavky dnes",
         "domainsBeingBlocked": "Domény na adlistoch"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "Kontrola diery DNS",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Nie je uvedená žiadna adresa URL iFrame",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Váš prehliadač nepodporuje iframe. Aktualizujte svoj prehliadač."
       }
     },

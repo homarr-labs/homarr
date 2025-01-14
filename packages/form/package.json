@@ -26,13 +26,13 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/form": "^7.15.3"
+    "@mantine/form": "^7.16.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "typescript": "^5.7.3"
   }
 }

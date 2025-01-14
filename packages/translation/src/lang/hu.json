@@ -966,6 +966,7 @@
     },
     "create": {
       "title": "Válassza ki a hozzáadni kívánt elemet",
+      "search": "",
       "addToBoard": "Hozzáadás a táblához"
     },
     "moveResize": {
@@ -1091,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Mai blokkolások",
         "dnsQueriesToday": "Mai lekérdezések",
         "domainsBeingBlocked": "Domainek a tiltólistán"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "DNS blokkolók ellenőrzése",
@@ -1280,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Nincs megadva iFrame URL",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Az Ön böngészője nem támogatja a beágyazott kereteket. Kérjük, frissítse böngészőjét."
       }
     },

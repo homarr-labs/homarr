@@ -94,6 +94,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
+          git config user.name "Releases Homarr"
+          git config user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
           git fetch origin dev
           git checkout dev
           git pull origin dev
