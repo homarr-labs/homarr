@@ -2885,7 +2885,7 @@
                 "description": "Tercihlerde öntanımlı arama motoru belirleyin"
               },
               "search": {
-                "label": "{name} ile '{query}' ifadesini arayın"
+                "label": "{name} kullanarak \"{query}\" terimini ara"
               },
               "from-integration": {
                 "description": "Aramak için yazmaya başla"

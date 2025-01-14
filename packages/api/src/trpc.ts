@@ -12,6 +12,7 @@ import type { OpenApiMeta } from "trpc-to-openapi";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";
+import { userAgent } from "@homarr/common/server";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 import { logger } from "@homarr/log";
@@ -39,6 +40,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
 
   return {
     session,
+    deviceType: userAgent(opts.headers).device.type,
     db,
   };
 };

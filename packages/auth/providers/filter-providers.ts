@@ -1,6 +1,6 @@
 import type { Provider } from "next-auth/providers";
 
-import { env } from "../env.mjs";
+import { env } from "../env";
 
 export const filterProviders = (providers: Exclude<Provider, () => unknown>[]) => {
   // During build this will be undefined, so we default to an empty array

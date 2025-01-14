@@ -11,7 +11,7 @@ import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { createSignInEventHandler } from "../events";
 
-vi.mock("../env.mjs", () => {
+vi.mock("../env", () => {
   return {
     env: {
       AUTH_OIDC_GROUPS_ATTRIBUTE: "someRandomGroupsKey",

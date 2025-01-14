@@ -989,8 +989,8 @@
     "edit": {
       "title": "Element bearbeiten",
       "advancedOptions": {
-        "label": "Erweiterte Optionen",
-        "title": "Erweiterte Element Optionen"
+        "label": "Erweiterte Einstellungen",
+        "title": "Erweiterte Einstellungen Optionen"
       },
       "field": {
         "integrations": {
@@ -1002,7 +1002,7 @@
       }
     },
     "remove": {
-      "title": "Element löschen",
+      "title": "Element entfernen",
       "message": "Soll dieses Element wirklich entfernt werden?"
     }
   },
@@ -1021,7 +1021,7 @@
           "label": "App Namen anzeigen"
         },
         "showDescriptionTooltip": {
-          "label": "Beschreibungs Tooltip anzeigen"
+          "label": "Beschreibungs des Tooltips anzeigen"
         },
         "pingEnabled": {
           "label": "Einfachen Ping aktivieren"
@@ -1036,7 +1036,7 @@
     },
     "bookmarks": {
       "name": "Lesezeichen",
-      "description": "Zeigt mehrere App Links an",
+      "description": "Mehrere App Links anzeigen",
       "option": {
         "title": {
           "label": "Titel"
@@ -2231,7 +2231,7 @@
               "title": "Benutzer erstellt"
             },
             "error": {
-              "title": "Benutzer anlegen fehlgeschlagen"
+              "title": "Erstellung des Benutzers fehlgeschlagen"
             }
           },
           "action": {

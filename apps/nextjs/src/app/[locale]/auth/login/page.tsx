@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { Card, Center, Stack, Text, Title } from "@mantine/core";
 
-import { env } from "@homarr/auth/env.mjs";
+import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 

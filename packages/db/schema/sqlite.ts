@@ -45,6 +45,9 @@ export const users = sqliteTable("user", {
   homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
+  mobileHomeBoardId: text().references((): AnySQLiteColumn => boards.id, {
+    onDelete: "set null",
+  }),
   defaultSearchEngineId: text().references(() => searchEngines.id, {
     onDelete: "set null",
   }),
