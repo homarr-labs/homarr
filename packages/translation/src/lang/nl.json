@@ -2153,6 +2153,13 @@
               "tooltip": "Dit bord wordt weergegeven als je home-bord"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": ""
           },
@@ -2189,7 +2196,13 @@
             "title": "Algemeen",
             "item": {
               "language": "Taal & regio",
-              "board": "Home-bord",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
@@ -2349,6 +2362,7 @@
             "title": "Borden",
             "homeBoard": {
               "label": "Globaal home-bord",
+              "mobileLabel": "",
               "description": "Alleen openbare borden zijn beschikbaar voor selectie"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "Instellen als home-bord"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "Instellingen openen"

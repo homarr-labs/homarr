@@ -98,7 +98,14 @@ interface AppLinkProps {
 
 const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
   enabled ? (
-    <UnstyledButton component="a" href={href} target={openInNewTab ? "_blank" : undefined} h="100%" w="100%">
+    <UnstyledButton
+      component="a"
+      href={href}
+      target={openInNewTab ? "_blank" : undefined}
+      rel="noreferrer"
+      h="100%"
+      w="100%"
+    >
       {children}
     </UnstyledButton>
   ) : (

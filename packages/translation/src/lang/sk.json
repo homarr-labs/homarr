@@ -2153,6 +2153,13 @@
               "tooltip": "Táto tabuľa sa zobrazí ako vaša domovská tabuľa"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": "Duplikovať dosku"
           },
@@ -2189,7 +2196,13 @@
             "title": "Všeobecné",
             "item": {
               "language": "Jazyk a región",
-              "board": "Domáca doska",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
@@ -2349,6 +2362,7 @@
             "title": "Dosky",
             "homeBoard": {
               "label": "Globálna domovská nástenka",
+              "mobileLabel": "",
               "description": "Na výber sú k dispozícii iba verejné tabule"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "Nastaviť ako domácu dosku"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "Otvorte nastavenia"

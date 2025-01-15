@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-import { env } from "../env.mjs";
+import { env } from "../env";
 
 const algorithm = "aes-256-cbc"; //Using AES encryption
 

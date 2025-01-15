@@ -11,7 +11,7 @@
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
     "./validationSchemas": "./validationSchemas.ts",
-    "./env.mjs": "./env.mjs"
+    "./env": "./env.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
@@ -45,7 +45,7 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@testcontainers/mysql": "^10.16.0",
-    "better-sqlite3": "^11.7.2",
+    "better-sqlite3": "^11.8.0",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.1",
     "drizzle-orm": "^0.38.3",

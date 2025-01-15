@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
-import { env } from "../../env.mjs";
+import { env } from "../../env";
 import * as sqliteSchema from "../../schema/sqlite";
 import { seedDataAsync } from "../seed";
 

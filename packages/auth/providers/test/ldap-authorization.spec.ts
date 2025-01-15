@@ -9,7 +9,7 @@ import { createDb } from "@homarr/db/test";
 import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";
 import * as ldapClient from "../credentials/ldap-client";
 
-vi.mock("../../env.mjs", () => ({
+vi.mock("../../env", () => ({
   env: {
     AUTH_LDAP_BIND_DN: "bind_dn",
     AUTH_LDAP_BIND_PASSWORD: "bind_password",

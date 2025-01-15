@@ -2161,6 +2161,13 @@
               "tooltip": "This board will show as your home board"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "Set as your mobile board",
+            "badge": {
+              "label": "Mobile",
+              "tooltip": "This board will show as your mobile board"
+            }
+          },
           "duplicate": {
             "label": "Duplicate board"
           },
@@ -2197,7 +2204,13 @@
             "title": "General",
             "item": {
               "language": "Language & Region",
-              "board": "Home board",
+              "board": {
+                "title": "Home board",
+                "type": {
+                  "general": "General",
+                  "mobile": "Mobile"
+                }
+              },
               "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
@@ -2357,6 +2370,7 @@
             "title": "Boards",
             "homeBoard": {
               "label": "Global home board",
+              "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
             }
           },
@@ -2745,6 +2759,9 @@
                 },
                 "homeBoard": {
                   "label": "Set as home board"
+                },
+                "mobileBoard": {
+                  "label": "Set as mobile board"
                 },
                 "settings": {
                   "label": "Open settings"

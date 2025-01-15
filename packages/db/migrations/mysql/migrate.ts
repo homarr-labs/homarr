@@ -3,7 +3,7 @@ import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2";
 
 import type { Database } from "../..";
-import { env } from "../../env.mjs";
+import { env } from "../../env";
 import * as mysqlSchema from "../../schema/mysql";
 import { seedDataAsync } from "../seed";
 

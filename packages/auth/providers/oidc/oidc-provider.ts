@@ -2,7 +2,7 @@ import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapte
 import type { OIDCConfig } from "@auth/core/providers";
 import type { Profile } from "@auth/core/types";
 
-import { env } from "../../env.mjs";
+import { env } from "../../env";
 import { createRedirectUri } from "../../redirect";
 
 export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profile> => ({

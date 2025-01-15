@@ -28,7 +28,7 @@ vi.mock("@homarr/auth", async () => {
 });
 
 // Mock the env module to return the credentials provider
-vi.mock("@homarr/auth/env.mjs", () => {
+vi.mock("@homarr/auth/env", () => {
   return {
     env: {
       AUTH_PROVIDERS: ["credentials"],
@@ -42,6 +42,7 @@ describe("initUser should initialize the first user", () => {
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -65,6 +66,7 @@ describe("initUser should initialize the first user", () => {
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -89,6 +91,7 @@ describe("initUser should initialize the first user", () => {
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -109,6 +112,7 @@ describe("register should create a user with valid invitation", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -164,6 +168,7 @@ describe("register should create a user with valid invitation", () => {
       const db = createDb();
       const caller = userRouter.createCaller({
         db,
+        deviceType: undefined,
         session: null,
       });
 
@@ -206,6 +211,7 @@ describe("editProfile shoud update user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -242,6 +248,7 @@ describe("editProfile shoud update user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -277,6 +284,7 @@ describe("delete should delete user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
