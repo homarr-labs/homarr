@@ -1,5 +1,6 @@
 import { parseStringPromise } from "xml2js";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { Integration } from "../base/integration";
@@ -11,7 +12,7 @@ export class PlexIntegration extends Integration {
   public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 
-    const response = await fetch(this.url("/status/sessions"), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/status/sessions"), {
       headers: {
         "X-Plex-Token": token,
       },
@@ -66,7 +67,7 @@ export class PlexIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(this.url("/"), {
+        return await fetchWithTrustedCertificatesAsync(this.url("/"), {
           headers: {
             "X-Plex-Token": token,
           },

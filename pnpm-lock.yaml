@@ -673,6 +673,9 @@ importers:
 
   packages/certificates:
     dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       undici:
         specifier: ^7.2.1
         version: 7.2.1
@@ -1080,6 +1083,9 @@ importers:
       '@ctrl/transmission':
         specifier: ^7.2.0
         version: 7.2.0
+      '@homarr/certificates':
+        specifier: workspace:^0.1.0
+        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common

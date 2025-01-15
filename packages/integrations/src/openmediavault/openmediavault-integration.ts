@@ -1,3 +1,7 @@
+import type { Response } from "undici";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { HealthMonitoring } from "../types";
@@ -105,7 +109,7 @@ export class OpenMediaVaultIntegration extends Integration {
     if (!response.ok) {
       throw new IntegrationTestConnectionError("invalidCredentials");
     }
-    const result = (await response.json()) as unknown;
+    const result = await response.json();
     if (typeof result !== "object" || result === null || !("response" in result)) {
       throw new IntegrationTestConnectionError("invalidJson");
     }
@@ -117,7 +121,7 @@ export class OpenMediaVaultIntegration extends Integration {
     params: Record<string, unknown>,
     headers: Record<string, string> = {},
   ): Promise<Response> {
-    return await fetch(this.url("/rpc.php"), {
+    return await fetchWithTrustedCertificatesAsync(this.url("/rpc.php"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

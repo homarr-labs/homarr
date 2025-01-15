@@ -1,3 +1,4 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { z } from "@homarr/validation";
 
 import { Integration } from "../base/integration";
@@ -9,7 +10,7 @@ import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } fro
 export class TdarrIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
     const url = this.url("/api/v2/status");
-    const response = await fetch(url);
+    const response = await fetchWithTrustedCertificatesAsync(url);
     if (response.status !== 200) {
       throw new Error(`Unexpected status code: ${response.status}`);
     }
@@ -19,7 +20,7 @@ export class TdarrIntegration extends Integration {
 
   public async getStatisticsAsync(): Promise<TdarrStatistics> {
     const url = this.url("/api/v2/cruddb");
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -61,7 +62,7 @@ export class TdarrIntegration extends Integration {
 
   public async getWorkersAsync(): Promise<TdarrWorker[]> {
     const url = this.url("/api/v2/get-nodes");
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "GET",
       headers: { "content-type": "application/json" },
     });
@@ -101,7 +102,7 @@ export class TdarrIntegration extends Integration {
 
   private async getTranscodingQueueAsync(firstItemIndex: number, pageSize: number) {
     const url = this.url("/api/v2/client/status-tables");
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -136,7 +137,7 @@ export class TdarrIntegration extends Integration {
 
   private async getHealthCheckDataAsync(firstItemIndex: number, pageSize: number, totalQueueCount: number) {
     const url = this.url("/api/v2/client/status-tables");
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({

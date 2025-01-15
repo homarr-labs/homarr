@@ -1,8 +1,12 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
+import { Agent } from "node:https";
 import path from "node:path";
 import { rootCertificates } from "node:tls";
-import { Agent, fetch } from "undici";
+import axios from "axios";
+import { fetch } from "undici";
+
+import { LoggingAgent } from "@homarr/common/server";
 
 const getCertificateFolder = () => {
   return process.env.NODE_ENV === "production"
@@ -54,12 +58,26 @@ export const addCustomRootCertificateAsync = async (fileName: string, content: s
   await fs.writeFile(path.join(folder, fileName), content);
 };
 
-export const fetchWithTrustedCertificatesAsync: typeof fetch = async (url, options) => {
-  const agent = new Agent({
+export const createCertificateAgentAsync = async () => {
+  const customCertificates = await loadCustomRootCertificatesAsync();
+  return new LoggingAgent({
     connect: {
-      ca: [...rootCertificates],
+      ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
     },
   });
+};
+
+export const createAxiosCertificateInstanceAsync = async () => {
+  const customCertificates = await loadCustomRootCertificatesAsync();
+  return axios.create({
+    httpsAgent: new Agent({
+      ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
+    }),
+  });
+};
+
+export const fetchWithTrustedCertificatesAsync: typeof fetch = async (url, options) => {
+  const agent = await createCertificateAgentAsync();
   return fetch(url, {
     ...options,
     dispatcher: agent,

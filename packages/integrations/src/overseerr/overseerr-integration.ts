@@ -1,3 +1,4 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
@@ -20,7 +21,7 @@ interface OverseerrSearchResult {
  */
 export class OverseerrIntegration extends Integration implements ISearchableIntegration<OverseerrSearchResult> {
   public async searchAsync(query: string) {
-    const response = await fetch(this.url("/api/v1/search", { query }), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/search", { query }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -44,7 +45,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async getSeriesInformationAsync(mediaType: "movie" | "tv", id: number) {
     const url = mediaType === "tv" ? this.url(`/api/v1/tv/${id}`) : this.url(`/api/v1/movie/${id}`);
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -60,7 +61,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
    */
   public async requestMediaAsync(mediaType: "movie" | "tv", id: number, seasons?: number[]): Promise<void> {
     const url = this.url("/api/v1/request");
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
       body: JSON.stringify({
         mediaType,
@@ -80,13 +81,12 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   public async testConnectionAsync(): Promise<void> {
-    const response = await fetch(this.url("/api/v1/auth/me"), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/auth/me"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const json: object = await response.json();
+    const json = (await response.json()) as object;
     if (Object.keys(json).includes("id")) {
       return;
     }
@@ -96,14 +96,17 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {
     //Ensure to get all pending request first
-    const pendingRequests = await fetch(this.url("/api/v1/request", { take: -1, filter: "pending" }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
+    const pendingRequests = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/v1/request", { take: -1, filter: "pending" }),
+      {
+        headers: {
+          "X-Api-Key": this.getSecretValue("apiKey"),
+        },
       },
-    });
+    );
 
     //Change 20 to integration setting (set to -1 for all)
-    const allRequests = await fetch(this.url("/api/v1/request", { take: 20 }), {
+    const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -151,7 +154,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   public async getStatsAsync(): Promise<RequestStats> {
-    const response = await fetch(this.url("/api/v1/request/count"), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request/count"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -160,7 +163,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   public async getUsersAsync(): Promise<RequestUser[]> {
-    const response = await fetch(this.url("/api/v1/user", { take: -1 }), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/user", { take: -1 }), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
@@ -177,7 +180,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async approveRequestAsync(requestId: number): Promise<void> {
     logger.info(`Approving media request id='${requestId}' integration='${this.integration.name}'`);
-    await fetch(this.url(`/api/v1/request/${requestId}/approve`), {
+    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -195,7 +198,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async declineRequestAsync(requestId: number): Promise<void> {
     logger.info(`Declining media request id='${requestId}' integration='${this.integration.name}'`);
-    await fetch(this.url(`/api/v1/request/${requestId}/decline`), {
+    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/decline`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
@@ -212,7 +215,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
   }
 
   private async getItemInformationAsync(id: number, type: MediaRequest["type"]): Promise<MediaInformation> {
-    const response = await fetch(this.url(`/api/v1/${type}/${id}`), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/${type}/${id}`), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },

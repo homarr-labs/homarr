@@ -1,6 +1,8 @@
 import { Transmission } from "@ctrl/transmission";
 import dayjs from "dayjs";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
+
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -8,12 +10,13 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 
 export class TransmissionIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
-    await this.getClient().getSession();
+    const client = await this.getClientAsync();
+    await client.getSession();
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const { torrents } = (await client.listTorrents()).arguments;
     const rates = torrents.reduce(
       ({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }),
@@ -47,34 +50,38 @@ export class TransmissionIntegration extends DownloadClientIntegration {
   }
 
   public async pauseQueueAsync() {
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const ids = (await client.listTorrents()).arguments.torrents.map(({ hashString }) => hashString);
-    await this.getClient().pauseTorrent(ids);
+    await client.pauseTorrent(ids);
   }
 
   public async pauseItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().pauseTorrent(id);
+    const client = await this.getClientAsync();
+    await client.pauseTorrent(id);
   }
 
   public async resumeQueueAsync() {
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const ids = (await client.listTorrents()).arguments.torrents.map(({ hashString }) => hashString);
-    await this.getClient().resumeTorrent(ids);
+    await client.resumeTorrent(ids);
   }
 
   public async resumeItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().resumeTorrent(id);
+    const client = await this.getClientAsync();
+    await client.resumeTorrent(id);
   }
 
   public async deleteItemAsync({ id }: DownloadClientItem, fromDisk: boolean): Promise<void> {
-    await this.getClient().removeTorrent(id, fromDisk);
+    const client = await this.getClientAsync();
+    await client.removeTorrent(id, fromDisk);
   }
 
-  private getClient() {
+  private async getClientAsync() {
     return new Transmission({
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
+      dispatcher: await createCertificateAgentAsync(),
     });
   }
 
