@@ -2153,6 +2153,13 @@
               "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": "Paneli Kopyala"
           },
@@ -2189,7 +2196,13 @@
             "title": "Genel",
             "item": {
               "language": "Dil & Bölge",
-              "board": "Öntanımlı panel",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "Öntanımlı arama motoru",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
@@ -2349,6 +2362,7 @@
             "title": "Paneller",
             "homeBoard": {
               "label": "Genel Ana Sayfa Paneli",
+              "mobileLabel": "",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "Öntanımlı panel olarak ata"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "Ayarları aç"

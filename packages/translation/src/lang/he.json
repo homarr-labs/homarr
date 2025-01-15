@@ -2153,6 +2153,13 @@
               "tooltip": "הלוח הזה יוצג כלוח הבית שלך"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": "שכפול לוח"
           },
@@ -2189,7 +2196,13 @@
             "title": "כללי",
             "item": {
               "language": "שפה ואיזור",
-              "board": "לוח בית",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "מנוע חיפוש ברירת מחדל",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
@@ -2349,6 +2362,7 @@
             "title": "לוחות",
             "homeBoard": {
               "label": "לוח בית גלובלי",
+              "mobileLabel": "",
               "description": "רק לוחות ציבוריים זמינים לבחירה"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "קביעה כלוח הבית"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "פתיחת הגדרות"
