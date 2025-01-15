@@ -13,12 +13,13 @@ import { superRefineCertificateFile, z } from "@homarr/validation";
 
 export const AddCertificateButton = () => {
   const { openModal } = useModalAction(AddCertificateModal);
+  const t = useI18n();
 
   const handleClick = () => {
     openModal({});
   };
 
-  return <Button onClick={handleClick}>Add certificate</Button>;
+  return <Button onClick={handleClick}>{t("certificate.action.create.label")}</Button>;
 };
 
 const AddCertificateModal = createModal(({ actions }) => {
@@ -45,16 +46,16 @@ const AddCertificateModal = createModal(({ actions }) => {
         await mutateAsync(formData, {
           async onSuccess() {
             showSuccessNotification({
-              title: "Certificate added",
-              message: "The certificate has been successfully added.",
+              title: t("certificate.action.create.notification.success.title"),
+              message: t("certificate.action.create.notification.success.message"),
             });
             await revalidatePathActionAsync("/manage/tools/certificates");
             actions.closeModal();
           },
           onError() {
             showErrorNotification({
-              title: "Failed to add certificate",
-              message: "An error occurred while adding the certificate.",
+              title: t("certificate.action.create.notification.error.title"),
+              message: t("certificate.action.create.notification.error.message"),
             });
           },
         });
@@ -74,5 +75,7 @@ const AddCertificateModal = createModal(({ actions }) => {
     </form>
   );
 }).withOptions({
-  defaultTitle: "Add certificate",
+  defaultTitle(t) {
+    return t("certificate.action.create.label");
+  },
 });

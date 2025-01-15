@@ -5,7 +5,6 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
     "./server": "./src/server.ts"
   },
   "typesVersions": {

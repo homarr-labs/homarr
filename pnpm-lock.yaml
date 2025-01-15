@@ -747,6 +747,9 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
+      undici:
+        specifier: 7.2.2
+        version: 7.2.2
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -1110,6 +1113,9 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.7.7)
+      undici:
+        specifier: 7.2.2
+        version: 7.2.2
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
