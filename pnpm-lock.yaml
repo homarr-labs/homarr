@@ -677,8 +677,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       undici:
-        specifier: ^7.2.1
-        version: 7.2.1
+        specifier: ^7.2.2
+        version: 7.2.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
