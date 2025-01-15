@@ -2153,6 +2153,13 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": ""
           },
@@ -2189,7 +2196,13 @@
             "title": "Általános",
             "item": {
               "language": "",
-              "board": "Főoldal",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "",
               "firstDayOfWeek": "A hét első napja",
               "accessibility": "Kisegítő lehetőségek"
@@ -2349,6 +2362,7 @@
             "title": "Táblák",
             "homeBoard": {
               "label": "",
+              "mobileLabel": "",
               "description": ""
             }
           },
@@ -2736,6 +2750,9 @@
                   "label": ""
                 },
                 "homeBoard": {
+                  "label": ""
+                },
+                "mobileBoard": {
                   "label": ""
                 },
                 "settings": {

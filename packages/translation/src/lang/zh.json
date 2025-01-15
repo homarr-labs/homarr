@@ -2153,6 +2153,13 @@
               "tooltip": "此面板將顯示為主面板"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": "複製面板"
           },
@@ -2189,7 +2196,13 @@
             "title": "一般",
             "item": {
               "language": "語言與地區",
-              "board": "主面板",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "預設搜尋引擎",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
@@ -2349,6 +2362,7 @@
             "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
+              "mobileLabel": "",
               "description": "只有公開面板可供選擇"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "設定為主面板"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "開啟設定"

@@ -2153,6 +2153,13 @@
               "tooltip": "Эта панель будет показываться как ваша домашняя панель"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": ""
           },
@@ -2189,7 +2196,13 @@
             "title": "Общие",
             "item": {
               "language": "Язык и регион",
-              "board": "Домашняя панель",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
@@ -2349,6 +2362,7 @@
             "title": "Панели",
             "homeBoard": {
               "label": "Общая домашняя панель",
+              "mobileLabel": "",
               "description": "Для выбора доступны только публичные панели"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "Сделать домашней панелью"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "Открыть настройки"
