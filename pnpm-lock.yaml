@@ -218,8 +218,8 @@ importers:
         specifier: ^16.4.7
         version: 16.4.7
       flag-icons:
-        specifier: ^7.2.3
-        version: 7.2.3
+        specifier: ^7.2.4
+        version: 7.2.4
       glob:
         specifier: ^11.0.1
         version: 11.0.1
@@ -6068,8 +6068,8 @@ packages:
     resolution: {integrity: sha512-2kCCtc+JvcZ86IGAz3Z2Y0A1baIz9fL31pH/0S1IqZr9Iwnjq8izfPtrCyQKO6TLMPELLsQMre7VDqeIKCsHkA==}
     engines: {node: '>=18'}
 
-  flag-icons@7.2.3:
-    resolution: {integrity: sha512-X2gUdteNuqdNqob2KKTJTS+ZCvyWeLCtDz9Ty8uJP17Y4o82Y+U/Vd4JNrdwTAjagYsRznOn9DZ+E/Q52qbmqg==}
+  flag-icons@7.2.4:
+    resolution: {integrity: sha512-3EAM4nLzKf0R3qsCDV0K2tvN8UQDz5235V/JETeP6qZ7482CQXI1YcDHMhUVrhw3M7gzki8kLNiUldeEXUlI2g==}
 
   flat-cache@4.0.1:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
@@ -14367,7 +14367,7 @@ snapshots:
       semver-regex: 4.0.5
       super-regex: 1.0.0
 
-  flag-icons@7.2.3: {}
+  flag-icons@7.2.4: {}
 
   flat-cache@4.0.1:
     dependencies:
