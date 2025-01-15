@@ -1,11 +1,12 @@
 import { X509Certificate } from "node:crypto";
-import { ActionIcon, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { IconCertificate, IconTrash } from "@tabler/icons-react";
+import { Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { IconCertificate } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { loadCustomRootCertificatesAsync } from "@homarr/certificates/server";
 
 import { AddCertificateButton } from "./_components/add-certificate";
+import { RemoveCertificate } from "./_components/remove-certificate";
 
 export default async function CertificatesPage() {
   const certificates = await loadCustomRootCertificatesAsync();
@@ -46,9 +47,7 @@ export default async function CertificatesPage() {
                     <Text size="sm" c="gray.6" title={cert.x509.validToDate.toISOString()}>
                       Expires {dayjs(cert.x509.validToDate).locale("en").fromNow()}
                     </Text>
-                    <ActionIcon color="red" variant="subtle">
-                      <IconTrash color="red" size={16} />
-                    </ActionIcon>
+                    <RemoveCertificate fileName={cert.fileName} />
                   </Group>
                 </Stack>
               </Group>
