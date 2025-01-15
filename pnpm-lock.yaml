@@ -366,8 +366,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       undici:
-        specifier: 7.2.1
-        version: 7.2.1
+        specifier: 7.2.2
+        version: 7.2.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -945,8 +945,8 @@ importers:
         specifier: ^10.16.0
         version: 10.16.0
       better-sqlite3:
-        specifier: ^11.7.2
-        version: 11.7.2
+        specifier: ^11.8.0
+        version: 11.8.0
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -955,10 +955,10 @@ importers:
         version: 0.30.1
       drizzle-orm:
         specifier: ^0.38.3
-        version: 0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.7.2)(mysql2@3.12.0)(react@19.0.0)
+        version: 0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0)
       drizzle-zod:
         specifier: ^0.6.1
-        version: 0.6.1(drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.7.2)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1)
+        version: 0.6.1(drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1)
       mysql2:
         specifier: 3.12.0
         version: 3.12.0
@@ -1947,8 +1947,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../typescript
       prettier-plugin-packagejson:
-        specifier: ^2.5.6
-        version: 2.5.6(prettier@3.4.2)
+        specifier: ^2.5.7
+        version: 2.5.7(prettier@3.4.2)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -4900,8 +4900,8 @@ packages:
     resolution: {integrity: sha512-Wjss+Bc674ZABPr+SCKWTqA4V1pyYFhzDTjNBJy4jdmgOv0oGIGXeKBRJyINwP5tIy+iIZD9SfgZpztduzQ5QA==}
     engines: {node: '>= 18.4'}
 
-  better-sqlite3@11.7.2:
-    resolution: {integrity: sha512-10a57cHVDmfNQS4jrZ9AH2t+2ekzYh5Rhbcnb4ytpmYweoLdogDmyTt5D+hLiY9b44Mx9foowb/4iXBTO2yP3Q==}
+  better-sqlite3@11.8.0:
+    resolution: {integrity: sha512-aKv9s2dir7bsEX5RIjL9HHWB9uQ+f6Vch5B4qmeAOop4Y9OYHX+PNKLr+mpv6+d8L/ZYh4l7H8zPuVMbWkVMLw==}
 
   big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
@@ -7954,8 +7954,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-packagejson@2.5.6:
-    resolution: {integrity: sha512-TY7KiLtyt6Tlf53BEbXUWkN0+TRdHKgIMmtXtDCyHH6yWnZ50Lwq6Vb6lyjapZrhDTXooC4EtlY5iLe1sCgi5w==}
+  prettier-plugin-packagejson@2.5.7:
+    resolution: {integrity: sha512-AF2xIbrSPduMF+p4Ag5cxeQpIFrAdDx+JE1G9qhU95ToVmUGOzXiNEJzdmb9+8lJ2IU5IX30i2xsojOmhTyT7Q==}
     peerDependencies:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
@@ -8672,8 +8672,8 @@ packages:
   sort-object-keys@1.1.3:
     resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
 
-  sort-package-json@2.12.0:
-    resolution: {integrity: sha512-/HrPQAeeLaa+vbAH/znjuhwUluuiM/zL5XX9kop8UpDgjtyWKt43hGDk2vd/TBdDpzIyzIHVUgmYofzYrAQjew==}
+  sort-package-json@2.13.0:
+    resolution: {integrity: sha512-y1iCgJ+ZrOSgkzuhtpaxxsCLeUPZbEbIxcMDBde6JwpkZ3e9vVQhZ46iCD97GYImdgBLtXSPxxS9LqZbL6Th2Q==}
     hasBin: true
 
   source-map-js@1.2.1:
@@ -9311,8 +9311,8 @@ packages:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
 
-  undici@7.2.1:
-    resolution: {integrity: sha512-U2k0XHLJfaciARRxDcqTk2AZQsGXerHzdvfCZcy1hNhSf5KCAF4jIQQxL+apQviOekhRFPqED6Of5/+LcUSLzQ==}
+  undici@7.2.2:
+    resolution: {integrity: sha512-j/M0BQelSQHcq2Fhc1fUMszXtLx+RsZR5IkXx07knZMICLTzRzsW0tbTI9e9N40RftPUkFP8j4qOjKJa5aTCzw==}
     engines: {node: '>=20.18.1'}
 
   unenv@1.10.0:
@@ -12961,7 +12961,7 @@ snapshots:
 
   bellajs@11.2.0: {}
 
-  better-sqlite3@11.7.2:
+  better-sqlite3@11.8.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -13663,18 +13663,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.7.2)(mysql2@3.12.0)(react@19.0.0):
+  drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.12
       '@types/react': 19.0.7
-      better-sqlite3: 11.7.2
+      better-sqlite3: 11.8.0
       mysql2: 3.12.0
       react: 19.0.0
 
-  drizzle-zod@0.6.1(drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.7.2)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1):
+  drizzle-zod@0.6.1(drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1):
     dependencies:
-      drizzle-orm: 0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.7.2)(mysql2@3.12.0)(react@19.0.0)
+      drizzle-orm: 0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0)
       zod: 3.24.1
 
   dunder-proto@1.0.1:
@@ -16252,9 +16252,9 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-packagejson@2.5.6(prettier@3.4.2):
+  prettier-plugin-packagejson@2.5.7(prettier@3.4.2):
     dependencies:
-      sort-package-json: 2.12.0
+      sort-package-json: 2.13.0
       synckit: 0.9.2
     optionalDependencies:
       prettier: 3.4.2
@@ -17168,7 +17168,7 @@ snapshots:
 
   sort-object-keys@1.1.3: {}
 
-  sort-package-json@2.12.0:
+  sort-package-json@2.13.0:
     dependencies:
       detect-indent: 7.0.1
       detect-newline: 4.0.1
@@ -17479,7 +17479,7 @@ snapshots:
   synckit@0.9.2:
     dependencies:
       '@pkgr/core': 0.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   tabbable@6.2.0: {}
 
@@ -17928,7 +17928,7 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@7.2.1: {}
+  undici@7.2.2: {}
 
   unenv@1.10.0:
     dependencies:

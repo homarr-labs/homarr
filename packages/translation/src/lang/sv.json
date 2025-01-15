@@ -2153,6 +2153,13 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": ""
           },
@@ -2189,7 +2196,13 @@
             "title": "Allmänt",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "",
               "firstDayOfWeek": "Första veckodagen",
               "accessibility": "Tillgänglighet"
@@ -2349,6 +2362,7 @@
             "title": "Tavlor",
             "homeBoard": {
               "label": "",
+              "mobileLabel": "",
               "description": ""
             }
           },
@@ -2736,6 +2750,9 @@
                   "label": ""
                 },
                 "homeBoard": {
+                  "label": ""
+                },
+                "mobileBoard": {
                   "label": ""
                 },
                 "settings": {

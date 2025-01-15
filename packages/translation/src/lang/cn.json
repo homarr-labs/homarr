@@ -2153,6 +2153,13 @@
               "tooltip": "此面板将显示为您的主面板"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": "复制面板"
           },
@@ -2189,7 +2196,13 @@
             "title": "通用",
             "item": {
               "language": "语言与地区",
-              "board": "主面板",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "默认搜索引擎",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
@@ -2349,6 +2362,7 @@
             "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
+              "mobileLabel": "",
               "description": "只有公共面板可供选择"
             }
           },
@@ -2737,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "设置为主面板"
+                },
+                "mobileBoard": {
+                  "label": ""
                 },
                 "settings": {
                   "label": "打开设置"

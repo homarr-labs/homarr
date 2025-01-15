@@ -2153,6 +2153,13 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
           "duplicate": {
             "label": ""
           },
@@ -2189,7 +2196,13 @@
             "title": "Obecné",
             "item": {
               "language": "Jazyk & oblast",
-              "board": "Domovská plocha",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
               "defaultSearchEngine": "Výchozí vyhledávač",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost"
@@ -2349,6 +2362,7 @@
             "title": "Plochy",
             "homeBoard": {
               "label": "",
+              "mobileLabel": "",
               "description": ""
             }
           },
@@ -2736,6 +2750,9 @@
                   "label": ""
                 },
                 "homeBoard": {
+                  "label": ""
+                },
+                "mobileBoard": {
                   "label": ""
                 },
                 "settings": {
