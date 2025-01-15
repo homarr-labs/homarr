@@ -141,7 +141,7 @@ export const integrationDefs = {
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/openmediavault.png",
-    category: ["healthMonitoring"],
+    category: ["tempNone"],
     supportsSearch: false,
   },
   dashDot: {
@@ -217,4 +217,5 @@ export type IntegrationCategory =
   | "torrent"
   | "smartHomeServer"
   | "indexerManager"
-  | "healthMonitoring";
+  | "healthMonitoring"
+  | "tempNone";

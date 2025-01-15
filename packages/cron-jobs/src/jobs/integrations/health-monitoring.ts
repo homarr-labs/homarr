@@ -8,7 +8,7 @@ export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SEC
   createRequestIntegrationJobHandler(systemInfoRequestHandler.handler, {
     widgetKinds: ["healthMonitoring"],
     getInput: {
-      healthMonitoring: () => ({}),
+      healthMonitoring: (options) => ({ maxElements: Number(options.pointDensity), pointCount: 1 }),
     },
   }),
 );

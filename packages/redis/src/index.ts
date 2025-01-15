@@ -6,6 +6,7 @@ export {
   createItemChannel,
   createIntegrationOptionsChannel,
   createChannelWithLatestAndEvents,
+  createIntegrationHistoryChannel,
   handshakeAsync,
 } from "./lib/channel";
 
