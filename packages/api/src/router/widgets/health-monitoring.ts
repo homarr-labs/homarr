@@ -1,42 +1,51 @@
 import { observable } from "@trpc/server/observable";
 
+import type { Modify } from "@homarr/common/types";
+import type { Integration } from "@homarr/db/schema/sqlite";
+import type { IntegrationKindByCategory } from "@homarr/definitions";
 import type { HealthMonitoring } from "@homarr/integrations";
-import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
-import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
+import { systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { z } from "zod";
 
 export const healthMonitoringRouter = createTRPCRouter({
-  getSystemHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
-    .query(async ({ ctx }) => {
+  getHealthStatus: publicProcedure
+    .input(z.object({ pointCount: z.number().optional(), maxElements: z.number().optional() }))
+    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "proxmox"))
+    .query(async ({ input: { pointCount = 1, maxElements = 32 }, ctx }) => {
       return await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = systemInfoRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+        ctx.integrations.map(async (integrationWithSecrets) => {
+          const innerHandler = systemInfoRequestHandler.handler(integrationWithSecrets, { maxElements, pointCount });
+          const healthInfo = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
 
           return {
-            integrationId: integration.id,
-            integrationName: integration.name,
-            healthInfo: data,
-            updatedAt: timestamp,
+            integration,
+            healthInfo,
           };
         }),
       );
     }),
-  subscribeSystemHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
-    .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
+
+  subscribeHealthStatus: publicProcedure
+    .input(z.object({ maxElements: z.number().optional() }))
+    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "proxmox"))
+    .subscription(({ ctx, input: { maxElements = 32 } }) => {
+      return observable<{
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"healthMonitoring"> }>;
+        healthInfo: { data: HealthMonitoring; timestamp: Date };
+      }>((emit) => {
         const unsubscribes: (() => void)[] = [];
-        for (const integration of ctx.integrations) {
-          const innerHandler = systemInfoRequestHandler.handler(integration, {});
-          const unsubscribe = innerHandler.subscribe((healthInfo) => {
+        for (const integrationWithSecrets of ctx.integrations) {
+          const innerHandler = systemInfoRequestHandler.handler(integrationWithSecrets, { maxElements, pointCount: 1 });
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+          const unsubscribe = innerHandler.subscribe((data) => {
             emit.next({
-              integrationId: integration.id,
-              healthInfo,
-              timestamp: new Date(),
+              integration,
+              healthInfo: { data, timestamp: new Date() },
             });
           });
           unsubscribes.push(unsubscribe);
@@ -45,28 +54,6 @@ export const healthMonitoringRouter = createTRPCRouter({
           unsubscribes.forEach((unsubscribe) => {
             unsubscribe();
           });
-        };
-      });
-    }),
-  getClusterHealthStatus: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "proxmox"))
-    .query(async ({ ctx }) => {
-      const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-      return data;
-    }),
-  subscribeClusterHealthStatus: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "proxmox"))
-    .subscription(({ ctx }) => {
-      return observable<ProxmoxClusterInfo>((emit) => {
-        const unsubscribes: (() => void)[] = [];
-        const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
-        const unsubscribe = innerHandler.subscribe((healthInfo) => {
-          emit.next(healthInfo);
-        });
-        unsubscribes.push(unsubscribe);
-        return () => {
-          unsubscribe();
         };
       });
     }),

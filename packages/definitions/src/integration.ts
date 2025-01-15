@@ -220,7 +220,8 @@ export type IntegrationCategory =
   | "miscellaneous"
   | "smartHomeServer"
   | "indexerManager"
-  | "healthMonitoring"
   | "search"
   | "mediaTranscoding"
-  | "networkController";
+  | "networkController"
+  | "healthMonitoring"
+  | "tempNone";

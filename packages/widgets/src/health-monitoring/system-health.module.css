@@ -1,7 +1,0 @@
-[data-mantine-color-scheme="light"] .card {
-  background-color: var(--mantine-color-gray-1);
-}
-
-[data-mantine-color-scheme="dark"] .card {
-  background-color: var(--mantine-color-dark-7);
-}
