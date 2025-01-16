@@ -1,3 +1,4 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 import { z } from "@homarr/validation";
 
@@ -8,7 +9,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(this.url("/api"), {
+        return await fetchWithTrustedCertificatesAsync(this.url("/api"), {
           headers: { "X-Api-Key": super.getSecretValue("apiKey") },
         });
       },
@@ -34,7 +35,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
       includeAuthor,
     });
 
-    const response = await fetch(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: {
         "X-Api-Key": super.getSecretValue("apiKey"),
       },

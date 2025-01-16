@@ -1,6 +1,8 @@
 import { QBittorrent } from "@ctrl/qbittorrent";
 import dayjs from "dayjs";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
+
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -8,13 +10,13 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 
 export class QBitTorrentIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     await client.login();
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const torrents = await client.listTorrents();
     const rates = torrents.reduce(
       ({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }),
@@ -50,30 +52,36 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
   }
 
   public async pauseQueueAsync() {
-    await this.getClient().pauseTorrent("all");
+    const client = await this.getClientAsync();
+    await client.pauseTorrent("all");
   }
 
   public async pauseItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().pauseTorrent(id);
+    const client = await this.getClientAsync();
+    await client.pauseTorrent(id);
   }
 
   public async resumeQueueAsync() {
-    await this.getClient().resumeTorrent("all");
+    const client = await this.getClientAsync();
+    await client.resumeTorrent("all");
   }
 
   public async resumeItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().resumeTorrent(id);
+    const client = await this.getClientAsync();
+    await client.resumeTorrent(id);
   }
 
   public async deleteItemAsync({ id }: DownloadClientItem, fromDisk: boolean): Promise<void> {
-    await this.getClient().removeTorrent(id, fromDisk);
+    const client = await this.getClientAsync();
+    await client.removeTorrent(id, fromDisk);
   }
 
-  private getClient() {
+  private async getClientAsync() {
     return new QBittorrent({
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
+      dispatcher: await createCertificateAgentAsync(),
     });
   }
 

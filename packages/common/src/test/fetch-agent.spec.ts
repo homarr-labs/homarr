@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import { logger } from "@homarr/log";
 
-import { LoggingAgent } from "~/undici-log-agent-override";
+import { LoggingAgent } from "../fetch-agent";
 
 vi.mock("undici", () => {
   return {

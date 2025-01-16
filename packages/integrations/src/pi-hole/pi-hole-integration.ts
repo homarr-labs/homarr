@@ -1,3 +1,5 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
@@ -7,7 +9,7 @@ import { summaryResponseSchema } from "./pi-hole-types";
 export class PiHoleIntegration extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetch(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));
     if (!response.ok) {
       throw new Error(
         `Failed to fetch summary for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
@@ -36,11 +38,11 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(this.url("/admin/api.php?status", { auth: apiKey }));
+        return await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?status", { auth: apiKey }));
       },
       handleResponseAsync: async (response) => {
         try {
-          const result = (await response.json()) as unknown;
+          const result = await response.json();
           if (typeof result === "object" && result !== null && "status" in result) return;
         } catch {
           throw new IntegrationTestConnectionError("invalidJson");
@@ -53,7 +55,7 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
 
   public async enableAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetch(this.url("/admin/api.php?enable", { auth: apiKey }));
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?enable", { auth: apiKey }));
     if (!response.ok) {
       throw new Error(
         `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
@@ -64,7 +66,7 @@ export class PiHoleIntegration extends Integration implements DnsHoleSummaryInte
   public async disableAsync(duration?: number): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
     const url = this.url(`/admin/api.php?disable${duration ? `=${duration}` : ""}`, { auth: apiKey });
-    const response = await fetch(url);
+    const response = await fetchWithTrustedCertificatesAsync(url);
     if (!response.ok) {
       throw new Error(
         `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,

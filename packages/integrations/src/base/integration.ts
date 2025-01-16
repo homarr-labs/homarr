@@ -1,3 +1,5 @@
+import type { Response } from "undici";
+
 import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";

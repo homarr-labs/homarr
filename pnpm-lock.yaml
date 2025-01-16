@@ -88,6 +88,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
+      '@homarr/certificates':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
@@ -491,6 +494,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
+      '@homarr/certificates':
+        specifier: workspace:^0.1.0
+        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -665,6 +671,31 @@ importers:
         specifier: ^5.7.3
         version: 5.7.3
 
+  packages/certificates:
+    dependencies:
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      undici:
+        specifier: 7.2.3
+        version: 7.2.3
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.18.0
+        version: 9.18.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
   packages/cli:
     dependencies:
       '@drizzle-team/brocli':
@@ -716,6 +747,9 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
+      undici:
+        specifier: 7.2.3
+        version: 7.2.3
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -1052,6 +1086,9 @@ importers:
       '@ctrl/transmission':
         specifier: ^7.2.0
         version: 7.2.0
+      '@homarr/certificates':
+        specifier: workspace:^0.1.0
+        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1076,6 +1113,9 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.7.7)
+      undici:
+        specifier: 7.2.3
+        version: 7.2.3
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2

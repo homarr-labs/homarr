@@ -897,6 +897,7 @@
           "passwordRequirements": "Password does not meet the requirements",
           "boardAlreadyExists": "A board with this name already exists",
           "invalidFileType": "Invalid file type, expected {expected}",
+          "invalidFileName": "Invalid file name",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
           "invalidConfiguration": "Invalid configuration",
           "groupNameTaken": "Group name already taken"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
+            "certificates": "Certificates",
             "tasks": "Tasks"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "Logs"
+        },
+        "certificates": {
+          "label": "Certificates"
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": "Send request"
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "Trusted certificates",
+        "description": "Used by Homarr to request data from integrations.",
+        "noResults": {
+          "title": "There are no certificates yet"
+        },
+        "expires": "Expires {when}"
+      }
+    },
+    "action": {
+      "create": {
+        "label": "Add certificate",
+        "notification": {
+          "success": {
+            "title": "Certificate added",
+            "message": "The certificate was added successfully"
+          },
+          "error": {
+            "title": "Failed to add certificate",
+            "message": "The certificate could not be added"
+          }
+        }
+      },
+      "remove": {
+        "label": "Remove certificate",
+        "confirm": "Are you sure you want to remove the certificate?",
+        "notification": {
+          "success": {
+            "title": "Certificate removed",
+            "message": "The certificate was removed successfully"
+          },
+          "error": {
+            "title": "Certificate not removed",
+            "message": "The certificate could not be removed"
           }
         }
       }
