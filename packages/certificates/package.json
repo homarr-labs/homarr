@@ -1,16 +1,11 @@
 {
-  "name": "@homarr/common",
+  "name": "@homarr/certificates",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./types": "./src/types.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./env": "./env.ts",
-    "./env-validation": "./src/env-validation.ts"
+    "./server": "./src/server.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,13 +22,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/log": "workspace:^0.1.0",
-    "dayjs": "^1.11.13",
-    "next": "15.1.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "undici": "7.2.3",
-    "zod": "^3.24.1"
+    "@homarr/common": "workspace:^0.1.0",
+    "undici": "7.2.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

@@ -1,3 +1,4 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { Integration } from "../base/integration";
@@ -7,7 +8,7 @@ export class HomeAssistantIntegration extends Integration {
   public async getEntityStateAsync(entityId: string) {
     try {
       const response = await this.getAsync(`/api/states/${entityId}`);
-      const body = (await response.json()) as unknown;
+      const body = await response.json();
       if (!response.ok) {
         logger.warn(`Response did not indicate success`);
         return {
@@ -71,7 +72,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async getAsync(path: `/api/${string}`) {
-    return await fetch(this.url(path), {
+    return await fetchWithTrustedCertificatesAsync(this.url(path), {
       headers: this.getAuthHeaders(),
     });
   }
@@ -84,7 +85,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async postAsync(path: `/api/${string}`, body: Record<string, string>) {
-    return await fetch(this.url(path), {
+    return await fetchWithTrustedCertificatesAsync(this.url(path), {
       headers: this.getAuthHeaders(),
       body: JSON.stringify(body),
       method: "POST",

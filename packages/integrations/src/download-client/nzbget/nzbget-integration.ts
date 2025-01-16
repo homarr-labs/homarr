@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -96,7 +98,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     const password = this.getSecretValue("password");
     const url = this.url(`/${username}:${password}/jsonrpc`);
     const body = JSON.stringify({ method, params });
-    return await fetch(url, { method: "POST", body })
+    return await fetchWithTrustedCertificatesAsync(url, { method: "POST", body })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(response.statusText);
