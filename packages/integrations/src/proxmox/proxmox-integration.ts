@@ -1,7 +1,9 @@
 import type { Proxmox } from "proxmox-api";
 import proxmoxApi from "proxmox-api";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { extractErrorMessage } from "@homarr/common";
+import { logger } from "@homarr/log";
 
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
@@ -26,6 +28,10 @@ export class ProxmoxIntegration extends Integration {
     const proxmox = this.getPromoxApi();
     const resources = await proxmox.cluster.resources.$get();
 
+    logger.info(
+      `Found ${resources.length} resources in Proxmox cluster node=${resources.filter((resource) => resource.type === "node").length} lxc=${resources.filter((resource) => resource.type === "lxc").length} qemu=${resources.filter((resource) => resource.type === "qemu").length} storage=${resources.filter((resource) => resource.type === "storage").length}`,
+    );
+
     const mappedResources = resources.map(mapResource).filter((resource) => resource !== null);
     return {
       nodes: mappedResources.filter((resource): resource is NodeResource => resource.type === "node"),
@@ -40,7 +46,8 @@ export class ProxmoxIntegration extends Integration {
       host: this.url("/").host,
       tokenID: `${this.getSecretValue("username")}@${this.getSecretValue("realm")}!${this.getSecretValue("tokenId")}`,
       tokenSecret: this.getSecretValue("apiKey"),
-      //fetch: // TODO: Add certificate thing
+      /** @ts-expect-error temp */
+      fetch: fetchWithTrustedCertificatesAsync,
     });
   }
 }

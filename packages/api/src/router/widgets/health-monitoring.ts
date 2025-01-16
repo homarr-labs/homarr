@@ -2,6 +2,7 @@ import { observable } from "@trpc/server/observable";
 
 import type { HealthMonitoring } from "@homarr/integrations";
 import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
+import { logger } from "@homarr/log";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -53,6 +54,10 @@ export const healthMonitoringRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
       const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+
+      logger.info(
+        `Found resources in Proxmox cluster node=${data.nodes.length} lxc=${data.lxcs.length} qemu=${data.vms.length} storage=${data.storages.length}`,
+      );
 
       return data;
     }),

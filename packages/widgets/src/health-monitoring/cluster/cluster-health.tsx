@@ -72,6 +72,8 @@ export const ClusterHealthMonitoring = ({
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
   const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
 
+  console.log("ClusterHealthMonitoring", healthData);
+
   return (
     <Stack h="100%">
       <Group justify="center" wrap="nowrap" pt="md">
