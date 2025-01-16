@@ -966,7 +966,7 @@
     },
     "create": {
       "title": "Vyberte položku, ktorú chcete pridať",
-      "search": "",
+      "search": "Filtrovať položky",
       "addToBoard": "Pridať na dosku"
     },
     "moveResize": {
@@ -1093,7 +1093,7 @@
         "dnsQueriesToday": "Poziadavky dnes",
         "domainsBeingBlocked": "Domény na adlistoch"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Kvôli viacerým integráciám nemôže Homarr vypočítať presný počet blokovaných domén"
     },
     "dnsHoleControls": {
       "name": "Kontrola diery DNS",
@@ -1282,7 +1282,7 @@
       },
       "error": {
         "noUrl": "Nie je uvedená žiadna adresa URL iFrame",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "Uvedená adresa URL používa nepodporovaný protokol. Použite jeden z ({supportedProtocols})",
         "noBrowerSupport": "Váš prehliadač nepodporuje iframe. Aktualizujte svoj prehliadač."
       }
     },
@@ -2154,10 +2154,10 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Nastaviť ako mobilnú tabuľu",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobilný",
+              "tooltip": "Táto tabuľa sa zobrazí ako vaša mobilná tabuľa"
             }
           },
           "duplicate": {
@@ -2197,10 +2197,10 @@
             "item": {
               "language": "Jazyk a región",
               "board": {
-                "title": "",
+                "title": "Domáca doska",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Hlavné",
+                  "mobile": "Mobilná"
                 }
               },
               "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
@@ -2362,7 +2362,7 @@
             "title": "Dosky",
             "homeBoard": {
               "label": "Globálna domovská nástenka",
-              "mobileLabel": "",
+              "mobileLabel": "Globálna mobilná doska",
               "description": "Na výber sú k dispozícii iba verejné tabule"
             }
           },
@@ -2753,7 +2753,7 @@
                   "label": "Nastaviť ako domácu dosku"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Nastaviť ako mobilnú tabuľu"
                 },
                 "settings": {
                   "label": "Otvorte nastavenia"
