@@ -923,11 +923,11 @@ importers:
         specifier: ^0.30.2
         version: 0.30.2
       drizzle-orm:
-        specifier: ^0.38.3
-        version: 0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0)
+        specifier: ^0.38.4
+        version: 0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0)
       drizzle-zod:
         specifier: ^0.6.1
-        version: 0.6.1(drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1)
+        version: 0.6.1(drizzle-orm@0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1)
       mysql2:
         specifier: 3.12.0
         version: 3.12.0
@@ -5538,8 +5538,8 @@ packages:
     resolution: {integrity: sha512-vhdLrxWA32WNVF77NabpSnX7pQBornx64VDQDmKddRonOB2Xe/yY4glQ7rECoa+ogqcQNo7VblLUbeBK6Zn9Ow==}
     hasBin: true
 
-  drizzle-orm@0.38.3:
-    resolution: {integrity: sha512-w41Y+PquMpSff/QDRGdItG0/aWca+/J3Sda9PPGkTxBtjWQvgU1jxlFBXdjog5tYvTu58uvi3PwR1NuCx0KeZg==}
+  drizzle-orm@0.38.4:
+    resolution: {integrity: sha512-s7/5BpLKO+WJRHspvpqTydxFob8i1vo2rEx4pY6TGY7QSMuUfWUuzaY0DIpXCkgHOo37BaFC+SJQb99dDUXT3Q==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -13629,7 +13629,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0):
+  drizzle-orm@0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.12
@@ -13638,9 +13638,9 @@ snapshots:
       mysql2: 3.12.0
       react: 19.0.0
 
-  drizzle-zod@0.6.1(drizzle-orm@0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1):
+  drizzle-zod@0.6.1(drizzle-orm@0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0))(zod@3.24.1):
     dependencies:
-      drizzle-orm: 0.38.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0)
+      drizzle-orm: 0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.7)(better-sqlite3@11.8.0)(mysql2@3.12.0)(react@19.0.0)
       zod: 3.24.1
 
   dunder-proto@1.0.1:
