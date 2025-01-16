@@ -2,7 +2,7 @@ import { analyticsJob } from "./jobs/analytics";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { dnsHoleJob } from "./jobs/integrations/dns-hole";
 import { downloadsJob } from "./jobs/integrations/downloads";
-import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
+import { clusterHealthMonitoringJob, healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
 import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
@@ -35,6 +35,7 @@ export const jobGroup = createCronJobGroup({
   updateChecker: updateCheckerJob,
   mediaTranscoding: mediaTranscodingJob,
   minecraftServerStatus: minecraftServerStatusJob,
+  clusterHealthMonitoring: clusterHealthMonitoringJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];

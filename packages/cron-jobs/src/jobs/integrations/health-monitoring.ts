@@ -5,7 +5,9 @@ import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/
 import { createCronJob } from "../../lib";
 
 export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SECONDS).withCallback(
-  createRequestIntegrationJobHandler(systemInfoRequestHandler.handler, {
+  // This is temporary until we combine them
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  createRequestIntegrationJobHandler(systemInfoRequestHandler.handler as any, {
     widgetKinds: ["healthMonitoring"],
     getInput: {
       healthMonitoring: () => ({}),
@@ -14,7 +16,9 @@ export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SEC
 );
 
 export const clusterHealthMonitoringJob = createCronJob("clusterHealthMonitoring", EVERY_5_SECONDS).withCallback(
-  createRequestIntegrationJobHandler(clusterInfoRequestHandler.handler, {
+  // This is temporary until we combine them
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  createRequestIntegrationJobHandler(clusterInfoRequestHandler.handler as any, {
     widgetKinds: ["healthMonitoring"],
     getInput: {
       healthMonitoring: () => ({}),

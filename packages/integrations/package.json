@@ -35,6 +35,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@jellyfin/sdk": "^0.11.0",
+    "proxmox-api": "1.1.1",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
