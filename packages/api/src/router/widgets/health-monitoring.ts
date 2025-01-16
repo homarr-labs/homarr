@@ -1,15 +1,15 @@
 import { observable } from "@trpc/server/observable";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { HealthMonitoring } from "@homarr/integrations";
-import { systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
+import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
+import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const healthMonitoringRouter = createTRPCRouter({
-  getHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("healthMonitoring")))
+  getSystemHealthStatus: publicProcedure
+    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -25,9 +25,8 @@ export const healthMonitoringRouter = createTRPCRouter({
         }),
       );
     }),
-
-  subscribeHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("healthMonitoring")))
+  subscribeSystemHealthStatus: publicProcedure
+    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -46,6 +45,29 @@ export const healthMonitoringRouter = createTRPCRouter({
           unsubscribes.forEach((unsubscribe) => {
             unsubscribe();
           });
+        };
+      });
+    }),
+  getClusterHealthStatus: publicProcedure
+    .unstable_concat(createOneIntegrationMiddleware("query", "proxmox"))
+    .query(async ({ ctx }) => {
+      const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
+      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+
+      return data;
+    }),
+  subscribeClusterHealthStatus: publicProcedure
+    .unstable_concat(createOneIntegrationMiddleware("query", "proxmox"))
+    .subscription(({ ctx }) => {
+      return observable<ProxmoxClusterInfo>((emit) => {
+        const unsubscribes: (() => void)[] = [];
+        const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
+        const unsubscribe = innerHandler.subscribe((healthInfo) => {
+          emit.next(healthInfo);
+        });
+        unsubscribes.push(unsubscribe);
+        return () => {
+          unsubscribe();
         };
       });
     }),

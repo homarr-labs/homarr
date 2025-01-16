@@ -2,13 +2,13 @@ import dayjs from "dayjs";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
-import type { HealthMonitoring } from "@homarr/integrations/types";
+import type { HealthMonitoring, ProxmoxClusterInfo } from "@homarr/integrations/types";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
 export const systemInfoRequestHandler = createCachedIntegrationRequestHandler<
   HealthMonitoring,
-  IntegrationKindByCategory<"healthMonitoring">,
+  Exclude<IntegrationKindByCategory<"healthMonitoring">, "proxmox">,
   Record<string, never>
 >({
   async requestAsync(integration, _input) {
@@ -17,4 +17,17 @@ export const systemInfoRequestHandler = createCachedIntegrationRequestHandler<
   },
   cacheDuration: dayjs.duration(5, "seconds"),
   queryKey: "systemInfo",
+});
+
+export const clusterInfoRequestHandler = createCachedIntegrationRequestHandler<
+  ProxmoxClusterInfo,
+  "proxmox",
+  Record<string, never>
+>({
+  async requestAsync(integration, _input) {
+    const integrationInstance = integrationCreator(integration);
+    return await integrationInstance.getClusterInfoAsync();
+  },
+  cacheDuration: dayjs.duration(5, "seconds"),
+  queryKey: "clusterInfo",
 });

@@ -23,6 +23,7 @@ import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
+import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
@@ -72,4 +73,5 @@ export const integrationCreators = {
   readarr: ReadarrIntegration,
   dashDot: DashDotIntegration,
   tdarr: TdarrIntegration,
+  proxmox: ProxmoxIntegration,
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;

@@ -5,6 +5,8 @@ export const integrationSecretKindObject = {
   apiKey: { isPublic: false },
   username: { isPublic: true },
   password: { isPublic: false },
+  tokenId: { isPublic: true },
+  realm: { isPublic: true },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -136,6 +138,12 @@ export const integrationDefs = {
     secretKinds: [[]],
     category: ["mediaTranscoding"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png",
+  },
+  proxmox: {
+    name: "Proxmox",
+    secretKinds: [["username", "tokenId", "apiKey", "realm"]],
+    category: ["healthMonitoring"],
+    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/proxmox.png",
   },
 } as const satisfies Record<string, integrationDefinition>;
 

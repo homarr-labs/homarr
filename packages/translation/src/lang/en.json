@@ -1429,6 +1429,52 @@
       "memory": {},
       "error": {
         "internalServerError": "Failed to fetch health status"
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "CPU",
+          "memory": "RAM"
+        },
+        "resource": {
+          "node": {
+            "name": "Nodes"
+          },
+          "qemu": {
+            "name": "VMs"
+          },
+          "lxc": {
+            "name": "LXCs"
+          },
+          "storage": {
+            "name": "Storage"
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
+          },
+          "detail": {
+            "cpu": "Cores",
+            "memory": "Memory",
+            "storage": "Storage",
+            "uptime": "Uptime",
+            "haState": "HA State",
+            "storageType": {
+              "local": "Local storage",
+              "shared": "Shared storage"
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
+          }
+        }
       }
     },
     "common": {
@@ -2438,6 +2484,9 @@
             },
             "healthMonitoring": {
               "label": "Health Monitoring"
+            },
+            "clusterHealthMonitoring": {
+              "label": "Cluster Health Monitoring"
             },
             "dnsHole": {
               "label": "DNS Hole Data"
