@@ -141,6 +141,9 @@ const optionMapping: OptionMapping = {
       "fileSystem" in oldOptions
         ? oldOptions.fileSystem
         : oldOptions.graphsOrder.some((graph) => graph.key === "storage" && graph.subValues.enabled),
+    defaultTab: (oldOptions) => ("defaultTabState" in oldOptions ? oldOptions.defaultTabState : undefined),
+    sectionIndicatorRequirement: (oldOptions) =>
+      "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
   },
   mediaTranscoding: {
     defaultView: (oldOptions) => oldOptions.defaultView,
