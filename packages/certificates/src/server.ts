@@ -48,7 +48,9 @@ export const removeCustomRootCertificateAsync = async (fileName: string) => {
 export const addCustomRootCertificateAsync = async (fileName: string, content: string) => {
   const folder = getCertificateFolder();
   if (!folder) {
-    return;
+    throw new Error(
+      "When you want to use custom certificates locally you need to set LOCAL_CERTIFICATE_PATH to an absolute path",
+    );
   }
 
   if (fileName.includes("/")) {

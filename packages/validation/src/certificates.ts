@@ -24,7 +24,7 @@ export const superRefineCertificateFile = (value: File | null, context: z.Refine
     });
   }
 
-  if (value.type !== "application/x-x509-ca-cert") {
+  if (value.type !== "application/x-x509-ca-cert" && value.type !== "application/pkix-cert") {
     return context.addIssue({
       code: "custom",
       params: createCustomErrorParams({
