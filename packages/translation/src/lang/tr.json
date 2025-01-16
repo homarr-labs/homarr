@@ -51,13 +51,13 @@
           "title": "İçe Aktarma Token'ını Girin",
           "field": {
             "token": {
-              "label": "Erişim Anahtarı",
+              "label": "Token",
               "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Token'ını girin"
             }
           },
           "notification": {
             "error": {
-              "title": "Geçersiz Token",
+              "title": "Token",
               "message": "Girdiğiniz Token Geçersiz"
             }
           }
@@ -2154,10 +2154,10 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Mobil Panel Olarak Ata",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobil",
+              "tooltip": "Bu panel sizin mobil paneliniz olarak görüntülenecektir"
             }
           },
           "duplicate": {
@@ -2197,10 +2197,10 @@
             "item": {
               "language": "Dil & Bölge",
               "board": {
-                "title": "",
+                "title": "Ana Panel",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Genel",
+                  "mobile": "Mobil"
                 }
               },
               "defaultSearchEngine": "Öntanımlı arama motoru",
@@ -2281,7 +2281,7 @@
               "label": "Son geçerlilik tarihi"
             },
             "token": {
-              "label": "Erişim Anahtarı"
+              "label": "Token"
             }
           }
         }
@@ -2362,7 +2362,7 @@
             "title": "Paneller",
             "homeBoard": {
               "label": "Genel Ana Sayfa Paneli",
-              "mobileLabel": "",
+              "mobileLabel": "Genel Mobil Panel",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             }
           },
@@ -2458,7 +2458,7 @@
           "modal": {
             "createApiToken": {
               "title": "API token'ı oluşturuldu",
-              "description": "API token'ı oluşturuldu. Dikkatli olun, bu token veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu belirteci kaybederseniz, bu token'ı artık geri alamazsınız.",
+              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anaharı kaybederseniz, bir daha erişmeniz mümkün değildir.",
               "button": "Kopyala ve kapat"
             }
           },
@@ -2611,7 +2611,7 @@
           }
         },
         "modal": {
-          "title": "Homarr'a docker konteyner(-ler)i ekleyin"
+          "title": "Docker Konteynerleri Homarr'a Ekle"
         }
       }
     },
@@ -2753,7 +2753,7 @@
                   "label": "Öntanımlı panel olarak ata"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Mobil Panel Olarak Ata"
                 },
                 "settings": {
                   "label": "Ayarları aç"

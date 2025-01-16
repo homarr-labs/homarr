@@ -2154,10 +2154,10 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "设置为您的手机面板",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "手机",
+              "tooltip": "此面板将显示为您的手机面板"
             }
           },
           "duplicate": {
@@ -2197,10 +2197,10 @@
             "item": {
               "language": "语言与地区",
               "board": {
-                "title": "",
+                "title": "主面板",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "通用",
+                  "mobile": "手机"
                 }
               },
               "defaultSearchEngine": "默认搜索引擎",
@@ -2362,7 +2362,7 @@
             "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
-              "mobileLabel": "",
+              "mobileLabel": "全局手机面板",
               "description": "只有公共面板可供选择"
             }
           },
@@ -2753,7 +2753,7 @@
                   "label": "设置为主面板"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "设置为手机面板"
                 },
                 "settings": {
                   "label": "打开设置"
