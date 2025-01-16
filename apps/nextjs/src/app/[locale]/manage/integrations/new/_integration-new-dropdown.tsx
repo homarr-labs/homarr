@@ -30,6 +30,7 @@ export const IntegrationCreateDropdownContent = () => {
         placeholder={t("integration.page.list.search")}
         value={search}
         onChange={handleSearch}
+        variant="filled"
       />
 
       {filteredKinds.length > 0 ? (

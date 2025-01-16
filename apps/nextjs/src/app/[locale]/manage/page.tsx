@@ -83,7 +83,7 @@ export default async function ManagementPage() {
         {links.map(
           (link) =>
             !link.hidden && (
-              <Card component={Link} href={link.href} key={link.href} withBorder>
+              <Card component={Link} href={link.href} key={link.href} radius="lg">
                 <Group justify="space-between" wrap="nowrap">
                   <Group wrap="nowrap">
                     <Text size="2.4rem" fw="bolder">
