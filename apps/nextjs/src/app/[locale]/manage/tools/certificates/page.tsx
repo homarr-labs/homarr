@@ -1,8 +1,10 @@
 import { X509Certificate } from "node:crypto";
+import { notFound } from "next/navigation";
 import { Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { IconCertificate, IconCertificateOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import { auth } from "@homarr/auth/next";
 import { loadCustomRootCertificatesAsync } from "@homarr/certificates/server";
 import { getMantineColor } from "@homarr/common";
 import type { SupportedLanguage } from "@homarr/translation";
@@ -20,6 +22,11 @@ interface CertificatesPageProps {
 }
 
 export default async function CertificatesPage({ params }: CertificatesPageProps) {
+  const session = await auth();
+  if (!session?.user.permissions.includes("admin")) {
+    notFound();
+  }
+
   const { locale } = await params;
   const t = await getI18n();
   const certificates = await loadCustomRootCertificatesAsync();
