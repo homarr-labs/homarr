@@ -1076,9 +1076,6 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.7.7)
-      proxmox-api:
-        specifier: ^1.1.1
-        version: 1.1.1
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
@@ -1238,7 +1235,7 @@ importers:
         version: link:../ui
       '@mantine/notifications':
         specifier: ^7.16.0
-        version: 7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tabler/icons-react':
         specifier: ^3.28.1
         version: 3.28.1(react@19.0.0)
@@ -1539,7 +1536,7 @@ importers:
         version: 7.16.0(react@19.0.0)
       '@mantine/spotlight':
         specifier: ^7.16.0
-        version: 7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tabler/icons-react':
         specifier: ^3.28.1
         version: 3.28.1(react@19.0.0)
@@ -8043,9 +8040,6 @@ packages:
     resolution: {integrity: sha512-mRUWCc3KUU4w1jU8sGxICXH/gNS94DvI1gxqDvBzhj1JpcsimQkYiOJfwsPUykUI5ZaspFbSgmBLER8IrQ3tqw==}
     engines: {node: '>=12.0.0'}
 
-  proxmox-api@1.1.1:
-    resolution: {integrity: sha512-2qH7pxKBBHa7WtEBmxPaBY2FZEH2R04hqr9zD9PmErLzJ7RGGcfNcXoS/v5G4vBM2Igmnx0EAYBstPwwfDwHnA==}
-
   proxy-agent@6.4.0:
     resolution: {integrity: sha512-u0piLU+nCOHMgGjRbimiXmA9kM/L9EHh3zL81xCdp7m+Y2pHIsnmbdDoEDoAz5geaonNR6q6+yOPQs6n4T6sBQ==}
     engines: {node: '>= 14'}
@@ -9282,10 +9276,6 @@ packages:
   undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
-
-  undici@6.21.1:
-    resolution: {integrity: sha512-q/1rj5D0/zayJB2FraXdaWxbhWiNKDvu8naDT2dl1yTlvJp4BLtOcp2a5BvgGNQpYYJzau7tf1WgKv3b+7mqpQ==}
-    engines: {node: '>=18.17'}
 
   undici@7.2.3:
     resolution: {integrity: sha512-2oSLHaDalSt2/O/wHA9M+/ZPAOcU2yrSP/cdBYJ+YxZskiPYDSqHbysLSlD7gq3JMqOoJI5O31RVU3BxX/MnAA==}
@@ -10792,7 +10782,7 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@mantine/notifications@7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/notifications@7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@mantine/core': 7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.0(react@19.0.0)
@@ -10801,7 +10791,7 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
       react-transition-group: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
-  '@mantine/spotlight@7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/spotlight@7.16.0(@mantine/core@7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@mantine/core': 7.16.0(@mantine/hooks@7.16.0(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.0(react@19.0.0)
@@ -16399,10 +16389,6 @@ snapshots:
       '@types/node': 22.10.7
       long: 5.2.3
 
-  proxmox-api@1.1.1:
-    dependencies:
-      undici: 6.21.1
-
   proxy-agent@6.4.0:
     dependencies:
       agent-base: 7.1.1
@@ -17907,8 +17893,6 @@ snapshots:
   undici@5.28.4:
     dependencies:
       '@fastify/busboy': 2.1.1
-
-  undici@6.21.1: {}
 
   undici@7.2.3: {}
 
