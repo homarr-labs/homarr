@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/homarr-labs/homarr/compare/v1.0.0...v1.0.1) (2025-01-17)
+
+### Bug Fixes
+
+* add error from ldap bind operation to log statement ([#1980](https://github.com/homarr-labs/homarr/issues/1980)) ([927913c](https://github.com/homarr-labs/homarr/commit/927913cf4e0a6e4f3a6b7dbf9ae9034d0780b5fb))
+* add missing old-import proxmox integration kind mapping ([#1979](https://github.com/homarr-labs/homarr/issues/1979)) ([e023edf](https://github.com/homarr-labs/homarr/commit/e023edf9d62417b054eb565a7f794267539eb992))
+* **deps:** update dependency flag-icons to ^7.3.2 ([#1981](https://github.com/homarr-labs/homarr/issues/1981)) ([c55207b](https://github.com/homarr-labs/homarr/commit/c55207bd59f0c51869e8fdb36e083a8327ca46b1))
+* **deps:** update nextjs monorepo to ^15.1.5 ([#1978](https://github.com/homarr-labs/homarr/issues/1978)) ([e35811c](https://github.com/homarr-labs/homarr/commit/e35811c921aea8c96dca398841ece396d71d4979))
+
 ## 1.0.0 (2025-01-17)
 
 ### ⚠ BREAKING CHANGES
