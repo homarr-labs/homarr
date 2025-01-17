@@ -10,4 +10,4 @@ export type Database = typeof db;
 export type { HomarrDatabaseMysql } from "./driver";
 
 export { createId } from "@paralleldrive/cuid2";
-export { handleTransactionsAsync } from "./transactions";
+export { handleDiffrentDbDriverOperationsAsync as handleTransactionsAsync } from "./transactions";
