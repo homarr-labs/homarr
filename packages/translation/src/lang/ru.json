@@ -897,6 +897,7 @@
           "passwordRequirements": "Пароль не соответствует требованиям",
           "boardAlreadyExists": "Панель с таким именем уже существует",
           "invalidFileType": "Неверный тип файла, ожидается {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "Файл слишком большой, максимальный размер {maxSize}",
           "invalidConfiguration": "Неверная конфигурация",
           "groupNameTaken": "Имя группы уже занято"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Логи",
             "api": "API",
+            "certificates": "",
             "tasks": "Задачи"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "Логи"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

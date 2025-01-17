@@ -897,6 +897,7 @@
           "passwordRequirements": "Wachtwoord voldoet niet aan de eisen",
           "boardAlreadyExists": "Er bestaat al een bord met deze naam",
           "invalidFileType": "Ongeldig bestandstype, verwachtte {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "Bestand is te groot, maximale grootte is {maxSize}",
           "invalidConfiguration": "Ongeldige configuratie",
           "groupNameTaken": "Groepsnaam al in gebruik"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
+            "certificates": "",
             "tasks": "Taken"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "Logs"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

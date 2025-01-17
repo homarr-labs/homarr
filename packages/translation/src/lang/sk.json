@@ -897,6 +897,7 @@
           "passwordRequirements": "Heslo nespĺňa požiadavky",
           "boardAlreadyExists": "Doska s týmto názvom už existuje",
           "invalidFileType": "Neplatný typ súboru, očakáva sa {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "Súbor je príliš veľký, maximálna veľkosť je {maxSize}",
           "invalidConfiguration": "Neplatná konfigurácia",
           "groupNameTaken": "Názov skupiny je už obsadený"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Záznamy",
             "api": "API",
+            "certificates": "",
             "tasks": "Úlohy"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "Záznamy"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": "Poslať požiadavku"
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

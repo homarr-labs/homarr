@@ -897,6 +897,7 @@
           "passwordRequirements": "Twoje hasło nie spełnia wymagań.",
           "boardAlreadyExists": "Tablica o tej nazwie już istnieje",
           "invalidFileType": "Nieprawidłowy typ pliku, oczekiwany {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "Plik jest zbyt duży, maksymalny rozmiar to {maxSize}",
           "invalidConfiguration": "Nieprawidłowa konfiguracja",
           "groupNameTaken": "Nazwa użytkownika jest już zajęta"
@@ -2101,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

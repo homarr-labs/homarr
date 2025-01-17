@@ -897,6 +897,7 @@
           "passwordRequirements": "Heslo nesplňuje požadavky",
           "boardAlreadyExists": "Plocha s tímto názvem již existuje",
           "invalidFileType": "Neplatný typ souboru, očekáván {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "Soubor je příliš velký, maximální velikost je {maxSize}",
           "invalidConfiguration": "Neplatná konfigurace",
           "groupNameTaken": "Název skupiny je již používán"
@@ -2101,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

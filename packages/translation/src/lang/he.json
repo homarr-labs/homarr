@@ -897,6 +897,7 @@
           "passwordRequirements": "הסיסמה אינה עומדת בדרישות",
           "boardAlreadyExists": "לוח בשם זה כבר קיים",
           "invalidFileType": "סוג קובץ לא חוקי, צפוי {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "הקובץ גדול מדי, הגודל המרבי הוא {maxSize}",
           "invalidConfiguration": "תצורה לא חוקית",
           "groupNameTaken": "שם הקבוצה כבר תפוס"
@@ -2101,6 +2102,7 @@
             "docker": "דוקר",
             "logs": "קובצי לוג",
             "api": "ממשק API",
+            "certificates": "",
             "tasks": "משימות"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "קבצי לוג"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }
