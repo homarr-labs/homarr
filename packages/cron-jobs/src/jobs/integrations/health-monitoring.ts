@@ -5,23 +5,19 @@ import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/
 import { createCronJob } from "../../lib";
 
 export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SECONDS).withCallback(
-  // This is temporary until we combine them
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createRequestIntegrationJobHandler(systemInfoRequestHandler.handler as any, {
-    widgetKinds: ["healthMonitoring"],
-    getInput: {
-      healthMonitoring: () => ({}),
+  createRequestIntegrationJobHandler(
+    (integration, itemOptions: Record<string, never>) => {
+      const { kind } = integration;
+      if (kind !== "proxmox") {
+        return systemInfoRequestHandler.handler({ ...integration, kind }, itemOptions);
+      }
+      return clusterInfoRequestHandler.handler({ ...integration, kind }, itemOptions);
     },
-  }),
-);
-
-export const clusterHealthMonitoringJob = createCronJob("clusterHealthMonitoring", EVERY_5_SECONDS).withCallback(
-  // This is temporary until we combine them
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createRequestIntegrationJobHandler(clusterInfoRequestHandler.handler as any, {
-    widgetKinds: ["healthMonitoring"],
-    getInput: {
-      healthMonitoring: () => ({}),
+    {
+      widgetKinds: ["healthMonitoring"],
+      getInput: {
+        healthMonitoring: () => ({}),
+      },
     },
-  }),
+  ),
 );
