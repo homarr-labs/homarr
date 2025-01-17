@@ -29,7 +29,7 @@
   "dependencies": {
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "next": "15.1.4",
+    "next": "15.1.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "undici": "7.2.3",
