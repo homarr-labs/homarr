@@ -62,7 +62,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
-    "flag-icons": "^7.3.0",
+    "flag-icons": "^7.3.1",
     "glob": "^11.0.1",
     "jotai": "^2.11.0",
     "mantine-react-table": "2.0.0-beta.8",

@@ -1,5 +1,5 @@
 import { objectEntries } from "@homarr/common";
-import type { Database, InferInsertModel } from "@homarr/db";
+import type { Database, HomarrDatabaseMysql, InferInsertModel } from "@homarr/db";
 import * as schema from "@homarr/db/schema";
 
 type TableKey = {
@@ -25,6 +25,16 @@ export const createDbInsertCollection = <TTableKey extends TableKey>(tablesInIns
               .insert(schema[key])
               .values(values as never)
               .run();
+          }
+        }
+      });
+    },
+    insertAllAsync: async (db: HomarrDatabaseMysql) => {
+      await db.transaction(async (transaction) => {
+        for (const [key, values] of objectEntries(context)) {
+          if (values.length >= 1) {
+            // Below is actually the mysqlSchema when the driver is mysql
+            await transaction.insert(schema[key] as never).values(values as never);
           }
         }
       });
