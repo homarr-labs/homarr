@@ -6,3 +6,4 @@ export * from "./interfaces/media-requests/media-request";
 export * from "./pi-hole/pi-hole-types";
 export * from "./base/searchable-integration";
 export * from "./homeassistant/homeassistant-types";
+export * from "./proxmox/proxmox-types";

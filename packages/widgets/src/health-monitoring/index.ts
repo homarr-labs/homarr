@@ -20,6 +20,20 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
     fileSystem: factory.switch({
       defaultValue: true,
     }),
+    defaultTab: factory.select({
+      defaultValue: "system",
+      options: [
+        { value: "system", label: "System" },
+        { value: "cluster", label: "Cluster" },
+      ] as const,
+    }),
+    sectionIndicatorRequirement: factory.select({
+      defaultValue: "all",
+      options: [
+        { value: "all", label: "All active" },
+        { value: "any", label: "Any active" },
+      ] as const,
+    }),
   })),
   supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring"),
   errors: {

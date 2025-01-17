@@ -130,6 +130,16 @@ export const integrationRouter = createTRPCRouter({
         limit: input.limit,
       });
     }),
+  // This is used to get the integrations by their ids it's public because it's needed to get integrations data in the boards
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
+    return await ctx.db.query.integrations.findMany({
+      where: inArray(integrations.id, input),
+      columns: {
+        id: true,
+        kind: true,
+      },
+    });
+  }),
   byId: protectedProcedure.input(validation.integration.byId).query(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
     const integration = await ctx.db.query.integrations.findFirst({

@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  proxmox-api>undici: 7.2.3
+
 patchedDependencies:
   pretty-print-error:
     hash: 4arrfgbz7em6s4gqywse7esg4u
@@ -1113,6 +1116,9 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.7.7)
+      proxmox-api:
+        specifier: 1.1.1
+        version: 1.1.1
       undici:
         specifier: 7.2.3
         version: 7.2.3
@@ -8030,6 +8036,9 @@ packages:
 
   proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
+
+  proxmox-api@1.1.1:
+    resolution: {integrity: sha512-2qH7pxKBBHa7WtEBmxPaBY2FZEH2R04hqr9zD9PmErLzJ7RGGcfNcXoS/v5G4vBM2Igmnx0EAYBstPwwfDwHnA==}
 
   proxy-agent@6.4.0:
     resolution: {integrity: sha512-u0piLU+nCOHMgGjRbimiXmA9kM/L9EHh3zL81xCdp7m+Y2pHIsnmbdDoEDoAz5geaonNR6q6+yOPQs6n4T6sBQ==}
@@ -16317,6 +16326,10 @@ snapshots:
       prosemirror-transform: 1.10.2
 
   proto-list@1.2.4: {}
+
+  proxmox-api@1.1.1:
+    dependencies:
+      undici: 7.2.3
 
   proxy-agent@6.4.0:
     dependencies:
