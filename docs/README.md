@@ -35,13 +35,6 @@
   </a>
 </p>
 
-> [!WARNING]
-> This is a beta version of Homarr. You can download the old but stable version at https://github.com/ajnart/homarr/. Running this version is at your own risk.
-
-Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips. With Homarr, you can access and control everything in one location. Homarr seamlessly integrates with the apps you've added, providing you with valuable information and giving you complete control. Installation is a breeze, and Homarr supports a wide range of deployment methods.
-
-<br/>
-<br/>
 
 ![Features Section](./section-features.png)
 
