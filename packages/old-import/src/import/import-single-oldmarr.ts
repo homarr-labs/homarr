@@ -32,5 +32,5 @@ export const importSingleOldmarrConfigAsync = async (
   const boardInsertCollection = createBoardInsertCollection({ preparedApps, preparedBoards }, settings);
 
   // Due to a limitation with better-sqlite it's only possible to use it synchronously
-  boardInsertCollection.insertAll(db);
+  boardInsertCollection.insertAllAsync(db);
 };

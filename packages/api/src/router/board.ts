@@ -4,7 +4,7 @@ import superjson from "superjson";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, createId, eq, inArray, like, or } from "@homarr/db";
+import { and, createId, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   boardGroupPermissions,
@@ -204,21 +204,49 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
-      await ctx.db.transaction(async (transaction) => {
-        await transaction.insert(boards).values({
-          id: boardId,
-          name: input.name,
-          isPublic: input.isPublic,
-          columnCount: input.columnCount,
-          creatorId: ctx.session.user.id,
-        });
-        await transaction.insert(sections).values({
-          id: createId(),
-          kind: "empty",
-          xOffset: 0,
-          yOffset: 0,
-          boardId,
-        });
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.boards).values({
+              id: boardId,
+              name: input.name,
+              isPublic: input.isPublic,
+              columnCount: input.columnCount,
+              creatorId: ctx.session.user.id,
+            });
+            await transaction.insert(schema.sections).values({
+              id: createId(),
+              kind: "empty",
+              xOffset: 0,
+              yOffset: 0,
+              boardId,
+            });
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .insert(boards)
+              .values({
+                id: boardId,
+                name: input.name,
+                isPublic: input.isPublic,
+                columnCount: input.columnCount,
+                creatorId: ctx.session.user.id,
+              })
+              .run();
+            transaction
+              .insert(sections)
+              .values({
+                id: createId(),
+                kind: "empty",
+                xOffset: 0,
+                yOffset: 0,
+                boardId,
+              })
+              .run();
+          });
+        },
       });
     }),
   duplicateBoard: permissionRequiredProcedure
@@ -302,28 +330,54 @@ export const boardRouter = createTRPCRouter({
           })),
       );
 
-      ctx.db.transaction((transaction) => {
-        transaction
-          .insert(boards)
-          .values({
-            ...boardProps,
-            id: newBoardId,
-            name: input.name,
-            creatorId: ctx.session.user.id,
-          })
-          .run();
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            transaction.insert(schema.boards).values({
+              ...boardProps,
+              id: newBoardId,
+              name: input.name,
+              creatorId: ctx.session.user.id,
+            });
 
-        if (sectionsToInsert.length > 0) {
-          transaction.insert(sections).values(sectionsToInsert).run();
-        }
+            if (sectionsToInsert.length > 0) {
+              await transaction.insert(schema.sections).values(sectionsToInsert);
+            }
 
-        if (itemsToInsert.length > 0) {
-          transaction.insert(items).values(itemsToInsert).run();
-        }
+            if (itemsToInsert.length > 0) {
+              await transaction.insert(schema.items).values(itemsToInsert);
+            }
 
-        if (itemIntegrationsToInsert.length > 0) {
-          transaction.insert(integrationItems).values(itemIntegrationsToInsert).run();
-        }
+            if (itemIntegrationsToInsert.length > 0) {
+              await transaction.insert(schema.integrationItems).values(itemIntegrationsToInsert);
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .insert(boards)
+              .values({
+                ...boardProps,
+                id: newBoardId,
+                name: input.name,
+                creatorId: ctx.session.user.id,
+              })
+              .run();
+
+            if (sectionsToInsert.length > 0) {
+              transaction.insert(sections).values(sectionsToInsert).run();
+            }
+
+            if (itemsToInsert.length > 0) {
+              transaction.insert(items).values(itemsToInsert).run();
+            }
+
+            if (itemIntegrationsToInsert.length > 0) {
+              transaction.insert(integrationItems).values(itemIntegrationsToInsert).run();
+            }
+          });
+        },
       });
     }),
   renameBoard: protectedProcedure.input(validation.board.rename).mutation(async ({ ctx, input }) => {
@@ -434,148 +488,313 @@ export const boardRouter = createTRPCRouter({
   saveBoard: protectedProcedure.input(validation.board.save).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
-    await ctx.db.transaction(async (transaction) => {
-      const dbBoard = await getFullBoardWithWhereAsync(transaction, eq(boards.id, input.id), ctx.session.user.id);
+    const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
 
-      const addedSections = filterAddedItems(input.sections, dbBoard.sections);
+    await handleTransactionsAsync(ctx.db, {
+      async handleAsync(db, schema) {
+        await db.transaction(async (transaction) => {
+          const addedSections = filterAddedItems(input.sections, dbBoard.sections);
 
-      if (addedSections.length > 0) {
-        await transaction.insert(sections).values(
-          addedSections.map((section) => ({
-            id: section.id,
-            kind: section.kind,
-            yOffset: section.yOffset,
-            xOffset: section.kind === "dynamic" ? section.xOffset : 0,
-            height: "height" in section ? section.height : null,
-            width: "width" in section ? section.width : null,
-            parentSectionId: "parentSectionId" in section ? section.parentSectionId : null,
-            name: "name" in section ? section.name : null,
-            boardId: dbBoard.id,
-          })),
-        );
-      }
+          if (addedSections.length > 0) {
+            await transaction.insert(schema.sections).values(
+              addedSections.map((section) => ({
+                id: section.id,
+                kind: section.kind,
+                yOffset: section.yOffset,
+                xOffset: section.kind === "dynamic" ? section.xOffset : 0,
+                height: "height" in section ? section.height : null,
+                width: "width" in section ? section.width : null,
+                parentSectionId: "parentSectionId" in section ? section.parentSectionId : null,
+                name: "name" in section ? section.name : null,
+                boardId: dbBoard.id,
+              })),
+            );
+          }
 
-      const inputItems = input.sections.flatMap((section) =>
-        section.items.map((item) => ({ ...item, sectionId: section.id })),
-      );
-      const dbItems = dbBoard.sections.flatMap((section) =>
-        section.items.map((item) => ({ ...item, sectionId: section.id })),
-      );
-
-      const addedItems = filterAddedItems(inputItems, dbItems);
-
-      if (addedItems.length > 0) {
-        await transaction.insert(items).values(
-          addedItems.map((item) => ({
-            id: item.id,
-            kind: item.kind,
-            height: item.height,
-            width: item.width,
-            xOffset: item.xOffset,
-            yOffset: item.yOffset,
-            options: superjson.stringify(item.options),
-            advancedOptions: superjson.stringify(item.advancedOptions),
-            sectionId: item.sectionId,
-          })),
-        );
-      }
-
-      const inputIntegrationRelations = inputItems.flatMap(({ integrationIds, id: itemId }) =>
-        integrationIds.map((integrationId) => ({
-          integrationId,
-          itemId,
-        })),
-      );
-      const dbIntegrationRelations = dbItems.flatMap(({ integrationIds, id: itemId }) =>
-        integrationIds.map((integrationId) => ({
-          integrationId,
-          itemId,
-        })),
-      );
-      const addedIntegrationRelations = inputIntegrationRelations.filter(
-        (inputRelation) =>
-          !dbIntegrationRelations.some(
-            (dbRelation) =>
-              dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
-          ),
-      );
-
-      if (addedIntegrationRelations.length > 0) {
-        await transaction.insert(integrationItems).values(
-          addedIntegrationRelations.map((relation) => ({
-            itemId: relation.itemId,
-            integrationId: relation.integrationId,
-          })),
-        );
-      }
-
-      const updatedItems = filterUpdatedItems(inputItems, dbItems);
-
-      for (const item of updatedItems) {
-        await transaction
-          .update(items)
-          .set({
-            kind: item.kind,
-            height: item.height,
-            width: item.width,
-            xOffset: item.xOffset,
-            yOffset: item.yOffset,
-            options: superjson.stringify(item.options),
-            advancedOptions: superjson.stringify(item.advancedOptions),
-            sectionId: item.sectionId,
-          })
-          .where(eq(items.id, item.id));
-      }
-
-      const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
-
-      for (const section of updatedSections) {
-        const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
-        await transaction
-          .update(sections)
-          .set({
-            yOffset: section.yOffset,
-            xOffset: section.xOffset,
-            height: prev?.kind === "dynamic" && "height" in section ? section.height : null,
-            width: prev?.kind === "dynamic" && "width" in section ? section.width : null,
-            parentSectionId: prev?.kind === "dynamic" && "parentSectionId" in section ? section.parentSectionId : null,
-            name: prev?.kind === "category" && "name" in section ? section.name : null,
-          })
-          .where(eq(sections.id, section.id));
-      }
-
-      const removedIntegrationRelations = dbIntegrationRelations.filter(
-        (dbRelation) =>
-          !inputIntegrationRelations.some(
-            (inputRelation) =>
-              dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
-          ),
-      );
-
-      for (const relation of removedIntegrationRelations) {
-        await transaction
-          .delete(integrationItems)
-          .where(
-            and(
-              eq(integrationItems.itemId, relation.itemId),
-              eq(integrationItems.integrationId, relation.integrationId),
-            ),
+          const inputItems = input.sections.flatMap((section) =>
+            section.items.map((item) => ({ ...item, sectionId: section.id })),
           );
-      }
+          const dbItems = dbBoard.sections.flatMap((section) =>
+            section.items.map((item) => ({ ...item, sectionId: section.id })),
+          );
 
-      const removedItems = filterRemovedItems(inputItems, dbItems);
+          const addedItems = filterAddedItems(inputItems, dbItems);
 
-      const itemIds = removedItems.map((item) => item.id);
-      if (itemIds.length > 0) {
-        await transaction.delete(items).where(inArray(items.id, itemIds));
-      }
+          if (addedItems.length > 0) {
+            await transaction.insert(schema.items).values(
+              addedItems.map((item) => ({
+                id: item.id,
+                kind: item.kind,
+                height: item.height,
+                width: item.width,
+                xOffset: item.xOffset,
+                yOffset: item.yOffset,
+                options: superjson.stringify(item.options),
+                advancedOptions: superjson.stringify(item.advancedOptions),
+                sectionId: item.sectionId,
+              })),
+            );
+          }
 
-      const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
-      const sectionIds = removedSections.map((section) => section.id);
+          const inputIntegrationRelations = inputItems.flatMap(({ integrationIds, id: itemId }) =>
+            integrationIds.map((integrationId) => ({
+              integrationId,
+              itemId,
+            })),
+          );
+          const dbIntegrationRelations = dbItems.flatMap(({ integrationIds, id: itemId }) =>
+            integrationIds.map((integrationId) => ({
+              integrationId,
+              itemId,
+            })),
+          );
+          const addedIntegrationRelations = inputIntegrationRelations.filter(
+            (inputRelation) =>
+              !dbIntegrationRelations.some(
+                (dbRelation) =>
+                  dbRelation.itemId === inputRelation.itemId &&
+                  dbRelation.integrationId === inputRelation.integrationId,
+              ),
+          );
 
-      if (sectionIds.length > 0) {
-        await transaction.delete(sections).where(inArray(sections.id, sectionIds));
-      }
+          if (addedIntegrationRelations.length > 0) {
+            await transaction.insert(schema.integrationItems).values(
+              addedIntegrationRelations.map((relation) => ({
+                itemId: relation.itemId,
+                integrationId: relation.integrationId,
+              })),
+            );
+          }
+
+          const updatedItems = filterUpdatedItems(inputItems, dbItems);
+
+          for (const item of updatedItems) {
+            await transaction
+              .update(schema.items)
+              .set({
+                kind: item.kind,
+                height: item.height,
+                width: item.width,
+                xOffset: item.xOffset,
+                yOffset: item.yOffset,
+                options: superjson.stringify(item.options),
+                advancedOptions: superjson.stringify(item.advancedOptions),
+                sectionId: item.sectionId,
+              })
+              .where(eq(items.id, item.id));
+          }
+
+          const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
+
+          for (const section of updatedSections) {
+            const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
+            await transaction
+              .update(schema.sections)
+              .set({
+                yOffset: section.yOffset,
+                xOffset: section.xOffset,
+                height: prev?.kind === "dynamic" && "height" in section ? section.height : null,
+                width: prev?.kind === "dynamic" && "width" in section ? section.width : null,
+                parentSectionId:
+                  prev?.kind === "dynamic" && "parentSectionId" in section ? section.parentSectionId : null,
+                name: prev?.kind === "category" && "name" in section ? section.name : null,
+              })
+              .where(eq(sections.id, section.id));
+          }
+
+          const removedIntegrationRelations = dbIntegrationRelations.filter(
+            (dbRelation) =>
+              !inputIntegrationRelations.some(
+                (inputRelation) =>
+                  dbRelation.itemId === inputRelation.itemId &&
+                  dbRelation.integrationId === inputRelation.integrationId,
+              ),
+          );
+
+          for (const relation of removedIntegrationRelations) {
+            await transaction
+              .delete(schema.integrationItems)
+              .where(
+                and(
+                  eq(integrationItems.itemId, relation.itemId),
+                  eq(integrationItems.integrationId, relation.integrationId),
+                ),
+              );
+          }
+
+          const removedItems = filterRemovedItems(inputItems, dbItems);
+
+          const itemIds = removedItems.map((item) => item.id);
+          if (itemIds.length > 0) {
+            await transaction.delete(schema.items).where(inArray(items.id, itemIds));
+          }
+
+          const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
+          const sectionIds = removedSections.map((section) => section.id);
+
+          if (sectionIds.length > 0) {
+            await transaction.delete(schema.sections).where(inArray(sections.id, sectionIds));
+          }
+        });
+      },
+      handleSync(db) {
+        db.transaction((transaction) => {
+          const addedSections = filterAddedItems(input.sections, dbBoard.sections);
+
+          if (addedSections.length > 0) {
+            transaction
+              .insert(sections)
+              .values(
+                addedSections.map((section) => ({
+                  id: section.id,
+                  kind: section.kind,
+                  yOffset: section.yOffset,
+                  xOffset: section.kind === "dynamic" ? section.xOffset : 0,
+                  height: "height" in section ? section.height : null,
+                  width: "width" in section ? section.width : null,
+                  parentSectionId: "parentSectionId" in section ? section.parentSectionId : null,
+                  name: "name" in section ? section.name : null,
+                  boardId: dbBoard.id,
+                })),
+              )
+              .run();
+          }
+
+          const inputItems = input.sections.flatMap((section) =>
+            section.items.map((item) => ({ ...item, sectionId: section.id })),
+          );
+          const dbItems = dbBoard.sections.flatMap((section) =>
+            section.items.map((item) => ({ ...item, sectionId: section.id })),
+          );
+
+          const addedItems = filterAddedItems(inputItems, dbItems);
+
+          if (addedItems.length > 0) {
+            transaction
+              .insert(items)
+              .values(
+                addedItems.map((item) => ({
+                  id: item.id,
+                  kind: item.kind,
+                  height: item.height,
+                  width: item.width,
+                  xOffset: item.xOffset,
+                  yOffset: item.yOffset,
+                  options: superjson.stringify(item.options),
+                  advancedOptions: superjson.stringify(item.advancedOptions),
+                  sectionId: item.sectionId,
+                })),
+              )
+              .run();
+          }
+
+          const inputIntegrationRelations = inputItems.flatMap(({ integrationIds, id: itemId }) =>
+            integrationIds.map((integrationId) => ({
+              integrationId,
+              itemId,
+            })),
+          );
+          const dbIntegrationRelations = dbItems.flatMap(({ integrationIds, id: itemId }) =>
+            integrationIds.map((integrationId) => ({
+              integrationId,
+              itemId,
+            })),
+          );
+          const addedIntegrationRelations = inputIntegrationRelations.filter(
+            (inputRelation) =>
+              !dbIntegrationRelations.some(
+                (dbRelation) =>
+                  dbRelation.itemId === inputRelation.itemId &&
+                  dbRelation.integrationId === inputRelation.integrationId,
+              ),
+          );
+
+          if (addedIntegrationRelations.length > 0) {
+            transaction
+              .insert(integrationItems)
+              .values(
+                addedIntegrationRelations.map((relation) => ({
+                  itemId: relation.itemId,
+                  integrationId: relation.integrationId,
+                })),
+              )
+              .run();
+          }
+
+          const updatedItems = filterUpdatedItems(inputItems, dbItems);
+
+          for (const item of updatedItems) {
+            transaction
+              .update(items)
+              .set({
+                kind: item.kind,
+                height: item.height,
+                width: item.width,
+                xOffset: item.xOffset,
+                yOffset: item.yOffset,
+                options: superjson.stringify(item.options),
+                advancedOptions: superjson.stringify(item.advancedOptions),
+                sectionId: item.sectionId,
+              })
+              .where(eq(items.id, item.id))
+              .run();
+          }
+
+          const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
+
+          for (const section of updatedSections) {
+            const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
+            transaction
+              .update(sections)
+              .set({
+                yOffset: section.yOffset,
+                xOffset: section.xOffset,
+                height: prev?.kind === "dynamic" && "height" in section ? section.height : null,
+                width: prev?.kind === "dynamic" && "width" in section ? section.width : null,
+                parentSectionId:
+                  prev?.kind === "dynamic" && "parentSectionId" in section ? section.parentSectionId : null,
+                name: prev?.kind === "category" && "name" in section ? section.name : null,
+              })
+              .where(eq(sections.id, section.id))
+              .run();
+          }
+
+          const removedIntegrationRelations = dbIntegrationRelations.filter(
+            (dbRelation) =>
+              !inputIntegrationRelations.some(
+                (inputRelation) =>
+                  dbRelation.itemId === inputRelation.itemId &&
+                  dbRelation.integrationId === inputRelation.integrationId,
+              ),
+          );
+
+          for (const relation of removedIntegrationRelations) {
+            transaction
+              .delete(integrationItems)
+              .where(
+                and(
+                  eq(integrationItems.itemId, relation.itemId),
+                  eq(integrationItems.integrationId, relation.integrationId),
+                ),
+              )
+              .run();
+          }
+
+          const removedItems = filterRemovedItems(inputItems, dbItems);
+
+          const itemIds = removedItems.map((item) => item.id);
+          if (itemIds.length > 0) {
+            transaction.delete(items).where(inArray(items.id, itemIds)).run();
+          }
+
+          const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
+          const sectionIds = removedSections.map((section) => section.id);
+
+          if (sectionIds.length > 0) {
+            transaction.delete(sections).where(inArray(sections.id, sectionIds)).run();
+          }
+        });
+      },
     });
   }),
 
@@ -655,18 +874,42 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
-      await ctx.db.transaction(async (transaction) => {
-        await transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId));
-        if (input.permissions.length === 0) {
-          return;
-        }
-        await transaction.insert(boardUserPermissions).values(
-          input.permissions.map((permission) => ({
-            userId: permission.principalId,
-            permission: permission.permission,
-            boardId: input.entityId,
-          })),
-        );
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.boardUserPermissions)
+              .where(eq(boardUserPermissions.boardId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.boardUserPermissions).values(
+              input.permissions.map((permission) => ({
+                userId: permission.principalId,
+                permission: permission.permission,
+                boardId: input.entityId,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(boardUserPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  userId: permission.principalId,
+                  permission: permission.permission,
+                  boardId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
       });
     }),
   saveGroupBoardPermissions: protectedProcedure
@@ -674,18 +917,42 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
-      await ctx.db.transaction(async (transaction) => {
-        await transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId));
-        if (input.permissions.length === 0) {
-          return;
-        }
-        await transaction.insert(boardGroupPermissions).values(
-          input.permissions.map((permission) => ({
-            groupId: permission.principalId,
-            permission: permission.permission,
-            boardId: input.entityId,
-          })),
-        );
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.boardGroupPermissions)
+              .where(eq(boardGroupPermissions.boardId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.boardGroupPermissions).values(
+              input.permissions.map((permission) => ({
+                groupId: permission.principalId,
+                permission: permission.permission,
+                boardId: input.entityId,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(boardGroupPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  groupId: permission.principalId,
+                  permission: permission.permission,
+                  boardId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
       });
     }),
   importOldmarrConfig: permissionRequiredProcedure

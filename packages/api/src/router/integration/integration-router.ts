@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
-import { and, asc, createId, eq, inArray, like } from "@homarr/db";
+import { and, asc, createId, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import {
   groupMembers,
   groupPermissions,
@@ -360,20 +360,45 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
-      await ctx.db.transaction(async (transaction) => {
-        await transaction
-          .delete(integrationUserPermissions)
-          .where(eq(integrationUserPermissions.integrationId, input.entityId));
-        if (input.permissions.length === 0) {
-          return;
-        }
-        await transaction.insert(integrationUserPermissions).values(
-          input.permissions.map((permission) => ({
-            userId: permission.principalId,
-            permission: permission.permission,
-            integrationId: input.entityId,
-          })),
-        );
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await ctx.db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.integrationUserPermissions)
+              .where(eq(schema.integrationUserPermissions.integrationId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.integrationUserPermissions).values(
+              input.permissions.map((permission) => ({
+                userId: permission.principalId,
+                permission: permission.permission,
+                integrationId: input.entityId,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .delete(integrationUserPermissions)
+              .where(eq(integrationUserPermissions.integrationId, input.entityId))
+              .run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(integrationUserPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  userId: permission.principalId,
+                  permission: permission.permission,
+                  integrationId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
       });
     }),
   saveGroupIntegrationPermissions: protectedProcedure
@@ -381,20 +406,45 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
-      await ctx.db.transaction(async (transaction) => {
-        await transaction
-          .delete(integrationGroupPermissions)
-          .where(eq(integrationGroupPermissions.integrationId, input.entityId));
-        if (input.permissions.length === 0) {
-          return;
-        }
-        await transaction.insert(integrationGroupPermissions).values(
-          input.permissions.map((permission) => ({
-            groupId: permission.principalId,
-            permission: permission.permission,
-            integrationId: input.entityId,
-          })),
-        );
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.integrationGroupPermissions)
+              .where(eq(schema.integrationGroupPermissions.integrationId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.integrationGroupPermissions).values(
+              input.permissions.map((permission) => ({
+                groupId: permission.principalId,
+                permission: permission.permission,
+                integrationId: input.entityId,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .delete(integrationGroupPermissions)
+              .where(eq(integrationGroupPermissions.integrationId, input.entityId))
+              .run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(integrationGroupPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  groupId: permission.principalId,
+                  permission: permission.permission,
+                  integrationId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
       });
     }),
   searchInIntegration: protectedProcedure

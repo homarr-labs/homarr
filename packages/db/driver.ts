@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import type { Logger } from "drizzle-orm";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
+import type { MySql2Database } from "drizzle-orm/mysql2";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
 import mysql from "mysql2";
 
@@ -11,7 +12,8 @@ import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
 import * as sqliteSchema from "./schema/sqlite";
 
-type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
+export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
+export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
 
 const init = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
