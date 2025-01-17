@@ -54,11 +54,6 @@ export const healthMonitoringRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
       const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-
-      logger.info(
-        `Found resources in Proxmox cluster node=${data.nodes.length} lxc=${data.lxcs.length} qemu=${data.vms.length} storage=${data.storages.length}`,
-      );
-
       return data;
     }),
   subscribeClusterHealthStatus: publicProcedure
