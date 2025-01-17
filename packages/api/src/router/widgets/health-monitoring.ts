@@ -2,7 +2,6 @@ import { observable } from "@trpc/server/observable";
 
 import type { HealthMonitoring } from "@homarr/integrations";
 import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
-import { logger } from "@homarr/log";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
