@@ -1,10 +1,11 @@
 import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { createId, eq, schema } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import type { Database } from "@homarr/db";
+import { createId, eq } from "@homarr/db";
+import { invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import type { GroupPermissionKey } from "@homarr/definitions";
+import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
 import { userRouter } from "../user";
 
@@ -27,7 +28,7 @@ vi.mock("@homarr/auth", async () => {
 });
 
 // Mock the env module to return the credentials provider
-vi.mock("@homarr/auth/env.mjs", () => {
+vi.mock("@homarr/auth/env", () => {
   return {
     env: {
       AUTH_PROVIDERS: ["credentials"],
@@ -36,33 +37,12 @@ vi.mock("@homarr/auth/env.mjs", () => {
 });
 
 describe("initUser should initialize the first user", () => {
-  it("should throw an error if a user already exists", async () => {
-    const db = createDb();
-    const caller = userRouter.createCaller({
-      db,
-      session: null,
-    });
-
-    await db.insert(schema.users).values({
-      id: "test",
-      name: "test",
-      password: "test",
-    });
-
-    const actAsync = async () =>
-      await caller.initUser({
-        username: "test",
-        password: "123ABCdef+/-",
-        confirmPassword: "123ABCdef+/-",
-      });
-
-    await expect(actAsync()).rejects.toThrow("User already exists");
-  });
-
   it("should create a user if none exists", async () => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -83,8 +63,10 @@ describe("initUser should initialize the first user", () => {
 
   it("should not create a user if the password and confirmPassword do not match", async () => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -106,8 +88,10 @@ describe("initUser should initialize the first user", () => {
     ["abc123+/-"], // does not contain uppercase
   ])("should throw error that password requirements do not match for '%s' as password", async (password) => {
     const db = createDb();
+    await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -128,6 +112,7 @@ describe("register should create a user with valid invitation", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -140,7 +125,7 @@ describe("register should create a user with valid invitation", () => {
     await db.insert(users).values({
       id: userId,
     });
-    await db.insert(schema.invites).values({
+    await db.insert(invites).values({
       id: inviteId,
       token: inviteToken,
       creatorId: userId,
@@ -183,6 +168,7 @@ describe("register should create a user with valid invitation", () => {
       const db = createDb();
       const caller = userRouter.createCaller({
         db,
+        deviceType: undefined,
         session: null,
       });
 
@@ -195,7 +181,7 @@ describe("register should create a user with valid invitation", () => {
       await db.insert(users).values({
         id: userId,
       });
-      await db.insert(schema.invites).values({
+      await db.insert(invites).values({
         id: inviteId,
         token: inviteToken,
         creatorId: userId,
@@ -225,12 +211,13 @@ describe("editProfile shoud update user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
     const emailVerified = new Date(2024, 0, 5);
 
-    await db.insert(schema.users).values({
+    await db.insert(users).values({
       id: defaultOwnerId,
       name: "TEST 1",
       email: "abc@gmail.com",
@@ -245,7 +232,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
+    const user = await db.select().from(users).where(eq(users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
     expect(user[0]).containSubset({
@@ -261,10 +248,11 @@ describe("editProfile shoud update user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
-    await db.insert(schema.users).values({
+    await db.insert(users).values({
       id: defaultOwnerId,
       name: "TEST 1",
       email: "abc@gmail.com",
@@ -279,7 +267,7 @@ describe("editProfile shoud update user", () => {
     });
 
     // assert
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, defaultOwnerId));
+    const user = await db.select().from(users).where(eq(users.id, defaultOwnerId));
 
     expect(user).toHaveLength(1);
     expect(user[0]).containSubset({
@@ -296,6 +284,7 @@ describe("delete should delete user", () => {
     const db = createDb();
     const caller = userRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -314,13 +303,20 @@ describe("delete should delete user", () => {
       },
     ];
 
-    await db.insert(schema.users).values(initialUsers);
+    await db.insert(users).values(initialUsers);
 
     await caller.delete({ userId: defaultOwnerId });
 
-    const usersInDb = await db.select().from(schema.users);
+    const usersInDb = await db.select().from(users);
     expect(usersInDb).toHaveLength(2);
     expect(usersInDb[0]).containSubset(initialUsers[0]);
     expect(usersInDb[1]).containSubset(initialUsers[2]);
   });
 });
+
+const createOnboardingStepAsync = async (db: Database, step: OnboardingStep) => {
+  await db.insert(onboarding).values({
+    id: createId(),
+    step,
+  });
+};

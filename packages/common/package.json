@@ -8,7 +8,9 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./env": "./env.ts",
+    "./env-validation": "./src/env-validation.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,15 +29,17 @@
   "dependencies": {
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "next": "^14.2.20",
-    "react": "^19.0.0",
-    "tldts": "^6.1.67"
+    "next": "15.1.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "undici": "7.2.3",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.16.0",
-    "typescript": "^5.7.2"
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3"
   }
 }

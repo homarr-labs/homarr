@@ -3,7 +3,7 @@ import type { AdapterUser } from "@auth/core/adapters";
 import type { JWT } from "next-auth/jwt";
 import { describe, expect, test, vi } from "vitest";
 
-import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import * as definitions from "@homarr/definitions";
 

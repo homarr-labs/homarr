@@ -29,6 +29,7 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
+    "octokit": "^4.1.0",
     "pretty-print-error": "^1.1.2",
     "superjson": "2.2.2"
   },
@@ -36,7 +37,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.16.0",
-    "typescript": "^5.7.2"
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3"
   }
 }

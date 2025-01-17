@@ -1,4 +1,109 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": ""
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "Aplicații",
+            "boards": "Planșe",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Setări",
+        "subtitle": ""
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": ""
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "Utilizatori",
     "name": "Utilizator",
@@ -105,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -197,7 +312,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplicații",
         "item": {
           "create": {
             "label": "",
@@ -384,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Aplicații",
@@ -507,6 +623,10 @@
       },
       "url": {
         "label": ""
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -588,6 +708,10 @@
     "secrets": {
       "title": "",
       "lastUpdated": "",
+      "notSet": {
+        "label": "",
+        "tooltip": ""
+      },
       "secureNotice": "",
       "reset": {
         "title": "",
@@ -678,6 +802,7 @@
       "previous": "Anteriorul",
       "next": "Următorul",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Încearcă din nou",
       "loading": ""
     },
@@ -685,6 +810,12 @@
     "iconPicker": {
       "label": "",
       "header": ""
+    },
+    "colorScheme": {
+      "options": {
+        "light": "",
+        "dark": ""
+      }
     },
     "information": {
       "min": "",
@@ -733,7 +864,8 @@
         "logout": "",
         "login": "Utilizator",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Zonă periculoasă",
@@ -765,8 +897,10 @@
           "passwordRequirements": "",
           "boardAlreadyExists": "",
           "invalidFileType": "",
+          "invalidFileName": "",
           "fileTooLarge": "",
-          "invalidConfiguration": ""
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -833,6 +967,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -908,10 +1043,10 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Aspect",
           "option": {
             "row": {
-              "label": ""
+              "label": "Orizontal"
             },
             "column": {
               "label": ""
@@ -958,7 +1093,8 @@
         "adsBlockedTodayPercentage": "Blocate astăzi",
         "dnsQueriesToday": "Interogări astăzi",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1031,6 +1167,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1128,6 +1283,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Browser-ul tău nu acceptă iFrames. Te rugăm să actualizezi browser-ul."
       }
     },
@@ -1308,9 +1464,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -1342,7 +1495,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1528,6 +1686,65 @@
         }
       }
     },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": "Afișare implicită"
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "Lucrători",
+        "queue": "Listă de așteptare",
+        "statistics": "Statistici"
+      },
+      "currentIndex": "",
+      "healthCheck": {
+        "title": "",
+        "queued": "Pus în așteptare",
+        "status": {
+          "healthy": "Sănătos",
+          "unhealthy": "Nesănătos"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "Gol",
+          "transcodes": "Transcrieri",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
+          "videoCodecs": "Codec-uri",
+          "videoContainers": "Containere",
+          "videoResolutions": "Rezoluţie"
+        },
+        "workers": {
+          "empty": "Gol",
+          "table": {
+            "file": "Fișier",
+            "eta": "Timp rămas estimat",
+            "progress": "Progres",
+            "transcode": "Transcriere",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "Gol",
+          "table": {
+            "file": "Fișier",
+            "size": "Mărime",
+            "transcode": "Transcriere",
+            "healthCheck": ""
+          }
+        }
+      }
+    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -1558,6 +1775,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1607,6 +1838,7 @@
           },
           "screenSize": {
             "label": "",
+            "description": "",
             "option": {
               "sm": "Mic",
               "md": "Mediu",
@@ -1803,6 +2035,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        }
+      }
     }
   },
   "management": {
@@ -1838,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -1890,6 +2155,16 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Șterge definitiv",
             "confirm": {
@@ -1923,7 +2198,14 @@
             "title": "",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Prima zi a săptămâni",
               "accessibility": "Accesibilitate"
             }
@@ -2011,7 +2293,7 @@
         "setting": {
           "general": {
             "title": "",
-            "owner": "",
+            "owner": "Proprietar",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2079,14 +2361,22 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Planșe",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Aspect",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2112,6 +2402,9 @@
             "error": "Eroare"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2152,6 +2445,12 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": ""
+            },
+            "mediaTranscoding": {
               "label": ""
             }
           }
@@ -2300,7 +2599,26 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
@@ -2390,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -2434,6 +2755,9 @@
                   "label": ""
                 },
                 "homeBoard": {
+                  "label": ""
+                },
+                "mobileBoard": {
                   "label": ""
                 },
                 "settings": {
@@ -2501,6 +2825,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
@@ -2567,6 +2896,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2739,6 +3086,63 @@
               "title": "",
               "message": ""
             }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

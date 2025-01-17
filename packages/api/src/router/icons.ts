@@ -1,5 +1,5 @@
-import { count, like } from "@homarr/db";
-import { icons } from "@homarr/db/schema/sqlite";
+import { and, count, like } from "@homarr/db";
+import { icons } from "@homarr/db/schema";
 import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
@@ -15,7 +15,11 @@ export const iconsRouter = createTRPCRouter({
               name: true,
               url: true,
             },
-            where: (input.searchText?.length ?? 0) > 0 ? like(icons.name, `%${input.searchText}%`) : undefined,
+            where:
+              (input.searchText?.length ?? 0) > 0
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  and(...input.searchText!.split(" ").map((keyword) => like(icons.name, `%${keyword}%`)))
+                : undefined,
             limit: input.limitPerGroup,
           },
         },

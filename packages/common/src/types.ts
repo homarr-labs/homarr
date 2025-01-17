@@ -1,3 +1,5 @@
+import type { z } from "zod";
+
 export type MaybePromise<T> = T | Promise<T>;
 
 export type AtLeastOneOf<T> = [T, ...T[]];
@@ -11,3 +13,16 @@ export type RemoveReadonly<T> = {
 };
 
 export type MaybeArray<T> = T | T[];
+export type Inverse<T extends Invertible> = {
+  [Key in keyof T as T[Key]]: Key;
+};
+
+type Invertible = Record<PropertyKey, PropertyKey>;
+
+export type inferSearchParamsFromSchema<TSchema extends z.AnyZodObject> = inferSearchParamsFromSchemaInner<
+  z.infer<TSchema>
+>;
+
+type inferSearchParamsFromSchemaInner<TSchema extends Record<string, unknown>> = Partial<{
+  [K in keyof TSchema]: Exclude<TSchema[K], undefined> extends unknown[] ? string[] : string;
+}>;

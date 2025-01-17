@@ -5,7 +5,7 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database } from "..";
 import { eq } from "..";
-import { serverSettings } from "../schema/sqlite";
+import { serverSettings } from "../schema";
 
 export const getServerSettingsAsync = async (db: Database) => {
   const settings = await db.query.serverSettings.findMany();

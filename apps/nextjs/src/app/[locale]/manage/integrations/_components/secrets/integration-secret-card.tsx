@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ActionIcon, Avatar, Button, Card, Collapse, Group, Kbd, Stack, Text } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Button, Card, Collapse, Group, Kbd, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import type { RouterOutputs } from "@homarr/api";
+import type { IntegrationSecretKind } from "@homarr/definitions";
 import { integrationSecretKindObject } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
@@ -16,7 +17,9 @@ import { integrationSecretIcons } from "./integration-secret-icons";
 dayjs.extend(relativeTime);
 
 interface SecretCardProps {
-  secret: RouterOutputs["integration"]["byId"]["secrets"][number];
+  secret:
+    | RouterOutputs["integration"]["byId"]["secrets"][number]
+    | { kind: IntegrationSecretKind; value: null; updatedAt: null };
   children: React.ReactNode;
   onCancel: () => Promise<boolean>;
 }
@@ -30,7 +33,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
   const KindIcon = integrationSecretIcons[secret.kind];
 
   return (
-    <Card>
+    <Card withBorder>
       <Stack>
         <Group justify="space-between">
           <Group>
@@ -41,11 +44,19 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
             {publicSecretDisplayOpened ? <Kbd>{secret.value}</Kbd> : null}
           </Group>
           <Group>
-            <Text c="gray.6" size="sm">
-              {t("integration.secrets.lastUpdated", {
-                date: dayjs().to(dayjs(secret.updatedAt)),
-              })}
-            </Text>
+            {secret.updatedAt ? (
+              <Text c="gray.6" size="sm">
+                {t("integration.secrets.lastUpdated", {
+                  date: dayjs().to(dayjs(secret.updatedAt)),
+                })}
+              </Text>
+            ) : (
+              <Tooltip label={t("integration.secrets.notSet.tooltip")} position="left">
+                <Badge color="orange" variant="light" size="sm">
+                  {t("integration.secrets.notSet.label")}
+                </Badge>
+              </Tooltip>
+            )}
             {isPublic ? (
               <ActionIcon color="gray" variant="subtle" onClick={togglePublicSecretDisplay}>
                 <DisplayIcon size={16} stroke={1.5} />

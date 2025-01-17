@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/db";
-import { serverSettings } from "@homarr/db/schema/sqlite";
+import { serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
@@ -15,7 +15,7 @@ vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 const defaultSession = {
   user: {
     id: createId(),
-    permissions: [],
+    permissions: ["admin"],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),
@@ -26,6 +26,7 @@ describe("getAll server settings", () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -44,6 +45,7 @@ describe("getAll server settings", () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -58,6 +60,7 @@ describe("saveSettings", () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 

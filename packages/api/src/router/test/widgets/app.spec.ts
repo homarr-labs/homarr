@@ -18,6 +18,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
     spy.mockImplementation(() => Promise.resolve({ error: "error" }));
@@ -37,6 +38,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
     spy.mockImplementation(() => Promise.resolve({ statusCode: 200 }));

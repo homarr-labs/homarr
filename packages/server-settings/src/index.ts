@@ -7,6 +7,7 @@ export const defaultServerSettingsKeys = [
   "board",
   "appearance",
   "culture",
+  "search",
 ] as const;
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
@@ -26,12 +27,16 @@ export const defaultServerSettings = {
   },
   board: {
     homeBoardId: null as string | null,
+    mobileHomeBoardId: null as string | null,
   },
   appearance: {
     defaultColorScheme: "light" as ColorScheme,
   },
   culture: {
     defaultLocale: "en" as SupportedLanguage,
+  },
+  search: {
+    defaultSearchEngineId: null as string | null,
   },
 } satisfies ServerSettingsRecord;
 

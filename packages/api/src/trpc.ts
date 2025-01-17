@@ -12,10 +12,13 @@ import type { OpenApiMeta } from "trpc-to-openapi";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";
+import { userAgent } from "@homarr/common/server";
 import { db } from "@homarr/db";
-import type { GroupPermissionKey } from "@homarr/definitions";
+import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { ZodError } from "@homarr/validation";
+
+import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 
 /**
  * 1. CONTEXT
@@ -37,6 +40,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
 
   return {
     session,
+    deviceType: userAgent(opts.headers).device.type,
     db,
   };
 };
@@ -134,6 +138,22 @@ export const permissionRequiredProcedure = {
           message: "Permission denied",
         });
       }
+      return next({ input, ctx });
+    });
+  },
+};
+
+export const onboardingProcedure = {
+  requiresStep: (step: OnboardingStep) => {
+    return publicProcedure.use(async ({ ctx, input, next }) => {
+      const currentStep = await getOnboardingOrFallbackAsync(ctx.db).then(({ current }) => current);
+      if (currentStep !== step) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Step denied",
+        });
+      }
+
       return next({ input, ctx });
     });
   },

@@ -1,20 +1,12 @@
 import crypto from "crypto";
 
-import { logger } from "@homarr/log";
+import { env } from "../env";
 
 const algorithm = "aes-256-cbc"; //Using AES encryption
-const fallbackKey = "0000000000000000000000000000000000000000000000000000000000000000";
-const encryptionKey = process.env.ENCRYPTION_KEY ?? fallbackKey; // Fallback to a default key for local development
-if (encryptionKey === fallbackKey) {
-  logger.warn("Using a fallback encryption key, stored secrets are not secure");
 
-  // We never want to use the fallback key in production
-  if (process.env.NODE_ENV === "production" && process.env.CI !== "true") {
-    throw new Error("Encryption key is not set");
-  }
-}
-
-const key = Buffer.from(encryptionKey, "hex");
+// We fallback to a key of 0s if the key was not provided because env validation was skipped
+// This should only be the case in CI
+const key = Buffer.from(env.SECRET_ENCRYPTION_KEY || "0".repeat(64), "hex");
 
 export function encryptSecret(text: string): `${string}.${string}` {
   const initializationVector = crypto.randomBytes(16);
@@ -25,6 +17,10 @@ export function encryptSecret(text: string): `${string}.${string}` {
 }
 
 export function decryptSecret(value: `${string}.${string}`) {
+  return decryptSecretWithKey(value, key);
+}
+
+export function decryptSecretWithKey(value: `${string}.${string}`, key: Buffer) {
   const [data, dataIv] = value.split(".") as [string, string];
   const initializationVector = Buffer.from(dataIv, "hex");
   const encryptedText = Buffer.from(data, "hex");

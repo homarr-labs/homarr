@@ -1,15 +1,38 @@
 import { TRPCError } from "@trpc/server";
 
 import { asc, createId, eq, inArray, like } from "@homarr/db";
-import { apps } from "@homarr/db/schema/sqlite";
+import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
+import { getIconForName } from "@homarr/icons";
 import { validation, z } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { canUserSeeAppAsync } from "./app/app-access-control";
 
+const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
+
 export const appRouter = createTRPCRouter({
+  getPaginated: protectedProcedure
+    .input(validation.common.paginated)
+    .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
+    .meta({ openapi: { method: "GET", path: "/api/apps/paginated", tags: ["apps"], protect: true } })
+    .query(async ({ input, ctx }) => {
+      const whereQuery = input.search ? like(apps.name, `%${input.search.trim()}%`) : undefined;
+      const totalCount = await ctx.db.$count(apps, whereQuery);
+
+      const dbApps = await ctx.db.query.apps.findMany({
+        limit: input.pageSize,
+        offset: (input.page - 1) * input.pageSize,
+        where: whereQuery,
+        orderBy: asc(apps.name),
+      });
+
+      return {
+        items: dbApps,
+        totalCount,
+      };
+    }),
   all: protectedProcedure
     .input(z.void())
     .output(z.array(selectAppSchema))
@@ -97,6 +120,21 @@ export const appRouter = createTRPCRouter({
         iconUrl: input.iconUrl,
         href: input.href,
       });
+    }),
+  createMany: permissionRequiredProcedure
+    .requiresPermission("app-create")
+    .input(validation.app.createMany)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.insert(apps).values(
+        input.map((app) => ({
+          id: createId(),
+          name: app.name,
+          description: app.description,
+          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
+          href: app.href,
+        })),
+      );
     }),
   update: permissionRequiredProcedure
     .requiresPermission("app-modify-all")

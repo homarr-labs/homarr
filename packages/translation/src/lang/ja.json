@@ -1,4 +1,109 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "Homarrへようこそ",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "ゼロからスタート",
+          "importOldmarr": ""
+        }
+      },
+      "import": {
+        "title": "データのインポート",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "アプリ",
+            "boards": "ボード",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "トークン",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "設定",
+        "subtitle": ""
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": ""
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "ユーザー",
     "name": "ユーザー",
@@ -105,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -197,7 +312,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "アプリ",
         "item": {
           "create": {
             "label": "",
@@ -384,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "アプリ",
@@ -507,6 +623,10 @@
       },
       "url": {
         "label": ""
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -588,6 +708,10 @@
     "secrets": {
       "title": "",
       "lastUpdated": "",
+      "notSet": {
+        "label": "",
+        "tooltip": ""
+      },
       "secureNotice": "",
       "reset": {
         "title": "",
@@ -661,7 +785,7 @@
     "error": "エラー",
     "action": {
       "add": "追加",
-      "apply": "適用する",
+      "apply": "適用",
       "backToOverview": "",
       "create": "作成",
       "edit": "編集",
@@ -676,8 +800,9 @@
       "confirm": "確認",
       "continue": "",
       "previous": "前へ",
-      "next": "次のページ",
+      "next": "次へ",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "リトライ",
       "loading": ""
     },
@@ -685,6 +810,12 @@
     "iconPicker": {
       "label": "",
       "header": ""
+    },
+    "colorScheme": {
+      "options": {
+        "light": "",
+        "dark": ""
+      }
     },
     "information": {
       "min": "",
@@ -733,7 +864,8 @@
         "logout": "",
         "login": "ログイン",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "危険な操作",
@@ -765,8 +897,10 @@
           "passwordRequirements": "",
           "boardAlreadyExists": "",
           "invalidFileType": "",
+          "invalidFileName": "",
           "fileTooLarge": "",
-          "invalidConfiguration": ""
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -833,6 +967,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -908,13 +1043,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "レイアウト",
           "option": {
             "row": {
-              "label": ""
+              "label": "水平"
             },
             "column": {
-              "label": ""
+              "label": "垂直"
             },
             "grid": {
               "label": ""
@@ -958,7 +1093,8 @@
         "adsBlockedTodayPercentage": "今日のブロック",
         "dnsQueriesToday": "今日のクエリ",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1031,6 +1167,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1128,6 +1283,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "お使いのブラウザは iframe をサポートしていません。ブラウザを更新してください。"
       }
     },
@@ -1308,9 +1464,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -1342,7 +1495,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1528,6 +1686,65 @@
         }
       }
     },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": "デフォルト表示"
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "ワーカー",
+        "queue": "キュー",
+        "statistics": "統計"
+      },
+      "currentIndex": "",
+      "healthCheck": {
+        "title": "",
+        "queued": "処理待ち",
+        "status": {
+          "healthy": "正常",
+          "unhealthy": "異常"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "空",
+          "transcodes": "トランスコード",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
+          "videoCodecs": "コーデック",
+          "videoContainers": "コンテナ",
+          "videoResolutions": "解像度"
+        },
+        "workers": {
+          "empty": "空",
+          "table": {
+            "file": "ファイル",
+            "eta": "",
+            "progress": "進捗状況",
+            "transcode": "トランスコード",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "空",
+          "table": {
+            "file": "ファイル",
+            "size": "サイズ",
+            "transcode": "トランスコード",
+            "healthCheck": ""
+          }
+        }
+      }
+    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -1558,6 +1775,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1607,6 +1838,7 @@
           },
           "screenSize": {
             "label": "",
+            "description": "",
             "option": {
               "sm": "小",
               "md": "中",
@@ -1803,6 +2035,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        }
+      }
     }
   },
   "management": {
@@ -1838,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -1890,6 +2155,16 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "永久削除",
             "confirm": {
@@ -1923,7 +2198,14 @@
             "title": "一般",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "週の初日",
               "accessibility": "アクセシビリティ"
             }
@@ -2011,7 +2293,7 @@
         "setting": {
           "general": {
             "title": "一般",
-            "owner": "",
+            "owner": "所有者",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2079,14 +2361,22 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "ボード",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "外観",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2112,6 +2402,9 @@
             "error": "エラー"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2152,6 +2445,12 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": ""
+            },
+            "mediaTranscoding": {
               "label": ""
             }
           }
@@ -2300,7 +2599,26 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
@@ -2390,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -2434,6 +2755,9 @@
                   "label": ""
                 },
                 "homeBoard": {
+                  "label": ""
+                },
+                "mobileBoard": {
                   "label": ""
                 },
                 "settings": {
@@ -2501,6 +2825,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
@@ -2567,6 +2896,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2739,6 +3086,63 @@
               "title": "",
               "message": ""
             }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

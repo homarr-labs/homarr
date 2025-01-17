@@ -10,10 +10,12 @@ import {
   AvatarGroup,
   Button,
   Center,
+  Chip,
   Divider,
   Group,
   Modal,
   Paper,
+  Popover,
   Progress,
   Space,
   Stack,
@@ -26,6 +28,7 @@ import type { IconProps } from "@tabler/icons-react";
 import {
   IconAlertTriangle,
   IconCirclesRelation,
+  IconFilter,
   IconInfinity,
   IconInfoCircle,
   IconPlayerPause,
@@ -45,7 +48,11 @@ import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/i
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationSelectedError } from "../errors";
+
+interface QuickFilter {
+  integrationKinds: string[];
+  statuses: ExtendedDownloadClientItem["state"][];
+}
 
 //Ratio table for relative width between columns
 const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
@@ -109,6 +116,18 @@ export default function DownloadClientsWidget({
   const [clickedIndex, setClickedIndex] = useState<number>(0);
   const [opened, { open, close }] = useDisclosure(false);
 
+  //User quick settings for filters
+  const [quickFilters, setQuickFilters] = useState<QuickFilter>({ integrationKinds: [], statuses: [] });
+  const availableStatuses = useMemo<QuickFilter["statuses"]>(() => {
+    //Redefine list of available statuses from current items
+    const statuses = Array.from(new Set(currentItems.flatMap(({ data }) => data.items.map(({ state }) => state))));
+    //Reset user filters accordingly to remove unavailable statuses
+    setQuickFilters(({ integrationKinds: names, statuses: prevStatuses }) => {
+      return { integrationKinds: names, statuses: prevStatuses.filter((status) => statuses.includes(status)) };
+    });
+    return statuses;
+  }, [currentItems]);
+
   //Get API mutation functions
   const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation();
   const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation();
@@ -165,6 +184,13 @@ export default function DownloadClientsWidget({
                     progress !== 1)) ||
                 (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)),
             )
+            //Filter following user quick setting
+            .filter(
+              ({ state }) =>
+                (quickFilters.integrationKinds.length === 0 ||
+                  quickFilters.integrationKinds.includes(pair.integration.name)) &&
+                (quickFilters.statuses.length === 0 || quickFilters.statuses.includes(state)),
+            )
             //Add extrapolated data and actions if user is allowed interaction
             .map((item): ExtendedDownloadClientItem => {
               const received = Math.floor(item.size * item.progress);
@@ -200,6 +226,7 @@ export default function DownloadClientsWidget({
       options.filterIsWhitelist,
       options.showCompletedTorrent,
       options.showCompletedUsenet,
+      quickFilters,
     ],
   );
 
@@ -636,10 +663,6 @@ export default function DownloadClientsWidget({
       { up: 0, down: 0 },
     );
 
-  if (integrationIds.length === 0) {
-    throw new NoIntegrationSelectedError();
-  }
-
   if (options.columns.length === 0)
     return (
       <Center h="100%">
@@ -665,7 +688,13 @@ export default function DownloadClientsWidget({
             <Text>{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
         )}
-        <ClientsControl clients={clients} style={editStyle} />
+        <ClientsControl
+          clients={clients}
+          style={editStyle}
+          filters={quickFilters}
+          setFilters={setQuickFilters}
+          availableStatuses={availableStatuses}
+        />
       </Group>
       <ItemInfoModal items={data} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
@@ -753,10 +782,13 @@ const NormalizedLine = ({
 
 interface ClientsControlProps {
   clients: ExtendedClientStatus[];
+  filters: QuickFilter;
+  setFilters: (filters: QuickFilter) => void;
+  availableStatuses: QuickFilter["statuses"];
   style?: MantineStyleProp;
 }
 
-const ClientsControl = ({ clients, style }: ClientsControlProps) => {
+const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style }: ClientsControlProps) => {
   const integrationsStatuses = clients.reduce(
     (acc, { status, integration: { id }, interact }) =>
       status && interact ? (acc[status.paused ? "paused" : "active"].push(id), acc) : acc,
@@ -767,13 +799,61 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
     clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0),
     "/s",
   );
+  const chipStyle = {
+    "--chip-fz": "var(--button-fz)",
+    "--chip-size": "calc(var(--ratio-width) * 0.9)",
+    "--chip-icon-size": "calc(var(--chip-fz)*2/3)",
+    "--chip-padding": "var(--chip-fz)",
+    "--chip-checked-padding": "var(--chip-icon-size)",
+    "--chip-spacing": "var(--space-size)",
+  };
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
   const [opened, { open, close }] = useDisclosure(false);
   const t = useScopedI18n("widget.downloads");
   return (
     <Group gap="var(--space-size)" style={style}>
-      <AvatarGroup spacing="calc(var(--space-size)*2)">
+      <Popover withinPortal={false} offset={0}>
+        <Popover.Target>
+          <ActionIcon size="var(--button-size)" radius={999} variant="light">
+            <IconFilter style={actionIconIconStyle} />
+          </ActionIcon>
+        </Popover.Target>
+        <Popover.Dropdown
+          w="calc(var(--ratio-width)*4)"
+          p="var(--space-size)"
+          bg="var(--background-color)"
+          style={{ "--popover-border-color": "var(--border-color)" }}
+        >
+          <Stack gap="var(--space-size)" align="center" pb="var(--space-size)">
+            <Text fw="700">{t("items.integration.columnTitle")}</Text>
+            <Chip.Group
+              multiple
+              value={filters.integrationKinds}
+              onChange={(names) => setFilters({ ...filters, integrationKinds: names })}
+            >
+              {clients.map(({ integration }) => (
+                <Chip style={chipStyle} key={integration.id} value={integration.name}>
+                  {integration.name}
+                </Chip>
+              ))}
+            </Chip.Group>
+            <Text fw="700">{t("items.state.columnTitle")}</Text>
+            <Chip.Group
+              multiple
+              value={filters.statuses}
+              onChange={(statuses) => setFilters({ ...filters, statuses: statuses as typeof filters.statuses })}
+            >
+              {availableStatuses.map((status) => (
+                <Chip style={chipStyle} key={status} value={status}>
+                  {t(`states.${status}`)}
+                </Chip>
+              ))}
+            </Chip.Group>
+          </Stack>
+        </Popover.Dropdown>
+      </Popover>
+      <AvatarGroup mx="calc(var(--space-size)*2)" spacing="calc(var(--space-size)*2)">
         {clients.map((client) => (
           <ClientAvatar key={client.integration.id} client={client} />
         ))}
@@ -792,7 +872,7 @@ const ClientsControl = ({ clients, style }: ClientsControlProps) => {
         </Tooltip>
       )}
       <Button
-        variant="default"
+        variant="light"
         radius={999}
         h="var(--button-size)"
         px="calc(var(--space-size)*2)"
@@ -902,7 +982,8 @@ const ClientAvatar = ({ client }: ClientAvatarProps) => {
       src={getIconUrl(client.integration.kind)}
       style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
       size="var(--image-size)"
-      bd={client.status ? 0 : "calc(var(--space-size)*0.5) solid var(--mantine-color-red-filled)"}
+      p="calc(var(--space-size)*0.5)"
+      bd={`calc(var(--space-size)*0.5) solid ${client.status ? "transparent" : "var(--mantine-color-red-filled)"}`}
     />
   );
 };

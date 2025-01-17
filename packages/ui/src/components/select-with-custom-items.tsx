@@ -17,6 +17,7 @@ export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
   withAsterisk?: boolean;
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
+  w?: string;
 }
 
 type Props<TSelectItem extends BaseSelectItem> = SelectWithCustomItemsProps<TSelectItem> & {
@@ -30,6 +31,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   defaultValue,
   placeholder,
   SelectOption,
+  w,
   ...props
 }: Props<TSelectItem>) => {
   const combobox = useCombobox({
@@ -75,6 +77,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
           onClick={toggle}
           rightSectionPointerEvents="none"
           multiline
+          w={w}
         >
           {selectedOption ? <SelectOption {...selectedOption} /> : <Input.Placeholder>{placeholder}</Input.Placeholder>}
         </InputBase>

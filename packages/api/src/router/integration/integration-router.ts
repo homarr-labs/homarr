@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
-import { and, asc, createId, eq, inArray, like } from "@homarr/db";
+import { and, asc, createId, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import {
   groupMembers,
   groupPermissions,
@@ -11,18 +11,21 @@ import {
   integrations,
   integrationSecrets,
   integrationUserPermissions,
-} from "@homarr/db/schema/sqlite";
+  searchEngines,
+} from "@homarr/db/schema";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
+  getIconUrl,
+  getIntegrationKindsByCategory,
   getPermissionsWithParents,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
-  isIntegrationWithSearchSupport,
 } from "@homarr/definitions";
-import { integrationCreatorFromSecrets } from "@homarr/integrations";
+import { integrationCreator } from "@homarr/integrations";
 import { validation, z } from "@homarr/validation";
 
+import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { testConnectionAsync } from "./integration-test-connection";
@@ -90,7 +93,7 @@ export const integrationRouter = createTRPCRouter({
       where: inArray(
         integrations.kind,
         objectEntries(integrationDefs)
-          .filter(([_, integration]) => integration.supportsSearch)
+          .filter(([_, integration]) => [...integration.category].includes("search"))
           .map(([kind, _]) => kind),
       ),
     });
@@ -127,6 +130,16 @@ export const integrationRouter = createTRPCRouter({
         limit: input.limit,
       });
     }),
+  // This is used to get the integrations by their ids it's public because it's needed to get integrations data in the boards
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
+    return await ctx.db.query.integrations.findMany({
+      where: inArray(integrations.id, input),
+      columns: {
+        id: true,
+        kind: true,
+      },
+    });
+  }),
   byId: protectedProcedure.input(validation.integration.byId).query(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
     const integration = await ctx.db.query.integrations.findFirst({
@@ -190,6 +203,18 @@ export const integrationRouter = createTRPCRouter({
             integrationId,
           })),
         );
+      }
+
+      if (input.attemptSearchEngineCreation) {
+        const icon = getIconUrl(input.kind);
+        await ctx.db.insert(searchEngines).values({
+          id: createId(),
+          name: input.name,
+          integrationId,
+          type: "fromIntegration",
+          iconUrl: icon,
+          short: await getNextValidShortNameForSearchEngineAsync(ctx.db, input.name),
+        });
       }
     }),
   update: protectedProcedure.input(validation.integration.update).mutation(async ({ ctx, input }) => {
@@ -345,20 +370,45 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
-      await ctx.db.transaction(async (transaction) => {
-        await transaction
-          .delete(integrationUserPermissions)
-          .where(eq(integrationUserPermissions.integrationId, input.entityId));
-        if (input.permissions.length === 0) {
-          return;
-        }
-        await transaction.insert(integrationUserPermissions).values(
-          input.permissions.map((permission) => ({
-            userId: permission.principalId,
-            permission: permission.permission,
-            integrationId: input.entityId,
-          })),
-        );
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await ctx.db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.integrationUserPermissions)
+              .where(eq(schema.integrationUserPermissions.integrationId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.integrationUserPermissions).values(
+              input.permissions.map((permission) => ({
+                userId: permission.principalId,
+                permission: permission.permission,
+                integrationId: input.entityId,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .delete(integrationUserPermissions)
+              .where(eq(integrationUserPermissions.integrationId, input.entityId))
+              .run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(integrationUserPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  userId: permission.principalId,
+                  permission: permission.permission,
+                  integrationId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
       });
     }),
   saveGroupIntegrationPermissions: protectedProcedure
@@ -366,48 +416,53 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
-      await ctx.db.transaction(async (transaction) => {
-        await transaction
-          .delete(integrationGroupPermissions)
-          .where(eq(integrationGroupPermissions.integrationId, input.entityId));
-        if (input.permissions.length === 0) {
-          return;
-        }
-        await transaction.insert(integrationGroupPermissions).values(
-          input.permissions.map((permission) => ({
-            groupId: permission.principalId,
-            permission: permission.permission,
-            integrationId: input.entityId,
-          })),
-        );
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.integrationGroupPermissions)
+              .where(eq(schema.integrationGroupPermissions.integrationId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.integrationGroupPermissions).values(
+              input.permissions.map((permission) => ({
+                groupId: permission.principalId,
+                permission: permission.permission,
+                integrationId: input.entityId,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .delete(integrationGroupPermissions)
+              .where(eq(integrationGroupPermissions.integrationId, input.entityId))
+              .run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(integrationGroupPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  groupId: permission.principalId,
+                  permission: permission.permission,
+                  integrationId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
       });
     }),
   searchInIntegration: protectedProcedure
+    .unstable_concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
     .query(async ({ ctx, input }) => {
-      const integration = await ctx.db.query.integrations.findFirst({
-        where: eq(integrations.id, input.integrationId),
-        with: {
-          secrets: true,
-        },
-      });
-
-      if (!integration) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "The requested integration does not exist",
-        });
-      }
-
-      if (!isIntegrationWithSearchSupport(integration)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "The requested integration does not support searching",
-        });
-      }
-
-      const integrationInstance = integrationCreatorFromSecrets(integration);
-      return await integrationInstance.searchAsync(input.query);
+      const integrationInstance = integrationCreator(ctx.integration);
+      return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
 });
 
@@ -430,6 +485,36 @@ interface AddSecretInput {
   value: string;
   kind: IntegrationSecretKind;
 }
+
+const getNextValidShortNameForSearchEngineAsync = async (db: Database, integrationName: string) => {
+  const searchEngines = await db.query.searchEngines.findMany({
+    columns: {
+      short: true,
+    },
+  });
+
+  const usedShortNames = searchEngines.flatMap((searchEngine) => searchEngine.short.toLowerCase());
+  const nameByIntegrationName = integrationName.slice(0, 1).toLowerCase();
+
+  if (!usedShortNames.includes(nameByIntegrationName)) {
+    return nameByIntegrationName;
+  }
+
+  // 8 is max length constraint
+  for (let i = 2; i < 9999999; i++) {
+    const generatedName = `${nameByIntegrationName}${i}`;
+    if (usedShortNames.includes(generatedName)) {
+      continue;
+    }
+
+    return generatedName;
+  }
+
+  throw new Error(
+    "Unable to automatically generate a short name. All possible variations were exhausted. Please disable the automatic creation and choose one later yourself.",
+  );
+};
+
 const addSecretAsync = async (db: Database, input: AddSecretInput) => {
   await db.insert(integrationSecrets).values({
     kind: input.kind,

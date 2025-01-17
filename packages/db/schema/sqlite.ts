@@ -1,6 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { DayOfWeek } from "@mantine/dates";
-import type { InferSelectModel } from "drizzle-orm";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
@@ -16,6 +15,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  OnboardingStep,
   SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
@@ -43,6 +43,12 @@ export const users = sqliteTable("user", {
   salt: text(),
   provider: text().$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
+    onDelete: "set null",
+  }),
+  mobileHomeBoardId: text().references((): AnySQLiteColumn => boards.id, {
+    onDelete: "set null",
+  }),
+  defaultSearchEngineId: text().references(() => searchEngines.id, {
     onDelete: "set null",
   }),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
@@ -375,11 +381,17 @@ export const searchEngines = sqliteTable("search_engine", {
   id: text().notNull().primaryKey(),
   iconUrl: text().notNull(),
   name: text().notNull(),
-  short: text().notNull(),
+  short: text().unique().notNull(),
   description: text(),
   urlTemplate: text(),
   type: text().$type<SearchEngineType>().notNull().default("generic"),
   integrationId: text().references(() => integrations.id, { onDelete: "cascade" }),
+});
+
+export const onboarding = sqliteTable("onboarding", {
+  id: text().notNull().primaryKey(),
+  step: text().$type<OnboardingStep>().notNull(),
+  previousStep: text().$type<OnboardingStep>(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
@@ -389,7 +401,7 @@ export const accountRelations = relations(accounts, ({ one }) => ({
   }),
 }));
 
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ one, many }) => ({
   accounts: many(accounts),
   boards: many(boards),
   boardPermissions: many(boardUserPermissions),
@@ -397,6 +409,10 @@ export const userRelations = relations(users, ({ many }) => ({
   ownedGroups: many(groups),
   invites: many(invites),
   medias: many(medias),
+  defaultSearchEngine: one(searchEngines, {
+    fields: [users.defaultSearchEngineId],
+    references: [searchEngines.id],
+  }),
 }));
 
 export const mediaRelations = relations(medias, ({ one }) => ({
@@ -554,16 +570,10 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   }),
 }));
 
-export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
+export const searchEngineRelations = relations(searchEngines, ({ one, many }) => ({
   integration: one(integrations, {
     fields: [searchEngines.integrationId],
     references: [integrations.id],
   }),
+  usersWithDefault: many(users),
 }));
-
-export type User = InferSelectModel<typeof users>;
-export type Account = InferSelectModel<typeof accounts>;
-export type Session = InferSelectModel<typeof sessions>;
-export type VerificationToken = InferSelectModel<typeof verificationTokens>;
-export type Integration = InferSelectModel<typeof integrations>;
-export type IntegrationSecret = InferSelectModel<typeof integrationSecrets>;

@@ -1,9 +1,9 @@
 import { splitToNChunks, Stopwatch } from "@homarr/common";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
-import { db, inArray } from "@homarr/db";
+import { db, handleTransactionsAsync, inArray, sql } from "@homarr/db";
 import { createId } from "@homarr/db/client";
-import { iconRepositories, icons } from "@homarr/db/schema/sqlite";
+import { iconRepositories, icons } from "@homarr/db/schema";
 import { fetchIconsAsync } from "@homarr/icons";
 import { logger } from "@homarr/log";
 
@@ -22,13 +22,13 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     `Successfully fetched ${countIcons} icons from ${repositoryIconGroups.length} repositories within ${stopWatch.getElapsedInHumanWords()}`,
   );
 
-  const databaseIconGroups = await db.query.iconRepositories.findMany({
+  const databaseIconRepositories = await db.query.iconRepositories.findMany({
     with: {
       icons: true,
     },
   });
 
-  const skippedChecksums: string[] = [];
+  const skippedChecksums: `${string}.${string}`[] = [];
   let countDeleted = 0;
   let countInserted = 0;
 
@@ -43,18 +43,24 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
       continue;
     }
 
-    const repositoryInDb = databaseIconGroups.find((dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug);
-    const repositoryIconGroupId: string = repositoryInDb?.id ?? createId();
+    const repositoryInDb = databaseIconRepositories.find(
+      (dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug,
+    );
+    const iconRepositoryId: string = repositoryInDb?.id ?? createId();
     if (!repositoryInDb?.id) {
       newIconRepositories.push({
-        id: repositoryIconGroupId,
+        id: iconRepositoryId,
         slug: repositoryIconGroup.slug,
       });
     }
 
     for (const icon of repositoryIconGroup.icons) {
-      if (databaseIconGroups.flatMap((group) => group.icons).some((dbIcon) => dbIcon.checksum === icon.checksum)) {
-        skippedChecksums.push(icon.checksum);
+      if (
+        databaseIconRepositories
+          .flatMap((repository) => repository.icons)
+          .some((dbIcon) => dbIcon.checksum === icon.checksum && dbIcon.iconRepositoryId === iconRepositoryId)
+      ) {
+        skippedChecksums.push(`${iconRepositoryId}.${icon.checksum}`);
         continue;
       }
 
@@ -63,37 +69,95 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
         checksum: icon.checksum,
         name: icon.fileNameWithExtension,
         url: icon.imageUrl,
-        iconRepositoryId: repositoryIconGroupId,
+        iconRepositoryId,
       });
       countInserted++;
     }
   }
 
-  const deadIcons = databaseIconGroups
-    .flatMap((group) => group.icons)
-    .filter((icon) => !skippedChecksums.includes(icon.checksum));
+  const deadIcons = databaseIconRepositories
+    .flatMap((repository) => repository.icons)
+    .filter((icon) => !skippedChecksums.includes(`${icon.iconRepositoryId}.${icon.checksum}`));
 
-  await db.transaction(async (transaction) => {
-    if (newIconRepositories.length >= 1) {
-      await transaction.insert(iconRepositories).values(newIconRepositories);
-    }
+  const deadIconRepositories = databaseIconRepositories.filter(
+    (iconRepository) => !repositoryIconGroups.some((group) => group.slug === iconRepository.slug),
+  );
 
-    if (newIcons.length >= 1) {
-      // We only insert 5000 icons at a time to avoid SQLite limitations
-      for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
-        await transaction.insert(icons).values(chunck);
-      }
-    }
-    if (deadIcons.length >= 1) {
-      await transaction.delete(icons).where(
-        inArray(
-          icons.checksum,
-          deadIcons.map((icon) => icon.checksum),
-        ),
-      );
-    }
+  await handleTransactionsAsync(db, {
+    async handleAsync(db, schema) {
+      await db.transaction(async (transaction) => {
+        if (newIconRepositories.length >= 1) {
+          await transaction.insert(schema.iconRepositories).values(newIconRepositories);
+        }
 
-    countDeleted += deadIcons.length;
+        if (newIcons.length >= 1) {
+          // We only insert 5000 icons at a time to avoid SQLite limitations
+          for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
+            await transaction.insert(schema.icons).values(chunck);
+          }
+        }
+        if (deadIcons.length >= 1) {
+          await transaction.delete(schema.icons).where(
+            inArray(
+              // Combine iconRepositoryId and checksum to allow same icons on different repositories
+              sql`concat(${icons.iconRepositoryId}, '.', ${icons.checksum})`,
+              deadIcons.map((icon) => `${icon.iconRepositoryId}.${icon.checksum}`),
+            ),
+          );
+        }
+
+        if (deadIconRepositories.length >= 1) {
+          await transaction.delete(schema.iconRepositories).where(
+            inArray(
+              iconRepositories.id,
+              deadIconRepositories.map((iconRepository) => iconRepository.id),
+            ),
+          );
+        }
+
+        countDeleted += deadIcons.length;
+      });
+    },
+    handleSync() {
+      db.transaction((transaction) => {
+        if (newIconRepositories.length >= 1) {
+          transaction.insert(iconRepositories).values(newIconRepositories).run();
+        }
+
+        if (newIcons.length >= 1) {
+          // We only insert 5000 icons at a time to avoid SQLite limitations
+          for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
+            transaction.insert(icons).values(chunck).run();
+          }
+        }
+        if (deadIcons.length >= 1) {
+          transaction
+            .delete(icons)
+            .where(
+              inArray(
+                // Combine iconRepositoryId and checksum to allow same icons on different repositories
+                sql`concat(${icons.iconRepositoryId}, '.', ${icons.checksum})`,
+                deadIcons.map((icon) => `${icon.iconRepositoryId}.${icon.checksum}`),
+              ),
+            )
+            .run();
+        }
+
+        if (deadIconRepositories.length >= 1) {
+          transaction
+            .delete(iconRepositories)
+            .where(
+              inArray(
+                iconRepositories.id,
+                deadIconRepositories.map((iconRepository) => iconRepository.id),
+              ),
+            )
+            .run();
+        }
+
+        countDeleted += deadIcons.length;
+      });
+    },
   });
 
   logger.info(`Updated database within ${stopWatch.getElapsedInHumanWords()} (-${countDeleted}, +${countInserted})`);

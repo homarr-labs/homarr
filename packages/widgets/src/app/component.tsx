@@ -7,7 +7,6 @@ import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
-import { parseAppHrefWithVariablesClient } from "@homarr/common/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
@@ -31,26 +30,30 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
   );
   useRegisterSpotlightContextResults(
     `app-${app.id}`,
-    [
-      {
-        id: app.id,
-        name: app.name,
-        icon: app.iconUrl,
-        interaction() {
-          return {
-            type: "link",
-            href: parseAppHrefWithVariablesClient(app.href ?? ""),
-            newTab: options.openInNewTab,
-          };
-        },
-      },
-    ],
+    app.href
+      ? [
+          {
+            id: app.id,
+            name: app.name,
+            icon: app.iconUrl,
+            interaction() {
+              return {
+                type: "link",
+                // We checked above that app.href is defined
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                href: app.href!,
+                newTab: options.openInNewTab,
+              };
+            },
+          },
+        ]
+      : [],
     [app, options.openInNewTab],
   );
 
   return (
     <AppLink
-      href={parseAppHrefWithVariablesClient(app.href ?? "")}
+      href={app.href ?? undefined}
       openInNewTab={options.openInNewTab}
       enabled={Boolean(app.href) && !isEditMode}
     >
@@ -88,14 +91,21 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
 }
 
 interface AppLinkProps {
-  href: string;
+  href: string | undefined;
   openInNewTab: boolean;
   enabled: boolean;
 }
 
 const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
   enabled ? (
-    <UnstyledButton component="a" href={href} target={openInNewTab ? "_blank" : undefined} h="100%" w="100%">
+    <UnstyledButton
+      component="a"
+      href={href}
+      target={openInNewTab ? "_blank" : undefined}
+      rel="noreferrer"
+      h="100%"
+      w="100%"
+    >
       {children}
     </UnstyledButton>
   ) : (

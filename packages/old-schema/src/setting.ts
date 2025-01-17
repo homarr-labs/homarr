@@ -32,11 +32,17 @@ const accessSettingsSchema = z.object({
   allowGuests: z.boolean(),
 });
 
-const gridstackSettingsSchema = z.object({
-  columnCountSmall: z.number(),
-  columnCountMedium: z.number(),
-  columnCountLarge: z.number(),
-});
+const gridstackSettingsSchema = z
+  .object({
+    columnCountSmall: z.number(),
+    columnCountMedium: z.number(),
+    columnCountLarge: z.number(),
+  })
+  .catch({
+    columnCountSmall: 3,
+    columnCountMedium: 6,
+    columnCountLarge: 12,
+  });
 
 const layoutSettingsSchema = z.object({
   enabledLeftSidebar: z.boolean(),

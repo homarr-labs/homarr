@@ -9,11 +9,12 @@ import "~/styles/scroll-area.scss";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 
-import { env } from "@homarr/auth/env.mjs";
+import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SpotlightProvider } from "@homarr/spotlight";
+import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { getI18nMessages } from "@homarr/translation/server";
 
@@ -63,14 +64,17 @@ export const viewport: Viewport = {
   ],
 };
 
-export default async function Layout(props: { children: React.ReactNode; params: { locale: string } }) {
-  if (!isLocaleSupported(props.params.locale)) {
+export default async function Layout(props: {
+  children: React.ReactNode;
+  params: Promise<{ locale: SupportedLanguage }>;
+}) {
+  if (!isLocaleSupported((await props.params).locale)) {
     notFound();
   }
 
   const session = await auth();
   const colorScheme = await getCurrentColorSchemeAsync();
-  const direction = isLocaleRTL(props.params.locale) ? "rtl" : "ltr";
+  const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
   const i18nMessages = await getI18nMessages();
 
   const StackedProvider = composeWrappers([
@@ -89,7 +93,7 @@ export default async function Layout(props: { children: React.ReactNode; params:
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
     <html
-      lang={props.params.locale}
+      lang={(await props.params).locale}
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{

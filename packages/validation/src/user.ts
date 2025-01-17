@@ -106,7 +106,12 @@ const changePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSche
 const changePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
 
 const changeHomeBoardSchema = z.object({
-  homeBoardId: z.string().min(1),
+  homeBoardId: z.string().nullable(),
+  mobileHomeBoardId: z.string().nullable(),
+});
+
+const changeDefaultSearchEngineSchema = z.object({
+  defaultSearchEngineId: z.string().min(1),
 });
 
 const changeColorSchemeSchema = z.object({
@@ -131,7 +136,8 @@ export const userSchemas = {
   password: passwordSchema,
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,
-  changeHomeBoard: changeHomeBoardSchema,
+  changeHomeBoards: changeHomeBoardSchema,
+  changeDefaultSearchEngine: changeDefaultSearchEngineSchema,
   changePasswordApi: changePasswordApiSchema,
   changeColorScheme: changeColorSchemeSchema,
   firstDayOfWeek: firstDayOfWeekSchema,

@@ -1,10 +1,12 @@
 import type { FocusEventHandler } from "react";
 import { startTransition, useState } from "react";
 import {
+  ActionIcon,
   Box,
   Card,
   Combobox,
   Flex,
+  Group,
   Image,
   Indicator,
   InputBase,
@@ -16,9 +18,14 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
+import { IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import { UploadMedia } from "~/app/[locale]/manage/medias/_actions/upload-media";
+import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
   initialValue?: string;
@@ -32,6 +39,7 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const [value, setValue] = useState<string>(initialValue ?? "");
   const [search, setSearch] = useState(initialValue ?? "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue ?? null);
+  const { data: session } = useSession();
 
   const tCommon = useScopedI18n("common");
 
@@ -49,34 +57,43 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   const totalOptions = data?.icons.reduce((acc, group) => acc + group.icons.length, 0) ?? 0;
   const groups = data?.icons.map((group) => {
     const options = group.icons.map((item) => (
-      <UnstyledButton
-        onClick={() => {
-          const value = item.url;
-          startTransition(() => {
-            setValue(value);
-            setPreviewUrl(value);
-            setSearch(value);
-            onChange(value);
-            combobox.closeDropdown();
-          });
-        }}
+      <Combobox.Option
         key={item.id}
+        value={item.url}
+        p={0}
+        h="calc(2*var(--mantine-spacing-sm)+25px)"
+        w="calc(2*var(--mantine-spacing-sm)+25px)"
       >
-        <Indicator label="SVG" disabled={!item.url.endsWith(".svg")} size={16}>
-          <Card
-            p="sm"
-            pos="relative"
-            style={{
-              overflow: "visible",
-              cursor: "pointer",
-            }}
-          >
-            <Box w={25} h={25}>
-              <Image src={item.url} w={25} h={25} radius="md" />
-            </Box>
-          </Card>
-        </Indicator>
-      </UnstyledButton>
+        <UnstyledButton
+          onClick={() => {
+            const value = item.url;
+            startTransition(() => {
+              setValue(value);
+              setPreviewUrl(value);
+              setSearch(value);
+              onChange(value);
+              combobox.closeDropdown();
+            });
+          }}
+        >
+          <Indicator label="SVG" disabled={!item.url.endsWith(".svg")} size={16}>
+            <Card
+              p="sm"
+              pos="relative"
+              style={{
+                overflow: "visible",
+                cursor: "pointer",
+              }}
+              className={classes.iconCard}
+              withBorder
+            >
+              <Box w={25} h={25}>
+                <Image src={item.url} w={25} h={25} radius="md" />
+              </Box>
+            </Card>
+          </Indicator>
+        </UnstyledButton>
+      </Combobox.Option>
     ));
 
     return (
@@ -94,40 +111,61 @@ export const IconPicker = ({ initialValue, onChange, error, onFocus, onBlur }: I
   return (
     <Combobox store={combobox} withinPortal>
       <Combobox.Target>
-        <InputBase
-          rightSection={<Combobox.Chevron />}
-          leftSection={
-            previewUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} />
-            ) : null
-          }
-          value={search}
-          onChange={(event) => {
-            combobox.openDropdown();
-            combobox.updateSelectedOptionIndex();
-            setSearch(event.currentTarget.value);
-            setValue(event.currentTarget.value);
-            setPreviewUrl(null);
-            onChange(event.currentTarget.value);
-          }}
-          onClick={() => combobox.openDropdown()}
-          onFocus={(event) => {
-            onFocus?.(event);
-            combobox.openDropdown();
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            combobox.closeDropdown();
-            setPreviewUrl(value);
-            setSearch(value || "");
-          }}
-          rightSectionPointerEvents="none"
-          withAsterisk
-          error={error}
-          label={tCommon("iconPicker.label")}
-          placeholder={tCommon("iconPicker.header", { countIcons: data?.countIcons ?? 0 })}
-        />
+        <Group wrap="nowrap" gap="xs" w="100%" align="start">
+          <InputBase
+            flex={1}
+            rightSection={<Combobox.Chevron />}
+            leftSection={
+              previewUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} />
+              ) : null
+            }
+            value={search}
+            onChange={(event) => {
+              combobox.openDropdown();
+              combobox.updateSelectedOptionIndex();
+              setSearch(event.currentTarget.value);
+              setValue(event.currentTarget.value);
+              setPreviewUrl(null);
+              onChange(event.currentTarget.value);
+            }}
+            onClick={() => combobox.openDropdown()}
+            onFocus={(event) => {
+              onFocus?.(event);
+              combobox.openDropdown();
+            }}
+            onBlur={(event) => {
+              onBlur?.(event);
+              combobox.closeDropdown();
+              setPreviewUrl(value);
+              setSearch(value || "");
+            }}
+            rightSectionPointerEvents="none"
+            withAsterisk
+            error={error}
+            label={tCommon("iconPicker.label")}
+            placeholder={tCommon("iconPicker.header", { countIcons: data?.countIcons ?? 0 })}
+          />
+          {session?.user.permissions.includes("media-upload") && (
+            <UploadMedia
+              onSuccess={({ url }) => {
+                startTransition(() => {
+                  setValue(url);
+                  setPreviewUrl(url);
+                  setSearch(url);
+                  onChange(url);
+                });
+              }}
+            >
+              {({ onClick, loading }) => (
+                <ActionIcon onClick={onClick} loading={loading} mt={24} size={36} variant="default">
+                  <IconUpload size={16} stroke={1.5} />
+                </ActionIcon>
+              )}
+            </UploadMedia>
+          )}
+        </Group>
       </Combobox.Target>
 
       <Combobox.Dropdown>

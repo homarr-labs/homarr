@@ -1,37 +1,78 @@
 name: 🐞 Bug Report
-description: Create a bug report to help us improve
+description: Report that something is broken, not working as intended or causes side-effects
 title: "bug: "
-labels: ["🐞❔ unconfirmed bug"]
+labels: ["needs triage"]
 body:
-  - type: textarea
-    attributes:
-      label: Provide environment information
-      description: |
-        Run this command in your project root and paste the results in a code block:
-        ```bash
-        npx envinfo --system --binaries
-        ```
-    validations:
-      required: true
   - type: textarea
     attributes:
       label: Describe the bug
       description: A clear and concise description of the bug, as well as what you expected to happen when encountering it.
     validations:
       required: true
-  - type: input
+  - type: textarea
     attributes:
-      label: Link to reproduction
-      description: Please provide a link to a reproduction of the bug. Issues without a reproduction repo may be ignored.
+      label: Steps to reproduce
+      description: Describe how to reproduce your bug. Steps, code snippets, reproduction repos etc.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: To reproduce
-      description: Describe how to reproduce your bug. Steps, code snippets, reproduction repos etc.
+      label: Impact
+      description: How big is the impact of this bug? Does it make Homarr unusable? Is there any workaround that you're aware of?
     validations:
       required: true
   - type: textarea
     attributes:
       label: Additional information
       description: Add any other information related to the bug here, screenshots if applicable.
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of Homarr are you running?
+      options:
+        - 1.0.0-beta
+        - Other (describe in "additional information")
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: installationMethod
+    attributes:
+      label: Installation method
+      description: How do you run Homarr? Post docker-compose, configs or screenshots if applicable.
+      options:
+        - Docker Run
+        - Docker Compose
+        - Portainer
+        - Helm
+        - QNAP
+        - Saltbox
+        - EasyPanel
+        - Unraid Apps
+        - TrueNAS Apps
+        - Synology
+        - HomeAssistant Addon
+        - From Source
+        - Other (describe in "additional information")
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: If relevant, what browser do you use?
+      options:
+        - Firefox
+        - Edge (Chromium)
+        - Edge (Proprietary)
+        - Chrome
+        - Safari
+        - Vivaldi
+        - Brave
+        - Samsung Internet
+        - Other (describe in "additional information")
+      default: 0
+    validations:
+      required: false

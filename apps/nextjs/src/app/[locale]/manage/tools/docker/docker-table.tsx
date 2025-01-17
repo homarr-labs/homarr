@@ -2,7 +2,14 @@
 
 import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
-import { IconPlayerPlay, IconPlayerStop, IconRefresh, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
+import {
+  IconCategoryPlus,
+  IconPlayerPlay,
+  IconPlayerStop,
+  IconRefresh,
+  IconRotateClockwise,
+  IconTrash,
+} from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -10,6 +17,8 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type { DockerContainerState } from "@homarr/definitions";
+import { useModalAction } from "@homarr/modals";
+import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -125,6 +134,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
       );
     },
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
+      const dockerContainers = table.getSelectedRowModel().rows.map((row) => row.original);
       return (
         <Group gap={"sm"}>
           {groupedAlert}
@@ -134,7 +144,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
               totalCount: table.getRowCount(),
             })}
           </Text>
-          <ContainerActionBar selectedIds={table.getSelectedRowModel().rows.map((row) => row.original.id)} />
+          <ContainerActionBar selectedContainers={dockerContainers} />
         </Group>
       );
     },
@@ -151,16 +161,29 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
 }
 
 interface ContainerActionBarProps {
-  selectedIds: string[];
+  selectedContainers: RouterOutputs["docker"]["getContainers"]["containers"];
 }
 
-const ContainerActionBar = ({ selectedIds }: ContainerActionBarProps) => {
+const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => {
+  const t = useScopedI18n("docker.action");
+  const { openModal } = useModalAction(AddDockerAppToHomarr);
+  const handleClick = () => {
+    openModal({
+      selectedContainers,
+    });
+  };
+
+  const selectedIds = selectedContainers.map((container) => container.id);
+
   return (
     <Group gap="xs">
       <ContainerActionBarButton icon={IconPlayerPlay} color="green" action="start" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
+      <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light" radius="md">
+        {t("addToHomarr.label")}
+      </Button>
     </Group>
   );
 };
@@ -174,8 +197,9 @@ interface ContainerActionBarButtonProps {
 
 const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
   const t = useScopedI18n("docker.action");
-  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation();
   const utils = clientApi.useUtils();
+
+  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation();
 
   const handleClickAsync = async () => {
     await mutateAsync(

@@ -2,50 +2,50 @@ import { TRPCError } from "@trpc/server";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { and, createId, eq, like, schema } from "@homarr/db";
-import { groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema/sqlite";
+import { and, createId, eq, like } from "@homarr/db";
+import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
+import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import { validation, z } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  onboardingProcedure,
+  permissionRequiredProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
+import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
+import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const userRouter = createTRPCRouter({
-  initUser: publicProcedure.input(validation.user.init).mutation(async ({ ctx, input }) => {
-    throwIfCredentialsDisabled();
+  initUser: onboardingProcedure
+    .requiresStep("user")
+    .input(validation.user.init)
+    .mutation(async ({ ctx, input }) => {
+      throwIfCredentialsDisabled();
 
-    const firstUser = await ctx.db.query.users.findFirst({
-      columns: {
-        id: true,
-      },
-    });
-
-    if (firstUser) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "User already exists",
+      const userId = await createUserAsync(ctx.db, input);
+      const groupId = createId();
+      await ctx.db.insert(groups).values({
+        id: groupId,
+        name: credentialsAdminGroup,
+        ownerId: userId,
       });
-    }
-
-    const userId = await createUserAsync(ctx.db, input);
-    const groupId = createId();
-    await ctx.db.insert(groups).values({
-      id: groupId,
-      name: "admin",
-      ownerId: userId,
-    });
-    await ctx.db.insert(groupPermissions).values({
-      groupId,
-      permission: "admin",
-    });
-    await ctx.db.insert(groupMembers).values({
-      groupId,
-      userId,
-    });
-  }),
+      await ctx.db.insert(groupPermissions).values({
+        groupId,
+        permission: "admin",
+      });
+      await ctx.db.insert(groupMembers).values({
+        groupId,
+        userId,
+      });
+      await nextOnboardingStepAsync(ctx.db, undefined);
+    }),
   register: publicProcedure
     .input(validation.user.registrationApi)
     .output(z.void())
@@ -210,8 +210,10 @@ export const userRouter = createTRPCRouter({
         image: true,
         provider: true,
         homeBoardId: true,
+        mobileHomeBoardId: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
+        defaultSearchEngineId: true,
       }),
     )
     .meta({ openapi: { method: "GET", path: "/api/users/{userId}", tags: ["users"], protect: true } })
@@ -232,8 +234,10 @@ export const userRouter = createTRPCRouter({
           image: true,
           provider: true,
           homeBoardId: true,
+          mobileHomeBoardId: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
+          defaultSearchEngineId: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -372,10 +376,50 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  changeHomeBoardId: protectedProcedure
-    .input(convertIntersectionToZodObject(validation.user.changeHomeBoard.and(z.object({ userId: z.string() }))))
+  changeHomeBoards: protectedProcedure
+    .input(convertIntersectionToZodObject(validation.user.changeHomeBoards.and(z.object({ userId: z.string() }))))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/changeHome", tags: ["users"], protect: true } })
+    .mutation(async ({ input, ctx }) => {
+      const user = ctx.session.user;
+      // Only admins can change other users passwords
+      if (!user.permissions.includes("admin") && user.id !== input.userId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.userId), "view");
+
+      await ctx.db
+        .update(users)
+        .set({
+          homeBoardId: input.homeBoardId,
+          mobileHomeBoardId: input.mobileHomeBoardId,
+        })
+        .where(eq(users.id, input.userId));
+    }),
+  changeDefaultSearchEngine: protectedProcedure
+    .input(
+      convertIntersectionToZodObject(validation.user.changeDefaultSearchEngine.and(z.object({ userId: z.string() }))),
+    )
+    .output(z.void())
+    .meta({ openapi: { method: "PATCH", path: "/api/users/changeSearchEngine", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
       const user = ctx.session.user;
       // Only admins can change other users passwords
@@ -403,7 +447,7 @@ export const userRouter = createTRPCRouter({
       await ctx.db
         .update(users)
         .set({
-          homeBoardId: input.homeBoardId,
+          defaultSearchEngineId: input.defaultSearchEngineId,
         })
         .where(eq(users.id, input.userId));
     }),
@@ -510,7 +554,7 @@ const createUserAsync = async (db: Database, input: Omit<z.infer<typeof validati
   const username = input.username.toLowerCase();
 
   const userId = createId();
-  await db.insert(schema.users).values({
+  await db.insert(users).values({
     id: userId,
     name: username,
     email: input.email,

@@ -7,6 +7,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { humanFileSize } from "@homarr/common";
+import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 import { z } from "@homarr/validation";
@@ -16,7 +17,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CopyMedia } from "./_actions/copy-media";
 import { DeleteMedia } from "./_actions/delete-media";
 import { IncludeFromAllUsersSwitch } from "./_actions/show-all";
-import { UploadMedia } from "./_actions/upload-media";
+import { UploadMediaButton } from "./_actions/upload-media";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
@@ -29,12 +30,8 @@ const searchParamsSchema = z.object({
   page: z.string().regex(/\d+/).transform(Number).catch(1),
 });
 
-type SearchParamsSchemaInputFromSchema<TSchema extends Record<string, unknown>> = Partial<{
-  [K in keyof TSchema]: Exclude<TSchema[K], undefined> extends unknown[] ? string[] : string;
-}>;
-
 interface MediaListPageProps {
-  searchParams: SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>;
+  searchParams: Promise<inferSearchParamsFromSchema<typeof searchParamsSchema>>;
 }
 
 export default async function GroupsListPage(props: MediaListPageProps) {
@@ -45,7 +42,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
   }
 
   const t = await getI18n();
-  const searchParams = searchParamsSchema.parse(props.searchParams);
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
 
   return (
@@ -61,7 +58,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
             )}
           </Group>
 
-          {session.user.permissions.includes("media-upload") && <UploadMedia />}
+          {session.user.permissions.includes("media-upload") && <UploadMediaButton />}
         </Group>
         <Table striped highlightOnHover>
           <TableThead>

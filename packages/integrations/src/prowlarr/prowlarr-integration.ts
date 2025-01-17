@@ -1,3 +1,5 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { Indexer } from "../interfaces/indexer-manager/indexer";
@@ -7,7 +9,7 @@ export class ProwlarrIntegration extends Integration {
   public async getIndexersAsync(): Promise<Indexer[]> {
     const apiKey = super.getSecretValue("apiKey");
 
-    const indexerResponse = await fetch(this.url("/api/v1/indexer"), {
+    const indexerResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/indexer"), {
       headers: {
         "X-Api-Key": apiKey,
       },
@@ -18,7 +20,7 @@ export class ProwlarrIntegration extends Integration {
       );
     }
 
-    const statusResponse = await fetch(this.url("/api/v1/indexerstatus"), {
+    const statusResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/indexerstatus"), {
       headers: {
         "X-Api-Key": apiKey,
       },
@@ -45,7 +47,7 @@ export class ProwlarrIntegration extends Integration {
       );
     }
 
-    const inactiveIndexerIds = new Set(statusResult.data.map((status: { id: number }) => status.id));
+    const inactiveIndexerIds = new Set(statusResult.data.map((status: { indexerId: number }) => status.indexerId));
 
     const indexers: Indexer[] = indexersResult.data.map((indexer) => ({
       id: indexer.id,
@@ -60,7 +62,7 @@ export class ProwlarrIntegration extends Integration {
 
   public async testAllAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetch(this.url("/api/v1/indexer/testall"), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/indexer/testall"), {
       headers: {
         "X-Api-Key": apiKey,
       },
@@ -78,7 +80,7 @@ export class ProwlarrIntegration extends Integration {
 
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetch(this.url("/api"), {
+        return await fetchWithTrustedCertificatesAsync(this.url("/api"), {
           headers: {
             "X-Api-Key": apiKey,
           },
@@ -86,7 +88,7 @@ export class ProwlarrIntegration extends Integration {
       },
       handleResponseAsync: async (response) => {
         try {
-          const result = (await response.json()) as unknown;
+          const result = await response.json();
           if (typeof result === "object" && result !== null) return;
         } catch {
           throw new IntegrationTestConnectionError("invalidJson");

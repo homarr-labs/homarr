@@ -6,11 +6,12 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import { createId, eq } from "..";
 import type { Database } from "..";
+import { onboarding, serverSettings } from "../schema";
 import { groups } from "../schema/mysql";
-import { serverSettings } from "../schema/sqlite";
 
 export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);
+  await seedOnboardingAsync(db);
   await seedServerSettingsAsync(db);
 };
 
@@ -29,6 +30,21 @@ const seedEveryoneGroupAsync = async (db: Database) => {
     name: everyoneGroup,
   });
   console.log("Created group 'everyone' through seed");
+};
+
+const seedOnboardingAsync = async (db: Database) => {
+  const existing = await db.query.onboarding.findFirst();
+
+  if (existing) {
+    console.log("Skipping seeding of onboarding as it already exists");
+    return;
+  }
+
+  await db.insert(onboarding).values({
+    id: createId(),
+    step: "start",
+  });
+  console.log("Created onboarding step through seed");
 };
 
 const seedServerSettingsAsync = async (db: Database) => {

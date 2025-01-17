@@ -15,11 +15,13 @@ import {
   wsLink,
 } from "@trpc/client";
 import superjson from "superjson";
+import type { SuperJSONResult } from "superjson";
 
 import type { AppRouter } from "@homarr/api";
-import { clientApi, createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/client";
+import { clientApi, getTrpcUrl } from "@homarr/api/client";
+import { createHeadersCallbackForSource } from "@homarr/api/shared";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 
 const getWebSocketProtocol = () => {
   // window is not defined on server side
@@ -82,8 +84,8 @@ export function TRPCReactProvider(props: PropsWithChildren) {
                 serialize(object: unknown) {
                   return object;
                 },
-                deserialize(data: unknown) {
-                  return data;
+                deserialize(data: SuperJSONResult) {
+                  return superjson.deserialize<unknown>(data);
                 },
               },
               url: getTrpcUrl(),

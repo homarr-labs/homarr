@@ -1,7 +1,7 @@
 import type { Duration } from "dayjs/plugin/duration";
 
 import type { Modify } from "@homarr/common/types";
-import type { Integration, IntegrationSecret } from "@homarr/db/schema/sqlite";
+import type { Integration, IntegrationSecret } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 import { createIntegrationOptionsChannel } from "@homarr/redis";
 

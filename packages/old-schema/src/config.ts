@@ -28,3 +28,5 @@ export const oldmarrConfigSchema = z.object({
 });
 
 export type OldmarrConfig = z.infer<typeof oldmarrConfigSchema>;
+export type OldmarrCategorySection = z.infer<typeof categorySchema>;
+export type OldmarrEmptySection = z.infer<typeof wrapperSchema>;

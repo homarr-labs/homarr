@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { encryptSecret } from "@homarr/common/server";
 import { createId } from "@homarr/db";
-import { integrations, integrationSecrets } from "@homarr/db/schema/sqlite";
+import { integrations, integrationSecrets } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
@@ -33,6 +33,7 @@ describe("all should return all integrations", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(),
     });
 
@@ -63,6 +64,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -89,6 +91,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -100,6 +103,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -147,6 +151,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
 
@@ -172,6 +177,7 @@ describe("create should create a new integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
     });
     const input = {
@@ -179,6 +185,7 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
     };
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
@@ -201,11 +208,55 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
   });
 
+  test("with create integration access should create a new integration when creating search engine", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+    const input = {
+      name: "Jellyseerr",
+      kind: "jellyseerr" as const,
+      url: "http://jellyseerr.local",
+      secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: true,
+    };
+
+    const fakeNow = new Date("2023-07-01T00:00:00Z");
+    vi.useFakeTimers();
+    vi.setSystemTime(fakeNow);
+    await caller.create(input);
+    vi.useRealTimers();
+
+    const dbIntegration = await db.query.integrations.findFirst();
+    const dbSecret = await db.query.integrationSecrets.findFirst();
+    const dbSearchEngine = await db.query.searchEngines.findFirst();
+    expect(dbIntegration).toBeDefined();
+    expect(dbIntegration!.name).toBe(input.name);
+    expect(dbIntegration!.kind).toBe(input.kind);
+    expect(dbIntegration!.url).toBe(input.url);
+
+    expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
+    expect(dbSecret).toBeDefined();
+    expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
+    expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
+    expect(dbSecret!.updatedAt).toEqual(fakeNow);
+
+    expect(dbSearchEngine!.integrationId).toBe(dbIntegration!.id);
+    expect(dbSearchEngine!.short).toBe("j");
+    expect(dbSearchEngine!.name).toBe(input.name);
+    expect(dbSearchEngine!.iconUrl).toBe(
+      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/jellyseerr.png",
+    );
+  });
+
   test("without create integration access should throw permission error", async () => {
     // Arrange
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
     const input = {
@@ -213,6 +264,7 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
     };
 
     // Act
@@ -228,6 +280,7 @@ describe("update should update an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -302,6 +355,7 @@ describe("update should update an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -320,6 +374,7 @@ describe("update should update an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
 
@@ -342,6 +397,7 @@ describe("delete should delete an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -375,6 +431,7 @@ describe("delete should delete an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
 

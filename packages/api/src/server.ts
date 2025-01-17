@@ -9,7 +9,7 @@ import { auth } from "@homarr/auth/next";
  * handling a tRPC call from a React Server Component.
  */
 const createContext = cache(async () => {
-  const heads = new Headers(headers());
+  const heads = new Headers(await headers());
   heads.set("x-trpc-source", "rsc");
 
   return createTRPCContext({

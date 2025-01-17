@@ -28,6 +28,9 @@ export type { HealthMonitoring } from "./interfaces/health-monitoring/healt-moni
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
 export type { StreamSession } from "./interfaces/media-server/session";
+export type { TdarrQueue } from "./interfaces/media-transcoding/queue";
+export type { TdarrPieSegment, TdarrStatistics } from "./interfaces/media-transcoding/statistics";
+export type { TdarrWorker } from "./interfaces/media-transcoding/workers";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";

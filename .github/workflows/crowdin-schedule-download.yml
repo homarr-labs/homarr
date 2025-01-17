@@ -42,7 +42,8 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Enable auto-merge
+        if: steps.crowdin-download.outputs.pull_request_number != '' && steps.crowdin-download.outputs.pull_request_number != null
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
-          gh pr merge ${{steps.crowdin-download.pull_request_number}} --auto --merge --squash --delete-branch --title "chore(lang): updated translations from crowdin"
+          gh pr merge ${{steps.crowdin-download.outputs.pull_request_number}} --auto --squash --delete-branch --subject "chore(lang): updated translations from crowdin"

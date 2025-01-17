@@ -15,7 +15,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
+import { IconDeviceMobile, IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -67,7 +67,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card>
+    <Card withBorder>
       <CardSection p="sm" withBorder>
         <Group justify="space-between" align="center">
           <Group gap="sm">
@@ -84,6 +84,14 @@ const BoardCard = async ({ board }: BoardCardProps) => {
               <Tooltip label={t("action.setHomeBoard.badge.tooltip")}>
                 <Badge tt="none" color="yellow" variant="light" leftSection={<IconHomeFilled size=".7rem" />}>
                   {t("action.setHomeBoard.badge.label")}
+                </Badge>
+              </Tooltip>
+            )}
+
+            {board.isMobileHome && (
+              <Tooltip label={t("action.setMobileHomeBoard.badge.tooltip")}>
+                <Badge tt="none" color="yellow" variant="light" leftSection={<IconDeviceMobile size=".7rem" />}>
+                  {t("action.setMobileHomeBoard.badge.label")}
                 </Badge>
               </Tooltip>
             )}

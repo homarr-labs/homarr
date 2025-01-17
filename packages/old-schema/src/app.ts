@@ -47,6 +47,8 @@ const integrationSchema = z.enum([
   "tdarr",
 ]);
 
+export type OldmarrIntegrationType = z.infer<typeof integrationSchema>;
+
 const appIntegrationPropertySchema = z.object({
   type: z.enum(["private", "public"]),
   field: z.enum(["apiKey", "password", "username"]),
@@ -67,7 +69,7 @@ export const oldmarrAppSchema = z
     behaviour: appBehaviourSchema,
     network: appNetworkSchema,
     appearance: appAppearanceSchema,
-    integration: appIntegrationSchema.optional(),
+    integration: appIntegrationSchema.optional().nullable(),
   })
   .and(tileBaseSchema);
 

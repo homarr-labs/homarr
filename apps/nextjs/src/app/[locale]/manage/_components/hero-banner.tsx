@@ -5,36 +5,36 @@ import { splitToNChunks } from "@homarr/common";
 import classes from "./hero-banner.module.css";
 
 const icons = [
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/homarr.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/sabnzbd.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/deluge.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/radarr.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/sonarr.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/lidarr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sabnzbd.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/deluge.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lidarr.svg",
   "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/pihole.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/dashdot.png",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/overseerr.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/plex.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/jellyfin.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dashdot.png",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg",
   "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/homeassistant.svg",
   "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/freshrss.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/readarr.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/transmission.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/qbittorrent.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/nzbget.png",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/openmediavault.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/transmission.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/nzbget.png",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/openmediavault.svg",
   "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/docker.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/jellyseerr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg",
   "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/adguardhome.svg",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/tdarr.png",
-  "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/prowlarr.svg",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tdarr.png",
+  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg",
 ];
 
 const countIconGroups = 3;
 const animationDurationInSeconds = 12;
+const arrayInChunks = splitToNChunks(icons, countIconGroups);
 
 export const HeroBanner = () => {
-  const arrayInChunks = splitToNChunks(icons, countIconGroups);
   const gridSpan = 12 / countIconGroups;
 
   return (

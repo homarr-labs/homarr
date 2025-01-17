@@ -2,13 +2,13 @@ import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
 
 import { eq } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
+import { items } from "@homarr/db/schema";
 import { z } from "@homarr/validation";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const notebookRouter = createTRPCRouter({
-  updateContent: publicProcedure
+  updateContent: protectedProcedure
     .input(
       z.object({
         itemId: z.string(),

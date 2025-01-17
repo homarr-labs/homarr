@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { createId } from "@homarr/db";
-import { users } from "@homarr/db/schema/sqlite";
+import { users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { createSaltAsync, hashPasswordAsync } from "../../security";

@@ -1,6 +1,6 @@
 import { decryptSecret } from "@homarr/common/server";
 import type { Modify } from "@homarr/common/types";
-import type { Integration as DbIntegration } from "@homarr/db/schema/sqlite";
+import type { Integration as DbIntegration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
@@ -17,11 +17,13 @@ import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration"
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
+import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
@@ -70,4 +72,6 @@ export const integrationCreators = {
   lidarr: LidarrIntegration,
   readarr: ReadarrIntegration,
   dashDot: DashDotIntegration,
+  tdarr: TdarrIntegration,
+  proxmox: ProxmoxIntegration,
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;

@@ -1,26 +1,131 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "Bienvenue dans Homarr",
+        "subtitle": "Commençons par configurer votre instance Homarr.",
+        "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
+        "action": {
+          "scratch": "Partir de zéro",
+          "importOldmarr": "Importer à partir d'Homarr avant la 1.0"
+        }
+      },
+      "import": {
+        "title": "Importer des données",
+        "subtitle": "Vous pouvez importer des données depuis une instance Homarr existante.",
+        "dropzone": {
+          "title": "Déposez le fichier zip ici ou cliquez pour naviguer",
+          "description": "Le zip téléchargé sera traité et vous pourrez sélectionner ce que vous voulez importer"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Changer le fichier"
+          }
+        },
+        "importSettings": {
+          "title": "Importer des paramètres",
+          "description": "Configurer le comportement d'importation"
+        },
+        "boardSelection": {
+          "title": "{count} tableaux trouvés",
+          "description": "Choisissez tous les tableaux avec la taille que vous souhaitez importer",
+          "action": {
+            "selectAll": "Tout sélectionner",
+            "unselectAll": "Tout désélectionner"
+          }
+        },
+        "summary": {
+          "title": "Résumé de l'importation",
+          "description": "Dans le résumé ci-dessous vous pouvez voir ce qui va être importé",
+          "action": {
+            "import": "Confirmer l'importation et continuer"
+          },
+          "entities": {
+            "apps": "Applications",
+            "boards": "Tableaux de bord",
+            "integrations": "Intégrations",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "Saisir le jeton d'importation",
+          "field": {
+            "token": {
+              "label": "Jeton",
+              "description": "Entrez le jeton d'importation de votre instance précédente"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Jeton non valide",
+              "message": "Le jeton que vous avez saisi est invalide"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Administrateur",
+        "subtitle": "Spécifiez les informations d'identification pour votre compte d'administrateur.",
+        "notification": {
+          "success": {
+            "title": "Utilisateur créé",
+            "message": "L’utilisateur a été créé avec succès"
+          },
+          "error": {
+            "title": "La création de l'utilisateur a échoué"
+          }
+        }
+      },
+      "group": {
+        "title": "Groupe externe",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "Nom du groupe",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Paramètres",
+        "subtitle": "Configurer les paramètres du serveur."
+      },
+      "finish": {
+        "title": "Terminer la configuration",
+        "subtitle": "Vous êtes prêt !",
+        "description": "Vous avez terminé avec succès le processus d'installation. Vous pouvez maintenant commencer à utiliser Homarr. Sélectionnez votre prochaine action :",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "Inviter d'autres utilisateurs",
+          "docs": "Lire la documentation"
+        }
+      }
+    },
+    "backToStart": "Retour au début"
+  },
   "user": {
     "title": "Utilisateurs",
     "name": "Utilisateur",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Connectez-vous à votre compte",
+        "subtitle": "Bon retour parmi nous ! Veuillez entrer vos identifiants"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Rejoindre Homarr",
+        "subtitle": "Bienvenue sur Homarr! Veuillez créer votre compte",
+        "description": "Vous avez été invité par {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nouvelle installation Homarr",
+        "subtitle": "Veuillez créer l'utilisateur administrateur initial"
       }
     },
     "field": {
       "email": {
         "label": "Courriel",
-        "verified": ""
+        "verified": "Vérifié"
       },
       "username": {
         "label": "Nom d'utilisateur"
@@ -28,18 +133,18 @@
       "password": {
         "label": "Mot de passe",
         "requirement": {
-          "length": "",
+          "length": "Contient au moins 8 caractères",
           "lowercase": "Inclut une lettre minuscule",
           "uppercase": "Inclut une lettre majuscule",
           "number": "Inclut un nombre",
-          "special": ""
+          "special": "Contient un symbole spécial"
         }
       },
       "passwordConfirm": {
         "label": "Confirmation du mot de passe"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Ancien mot de passe"
       },
       "homeBoard": {
         "label": ""
@@ -49,25 +154,25 @@
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Nom d'utilisateur déjà utilisé"
     },
     "action": {
       "login": {
         "label": "Connexion",
-        "labelWith": "",
+        "labelWith": "Se connecter avec {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Connexion réussie",
+            "message": "Vous êtes maintenant connecté"
           },
           "error": {
-            "title": "",
+            "title": "Échec de la connexion",
             "message": ""
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Mot de passe oublié?",
+          "description": "Un administrateur peut utiliser la commande suivante pour réinitialiser votre mot de passe :"
         }
       },
       "register": {
@@ -79,13 +184,23 @@
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Votre compte n'a pas pu être créé"
           }
         }
       },
       "create": "Créer un utilisateur",
       "changePassword": {
-        "label": "",
+        "label": "Changer le mot de passe",
+        "notification": {
+          "success": {
+            "message": "Mot de passe modifié avec succès"
+          },
+          "error": {
+            "message": "Modification du mot de passe impossible"
+          }
+        }
+      },
+      "changeHomeBoard": {
         "notification": {
           "success": {
             "message": ""
@@ -95,7 +210,7 @@
           }
         }
       },
-      "changeHomeBoard": {
+      "changeDefaultSearchEngine": {
         "notification": {
           "success": {
             "message": ""
@@ -127,29 +242,29 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Modifier l’image",
           "notification": {
             "success": {
-              "message": ""
+              "message": "L'image a été modifiée avec succès"
             },
             "error": {
-              "message": ""
+              "message": "Impossible de modifier l'image"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "L'image est trop volumineuse",
+              "message": "La taille maximale de l'image est {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Retirer l'image",
+          "confirm": "Êtes-vous sûr de vouloir retirer cette image ?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Image retirée avec succès"
             },
             "error": {
-              "message": ""
+              "message": "Impossible de retirer l'image"
             }
           }
         }
@@ -157,58 +272,58 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profil mis à jour avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Impossible de mettre à jour le profil"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Supprimer définitivement l'utilisateur",
+        "description": "Supprime cet utilisateur ainsi que ses préférences. Ne supprimera aucun tableau. L'utilisateur ne sera pas averti.",
+        "confirm": "Êtes-vous sûr de vouloir supprimer l'utilisateur {username} ainsi que ses préférences ?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Sélectionner l'utilisateur",
+        "notFound": "Aucun utilisateur trouvé"
       },
       "transfer": {
-        "label": ""
+        "label": "Choisir un nouveau propriétaire"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Groupes",
+    "name": "Groupe",
+    "search": "Trouver un groupe",
     "field": {
       "name": "Nom",
-      "members": ""
+      "members": "Membres"
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrateur",
+            "description": "Les membres avec cette permission ont un accès complet à toutes les fonctionnalités et paramètres"
           }
         }
       },
       "app": {
-        "title": "",
+        "title": "Applications",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Créer une app",
+            "description": "Autoriser les membres à créer des apps"
           },
           "use-all": {
-            "label": "",
+            "label": "Utiliser toutes les apps",
             "description": ""
           },
           "modify-all": {
-            "label": "",
+            "label": "Modifier toutes les apps",
             "description": ""
           },
           "full-all": {
@@ -239,11 +354,11 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "Intégrations",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Créer des intégrations",
+            "description": "Autoriser les membres à créer des intégrations"
           },
           "use-all": {
             "label": "",
@@ -260,37 +375,37 @@
         }
       },
       "media": {
-        "title": "",
+        "title": "Médias",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Téléverser des médias",
+            "description": "Autoriser les membres à téléverser des médias"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Voir tous les médias",
+            "description": "Autoriser les membres à voir tous les médias"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accès complet aux médias",
+            "description": "Autoriser les membres à gérer et supprimer les médias"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Autre",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Voir les logs",
+            "description": "Autoriser les membres à voir les logs"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Moteurs de recherche",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Créer des moteurs de recherche",
+            "description": "Autoriser les membres à créer des moteurs de recherche"
           },
           "modify-all": {
             "label": "",
@@ -308,62 +423,62 @@
       "external": ""
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ce groupe est réservé pour l'utilisation du système et restreint certaines actions. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nouveau groupe",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Le groupe a été créé avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Le groupe n'a pas pu être créé"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Changer le propriétaire",
+        "description": "Transférer la propriété de ce groupe à un autre utilisateur.",
+        "confirm": "Êtes-vous sûr de vouloir transférer la propriété du groupe {name} à {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Le groupe {group} a été transféré avec succès à {user}"
           },
           "error": {
-            "message": ""
+            "message": "Impossible de transférer la propriété"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Ajouter un membre"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Retirer un membre",
+        "confirm": "Êtes-vous sûr de vouloir retirer {user} de ce groupe ?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Supprimer le groupe",
+        "description": "Une fois que vous supprimez un groupe, il n'y a pas de retour en arrière possible. Soyez certain.",
+        "confirm": "Êtes-vous sûr de vouloir supprimer le groupe {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Groupe {name} supprimé avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Impossible de supprimer le groupe {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Permissions sauvegardées",
+            "message": "Les permissions ont été sauvegardées avec succès"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Permissions non sauvegardées",
+            "message": "Les permissions n'ont pas été sauvegardées"
           }
         }
       },
@@ -378,26 +493,27 @@
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Sélectionner un groupe",
+        "notFound": "Aucun groupe trouvé"
       }
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Applications",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Il n'y a pas encore d'apps",
+          "action": "Créer votre première app"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nouvelle app",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Créé avec succès",
+            "message": "L'application a bien été créée"
           },
           "error": {
             "title": "",
@@ -413,17 +529,17 @@
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Impossible d'appliquer les changements",
             "message": ""
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Supprimer l'app",
+        "message": "Êtes-vous sûr de vouloir supprimer l'app {name}?",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Suppression effectuée avec succès",
             "message": ""
           },
           "error": {
@@ -438,23 +554,23 @@
         "label": "Nom"
       },
       "description": {
-        "label": ""
+        "label": "Description"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Sélectionner l'app",
+        "notFound": "Aucune app trouvée"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
+        "title": "Intégrations",
         "search": "",
         "noResults": {
           "title": ""
@@ -464,7 +580,7 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Créé avec succès",
             "message": ""
           },
           "error": {
@@ -506,37 +622,41 @@
         "label": "Nom"
       },
       "url": {
-        "label": ""
+        "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
-      "create": ""
+      "create": "Nouvelle intégration"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Tester la connexion et créer",
+        "edit": "Tester la connexion et enregistrer"
       },
-      "alertNotice": "",
+      "alertNotice": "Le bouton Enregistrer est activé une fois qu'une connexion est établie avec succès",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Connexion réussie",
+          "message": "La connexion a été établie avec succès"
         },
         "invalidUrl": {
           "title": "URL invalide",
-          "message": ""
+          "message": "L'URL est invalide."
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Identifiants manquants",
+          "message": "Les informations d'identification n'ont pas toutes été fournies"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Informations d'identification incorrectes.",
+          "message": "Les informations d'identification ne sont pas valides"
         },
         "commonError": {
-          "title": "",
+          "title": "Échec de la connexion",
           "message": ""
         },
         "badRequest": {
@@ -588,6 +708,10 @@
     "secrets": {
       "title": "",
       "lastUpdated": "",
+      "notSet": {
+        "label": "",
+        "tooltip": ""
+      },
       "secureNotice": "",
       "reset": {
         "title": "",
@@ -600,11 +724,11 @@
       "kind": {
         "username": {
           "label": "Nom d'utilisateur",
-          "newLabel": ""
+          "newLabel": "Nouveau nom d'utilisateur"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clé API",
+          "newLabel": "Nouvelle clé API"
         },
         "password": {
           "label": "Mot de passe",
@@ -624,7 +748,7 @@
     "field": {
       "name": "Nom",
       "size": "Taille",
-      "creator": "Créé par"
+      "creator": "Créateur"
     },
     "action": {
       "upload": {
@@ -652,12 +776,12 @@
         }
       },
       "copy": {
-        "label": ""
+        "label": "Copier l'URL"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Bêta",
     "error": "Erreur",
     "action": {
       "add": "Ajouter",
@@ -665,7 +789,7 @@
       "backToOverview": "",
       "create": "Créer",
       "edit": "Modifier",
-      "import": "",
+      "import": "Importer",
       "insert": "Insérer",
       "remove": "Supprimer",
       "save": "Sauvegarder",
@@ -674,24 +798,31 @@
       "delete": "Supprimer",
       "discard": "",
       "confirm": "Confirmer",
-      "continue": "",
+      "continue": "Continuer",
       "previous": "Précédent",
       "next": "Suivant",
-      "checkoutDocs": "",
+      "checkoutDocs": "Voir la documentation",
+      "checkLogs": "Vérifiez les logs pour plus de détails",
       "tryAgain": "Réessayer",
-      "loading": ""
+      "loading": "Chargement"
     },
-    "here": "",
+    "here": "ici",
     "iconPicker": {
       "label": "",
       "header": ""
     },
+    "colorScheme": {
+      "options": {
+        "light": "Clair",
+        "dark": "Sombre"
+      }
+    },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "Min",
+      "max": "Max",
+      "days": "Jours",
       "hours": "Heures",
-      "minutes": ""
+      "minutes": "Minutes"
     },
     "notification": {
       "create": {
@@ -716,7 +847,7 @@
     },
     "multiText": {
       "placeholder": "",
-      "addLabel": ""
+      "addLabel": "Ajouter {value}"
     },
     "select": {
       "placeholder": "",
@@ -726,14 +857,15 @@
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Activer le mode sombre",
+        "switchToLightMode": "Activer le mode clair",
+        "management": "Administration",
         "preferences": "Vos préférences",
-        "logout": "",
+        "logout": "Se déconnecter",
         "login": "Connexion",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Zone de danger",
@@ -765,8 +897,10 @@
           "passwordRequirements": "",
           "boardAlreadyExists": "",
           "invalidFileType": "",
+          "invalidFileName": "",
           "fileTooLarge": "",
-          "invalidConfiguration": ""
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -833,6 +967,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -874,7 +1009,7 @@
   },
   "widget": {
     "app": {
-      "name": "",
+      "name": "App",
       "description": "",
       "option": {
         "appId": {
@@ -908,13 +1043,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Mise en page",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontale"
             },
             "column": {
-              "label": ""
+              "label": "Verticale"
             },
             "grid": {
               "label": ""
@@ -958,7 +1093,8 @@
         "adsBlockedTodayPercentage": "Bloqué aujourd'hui",
         "dnsQueriesToday": "Requêtes aujourd'hui",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1031,6 +1167,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1128,6 +1283,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Votre navigateur internet ne prend pas en charge les iframes. Merci de le mettre à jour."
       }
     },
@@ -1308,9 +1464,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -1342,7 +1495,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1528,6 +1686,65 @@
         }
       }
     },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": "Affichage par défaut"
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "Travailleurs",
+        "queue": "File d'attente",
+        "statistics": "Statistiques"
+      },
+      "currentIndex": "",
+      "healthCheck": {
+        "title": "",
+        "queued": "En file d’attente",
+        "status": {
+          "healthy": "Sain",
+          "unhealthy": "Dysfonctionnement"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "Vide",
+          "transcodes": "Transcodeur",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
+          "videoCodecs": "",
+          "videoContainers": "Conteneurs",
+          "videoResolutions": "Résolutions"
+        },
+        "workers": {
+          "empty": "Vide",
+          "table": {
+            "file": "Fichier",
+            "eta": "",
+            "progress": "Progrès",
+            "transcode": "Transcodeur",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "Vide",
+          "table": {
+            "file": "Fichier",
+            "size": "Taille",
+            "transcode": "Transcodeur",
+            "healthCheck": ""
+          }
+        }
+      }
+    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -1558,6 +1775,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1607,6 +1838,7 @@
           },
           "screenSize": {
             "label": "",
+            "description": "",
             "option": {
               "sm": "Petite",
               "md": "Moyenne",
@@ -1803,6 +2035,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        }
+      }
     }
   },
   "management": {
@@ -1838,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -1890,6 +2155,16 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Supprimer définitivement",
             "confirm": {
@@ -1923,7 +2198,14 @@
             "title": "Général",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Premier jour de la semaine",
               "accessibility": "Accessibilité"
             }
@@ -1995,7 +2277,7 @@
               "label": ""
             },
             "creator": {
-              "label": "Créé par"
+              "label": "Créateur"
             },
             "expirationDate": {
               "label": "Date d'expiration"
@@ -2011,7 +2293,7 @@
         "setting": {
           "general": {
             "title": "Général",
-            "owner": "",
+            "owner": "Propriétaire",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2079,14 +2361,22 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Tableaux de bord",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Apparence",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2112,6 +2402,9 @@
             "error": "Erreur"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2152,6 +2445,12 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": ""
+            },
+            "mediaTranscoding": {
               "label": ""
             }
           }
@@ -2300,7 +2599,26 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
@@ -2390,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -2436,6 +2757,9 @@
                 "homeBoard": {
                   "label": ""
                 },
+                "mobileBoard": {
+                  "label": ""
+                },
                 "settings": {
                   "label": ""
                 }
@@ -2460,8 +2784,8 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Activer le mode clair",
+                "dark": "Activer le mode sombre"
               },
               "language": {
                 "label": "",
@@ -2500,6 +2824,11 @@
             }
           }
         }
+      },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
       },
       "external": {
         "help": "",
@@ -2567,6 +2896,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2739,6 +3086,63 @@
               "title": "",
               "message": ""
             }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

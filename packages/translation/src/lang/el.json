@@ -1,4 +1,109 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": ""
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "Εφαρμογές",
+            "boards": "Πίνακες",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Ρυθμίσεις",
+        "subtitle": ""
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": ""
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "Χρήστες",
     "name": "Χρήστης",
@@ -105,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -197,7 +312,7 @@
         }
       },
       "app": {
-        "title": "",
+        "title": "Εφαρμογές",
         "item": {
           "create": {
             "label": "",
@@ -384,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Εφαρμογές",
@@ -507,6 +623,10 @@
       },
       "url": {
         "label": ""
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -588,6 +708,10 @@
     "secrets": {
       "title": "",
       "lastUpdated": "",
+      "notSet": {
+        "label": "",
+        "tooltip": ""
+      },
       "secureNotice": "",
       "reset": {
         "title": "",
@@ -678,6 +802,7 @@
       "previous": "Προηγούμενο",
       "next": "Επόμενο",
       "checkoutDocs": "",
+      "checkLogs": "",
       "tryAgain": "Προσπαθήστε ξανά",
       "loading": ""
     },
@@ -685,6 +810,12 @@
     "iconPicker": {
       "label": "",
       "header": ""
+    },
+    "colorScheme": {
+      "options": {
+        "light": "",
+        "dark": ""
+      }
     },
     "information": {
       "min": "",
@@ -733,7 +864,8 @@
         "logout": "",
         "login": "Σύνδεση",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Επικίνδυνη Περιοχή",
@@ -765,8 +897,10 @@
           "passwordRequirements": "",
           "boardAlreadyExists": "",
           "invalidFileType": "",
+          "invalidFileName": "",
           "fileTooLarge": "",
-          "invalidConfiguration": ""
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -833,6 +967,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -908,13 +1043,13 @@
           "label": ""
         },
         "layout": {
-          "label": "",
+          "label": "Διάταξη",
           "option": {
             "row": {
-              "label": ""
+              "label": "Οριζόντια"
             },
             "column": {
-              "label": ""
+              "label": "Κατακόρυφα"
             },
             "grid": {
               "label": ""
@@ -958,7 +1093,8 @@
         "adsBlockedTodayPercentage": "Σημερινοί αποκλεισμοί",
         "dnsQueriesToday": "Σημερινά queries",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1031,6 +1167,25 @@
           "label": "",
           "description": ""
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1128,6 +1283,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Ο περιηγητής σας δεν υποστηρίζει iframes. Παρακαλούμε ενημερώστε το πρόγραμμα περιήγησης."
       }
     },
@@ -1308,9 +1464,6 @@
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -1342,7 +1495,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1528,6 +1686,65 @@
         }
       }
     },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": "Προεπιλεγμένη προβολή"
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "Εργάτες",
+        "queue": "Ουρά",
+        "statistics": "Στατιστικά"
+      },
+      "currentIndex": "",
+      "healthCheck": {
+        "title": "",
+        "queued": "Στην ουρά",
+        "status": {
+          "healthy": "Υγιές",
+          "unhealthy": "Μη υγιές"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "Άδειο",
+          "transcodes": "Μετακωδικοποιήσεις",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
+          "videoCodecs": "Κωδικοποιητές",
+          "videoContainers": "",
+          "videoResolutions": "Αναλύσεις"
+        },
+        "workers": {
+          "empty": "Άδειο",
+          "table": {
+            "file": "Αρχείο",
+            "eta": "Εκτιμώμενος χρόνος αναμονής",
+            "progress": "Πρόοδος",
+            "transcode": "Μετακωδικοποίηση",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "Άδειο",
+          "table": {
+            "file": "Αρχείο",
+            "size": "Μέγεθος",
+            "transcode": "Μετακωδικοποίηση",
+            "healthCheck": ""
+          }
+        }
+      }
+    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -1558,6 +1775,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1607,6 +1838,7 @@
           },
           "screenSize": {
             "label": "",
+            "description": "",
             "option": {
               "sm": "Μικρό",
               "md": "Μεσαίο",
@@ -1803,6 +2035,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        }
+      }
     }
   },
   "management": {
@@ -1838,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -1890,6 +2155,16 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Οριστική διαγραφή",
             "confirm": {
@@ -1923,7 +2198,14 @@
             "title": "Γενικά",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Πρώτη ημέρα της εβδομάδας",
               "accessibility": "Προσβασιμότητα"
             }
@@ -2011,7 +2293,7 @@
         "setting": {
           "general": {
             "title": "Γενικά",
-            "owner": "",
+            "owner": "Ιδιοκτήτης",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2079,14 +2361,22 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Πίνακες",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Εμφάνιση",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2112,6 +2402,9 @@
             "error": "Σφάλμα"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2152,6 +2445,12 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": ""
+            },
+            "mediaTranscoding": {
               "label": ""
             }
           }
@@ -2300,7 +2599,26 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
@@ -2390,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -2434,6 +2755,9 @@
                   "label": ""
                 },
                 "homeBoard": {
+                  "label": ""
+                },
+                "mobileBoard": {
                   "label": ""
                 },
                 "settings": {
@@ -2501,6 +2825,11 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
@@ -2567,6 +2896,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2739,6 +3086,63 @@
               "title": "",
               "message": ""
             }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

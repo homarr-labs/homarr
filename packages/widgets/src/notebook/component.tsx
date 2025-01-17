@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 
 import "@mantine/tiptap/styles.css";

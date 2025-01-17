@@ -37,7 +37,7 @@ jobs:
           token: ${{ github.token }}
           branch: dev
       - name: Create pull request
-        run: "gh pr create --title \"chore(release): automatic release ${{ steps.semver.outputs.next }}\" --body \"**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``\" --base main --head dev --label automerge"
+        run: 'gh pr create --title "chore(release): automatic release ${{ steps.semver.outputs.next }}" --body "**This is an automatic release**.<br/>Manual action may be required for major bumps.<br/>Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}``" --base main --head dev --label automerge'
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: Discord notification

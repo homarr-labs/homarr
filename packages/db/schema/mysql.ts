@@ -25,6 +25,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  OnboardingStep,
   SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
@@ -59,6 +60,12 @@ export const users = mysqlTable("user", {
   salt: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
   homeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
+    onDelete: "set null",
+  }),
+  mobileHomeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
+    onDelete: "set null",
+  }),
+  defaultSearchEngineId: varchar({ length: 64 }).references(() => searchEngines.id, {
     onDelete: "set null",
   }),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
@@ -388,11 +395,17 @@ export const searchEngines = mysqlTable("search_engine", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   iconUrl: text().notNull(),
   name: varchar({ length: 64 }).notNull(),
-  short: varchar({ length: 8 }).notNull(),
+  short: varchar({ length: 8 }).unique().notNull(),
   description: text(),
   urlTemplate: text(),
   type: varchar({ length: 64 }).$type<SearchEngineType>().notNull().default("generic"),
   integrationId: varchar({ length: 64 }).references(() => integrations.id, { onDelete: "cascade" }),
+});
+
+export const onboarding = mysqlTable("onboarding", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  step: varchar({ length: 64 }).$type<OnboardingStep>().notNull(),
+  previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
@@ -402,13 +415,17 @@ export const accountRelations = relations(accounts, ({ one }) => ({
   }),
 }));
 
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ one, many }) => ({
   accounts: many(accounts),
   boards: many(boards),
   boardPermissions: many(boardUserPermissions),
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  defaultSearchEngine: one(searchEngines, {
+    fields: [users.defaultSearchEngineId],
+    references: [searchEngines.id],
+  }),
 }));
 
 export const mediaRelations = relations(medias, ({ one }) => ({
@@ -566,9 +583,10 @@ export const integrationItemRelations = relations(integrationItems, ({ one }) =>
   }),
 }));
 
-export const searchEngineRelations = relations(searchEngines, ({ one }) => ({
+export const searchEngineRelations = relations(searchEngines, ({ one, many }) => ({
   integration: one(integrations, {
     fields: [searchEngines.integrationId],
     references: [integrations.id],
   }),
+  usersWithDefault: many(users),
 }));

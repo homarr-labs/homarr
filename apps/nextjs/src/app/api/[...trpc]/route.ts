@@ -1,19 +1,18 @@
-import { headers } from "next/headers";
-import { userAgent } from "next/server";
 import type { NextRequest } from "next/server";
+import { userAgent } from "next/server";
 import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
-import { hashPasswordAsync } from "@homarr/auth";
 import type { Session } from "@homarr/auth";
+import { hashPasswordAsync } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
 import { db, eq } from "@homarr/db";
-import { apiKeys } from "@homarr/db/schema/sqlite";
+import { apiKeys } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 
 const handlerAsync = async (req: NextRequest) => {
   const apiKeyHeaderValue = req.headers.get("ApiKey");
-  const ipAddress = req.ip ?? headers().get("x-forwarded-for");
+  const ipAddress = req.headers.get("x-forwarded-for");
   const { ua } = userAgent(req);
   const session: Session | null = await getSessionOrDefaultFromHeadersAsync(apiKeyHeaderValue, ipAddress, ua);
 
@@ -88,9 +87,9 @@ const getSessionOrDefaultFromHeadersAsync = async (
 };
 
 export {
+  handlerAsync as DELETE,
   handlerAsync as GET,
+  handlerAsync as PATCH,
   handlerAsync as POST,
   handlerAsync as PUT,
-  handlerAsync as DELETE,
-  handlerAsync as PATCH,
 };

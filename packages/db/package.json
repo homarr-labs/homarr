@@ -7,10 +7,11 @@
   "exports": {
     ".": "./index.ts",
     "./client": "./client.ts",
-    "./schema/sqlite": "./schema/sqlite.ts",
+    "./schema": "./schema/index.ts",
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
-    "./validationSchemas": "./validationSchemas.ts"
+    "./validationSchemas": "./validationSchemas.ts",
+    "./env": "./env.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
@@ -21,16 +22,16 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "migration:mysql:drop": "drizzle-kit drop --config ./configs/mysql.config.ts",
-    "migration:mysql:generate": "drizzle-kit generate --config ./configs/mysql.config.ts",
-    "migration:mysql:run": "drizzle-kit migrate --config ./configs/mysql.config.ts && pnpm run seed",
-    "migration:sqlite:drop": "drizzle-kit drop --config ./configs/sqlite.config.ts",
-    "migration:sqlite:generate": "drizzle-kit generate --config ./configs/sqlite.config.ts",
-    "migration:sqlite:run": "drizzle-kit migrate --config ./configs/sqlite.config.ts && pnpm run seed",
-    "push:mysql": "drizzle-kit push --config ./configs/mysql.config.ts",
-    "push:sqlite": "drizzle-kit push --config ./configs/sqlite.config.ts",
+    "migration:mysql:drop": "pnpm with-env drizzle-kit drop --config ./configs/mysql.config.ts",
+    "migration:mysql:generate": "pnpm with-env drizzle-kit generate --config ./configs/mysql.config.ts",
+    "migration:mysql:run": "pnpm with-env drizzle-kit migrate --config ./configs/mysql.config.ts && pnpm run seed",
+    "migration:sqlite:drop": "pnpm with-env drizzle-kit drop --config ./configs/sqlite.config.ts",
+    "migration:sqlite:generate": "pnpm with-env drizzle-kit generate --config ./configs/sqlite.config.ts",
+    "migration:sqlite:run": "pnpm with-env drizzle-kit migrate --config ./configs/sqlite.config.ts && pnpm run seed",
+    "push:mysql": "pnpm with-env drizzle-kit push --config ./configs/mysql.config.ts",
+    "push:sqlite": "pnpm with-env drizzle-kit push --config ./configs/sqlite.config.ts",
     "seed": "pnpm with-env tsx ./migrations/run-seed.ts",
-    "studio": "drizzle-kit studio --config ./configs/sqlite.config.ts",
+    "studio": "pnpm with-env drizzle-kit studio --config ./configs/sqlite.config.ts",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -42,23 +43,24 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
+    "@t3-oss/env-nextjs": "^0.11.1",
     "@testcontainers/mysql": "^10.16.0",
-    "better-sqlite3": "^11.7.0",
+    "better-sqlite3": "^11.8.0",
     "dotenv": "^16.4.7",
-    "drizzle-kit": "^0.30.1",
-    "drizzle-orm": "^0.38.1",
-    "drizzle-zod": "^0.6.0",
-    "mysql2": "3.11.5"
+    "drizzle-kit": "^0.30.2",
+    "drizzle-orm": "^0.38.4",
+    "drizzle-zod": "^0.6.1",
+    "mysql2": "3.12.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.12",
-    "dotenv-cli": "^7.4.4",
-    "eslint": "^9.16.0",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^9.18.0",
     "prettier": "^3.4.2",
     "tsx": "4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

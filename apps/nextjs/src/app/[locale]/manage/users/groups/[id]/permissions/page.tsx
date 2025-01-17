@@ -1,7 +1,9 @@
 import React from "react";
+import { notFound } from "next/navigation";
 import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
 import { objectKeys } from "@homarr/common";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { groupPermissions } from "@homarr/definitions";
@@ -10,12 +12,19 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { PermissionForm, PermissionSwitch, SaveAffix } from "./_group-permission-form";
 
 interface GroupPermissionsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function GroupPermissionsPage({ params }: GroupPermissionsPageProps) {
+export default async function GroupPermissionsPage(props: GroupPermissionsPageProps) {
+  const params = await props.params;
+  const session = await auth();
+
+  if (!session?.user.permissions.includes("admin")) {
+    notFound();
+  }
+
   const group = await api.group.getById({ id: params.id });
   const tPermissions = await getScopedI18n("group.permission");
   const t = await getI18n();

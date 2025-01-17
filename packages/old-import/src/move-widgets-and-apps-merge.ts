@@ -1,10 +1,10 @@
 import { objectEntries } from "@homarr/common";
 import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import { OldHomarrScreenSizeError } from "./import-error";
 import { mapColumnCount } from "./mappers/map-column-count";
+import type { OldmarrImportConfiguration } from "./settings";
 
 export const moveWidgetsAndAppsIfMerge = (
   old: OldmarrConfig,
@@ -81,13 +81,26 @@ export const moveWidgetsAndAppsIfMerge = (
   }
 
   if (configuration.sidebarBehaviour === "last-section") {
-    if (old.settings.customization.layout.enabledLeftSidebar) {
+    const areas = [...old.apps.map((app) => app.area), ...old.widgets.map((widget) => widget.area)];
+    if (
+      old.settings.customization.layout.enabledLeftSidebar ||
+      areas.some((area) => area.type === "sidebar" && area.properties.location === "left")
+    ) {
       offset = moveWidgetsAndAppsInLeftSidebar(old, firstId, offset, configuration.screenSize);
     }
 
-    if (old.settings.customization.layout.enabledRightSidebar) {
+    if (
+      old.settings.customization.layout.enabledRightSidebar ||
+      areas.some((area) => area.type === "sidebar" && area.properties.location === "right")
+    ) {
       moveWidgetsAndAppsInRightSidebar(old, firstId, offset, configuration.screenSize);
     }
+  } else {
+    // Remove all widgets and apps in the sidebar
+    return {
+      apps: old.apps.filter((app) => app.area.type !== "sidebar"),
+      widgets: old.widgets.filter((app) => app.area.type !== "sidebar"),
+    };
   }
 
   return { apps: old.apps, widgets: old.widgets };

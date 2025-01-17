@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { db, eq } from "@homarr/db";
-import { medias } from "@homarr/db/schema/sqlite";
+import { medias } from "@homarr/db/schema";
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const image = await db.query.medias.findFirst({
     where: eq(medias.id, params.id),
     columns: {

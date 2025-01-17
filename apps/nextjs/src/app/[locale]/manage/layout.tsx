@@ -6,6 +6,7 @@ import {
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
+  IconCertificate,
   IconGitFork,
   IconHome,
   IconInfoSmall,
@@ -118,6 +119,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconLogs,
           href: "/manage/tools/logs",
           hidden: !session?.user.permissions.includes("other-view-logs"),
+        },
+        {
+          label: t("items.tools.items.certificates"),
+          icon: IconCertificate,
+          href: "/manage/tools/certificates",
+          hidden: !session?.user.permissions.includes("admin"),
         },
         {
           label: t("items.tools.items.tasks"),

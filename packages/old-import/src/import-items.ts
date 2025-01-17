@@ -2,13 +2,13 @@ import SuperJSON from "superjson";
 
 import type { Database } from "@homarr/db";
 import { createId } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
+import { items } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
-import type { OldmarrImportConfiguration } from "@homarr/validation";
 
 import type { WidgetComponentProps } from "../../widgets/src/definition";
 import { OldHomarrScreenSizeError } from "./import-error";
+import type { OldmarrImportConfiguration } from "./settings";
 import { mapKind } from "./widgets/definitions";
 import { mapOptions } from "./widgets/options";
 
@@ -55,7 +55,7 @@ export const insertItemsAsync = async (
       xOffset: screenSizeShape.location.x,
       yOffset: screenSizeShape.location.y,
       kind,
-      options: SuperJSON.stringify(mapOptions(kind, widget.properties, appsMap)),
+      options: SuperJSON.stringify(mapOptions(widget.type, widget.properties, appsMap)),
     });
 
     logger.debug(`Inserted widget id=${widget.id} sectionId=${sectionId}`);

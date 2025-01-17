@@ -21,7 +21,6 @@ import type { RequestStats } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
-import { NoIntegrationSelectedError } from "../../errors";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
 
@@ -42,8 +41,6 @@ export default function MediaServerWidget({
   );
 
   const { width, height, ref } = useElementSize();
-
-  if (integrationIds.length === 0) throw new NoIntegrationSelectedError();
 
   if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 

@@ -98,8 +98,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             {secretsKinds.map((kind, index) => (
               <SecretCard
                 key={kind}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                secret={secretsMap.get(kind)!}
+                secret={secretsMap.get(kind) ?? { kind, value: null, updatedAt: null }}
                 onCancel={() =>
                   new Promise((resolve) => {
                     // When nothing changed, just close the secret card

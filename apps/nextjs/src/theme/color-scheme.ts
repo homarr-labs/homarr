@@ -7,7 +7,7 @@ import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemeCookieKey } from "@homarr/definitions";
 
 export const getCurrentColorSchemeAsync = cache(async () => {
-  const cookieValue = cookies().get(colorSchemeCookieKey)?.value;
+  const cookieValue = (await cookies()).get(colorSchemeCookieKey)?.value;
 
   if (cookieValue) {
     return cookieValue as ColorScheme;

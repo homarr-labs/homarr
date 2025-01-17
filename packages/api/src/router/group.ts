@@ -2,12 +2,13 @@ import { TRPCError } from "@trpc/server";
 
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like, not, sql } from "@homarr/db";
-import { groupMembers, groupPermissions, groups } from "@homarr/db/schema/sqlite";
+import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { validation, z } from "@homarr/validation";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
+import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
   getPaginated: permissionRequiredProcedure
@@ -144,6 +145,25 @@ export const groupRouter = createTRPCRouter({
         },
         limit: input.limit,
       });
+    }),
+  createInitialExternalGroup: onboardingProcedure
+    .requiresStep("group")
+    .input(validation.group.create)
+    .mutation(async ({ input, ctx }) => {
+      await checkSimilarNameAndThrowAsync(ctx.db, input.name);
+
+      const groupId = createId();
+      await ctx.db.insert(groups).values({
+        id: groupId,
+        name: input.name,
+      });
+
+      await ctx.db.insert(groupPermissions).values({
+        groupId,
+        permission: "admin",
+      });
+
+      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")

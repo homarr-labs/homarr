@@ -1,3 +1,5 @@
+import type { Response } from "undici";
+
 import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
@@ -27,6 +29,10 @@ export abstract class Integration {
       throw new Error(`No secret of kind ${kind} was found`);
     }
     return secret.value;
+  }
+
+  protected hasSecretValue(kind: IntegrationSecretKind) {
+    return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
   }
 
   protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {

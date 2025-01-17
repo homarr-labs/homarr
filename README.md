@@ -1,7 +1,0 @@
-# THIS PROJECT IS STILL UNSTABLE AND WE DO NOT PROVIDE ANY SUPPORT FOR ISSUES THAT OCCURE.
-
-## PLEASE DO NOT OPEN ANY ISSUES OR DISCUSSIONS
-
-### EVERYTHING IS SUBJECT TO CHANGE
-
-Please use [this](https://github.com/ajnart/homarr) version of Homarr when you want to use it

@@ -31,15 +31,15 @@ import { GeneralSettingsContent } from "./_general";
 import { LayoutSettingsContent } from "./_layout";
 
 interface Props {
-  params: {
+  params: Promise<{
     name: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     tab?: keyof TranslationObject["board"]["setting"]["section"];
-  };
+  }>;
 }
 
-const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
+const getBoardAndPermissionsAsync = async (params: Awaited<Props["params"]>) => {
   try {
     const board = await api.board.getBoardByName({ name: params.name });
     const { hasFullAccess } = await getBoardPermissionsAsync(board);
@@ -63,11 +63,17 @@ const getBoardAndPermissionsAsync = async (params: Props["params"]) => {
   }
 };
 
-export default async function BoardSettingsPage({ params, searchParams }: Props) {
+export default async function BoardSettingsPage(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { board, permissions } = await getBoardAndPermissionsAsync(params);
   const boardSettings = await getServerSettingByKeyAsync(db, "board");
-  const { hasFullAccess } = await getBoardPermissionsAsync(board);
+  const { hasFullAccess, hasChangeAccess } = await getBoardPermissionsAsync(board);
   const t = await getScopedI18n("board.setting");
+
+  if (!hasChangeAccess) {
+    notFound();
+  }
 
   return (
     <Container>
@@ -95,7 +101,11 @@ export default async function BoardSettingsPage({ params, searchParams }: Props)
                 <BoardAccessSettings board={board} initialPermissions={permissions} />
               </AccordionItemFor>
               <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
-                <DangerZoneSettingsContent hideVisibility={boardSettings.homeBoardId === board.id} />
+                <DangerZoneSettingsContent
+                  hideVisibility={
+                    boardSettings.homeBoardId === board.id || boardSettings.mobileHomeBoardId === board.id
+                  }
+                />
               </AccordionItemFor>
             </>
           )}

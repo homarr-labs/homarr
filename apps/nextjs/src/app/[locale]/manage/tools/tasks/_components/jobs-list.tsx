@@ -54,7 +54,7 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
   return (
     <Stack>
       {jobs.map((job) => (
-        <Card key={job.job.name}>
+        <Card key={job.job.name} withBorder>
           <Group justify={"space-between"} gap={"md"}>
             <Stack gap={0}>
               <Group>

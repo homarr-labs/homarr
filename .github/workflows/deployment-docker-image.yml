@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - beta
+      - dev
   workflow_dispatch:
     inputs:
       send-notifications:
@@ -11,11 +13,6 @@ on:
         required: false
         default: true
         description: Send notifications
-      push-image:
-        type: boolean
-        required: false
-        default: true
-        description: Push Docker Image
 
 permissions:
   contents: write
@@ -27,34 +24,102 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   TURBO_TELEMETRY_DISABLED: 1
 
-concurrency: production
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
 
 jobs:
+  release:
+    name: Create tag and release
+    runs-on: ubuntu-latest
+    env:
+      SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' }}
+    outputs:
+      version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
+      git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
+
+    steps:
+      - run: echo "Skipping release for workflow_dispatch event"
+        if: env.SKIP_RELEASE == 'true'
+        # The below generated version fallback represents a normalized branch name, for example "feature/branch-name" -> "feature-branch-name"
+      - run: echo "version="$(echo ${{github.ref_name}} | sed 's/[^a-zA-Z0-9\-]/-/g') >> "$GITHUB_OUTPUT"
+        id: version-fallback
+        if: env.SKIP_RELEASE == 'true' && github.ref_name != 'main' && github.ref_name != 'beta'
+
+      - name: Obtain token
+        if: env.SKIP_RELEASE == 'false'
+        id: obtainToken
+        uses: tibdex/github-app-token@v2
+        with:
+          private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
+          app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+      - uses: actions/checkout@v4
+        if: env.SKIP_RELEASE == 'false'
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        if: env.SKIP_RELEASE == 'false'
+        with:
+          node-version: 22
+      - run: npm i -g pnpm
+        if: env.SKIP_RELEASE == 'false'
+      - name: Install dependencies
+        if: env.SKIP_RELEASE == 'false'
+        run: |
+          pnpm install
+      - name: Run Semantic Release
+        if: env.SKIP_RELEASE == 'false'
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          GIT_AUTHOR_NAME: "Releases Homarr"
+          GIT_AUTHOR_EMAIL: "175486441+homarr-releases[bot]@users.noreply.github.com"
+          GIT_COMMITTER_NAME: "Releases Homarr"
+          GIT_COMMITTER_EMAIL: "175486441+homarr-releases[bot]@users.noreply.github.com"
+        run: |
+          pnpm release
+      - name: Read semver output
+        # We read the last tag either from the created release or from the current branch, this is to rerun the deployment job for the currently released version when it failed
+        if: env.SKIP_RELEASE == 'false' || github.ref_name == 'main' || github.ref_name == 'beta'
+        id: read-semver
+        run: |
+          git fetch --tags
+          echo "version=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
+      - name: Read git ref
+        if: env.SKIP_RELEASE == 'false'
+        id: read-git-ref
+        run: |
+          echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Update dev branch
+        if: env.SKIP_RELEASE == 'false'
+        continue-on-error: true # Prevent pipeline from failing when merge fails
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: |
+          git config user.name "Releases Homarr"
+          git config user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
+          git fetch origin dev
+          git checkout dev
+          git pull origin dev
+          git merge ${{ github.ref_name }}
+          git push origin dev
   deploy:
     name: Deploy docker image
+    needs: release
     runs-on: ubuntu-latest
+    env:
+      NEXT_VERSION: ${{ needs.release.outputs.version }}
+      DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
+      DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
     steps:
-      - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications != false }}
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Deployment of an image has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - uses: actions/checkout@v4
-      - name: Get Next Version
-        id: semver
-        uses: ietf-tools/semver-action@v1
         with:
-          token: ${{ github.token }}
-          branch: dev
+          ref: ${{ needs.release.outputs.git_ref }}
       - name: Discord notification
         if: ${{ github.events.inputs.send-notifications != false }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Semver computed next tag to be ${{ steps.semver.outputs.next }}. Current is ${{ steps.semver.outputs.current }}. Building images..."
+          args: "Deployment of an image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -71,15 +136,12 @@ jobs:
         with:
           images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           tags: |
-            type=raw,value=alpha
-            type=raw,value=early-adopters
-      #          tags: |
-      #            type=raw,value=latest
-      #            type=raw,value=${{ steps.semver.outputs.next }}
+            ${{ env.DEPLOY_LATEST == 'true' && 'type=raw,value=latest' || null }}
+            ${{ env.DEPLOY_BETA == 'true' && 'type=raw,value=beta' || null }}
+            type=raw,value=${{ env.NEXT_VERSION }}
       - name: Build and push
         id: buildPushAction
         uses: docker/build-push-action@v6
-        if: ${{ github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null }}
         with:
           platforms: linux/amd64,linux/arm64
           context: .
@@ -89,30 +151,9 @@ jobs:
           network: host
         env:
           SKIP_ENV_VALIDATION: true
-      - name: Build
-        id: buildPushDryAction
-        uses: docker/build-push-action@v6
-        if: ${{ github.events.inputs.push-image == 'false' }}
-        with:
-          platforms: linux/amd64,linux/arm64
-          context: .
-          push: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          network: host
-        env:
-          SKIP_ENV_VALIDATION: true
       - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications != false && (github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null) }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of image has completed. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
-      - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications != false && !(github.events.inputs.push-image == 'true' || github.events.inputs.push-image == null) }}
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Deployment of image has completed. Image ID is '${{ steps.buildPushDryAction.outputs.imageid }}'. This was a dry run."
+          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."

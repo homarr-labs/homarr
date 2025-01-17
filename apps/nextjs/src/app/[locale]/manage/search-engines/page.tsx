@@ -6,6 +6,7 @@ import { IconPencil, IconSearch } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination } from "@homarr/ui";
 import { z } from "@homarr/validation";
@@ -22,12 +23,8 @@ const searchParamsSchema = z.object({
   page: z.string().regex(/\d+/).transform(Number).catch(1),
 });
 
-type SearchParamsSchemaInputFromSchema<TSchema extends Record<string, unknown>> = Partial<{
-  [K in keyof TSchema]: Exclude<TSchema[K], undefined> extends unknown[] ? string[] : string;
-}>;
-
 interface SearchEnginesPageProps {
-  searchParams: SearchParamsSchemaInputFromSchema<z.infer<typeof searchParamsSchema>>;
+  searchParams: Promise<inferSearchParamsFromSchema<typeof searchParamsSchema>>;
 }
 
 export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
@@ -37,7 +34,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
     redirect("/auth/login");
   }
 
-  const searchParams = searchParamsSchema.parse(props.searchParams);
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
 
   const tEngine = await getScopedI18n("search.engine");
@@ -81,7 +78,7 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
   const session = await auth();
 
   return (
-    <Card>
+    <Card withBorder>
       <Group justify="space-between" wrap="nowrap">
         <Group align="top" justify="start" wrap="nowrap" style={{ flex: 1 }}>
           <Avatar

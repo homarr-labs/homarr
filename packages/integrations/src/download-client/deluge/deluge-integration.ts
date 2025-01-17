@@ -1,6 +1,8 @@
 import { Deluge } from "@ctrl/deluge";
 import dayjs from "dayjs";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
+
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -8,13 +10,13 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 
 export class DelugeIntegration extends DownloadClientIntegration {
   public async testConnectionAsync(): Promise<void> {
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     await client.login();
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const {
       stats: { download_rate, upload_rate },
       torrents: rawTorrents,
@@ -57,7 +59,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
   }
 
   public async pauseQueueAsync() {
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const store = (await client.listTorrents()).result.torrents;
     await Promise.all(
       Object.entries(store).map(async ([id]) => {
@@ -67,11 +69,12 @@ export class DelugeIntegration extends DownloadClientIntegration {
   }
 
   public async pauseItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().pauseTorrent(id);
+    const client = await this.getClientAsync();
+    await client.pauseTorrent(id);
   }
 
   public async resumeQueueAsync() {
-    const client = this.getClient();
+    const client = await this.getClientAsync();
     const store = (await client.listTorrents()).result.torrents;
     await Promise.all(
       Object.entries(store).map(async ([id]) => {
@@ -81,17 +84,20 @@ export class DelugeIntegration extends DownloadClientIntegration {
   }
 
   public async resumeItemAsync({ id }: DownloadClientItem): Promise<void> {
-    await this.getClient().resumeTorrent(id);
+    const client = await this.getClientAsync();
+    await client.resumeTorrent(id);
   }
 
   public async deleteItemAsync({ id }: DownloadClientItem, fromDisk: boolean): Promise<void> {
-    await this.getClient().removeTorrent(id, fromDisk);
+    const client = await this.getClientAsync();
+    await client.removeTorrent(id, fromDisk);
   }
 
-  private getClient() {
+  private async getClientAsync() {
     return new Deluge({
       baseUrl: this.url("/").toString(),
       password: this.getSecretValue("password"),
+      dispatcher: await createCertificateAgentAsync(),
     });
   }
 

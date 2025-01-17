@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/db";
-import { invites, users } from "@homarr/db/schema/sqlite";
+import { invites, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { inviteRouter } from "../invite";
@@ -11,7 +11,7 @@ import { inviteRouter } from "../invite";
 const defaultSession = {
   user: {
     id: createId(),
-    permissions: [],
+    permissions: ["admin"],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),
@@ -24,7 +24,7 @@ vi.mock("@homarr/auth", async () => {
 });
 
 // Mock the env module to return the credentials provider
-vi.mock("@homarr/auth/env.mjs", () => {
+vi.mock("@homarr/auth/env", () => {
   return {
     env: {
       AUTH_PROVIDERS: ["credentials"],
@@ -38,6 +38,7 @@ describe("all should return all existing invites without sensitive informations"
     const db = createDb();
     const caller = inviteRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -72,6 +73,7 @@ describe("all should return all existing invites without sensitive informations"
     const db = createDb();
     const caller = inviteRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -111,6 +113,7 @@ describe("create should create a new invite expiring on the specified date with 
     const db = createDb();
     const caller = inviteRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
     await db.insert(users).values({
@@ -142,6 +145,7 @@ describe("delete should remove invite by id", () => {
     const db = createDb();
     const caller = inviteRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 
@@ -179,6 +183,7 @@ describe("delete should remove invite by id", () => {
     const db = createDb();
     const caller = inviteRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSession,
     });
 

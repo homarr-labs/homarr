@@ -1,6 +1,7 @@
-# Creating folders in volume
+# Create sub directories in volume
 mkdir -p /appdata/db
 mkdir -p /appdata/redis
+mkdir -p /appdata/trusted-certificates
 
 # Run migrations
 if [ $DB_MIGRATIONS_DISABLED = "true" ]; then
@@ -10,18 +11,8 @@ else
     node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
 fi
 
-# Generates an encryption key if it doesn't exist and saves it to /secrets/encryptionKey
-# Also sets the ENCRYPTION_KEY environment variable
-encryptionKey=""
-if [ -r /secrets/encryptionKey ]; then
-    echo "Encryption key already exists"
-    encryptionKey=$(cat /secrets/encryptionKey)
-else
-    echo "Generating encryption key"
-    encryptionKey=$(node ./generateEncryptionKey.js)
-    echo $encryptionKey > /secrets/encryptionKey
-fi
-export ENCRYPTION_KEY=$encryptionKey
+# Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
+export AUTH_SECRET=$(openssl rand -base64 32)
 
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file

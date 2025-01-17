@@ -3,8 +3,9 @@ import type Docker from "dockerode";
 import type { Container } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
-import { icons } from "@homarr/db/schema/sqlite";
+import { icons } from "@homarr/db/schema";
 import type { DockerContainerState } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
@@ -17,42 +18,60 @@ const dockerCache = createCacheChannel<{
 
 export const dockerRouter = createTRPCRouter({
   getContainers: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
-    const { timestamp, data } = await dockerCache.consumeAsync(async () => {
-      const dockerInstances = DockerSingleton.getInstance();
-      const containers = await Promise.all(
-        // Return all the containers of all the instances into only one item
-        dockerInstances.map(({ instance, host: key }) =>
-          instance.listContainers({ all: true }).then((containers) =>
-            containers.map((container) => ({
-              ...container,
-              instance: key,
-            })),
+    const result = await dockerCache
+      .consumeAsync(async () => {
+        const dockerInstances = DockerSingleton.getInstance();
+        const containers = await Promise.all(
+          // Return all the containers of all the instances into only one item
+          dockerInstances.map(({ instance, host: key }) =>
+            instance.listContainers({ all: true }).then((containers) =>
+              containers.map((container) => ({
+                ...container,
+                instance: key,
+              })),
+            ),
           ),
-        ),
-      ).then((containers) => containers.flat());
+        ).then((containers) => containers.flat());
 
-      const extractImage = (container: Docker.ContainerInfo) =>
-        container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
-      const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
-      const dbIcons =
-        likeQueries.length >= 1
-          ? await db.query.icons.findMany({
-              where: or(...likeQueries),
-            })
-          : [];
+        const extractImage = (container: Docker.ContainerInfo) =>
+          container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+        const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
+        const dbIcons =
+          likeQueries.length >= 1
+            ? await db.query.icons.findMany({
+                where: or(...likeQueries),
+              })
+            : [];
 
-      return {
-        containers: containers.map((container) => ({
-          ...container,
-          iconUrl:
-            dbIcons.find((icon) => {
-              const extractedImage = extractImage(container);
-              if (!extractedImage) return false;
-              return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-            })?.url ?? null,
-        })),
-      };
-    });
+        return {
+          containers: containers.map((container) => ({
+            ...container,
+            iconUrl:
+              dbIcons.find((icon) => {
+                const extractedImage = extractImage(container);
+                if (!extractedImage) return false;
+                return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
+              })?.url ?? null,
+          })),
+        };
+      })
+      .catch((error) => {
+        logger.error(error);
+        return {
+          isError: true,
+          error: error as unknown,
+        };
+      });
+
+    if ("isError" in result) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An error occurred while fetching the containers",
+        cause: result.error,
+      });
+    }
+
+    const { data, timestamp } = result;
 
     return {
       containers: sanitizeContainers(data.containers),

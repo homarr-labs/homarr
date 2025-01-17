@@ -1,128 +1,864 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "歡迎來到 Homarr",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": ""
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "應用",
+            "boards": "面板",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "設定",
+        "subtitle": ""
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": ""
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "使用者",
     "name": "使用者",
+    "page": {
+      "login": {
+        "title": "",
+        "subtitle": ""
+      },
+      "invite": {
+        "title": "",
+        "subtitle": "",
+        "description": ""
+      },
+      "init": {
+        "title": "",
+        "subtitle": ""
+      }
+    },
     "field": {
       "email": {
-        "label": "E-mail"
+        "label": "E-mail",
+        "verified": ""
       },
       "username": {
-        "label": "帳號"
+        "label": "使用者"
       },
       "password": {
         "label": "密碼",
         "requirement": {
+          "length": "",
           "lowercase": "包含小寫字母",
           "uppercase": "包含大寫字母",
-          "number": "包含數字"
+          "number": "包含數字",
+          "special": ""
         }
       },
       "passwordConfirm": {
         "label": "確認密碼"
+      },
+      "previousPassword": {
+        "label": ""
+      },
+      "homeBoard": {
+        "label": ""
+      },
+      "pingIconsEnabled": {
+        "label": ""
       }
+    },
+    "error": {
+      "usernameTaken": ""
     },
     "action": {
       "login": {
-        "label": "登入"
+        "label": "登入",
+        "labelWith": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "forgotPassword": {
+          "label": "",
+          "description": ""
+        }
       },
       "register": {
         "label": "創建帳號",
         "notification": {
           "success": {
-            "title": "帳號已創建"
+            "title": "帳號已創建",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       },
-      "create": "創建使用者"
+      "create": "創建使用者",
+      "changePassword": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changeFirstDayOfWeek": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePingIconsEnabled": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "manageAvatar": {
+        "changeImage": {
+          "label": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            },
+            "toLarge": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "removeImage": {
+          "label": "",
+          "confirm": "",
+          "notification": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          }
+        }
+      },
+      "editProfile": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": ""
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
+      },
+      "transfer": {
+        "label": ""
+      }
     }
   },
   "group": {
+    "title": "",
+    "name": "",
+    "search": "",
     "field": {
-      "name": "名稱"
+      "name": "名稱",
+      "members": ""
     },
     "permission": {
       "admin": {
-        "title": "管理員"
+        "title": "管理員",
+        "item": {
+          "admin": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "app": {
+        "title": "應用",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "board": {
-        "title": "面板"
+        "title": "面板",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "integration": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "use-all": {
+            "label": "",
+            "description": ""
+          },
+          "interact-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "media": {
+        "title": "",
+        "item": {
+          "upload": {
+            "label": "",
+            "description": ""
+          },
+          "view-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "other": {
+        "title": "",
+        "item": {
+          "view-logs": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "search-engine": {
+        "title": "",
+        "item": {
+          "create": {
+            "label": "",
+            "description": ""
+          },
+          "modify-all": {
+            "label": "",
+            "description": ""
+          },
+          "full-all": {
+            "label": "",
+            "description": ""
+          }
+        }
+      }
+    },
+    "memberNotice": {
+      "mixed": "",
+      "external": ""
+    },
+    "reservedNotice": {
+      "message": ""
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "transfer": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "addMember": {
+        "label": ""
+      },
+      "removeMember": {
+        "label": "",
+        "confirm": ""
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "changePermissions": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "update": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "app": {
     "page": {
       "list": {
-        "title": "應用"
+        "title": "應用",
+        "noResults": {
+          "title": "",
+          "action": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
     },
     "field": {
       "name": {
         "label": "名稱"
+      },
+      "description": {
+        "label": ""
+      },
+      "url": {
+        "label": ""
+      }
+    },
+    "action": {
+      "select": {
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "integration": {
+    "page": {
+      "list": {
+        "title": "",
+        "search": "",
+        "noResults": {
+          "title": ""
+        }
+      },
+      "create": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "title": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      }
+    },
     "field": {
       "name": {
         "label": "名稱"
+      },
+      "url": {
+        "label": ""
       }
     },
+    "action": {
+      "create": ""
+    },
     "testConnection": {
+      "action": {
+        "create": "",
+        "edit": ""
+      },
+      "alertNotice": "",
       "notification": {
+        "success": {
+          "title": "",
+          "message": ""
+        },
         "invalidUrl": {
-          "title": "無效連結"
+          "title": "無效連結",
+          "message": ""
+        },
+        "secretNotDefined": {
+          "title": "",
+          "message": ""
+        },
+        "invalidCredentials": {
+          "title": "",
+          "message": ""
+        },
+        "commonError": {
+          "title": "",
+          "message": ""
+        },
+        "badRequest": {
+          "title": "",
+          "message": ""
+        },
+        "unauthorized": {
+          "title": "",
+          "message": ""
+        },
+        "forbidden": {
+          "title": "",
+          "message": ""
+        },
+        "notFound": {
+          "title": "",
+          "message": ""
+        },
+        "internalServerError": {
+          "title": "",
+          "message": ""
+        },
+        "serviceUnavailable": {
+          "title": "",
+          "message": ""
+        },
+        "connectionAborted": {
+          "title": "",
+          "message": ""
+        },
+        "domainNotFound": {
+          "title": "",
+          "message": ""
+        },
+        "connectionRefused": {
+          "title": "",
+          "message": ""
+        },
+        "invalidJson": {
+          "title": "",
+          "message": ""
+        },
+        "wrongPath": {
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
+      "title": "",
+      "lastUpdated": "",
+      "notSet": {
+        "label": "",
+        "tooltip": ""
+      },
+      "secureNotice": "",
+      "reset": {
+        "title": "",
+        "message": ""
+      },
+      "noSecretsRequired": {
+        "segmentTitle": "",
+        "text": ""
+      },
       "kind": {
         "username": {
-          "label": "帳號"
+          "label": "使用者",
+          "newLabel": ""
+        },
+        "apiKey": {
+          "label": "",
+          "newLabel": ""
         },
         "password": {
           "label": "密碼",
           "newLabel": "新密碼"
         }
       }
+    },
+    "permission": {
+      "use": "",
+      "interact": "",
+      "full": ""
     }
   },
   "media": {
+    "plural": "",
+    "search": "",
     "field": {
       "name": "名稱",
       "size": "大小",
       "creator": "創建者"
+    },
+    "action": {
+      "upload": {
+        "label": "",
+        "file": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "delete": {
+        "label": "",
+        "description": "",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
+      "copy": {
+        "label": ""
+      }
     }
   },
   "common": {
+    "beta": "",
     "error": "錯誤",
     "action": {
       "add": "新增",
       "apply": "應用",
+      "backToOverview": "",
       "create": "創建",
       "edit": "編輯",
+      "import": "",
       "insert": "插入",
       "remove": "刪除",
       "save": "儲存",
       "saveChanges": "儲存設定",
       "cancel": "取消",
       "delete": "刪除",
+      "discard": "",
       "confirm": "確認",
+      "continue": "",
       "previous": "上一步",
       "next": "下一步",
-      "tryAgain": "請再試一次"
+      "checkoutDocs": "",
+      "checkLogs": "",
+      "tryAgain": "請再試一次",
+      "loading": ""
+    },
+    "here": "",
+    "iconPicker": {
+      "label": "",
+      "header": ""
+    },
+    "colorScheme": {
+      "options": {
+        "light": "",
+        "dark": ""
+      }
     },
     "information": {
+      "min": "",
+      "max": "",
+      "days": "",
       "hours": "時",
       "minutes": "分"
     },
+    "notification": {
+      "create": {
+        "success": "",
+        "error": ""
+      },
+      "delete": {
+        "success": "",
+        "error": ""
+      },
+      "update": {
+        "success": "",
+        "error": ""
+      },
+      "transfer": {
+        "success": "",
+        "error": ""
+      }
+    },
+    "multiSelect": {
+      "placeholder": ""
+    },
+    "multiText": {
+      "placeholder": "",
+      "addLabel": ""
+    },
+    "select": {
+      "placeholder": "",
+      "badge": {
+        "recommended": ""
+      }
+    },
     "userAvatar": {
       "menu": {
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
         "preferences": "您的偏好設定",
-        "login": "登入"
+        "logout": "",
+        "login": "登入",
+        "homeBoard": "",
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "危險",
     "noResults": "未找到結果",
+    "preview": {
+      "show": "",
+      "hide": ""
+    },
     "zod": {
       "errors": {
         "default": "該字段無效",
@@ -130,7 +866,8 @@
         "string": {
           "startsWith": "該字段必須以 {startsWith} 開頭",
           "endsWith": "該字段必須以 {endsWith} 結尾",
-          "includes": "該字段必須以 {includes}"
+          "includes": "該字段必須以 {includes}",
+          "invalidEmail": ""
         },
         "tooSmall": {
           "string": "該字段長度必須至少為 {minimum} 個字符",
@@ -139,11 +876,30 @@
         "tooBig": {
           "string": "該字段長度不得超過 {maximum} 個字符",
           "number": "該字段必須小於或等於 {maximum}"
+        },
+        "custom": {
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
+          "fileTooLarge": "",
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
   },
   "section": {
+    "dynamic": {
+      "action": {
+        "create": "",
+        "remove": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      }
+    },
     "category": {
       "field": {
         "name": {
@@ -151,42 +907,147 @@
         }
       },
       "action": {
+        "create": "",
+        "edit": "",
+        "remove": "",
         "moveUp": "上移",
-        "moveDown": "下移"
+        "moveDown": "下移",
+        "createAbove": "",
+        "createBelow": ""
+      },
+      "create": {
+        "title": "",
+        "submit": ""
+      },
+      "remove": {
+        "title": "",
+        "message": ""
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
+          "create": "",
           "changePosition": "換位"
         }
       }
     }
   },
   "item": {
+    "action": {
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
+    },
     "menu": {
       "label": {
         "settings": "設定"
       }
     },
+    "create": {
+      "title": "",
+      "addToBoard": ""
+    },
     "moveResize": {
+      "title": "",
       "field": {
         "width": {
           "label": "寬度"
         },
         "height": {
           "label": "高度"
+        },
+        "xOffset": {
+          "label": ""
+        },
+        "yOffset": {
+          "label": ""
         }
       }
+    },
+    "edit": {
+      "title": "",
+      "advancedOptions": {
+        "label": "",
+        "title": ""
+      },
+      "field": {
+        "integrations": {
+          "label": ""
+        },
+        "customCssClasses": {
+          "label": ""
+        }
+      }
+    },
+    "remove": {
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
+      "name": "",
+      "description": "",
       "option": {
+        "appId": {
+          "label": ""
+        },
         "openInNewTab": {
           "label": "在新分頁中開啟"
+        },
+        "showTitle": {
+          "label": ""
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "pingEnabled": {
+          "label": ""
+        }
+      },
+      "error": {
+        "notFound": {
+          "label": "",
+          "tooltip": ""
+        }
+      }
+    },
+    "bookmarks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "layout": {
+          "label": "顯示布局",
+          "option": {
+            "row": {
+              "label": "橫向"
+            },
+            "column": {
+              "label": "垂直"
+            },
+            "grid": {
+              "label": ""
+            }
+          }
+        },
+        "items": {
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
           "label": "顯示布局",
@@ -196,17 +1057,29 @@
             },
             "column": {
               "label": "垂直"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "usePiHoleColors": {
+          "label": ""
         }
+      },
+      "error": {
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
         "adsBlockedToday": "今日封鎖",
         "adsBlockedTodayPercentage": "今日封鎖",
-        "dnsQueriesToday": "今日查詢"
+        "dnsQueriesToday": "今日查詢",
+        "domainsBeingBlocked": ""
       }
     },
     "dnsHoleControls": {
+      "name": "",
       "description": "從您的面板控制 PiHole 或 AdGuard",
       "option": {
         "layout": {
@@ -217,28 +1090,70 @@
             },
             "column": {
               "label": "垂直"
+            },
+            "grid": {
+              "label": ""
             }
           }
+        },
+        "showToggleAllButtons": {
+          "label": ""
         }
       },
+      "error": {
+        "internalServerError": ""
+      },
       "controls": {
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
         "set": "設定",
         "enabled": "已啟用",
         "disabled": "已禁用",
+        "processing": "",
+        "disconnected": "",
         "hours": "時",
-        "minutes": "分"
+        "minutes": "分",
+        "unlimited": ""
       }
     },
     "clock": {
+      "name": "",
       "description": "顯示目前的日期與時間",
       "option": {
+        "customTitleToggle": {
+          "label": "",
+          "description": ""
+        },
+        "customTitle": {
+          "label": ""
+        },
+        "is24HourFormat": {
+          "label": "",
+          "description": ""
+        },
+        "showSeconds": {
+          "label": ""
+        },
+        "useCustomTimezone": {
+          "label": ""
+        },
         "timezone": {
-          "label": "時區"
+          "label": "時區",
+          "description": ""
+        },
+        "showDate": {
+          "label": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
     "notebook": {
       "name": "筆記本",
+      "description": "",
       "option": {
         "showToolbar": {
           "label": "顯示幫助您紀錄 Markdown 的工具欄"
@@ -330,17 +1245,31 @@
         }
       },
       "error": {
+        "noUrl": "",
         "noBrowerSupport": "您的瀏覽器不支援iFrame，請更新您的瀏覽器"
       }
     },
     "smartHome-entityState": {
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
           "label": "實體 ID"
+        },
+        "displayName": {
+          "label": ""
+        },
+        "entityUnit": {
+          "label": ""
+        },
+        "clickable": {
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
           "label": "顯示名稱"
@@ -348,13 +1277,28 @@
         "automationId": {
           "label": "自動化ID"
         }
+      },
+      "spotlightAction": {
+        "run": ""
       }
     },
     "calendar": {
       "name": "日曆",
+      "description": "",
       "option": {
         "releaseType": {
-          "label": "Radarr 發布類型"
+          "label": "Radarr 發布類型",
+          "options": {
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
+          }
+        },
+        "filterPastMonths": {
+          "label": ""
+        },
+        "filterFutureMonths": {
+          "label": ""
         }
       }
     },
@@ -362,8 +1306,25 @@
       "name": "天氣",
       "description": "顯示指定位置的目前天氣狀況",
       "option": {
+        "isFormatFahrenheit": {
+          "label": ""
+        },
         "location": {
           "label": "天氣位置"
+        },
+        "showCity": {
+          "label": ""
+        },
+        "hasForecast": {
+          "label": ""
+        },
+        "forecastDayCount": {
+          "label": "",
+          "description": ""
+        },
+        "dateFormat": {
+          "label": "",
+          "description": ""
         }
       },
       "kind": {
@@ -385,8 +1346,17 @@
     },
     "indexerManager": {
       "name": "索引管理器狀態",
+      "description": "",
+      "option": {
+        "openIndexerSiteInNewTab": {
+          "label": ""
+        }
+      },
       "title": "索引管理器",
-      "testAll": "測試全部"
+      "testAll": "測試全部",
+      "error": {
+        "internalServerError": ""
+      }
     },
     "healthMonitoring": {
       "name": "系統健康監控",
@@ -406,20 +1376,60 @@
         }
       },
       "popover": {
-        "available": "可用"
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
+        "uptime": "",
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "可用",
+        "lastSeen": ""
+      },
+      "memory": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
       "location": {
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
         "search": "搜尋",
         "table": {
-          "header": {},
-          "action": {},
+          "header": {
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
+          },
+          "action": {
+            "select": ""
+          },
           "population": {
             "fallback": "未知"
           }
         }
-      }
+      },
+      "integration": {
+        "noData": "",
+        "description": ""
+      },
+      "app": {
+        "noData": "",
+        "description": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "noData": ""
+      },
+      "option": {}
     },
     "video": {
       "name": "影片串流",
@@ -429,33 +1439,134 @@
           "label": "訂閱網址"
         },
         "hasAutoPlay": {
-          "label": "自動播放"
+          "label": "自動播放",
+          "description": ""
+        },
+        "isMuted": {
+          "label": ""
+        },
+        "hasControls": {
+          "label": ""
         }
+      },
+      "error": {
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
+      }
+    },
+    "mediaServer": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "items": {
+        "user": "使用者",
+        "name": "名稱",
+        "id": ""
       }
     },
     "downloads": {
+      "name": "",
+      "description": "",
+      "option": {
+        "columns": {
+          "label": ""
+        },
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": ""
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        },
+        "showCompletedUsenet": {
+          "label": ""
+        },
+        "showCompletedTorrent": {
+          "label": ""
+        },
+        "activeTorrentThreshold": {
+          "label": ""
+        },
+        "categoryFilter": {
+          "label": ""
+        },
+        "filterIsWhitelist": {
+          "label": ""
+        },
+        "applyFilterToRatio": {
+          "label": ""
+        }
+      },
+      "errors": {
+        "noColumns": "",
+        "noCommunications": ""
+      },
       "items": {
+        "actions": {
+          "columnTitle": ""
+        },
         "added": {
+          "columnTitle": "",
           "detailsTitle": "日期已添加"
+        },
+        "category": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "downSpeed": {
           "columnTitle": "下載",
           "detailsTitle": "下載速度"
         },
+        "index": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "id": {
+          "columnTitle": ""
+        },
         "integration": {
           "columnTitle": "集成"
         },
+        "name": {
+          "columnTitle": ""
+        },
         "progress": {
-          "columnTitle": "進度"
+          "columnTitle": "進度",
+          "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "分享率"
+          "columnTitle": "分享率",
+          "detailsTitle": ""
+        },
+        "received": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "sent": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "size": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "狀態"
+          "columnTitle": "狀態",
+          "detailsTitle": ""
+        },
+        "time": {
+          "columnTitle": "",
+          "detailsTitle": ""
+        },
+        "type": {
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "上傳"
+          "columnTitle": "上傳",
+          "detailsTitle": ""
         }
       },
       "states": {
@@ -463,62 +1574,304 @@
         "queued": "隊列",
         "paused": "已暫停",
         "completed": "已完成",
-        "unknown": "未知"
-      }
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "未知",
+        "seeding": ""
+      },
+      "actions": {
+        "clients": {
+          "modalTitle": "",
+          "pause": "",
+          "resume": ""
+        },
+        "client": {
+          "pause": "",
+          "resume": ""
+        },
+        "item": {
+          "pause": "",
+          "resume": "",
+          "delete": {
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
+          }
+        }
+      },
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
+      "name": "",
       "description": "查看 Overseerr 或 Jellyseer 實例中的所有媒體請求列表",
       "option": {
         "linksTargetNewTab": {
           "label": "在新分頁中開啟連結"
         }
       },
+      "pending": {
+        "approve": "",
+        "approving": "",
+        "decline": ""
+      },
       "availability": {
         "unknown": "未知",
+        "pending": "",
+        "processing": "",
         "partiallyAvailable": "部分",
         "available": "可用"
-      }
+      },
+      "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
+      "name": "",
       "description": "您的媒體請求統計",
+      "option": {},
       "titles": {
         "stats": {
           "main": "媒體狀態",
           "approved": "已准許",
           "pending": "待准許",
+          "processing": "",
+          "declined": "",
+          "available": "",
           "tv": "電視劇請求",
           "movie": "電影請求",
           "total": "總計"
         },
         "users": {
-          "main": "使用者排行"
+          "main": "使用者排行",
+          "requests": ""
+        }
+      }
+    },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": "預設視圖"
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "工作種",
+        "queue": "隊列",
+        "statistics": "統計"
+      },
+      "currentIndex": "",
+      "healthCheck": {
+        "title": "",
+        "queued": "隊列",
+        "status": {
+          "healthy": "健康",
+          "unhealthy": "不良"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "空",
+          "transcodes": "轉碼",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
+          "videoCodecs": "編碼",
+          "videoContainers": "容器",
+          "videoResolutions": "解析度"
+        },
+        "workers": {
+          "empty": "空",
+          "table": {
+            "file": "檔案",
+            "eta": "剩餘時間",
+            "progress": "進度",
+            "transcode": "轉碼",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "空",
+          "table": {
+            "file": "檔案",
+            "size": "大小",
+            "transcode": "轉碼",
+            "healthCheck": ""
+          }
+        }
+      }
+    },
+    "rssFeed": {
+      "name": "",
+      "description": "",
+      "option": {
+        "feedUrls": {
+          "label": ""
+        },
+        "enableRtl": {
+          "label": ""
+        },
+        "textLinesClamp": {
+          "label": ""
+        },
+        "maximumAmountPosts": {
+          "label": ""
         }
       }
     }
   },
+  "widgetPreview": {
+    "toggle": {
+      "enabled": "",
+      "disabled": ""
+    },
+    "dimensions": {
+      "title": ""
+    }
+  },
   "board": {
     "action": {
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "confirmLeave": {
+          "title": "",
+          "message": ""
+        }
+      },
       "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
         "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
           "apps": {
-            "label": "應用"
+            "label": "應用",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
           },
           "screenSize": {
+            "label": "",
+            "description": "",
             "option": {
               "sm": "小",
               "md": "中等",
               "lg": "大號"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
             }
           }
         }
       }
     },
     "field": {
+      "pageTitle": {
+        "label": ""
+      },
+      "metaTitle": {
+        "label": ""
+      },
+      "logoImageUrl": {
+        "label": ""
+      },
+      "faviconImageUrl": {
+        "label": ""
+      },
+      "backgroundImageUrl": {
+        "label": ""
+      },
       "backgroundImageAttachment": {
-        "label": "背景圖片附件"
+        "label": "背景圖片附件",
+        "option": {
+          "fixed": {
+            "label": "",
+            "description": ""
+          },
+          "scroll": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "backgroundImageRepeat": {
+        "label": "",
+        "option": {
+          "repeat": {
+            "label": "",
+            "description": ""
+          },
+          "no-repeat": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-x": {
+            "label": "",
+            "description": ""
+          },
+          "repeat-y": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "backgroundImageSize": {
-        "label": "背景圖像大小"
+        "label": "背景圖像大小",
+        "option": {
+          "cover": {
+            "label": "",
+            "description": ""
+          },
+          "contain": {
+            "label": "",
+            "description": ""
+          }
+        }
       },
       "primaryColor": {
         "label": "主體顏色"
@@ -526,20 +1879,37 @@
       "secondaryColor": {
         "label": "輔助顏色"
       },
+      "opacity": {
+        "label": ""
+      },
       "customCss": {
-        "description": "此外，只推薦有經驗的使用者使用 CSS 自定義面板"
+        "label": "",
+        "description": "此外，只推薦有經驗的使用者使用 CSS 自定義面板",
+        "customClassesAlert": {
+          "title": "",
+          "description": ""
+        }
+      },
+      "columnCount": {
+        "label": ""
       },
       "name": {
         "label": "名稱"
       },
       "isPublic": {
-        "label": "公開"
+        "label": "公開",
+        "description": ""
       }
     },
+    "content": {
+      "metaTitle": ""
+    },
     "setting": {
+      "title": "",
       "section": {
         "general": {
-          "title": "一般"
+          "title": "一般",
+          "unrecognizedLink": ""
         },
         "layout": {
           "title": "顯示布局"
@@ -547,11 +1917,24 @@
         "background": {
           "title": "背景"
         },
+        "color": {
+          "title": ""
+        },
+        "customCss": {
+          "title": ""
+        },
         "access": {
+          "title": "",
           "permission": {
             "item": {
               "view": {
                 "label": "查看面板"
+              },
+              "modify": {
+                "label": ""
+              },
+              "full": {
+                "label": ""
               }
             }
           }
@@ -559,34 +1942,115 @@
         "dangerZone": {
           "title": "危險",
           "action": {
-            "delete": {
+            "rename": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "modal": {
+                "title": ""
+              }
+            },
+            "visibility": {
+              "label": "",
+              "description": {
+                "public": "",
+                "private": ""
+              },
+              "button": {
+                "public": "",
+                "private": ""
+              },
               "confirm": {
-                "title": "刪除面板"
+                "public": {
+                  "title": "",
+                  "description": ""
+                },
+                "private": {
+                  "title": "",
+                  "description": ""
+                }
+              }
+            },
+            "delete": {
+              "label": "",
+              "description": "",
+              "button": "",
+              "confirm": {
+                "title": "刪除面板",
+                "description": ""
               }
             }
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "歡迎來到 Homarr",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "",
+        "notice": ""
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        }
+      }
     }
   },
   "management": {
+    "metaTitle": "",
+    "title": {
+      "morning": "",
+      "afternoon": "",
+      "evening": ""
+    },
+    "notFound": {
+      "title": "",
+      "text": ""
+    },
     "navbar": {
       "items": {
         "home": "首頁",
         "boards": "面板",
         "apps": "應用",
+        "integrations": "",
+        "searchEngies": "",
+        "medias": "",
         "users": {
           "label": "使用者",
           "items": {
             "manage": "管理",
-            "invites": "邀請"
+            "invites": "邀請",
+            "groups": ""
           }
         },
         "tools": {
           "label": "工具",
           "items": {
             "docker": "Docker",
-            "api": "API"
+            "logs": "",
+            "api": "API",
+            "tasks": ""
           }
         },
         "settings": "設定",
@@ -594,7 +2058,9 @@
           "label": "幫助",
           "items": {
             "documentation": "文件",
-            "discord": "Discord 社群"
+            "submitIssue": "",
+            "discord": "Discord 社群",
+            "sourceCode": ""
           }
         },
         "about": "關於"
@@ -606,29 +2072,47 @@
           "board": "面板",
           "user": "使用者",
           "invite": "邀請",
-          "app": "應用"
+          "integration": "",
+          "app": "應用",
+          "group": ""
         },
         "statisticLabel": {
-          "boards": "面板"
+          "boards": "面板",
+          "resources": "",
+          "authentication": "",
+          "authorization": ""
         }
       },
       "board": {
         "title": "您的面板",
         "action": {
+          "new": {
+            "label": ""
+          },
+          "open": {
+            "label": ""
+          },
           "settings": {
             "label": "設定"
           },
           "setHomeBoard": {
+            "label": "",
             "badge": {
-              "label": "首頁"
+              "label": "首頁",
+              "tooltip": ""
             }
           },
           "delete": {
             "label": "永久刪除",
             "confirm": {
-              "title": "刪除面板"
+              "title": "刪除面板",
+              "description": ""
             }
           }
+        },
+        "visibility": {
+          "public": "",
+          "private": ""
         },
         "modal": {
           "createBoard": {
@@ -640,11 +2124,18 @@
           }
         }
       },
+      "media": {
+        "includeFromAllUsers": ""
+      },
       "user": {
+        "back": "",
+        "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
             "title": "一般",
             "item": {
+              "language": "",
+              "board": "",
               "firstDayOfWeek": "一週的第一天",
               "accessibility": "無障礙服務"
             }
@@ -660,22 +2151,51 @@
           "metaTitle": "管理使用者",
           "title": "使用者"
         },
+        "edit": {
+          "metaTitle": ""
+        },
         "create": {
           "metaTitle": "創建使用者",
+          "title": "",
           "step": {
+            "personalInformation": {
+              "label": ""
+            },
             "security": {
               "label": "安全"
+            },
+            "groups": {
+              "label": "",
+              "title": "",
+              "description": ""
+            },
+            "review": {
+              "label": ""
+            },
+            "completed": {
+              "title": ""
+            },
+            "error": {
+              "title": ""
             }
+          },
+          "action": {
+            "createAnother": "",
+            "back": ""
           }
         },
         "invite": {
           "title": "管理使用者邀請",
           "action": {
             "new": {
+              "title": "",
               "description": "過期後，邀請會失效，被邀請者將無法創建帳號"
             },
             "copy": {
-              "link": "邀請連結"
+              "title": "",
+              "description": "",
+              "link": "邀請連結",
+              "button": ""
             },
             "delete": {
               "title": "刪除邀請",
@@ -699,43 +2219,205 @@
         }
       },
       "group": {
+        "back": "",
         "setting": {
           "general": {
-            "title": "一般"
+            "title": "一般",
+            "owner": "所有者",
+            "ownerOfGroup": "",
+            "ownerOfGroupDeleted": ""
+          },
+          "members": {
+            "title": "",
+            "search": "",
+            "notFound": ""
+          },
+          "permissions": {
+            "title": "",
+            "form": {
+              "unsavedChanges": ""
+            }
           }
         }
       },
       "settings": {
-        "title": "設定"
+        "title": "設定",
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        },
+        "section": {
+          "analytics": {
+            "title": "",
+            "general": {
+              "title": "",
+              "text": ""
+            },
+            "widgetData": {
+              "title": "",
+              "text": ""
+            },
+            "integrationData": {
+              "title": "",
+              "text": ""
+            },
+            "usersData": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "crawlingAndIndexing": {
+            "title": "",
+            "warning": "",
+            "noIndex": {
+              "title": "",
+              "text": ""
+            },
+            "noFollow": {
+              "title": "",
+              "text": ""
+            },
+            "noTranslate": {
+              "title": "",
+              "text": ""
+            },
+            "noSiteLinksSearchBox": {
+              "title": "",
+              "text": ""
+            }
+          },
+          "board": {
+            "title": "面板",
+            "homeBoard": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "appearance": {
+            "title": "外觀",
+            "defaultColorScheme": {
+              "label": "",
+              "options": {
+                "light": "",
+                "dark": ""
+              }
+            }
+          },
+          "culture": {
+            "title": "",
+            "defaultLocale": {
+              "label": ""
+            }
+          }
+        }
       },
       "tool": {
         "tasks": {
+          "title": "",
           "status": {
+            "idle": "",
             "running": "運行中",
             "error": "錯誤"
           },
           "job": {
+            "iconsUpdater": {
+              "label": ""
+            },
+            "analytics": {
+              "label": ""
+            },
+            "smartHomeEntityState": {
+              "label": ""
+            },
+            "ping": {
+              "label": ""
+            },
             "mediaServer": {
               "label": "媒體服務"
             },
-            "mediaRequests": {
-              "label": "媒體請求"
+            "mediaOrganizer": {
+              "label": ""
+            },
+            "downloads": {
+              "label": ""
+            },
+            "mediaRequestStats": {
+              "label": ""
+            },
+            "mediaRequestList": {
+              "label": ""
+            },
+            "rssFeeds": {
+              "label": ""
+            },
+            "indexerManager": {
+              "label": ""
+            },
+            "healthMonitoring": {
+              "label": ""
+            },
+            "dnsHole": {
+              "label": ""
+            },
+            "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": ""
+            },
+            "mediaTranscoding": {
+              "label": ""
             }
           }
         },
         "api": {
           "title": "API",
+          "modal": {
+            "createApiToken": {
+              "title": "",
+              "description": "",
+              "button": ""
+            }
+          },
           "tab": {
             "documentation": {
               "label": "文件"
             },
             "apiKey": {
+              "label": "",
+              "title": "",
+              "button": {
+                "createApiToken": ""
+              },
               "table": {
                 "header": {
-                  "id": "ID"
+                  "id": "ID",
+                  "createdBy": ""
                 }
               }
             }
+          }
+        }
+      },
+      "about": {
+        "version": "",
+        "text": "",
+        "accordion": {
+          "contributors": {
+            "title": "",
+            "subtitle": ""
+          },
+          "translators": {
+            "title": "",
+            "subtitle": ""
+          },
+          "libraries": {
+            "title": "",
+            "subtitle": ""
           }
         }
       }
@@ -743,6 +2425,11 @@
   },
   "docker": {
     "title": "容器",
+    "table": {
+      "updated": "",
+      "search": "",
+      "selected": ""
+    },
     "field": {
       "name": {
         "label": "名稱"
@@ -754,7 +2441,9 @@
           "running": "運行中",
           "paused": "已暫停",
           "restarting": "正在重啟...",
-          "removing": "正在刪除..."
+          "exited": "",
+          "removing": "正在刪除...",
+          "dead": ""
         }
       },
       "containerImage": {
@@ -766,27 +2455,102 @@
     },
     "action": {
       "start": {
-        "label": "開始"
+        "label": "開始",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "stop": {
-        "label": "停止"
+        "label": "停止",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "restart": {
-        "label": "重啟"
+        "label": "重啟",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       },
       "remove": {
-        "label": "刪除"
+        "label": "刪除",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "refresh": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
+    "title": "",
+    "userSelect": {
+      "title": ""
+    },
+    "groupSelect": {
+      "title": ""
+    },
     "tab": {
-      "user": "使用者"
+      "user": "使用者",
+      "group": "",
+      "inherited": ""
     },
     "field": {
       "user": {
         "label": "使用者"
+      },
+      "group": {
+        "label": ""
+      },
+      "permission": {
+        "label": ""
       }
+    },
+    "action": {
+      "saveUser": "",
+      "saveGroup": ""
     }
   },
   "navigationStructure": {
@@ -796,17 +2560,31 @@
         "label": "面板"
       },
       "integrations": {
+        "label": "",
         "edit": {
           "label": "編輯"
+        },
+        "new": {
+          "label": ""
         }
       },
       "search-engines": {
+        "label": "",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "編輯"
         }
       },
+      "medias": {
+        "label": ""
+      },
       "apps": {
         "label": "應用",
+        "new": {
+          "label": ""
+        },
         "edit": {
           "label": "編輯"
         }
@@ -819,6 +2597,9 @@
         "general": "一般",
         "security": "安全",
         "board": "面板",
+        "groups": {
+          "label": ""
+        },
         "invites": {
           "label": "邀請"
         }
@@ -827,6 +2608,9 @@
         "label": "工具",
         "docker": {
           "label": "Docker"
+        },
+        "logs": {
+          "label": ""
         }
       },
       "settings": {
@@ -838,23 +2622,144 @@
     }
   },
   "search": {
+    "placeholder": "",
+    "nothingFound": "",
+    "error": {
+      "fetch": ""
+    },
     "mode": {
       "appIntegrationBoard": {
+        "help": "",
         "group": {
           "app": {
-            "title": "應用"
+            "title": "應用",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "edit": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           },
           "board": {
-            "title": "面板"
+            "title": "面板",
+            "children": {
+              "action": {
+                "open": {
+                  "label": ""
+                },
+                "homeBoard": {
+                  "label": ""
+                },
+                "settings": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "integration": {
+            "title": ""
+          }
+        }
+      },
+      "command": {
+        "help": "",
+        "group": {
+          "localCommand": {
+            "title": ""
+          },
+          "globalCommand": {
+            "title": "",
+            "option": {
+              "colorScheme": {
+                "light": "",
+                "dark": ""
+              },
+              "language": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
+                "label": ""
+              },
+              "newApp": {
+                "label": ""
+              },
+              "newIntegration": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "newUser": {
+                "label": ""
+              },
+              "newInvite": {
+                "label": ""
+              },
+              "newGroup": {
+                "label": ""
+              }
+            }
           }
         }
       },
       "external": {
+        "help": "",
         "group": {
           "searchEngine": {
+            "title": "",
+            "children": {
+              "action": {
+                "search": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              },
+              "searchResults": {
+                "title": ""
+              }
+            },
             "option": {
+              "google": {
+                "name": "",
+                "description": ""
+              },
+              "bing": {
+                "name": "",
+                "description": ""
+              },
+              "duckduckgo": {
+                "name": "",
+                "description": ""
+              },
               "torrent": {
-                "name": "Torrents"
+                "name": "Torrents",
+                "description": ""
+              },
+              "youTube": {
+                "name": "",
+                "description": ""
               }
             }
           }
@@ -862,11 +2767,17 @@
       },
       "help": {
         "group": {
+          "mode": {
+            "title": ""
+          },
           "help": {
             "title": "幫助",
             "option": {
               "documentation": {
                 "label": "文件"
+              },
+              "submitIssue": {
+                "label": ""
               },
               "discord": {
                 "label": "Discord 社群"
@@ -875,15 +2786,66 @@
           }
         }
       },
+      "home": {
+        "group": {
+          "local": {
+            "title": ""
+          }
+        }
+      },
       "page": {
+        "help": "",
         "group": {
           "page": {
+            "title": "",
             "option": {
+              "manageHome": {
+                "label": ""
+              },
+              "manageBoard": {
+                "label": ""
+              },
+              "manageApp": {
+                "label": ""
+              },
+              "manageIntegration": {
+                "label": ""
+              },
+              "manageSearchEngine": {
+                "label": ""
+              },
+              "manageMedia": {
+                "label": ""
+              },
               "manageUser": {
                 "label": "管理使用者"
               },
+              "manageInvite": {
+                "label": ""
+              },
+              "manageGroup": {
+                "label": ""
+              },
+              "manageDocker": {
+                "label": ""
+              },
+              "manageApi": {
+                "label": ""
+              },
+              "manageLog": {
+                "label": ""
+              },
+              "manageTask": {
+                "label": ""
+              },
+              "manageSettings": {
+                "label": ""
+              },
               "about": {
                 "label": "關於"
+              },
+              "homeBoard": {
+                "label": ""
               },
               "preferences": {
                 "label": "您的偏好設定"
@@ -893,17 +2855,112 @@
         }
       },
       "userGroup": {
+        "help": "",
         "group": {
           "user": {
-            "title": "使用者"
+            "title": "使用者",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
+          },
+          "group": {
+            "title": "",
+            "children": {
+              "action": {
+                "detail": {
+                  "label": ""
+                },
+                "manageMember": {
+                  "label": ""
+                },
+                "managePermission": {
+                  "label": ""
+                }
+              },
+              "detail": {
+                "title": ""
+              }
+            }
           }
         }
       }
     },
     "engine": {
+      "search": "",
       "field": {
         "name": {
           "label": "名稱"
+        },
+        "short": {
+          "label": ""
+        },
+        "urlTemplate": {
+          "label": ""
+        },
+        "description": {
+          "label": ""
+        }
+      },
+      "page": {
+        "list": {
+          "title": "",
+          "noResults": {
+            "title": "",
+            "action": ""
+          },
+          "interactive": ""
+        },
+        "create": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        },
+        "edit": {
+          "title": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "configControl": "",
+          "searchEngineType": {
+            "generic": "",
+            "fromIntegration": ""
+          }
+        },
+        "delete": {
+          "title": "",
+          "message": "",
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
         }
       }
     }

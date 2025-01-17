@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { drizzle } from "drizzle-orm/mysql2";
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2";
 
 import type { Database } from "../..";
+import { env } from "../../env";
 import * as mysqlSchema from "../../schema/mysql";
 import { seedDataAsync } from "../seed";
 
@@ -11,15 +11,15 @@ const migrationsFolder = process.argv[2] ?? ".";
 
 const migrateAsync = async () => {
   const mysql2 = mysql.createConnection(
-    process.env.DB_HOST
-      ? {
-          host: process.env.DB_HOST,
-          database: process.env.DB_NAME!,
-          port: Number(process.env.DB_PORT),
-          user: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-        }
-      : { uri: process.env.DB_URL },
+    env.DB_URL
+      ? { uri: env.DB_URL }
+      : {
+          host: env.DB_HOST,
+          database: env.DB_NAME,
+          port: env.DB_PORT,
+          user: env.DB_USER,
+          password: env.DB_PASSWORD,
+        },
   );
 
   const db = drizzle(mysql2, {

@@ -3,13 +3,13 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Database } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
-import { groups, users } from "@homarr/db/schema/sqlite";
+import { groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";
 import * as ldapClient from "../credentials/ldap-client";
 
-vi.mock("../../env.mjs", () => ({
+vi.mock("../../env", () => ({
   env: {
     AUTH_LDAP_BIND_DN: "bind_dn",
     AUTH_LDAP_BIND_PASSWORD: "bind_password",

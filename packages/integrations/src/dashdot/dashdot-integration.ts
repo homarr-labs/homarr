@@ -4,6 +4,7 @@ import "@homarr/redis";
 
 import dayjs from "dayjs";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { z } from "@homarr/validation";
 
 import { createChannelEventHistory } from "../../../redis/src/lib/channel";
@@ -12,7 +13,7 @@ import type { HealthMonitoring } from "../types";
 
 export class DashDotIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
-    const response = await fetch(this.url("/info"));
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/info"));
     await response.json();
   }
 
@@ -52,7 +53,7 @@ export class DashDotIntegration extends Integration {
   }
 
   private async getInfoAsync() {
-    const infoResponse = await fetch(this.url("/info"));
+    const infoResponse = await fetchWithTrustedCertificatesAsync(this.url("/info"));
     const serverInfo = await internalServerInfoApi.parseAsync(await infoResponse.json());
     return {
       maxAvailableMemoryBytes: serverInfo.ram.size,
@@ -66,7 +67,7 @@ export class DashDotIntegration extends Integration {
 
   private async getCurrentCpuLoadAsync() {
     const channel = this.getChannel();
-    const cpu = await fetch(this.url("/load/cpu"));
+    const cpu = await fetchWithTrustedCertificatesAsync(this.url("/load/cpu"));
     const data = await cpuLoadPerCoreApiList.parseAsync(await cpu.json());
     await channel.pushAsync(data);
     return {
@@ -88,12 +89,12 @@ export class DashDotIntegration extends Integration {
   }
 
   private async getCurrentStorageLoadAsync() {
-    const storageLoad = await fetch(this.url("/load/storage"));
+    const storageLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/storage"));
     return (await storageLoad.json()) as number[];
   }
 
   private async getCurrentMemoryLoadAsync() {
-    const memoryLoad = await fetch(this.url("/load/ram"));
+    const memoryLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/ram"));
     const data = await memoryLoadApi.parseAsync(await memoryLoad.json());
     return {
       loadInBytes: data.load,

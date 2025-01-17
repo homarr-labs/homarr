@@ -1,4 +1,109 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "Welcome to Homarr",
+        "subtitle": "Let's get started with setting up your Homarr instance.",
+        "description": "To get started, please select how you want to set up your Homarr instance.",
+        "action": {
+          "scratch": "Start from scratch",
+          "importOldmarr": "Import from Homarr before 1.0"
+        }
+      },
+      "import": {
+        "title": "Import data",
+        "subtitle": "You can import data from an existing Homarr instance.",
+        "dropzone": {
+          "title": "Drag the zip file here or click to browse",
+          "description": "The uploaded zip will be processed and you'll be able to select what you want to import"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Change file"
+          }
+        },
+        "importSettings": {
+          "title": "Import settings",
+          "description": "Configure the import behavior"
+        },
+        "boardSelection": {
+          "title": "Found {count} boards",
+          "description": "Choose all boards with there size you want to import",
+          "action": {
+            "selectAll": "Select all",
+            "unselectAll": "Unselect all"
+          }
+        },
+        "summary": {
+          "title": "Import summary",
+          "description": "In the below summary you can see what will be imported",
+          "action": {
+            "import": "Confirm import and continue"
+          },
+          "entities": {
+            "apps": "Apps",
+            "boards": "Boards",
+            "integrations": "Integrations",
+            "credentialUsers": "Credential users"
+          }
+        },
+        "tokenModal": {
+          "title": "Enter import token",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Enter the shown import token from your previous homarr instance"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Invalid token",
+              "message": "The token you entered is invalid"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Admin user",
+        "subtitle": "Specify the credentials for your administrator user.",
+        "notification": {
+          "success": {
+            "title": "User created",
+            "message": "The user was successfully created"
+          },
+          "error": {
+            "title": "User creation failed"
+          }
+        }
+      },
+      "group": {
+        "title": "External group",
+        "subtitle": "Specify the group that should be used for external users.",
+        "form": {
+          "name": {
+            "label": "Group name",
+            "description": "Name has to match admin group of external provider"
+          }
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "subtitle": "Configure server settings."
+      },
+      "finish": {
+        "title": "Finish setup",
+        "subtitle": "You are ready to go!",
+        "description": "You have successfully completed the setup process. You can now start using Homarr. Select your next action:",
+        "action": {
+          "goToBoard": "Go to {name} board",
+          "createBoard": "Create your first board",
+          "inviteUser": "Invite other users",
+          "docs": "Read the documentation"
+        }
+      }
+    },
+    "backToStart": "Back to start"
+  },
   "user": {
     "title": "Users",
     "name": "User",
@@ -102,6 +207,16 @@
           },
           "error": {
             "message": "Unable to change home board"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Default search engine changed successfully"
+          },
+          "error": {
+            "message": "Unable to change default search engine"
           }
         }
       },
@@ -384,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Find an app",
     "page": {
       "list": {
         "title": "Apps",
@@ -507,6 +623,10 @@
       },
       "url": {
         "label": "Url"
+      },
+      "attemptSearchEngineCreation": {
+        "label": "Create Search Engine",
+        "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
       }
     },
     "action": {
@@ -588,6 +708,10 @@
     "secrets": {
       "title": "Secrets",
       "lastUpdated": "Last updated {date}",
+      "notSet": {
+        "label": "No value set",
+        "tooltip": "This required secret has not been set yet"
+      },
       "secureNotice": "This secret cannot be retrieved after creation",
       "reset": {
         "title": "Reset secret",
@@ -609,6 +733,14 @@
         "password": {
           "label": "Password",
           "newLabel": "New password"
+        },
+        "tokenId": {
+          "label": "Token ID",
+          "newLabel": "New token ID"
+        },
+        "realm": {
+          "label": "Realm",
+          "newLabel": "New realm"
         }
       }
     },
@@ -678,6 +810,7 @@
       "previous": "Previous",
       "next": "Next",
       "checkoutDocs": "Check out the documentation",
+      "checkLogs": "Check logs for more details",
       "tryAgain": "Try again",
       "loading": "Loading"
     },
@@ -685,6 +818,12 @@
     "iconPicker": {
       "label": "Icon URL",
       "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you."
+    },
+    "colorScheme": {
+      "options": {
+        "light": "Light",
+        "dark": "Dark"
+      }
     },
     "information": {
       "min": "Min",
@@ -733,7 +872,8 @@
         "logout": "Logout",
         "login": "Login",
         "homeBoard": "Your home board",
-        "loggedOut": "Logged out"
+        "loggedOut": "Logged out",
+        "updateAvailable": "{countUpdates} updates available: {tag}"
       }
     },
     "dangerZone": "Danger zone",
@@ -765,8 +905,10 @@
           "passwordRequirements": "Password does not meet the requirements",
           "boardAlreadyExists": "A board with this name already exists",
           "invalidFileType": "Invalid file type, expected {expected}",
+          "invalidFileName": "Invalid file name",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
-          "invalidConfiguration": "Invalid configuration"
+          "invalidConfiguration": "Invalid configuration",
+          "groupNameTaken": "Group name already taken"
         }
       }
     }
@@ -833,6 +975,7 @@
     },
     "create": {
       "title": "Choose item to add",
+      "search": "Filter items",
       "addToBoard": "Add to board"
     },
     "moveResize": {
@@ -958,7 +1101,8 @@
         "adsBlockedTodayPercentage": "Blocked today",
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
-      }
+      },
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -1031,6 +1175,25 @@
           "label": "Date Format",
           "description": "How the date should look like"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "Minecraft Server Status",
+      "description": "Displays the status of a Minecraft server",
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "domain": {
+          "label": "Server address"
+        },
+        "isBedrockServer": {
+          "label": "Bedrock server"
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "notebook": {
@@ -1128,6 +1291,7 @@
       },
       "error": {
         "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
         "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
@@ -1255,6 +1419,12 @@
         },
         "fileSystem": {
           "label": "Show Filesystem Info"
+        },
+        "defaultTab": {
+          "label": "Default tab"
+        },
+        "sectionIndicatorRequirement": {
+          "label": "Section indicator requirement"
         }
       },
       "popover": {
@@ -1263,7 +1433,7 @@
         "memory": "Memory: {memory}GiB",
         "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
         "version": "Version: {version}",
-        "uptime": "Uptime: {days} Days, {hours} Hours, {minutes} Minutes",
+        "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
         "loadAverage": "Load average:",
         "minute": "1 minute",
         "minutes": "{count} minutes",
@@ -1274,6 +1444,52 @@
       "memory": {},
       "error": {
         "internalServerError": "Failed to fetch health status"
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "CPU",
+          "memory": "RAM"
+        },
+        "resource": {
+          "node": {
+            "name": "Nodes"
+          },
+          "qemu": {
+            "name": "VMs"
+          },
+          "lxc": {
+            "name": "LXCs"
+          },
+          "storage": {
+            "name": "Storage"
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
+          },
+          "detail": {
+            "cpu": "Cores",
+            "memory": "Memory",
+            "storage": "Storage",
+            "uptime": "Uptime",
+            "haState": "HA State",
+            "storageType": {
+              "local": "Local storage",
+              "shared": "Shared storage"
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
+          }
+        }
       }
     },
     "common": {
@@ -1308,9 +1524,6 @@
         "description": "Click <here></here> to create a new app"
       },
       "error": {
-        "action": {
-          "logs": "Check logs for more details"
-        },
         "noIntegration": "No integration selected",
         "noData": "No integration data available"
       },
@@ -1342,7 +1555,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "User",
+        "name": "Name",
+        "id": "Id"
+      }
     },
     "downloads": {
       "name": "Download Client",
@@ -1528,6 +1746,65 @@
         }
       }
     },
+    "mediaTranscoding": {
+      "name": "Media transcoding",
+      "description": "Statistics, current queue and worker status of your media transcoding",
+      "option": {
+        "defaultView": {
+          "label": "Default view"
+        },
+        "queuePageSize": {
+          "label": "Queue page size"
+        }
+      },
+      "tab": {
+        "workers": "Workers",
+        "queue": "Queue",
+        "statistics": "Statistics"
+      },
+      "currentIndex": "{start}-{end} of {total}",
+      "healthCheck": {
+        "title": "Health check",
+        "queued": "Queued",
+        "status": {
+          "healthy": "Healthy",
+          "unhealthy": "Unhealthy"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "Empty",
+          "transcodes": "Transcodes",
+          "transcodesCount": "Transcodes: {value}",
+          "healthChecksCount": "Health checks: {value}",
+          "filesCount": "Files: {value}",
+          "savedSpace": "Saved space: {value}",
+          "healthChecks": "Health checks",
+          "videoCodecs": "Codecs",
+          "videoContainers": "Containers",
+          "videoResolutions": "Resolutions"
+        },
+        "workers": {
+          "empty": "Empty",
+          "table": {
+            "file": "File",
+            "eta": "ETA",
+            "progress": "Progress",
+            "transcode": "Transcode",
+            "healthCheck": "Health check"
+          }
+        },
+        "queue": {
+          "empty": "Empty",
+          "table": {
+            "file": "File",
+            "size": "Size",
+            "transcode": "Transcode",
+            "healthCheck": "Health check"
+          }
+        }
+      }
+    },
     "rssFeed": {
       "name": "RSS feeds",
       "description": "Monitor and display one or more generic RSS, ATOM or JSON feeds",
@@ -1558,6 +1835,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplicate board",
+        "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
+        "notification": {
+          "success": {
+            "title": "Board duplicated",
+            "message": "The board was successfully duplicated"
+          },
+          "error": {
+            "title": "Unable to duplicate board",
+            "message": "The board could not be duplicated"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1607,6 +1898,7 @@
           },
           "screenSize": {
             "label": "Screen size",
+            "description": "In versions before 1.0 three different modes existed, so you were able to choose the amount of columns for each screen size.",
             "option": {
               "sm": "Small",
               "md": "Medium",
@@ -1803,6 +2095,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "Welcome to Homarr",
+        "description": "A sleek,  modern dashboard that puts all of your apps and services at your fingertips.",
+        "link": "Create your first board",
+        "notice": "To make this page disappear, create a board and set it as the home board"
+      },
+      "notFound": {
+        "title": "Board not found",
+        "description": "The board specified was either not found or you don't have access to it.",
+        "link": "View all boards",
+        "notice": "Check the link or contact an administrator if you think it should be accessible"
+      },
+      "homeBoard": {
+        "title": "No home board",
+        "admin": {
+          "description": "You haven't set a home board for the server yet.",
+          "link": "Configure server-wide home board",
+          "notice": "To make this page disappear for all users, set a home board for the server"
+        },
+        "user": {
+          "description": "You haven't set a home board yet.",
+          "link": "Configure your home board",
+          "notice": "To make this page disappear, specify the home board in your preferences"
+        },
+        "anonymous": {
+          "description": "The server administrator hasn't set a home board yet.",
+          "link": "View public boards",
+          "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
+        }
+      }
     }
   },
   "management": {
@@ -1838,6 +2162,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
+            "certificates": "Certificates",
             "tasks": "Tasks"
           }
         },
@@ -1890,6 +2215,16 @@
               "tooltip": "This board will show as your home board"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "Set as your mobile board",
+            "badge": {
+              "label": "Mobile",
+              "tooltip": "This board will show as your mobile board"
+            }
+          },
+          "duplicate": {
+            "label": "Duplicate board"
+          },
           "delete": {
             "label": "Delete permanently",
             "confirm": {
@@ -1923,7 +2258,14 @@
             "title": "General",
             "item": {
               "language": "Language & Region",
-              "board": "Home board",
+              "board": {
+                "title": "Home board",
+                "type": {
+                  "general": "General",
+                  "mobile": "Mobile"
+                }
+              },
+              "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }
@@ -2082,7 +2424,15 @@
             "title": "Boards",
             "homeBoard": {
               "label": "Global home board",
+              "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
+            }
+          },
+          "search": {
+            "title": "Search",
+            "defaultSearchEngine": {
+              "label": "Global default search engine",
+              "description": "Integration search engines can not be selected here"
             }
           },
           "appearance": {
@@ -2112,6 +2462,9 @@
             "error": "Error"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": "Minecraft server status"
+            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
@@ -2153,6 +2506,12 @@
             },
             "sessionCleanup": {
               "label": "Session Cleanup"
+            },
+            "updateChecker": {
+              "label": "Update checker"
+            },
+            "mediaTranscoding": {
+              "label": "Media transcoding"
             }
           }
         },
@@ -2300,7 +2659,26 @@
             "message": "Something went wrong while refreshing the containers"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Add to Homarr",
+        "notification": {
+          "success": {
+            "title": "Added to Homarr",
+            "message": "Selected apps have been added to Homarr"
+          },
+          "error": {
+            "title": "Could not add to Homarr",
+            "message": "Selected apps could not be added to Homarr"
+          }
+        },
+        "modal": {
+          "title": "Add docker container(-s) to Homarr"
+        }
       }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Docker containers"
     }
   },
   "permission": {
@@ -2390,6 +2768,9 @@
         },
         "logs": {
           "label": "Logs"
+        },
+        "certificates": {
+          "label": "Certificates"
         }
       },
       "settings": {
@@ -2435,6 +2816,9 @@
                 },
                 "homeBoard": {
                   "label": "Set as home board"
+                },
+                "mobileBoard": {
+                  "label": "Set as mobile board"
                 },
                 "settings": {
                   "label": "Open settings"
@@ -2500,6 +2884,11 @@
             }
           }
         }
+      },
+      "media": {
+        "requestMovie": "Request movie",
+        "requestSeries": "Request series",
+        "openIn": "Open in {kind}"
       },
       "external": {
         "help": "Use an external search engine",
@@ -2567,6 +2956,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Search",
+            "option": {
+              "other": {
+                "label": "Search with another search engine"
+              },
+              "no-default": {
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
+              },
+              "search": {
+                "label": "Search for \"{query}\" with {name}"
+              },
+              "from-integration": {
+                "description": "Start typing to search"
+              }
+            }
+          },
           "local": {
             "title": "Local results"
           }
@@ -2739,6 +3146,63 @@
               "title": "Search engine not deleted",
               "message": "The search engine could not be deleted"
             }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "Request \"{name}\"",
+            "table": {
+              "header": {
+                "season": "Season",
+                "episodes": "Episodes"
+              }
+            },
+            "button": {
+              "send": "Send request"
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "Trusted certificates",
+        "description": "Used by Homarr to request data from integrations.",
+        "noResults": {
+          "title": "There are no certificates yet"
+        },
+        "expires": "Expires {when}"
+      }
+    },
+    "action": {
+      "create": {
+        "label": "Add certificate",
+        "notification": {
+          "success": {
+            "title": "Certificate added",
+            "message": "The certificate was added successfully"
+          },
+          "error": {
+            "title": "Failed to add certificate",
+            "message": "The certificate could not be added"
+          }
+        }
+      },
+      "remove": {
+        "label": "Remove certificate",
+        "confirm": "Are you sure you want to remove the certificate?",
+        "notification": {
+          "success": {
+            "title": "Certificate removed",
+            "message": "The certificate was removed successfully"
+          },
+          "error": {
+            "title": "Certificate not removed",
+            "message": "The certificate could not be removed"
           }
         }
       }

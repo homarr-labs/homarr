@@ -1,26 +1,131 @@
 {
+  "init": {
+    "step": {
+      "start": {
+        "title": "Üdvözöljük a Homarrban",
+        "subtitle": "Kezdjük el a Homarr-példány beállítását.",
+        "description": "A kezdéshez válassza ki, hogyan szeretné beállítani a Homarr-példányt.",
+        "action": {
+          "scratch": "Kezdjük a legelejétől",
+          "importOldmarr": "Importálás Homarr 1.0 előtti verzióból"
+        }
+      },
+      "import": {
+        "title": "Importálás",
+        "subtitle": "Importálhat adatokat egy meglévő Homarr-példányból.",
+        "dropzone": {
+          "title": "Húzza ide a zip fájlt, vagy kattintson a böngészéshez",
+          "description": "A feltöltött zip fájlt feldolgozzuk, és kiválaszthatja, hogy mit szeretne importálni"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Fájl módosítása"
+          }
+        },
+        "importSettings": {
+          "title": "Beállítások importálása",
+          "description": "Az importálási viselkedés konfigurálása"
+        },
+        "boardSelection": {
+          "title": "Talált {count} táblák",
+          "description": "Válassza ki az összes olyan méretű táblát, amelyet importálni szeretne",
+          "action": {
+            "selectAll": "Összes kijelölése",
+            "unselectAll": "Kijelölés megszüntetése"
+          }
+        },
+        "summary": {
+          "title": "Import összefoglaló",
+          "description": "Az alábbi összefoglalóban láthatja, hogy mi lesz importálva",
+          "action": {
+            "import": "Importálás megerősítése és folytatás"
+          },
+          "entities": {
+            "apps": "Alkalmazások",
+            "boards": "Táblák",
+            "integrations": "Integrációk",
+            "credentialUsers": "Hitelesített felhasználók"
+          }
+        },
+        "tokenModal": {
+          "title": "Import token megadása",
+          "field": {
+            "token": {
+              "label": "",
+              "description": "Írja be a megjelenített import tokent az előző homarr példányból"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Érvénytelen token",
+              "message": "A megadott token érvénytelen"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Admin felhasználó",
+        "subtitle": "Adja meg a rendszergazda felhasználó hitelesítő adatait.",
+        "notification": {
+          "success": {
+            "title": "Létrejött a felhasználó",
+            "message": "A felhasználót sikeresen létrehoztuk"
+          },
+          "error": {
+            "title": "A felhasználó létrehozása sikertelen"
+          }
+        }
+      },
+      "group": {
+        "title": "Külső csoport",
+        "subtitle": "Adja meg a külső felhasználók számára használandó csoportot.",
+        "form": {
+          "name": {
+            "label": "Csoportnév",
+            "description": "A névnek meg kell egyeznie a külső szolgáltató admin csoportjával"
+          }
+        }
+      },
+      "settings": {
+        "title": "Beállítások",
+        "subtitle": "Szerver beállítások konfigurálása."
+      },
+      "finish": {
+        "title": "Beállítás befejezése",
+        "subtitle": "Készen állsz!",
+        "description": "Sikeresen befejezte a beállítási folyamatot. Most már használhatja a Homarr-t. Válassza ki a következő műveletet:",
+        "action": {
+          "goToBoard": "Tovább a {name} oldalra",
+          "createBoard": "Az első tábla létrehozása",
+          "inviteUser": "Más felhasználók meghívása",
+          "docs": "Olvassa el a dokumentációt"
+        }
+      }
+    },
+    "backToStart": "Vissza a starthoz"
+  },
   "user": {
     "title": "Felhasználók",
     "name": "Felhasználó",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Jelentkezzen be a fiókjába",
+        "subtitle": "Üdvözöljük újra! Kérjük, adja meg hitelesítő adatait"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Csatlakozz Homarrhoz",
+        "subtitle": "Üdvözöljük a Homarrban! Kérjük, hozza létre fiókját",
+        "description": "{username} meghívott"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Új Homarr telepítés",
+        "subtitle": "Kérjük, hozza létre a kezdeti rendszergazda felhasználót"
       }
     },
     "field": {
       "email": {
         "label": "Email cím",
-        "verified": ""
+        "verified": "Ellenőrzött"
       },
       "username": {
         "label": "Felhasználónév"
@@ -28,46 +133,46 @@
       "password": {
         "label": "Jelszó",
         "requirement": {
-          "length": "",
+          "length": "Tartalmazzon legalább 8 karaktert",
           "lowercase": "Tartalmazzon kisbetűt",
           "uppercase": "Tartalmazzon nagybetűt",
           "number": "Tartalmazzon számot",
-          "special": ""
+          "special": "Különleges szimbólumot tartalmaz"
         }
       },
       "passwordConfirm": {
         "label": "Jelszó megerősítése"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Előző jelszó"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Főoldal"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Ikonok használata a pingekhez"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "A felhasználónév már foglalt"
     },
     "action": {
       "login": {
         "label": "Bejelentkezés",
-        "labelWith": "",
+        "labelWith": "Bejelentkezés {provider} fiókkal",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Belépés sikeres",
+            "message": "Be van jelentkezve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Belépés sikertelen",
+            "message": "Belépés sikertelen"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Elfelejtette a jelszavát?",
+          "description": "A rendszergazda a következő paranccsal állíthatja vissza a jelszavát:"
         }
       },
       "register": {
@@ -75,27 +180,37 @@
         "notification": {
           "success": {
             "title": "Fiók létrehozva",
-            "message": ""
+            "message": "Kérjük, jelentkezzen be a folytatáshoz"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Fiók létrehozása sikertelen",
+            "message": "Fiókját nem sikerült létrehozni"
           }
         }
       },
       "create": "Felhasználó létrehozása",
       "changePassword": {
-        "label": "",
+        "label": "Jelszó módosítása",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Jelszó sikeresen megváltozott"
           },
           "error": {
-            "message": ""
+            "message": "Nem lehet megváltoztatni a jelszót"
           }
         }
       },
       "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": "A kezdőlap sikeresen cserélve"
+          },
+          "error": {
+            "message": "A kezdőlap cseréje nem lehetséges"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
         "notification": {
           "success": {
             "message": ""
@@ -108,48 +223,48 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A hét első napja sikeresen megváltozott"
           },
           "error": {
-            "message": ""
+            "message": "A hét első napja nem módosítható"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A ping ikonok sikeresen váltakoztak"
           },
           "error": {
-            "message": ""
+            "message": "Nem lehet ping ikonokat megváltoztatni"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Képcsere",
           "notification": {
             "success": {
-              "message": ""
+              "message": "A kép sikeresen megváltozott"
             },
             "error": {
-              "message": ""
+              "message": "A kép nem módosítható"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "A kép túl nagy",
+              "message": "A maximális képméret {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Kép eltávolítása",
+          "confirm": "Valóban törölni szeretnéd ezt a képet?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Kép sikeresen eltávolítva"
             },
             "error": {
-              "message": ""
+              "message": "Nem sikerült eltávolítani a képet"
             }
           }
         }
@@ -157,63 +272,63 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A profil sikeresen frissítve"
           },
           "error": {
-            "message": ""
+            "message": "Nem sikerült frissíteni a profilt"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Felhasználó végleges törlése",
+        "description": "Törli ezt a felhasználót, beleértve a beállításait. Nem töröl egyetlen táblát sem. A felhasználó nem kap értesítést.",
+        "confirm": "Biztos benne, hogy törli a {username} felhasználót a beállításaival együtt?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Felhasználó kiválasztása",
+        "notFound": "Felhasználó nem található"
       },
       "transfer": {
-        "label": ""
+        "label": "Válasszon új tulajdonost"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Csoportok",
+    "name": "Csoport",
+    "search": "Csoport keresése",
     "field": {
       "name": "Név",
-      "members": ""
+      "members": "Tagok"
     },
     "permission": {
       "admin": {
         "title": "Adminisztrátor",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Admin",
+            "description": "Az ezzel az engedéllyel rendelkező tagok teljes hozzáféréssel rendelkeznek az összes funkcióhoz és beállításhoz"
           }
         }
       },
       "app": {
-        "title": "",
+        "title": "Alkalmazások",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Alkalmazások létrehozása",
+            "description": "Alkalmazások létrehozásának engedélyezése a tagoknak"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Minden alkalmazás használata",
+            "description": "Lehetővé teszi a tagok számára, hogy bármilyen alkalmazást hozzáadjanak a tábláikhoz"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Minden alkalmazás módosítása",
+            "description": "A tagok módosíthatják az összes alkalmazást"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes alkalmazás hozzáférés",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék, használják és töröljék az alkalmazásokat"
           }
         }
       },
@@ -221,214 +336,215 @@
         "title": "Táblák",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tábla létrehozása",
+            "description": "A tagok táblákat hozhatnak létre"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Az összes tábla megtekintése",
+            "description": "A tagok megtekinthetik az összes táblát"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Az összes tábla módosítása",
+            "description": "Lehetővé teszi a tagoknak, hogy módosítsák az összes táblát (Nem tartalmazza a beléptetést és a veszélyes zónát)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes alkalmazás hozzáférés",
+            "description": "Lehetővé teszi a tagoknak az összes tábla megtekintését, módosítását és törlését (beleértve a beléptetést és a veszélyzónát)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrációk",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Integrációk létrehozása",
+            "description": "A tagok integrációkat hozhatnak létre"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Használja az összes integrációt",
+            "description": "Lehetővé teszi a tagok számára, hogy bármilyen integrációt hozzáadjanak a tábláikhoz"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interakció bármely integrációval",
+            "description": "Lehetővé teszi a tagoknak, hogy bármilyen integrációval kapcsolatba lépjenek"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes integrációs hozzáférés",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék, használhassák és kapcsolatba lépjenek bármilyen integrációval"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Média",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Média feltöltése",
+            "description": "Engedélyezze a tagok számára a médiák feltöltését"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Az összes média megtekintése",
+            "description": "Engedélyezze a tagok számára az összes média megtekintését"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes médiahozzáférés",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék és töröljék a médiatartalmakat"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Egyéb",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Naplók megtekintése",
+            "description": "A tagok megtekinthetik a naplókat"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Keresőmotorok",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Egyéni keresőmotor",
+            "description": "A tagok egyéni keresőmotorokat hozhatnak létre"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Módosítsa az összes keresőmotort",
+            "description": "A tagok módosíthatják az összes a keresőmotorokat"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Teljes hozzáférés a keresőmotorokhoz",
+            "description": "Lehetővé teszi a tagoknak, hogy kezeljék és töröljék a keresőmotorokat"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Egyes tagok külső szolgáltatóktól származnak, és itt nem kezelhetők",
+      "external": "Minden tag külső szolgáltatótól származik, és itt nem kezelhetők"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ez a csoport a rendszer használatára van fenntartva, és korlátoz bizonyos műveleteket. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Új csoport",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A csoport sikeresen létrejött"
           },
           "error": {
-            "message": ""
+            "message": "A csoport létrehozása nem sikerült"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Tulajdonos megváltoztatása",
+        "description": "A csoport tulajdonjogának átadása másik felhasználónak.",
+        "confirm": "Biztosan át akarja adni a {name} csoport tulajdonjogát {username}felhasználónak?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A {group} csoport sikeresen áthelyezve {user} felhasználó tulajdonába"
           },
           "error": {
-            "message": ""
+            "message": "Nem lehet átruházni a tulajdonjogot"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Tag hozzáadása"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Tag eltávolítása",
+        "confirm": "Biztos, hogy el akarod távolítani a {user} felhasználót ebből a csoportból?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Csoport törlése",
+        "description": "Ha töröl egy csoportot, az végleges. Kérjük, legyen biztos benne.",
+        "confirm": "Biztosan törli a {name} csoportot?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A {name} csoport sikeresen törölve"
           },
           "error": {
-            "message": ""
+            "message": "A {name} csoport nem törölhető"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Engedélyek mentve",
+            "message": "Engedélyek mentése sikeresen megtörtént"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Engedélyek nincsenek mentve",
+            "message": "Engedélyek nem kerültek mentésre"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "A {name} csoport mentése sikeresen megtörtént"
           },
           "error": {
-            "message": ""
+            "message": "Nem sikerült menteni a {name} csoportot"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Csoport kiválasztása",
+        "notFound": "Nem található csoport"
       }
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Alkalmazások",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Még nincsenek alkalmazások",
+          "action": "Hozza létre első alkalmazását"
         }
       },
       "create": {
-        "title": "",
+        "title": "Új alkalmazás",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres létrehozás",
+            "message": "Az alkalmazás sikeresen létrejött"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "A létrehozás nem sikerült",
+            "message": "Az alkalmazást nem sikerült létrehozni"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Alkalmazás szerkesztése",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "A módosítások sikeresen alkalmazva",
+            "message": "Az alkalmazás sikeresen mentve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nem sikerült alkalmazni a változtatásokat",
+            "message": "Az alkalmazást nem sikerült menteni"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Törölje az alkalmazást",
+        "message": "Biztosan törli a {name} alkalmazást?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres törlés",
+            "message": "Az alkalmazás sikeresen törölve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Törlés sikertelen",
+            "message": "Nem lehet törölni az alkalmazást"
           }
         }
       }
@@ -438,7 +554,7 @@
         "label": "Név"
       },
       "description": {
-        "label": ""
+        "label": "Leírás"
       },
       "url": {
         "label": ""
@@ -446,57 +562,57 @@
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Alkalmazás kiválasztása",
+        "notFound": "Nem található alkalmazás"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integrációk",
+        "search": "Integrációk közötti keresés",
         "noResults": {
-          "title": ""
+          "title": "Még nincsenek integrációk"
         }
       },
       "create": {
-        "title": "",
+        "title": "Új {name} integráció",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres létrehozás",
+            "message": "Az integráció sikeresen létrejött"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "A létrehozás nem sikerült",
+            "message": "Az integráció nem hozható létre"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "A {name} integráció szerkesztése",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "A módosítások sikeresen alkalmazva",
+            "message": "Az integráció sikeresen mentve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nem sikerült alkalmazni a változtatásokat",
+            "message": "Az integrációt nem sikerült menteni"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Integráció törlése",
+        "message": "Biztosan törli a {name} integrációt?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sikeres törlés",
+            "message": "Az integráció sikeresen törölve"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Törlés sikertelen",
+            "message": "Az integráció nem törölhető"
           }
         }
       }
@@ -507,104 +623,112 @@
       },
       "url": {
         "label": ""
+      },
+      "attemptSearchEngineCreation": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
-      "create": ""
+      "create": "Új integráció"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Tesztelje a kapcsolatot és hozzon létre",
+        "edit": "Tesztelje a kapcsolatot és mentsen"
       },
-      "alertNotice": "",
+      "alertNotice": "A Mentés gomb a sikeres kapcsolat létrehozása után aktiválódik",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Sikeres csatlakozás",
+          "message": "A kapcsolat sikeresen létrejött"
         },
         "invalidUrl": {
           "title": "Érvénytelen URL",
-          "message": ""
+          "message": "Az URL érvénytelen"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Hiányzó hitelesítő adatok",
+          "message": "Nem adtak meg minden hitelesítő adatot"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Érvénytelen hitelesítő adatok",
+          "message": "A hitelesítő adatok érvénytelenek"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Sikertelen kapcsolódás",
+          "message": "A kapcsolat nem hozható létre"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Hibás kérés",
+          "message": "A kérés hibás volt"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Jogosulatlan",
+          "message": "Valószínűleg rossz hitelesítő adatok"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Elutasítva",
+          "message": "Valószínűleg hiányoznak az engedélyek"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Nem található",
+          "message": "Valószínűleg rossz url vagy elérési útvonal"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Belső szerverhiba",
+          "message": "A szerver hibát észlelt"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "A szolgáltatás nem elérhető",
+          "message": "A szerver jelenleg nem elérhető"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "A kapcsolat megszakadt",
+          "message": "A kapcsolat megszakadt"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "A domain nem található",
+          "message": "A domain nem található"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Csatlakozás elutasítva",
+          "message": "Csatlakozás elutasítva"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Hibás JSON",
+          "message": "A válasz nem érvényes JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Rossz útvonal",
+          "message": "Az útvonal valószínűleg nem helyes"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
-      "secureNotice": "",
+      "title": "Titkok",
+      "lastUpdated": "Utoljára frissítve: {date}",
+      "notSet": {
+        "label": "Nincs beállítva érték",
+        "tooltip": "Ez a szükséges titok még nincs beállítva"
+      },
+      "secureNotice": "Ezt a titkot a létrehozás után nem lehet visszakeresni",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Titok visszaállítása",
+        "message": "Biztosan valaphelyzetbe állítja ezt a titkot?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Nincsenek titkok",
+        "text": "Ehhez az integrációhoz nincs szükség titkokra"
       },
       "kind": {
         "username": {
           "label": "Felhasználónév",
-          "newLabel": ""
+          "newLabel": "Új felhasználónév"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Kulcs",
+          "newLabel": "Új API kulcs"
         },
         "password": {
           "label": "Jelszó",
@@ -613,14 +737,14 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Válassza ki az integrációkat az elemekben",
+      "interact": "Interakció az integrációkkal",
+      "full": "Teljes integrációs hozzáférés"
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Média",
+    "search": "Média keresése",
     "field": {
       "name": "Név",
       "size": "Méret",
@@ -628,83 +752,90 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Média feltöltése",
+        "file": "Fájl kiválasztása",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A média sikeresen feltöltve"
           },
           "error": {
-            "message": ""
+            "message": "A médiát nem lehetett feltölteni"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Média törlése",
+        "description": "Biztos, hogy törölni akarja a médiát <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A média sikeresen törölve"
           },
           "error": {
-            "message": ""
+            "message": "A médiát nem lehetett törölni"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "URL másolása"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Béta",
     "error": "Hiba",
     "action": {
       "add": "Hozzáadás",
       "apply": "Alkalmaz",
-      "backToOverview": "",
+      "backToOverview": "Vissza az áttekintéshez",
       "create": "Létrehozás",
       "edit": "Szerkesztés",
-      "import": "",
+      "import": "Importálás",
       "insert": "Beillesztés",
       "remove": "Eltávolítás",
       "save": "Mentés",
       "saveChanges": "Változások mentése",
       "cancel": "Mégse",
       "delete": "Törlés",
-      "discard": "",
+      "discard": "Elvetés",
       "confirm": "Megerősít",
-      "continue": "",
+      "continue": "Folytatás",
       "previous": "Előző",
       "next": "Következő",
-      "checkoutDocs": "",
+      "checkoutDocs": "Tekintse meg a dokumentációt",
+      "checkLogs": "További részletekért ellenőrizze a naplókat",
       "tryAgain": "Próbálja újra",
-      "loading": ""
+      "loading": "Töltés"
     },
-    "here": "",
+    "here": "itt",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "Ikonhivatkozás",
+      "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A Homarr a {countIcons} ikonok között keres."
+    },
+    "colorScheme": {
+      "options": {
+        "light": "Világos",
+        "dark": "Sötét"
+      }
     },
     "information": {
-      "min": "",
-      "max": "",
+      "min": "Legalább",
+      "max": "Legfeljebb",
       "days": "",
       "hours": "Óra",
       "minutes": "Perc"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Sikeres létrehozás",
+        "error": "A létrehozás nem sikerült"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Sikeres törlés",
+        "error": "Törlés sikertelen"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "A módosítások sikeresen alkalmazva",
+        "error": "Nem sikerült alkalmazni a változtatásokat"
       },
       "transfer": {
         "success": "",
@@ -733,7 +864,8 @@
         "logout": "",
         "login": "Bejelentkezés",
         "homeBoard": "",
-        "loggedOut": ""
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
     "dangerZone": "Veszélyzóna",
@@ -765,8 +897,10 @@
           "passwordRequirements": "",
           "boardAlreadyExists": "",
           "invalidFileType": "",
+          "invalidFileName": "",
           "fileTooLarge": "",
-          "invalidConfiguration": ""
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -832,8 +966,9 @@
       }
     },
     "create": {
-      "title": "",
-      "addToBoard": ""
+      "title": "Válassza ki a hozzáadni kívánt elemet",
+      "search": "",
+      "addToBoard": "Hozzáadás a táblához"
     },
     "moveResize": {
       "title": "",
@@ -845,91 +980,91 @@
           "label": "Magasság"
         },
         "xOffset": {
-          "label": ""
+          "label": "X eltolás"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y eltolás"
         }
       }
     },
     "edit": {
       "title": "",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Haladó beállítások",
+        "title": "Speciális tételbeállítások"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrációk"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Egyedi css osztályok"
         }
       }
     },
     "remove": {
       "title": "",
-      "message": ""
+      "message": "Biztosan eltávolítja ezt az elemet?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Alkalmazás",
+      "description": "Alkalmazást ágyaz be a táblába.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Válasszon alkalmazást"
         },
         "openInNewTab": {
           "label": "Megnyitás új lapon"
         },
         "showTitle": {
-          "label": ""
+          "label": "Alkalmazás nevének megjelenítése"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Leírás elemleírás megjelenítése"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Egyszerű ping engedélyezése"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Nincs alkalmazás",
+          "tooltip": "Nem választott ki érvényes alkalmazást"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Könyjelzők",
+      "description": "Több alkalmazáshivatkozást jelenít meg",
       "option": {
         "title": {
-          "label": ""
+          "label": "Cím"
         },
         "layout": {
-          "label": "",
+          "label": "Elrendezés",
           "option": {
             "row": {
-              "label": ""
+              "label": "Vízszintes"
             },
             "column": {
-              "label": ""
+              "label": "Függőleges"
             },
             "grid": {
-              "label": ""
+              "label": "Rács"
             }
           }
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Könyjelzők",
+          "add": "Könyvjelző hozzáadása"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Blokkoló Összefoglaló",
+      "description": "Megjeleníti a DNS Blokkoló összefoglalóját",
       "option": {
         "layout": {
           "label": "Elrendezés",
@@ -941,27 +1076,28 @@
               "label": "Függőleges"
             },
             "grid": {
-              "label": ""
+              "label": "Rács"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Használjon Pi-Hole színeket"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Nem sikerült lekérni a DNS Hole összefoglalóját",
+        "integrationsDisconnected": "Nem állnak rendelkezésre adatok, minden integráció megszakadt"
       },
       "data": {
         "adsBlockedToday": "Mai blokkolások",
         "adsBlockedTodayPercentage": "Mai blokkolások",
         "dnsQueriesToday": "Mai lekérdezések",
-        "domainsBeingBlocked": ""
-      }
+        "domainsBeingBlocked": "Domainek a tiltólistán"
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS blokkolók ellenőrzése",
       "description": "A PiHole vagy az AdGuard vezérlése a műszerfalról",
       "option": {
         "layout": {
@@ -974,68 +1110,87 @@
               "label": "Függőleges"
             },
             "grid": {
-              "label": ""
+              "label": "Rács"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Összes gomb megjelenítése"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nem sikerült vezérelni a DNS Blokkolót"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
+        "enableAll": "Az összes engedélyezése",
+        "disableAll": "Az összes tiltása",
+        "setTimer": "Időzítő beállítása",
         "set": "Beállít",
         "enabled": "Engedélyezve",
         "disabled": "Letiltva",
-        "processing": "",
-        "disconnected": "",
+        "processing": "Feldolgozás",
+        "disconnected": "Szétkapcsolt",
         "hours": "Óra",
         "minutes": "Perc",
-        "unlimited": ""
+        "unlimited": "Hagyja üresen a korlátlanhoz"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Dátum és idő",
       "description": "Megjeleníti az aktuális dátumot és időt.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Egyedi cím/város megjelenítése",
+          "description": "Mutasson egy egyéni címet vagy a város/ország nevét az óra tetején."
         },
         "customTitle": {
-          "label": ""
+          "label": "Cím"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24 órás formátum",
+          "description": "12 órás formátum helyett 24 órás formátumot használjon"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Másodpercek kijelzése"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Használjon rögzített időzónát"
         },
         "timezone": {
           "label": "Időzóna",
-          "description": ""
+          "description": "Válassza ki az IANA szabványnak megfelelő időzónát"
         },
         "showDate": {
-          "label": ""
+          "label": "Mutasd a dátumot"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Dátum formátum",
+          "description": "Hogyan nézzen ki a dátum"
         }
+      }
+    },
+    "minecraftServerStatus": {
+      "name": "",
+      "description": "",
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "domain": {
+          "label": ""
+        },
+        "isBedrockServer": {
+          "label": ""
+        }
+      },
+      "status": {
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
       "name": "Jegyzettömb",
-      "description": "",
+      "description": "Egy egyszerű notebook widget, amely támogatja a leértékelést",
       "option": {
         "showToolbar": {
           "label": "A markdown írást segítő eszköztár megjelenítése"
@@ -1127,12 +1282,13 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nincs megadva iFrame URL",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Az Ön böngészője nem támogatja a beágyazott kereteket. Kérjük, frissítse böngészőjét."
       }
     },
     "smartHome-entityState": {
-      "name": "",
+      "name": "Egység állapota",
       "description": "",
       "option": {
         "entityId": {
@@ -1205,8 +1361,8 @@
           "description": ""
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Dátum formátum",
+          "description": "Hogyan nézzen ki a dátum"
         }
       },
       "kind": {
@@ -1304,13 +1460,10 @@
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Nem található alkalmazás",
         "description": ""
       },
       "error": {
-        "action": {
-          "logs": ""
-        },
         "noIntegration": "",
         "noData": ""
       },
@@ -1342,7 +1495,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {}
+      "option": {},
+      "items": {
+        "user": "",
+        "name": "",
+        "id": ""
+      }
     },
     "downloads": {
       "name": "",
@@ -1455,7 +1613,7 @@
         "paused": "Szünet",
         "completed": "Kész",
         "failed": "",
-        "processing": "",
+        "processing": "Feldolgozás",
         "leeching": "",
         "stalled": "",
         "unknown": "Ismeretlen",
@@ -1500,7 +1658,7 @@
       "availability": {
         "unknown": "Ismeretlen",
         "pending": "",
-        "processing": "",
+        "processing": "Feldolgozás",
         "partiallyAvailable": "Részleges",
         "available": "Elérhető"
       },
@@ -1525,6 +1683,65 @@
         "users": {
           "main": "Legnépszerűbb felhasználók",
           "requests": ""
+        }
+      }
+    },
+    "mediaTranscoding": {
+      "name": "",
+      "description": "",
+      "option": {
+        "defaultView": {
+          "label": "Alapértelmezett nézet"
+        },
+        "queuePageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "workers": "Munkások",
+        "queue": "Várólista",
+        "statistics": "Statisztikák"
+      },
+      "currentIndex": "",
+      "healthCheck": {
+        "title": "",
+        "queued": "Sorban áll",
+        "status": {
+          "healthy": "Egészséges",
+          "unhealthy": "Egészségtelen"
+        }
+      },
+      "panel": {
+        "statistics": {
+          "empty": "Üres",
+          "transcodes": "Átkódolás",
+          "transcodesCount": "",
+          "healthChecksCount": "",
+          "filesCount": "",
+          "savedSpace": "",
+          "healthChecks": "",
+          "videoCodecs": "Kodekek",
+          "videoContainers": "Tartály",
+          "videoResolutions": "Felbontás"
+        },
+        "workers": {
+          "empty": "Üres",
+          "table": {
+            "file": "Fájl",
+            "eta": "Hátralévő idő",
+            "progress": "Folyamat",
+            "transcode": "Átkódolás",
+            "healthCheck": ""
+          }
+        },
+        "queue": {
+          "empty": "Üres",
+          "table": {
+            "file": "Fájl",
+            "size": "Méret",
+            "transcode": "Átkódolás",
+            "healthCheck": ""
+          }
         }
       }
     },
@@ -1558,7 +1775,9 @@
   },
   "board": {
     "action": {
-      "edit": {
+      "duplicate": {
+        "title": "",
+        "message": "",
         "notification": {
           "success": {
             "title": "",
@@ -1566,6 +1785,18 @@
           },
           "error": {
             "title": "",
+            "message": ""
+          }
+        }
+      },
+      "edit": {
+        "notification": {
+          "success": {
+            "title": "A módosítások sikeresen alkalmazva",
+            "message": ""
+          },
+          "error": {
+            "title": "Nem sikerült alkalmazni a változtatásokat",
             "message": ""
           }
         },
@@ -1607,6 +1838,7 @@
           },
           "screenSize": {
             "label": "",
+            "description": "",
             "option": {
               "sm": "Kicsi",
               "md": "Közepes",
@@ -1803,6 +2035,38 @@
           }
         }
       }
+    },
+    "error": {
+      "noBoard": {
+        "title": "Üdvözöljük a Homarrban",
+        "description": "",
+        "link": "Az első tábla létrehozása",
+        "notice": ""
+      },
+      "notFound": {
+        "title": "",
+        "description": "",
+        "link": "Az összes tábla megtekintése",
+        "notice": ""
+      },
+      "homeBoard": {
+        "title": "",
+        "admin": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "user": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        },
+        "anonymous": {
+          "description": "",
+          "link": "",
+          "notice": ""
+        }
+      }
     }
   },
   "management": {
@@ -1821,15 +2085,15 @@
         "home": "Nyitólap",
         "boards": "Táblák",
         "apps": "Alkalmazások",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Integrációk",
+        "searchEngies": "Keresőmotorok",
+        "medias": "Média",
         "users": {
           "label": "Felhasználók",
           "items": {
             "manage": "Kezelés",
             "invites": "Meghívók",
-            "groups": ""
+            "groups": "Csoportok"
           }
         },
         "tools": {
@@ -1838,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -1860,9 +2125,9 @@
           "board": "Táblák",
           "user": "Felhasználók",
           "invite": "Meghívók",
-          "integration": "",
+          "integration": "Integrációk",
           "app": "Alkalmazások",
-          "group": ""
+          "group": "Csoportok"
         },
         "statisticLabel": {
           "boards": "Táblák",
@@ -1889,6 +2154,16 @@
               "label": "Nyitólap",
               "tooltip": ""
             }
+          },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
           },
           "delete": {
             "label": "Végleges törlés",
@@ -1923,7 +2198,14 @@
             "title": "Általános",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "A hét első napja",
               "accessibility": "Kisegítő lehetőségek"
             }
@@ -1953,7 +2235,7 @@
               "label": "Biztonság"
             },
             "groups": {
-              "label": "",
+              "label": "Csoportok",
               "title": "",
               "description": ""
             },
@@ -1961,10 +2243,10 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Létrejött a felhasználó"
             },
             "error": {
-              "title": ""
+              "title": "A felhasználó létrehozása sikertelen"
             }
           },
           "action": {
@@ -2011,12 +2293,12 @@
         "setting": {
           "general": {
             "title": "Általános",
-            "owner": "",
+            "owner": "Tulajdonos",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
           "members": {
-            "title": "",
+            "title": "Tagok",
             "search": "",
             "notFound": ""
           },
@@ -2079,19 +2361,27 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Táblák",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Megjelenés",
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Világos",
+                "dark": "Sötét"
               }
             }
           },
@@ -2112,6 +2402,9 @@
             "error": "Hiba"
           },
           "job": {
+            "minecraftServerStatus": {
+              "label": ""
+            },
             "iconsUpdater": {
               "label": ""
             },
@@ -2131,7 +2424,7 @@
               "label": ""
             },
             "downloads": {
-              "label": ""
+              "label": "Letöltések"
             },
             "mediaRequestStats": {
               "label": ""
@@ -2152,6 +2445,12 @@
               "label": ""
             },
             "sessionCleanup": {
+              "label": ""
+            },
+            "updateChecker": {
+              "label": ""
+            },
+            "mediaTranscoding": {
               "label": ""
             }
           }
@@ -2300,7 +2599,26 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
+    },
+    "error": {
+      "internalServerError": ""
     }
   },
   "permission": {
@@ -2313,7 +2631,7 @@
     },
     "tab": {
       "user": "Felhasználók",
-      "group": "",
+      "group": "Csoportok",
       "inherited": ""
     },
     "field": {
@@ -2321,7 +2639,7 @@
         "label": "Felhasználó"
       },
       "group": {
-        "label": ""
+        "label": "Csoport"
       },
       "permission": {
         "label": ""
@@ -2339,7 +2657,7 @@
         "label": "Táblák"
       },
       "integrations": {
-        "label": "",
+        "label": "Integrációk",
         "edit": {
           "label": "Szerkesztés"
         },
@@ -2348,7 +2666,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Keresőmotorok",
         "new": {
           "label": ""
         },
@@ -2357,7 +2675,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Média"
       },
       "apps": {
         "label": "Alkalmazások",
@@ -2377,7 +2695,7 @@
         "security": "Biztonság",
         "board": "Táblák",
         "groups": {
-          "label": ""
+          "label": "Csoportok"
         },
         "invites": {
           "label": "Meghívók"
@@ -2389,6 +2707,9 @@
           "label": ""
         },
         "logs": {
+          "label": ""
+        },
+        "certificates": {
           "label": ""
         }
       },
@@ -2418,7 +2739,7 @@
                   "label": ""
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Alkalmazás szerkesztése"
                 }
               },
               "detail": {
@@ -2436,6 +2757,9 @@
                 "homeBoard": {
                   "label": ""
                 },
+                "mobileBoard": {
+                  "label": ""
+                },
                 "settings": {
                   "label": ""
                 }
@@ -2446,7 +2770,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integrációk"
           }
         }
       },
@@ -2501,11 +2825,16 @@
           }
         }
       },
+      "media": {
+        "requestMovie": "",
+        "requestSeries": "",
+        "openIn": ""
+      },
       "external": {
         "help": "",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Keresőmotorok",
             "children": {
               "action": {
                 "search": {
@@ -2567,6 +2896,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }
@@ -2612,7 +2959,7 @@
                 "label": ""
               },
               "manageLog": {
-                "label": ""
+                "label": "Naplók megtekintése"
               },
               "manageTask": {
                 "label": ""
@@ -2624,7 +2971,7 @@
                 "label": "Névjegy"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Főoldal"
               },
               "preferences": {
                 "label": "Saját preferenciák"
@@ -2650,7 +2997,7 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Csoportok",
             "children": {
               "action": {
                 "detail": {
@@ -2684,12 +3031,12 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Leírás"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Keresőmotorok",
           "noResults": {
             "title": "",
             "action": ""
@@ -2713,11 +3060,11 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "A módosítások sikeresen alkalmazva",
               "message": ""
             },
             "error": {
-              "title": "",
+              "title": "Nem sikerült alkalmazni a változtatásokat",
               "message": ""
             }
           },
@@ -2739,6 +3086,63 @@
               "title": "",
               "message": ""
             }
+          }
+        }
+      },
+      "media": {
+        "request": {
+          "modal": {
+            "title": "",
+            "table": {
+              "header": {
+                "season": "",
+                "episodes": ""
+              }
+            },
+            "button": {
+              "send": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

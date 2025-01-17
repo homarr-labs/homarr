@@ -5,7 +5,7 @@ import SuperJSON from "superjson";
 import type { Modify } from "@homarr/common/types";
 import { EVERY_5_MINUTES } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
-import { items } from "@homarr/db/schema/sqlite";
+import { items } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import { createItemChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";

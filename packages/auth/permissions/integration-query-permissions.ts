@@ -2,7 +2,7 @@ import type { Session } from "next-auth";
 
 import type { Database } from "@homarr/db";
 import { and, eq, inArray, or } from "@homarr/db";
-import { boards, boardUserPermissions, groupMembers } from "@homarr/db/schema/sqlite";
+import { boards, boardUserPermissions, groupMembers } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
 
 import { constructIntegrationPermissions } from "./integration-permissions";
