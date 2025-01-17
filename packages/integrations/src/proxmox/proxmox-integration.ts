@@ -46,7 +46,6 @@ export class ProxmoxIntegration extends Integration {
       host: this.url("/").host,
       tokenID: `${this.getSecretValue("username")}@${this.getSecretValue("realm")}!${this.getSecretValue("tokenId")}`,
       tokenSecret: this.getSecretValue("apiKey"),
-      /** @ts-expect-error remove this later once it works with undici override in package.json */
       fetch: fetchWithTrustedCertificatesAsync,
     });
   }
