@@ -24,10 +24,10 @@
     <strong>Demo ✨</strong>
   </a>
   •
-  <a href="https://homarr.dev/docs/getting-started/installation/">
+  <a href="https://homarr.dev/docs/category/installation-1/">
     <strong>Install 💻</strong>
   </a> •
-  <a href="https://translate.homarr.dev/">
+  <a href="https://homarr.dev/docs/community/translations/">
     <strong>Translations 🈺</strong>
   </a> •
   <a href="https://discord.com/invite/aCsmEV5RgA">
@@ -93,7 +93,7 @@ Homarr has a [built-in collection of widgets and integrations](https://homarr.de
 Since we are updating Homarr very frequently, we recommend reading our official installation guides:
 
 <h2>
-<a href="https://homarr.dev/docs/getting-started/installation/">
+<a href="https://homarr.dev/docs/category/installation-1/">
   Please click here for official installation instructions
 </a>
 </h2>
