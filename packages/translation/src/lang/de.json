@@ -897,6 +897,7 @@
           "passwordRequirements": "Passwort erfüllt nicht alle Anforderungen",
           "boardAlreadyExists": "Ein Board mit diesem Namen existiert bereits",
           "invalidFileType": "Ungültiger Dateityp, erwartete {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
           "invalidConfiguration": "Ungültige Konfiguration",
           "groupNameTaken": "Gruppenname bereits vergeben"
@@ -2101,6 +2102,7 @@
             "docker": "",
             "logs": "",
             "api": "",
+            "certificates": "",
             "tasks": ""
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": ""
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

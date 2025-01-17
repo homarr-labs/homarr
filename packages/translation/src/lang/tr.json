@@ -897,6 +897,7 @@
           "passwordRequirements": "Parola gereksinimleri karşılamıyor",
           "boardAlreadyExists": "Bu isimde bir panel zaten mevcut",
           "invalidFileType": "Geçersiz dosya türü, {expected} bekleniyor",
+          "invalidFileName": "",
           "fileTooLarge": "Dosya çok büyük, azami boyut {maxSize}",
           "invalidConfiguration": "Geçersiz yapılandırma",
           "groupNameTaken": "Grup adı zaten alınmış"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Günlükler",
             "api": "API",
+            "certificates": "",
             "tasks": "Görevler"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "Günlükler"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": "Talep Gönder"
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

@@ -897,6 +897,7 @@
           "passwordRequirements": "密码不符合要求",
           "boardAlreadyExists": "具有此名称的面板已存在",
           "invalidFileType": "无效的文件类型，例如 {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "文件太大，最大大小为 {maxSize}",
           "invalidConfiguration": "无效配置",
           "groupNameTaken": "用户组名称已存在"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "日志",
             "api": "API",
+            "certificates": "",
             "tasks": "任务"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "日志"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": "发送请求"
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

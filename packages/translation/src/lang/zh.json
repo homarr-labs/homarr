@@ -897,6 +897,7 @@
           "passwordRequirements": "密碼不符合要求",
           "boardAlreadyExists": "此面板名稱已存在",
           "invalidFileType": "無效的檔案類型，例如 {expected}",
+          "invalidFileName": "",
           "fileTooLarge": "檔案太大，最大大小為 {maxSize}",
           "invalidConfiguration": "無效設定",
           "groupNameTaken": "用戶組名稱已存在"
@@ -2101,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
+            "certificates": "",
             "tasks": "任務"
           }
         },
@@ -2706,6 +2708,9 @@
         },
         "logs": {
           "label": "Logs"
+        },
+        "certificates": {
+          "label": ""
         }
       },
       "settings": {
@@ -3097,6 +3102,47 @@
             "button": {
               "send": "發送請求"
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "expires": ""
+      }
+    },
+    "action": {
+      "create": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }
