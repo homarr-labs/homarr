@@ -1,5 +1,6 @@
 import { CredentialsSignin } from "@auth/core/errors";
 
+import { extractErrorMessage } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
@@ -21,8 +22,8 @@ export const authorizeWithLdapCredentialsAsync = async (
       distinguishedName: env.AUTH_LDAP_BIND_DN,
       password: env.AUTH_LDAP_BIND_PASSWORD,
     })
-    .catch(() => {
-      logger.error("Failed to connect to LDAP server");
+    .catch((error) => {
+      logger.error(`Failed to connect to LDAP server ${extractErrorMessage(error)}`);
       throw new CredentialsSignin();
     });
 
