@@ -27,7 +27,7 @@
   <a href="https://homarr.dev/docs/category/installation-1/">
     <strong>Install 💻</strong>
   </a> •
-  <a href="https://homarr.dev/docs/community/translations/">
+  <a href="https://crowdin.com/project/homarr_labs">
     <strong>Translations 🈺</strong>
   </a> •
   <a href="https://discord.com/invite/aCsmEV5RgA">
