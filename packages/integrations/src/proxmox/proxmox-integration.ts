@@ -46,7 +46,7 @@ export class ProxmoxIntegration extends Integration {
       host: this.url("/").host,
       tokenID: `${this.getSecretValue("username")}@${this.getSecretValue("realm")}!${this.getSecretValue("tokenId")}`,
       tokenSecret: this.getSecretValue("apiKey"),
-      /** @ts-expect-error temp */
+      /** @ts-expect-error remove this later once it works with undici override in package.json */
       fetch: fetchWithTrustedCertificatesAsync,
     });
   }
@@ -99,6 +99,7 @@ const mapNodeResource = (resource: Proxmox.clusterResourcesResources): NodeResou
   return {
     type: "node",
     ...mapComputeResource(resource),
+    name: resource.node ?? "",
   };
 };
 
@@ -113,7 +114,7 @@ const mapVmResource = (resource: Proxmox.clusterResourcesResources): LxcResource
 const mapStorageResource = (resource: Proxmox.clusterResourcesResources): StorageResource => {
   return {
     type: "storage",
-    name: resource.name ?? "",
+    name: resource.storage ?? "",
     node: resource.node ?? "",
     isRunning: resource.status === "available",
     status: resource.status ?? "offline",
