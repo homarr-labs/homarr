@@ -61,7 +61,7 @@ const helpMode = {
             {
               label: t("submitIssue.label"),
               icon: IconBrandGithub,
-              href: "https://github.com/ajnart/homarr/issues/new/choose",
+              href: "https://github.com/homarr-labs/homarr/issues/new/choose",
             },
             {
               label: t("discord.label"),
