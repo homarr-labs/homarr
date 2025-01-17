@@ -153,7 +153,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.help.items.submitIssue"),
           icon: IconBrandGithub,
-          href: "https://github.com/ajnart/homarr/issues/new/choose",
+          href: "https://github.com/homarr-labs/homarr/issues/new/choose",
           external: true,
         },
         {
@@ -165,7 +165,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         {
           label: t("items.help.items.sourceCode"),
           icon: IconGitFork,
-          href: "https://github.com/ajnart/homarr",
+          href: "https://github.com/homarr-labs/homarr",
           external: true,
         },
       ],
