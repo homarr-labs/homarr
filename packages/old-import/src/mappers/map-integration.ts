@@ -25,7 +25,7 @@ const mapping: Record<OldmarrIntegrationType, IntegrationKind | null> = {
   overseerr: "overseerr",
   pihole: "piHole",
   prowlarr: "prowlarr",
-  proxmox: null,
+  proxmox: "proxmox",
   qBittorrent: "qBittorrent",
   radarr: "radarr",
   readarr: "readarr",
