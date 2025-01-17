@@ -6,6 +6,11 @@
       matchPackagePatterns: ["^@homarr/"],
       enabled: false,
     },
+    // Disable Dockerode updates see https://github.com/apocas/dockerode/issues/787
+    {
+      matchPackagePatterns: ["^dockerode$"],
+      enabled: false,
+    },
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,

@@ -7,7 +7,7 @@
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --external:@opentelemetry/api --external:dockerode --external:cpu-features --loader:.html=text --loader:.scss=text --loader:.node=text",
+    "build": "esbuild src/main.ts --bundle --platform=node --outfile=wssServer.cjs --external:bcrypt --external:@opentelemetry/api --external:cpu-features --loader:.html=text --loader:.scss=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
