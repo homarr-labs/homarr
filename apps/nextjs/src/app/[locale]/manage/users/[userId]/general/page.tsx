@@ -11,6 +11,7 @@ import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone"
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
+import { ChangeDefaultSearchEngineForm } from "./_components/_change-default-search-engine";
 import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { FirstDayOfWeek } from "./_components/_first-day-of-week";
@@ -19,12 +20,13 @@ import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { UserProfileForm } from "./_components/_profile-form";
 
 interface Props {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata(props: Props) {
+  const params = await props.params;
   const session = await auth();
   const user = await api.user
     .getById({
@@ -43,7 +45,8 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function EditUserPage({ params }: Props) {
+export default async function EditUserPage(props: Props) {
+  const params = await props.params;
   const t = await getI18n();
   const tGeneral = await getScopedI18n("management.page.user.setting.general");
   const session = await auth();
@@ -58,6 +61,7 @@ export default async function EditUserPage({ params }: Props) {
   }
 
   const boards = await api.board.getAllBoards();
+  const searchEngines = await api.searchEngine.getSelectable();
 
   const isCredentialsUser = user.provider === "credentials";
 
@@ -85,7 +89,7 @@ export default async function EditUserPage({ params }: Props) {
       </Stack>
 
       <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.board")}</Title>
+        <Title order={2}>{tGeneral("item.board.title")}</Title>
         <ChangeHomeBoardForm
           user={user}
           boardsData={boards.map((board) => ({
@@ -93,6 +97,11 @@ export default async function EditUserPage({ params }: Props) {
             label: board.name,
           }))}
         />
+      </Stack>
+
+      <Stack mb="lg">
+        <Title order={2}>{tGeneral("item.defaultSearchEngine")}</Title>
+        <ChangeDefaultSearchEngineForm user={user} searchEnginesData={searchEngines} />
       </Stack>
 
       <Stack mb="lg">

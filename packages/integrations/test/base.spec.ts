@@ -1,3 +1,4 @@
+import { Response } from "undici";
 import { describe, expect, test } from "vitest";
 
 import { IntegrationTestConnectionError } from "../src";

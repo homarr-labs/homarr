@@ -5,7 +5,7 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
-import { env } from "@homarr/auth/env.mjs";
+import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
@@ -17,15 +17,17 @@ import { AddGroupMember } from "./_add-group-member";
 import { RemoveGroupMember } from "./_remove-group-member";
 
 interface GroupsDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     search: string | undefined;
-  };
+  }>;
 }
 
-export default async function GroupsDetailPage({ params, searchParams }: GroupsDetailPageProps) {
+export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user.permissions.includes("admin")) {

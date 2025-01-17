@@ -51,13 +51,13 @@
           "title": "İçe Aktarma Token'ını Girin",
           "field": {
             "token": {
-              "label": "Erişim Anahtarı",
+              "label": "Token",
               "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Token'ını girin"
             }
           },
           "notification": {
             "error": {
-              "title": "Geçersiz Token",
+              "title": "Token",
               "message": "Girdiğiniz Token Geçersiz"
             }
           }
@@ -147,7 +147,7 @@
         "label": "Eski Şifre"
       },
       "homeBoard": {
-        "label": "Öntanımlı panel"
+        "label": "Ana panel"
       },
       "pingIconsEnabled": {
         "label": "Pingler İçin Simgeler Kullanın"
@@ -207,6 +207,16 @@
           },
           "error": {
             "message": "Öntanımlı panel değiştirilemiyor"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Öntanımlı arama motoru başarıyla değiştirildi"
+          },
+          "error": {
+            "message": "Öntanımlı arama motoru değiştirilemiyor"
           }
         }
       },
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Uygulama Bulun",
     "page": {
       "list": {
         "title": "Uygulamalar",
@@ -866,7 +877,7 @@
     "zod": {
       "errors": {
         "default": "Bu alan geçersiz",
-        "required": "Bu alan gereklidir",
+        "required": "Bu alan gerekli",
         "string": {
           "startsWith": "Bu alan {startsWith} ile başlamalıdır",
           "endsWith": "Bu alan {endsWith} ile bitmelidir",
@@ -955,6 +966,7 @@
     },
     "create": {
       "title": "Eklenecek öğeyi seçin",
+      "search": "Öğeleri Filtrele",
       "addToBoard": "Panele Ekle"
     },
     "moveResize": {
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Bugün engellenenler",
         "dnsQueriesToday": "Bugünkü Sorgular",
         "domainsBeingBlocked": "Engelleme listesindeki alan adları"
-      }
+      },
+      "domainsTooltip": "Birden fazla entegrasyon nedeniyle Homarr, engellenen alan adlarının tam sayısını hesaplayamıyor"
     },
     "dnsHoleControls": {
       "name": "DNS Çözümleyici Kontrolleri",
@@ -1208,7 +1221,7 @@
         "decreaseIndent": "Girintiyi Azalt",
         "link": "Bağlantı",
         "unlink": "Bağlantıyı kaldır",
-        "image": "Görsel Göm",
+        "image": "Görsel Yerleştir",
         "addTable": "Tablo ekle",
         "deleteTable": "Tablo Sil",
         "colorCell": "Renk Hücresi",
@@ -1269,6 +1282,7 @@
       },
       "error": {
         "noUrl": "IFrame URL'si sağlanmadı",
+        "unsupportedProtocol": "Sağlanan URL, desteklenmeyen bir protokol kullanıyor. Lütfen ({supportedProtocols})'den birini kullanın",
         "noBrowerSupport": "Tarayıcınız iframe'leri desteklemiyor. Lütfen tarayıcınızı güncelleyin."
       }
     },
@@ -1280,7 +1294,7 @@
           "label": "Varlık Kimliği"
         },
         "displayName": {
-          "label": "Ekran adı"
+          "label": "Görünen isim"
         },
         "entityUnit": {
           "label": "Varlık Birimi"
@@ -1295,7 +1309,7 @@
       "description": "Tek tıklamayla otomasyonu tetikleyin",
       "option": {
         "displayName": {
-          "label": "Ekran adı"
+          "label": "Görünen isim"
         },
         "automationId": {
           "label": "Otomasyon Kimliği"
@@ -1676,7 +1690,7 @@
       "description": "Medya kod dönüştürmenizin istatistikleri, geçerli kuyruğu ve çalışan durumu",
       "option": {
         "defaultView": {
-          "label": "Öntanımlı görünüm"
+          "label": "Varsayılan Görünüm"
         },
         "queuePageSize": {
           "label": "Kuyruk Sayfa Boyutu"
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Paneli Kopyala",
+        "message": "{name} panelini tüm içerikleri ile birlikte kopyalamayı seçtiniz. Kullanım yetkiniz olmayan entegrasyonlar ve bunları içeren araçlar dahil edilmeyecektir.",
+        "notification": {
+          "success": {
+            "title": "Panel Kopyalandı",
+            "message": "Panel başarıyla kopyalandı"
+          },
+          "error": {
+            "title": "Panel Kopyalanamıyor",
+            "message": "Panel kopyalanamadı"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2119,11 +2147,21 @@
             "label": "Ayarlar"
           },
           "setHomeBoard": {
-            "label": "Öntanımlı panel olarak ayarlayın",
+            "label": "Öntanımlı Panel Olarak Ata",
             "badge": {
               "label": "Ana Sayfa",
               "tooltip": "Bu panel sizin öntanımlı paneliniz olarak görüntülenecektir"
             }
+          },
+          "setMobileHomeBoard": {
+            "label": "Mobil Panel Olarak Ata",
+            "badge": {
+              "label": "Mobil",
+              "tooltip": "Bu panel sizin mobil paneliniz olarak görüntülenecektir"
+            }
+          },
+          "duplicate": {
+            "label": "Paneli Kopyala"
           },
           "delete": {
             "label": "Kalıcı olarak sil",
@@ -2158,7 +2196,14 @@
             "title": "Genel",
             "item": {
               "language": "Dil & Bölge",
-              "board": "Öntanımlı panel",
+              "board": {
+                "title": "Ana Panel",
+                "type": {
+                  "general": "Genel",
+                  "mobile": "Mobil"
+                }
+              },
+              "defaultSearchEngine": "Öntanımlı arama motoru",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
@@ -2236,7 +2281,7 @@
               "label": "Son geçerlilik tarihi"
             },
             "token": {
-              "label": "Erişim Anahtarı"
+              "label": "Token"
             }
           }
         }
@@ -2317,7 +2362,15 @@
             "title": "Paneller",
             "homeBoard": {
               "label": "Genel Ana Sayfa Paneli",
+              "mobileLabel": "Genel Mobil Panel",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
+            }
+          },
+          "search": {
+            "title": "Ara",
+            "defaultSearchEngine": {
+              "label": "Genel öntanımlı arama motoru",
+              "description": "Entegrasyona bağlı arama motorları burada seçilemez"
             }
           },
           "appearance": {
@@ -2405,7 +2458,7 @@
           "modal": {
             "createApiToken": {
               "title": "API token'ı oluşturuldu",
-              "description": "API token'ı oluşturuldu. Dikkatli olun, bu token veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu belirteci kaybederseniz, bu token'ı artık geri alamazsınız.",
+              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anaharı kaybederseniz, bir daha erişmeniz mümkün değildir.",
               "button": "Kopyala ve kapat"
             }
           },
@@ -2544,6 +2597,22 @@
             "message": "Konteynerler yenilenirken bir şeyler ters gitti"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Homarr'a Ekle",
+        "notification": {
+          "success": {
+            "title": "Homarr'a Eklendi",
+            "message": "Seçili uygulamalar Homarr'a eklendi"
+          },
+          "error": {
+            "title": "Homarr'a Eklenemedi",
+            "message": "Seçilen uygulamalar Homarr'a eklenemedi"
+          }
+        },
+        "modal": {
+          "title": "Docker Konteynerleri Homarr'a Ekle"
+        }
       }
     },
     "error": {
@@ -2648,7 +2717,7 @@
     }
   },
   "search": {
-    "placeholder": "Ara (\"!\" İle Başlamalı)",
+    "placeholder": "Aramak için yaz",
     "nothingFound": "Hiçbir şey bulunamadı",
     "error": {
       "fetch": "Veriler alınırken bir hata oluştu"
@@ -2682,6 +2751,9 @@
                 },
                 "homeBoard": {
                   "label": "Öntanımlı panel olarak ata"
+                },
+                "mobileBoard": {
+                  "label": "Mobil Panel Olarak Ata"
                 },
                 "settings": {
                   "label": "Ayarları aç"
@@ -2768,7 +2840,7 @@
                 "title": "Arama yapmak istediğiniz terimleri girin"
               },
               "searchResults": {
-                "title": "Eylemler için bir arama sonucu seçin"
+                "title": "Etkileşime geçmek için bir sonuç seçin"
               }
             },
             "option": {
@@ -2819,6 +2891,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Ara",
+            "option": {
+              "other": {
+                "label": "Farklı bir arama motoruyla arama yap"
+              },
+              "no-default": {
+                "label": "Öntanımlı arama motoru yapılandırılmadı",
+                "description": "Tercihlerde öntanımlı arama motoru belirleyin"
+              },
+              "search": {
+                "label": "{name} kullanarak \"{query}\" terimini ara"
+              },
+              "from-integration": {
+                "description": "Aramak için yazmaya başla"
+              }
+            }
+          },
           "local": {
             "title": "Yerel sonuçlar"
           }

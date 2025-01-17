@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Apps",
@@ -955,6 +966,7 @@
     },
     "create": {
       "title": "Kies een item om toe te voegen",
+      "search": "",
       "addToBoard": "Toevoegen aan bord"
     },
     "moveResize": {
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Vandaag geblokkeerd",
         "dnsQueriesToday": "Aanvragen vandaag",
         "domainsBeingBlocked": "Domeinen op blokkadelijst"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "DNS-hole bedieningen",
@@ -1269,6 +1282,7 @@
       },
       "error": {
         "noUrl": "Geen iFrame URL opgegeven",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Je browser ondersteunt geen iframes. Update je browser."
       }
     },
@@ -1404,7 +1418,7 @@
         "memory": "Geheugen: {memory}GiB",
         "memoryAvailable": "Beschikbaar: {memoryAvailable}GiB ({percent}%)",
         "version": "Versie: {version}",
-        "uptime": "Uptime: {days} Dagen, {hours} Uren, {minutes} Minuten",
+        "uptime": "Uptime: {months} maanden, {days} dagen, {hours} uren, {minutes} minuten",
         "loadAverage": "Gemiddelde belasting:",
         "minute": "1 minuut",
         "minutes": "{count} minuten",
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2125,6 +2153,16 @@
               "tooltip": "Dit bord wordt weergegeven als je home-bord"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Permanent verwijderen",
             "confirm": {
@@ -2158,7 +2196,14 @@
             "title": "Algemeen",
             "item": {
               "language": "Taal & regio",
-              "board": "Home-bord",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
             }
@@ -2317,7 +2362,15 @@
             "title": "Borden",
             "homeBoard": {
               "label": "Globaal home-bord",
+              "mobileLabel": "",
               "description": "Alleen openbare borden zijn beschikbaar voor selectie"
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
             }
           },
           "appearance": {
@@ -2544,6 +2597,22 @@
             "message": "Er is iets misgegaan tijdens het verversen van de containers"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
     },
     "error": {
@@ -2683,6 +2752,9 @@
                 "homeBoard": {
                   "label": "Instellen als home-bord"
                 },
+                "mobileBoard": {
+                  "label": ""
+                },
                 "settings": {
                   "label": "Instellingen openen"
                 }
@@ -2819,6 +2891,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": "Lokale resultaten"
           }

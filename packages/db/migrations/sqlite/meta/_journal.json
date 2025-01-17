@@ -134,6 +134,20 @@
       "when": 1735593831501,
       "tag": "0018_cheerful_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1735651175378,
+      "tag": "0019_steady_darkhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1736510755691,
+      "tag": "0020_empty_hellfire_club",
+      "breakpoints": true
     }
   ]
 }

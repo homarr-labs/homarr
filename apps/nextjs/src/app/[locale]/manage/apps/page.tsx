@@ -6,7 +6,10 @@ import { IconBox, IconPencil } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { SearchInput, TablePagination } from "@homarr/ui";
+import { z } from "@homarr/validation";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -14,22 +17,35 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
 import { AppDeleteButton } from "./_app-delete-button";
 
-export default async function AppsPage() {
+const searchParamsSchema = z.object({
+  search: z.string().optional(),
+  pageSize: z.string().regex(/\d+/).transform(Number).catch(10),
+  page: z.string().regex(/\d+/).transform(Number).catch(1),
+});
+
+interface AppsPageProps {
+  searchParams: Promise<inferSearchParamsFromSchema<typeof searchParamsSchema>>;
+}
+
+export default async function AppsPage(props: AppsPageProps) {
   const session = await auth();
 
   if (!session) {
     redirect("/auth/login");
   }
 
-  const apps = await api.app.all();
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
+
+  const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
   const t = await getScopedI18n("app");
 
   return (
     <ManageContainer>
       <DynamicBreadcrumb />
       <Stack>
+        <Title>{t("page.list.title")}</Title>
         <Group justify="space-between" align="center">
-          <Title>{t("page.list.title")}</Title>
+          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} />
           {session.user.permissions.includes("app-create") && (
             <MobileAffixButton component={Link} href="/manage/apps/new">
               {t("page.create.title")}
@@ -44,6 +60,10 @@ export default async function AppsPage() {
             ))}
           </Stack>
         )}
+
+        <Group justify="end">
+          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
+        </Group>
       </Stack>
     </ManageContainer>
   );

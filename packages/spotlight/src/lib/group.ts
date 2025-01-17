@@ -1,5 +1,4 @@
 import type { JSX } from "react";
-import type { UseTRPCQueryResult } from "@trpc/react-query/shared";
 
 import type { stringOrTranslation } from "@homarr/translation";
 
@@ -29,9 +28,12 @@ export type SearchGroup<TOption extends Record<string, unknown> = any> =
       {
         filter: (query: string, option: TOption) => boolean;
         sort?: (query: string, options: [TOption, TOption]) => number;
-        useOptions: () => TOption[];
+        useOptions: (query: string) => TOption[];
       }
     >
-  | CommonSearchGroup<TOption, { useQueryOptions: (query: string) => UseTRPCQueryResult<TOption[], unknown> }>;
+  | CommonSearchGroup<
+      TOption,
+      { useQueryOptions: (query: string) => { data: TOption[] | undefined; isLoading: boolean; isError: boolean } }
+    >;
 
 export const createGroup = <TOption extends Record<string, unknown>>(group: SearchGroup<TOption>) => group;

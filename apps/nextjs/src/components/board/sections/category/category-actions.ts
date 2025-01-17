@@ -2,10 +2,12 @@ import { useCallback } from "react";
 
 import { createId } from "@homarr/db/client";
 
-import type { CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
+import type { CategorySection, EmptySection } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
 import type { MoveCategoryInput } from "./actions/move-category";
 import { moveCategoryCallback } from "./actions/move-category";
+import type { RemoveCategoryInput } from "./actions/remove-category";
+import { removeCategoryCallback } from "./actions/remove-category";
 
 interface AddCategory {
   name: string;
@@ -15,10 +17,6 @@ interface AddCategory {
 interface RenameCategory {
   id: string;
   name: string;
-}
-
-interface RemoveCategory {
-  id: string;
 }
 
 export const useCategoryActions = () => {
@@ -132,57 +130,8 @@ export const useCategoryActions = () => {
   );
 
   const removeCategory = useCallback(
-    ({ id: categoryId }: RemoveCategory) => {
-      updateBoard((previous) => {
-        const currentCategory = previous.sections.find(
-          (section): section is CategorySection => section.kind === "category" && section.id === categoryId,
-        );
-        if (!currentCategory) return previous;
-
-        const aboveWrapper = previous.sections.find(
-          (section): section is EmptySection =>
-            section.kind === "empty" && section.yOffset === currentCategory.yOffset - 1,
-        );
-
-        const removedWrapper = previous.sections.find(
-          (section): section is EmptySection =>
-            section.kind === "empty" && section.yOffset === currentCategory.yOffset + 1,
-        );
-
-        if (!aboveWrapper || !removedWrapper) return previous;
-
-        // Calculate the yOffset for the items in the currentCategory and removedWrapper to add them with the same offset to the aboveWrapper
-        const aboveYOffset = calculateYHeightWithOffset(aboveWrapper);
-        const categoryYOffset = calculateYHeightWithOffset(currentCategory);
-
-        const previousCategoryItems = currentCategory.items.map((item) => ({
-          ...item,
-          yOffset: item.yOffset + aboveYOffset,
-        }));
-        const previousBelowWrapperItems = removedWrapper.items.map((item) => ({
-          ...item,
-          yOffset: item.yOffset + aboveYOffset + categoryYOffset,
-        }));
-
-        return {
-          ...previous,
-          sections: [
-            ...previous.sections.filter((section) => section.yOffset < currentCategory.yOffset - 1),
-            {
-              ...aboveWrapper,
-              items: [...aboveWrapper.items, ...previousCategoryItems, ...previousBelowWrapperItems],
-            },
-            ...previous.sections
-              .filter(
-                (section): section is CategorySection | EmptySection => section.yOffset >= currentCategory.yOffset + 2,
-              )
-              .map((section) => ({
-                ...section,
-                position: section.yOffset - 2,
-              })),
-          ],
-        };
-      });
+    (input: RemoveCategoryInput) => {
+      updateBoard(removeCategoryCallback(input));
     },
     [updateBoard],
   );
@@ -195,10 +144,3 @@ export const useCategoryActions = () => {
     removeCategory,
   };
 };
-
-const calculateYHeightWithOffset = (section: Section) =>
-  section.items.reduce((acc, item) => {
-    const yHeightWithOffset = item.yOffset + item.height;
-    if (yHeightWithOffset > acc) return yHeightWithOffset;
-    return acc;
-  }, 0);

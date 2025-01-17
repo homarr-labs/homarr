@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -106,12 +108,12 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       apikey: this.getSecretValue("apiKey"),
     });
 
-    return await fetch(url)
+    return await fetchWithTrustedCertificatesAsync(url)
       .then((response) => {
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        return response.json() as Promise<unknown>;
+        return response.json();
       })
       .catch((error) => {
         if (error instanceof Error) {

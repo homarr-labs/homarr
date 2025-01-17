@@ -7,7 +7,7 @@ import { logger } from "@homarr/log";
 import type { validation } from "@homarr/validation";
 import { z } from "@homarr/validation";
 
-import { env } from "../../../env.mjs";
+import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";
 
 export const authorizeWithLdapCredentialsAsync = async (

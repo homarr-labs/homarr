@@ -45,7 +45,9 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
     <Spotlight.Action
       renderRoot={renderRoot}
       onClick={handleClickAsync}
-      closeSpotlightOnTrigger={interaction.type !== "mode" && interaction.type !== "children"}
+      closeSpotlightOnTrigger={
+        interaction.type !== "mode" && interaction.type !== "children" && interaction.type !== "none"
+      }
       className={classes.spotlightAction}
     >
       <group.Component {...option} />

@@ -11,7 +11,7 @@ import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { createSignInEventHandler } from "../events";
 
-vi.mock("../env.mjs", () => {
+vi.mock("../env", () => {
   return {
     env: {
       AUTH_OIDC_GROUPS_ATTRIBUTE: "someRandomGroupsKey",
@@ -29,7 +29,7 @@ vi.mock("next/headers", async (importOriginal) => {
 
   vi.spyOn(result, "set");
 
-  const cookies = () => result;
+  const cookies = () => Promise.resolve(result);
 
   return { ...mod, cookies } satisfies HeadersExport;
 });
@@ -238,7 +238,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
 
     // Assert
-    expect(cookies().set).toHaveBeenCalledWith(
+    expect((await cookies()).set).toHaveBeenCalledWith(
       colorSchemeCookieKey,
       "dark",
       expect.objectContaining({

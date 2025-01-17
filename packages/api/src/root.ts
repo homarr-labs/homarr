@@ -1,6 +1,7 @@
 import { apiKeysRouter } from "./router/apiKeys";
 import { appRouter as innerAppRouter } from "./router/app";
 import { boardRouter } from "./router/board";
+import { certificateRouter } from "./router/certificates/certificate-router";
 import { cronJobsRouter } from "./router/cron-jobs";
 import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
@@ -41,6 +42,7 @@ export const appRouter = createTRPCRouter({
   apiKeys: apiKeysRouter,
   media: mediaRouter,
   updateChecker: updateCheckerRouter,
+  certificates: certificateRouter,
 });
 
 // export type definition of API

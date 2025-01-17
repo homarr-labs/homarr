@@ -27,6 +27,7 @@
     "@ctrl/deluge": "^7.1.0",
     "@ctrl/qbittorrent": "^9.2.0",
     "@ctrl/transmission": "^7.2.0",
+    "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
@@ -35,6 +36,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@jellyfin/sdk": "^0.11.0",
+    "undici": "7.2.3",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
@@ -42,7 +44,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.17.0",
-    "typescript": "^5.7.2"
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3"
   }
 }

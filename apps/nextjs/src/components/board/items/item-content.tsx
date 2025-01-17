@@ -36,6 +36,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         root: {
           "--opacity": board.opacity / 100,
           containerType: "size",
+          overflow: item.kind === "iframe" ? "hidden" : undefined,
         },
       }}
       p={0}
@@ -87,7 +88,14 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             isEditMode={isEditMode}
             boardId={board.id}
             itemId={item.id}
-            setOptions={updateOptions}
+            setOptions={(partialNewOptions) =>
+              updateOptions({
+                newOptions: {
+                  ...partialNewOptions.newOptions,
+                  ...options,
+                },
+              })
+            }
             {...dimensions}
           />
         </ErrorBoundary>

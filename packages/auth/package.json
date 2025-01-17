@@ -11,7 +11,7 @@
     "./client": "./client.ts",
     "./server": "./server.ts",
     "./shared": "./shared.ts",
-    "./env.mjs": "./env.mjs"
+    "./env": "./env.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",
@@ -33,11 +33,11 @@
     "@t3-oss/env-nextjs": "^0.11.1",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
-    "ldapts": "7.3.0",
-    "next": "^14.2.22",
+    "ldapts": "7.3.1",
+    "next": "15.1.4",
     "next-auth": "5.0.0-beta.25",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -45,8 +45,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "prettier": "^3.4.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

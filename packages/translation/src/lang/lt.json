@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Programėlės",
@@ -955,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Šiandien užblokuota",
         "dnsQueriesToday": "Užklausos šiandien",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1269,6 +1282,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Jūsų naršyklė nepalaiko iframe. Atnaujinkite savo naršyklę."
       }
     },
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2125,6 +2153,16 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Ištrinti visam laikui",
             "confirm": {
@@ -2158,7 +2196,14 @@
             "title": "Bendras",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "",
               "accessibility": ""
             }
@@ -2316,6 +2361,14 @@
           "board": {
             "title": "Lentos",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
@@ -2544,6 +2597,22 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
     },
     "error": {
@@ -2683,6 +2752,9 @@
                 "homeBoard": {
                   "label": ""
                 },
+                "mobileBoard": {
+                  "label": ""
+                },
                 "settings": {
                   "label": ""
                 }
@@ -2819,6 +2891,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }

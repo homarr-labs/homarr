@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "默认搜索引擎更改成功"
+          },
+          "error": {
+            "message": "无法更改默认的搜索引擎"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -232,10 +242,10 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "更改图像",
+          "label": "更改头像",
           "notification": {
             "success": {
-              "message": "图像修改成功"
+              "message": "头像修改成功"
             },
             "error": {
               "message": "无法更改图像"
@@ -284,9 +294,9 @@
     }
   },
   "group": {
-    "title": "用户组",
+    "title": "群组",
     "name": "组",
-    "search": "查找用户组",
+    "search": "查找群组",
     "field": {
       "name": "名称",
       "members": "成员"
@@ -417,13 +427,13 @@
     },
     "action": {
       "create": {
-        "label": "新建用户组",
+        "label": "新建群组",
         "notification": {
           "success": {
-            "message": "用户组已成功创建"
+            "message": "群组已成功创建"
           },
           "error": {
-            "message": "无法创建用户组"
+            "message": "无法创建群组"
           }
         }
       },
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "查找应用",
     "page": {
       "list": {
         "title": "应用",
@@ -614,8 +625,8 @@
         "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "创建搜索引擎",
+        "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
       }
     },
     "action": {
@@ -630,7 +641,7 @@
       "notification": {
         "success": {
           "title": "连接成功",
-          "message": ""
+          "message": "已成功建立连接"
         },
         "invalidUrl": {
           "title": "无效链接",
@@ -642,7 +653,7 @@
         },
         "invalidCredentials": {
           "title": "凭证无效",
-          "message": ""
+          "message": "凭证无效"
         },
         "commonError": {
           "title": "连接失败",
@@ -654,35 +665,35 @@
         },
         "unauthorized": {
           "title": "未授权",
-          "message": ""
+          "message": "可能错误的凭证"
         },
         "forbidden": {
-          "title": "",
+          "title": "禁止",
           "message": "可能缺少权限"
         },
         "notFound": {
           "title": "未找到",
-          "message": ""
+          "message": "可能错误的 URL 或路径"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "服务器内部错误",
+          "message": "服务器遇到一个错误"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "服务暂时不可用",
+          "message": "服务器当前不可用"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "连接被中止",
+          "message": "连接被终止"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "找不到域",
+          "message": "找不到该域"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "连接被拒绝",
+          "message": "连接被拒绝"
         },
         "invalidJson": {
           "title": "无效的 JSON",
@@ -695,16 +706,16 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "秘钥",
+      "lastUpdated": "最后更新于 {date}",
       "notSet": {
         "label": "未设置值",
         "tooltip": "尚未设置此必填的密钥"
       },
-      "secureNotice": "",
+      "secureNotice": "创建后无法再次获取此密钥",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "重置密钥",
+        "message": "您确定要重置此秘钥吗？"
       },
       "noSecretsRequired": {
         "segmentTitle": "没有密钥",
@@ -726,8 +737,8 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
+      "use": "选择项目中的集成",
+      "interact": "与集成进行互动",
       "full": "完整的组件访问权限"
     }
   },
@@ -745,10 +756,10 @@
         "file": "选择文件",
         "notification": {
           "success": {
-            "message": ""
+            "message": "上传媒体成功"
           },
           "error": {
-            "message": ""
+            "message": "无法上传媒体"
           }
         }
       },
@@ -785,12 +796,12 @@
       "saveChanges": "保存更改",
       "cancel": "取消",
       "delete": "删除",
-      "discard": "",
+      "discard": "Discard",
       "confirm": "确认",
       "continue": "继续",
       "previous": "上一步",
       "next": "下一步",
-      "checkoutDocs": "",
+      "checkoutDocs": "查阅文档",
       "checkLogs": "检查日志获取更多详情",
       "tryAgain": "重试",
       "loading": "正在加载"
@@ -798,7 +809,7 @@
     "here": "这里",
     "iconPicker": {
       "label": "图标 URL",
-      "header": ""
+      "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。"
     },
     "colorScheme": {
       "options": {
@@ -827,8 +838,8 @@
         "error": "无法应用更改"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "传输成功",
+        "error": "传输失败"
       }
     },
     "multiSelect": {
@@ -836,12 +847,12 @@
     },
     "multiText": {
       "placeholder": "添加更多值",
-      "addLabel": ""
+      "addLabel": "添加 {value}"
     },
     "select": {
       "placeholder": "选择值",
       "badge": {
-        "recommended": ""
+        "recommended": "推荐"
       }
     },
     "userAvatar": {
@@ -853,8 +864,8 @@
         "logout": "退出登录",
         "login": "登录",
         "homeBoard": "您的首页",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "loggedOut": "已注销",
+        "updateAvailable": "{countUpdates} 可用更新：{tag}"
       }
     },
     "dangerZone": "危险",
@@ -871,7 +882,7 @@
           "startsWith": "该字段必须以 {startsWith} 开头",
           "endsWith": "该字段必须以 {endsWith} 结尾",
           "includes": "该字段必须包含 {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "此字段必须是一个有效的电子邮件"
         },
         "tooSmall": {
           "string": "该字段长度必须至少为 {minimum} 个字符",
@@ -884,10 +895,10 @@
         "custom": {
           "passwordsDoNotMatch": "两次输入的密码不一致",
           "passwordRequirements": "密码不符合要求",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
+          "boardAlreadyExists": "具有此名称的面板已存在",
+          "invalidFileType": "无效的文件类型，例如 {expected}",
+          "fileTooLarge": "文件太大，最大大小为 {maxSize}",
+          "invalidConfiguration": "无效配置",
           "groupNameTaken": "用户组名称已存在"
         }
       }
@@ -896,12 +907,12 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "新建动态部分",
+        "remove": "删除动态部分"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "删除动态部分",
+        "message": "你确定你要删除这个动态部分？项目将被移动到父节的相同位置。"
       }
     },
     "category": {
@@ -916,16 +927,16 @@
         "remove": "删除分类",
         "moveUp": "上移",
         "moveDown": "下移",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "上方新建分类",
+        "createBelow": "下方新建分类"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "新建分类",
+        "submit": "添加分类"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "删除分类",
+        "message": "您确定要删除分类 {name} 吗？"
       },
       "edit": {
         "title": "重命名分类",
@@ -944,8 +955,8 @@
       "create": "新建项目",
       "import": "导入项目",
       "edit": "编辑项目",
-      "moveResize": "",
-      "duplicate": "",
+      "moveResize": "移动/调整项目大小",
+      "duplicate": "复制项目",
       "remove": "删除项目"
     },
     "menu": {
@@ -954,11 +965,12 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "选择要添加的项目",
+      "search": "筛选项目",
       "addToBoard": "添加到面板"
     },
     "moveResize": {
-      "title": "",
+      "title": "移动/调整项目大小",
       "field": {
         "width": {
           "label": "宽度"
@@ -978,14 +990,14 @@
       "title": "编辑项目",
       "advancedOptions": {
         "label": "高级选项",
-        "title": ""
+        "title": "高级项目选项"
       },
       "field": {
         "integrations": {
           "label": "集成"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "自定义 CSS 类"
         }
       }
     },
@@ -997,7 +1009,7 @@
   "widget": {
     "app": {
       "name": "应用",
-      "description": "",
+      "description": "将应用嵌入到面板中。",
       "option": {
         "appId": {
           "label": "选择应用"
@@ -1018,7 +1030,7 @@
       "error": {
         "notFound": {
           "label": "没有应用",
-          "tooltip": ""
+          "tooltip": "您没有选择有效的应用"
         }
       }
     },
@@ -1039,19 +1051,19 @@
               "label": "垂直"
             },
             "grid": {
-              "label": ""
+              "label": "网格"
             }
           }
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "书签",
+          "add": "添加书签"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole 摘要",
+      "description": "显示 DNS Hole 的摘要",
       "option": {
         "layout": {
           "label": "显示布局",
@@ -1063,7 +1075,7 @@
               "label": "垂直"
             },
             "grid": {
-              "label": ""
+              "label": "网格"
             }
           }
         },
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "今日屏蔽",
         "dnsQueriesToday": "今日查询",
         "domainsBeingBlocked": "黑名单上的域"
-      }
+      },
+      "domainsTooltip": "由于多个集成，Homarr 无法计算被阻止的域的准确数量"
     },
     "dnsHoleControls": {
       "name": "DNS Hole 控制",
@@ -1096,7 +1109,7 @@
               "label": "垂直"
             },
             "grid": {
-              "label": ""
+              "label": "网格"
             }
           }
         },
@@ -1110,73 +1123,73 @@
       "controls": {
         "enableAll": "全部启用",
         "disableAll": "全部禁用",
-        "setTimer": "",
+        "setTimer": "设置计时",
         "set": "设置",
         "enabled": "已启用",
         "disabled": "已禁用",
-        "processing": "",
-        "disconnected": "",
+        "processing": "处理中",
+        "disconnected": "网络连线中断",
         "hours": "时",
         "minutes": "分",
-        "unlimited": ""
+        "unlimited": "留空表示无限制"
       }
     },
     "clock": {
-      "name": "",
+      "name": "日期和时间",
       "description": "显示当前的日期和时间。",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "自定义标题/城市显示",
+          "description": "在时钟上显示自定义的标题或城市/国家的名称。"
         },
         "customTitle": {
-          "label": ""
+          "label": "标题"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24 小时制",
+          "description": "使用24小时格式代替12小时格式"
         },
         "showSeconds": {
-          "label": ""
+          "label": "显示秒数"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "使用固定时区"
         },
         "timezone": {
           "label": "时区",
-          "description": ""
+          "description": "选择遵循 IANA 标准的时区"
         },
         "showDate": {
-          "label": ""
+          "label": "显示日期"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "日期格式",
+          "description": "日期应该是什么样的"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft 服务状态",
+      "description": "显示 Minecraft 服务器状态",
       "option": {
         "title": {
-          "label": ""
+          "label": "标题"
         },
         "domain": {
-          "label": ""
+          "label": "服务器地址"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock 服务器"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "在线",
+        "offline": "离线"
       }
     },
     "notebook": {
       "name": "笔记",
-      "description": "",
+      "description": "支持 Markdown 的简单笔记本小部件",
       "option": {
         "showToolbar": {
           "label": "显示帮助您写下 Markdown 的工具栏"
@@ -1236,7 +1249,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "嵌入互联网上的任何内容。某些网站可能限制访问。",
       "option": {
         "embedUrl": {
@@ -1268,30 +1281,31 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "没有提供 iFrame 网址",
+        "unsupportedProtocol": "提供的URL使用了不支持的协议。请使用（{supportedProtocols}）中的一个",
         "noBrowerSupport": "您的浏览器不支持 iframe。请更新您的浏览器。"
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "实体状态",
+      "description": "显示实体状态并可选切换",
       "option": {
         "entityId": {
           "label": "实体 ID"
         },
         "displayName": {
-          "label": ""
+          "label": "显示名称"
         },
         "entityUnit": {
-          "label": ""
+          "label": "实体单位"
         },
         "clickable": {
-          "label": ""
+          "label": "可单击"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
+      "name": "执行自动化",
       "description": "一键触发自动化操作",
       "option": {
         "displayName": {
@@ -1532,7 +1546,7 @@
         },
         "added": {
           "columnTitle": "已添加",
-          "detailsTitle": "日期已添加"
+          "detailsTitle": "添加日期"
         },
         "category": {
           "columnTitle": "扩展的",
@@ -1573,7 +1587,7 @@
         },
         "size": {
           "columnTitle": "文件大小",
-          "detailsTitle": "选择/文件的总大小"
+          "detailsTitle": "文件大小"
         },
         "state": {
           "columnTitle": "状态",
@@ -1581,7 +1595,7 @@
         },
         "time": {
           "columnTitle": "完成时间",
-          "detailsTitle": "结束/结束时间"
+          "detailsTitle": "完成时间"
         },
         "type": {
           "columnTitle": "类型",
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "复制面板",
+        "message": "这将复制面板{name}及其所有内容。如果组件引用了不允许使用的集成，它们将被删除。",
+        "notification": {
+          "success": {
+            "title": "面板已复制",
+            "message": "面板已成功复制"
+          },
+          "error": {
+            "title": "无法复制面板",
+            "message": "无法复制面板"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -1838,7 +1866,7 @@
         "label": "页面标题"
       },
       "metaTitle": {
-        "label": "Meta标题"
+        "label": "Meta 标题"
       },
       "logoImageUrl": {
         "label": "Logo 图像 URL"
@@ -1853,7 +1881,7 @@
         "label": "背景图片附件",
         "option": {
           "fixed": {
-            "label": "已修复",
+            "label": "固定",
             "description": "背景保持不变。"
           },
           "scroll": {
@@ -1935,7 +1963,7 @@
           "unrecognizedLink": "提供的链接未被识别，无法预览，但它可能仍然有效。"
         },
         "layout": {
-          "title": "显示布局"
+          "title": "布局"
         },
         "background": {
           "title": "背景"
@@ -2057,7 +2085,7 @@
         "boards": "面板",
         "apps": "应用",
         "integrations": "集成",
-        "searchEngies": "搜索引擎",
+        "searchEngies": "搜索",
         "medias": "媒体",
         "users": {
           "label": "用户",
@@ -2080,10 +2108,10 @@
         "help": {
           "label": "帮助",
           "items": {
-            "documentation": "文档",
+            "documentation": "帮助文档",
             "submitIssue": "提交问题",
             "discord": "Discord 社区",
-            "sourceCode": "源码"
+            "sourceCode": "源码仓库"
           }
         },
         "about": "关于"
@@ -2125,6 +2153,16 @@
               "tooltip": "此面板将显示为您的主面板"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "设置为您的手机面板",
+            "badge": {
+              "label": "手机",
+              "tooltip": "此面板将显示为您的手机面板"
+            }
+          },
+          "duplicate": {
+            "label": "复制面板"
+          },
           "delete": {
             "label": "永久删除",
             "confirm": {
@@ -2158,7 +2196,14 @@
             "title": "通用",
             "item": {
               "language": "语言与地区",
-              "board": "主面板",
+              "board": {
+                "title": "主面板",
+                "type": {
+                  "general": "通用",
+                  "mobile": "手机"
+                }
+              },
+              "defaultSearchEngine": "默认搜索引擎",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }
@@ -2317,7 +2362,15 @@
             "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
+              "mobileLabel": "全局手机面板",
               "description": "只有公共面板可供选择"
+            }
+          },
+          "search": {
+            "title": "搜索",
+            "defaultSearchEngine": {
+              "label": "全局默认搜索引擎",
+              "description": "无法在这里选择集成搜索引擎"
             }
           },
           "appearance": {
@@ -2435,15 +2488,15 @@
         "accordion": {
           "contributors": {
             "title": "贡献人员",
-            "subtitle": "{count} 维护代码和 Homarr"
+            "subtitle": "{count} 人在维护代码和 Homarr"
           },
           "translators": {
             "title": "翻译人员",
-            "subtitle": "{count}翻译了许多语言"
+            "subtitle": "{count} 名人员翻译了许多语言"
           },
           "libraries": {
-            "title": "资源库",
-            "subtitle": "{count} 在 Homarr 代码中使用"
+            "title": "相关的库",
+            "subtitle": "{count} 个相关的库在 Homarr 代码中被使用"
           }
         }
       }
@@ -2543,6 +2596,22 @@
             "title": "容器未刷新",
             "message": "刷新容器时出现错误"
           }
+        }
+      },
+      "addToHomarr": {
+        "label": "添加到 Homarr",
+        "notification": {
+          "success": {
+            "title": "已添加到 Homarr",
+            "message": "所选应用已被添加到 Homarr"
+          },
+          "error": {
+            "title": "无法添加到 Homarr",
+            "message": "所选应用无法添加到 Homarr"
+          }
+        },
+        "modal": {
+          "title": "将 docker 容器添加到 Homarr"
         }
       }
     },
@@ -2683,6 +2752,9 @@
                 "homeBoard": {
                   "label": "设置为主面板"
                 },
+                "mobileBoard": {
+                  "label": "设置为手机面板"
+                },
                 "settings": {
                   "label": "打开设置"
                 }
@@ -2819,6 +2891,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "搜索",
+            "option": {
+              "other": {
+                "label": "使用另一个搜索引擎搜索"
+              },
+              "no-default": {
+                "label": "没有默认的搜索引擎",
+                "description": "在首选项中设置默认搜索引擎"
+              },
+              "search": {
+                "label": "用{name}搜索“{query}”"
+              },
+              "from-integration": {
+                "description": "输入内容以搜索"
+              }
+            }
+          },
           "local": {
             "title": "本地结果"
           }
@@ -2930,7 +3020,7 @@
           "label": "名称"
         },
         "short": {
-          "label": "不足"
+          "label": "短的"
         },
         "urlTemplate": {
           "label": "URL搜索模板"

@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "Приложения",
@@ -955,6 +966,7 @@
     },
     "create": {
       "title": "Выберите тип элемента",
+      "search": "",
       "addToBoard": "Добавить на панель"
     },
     "moveResize": {
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "заблокировано сегодня",
         "dnsQueriesToday": "DNS-запросов сегодня",
         "domainsBeingBlocked": "Доменов в списке блокировки"
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "Управление DNS-фильтром",
@@ -1269,6 +1282,7 @@
       },
       "error": {
         "noUrl": "URL для iFrame не указан",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Ваш браузер не поддерживает iframes. Пожалуйста, обновите браузер."
       }
     },
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2125,6 +2153,16 @@
               "tooltip": "Эта панель будет показываться как ваша домашняя панель"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Удалить навсегда",
             "confirm": {
@@ -2158,7 +2196,14 @@
             "title": "Общие",
             "item": {
               "language": "Язык и регион",
-              "board": "Домашняя панель",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
@@ -2317,7 +2362,15 @@
             "title": "Панели",
             "homeBoard": {
               "label": "Общая домашняя панель",
+              "mobileLabel": "",
               "description": "Для выбора доступны только публичные панели"
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
+              "label": "",
+              "description": ""
             }
           },
           "appearance": {
@@ -2544,6 +2597,22 @@
             "message": "Произошла ошибка при обновлении данных о контейнерах"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
     },
     "error": {
@@ -2683,6 +2752,9 @@
                 "homeBoard": {
                   "label": "Сделать домашней панелью"
                 },
+                "mobileBoard": {
+                  "label": ""
+                },
                 "settings": {
                   "label": "Открыть настройки"
                 }
@@ -2819,6 +2891,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": "Локальные результаты"
           }

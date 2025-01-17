@@ -24,6 +24,7 @@ describe("all should return all apps", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: createDefaultSession(),
     });
 
@@ -55,6 +56,7 @@ describe("all should return all apps", () => {
     // Arrange
     const caller = appRouter.createCaller({
       db: createDb(),
+      deviceType: undefined,
       session: null,
     });
 
@@ -72,6 +74,7 @@ describe("byId should return an app by id", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
     vi.spyOn(appAccessControl, "canUserSeeAppAsync").mockReturnValue(Promise.resolve(true));
@@ -103,6 +106,7 @@ describe("byId should return an app by id", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
     await db.insert(apps).values([
@@ -128,6 +132,7 @@ describe("byId should return an app by id", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: null,
     });
 
@@ -145,6 +150,7 @@ describe("create should create a new app with all arguments", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: createDefaultSession(["app-create"]),
     });
     const input = {
@@ -171,6 +177,7 @@ describe("create should create a new app with all arguments", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: createDefaultSession(["app-create"]),
     });
     const input = {
@@ -199,6 +206,7 @@ describe("update should update an app", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: createDefaultSession(["app-modify-all"]),
     });
 
@@ -237,6 +245,7 @@ describe("update should update an app", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: createDefaultSession(["app-modify-all"]),
     });
 
@@ -261,6 +270,7 @@ describe("delete should delete an app", () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
+      deviceType: undefined,
       session: createDefaultSession(["app-full-all"]),
     });
 

@@ -1,4 +1,4 @@
-FROM node:22.12.0-alpine AS base
+FROM node:22.13.0-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -11,9 +11,6 @@ RUN apk update
 COPY . .
 
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
-
-# Install sharp for image optimization
-RUN corepack enable pnpm && pnpm install sharp -w
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
@@ -42,7 +39,7 @@ RUN mkdir -p /var/cache/nginx && \
     touch /run/nginx/nginx.pid && \
     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
 
-COPY --from=builder /app/apps/nextjs/next.config.mjs .
+COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
 
 COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs

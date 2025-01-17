@@ -33,6 +33,7 @@ describe("all should return all integrations", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(),
     });
 
@@ -63,6 +64,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -89,6 +91,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -100,6 +103,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -147,6 +151,7 @@ describe("byId should return an integration by id", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
 
@@ -172,6 +177,7 @@ describe("create should create a new integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
     });
     const input = {
@@ -206,6 +212,7 @@ describe("create should create a new integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
     });
     const input = {
@@ -240,7 +247,7 @@ describe("create should create a new integration", () => {
     expect(dbSearchEngine!.short).toBe("j");
     expect(dbSearchEngine!.name).toBe(input.name);
     expect(dbSearchEngine!.iconUrl).toBe(
-      "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyseerr.png",
+      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/jellyseerr.png",
     );
   });
 
@@ -249,6 +256,7 @@ describe("create should create a new integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
     const input = {
@@ -272,6 +280,7 @@ describe("update should update an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -346,6 +355,7 @@ describe("update should update an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -364,6 +374,7 @@ describe("update should update an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
 
@@ -386,6 +397,7 @@ describe("delete should delete an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
@@ -419,6 +431,7 @@ describe("delete should delete an integration", () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
+      deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
     });
 

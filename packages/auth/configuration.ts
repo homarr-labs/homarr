@@ -8,7 +8,7 @@ import type { SupportedAuthProvider } from "@homarr/definitions";
 
 import { createAdapter } from "./adapter";
 import { createSessionCallback } from "./callbacks";
-import { env } from "./env.mjs";
+import { env } from "./env";
 import { createSignInEventHandler } from "./events";
 import { createCredentialsConfiguration, createLdapConfiguration } from "./providers/credentials/credentials-provider";
 import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
@@ -74,7 +74,7 @@ export const createConfiguration = (
           userId: user.id,
         });
 
-        cookies().set(sessionTokenCookieName, sessionToken, {
+        (await cookies()).set(sessionTokenCookieName, sessionToken, {
           path: "/",
           expires: expires,
           httpOnly: true,
@@ -99,8 +99,9 @@ export const createConfiguration = (
       error: "/auth/login",
     },
     jwt: {
-      encode() {
-        const cookie = cookies().get(sessionTokenCookieName)?.value;
+      // eslint-disable-next-line no-restricted-syntax
+      async encode() {
+        const cookie = (await cookies()).get(sessionTokenCookieName)?.value;
         return cookie ?? "";
       },
 

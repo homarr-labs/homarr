@@ -5,15 +5,15 @@ import { db } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetImports } from "@homarr/widgets";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { WidgetPreviewPageContent } from "./_content";
 
 interface Props {
-  params: { kind: string };
+  params: Promise<{ kind: string }>;
 }
 
 export default async function WidgetPreview(props: Props) {
-  if (!(props.params.kind in widgetImports || env.NODE_ENV !== "development")) {
+  if (!((await props.params).kind in widgetImports || env.NODE_ENV !== "development")) {
     notFound();
   }
 
@@ -26,7 +26,7 @@ export default async function WidgetPreview(props: Props) {
     },
   });
 
-  const sort = props.params.kind as WidgetKind;
+  const sort = (await props.params).kind as WidgetKind;
 
   return (
     <Center h="100vh">

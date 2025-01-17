@@ -12,12 +12,13 @@ import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { PermissionForm, PermissionSwitch, SaveAffix } from "./_group-permission-form";
 
 interface GroupPermissionsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function GroupPermissionsPage({ params }: GroupPermissionsPageProps) {
+export default async function GroupPermissionsPage(props: GroupPermissionsPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user.permissions.includes("admin")) {

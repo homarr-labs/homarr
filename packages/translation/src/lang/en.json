@@ -210,6 +210,16 @@
           }
         }
       },
+      "changeDefaultSearchEngine": {
+        "notification": {
+          "success": {
+            "message": "Default search engine changed successfully"
+          },
+          "error": {
+            "message": "Unable to change default search engine"
+          }
+        }
+      },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "Find an app",
     "page": {
       "list": {
         "title": "Apps",
@@ -886,6 +897,7 @@
           "passwordRequirements": "Password does not meet the requirements",
           "boardAlreadyExists": "A board with this name already exists",
           "invalidFileType": "Invalid file type, expected {expected}",
+          "invalidFileName": "Invalid file name",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
           "invalidConfiguration": "Invalid configuration",
           "groupNameTaken": "Group name already taken"
@@ -955,6 +967,7 @@
     },
     "create": {
       "title": "Choose item to add",
+      "search": "Filter items",
       "addToBoard": "Add to board"
     },
     "moveResize": {
@@ -1080,7 +1093,8 @@
         "adsBlockedTodayPercentage": "Blocked today",
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
-      }
+      },
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -1269,6 +1283,7 @@
       },
       "error": {
         "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
         "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
@@ -1760,6 +1775,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "Duplicate board",
+        "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
+        "notification": {
+          "success": {
+            "title": "Board duplicated",
+            "message": "The board was successfully duplicated"
+          },
+          "error": {
+            "title": "Unable to duplicate board",
+            "message": "The board could not be duplicated"
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2073,6 +2102,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
+            "certificates": "Certificates",
             "tasks": "Tasks"
           }
         },
@@ -2125,6 +2155,16 @@
               "tooltip": "This board will show as your home board"
             }
           },
+          "setMobileHomeBoard": {
+            "label": "Set as your mobile board",
+            "badge": {
+              "label": "Mobile",
+              "tooltip": "This board will show as your mobile board"
+            }
+          },
+          "duplicate": {
+            "label": "Duplicate board"
+          },
           "delete": {
             "label": "Delete permanently",
             "confirm": {
@@ -2158,7 +2198,14 @@
             "title": "General",
             "item": {
               "language": "Language & Region",
-              "board": "Home board",
+              "board": {
+                "title": "Home board",
+                "type": {
+                  "general": "General",
+                  "mobile": "Mobile"
+                }
+              },
+              "defaultSearchEngine": "Default search engine",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }
@@ -2317,7 +2364,15 @@
             "title": "Boards",
             "homeBoard": {
               "label": "Global home board",
+              "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
+            }
+          },
+          "search": {
+            "title": "Search",
+            "defaultSearchEngine": {
+              "label": "Global default search engine",
+              "description": "Integration search engines can not be selected here"
             }
           },
           "appearance": {
@@ -2544,6 +2599,22 @@
             "message": "Something went wrong while refreshing the containers"
           }
         }
+      },
+      "addToHomarr": {
+        "label": "Add to Homarr",
+        "notification": {
+          "success": {
+            "title": "Added to Homarr",
+            "message": "Selected apps have been added to Homarr"
+          },
+          "error": {
+            "title": "Could not add to Homarr",
+            "message": "Selected apps could not be added to Homarr"
+          }
+        },
+        "modal": {
+          "title": "Add docker container(-s) to Homarr"
+        }
       }
     },
     "error": {
@@ -2637,6 +2708,9 @@
         },
         "logs": {
           "label": "Logs"
+        },
+        "certificates": {
+          "label": "Certificates"
         }
       },
       "settings": {
@@ -2682,6 +2756,9 @@
                 },
                 "homeBoard": {
                   "label": "Set as home board"
+                },
+                "mobileBoard": {
+                  "label": "Set as mobile board"
                 },
                 "settings": {
                   "label": "Open settings"
@@ -2819,6 +2896,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "Search",
+            "option": {
+              "other": {
+                "label": "Search with another search engine"
+              },
+              "no-default": {
+                "label": "No default search engine",
+                "description": "Set a default search engine in preferences"
+              },
+              "search": {
+                "label": "Search for \"{query}\" with {name}"
+              },
+              "from-integration": {
+                "description": "Start typing to search"
+              }
+            }
+          },
           "local": {
             "title": "Local results"
           }
@@ -3007,6 +3102,47 @@
             "button": {
               "send": "Send request"
             }
+          }
+        }
+      }
+    }
+  },
+  "certificate": {
+    "page": {
+      "list": {
+        "title": "Trusted certificates",
+        "description": "Used by Homarr to request data from integrations.",
+        "noResults": {
+          "title": "There are no certificates yet"
+        },
+        "expires": "Expires {when}"
+      }
+    },
+    "action": {
+      "create": {
+        "label": "Add certificate",
+        "notification": {
+          "success": {
+            "title": "Certificate added",
+            "message": "The certificate was added successfully"
+          },
+          "error": {
+            "title": "Failed to add certificate",
+            "message": "The certificate could not be added"
+          }
+        }
+      },
+      "remove": {
+        "label": "Remove certificate",
+        "confirm": "Are you sure you want to remove the certificate?",
+        "notification": {
+          "success": {
+            "title": "Certificate removed",
+            "message": "The certificate was removed successfully"
+          },
+          "error": {
+            "title": "Certificate not removed",
+            "message": "The certificate could not be removed"
           }
         }
       }

@@ -2,130 +2,130 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Velkommen til Homarr",
+        "subtitle": "Lad os komme i gang med at konfigurere din Homarr instans.",
+        "description": "For at komme i gang, skal du vælge, hvordan du vil konfigurere din Homarr instans.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Start fra bunden",
+          "importOldmarr": "Importer fra Homarr før 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importer data",
+        "subtitle": "Du kan importere data fra en eksisterende Homarr instans.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Træk zip-filen her eller klik for at gennemse",
+          "description": "Den uploadede zip vil blive behandlet, og du vil kunne vælge, hvad du vil importere"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Ændre fil"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importer indstillinger",
+          "description": "Konfigurer importadfærden"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Fundet {count} tavler",
+          "description": "Vælg alle tavler med deres størrelser du vil importere",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Vælg alle",
+            "unselectAll": "Fravælg alle"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Importér sammendrag",
+          "description": "I nedenstående oversigt kan du se hvad der vil blive importeret",
           "action": {
-            "import": ""
+            "import": "Bekræft import og fortsæt"
           },
           "entities": {
-            "apps": "",
-            "boards": "",
-            "integrations": "",
-            "credentialUsers": ""
+            "apps": "Apps",
+            "boards": "Tavler",
+            "integrations": "Integrationer",
+            "credentialUsers": "Brugere, der er legitimerede"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Angiv import token",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Indtast den viste import token fra din tidligere homarr instans"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Ugyldig token",
+              "message": "Den indtastede token er ugyldig"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Admin bruger",
+        "subtitle": "Angiv legitimationsoplysninger for din administrator bruger.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Bruger oprettet",
+            "message": "Brugeren blev oprettet"
           },
           "error": {
-            "title": ""
+            "title": "Brugeroprettelse mislykkedes"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Ekstern gruppe",
+        "subtitle": "Angiv den gruppe, der skal bruges til eksterne brugere.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Gruppenavn",
+            "description": "Navn skal matche admin gruppe fra ekstern udbyder"
           }
         }
       },
       "settings": {
         "title": "Indstillinger",
-        "subtitle": ""
+        "subtitle": "Konfigurer serverindstillinger."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Afslut opsætningen",
+        "subtitle": "Du er klar!",
+        "description": "Du har fuldført opsætningsprocessen. Du kan nu begynde at bruge Homarr. Vælg din næste handling:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Gå til {name} tavle",
+          "createBoard": "Opret din første tavle",
+          "inviteUser": "Inviter andre brugere",
+          "docs": "Læs dokumentationen"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Tilbage til start"
   },
   "user": {
     "title": "Brugere",
     "name": "Bruger",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Log ind på din konto",
+        "subtitle": "Velkommen tilbage! Indtast venligst dine legitimationsoplysninger"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Tilmeld Homarr",
+        "subtitle": "Velkommen til Homarr! Opret venligst din konto",
+        "description": "Du blev inviteret af {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Ny Homarr installation",
+        "subtitle": "Opret venligst den første administrator bruger"
       }
     },
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Verificeret"
       },
       "username": {
         "label": "Brugernavn"
@@ -133,46 +133,46 @@
       "password": {
         "label": "Adgangskode",
         "requirement": {
-          "length": "",
+          "length": "Inkluderer mindst 8 tegn",
           "lowercase": "Inkluderer små bogstaver",
           "uppercase": "Inkluderer store bogstaver",
           "number": "Inkluderer nummer",
-          "special": ""
+          "special": "Inkluderer specielt symbol"
         }
       },
       "passwordConfirm": {
         "label": "Bekræft kodeord"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Tidligere adgangskode"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Hjemme tavle"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Brug ikoner til pings"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Brugernavn allerede taget"
     },
     "action": {
       "login": {
         "label": "Log ind",
-        "labelWith": "",
+        "labelWith": "Log ind med {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Login lykkedes",
+            "message": "Du er nu logget ind"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Login mislykkedes",
+            "message": "Dit login mislykkedes"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Glemt din adgangskode?",
+          "description": "En administrator kan bruge følgende kommando til at nulstille din adgangskode:"
         }
       },
       "register": {
@@ -180,27 +180,37 @@
         "notification": {
           "success": {
             "title": "Konto oprettet",
-            "message": ""
+            "message": "Log venligst på for at fortsætte"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Oprettelse af konto mislykkedes",
+            "message": "Din konto kunne ikke oprettes"
           }
         }
       },
       "create": "Opret bruger",
       "changePassword": {
-        "label": "",
+        "label": "Skift adgangskode",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Adgangskoden er blevet ændret"
           },
           "error": {
-            "message": ""
+            "message": "Adgangskoden kunne ikke ændres"
           }
         }
       },
       "changeHomeBoard": {
+        "notification": {
+          "success": {
+            "message": "Hjemmetavle blev ændret"
+          },
+          "error": {
+            "message": "Kan ikke ændre hjemmetavle"
+          }
+        }
+      },
+      "changeDefaultSearchEngine": {
         "notification": {
           "success": {
             "message": ""
@@ -213,48 +223,48 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Første ugedag ændret med succes"
           },
           "error": {
-            "message": ""
+            "message": "Kan ikke ændre den første ugedag"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping ikoner skiftet"
           },
           "error": {
-            "message": ""
+            "message": "Kan ikke skifte ping-ikoner"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Skift billede",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Billedet blev ændret"
             },
             "error": {
-              "message": ""
+              "message": "Kan ikke ændre billede"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Billedet er for stort",
+              "message": "Maks billedstørrelse er {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Fjern billede",
+          "confirm": "Er du sikker på du vil fjerne billedet?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Billedet blev fjernet"
             },
             "error": {
-              "message": ""
+              "message": "Kan ikke fjerne billede"
             }
           }
         }
@@ -262,15 +272,15 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profilen blev opdateret"
           },
           "error": {
-            "message": ""
+            "message": "Ikke i stand til at opdatere profil"
           }
         }
       },
       "delete": {
-        "label": "",
+        "label": "Slet brugeren permanent",
         "description": "",
         "confirm": ""
       },
@@ -293,23 +303,23 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Admin",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrator",
+            "description": "Medlemmer med denne tilladelse har fuld adgang til alle funktioner og indstillinger"
           }
         }
       },
       "app": {
-        "title": "",
+        "title": "Apps",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Opret apps",
+            "description": "Tillad medlemmer at oprette apps"
           },
           "use-all": {
-            "label": "",
+            "label": "Brug alle apps",
             "description": ""
           },
           "modify-all": {
@@ -489,6 +499,7 @@
     }
   },
   "app": {
+    "search": "",
     "page": {
       "list": {
         "title": "",
@@ -955,6 +966,7 @@
     },
     "create": {
       "title": "",
+      "search": "",
       "addToBoard": ""
     },
     "moveResize": {
@@ -1080,7 +1092,8 @@
         "adsBlockedTodayPercentage": "Blokeret i dag",
         "dnsQueriesToday": "Forespørgsler i dag",
         "domainsBeingBlocked": ""
-      }
+      },
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
@@ -1269,6 +1282,7 @@
       },
       "error": {
         "noUrl": "",
+        "unsupportedProtocol": "",
         "noBrowerSupport": "Din browser understøtter ikke iframes. Opdater venligst din browser."
       }
     },
@@ -1760,6 +1774,20 @@
   },
   "board": {
     "action": {
+      "duplicate": {
+        "title": "",
+        "message": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
       "edit": {
         "notification": {
           "success": {
@@ -2125,6 +2153,16 @@
               "tooltip": ""
             }
           },
+          "setMobileHomeBoard": {
+            "label": "",
+            "badge": {
+              "label": "",
+              "tooltip": ""
+            }
+          },
+          "duplicate": {
+            "label": ""
+          },
           "delete": {
             "label": "Slet permanent",
             "confirm": {
@@ -2158,7 +2196,14 @@
             "title": "Generelt",
             "item": {
               "language": "",
-              "board": "",
+              "board": {
+                "title": "",
+                "type": {
+                  "general": "",
+                  "mobile": ""
+                }
+              },
+              "defaultSearchEngine": "",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner"
             }
@@ -2316,6 +2361,14 @@
           "board": {
             "title": "",
             "homeBoard": {
+              "label": "",
+              "mobileLabel": "",
+              "description": ""
+            }
+          },
+          "search": {
+            "title": "",
+            "defaultSearchEngine": {
               "label": "",
               "description": ""
             }
@@ -2544,6 +2597,22 @@
             "message": ""
           }
         }
+      },
+      "addToHomarr": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "modal": {
+          "title": ""
+        }
       }
     },
     "error": {
@@ -2683,6 +2752,9 @@
                 "homeBoard": {
                   "label": ""
                 },
+                "mobileBoard": {
+                  "label": ""
+                },
                 "settings": {
                   "label": ""
                 }
@@ -2819,6 +2891,24 @@
       },
       "home": {
         "group": {
+          "search": {
+            "title": "",
+            "option": {
+              "other": {
+                "label": ""
+              },
+              "no-default": {
+                "label": "",
+                "description": ""
+              },
+              "search": {
+                "label": ""
+              },
+              "from-integration": {
+                "description": ""
+              }
+            }
+          },
           "local": {
             "title": ""
           }

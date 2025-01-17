@@ -91,6 +91,8 @@ jobs:
           network: host
         env:
           SKIP_ENV_VALIDATION: true
+      - name: Install playwright browsers
+        run: pnpm exec playwright install chromium
       - name: Run E2E Tests
         shell: bash
         run: pnpm test:e2e
