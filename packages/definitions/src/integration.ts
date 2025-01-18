@@ -143,7 +143,7 @@ export const integrationDefs = {
     name: "Proxmox",
     secretKinds: [["username", "tokenId", "apiKey", "realm"]],
     category: ["healthMonitoring"],
-    iconUrl: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/proxmox.png",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/proxmox.png",
   },
 } as const satisfies Record<string, integrationDefinition>;
 
