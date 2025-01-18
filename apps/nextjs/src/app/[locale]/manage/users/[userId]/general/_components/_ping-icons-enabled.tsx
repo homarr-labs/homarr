@@ -51,11 +51,7 @@ export const PingIconsEnabled = ({ user }: PingIconsEnabledProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Switch
-          checked={form.getInputProps("pingIconsEnabled").value as boolean}
-          {...form.getInputProps("pingIconsEnabled")}
-          label={t("user.field.pingIconsEnabled.label")}
-        />
+        <Switch {...form.getInputProps("pingIconsEnabled", { type: "checkbox" })} label={t("user.field.pingIconsEnabled.label")} />
 
         <Group justify="end">
           <Button type="submit" color="teal" loading={isPending}>
