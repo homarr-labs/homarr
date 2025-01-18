@@ -28,7 +28,7 @@ export const integrationDefs = {
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/nzbget.png",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nzbget.svg",
     category: ["downloadClient", "usenet"],
   },
   deluge: {
