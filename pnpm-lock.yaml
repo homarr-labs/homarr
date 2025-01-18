@@ -825,9 +825,6 @@ importers:
 
   packages/cron-jobs:
     dependencies:
-      '@extractus/feed-extractor':
-        specifier: ^7.1.3
-        version: 7.1.3
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../analytics
@@ -1473,6 +1470,9 @@ importers:
 
   packages/request-handler:
     dependencies:
+      '@extractus/feed-extractor':
+        specifier: 7.1.3
+        version: 7.1.3
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
