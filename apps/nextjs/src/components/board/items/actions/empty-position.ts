@@ -21,4 +21,5 @@ export const getFirstEmptyPosition = (
       }
     }
   }
+  return undefined;
 };

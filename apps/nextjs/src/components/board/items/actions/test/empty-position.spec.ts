@@ -125,8 +125,8 @@ const createElementsFromLayout = (layout: string[][]) => {
       }
 
       elements.push({
-        yOffset: yOffset,
-        xOffset: xOffset,
+        yOffset,
+        xOffset,
         width: 1,
         height: 1,
         char: item,
