@@ -733,6 +733,14 @@
         "password": {
           "label": "Parole",
           "newLabel": "Jauna parole"
+        },
+        "tokenId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "realm": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1411,6 +1419,12 @@
         },
         "fileSystem": {
           "label": "Rādīt failu sistēmas informāciju"
+        },
+        "defaultTab": {
+          "label": ""
+        },
+        "sectionIndicatorRequirement": {
+          "label": ""
         }
       },
       "popover": {
@@ -1430,6 +1444,52 @@
       "memory": {},
       "error": {
         "internalServerError": ""
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "",
+          "memory": ""
+        },
+        "resource": {
+          "node": {
+            "name": ""
+          },
+          "qemu": {
+            "name": ""
+          },
+          "lxc": {
+            "name": ""
+          },
+          "storage": {
+            "name": ""
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "",
+            "vmId": "",
+            "plugin": ""
+          },
+          "detail": {
+            "cpu": "",
+            "memory": "",
+            "storage": "",
+            "uptime": "",
+            "haState": "",
+            "storageType": {
+              "local": "",
+              "shared": ""
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "",
+            "cpu": "",
+            "memory": "",
+            "node": ""
+          }
+        }
       }
     },
     "common": {
