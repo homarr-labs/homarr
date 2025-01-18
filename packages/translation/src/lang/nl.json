@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Standaard zoekmachine succesvol gewijzigd"
           },
           "error": {
-            "message": ""
+            "message": "Standaard zoekmachine kan niet worden gewijzigd"
           }
         }
       },
@@ -499,7 +499,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "Vind een app",
     "page": {
       "list": {
         "title": "Apps",
@@ -625,8 +625,8 @@
         "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Zoekmachine aanmaken",
+        "description": "Integratie \"{kind}\" kan worden gebruikt met de zoekmachines. Controleer dit om automatisch de zoekmachine te configureren."
       }
     },
     "action": {
@@ -733,6 +733,14 @@
         "password": {
           "label": "Wachtwoord",
           "newLabel": "Nieuw wachtwoord"
+        },
+        "tokenId": {
+          "label": "Token ID",
+          "newLabel": "Nieuwe token ID"
+        },
+        "realm": {
+          "label": "Realm",
+          "newLabel": "Nieuwe Realm"
         }
       }
     },
@@ -897,7 +905,7 @@
           "passwordRequirements": "Wachtwoord voldoet niet aan de eisen",
           "boardAlreadyExists": "Er bestaat al een bord met deze naam",
           "invalidFileType": "Ongeldig bestandstype, verwachtte {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Ongeldige bestandsnaam",
           "fileTooLarge": "Bestand is te groot, maximale grootte is {maxSize}",
           "invalidConfiguration": "Ongeldige configuratie",
           "groupNameTaken": "Groepsnaam al in gebruik"
@@ -967,7 +975,7 @@
     },
     "create": {
       "title": "Kies een item om toe te voegen",
-      "search": "",
+      "search": "Items filteren",
       "addToBoard": "Toevoegen aan bord"
     },
     "moveResize": {
@@ -1094,7 +1102,7 @@
         "dnsQueriesToday": "Aanvragen vandaag",
         "domainsBeingBlocked": "Domeinen op blokkadelijst"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Vanwege meerdere integraties kan Homarr het exacte aantal geblokkeerde domeinen niet berekenen"
     },
     "dnsHoleControls": {
       "name": "DNS-hole bedieningen",
@@ -1170,22 +1178,22 @@
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft server status",
+      "description": "Geeft de status van een Minecraft server weer",
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "domain": {
-          "label": ""
+          "label": "Serveradres"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock server"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "notebook": {
@@ -1283,7 +1291,7 @@
       },
       "error": {
         "noUrl": "Geen iFrame URL opgegeven",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "De opgegeven URL gebruikt een niet-ondersteund protocol. Gebruik een van ({supportedProtocols})",
         "noBrowerSupport": "Je browser ondersteunt geen iframes. Update je browser."
       }
     },
@@ -1411,6 +1419,12 @@
         },
         "fileSystem": {
           "label": "Bestandssysteem info weergeven"
+        },
+        "defaultTab": {
+          "label": "Standaard tab"
+        },
+        "sectionIndicatorRequirement": {
+          "label": "Sectie indicator vereiste"
         }
       },
       "popover": {
@@ -1430,6 +1444,52 @@
       "memory": {},
       "error": {
         "internalServerError": "Gezondheidsstatus ophalen mislukt"
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "CPU",
+          "memory": "RAM"
+        },
+        "resource": {
+          "node": {
+            "name": "Nodes"
+          },
+          "qemu": {
+            "name": "VM's"
+          },
+          "lxc": {
+            "name": "LXC's"
+          },
+          "storage": {
+            "name": "Opslagruimte"
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
+          },
+          "detail": {
+            "cpu": "Cores",
+            "memory": "Geheugen",
+            "storage": "Opslagruimte",
+            "uptime": "Uptime",
+            "haState": "HA status",
+            "storageType": {
+              "local": "Lokale opslag",
+              "shared": "Gedeelde opslag"
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "Naam",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
+          }
+        }
       }
     },
     "common": {
@@ -1497,9 +1557,9 @@
       "description": "De huidige streams op je mediaservers weergeven",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "Gebruiker",
+        "name": "Naam",
+        "id": "Id"
       }
     },
     "downloads": {
@@ -1776,16 +1836,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Bord dupliceren",
+        "message": "Dit zal het bord {name} dupliceren met al zijn inhoud. Als widgets refereren aan integraties, die je niet mag gebruiken, zullen ze worden verwijderd.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Bord gedupliceerd",
+            "message": "Het bord is succesvol gedupliceerd"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kan board niet dupliceren",
+            "message": "Het bord kon niet worden gedupliceerd"
           }
         }
       },
@@ -2102,7 +2162,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
-            "certificates": "",
+            "certificates": "Certificaten",
             "tasks": "Taken"
           }
         },
@@ -2156,14 +2216,14 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Instellen als je mobiele bord",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobiel",
+              "tooltip": "Dit bord zal getoond worden als je mobiele bord"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Bord dupliceren"
           },
           "delete": {
             "label": "Permanent verwijderen",
@@ -2199,13 +2259,13 @@
             "item": {
               "language": "Taal & regio",
               "board": {
-                "title": "",
+                "title": "Home bord",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Algemeen",
+                  "mobile": "Mobiel"
                 }
               },
-              "defaultSearchEngine": "",
+              "defaultSearchEngine": "Standaard zoekmachine",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
             }
@@ -2364,15 +2424,15 @@
             "title": "Borden",
             "homeBoard": {
               "label": "Globaal home-bord",
-              "mobileLabel": "",
+              "mobileLabel": "Globaal mobiel bord",
               "description": "Alleen openbare borden zijn beschikbaar voor selectie"
             }
           },
           "search": {
-            "title": "",
+            "title": "Zoeken",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Globale standaard zoekmachine",
+              "description": "Integratie zoekmachines kunnen hier niet geselecteerd worden"
             }
           },
           "appearance": {
@@ -2403,7 +2463,7 @@
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Minecraft server status"
             },
             "iconsUpdater": {
               "label": "Icoon updater"
@@ -2601,19 +2661,19 @@
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Toevoegen aan Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Toegevoegd aan Homarr",
+            "message": "Geselecteerde apps zijn toegevoegd aan Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kon niet toevoegen aan Homarr",
+            "message": "Geselecteerde apps konden niet worden toegevoegd aan Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Docker container('s) toevoegen aan Homarr"
         }
       }
     },
@@ -2710,7 +2770,7 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": ""
+          "label": "Certificaten"
         }
       },
       "settings": {
@@ -2758,7 +2818,7 @@
                   "label": "Instellen als home-bord"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Instellen als mobiel bord"
                 },
                 "settings": {
                   "label": "Instellingen openen"
@@ -2826,9 +2886,9 @@
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Film aanvragen",
+        "requestSeries": "Series aanvragen",
+        "openIn": "Openen in {kind}"
       },
       "external": {
         "help": "Gebruik een externe zoekmachine",
@@ -2897,20 +2957,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Zoeken",
             "option": {
               "other": {
-                "label": ""
+                "label": "Zoeken met andere zoekmachine"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Geen standaard zoekmachine",
+                "description": "Stel een standaard zoekmachine in in voorkeuren"
               },
               "search": {
-                "label": ""
+                "label": "Zoeken naar \"{query}\" met {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Typ om te zoeken"
               }
             }
           },
@@ -3092,15 +3152,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "\"{name}\" aanvragen",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Seizoen",
+                "episodes": "Afleveringen"
               }
             },
             "button": {
-              "send": ""
+              "send": "Aanvraag versturen"
             }
           }
         }
@@ -3110,39 +3170,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Vertrouwde certificaten",
+        "description": "Gebruikt door Homarr om gegevens op te vragen van integraties.",
         "noResults": {
-          "title": ""
+          "title": "Er zijn nog geen certificaten"
         },
-        "expires": ""
+        "expires": "Verloopt {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Certificaat toevoegen",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certificaat toegevoegd",
+            "message": "Het certificaat is succesvol toegevoegd"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certificaat toevoegen mislukt",
+            "message": "Het certificaat kon niet worden toegevoegd"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Certificaten verwijderen",
+        "confirm": "Weet je zeker dat je het certificaat wilt verwijderen?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certificaat verwijderd",
+            "message": "Het certificaat is succesvol verwijderd"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certificaat niet verwijderd",
+            "message": "Certificaat kon niet worden verwijderd"
           }
         }
       }
