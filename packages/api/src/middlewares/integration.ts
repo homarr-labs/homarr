@@ -99,31 +99,30 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
   ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
   return publicProcedure.input(z.object({ integrationIds: z.array(z.string()) })).use(async ({ ctx, input, next }) => {
-    if (input.integrationIds.length === 0) {
-      return next({ ctx: { integrations: [] } });
-    }
-
-    const dbIntegrations = await ctx.db.query.integrations.findMany({
-      where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
-      with: {
-        secrets: true,
-        items: {
-          with: {
-            item: {
-              with: {
-                section: {
-                  columns: {
-                    boardId: true,
+    const dbIntegrations =
+      input.integrationIds.length >= 1
+        ? await ctx.db.query.integrations.findMany({
+            where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
+            with: {
+              secrets: true,
+              items: {
+                with: {
+                  item: {
+                    with: {
+                      section: {
+                        columns: {
+                          boardId: true,
+                        },
+                      },
+                    },
                   },
                 },
               },
+              userPermissions: true,
+              groupPermissions: true,
             },
-          },
-        },
-        userPermissions: true,
-        groupPermissions: true,
-      },
-    });
+          })
+        : [];
 
     const offset = input.integrationIds.length - dbIntegrations.length;
     if (offset !== 0) {
@@ -133,7 +132,9 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
       });
     }
 
-    await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
+    if (dbIntegrations.length >= 1) {
+      await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
+    }
 
     return next({
       ctx: {
