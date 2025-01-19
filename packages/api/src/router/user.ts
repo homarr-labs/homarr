@@ -404,7 +404,13 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.userId), "view");
+      // Only allow user to select boards they have access to
+      if (input.homeBoardId) {
+        await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.homeBoardId), "view");
+      }
+      if (input.mobileHomeBoardId) {
+        await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.mobileHomeBoardId), "view");
+      }
 
       await ctx.db
         .update(users)
