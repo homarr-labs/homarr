@@ -316,19 +316,19 @@
         "item": {
           "create": {
             "label": "Створення додатків",
-            "description": ""
+            "description": "Дозволити учасникам створювати додатки"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Використовувати всі додатки",
+            "description": "Дозволити учасникам додавати будь-які додатки до своїх дошок"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Змінювати всі додатки",
+            "description": "Дозволити учасникам змінювати всі додатки"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Повний доступ до додатка",
+            "description": "Дозволити учасникам керувати, використовувати і видаляти будь-які додатки"
           }
         }
       },
@@ -336,16 +336,16 @@
         "title": "Дошки",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Створити дошки",
+            "description": "Дозволити учасникам створювати дошки"
           },
           "view-all": {
             "label": "",
-            "description": ""
+            "description": "Дозволити учасникам переглядати всі дошки"
           },
           "modify-all": {
             "label": "",
-            "description": ""
+            "description": "Дозволити учасникам змінювати всі дошки (не включає контроль доступу та небезпечну зону)"
           },
           "full-all": {
             "label": "",
@@ -354,14 +354,14 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "Інтеграції",
         "item": {
           "create": {
             "label": "",
-            "description": ""
+            "description": "Дозволити учасникам створювати інтеграції"
           },
           "use-all": {
-            "label": "",
+            "label": "Використовувати всі інтеграції",
             "description": ""
           },
           "interact-all": {
@@ -392,16 +392,16 @@
         }
       },
       "other": {
-        "title": "",
+        "title": "Інше",
         "item": {
           "view-logs": {
             "label": "",
-            "description": ""
+            "description": "Дозволити учасникам переглядати логи"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Пошукові системи",
         "item": {
           "create": {
             "label": "",
@@ -423,24 +423,24 @@
       "external": ""
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ця група зарезервована для використання системою та обмежує деякі дії. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Нова група",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Групу успішно створено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося створити групу"
           }
         }
       },
       "transfer": {
         "label": "",
         "description": "",
-        "confirm": "",
+        "confirm": "Ви впевнені, що бажаєте передати право власності на групу {name} користувачу {username}?",
         "notification": {
           "success": {
             "message": "Група {group} перенесена до {user}"
@@ -789,7 +789,7 @@
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Бета-версія",
     "error": "Помилка",
     "action": {
       "add": "Додати",
@@ -797,7 +797,7 @@
       "backToOverview": "",
       "create": "Створити",
       "edit": "Редагувати",
-      "import": "",
+      "import": "Імпорт",
       "insert": "Вставити",
       "remove": "Видалити",
       "save": "Зберегти",
@@ -806,13 +806,13 @@
       "delete": "Видалити",
       "discard": "",
       "confirm": "Підтвердити",
-      "continue": "",
+      "continue": "Продовжити",
       "previous": "Попередній",
       "next": "Далі",
       "checkoutDocs": "",
       "checkLogs": "",
       "tryAgain": "Повторіть спробу",
-      "loading": ""
+      "loading": "Завантаження"
     },
     "here": "",
     "iconPicker": {
@@ -821,29 +821,29 @@
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Світла",
+        "dark": "Темна"
       }
     },
     "information": {
       "min": "",
       "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "days": "Днів",
+      "hours": "Годин",
+      "minutes": "Хвилин"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Успішно створено",
+        "error": "Не вдалося створити"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Успішно видалено",
+        "error": "Не вдалося видалити"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Зміни успішно застосовано",
+        "error": "Не вдалося застосувати зміни"
       },
       "transfer": {
         "success": "",
@@ -855,7 +855,7 @@
     },
     "multiText": {
       "placeholder": "",
-      "addLabel": ""
+      "addLabel": "Додати {value}"
     },
     "select": {
       "placeholder": "",
@@ -901,9 +901,9 @@
           "number": "Це поле повинно бути менше або дорівнювати {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
+          "passwordsDoNotMatch": "Паролі не збігаються",
+          "passwordRequirements": "Пароль не відповідає вимогам",
+          "boardAlreadyExists": "Дошка з такою назвою вже існує",
           "invalidFileType": "",
           "invalidFileName": "",
           "fileTooLarge": "",
@@ -1201,7 +1201,7 @@
       "description": "",
       "option": {
         "showToolbar": {
-          "label": "Показати панель інструментів для написання націнки"
+          "label": "Показати панель інструментів для допомоги з розміткою"
         },
         "allowReadOnlyCheck": {
           "label": ""
@@ -1836,16 +1836,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Скопіювати дошку",
+        "message": "Це продублює дошку {name} з усім її вмістом. Якщо віджети посилаються на інтеграції, які ви не можете використовувати, їх буде видалено.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Дошку скопійовано",
+            "message": "Дошку успішно продубльовано"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Неможливо продублювати дошку",
+            "message": "Дошку не може бути продубльовано"
           }
         }
       },
@@ -1866,7 +1866,7 @@
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Імпорт з homarr до версії 1.0.0",
         "notification": {
           "success": {
             "title": "",
@@ -1885,8 +1885,8 @@
           "apps": {
             "label": "Додатки",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Уникати дублікатів",
+              "description": "Ігнорує додатки, якщо додаток з таким самим посиланням вже існує"
             },
             "onlyImportApps": {
               "label": "",
@@ -2168,12 +2168,12 @@
         },
         "settings": "Налаштування",
         "help": {
-          "label": "Допоможіть!",
+          "label": "Допомога",
           "items": {
             "documentation": "Документація",
-            "submitIssue": "",
+            "submitIssue": "Повідомити про проблему",
             "discord": "Розбрат у громаді",
-            "sourceCode": ""
+            "sourceCode": "Вихідний код"
           }
         },
         "about": "Про програму"
@@ -2200,30 +2200,30 @@
         "title": "Твої дошки",
         "action": {
           "new": {
-            "label": ""
+            "label": "Нова дошка"
           },
           "open": {
-            "label": ""
+            "label": "Відкрити дошку"
           },
           "settings": {
             "label": "Налаштування"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Встановити як домашню дошку",
             "badge": {
               "label": "Головна",
-              "tooltip": ""
+              "tooltip": "Ця дошка буде вашою домашньою дошкою"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Встановити як мобільну дошку",
             "badge": {
               "label": "",
-              "tooltip": ""
+              "tooltip": "Ця дошка буде вашою мобільною дошкою"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Скопіювати дошку"
           },
           "delete": {
             "label": "Видалити назавжди",
@@ -2374,37 +2374,37 @@
         "title": "Налаштування",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Налаштування успішно збережено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося зберегти налаштування"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Аналітика",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Надсилати анонімну аналітику",
+              "text": "Homarr буде відправляти анонімну аналітику з використанням програмного забезпечення з відкритим вихідним кодом Umami. Він ніколи не збирає жодної особистої інформації і, таким чином, сумісний з GDPR та CCPA. Ми заохочуємо вас увімкнути аналітику, тому що це допомагає нашій команді визначати проблеми та пріоритетні задачі."
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "Дані віджетів",
+              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "Дані інтеграції",
+              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
             },
             "usersData": {
-              "title": "",
-              "text": ""
+              "title": "Дані користувачів",
+              "text": "Надсилати кількість користувачів і чи активували ви SSO"
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Crawling та індексація",
+            "warning": "Увімкнення або вимкнення будь-яких налаштувань тут серйозно вплине на те, як пошукові системи індексуватимуть і скануватимуть вашу сторінку. Будь-яке налаштування є запитом, і пошуковий сканер має застосувати ці налаштування. Будь-які зміни можуть зайняти кілька днів або тижнів. Деякі налаштування можуть залежати від пошукової системи.",
             "noIndex": {
-              "title": "",
+              "title": "Не індексувати",
               "text": ""
             },
             "noFollow": {
@@ -2545,20 +2545,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Версія {version}",
+        "text": "Homarr — це проєкт із відкритим кодом, керований спільнотою, який підтримується волонтерами. Завдяки цим людям проєкт Homarr розвивається з 2021 року. Наша команда працює над Homarr абсолютно віддалено з різних країн у вільний час без жодної компенсації.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Учасники",
+            "subtitle": "{count} - стільки людей розробляє код та Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Перекладачі",
+            "subtitle": "{count} - стільки людей допомагають перекладати багатьма мовами"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Бібліотеки",
+            "subtitle": "{count} - стільки бібліотек використано в коді Homarr"
           }
         }
       }
@@ -2789,14 +2789,14 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Пошук додатків, інтеграцій, або дошок",
         "group": {
           "app": {
             "title": "Додатки",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Відкрити посилання на додаток"
                 },
                 "edit": {
                   "label": ""
@@ -2812,7 +2812,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Відкрити дошку"
                 },
                 "homeBoard": {
                   "label": ""
@@ -2821,7 +2821,7 @@
                   "label": ""
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Відкрити налаштування"
                 }
               },
               "detail": {
@@ -2856,7 +2856,7 @@
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Створити нову дошку"
               },
               "importBoard": {
                 "label": ""
@@ -2891,7 +2891,7 @@
         "openIn": ""
       },
       "external": {
-        "help": "",
+        "help": "Використовувати зовнішню пошукову систему",
         "group": {
           "searchEngine": {
             "title": "",
@@ -2936,19 +2936,19 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Режими"
           },
           "help": {
-            "title": "Допоможіть!",
+            "title": "Допомога",
             "option": {
               "documentation": {
                 "label": "Документація"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Повідомити про проблему"
               },
               "discord": {
-                "label": "Розбрат у громаді"
+                "label": "Discord"
               }
             }
           }
@@ -2980,7 +2980,7 @@
         }
       },
       "page": {
-        "help": "",
+        "help": "Пошук сторінок",
         "group": {
           "page": {
             "title": "",
@@ -3041,7 +3041,7 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Пошук користувачів або груп",
         "group": {
           "user": {
             "title": "Користувачі",
