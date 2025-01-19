@@ -98,56 +98,59 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   ...kinds: AtLeastOneOf<TKind> // Ensure at least one kind is provided
 ) => {
-  return publicProcedure
-    .input(z.object({ integrationIds: z.array(z.string()).min(1) }))
-    .use(async ({ ctx, input, next }) => {
-      const dbIntegrations = await ctx.db.query.integrations.findMany({
-        where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
-        with: {
-          secrets: true,
-          items: {
+  return publicProcedure.input(z.object({ integrationIds: z.array(z.string()) })).use(async ({ ctx, input, next }) => {
+    const dbIntegrations =
+      input.integrationIds.length >= 1
+        ? await ctx.db.query.integrations.findMany({
+            where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
             with: {
-              item: {
+              secrets: true,
+              items: {
                 with: {
-                  section: {
-                    columns: {
-                      boardId: true,
+                  item: {
+                    with: {
+                      section: {
+                        columns: {
+                          boardId: true,
+                        },
+                      },
                     },
                   },
                 },
               },
+              userPermissions: true,
+              groupPermissions: true,
             },
-          },
-          userPermissions: true,
-          groupPermissions: true,
-        },
+          })
+        : [];
+
+    const offset = input.integrationIds.length - dbIntegrations.length;
+    if (offset !== 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}: ([${input.integrationIds.join(",")}] compared to [${dbIntegrations.map(({ id, kind }) => `${kind}:${id}`).join(",")}])`,
       });
+    }
 
-      const offset = input.integrationIds.length - dbIntegrations.length;
-      if (offset !== 0) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}: ([${input.integrationIds.join(",")}] compared to [${dbIntegrations.map(({ id, kind }) => `${kind}:${id}`).join(",")}])`,
-        });
-      }
-
+    if (dbIntegrations.length >= 1) {
       await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
+    }
 
-      return next({
-        ctx: {
-          integrations: dbIntegrations.map(
-            ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
-              ...rest,
-              kind: kind as TKind,
-              decryptedSecrets: secrets.map((secret) => ({
-                ...secret,
-                value: decryptSecret(secret.value),
-              })),
-            }),
-          ),
-        },
-      });
+    return next({
+      ctx: {
+        integrations: dbIntegrations.map(
+          ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
+            ...rest,
+            kind: kind as TKind,
+            decryptedSecrets: secrets.map((secret) => ({
+              ...secret,
+              value: decryptSecret(secret.value),
+            })),
+          }),
+        ),
+      },
     });
+  });
 };
 
 /**

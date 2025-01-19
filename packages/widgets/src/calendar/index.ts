@@ -27,4 +27,5 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
     }),
   })),
   supportedIntegrations: getIntegrationKindsByCategory("calendar"),
+  integrationsRequired: false,
 }).withDynamicImport(() => import("./component"));

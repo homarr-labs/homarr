@@ -29,6 +29,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 export interface WidgetDefinition {
   icon: TablerIcon;
   supportedIntegrations?: IntegrationKind[];
+  integrationsRequired?: boolean;
   options: WidgetOptionsRecord;
   errors?: Partial<
     Record<
