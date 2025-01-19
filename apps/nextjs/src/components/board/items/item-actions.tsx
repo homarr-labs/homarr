@@ -1,12 +1,13 @@
 import { useCallback } from "react";
 
-import type { Modify } from "@homarr/common/types";
-import { createId } from "@homarr/db/client";
-import type { WidgetKind } from "@homarr/definitions";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
 
-import type { EmptySection, Item } from "~/app/[locale]/boards/_types";
+import type { Item } from "~/app/[locale]/boards/_types";
 import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
+import type { CreateItemInput } from "./actions/create-item";
+import { createItemCallback } from "./actions/create-item";
+import type { DuplicateItemInput } from "./actions/duplicate-item";
+import { duplicateItemCallback } from "./actions/duplicate-item";
 
 interface MoveAndResizeItem {
   itemId: string;
@@ -42,87 +43,19 @@ interface UpdateItemIntegrations {
   newIntegrations: string[];
 }
 
-interface CreateItem {
-  kind: WidgetKind;
-}
-
-interface DuplicateItem {
-  itemId: string;
-}
-
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
 
   const createItem = useCallback(
-    ({ kind }: CreateItem) => {
-      updateBoard((previous) => {
-        const lastSection = previous.sections
-          .filter((section): section is EmptySection => section.kind === "empty")
-          .sort((sectionA, sectionB) => sectionB.yOffset - sectionA.yOffset)[0];
-
-        if (!lastSection) return previous;
-
-        const widget = {
-          id: createId(),
-          kind,
-          options: {},
-          width: 1,
-          height: 1,
-          integrationIds: [],
-          advancedOptions: {
-            customCssClasses: [],
-          },
-        } satisfies Modify<
-          Omit<Item, "yOffset" | "xOffset">,
-          {
-            kind: WidgetKind;
-          }
-        >;
-
-        return {
-          ...previous,
-          sections: previous.sections.map((section) => {
-            // Return same section if item is not in it
-            if (section.id !== lastSection.id) return section;
-            return {
-              ...section,
-              items: section.items.concat(widget as unknown as Item),
-            };
-          }),
-        };
-      });
+    (input: CreateItemInput) => {
+      updateBoard(createItemCallback(input));
     },
     [updateBoard],
   );
 
   const duplicateItem = useCallback(
-    ({ itemId }: DuplicateItem) => {
-      updateBoard((previous) => {
-        const itemToDuplicate = previous.sections
-          .flatMap((section) => section.items)
-          .find((item) => item.id === itemId);
-
-        if (!itemToDuplicate) return previous;
-
-        const newItem = {
-          ...itemToDuplicate,
-          id: createId(),
-          yOffset: undefined,
-          xOffset: undefined,
-        } satisfies Modify<Item, { yOffset?: number; xOffset?: number }>;
-
-        return {
-          ...previous,
-          sections: previous.sections.map((section) => {
-            // Return same section if item is not in it
-            if (!section.items.some((item) => item.id === itemId)) return section;
-            return {
-              ...section,
-              items: section.items.concat(newItem as unknown as Item),
-            };
-          }),
-        };
-      });
+    ({ itemId }: DuplicateItemInput) => {
+      updateBoard(duplicateItemCallback({ itemId }));
     },
     [updateBoard],
   );
