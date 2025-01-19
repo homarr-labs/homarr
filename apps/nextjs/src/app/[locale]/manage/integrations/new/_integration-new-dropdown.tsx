@@ -15,7 +15,9 @@ export const IntegrationCreateDropdownContent = () => {
   const [search, setSearch] = useState("");
 
   const filteredKinds = useMemo(() => {
-    return integrationKinds.filter((kind) => kind.includes(search.toLowerCase()));
+    return integrationKinds.filter((kind) =>
+      getIntegrationName(kind).toLowerCase().includes(search.toLowerCase().trim()),
+    );
   }, [search]);
 
   const handleSearch = React.useCallback(
@@ -29,6 +31,7 @@ export const IntegrationCreateDropdownContent = () => {
         leftSection={<IconSearch stroke={1.5} size={20} />}
         placeholder={t("integration.page.list.search")}
         value={search}
+        data-autofocus
         onChange={handleSearch}
       />
 
