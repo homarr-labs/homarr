@@ -735,12 +735,12 @@
           "newLabel": "新密码"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "密鑰 ID",
+          "newLabel": "新密鑰 ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "領域",
+          "newLabel": "新領域"
         }
       }
     },
@@ -905,7 +905,7 @@
           "passwordRequirements": "密码不符合要求",
           "boardAlreadyExists": "具有此名称的面板已存在",
           "invalidFileType": "无效的文件类型，例如 {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "無效的檔案名稱",
           "fileTooLarge": "文件太大，最大大小为 {maxSize}",
           "invalidConfiguration": "无效配置",
           "groupNameTaken": "用户组名称已存在"
@@ -1421,10 +1421,10 @@
           "label": "显示文件系统信息"
         },
         "defaultTab": {
-          "label": ""
+          "label": "預設頁面"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "部分指示需求"
         }
       },
       "popover": {
@@ -1447,34 +1447,34 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "處理器",
+          "memory": "記憶體"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "節點"
           },
           "qemu": {
-            "name": ""
+            "name": "虛擬機"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "儲存裝置"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "節點",
+            "vmId": "虛擬機 ID",
+            "plugin": "插件"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
+            "cpu": "核心",
+            "memory": "記憶體",
+            "storage": "儲存裝置",
+            "uptime": "運行時間",
             "haState": "HA 状态",
             "storageType": {
               "local": "本地存储",

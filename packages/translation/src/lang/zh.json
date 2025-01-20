@@ -735,12 +735,12 @@
           "newLabel": "新密碼"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "密鑰 ID",
+          "newLabel": "新密鑰 ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "領域",
+          "newLabel": "新領域"
         }
       }
     },
@@ -905,7 +905,7 @@
           "passwordRequirements": "密碼不符合要求",
           "boardAlreadyExists": "此面板名稱已存在",
           "invalidFileType": "無效的檔案類型，例如 {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "無效的檔案名稱",
           "fileTooLarge": "檔案太大，最大大小為 {maxSize}",
           "invalidConfiguration": "無效設定",
           "groupNameTaken": "用戶組名稱已存在"
@@ -1421,10 +1421,10 @@
           "label": "顯示檔案系統訊息"
         },
         "defaultTab": {
-          "label": ""
+          "label": "預設頁面"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "部分指示需求"
         }
       },
       "popover": {
@@ -1447,47 +1447,47 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "處理器",
+          "memory": "記憶體"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "節點數"
           },
           "qemu": {
-            "name": ""
+            "name": "虛擬機"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "儲存裝置"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "節點",
+            "vmId": "虛擬機 ID",
+            "plugin": "插件"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "核心數",
+            "memory": "記憶體",
+            "storage": "儲存裝置",
+            "uptime": "運行時間",
+            "haState": "HA 狀態",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "本機儲存",
+              "shared": "共享儲存"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "名稱",
+            "cpu": "處理器",
+            "memory": "記憶體",
+            "node": "節點"
           }
         }
       }
@@ -2162,7 +2162,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
-            "certificates": "",
+            "certificates": "憑證",
             "tasks": "任務"
           }
         },
@@ -2216,10 +2216,10 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "設定為移動裝置面板",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "移動裝置",
+              "tooltip": "此面板將顯示為移動裝置主面板"
             }
           },
           "duplicate": {
@@ -2259,10 +2259,10 @@
             "item": {
               "language": "語言與地區",
               "board": {
-                "title": "",
+                "title": "主面板",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "一般",
+                  "mobile": "移動裝置"
                 }
               },
               "defaultSearchEngine": "預設搜尋引擎",
@@ -2424,7 +2424,7 @@
             "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
-              "mobileLabel": "",
+              "mobileLabel": "全局移動裝置主面板",
               "description": "只有公開面板可供選擇"
             }
           },
@@ -2770,7 +2770,7 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": ""
+          "label": "憑證"
         }
       },
       "settings": {
@@ -2818,7 +2818,7 @@
                   "label": "設定為主面板"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "設定為移動裝置面板"
                 },
                 "settings": {
                   "label": "開啟設定"
@@ -3170,39 +3170,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "可信任的憑證",
+        "description": "由 Homarr 用於集成中請求數據",
         "noResults": {
-          "title": ""
+          "title": "尚無憑證"
         },
-        "expires": ""
+        "expires": "到期 {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "新增憑證",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "憑證已新增",
+            "message": "此憑證已新增成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "新增憑證失敗",
+            "message": "此憑證無法新增"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "移除憑證",
+        "confirm": "確定要移除這個憑證？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "憑證已移除",
+            "message": "此憑證已移除成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "憑證未被移除",
+            "message": "此憑證無法被移除"
           }
         }
       }
