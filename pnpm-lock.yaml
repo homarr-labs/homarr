@@ -112,6 +112,9 @@ importers:
       '@homarr/gridstack':
         specifier: ^1.11.3
         version: 1.11.3
+      '@homarr/icons':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/icons
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../../packages/integrations
