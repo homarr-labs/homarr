@@ -181,9 +181,7 @@ export const SystemHealthMonitoring = ({ options, integrationIds }: WidgetCompon
                   </Modal>
                 </Box>
                 {options.cpu && <CpuRing cpuUtilization={healthInfo.cpuUtilization} />}
-                {healthInfo.cpuTemp && options.cpu && (
-                  <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} />
-                )}
+                {options.cpu && <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} />}
                 {options.memory && <MemoryRing available={healthInfo.memAvailable} used={healthInfo.memUsed} />}
               </Flex>
               {
@@ -225,7 +223,7 @@ export const SystemHealthMonitoring = ({ options, integrationIds }: WidgetCompon
                       <Group gap="1cqmin">
                         <IconFileReport className="health-monitoring-disk-status-icon" size="5cqmin" />
                         <Text className="health-monitoring-disk-status-value" size="4cqmin">
-                          {disk.overallStatus}
+                          {disk.overallStatus ? disk.overallStatus : "N/A"}
                         </Text>
                       </Group>
                     </Flex>
