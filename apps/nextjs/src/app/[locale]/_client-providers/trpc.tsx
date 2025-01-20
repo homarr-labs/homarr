@@ -94,6 +94,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
             false: unstable_httpBatchStreamLink({
               transformer: superjson,
               url: getTrpcUrl(),
+              maxURLLength: 2083, // Suggested by tRPC: https://trpc.io/docs/client/links/httpBatchLink#setting-a-maximum-url-length
               headers: createHeadersCallbackForSource("nextjs-react (json)"),
             }),
           }),
