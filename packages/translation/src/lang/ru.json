@@ -213,10 +213,10 @@
       "changeDefaultSearchEngine": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Поисковая система по умолчанию успешно изменена"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось изменить поисковую систему по умолчанию"
           }
         }
       },
@@ -499,7 +499,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "Поиск приложений",
     "page": {
       "list": {
         "title": "Приложения",
@@ -625,8 +625,8 @@
         "label": "URL-адрес"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Создать поисковую систему",
+        "description": "Интеграцию \"{kind}\" можно использовать с поисковыми системами. Включите эту опцию для автоматической настройки поисковой системы."
       }
     },
     "action": {
@@ -735,12 +735,12 @@
           "newLabel": "Новый пароль"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID токена",
+          "newLabel": "Новый ID токена"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Область",
+          "newLabel": "Новая область"
         }
       }
     },
@@ -905,7 +905,7 @@
           "passwordRequirements": "Пароль не соответствует требованиям",
           "boardAlreadyExists": "Панель с таким именем уже существует",
           "invalidFileType": "Неверный тип файла, ожидается {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Недопустимое имя файла",
           "fileTooLarge": "Файл слишком большой, максимальный размер {maxSize}",
           "invalidConfiguration": "Неверная конфигурация",
           "groupNameTaken": "Имя группы уже занято"
@@ -975,7 +975,7 @@
     },
     "create": {
       "title": "Выберите тип элемента",
-      "search": "",
+      "search": "Фильтр элементов",
       "addToBoard": "Добавить на панель"
     },
     "moveResize": {
@@ -1102,7 +1102,7 @@
         "dnsQueriesToday": "DNS-запросов сегодня",
         "domainsBeingBlocked": "Доменов в списке блокировки"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Из-за наличия нескольких интеграций Homarr не может рассчитать точное количество заблокированных доменов"
     },
     "dnsHoleControls": {
       "name": "Управление DNS-фильтром",
@@ -1178,22 +1178,22 @@
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Статус сервера Minecraft",
+      "description": "Отображает текущий статус и информацию о сервере Minecraft",
       "option": {
         "title": {
-          "label": ""
+          "label": "Заголовок"
         },
         "domain": {
-          "label": ""
+          "label": "Домен сервера"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Сервер Bedrock Edition"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "В сети",
+        "offline": "Не в сети"
       }
     },
     "notebook": {
@@ -1291,7 +1291,7 @@
       },
       "error": {
         "noUrl": "URL для iFrame не указан",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "Указанный URL использует неподдерживаемый протокол. Пожалуйста, используйте один из ({supportedProtocols})",
         "noBrowerSupport": "Ваш браузер не поддерживает iframes. Пожалуйста, обновите браузер."
       }
     },
@@ -1421,10 +1421,10 @@
           "label": "Показать информацию о файловой системе"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Вкладка по умолчанию"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Пороговое значение индикатора раздела"
         }
       },
       "popover": {
@@ -1447,47 +1447,47 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "ЦП",
+          "memory": "Память"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Узлы"
           },
           "qemu": {
-            "name": ""
+            "name": "Виртуальные машины"
           },
           "lxc": {
-            "name": ""
+            "name": "Контейнеры LXC"
           },
           "storage": {
-            "name": ""
+            "name": "Хранилище"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Узел",
+            "vmId": "ID виртуальной машины",
+            "plugin": "Плагин"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Ядер",
+            "memory": "Память",
+            "storage": "Хранилище",
+            "uptime": "Время работы",
+            "haState": "Состояние HA",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Локальное",
+              "shared": "Общее"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Название",
+            "cpu": "ЦП",
+            "memory": "Память",
+            "node": "Узел"
           }
         }
       }
@@ -1557,9 +1557,9 @@
       "description": "Отображает текущие сеансы воспроизведения на медиасерверах",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "Пользователь",
+        "name": "Название",
+        "id": "Id"
       }
     },
     "downloads": {
@@ -1836,16 +1836,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Дублировать панель",
+        "message": "Это действие создаст копию панели {name} со всем её содержимым. Если виджеты используют интеграции, к которым у вас нет доступа, они будут удалены.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Панель продублирована",
+            "message": "Панель успешно продублирована"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ошибка дублирования",
+            "message": "Не удалось продублировать панель"
           }
         }
       },
@@ -2162,7 +2162,7 @@
             "docker": "Docker",
             "logs": "Логи",
             "api": "API",
-            "certificates": "",
+            "certificates": "Сертификаты",
             "tasks": "Задачи"
           }
         },
@@ -2216,14 +2216,14 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Сделать домашней панелью для мобильных устройств",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Мобильная",
+              "tooltip": "Эта панель будет показываться как ваша домашняя панель на мобильных устройствах"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Дублировать"
           },
           "delete": {
             "label": "Удалить навсегда",
@@ -2259,13 +2259,13 @@
             "item": {
               "language": "Язык и регион",
               "board": {
-                "title": "",
+                "title": "Домашняя панель",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Основная",
+                  "mobile": "Мобильная"
                 }
               },
-              "defaultSearchEngine": "",
+              "defaultSearchEngine": "Поисковая система по умолчанию",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
@@ -2423,16 +2423,16 @@
           "board": {
             "title": "Панели",
             "homeBoard": {
-              "label": "Общая домашняя панель",
-              "mobileLabel": "",
+              "label": "Глобальная домашняя панель",
+              "mobileLabel": "Глобальная мобильная панель",
               "description": "Для выбора доступны только публичные панели"
             }
           },
           "search": {
-            "title": "",
+            "title": "Поиск",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Глобальная поисковая система",
+              "description": "Поисковые системы из интеграций нельзя выбрать здесь"
             }
           },
           "appearance": {
@@ -2463,7 +2463,7 @@
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Статус сервера Minecraft"
             },
             "iconsUpdater": {
               "label": "Обновление иконок"
@@ -2661,19 +2661,19 @@
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Добавить в Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Приложение добавлено",
+            "message": "Приложение успешно добавлено в Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось добавить",
+            "message": "Не удалось добавить приложение в Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Добавить контейнер(ы) Docker в Homarr"
         }
       }
     },
@@ -2770,7 +2770,7 @@
           "label": "Логи"
         },
         "certificates": {
-          "label": ""
+          "label": "Сертификаты"
         }
       },
       "settings": {
@@ -2818,7 +2818,7 @@
                   "label": "Сделать домашней панелью"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Сделать домашней панелью для мобильных устройств"
                 },
                 "settings": {
                   "label": "Открыть настройки"
@@ -2886,9 +2886,9 @@
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Запросить фильм",
+        "requestSeries": "Запросить сериал",
+        "openIn": "Открыть в {kind}"
       },
       "external": {
         "help": "Использовать внешнюю поисковую систему",
@@ -2957,20 +2957,20 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Поиск",
             "option": {
               "other": {
-                "label": ""
+                "label": "Искать в другой поисковой системе"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Нет поисковой системы по умолчанию",
+                "description": "Установите поисковую систему по умолчанию в настройках"
               },
               "search": {
-                "label": ""
+                "label": "Искать \"{query}\" через {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Начните вводить для поиска"
               }
             }
           },
@@ -3152,15 +3152,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Запрос \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Сезон",
+                "episodes": "Серии"
               }
             },
             "button": {
-              "send": ""
+              "send": "Отправить запрос"
             }
           }
         }
@@ -3170,39 +3170,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Доверенные сертификаты",
+        "description": "Используются Homarr для запроса данных из интеграций.",
         "noResults": {
-          "title": ""
+          "title": "Доверенные сертификаты отсутствуют"
         },
-        "expires": ""
+        "expires": "Истекает {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Создать сертификат",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Сертификат создан",
+            "message": "Сертификат успешно создан"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось создать сертификат",
+            "message": "Произошла ошибка при создании сертификата"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Удалить сертификат",
+        "confirm": "Вы уверены, что хотите удалить этот сертификат?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Сертификат удален",
+            "message": "Сертификат успешно удален"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не удалось удалить сертификат",
+            "message": "Произошла ошибка при удалении сертификата"
           }
         }
       }
