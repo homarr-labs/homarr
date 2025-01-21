@@ -1,5 +1,6 @@
 import type Docker from "dockerode";
 
+export type { DockerInstance } from "./singleton";
 export { DockerSingleton } from "./singleton";
 export type { ContainerInfo, Container, Port } from "dockerode";
 export type { Docker };

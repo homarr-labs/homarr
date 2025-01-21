@@ -1,8 +1,8 @@
 import Docker from "dockerode";
 
-import { env } from "~/env";
+import { env } from "./env";
 
-interface DockerInstance {
+export interface DockerInstance {
   host: string;
   instance: Docker;
 }
