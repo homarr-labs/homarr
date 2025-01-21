@@ -60,7 +60,12 @@ export default function SmartHomeTriggerAutomationWidget({
   );
 
   return (
-    <UnstyledButton onClick={handleClick} style={{ cursor: !isEditMode ? "pointer" : "initial" }} w="100%" h="100%">
+    <UnstyledButton
+      onClick={handleClick}
+      style={{ cursor: !isEditMode ? "pointer" : "initial", pointerEvents: isEditMode ? "none" : undefined }}
+      w="100%"
+      h="100%"
+    >
       {isShowSuccess && (
         <Overlay>
           <Center w="100%" h="100%">

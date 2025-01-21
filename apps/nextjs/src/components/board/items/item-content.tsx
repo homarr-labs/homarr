@@ -82,9 +82,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             when={
               widgetSupportsIntegrations &&
               item.integrationIds.length === 0 &&
-              "integrationsRequired" in definition &&
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              definition.integrationsRequired !== false
+              (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
           <BoardItemMenu offset={4} item={newItem} />
