@@ -26,4 +26,5 @@ export const env = createEnv({
     SECRET_ENCRYPTION_KEY: process.env.SECRET_ENCRYPTION_KEY,
   },
   skipValidation: shouldSkipEnvValidation(),
+  emptyStringAsUndefined: true,
 });

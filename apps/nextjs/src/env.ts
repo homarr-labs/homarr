@@ -35,4 +35,5 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation: shouldSkipEnvValidation(),
+  emptyStringAsUndefined: true,
 });

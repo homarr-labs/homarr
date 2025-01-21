@@ -86,4 +86,5 @@ export const env = createEnv({
     AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: process.env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE,
   },
   skipValidation,
+  emptyStringAsUndefined: true,
 });
