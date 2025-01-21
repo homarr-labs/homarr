@@ -1733,7 +1733,7 @@
           "main": "Medya İstatistikleri",
           "approved": "Onaylanan",
           "pending": "Onay bekleyen",
-          "processing": "İşleniyor",
+          "processing": "İşlenen",
           "declined": "Reddedilen",
           "available": "Mevcut",
           "tv": "Dizi talepleri",
@@ -2099,9 +2099,9 @@
     "error": {
       "noBoard": {
         "title": "Homarr'a Hoş Geldiniz",
-        "description": "Tüm uygulamalarınızı ve hizmetlerinizi parmaklarınızın ucuna getiren şık ve modern bir gösterge paneli.",
+        "description": "Tüm uygulamalarınızı ve hizmetlerinizi parmaklarınızın ucuna getiren şık ve modern kontrol paneli.",
         "link": "İlk panelinizi oluşturun",
-        "notice": "Bu sayfanın kaybolmasını sağlamak için bir panel oluşturun ve bunu ana panel olarak ayarlayın"
+        "notice": "Bu sayfanın kaybolmasını sağlamak için bir panel oluşturun ve bunu ön tanımlı panel olarak atayın"
       },
       "notFound": {
         "title": "Panel bulunamadı",
