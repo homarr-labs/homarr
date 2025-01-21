@@ -12,11 +12,7 @@ export const env = createEnv({
    * Specify your server-side environment variables schema here. This way you can ensure the app isn't
    * built with invalid env vars.
    */
-  server: {
-    // Comma separated list of docker hostnames that can be used to connect to query the docker endpoints (localhost:2375,host.docker.internal:2375, ...)
-    DOCKER_HOSTNAMES: z.string().optional(),
-    DOCKER_PORTS: z.string().optional(),
-  },
+  server: {},
   /**
    * Specify your client-side environment variables schema here.
    * For them to be exposed to the client, prefix them with `NEXT_PUBLIC_`.
@@ -30,8 +26,6 @@ export const env = createEnv({
   runtimeEnv: {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
-    DOCKER_HOSTNAMES: process.env.DOCKER_HOSTNAMES,
-    DOCKER_PORTS: process.env.DOCKER_PORTS,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation: shouldSkipEnvValidation(),
