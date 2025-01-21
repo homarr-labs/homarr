@@ -1,6 +1,6 @@
 "use client";
 
-import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import { Anchor, Box, Card, Divider, Flex, Group, Image, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -169,7 +169,7 @@ const VerticalItem = ({
         {app.name}
       </Text>
       {showIcon && (
-        <img
+        <Image
           style={{
             maxHeight: "100%",
             maxWidth: "100%",
@@ -203,7 +203,7 @@ const HorizontalItem = ({
   return (
     <Group wrap="nowrap">
       {showIcon && (
-        <img
+        <Image
           style={{
             overflow: "auto",
             objectFit: "contain",
