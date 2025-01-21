@@ -15,6 +15,11 @@ export const CopyMedia = ({ media }: CopyMediaProps) => {
 
   const url = typeof window !== "undefined" ? `${window.location.origin}/api/user-medias/${media.id}` : "";
 
+  // Clipboard only works on localhost or secure connections (https)
+  if (url.startsWith("http://") && !url.startsWith("http://localhost")) {
+    return null;
+  }
+
   return (
     <CopyButton value={url}>
       {({ copy, copied }) => (

@@ -102,7 +102,15 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
 
 const IntegrationSelectMenu = ({ children }: PropsWithChildren) => {
   return (
-    <Menu width={256} trapFocus position="bottom-end" withinPortal shadow="md" keepMounted={false}>
+    <Menu
+      width={256}
+      trapFocus
+      position="bottom-end"
+      withinPortal
+      shadow="md"
+      keepMounted={false}
+      withInitialFocusPlaceholder={false}
+    >
       {children}
       <MenuDropdown>
         <IntegrationCreateDropdownContent />

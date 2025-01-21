@@ -1,13 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Anchor, Group, Stack, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Anchor,
+  Group,
+  Stack,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Title,
+  Tooltip,
+} from "@mantine/core";
+import { IconExternalLink } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { humanFileSize } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
+import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 import { z } from "@homarr/validation";
@@ -91,13 +106,14 @@ interface RowProps {
 
 const Row = async ({ media }: RowProps) => {
   const session = await auth();
+  const t = await getI18n();
   const canDelete = media.creatorId === session?.user.id || session?.user.permissions.includes("media-full-all");
 
   return (
     <TableTr>
       <TableTd w={64}>
         <Image
-          src={`/api/user-medias/${media.id}`}
+          src={createLocalImageUrl(media.id)}
           alt={media.name}
           width={64}
           height={64}
@@ -121,6 +137,17 @@ const Row = async ({ media }: RowProps) => {
       <TableTd w={64}>
         <Group wrap="nowrap" gap="xs">
           <CopyMedia media={media} />
+          <Tooltip label={t("media.action.open.label")} openDelay={500}>
+            <ActionIcon
+              component="a"
+              href={createLocalImageUrl(media.id)}
+              target="_blank"
+              color="gray"
+              variant="subtle"
+            >
+              <IconExternalLink size={16} stroke={1.5} />
+            </ActionIcon>
+          </Tooltip>
           {canDelete && <DeleteMedia media={media} />}
         </Group>
       </TableTd>
