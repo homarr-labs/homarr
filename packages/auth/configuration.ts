@@ -2,9 +2,11 @@ import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapte
 import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { formatError } from "pretty-print-error";
 
 import { db } from "@homarr/db";
 import type { SupportedAuthProvider } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 
 import { createAdapter } from "./adapter";
 import { createSessionCallback } from "./callbacks";
@@ -26,15 +28,16 @@ export const createConfiguration = (
   const adapter = createAdapter(db, provider);
   return NextAuth({
     logger: {
-      error: (code, ...message) => {
+      error: (error) => {
         // Remove the big error message for failed login attempts
         // as it is not useful for the user.
-        if (code.name === "CredentialsSignin") {
-          console.warn("The login attempt of a user was not successful.");
+        if (error.name === "CredentialsSignin") {
+          logger.warn("The login attempt of a user was not successful.");
           return;
         }
 
-        console.error(code, ...message);
+        logger.error(formatError(error));
+        logger.error(formatError(error.cause));
       },
     },
     trustHost: true,
