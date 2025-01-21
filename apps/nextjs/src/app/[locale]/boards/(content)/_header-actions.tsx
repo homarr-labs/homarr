@@ -169,9 +169,10 @@ const SelectBoardsMenu = () => {
       <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
         {boards.map((board) => (
           <Menu.Item
+            key={board.id}
             component={Link}
             href={`/boards/${board.name}`}
-            leftSection={<IconLayoutBoard size={20} key={board.id} />}
+            leftSection={<IconLayoutBoard size={20} />}
           >
             {board.name}
           </Menu.Item>
