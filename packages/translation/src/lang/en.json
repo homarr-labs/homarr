@@ -1067,14 +1067,14 @@
             }
           }
         },
-        "showIcon": {
-          "label": "Show icons"
+        "hideIcon": {
+          "label": "Hide icons"
         },
-        "showUrl": {
-          "label": "Show URLs"
+        "hideHostname": {
+          "label": "Hide hostname"
         },
-        "openInNewTab": {
-          "label": "Open in new tab"
+        "openNewTab": {
+          "label": "Open new tab"
         },
         "items": {
           "label": "Bookmarks",
