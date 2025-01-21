@@ -49,9 +49,9 @@ describe("Onboarding", () => {
       environment: {
         AUTH_PROVIDERS: "ldap",
         AUTH_LDAP_URI: "ldap://host.docker.internal:3890",
-        AUTH_LDAP_BASE: "",
-        AUTH_LDAP_BIND_DN: "",
-        AUTH_LDAP_BIND_PASSWORD: "",
+        AUTH_LDAP_BASE: "not-used",
+        AUTH_LDAP_BIND_DN: "not-used",
+        AUTH_LDAP_BIND_PASSWORD: "not-used",
       },
       mounts: {
         "/appdata": localMountPath,
