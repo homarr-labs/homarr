@@ -19,6 +19,9 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       })),
       defaultValue: "column",
     }),
+    showIcon: factory.switch({ defaultValue: true }),
+    showUrl: factory.switch({ defaultValue: true }),
+    openInNewTab: factory.switch({ defaultValue: true }),
     items: factory.sortableItemList<RouterOutputs["app"]["all"][number], string>({
       ItemComponent: ({ item, handle: Handle, removeItem, rootAttributes }) => {
         return (

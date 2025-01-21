@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "showIcon": {
+          "label": "Show icons"
+        },
+        "showUrl": {
+          "label": "Show URLs"
+        },
+        "openInNewTab": {
+          "label": "Open in new tab"
+        },
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"
