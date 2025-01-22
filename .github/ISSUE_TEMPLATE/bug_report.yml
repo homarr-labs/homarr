@@ -31,8 +31,10 @@ body:
       label: Version
       description: What version of Homarr are you running?
       options:
-        - 1.0.0-beta
+        - 1.1.0
+        - 1.0.1
         - 1.0.0
+        - 1.0.0-beta
         - Other (describe in "additional information")
       default: 0
     validations:
