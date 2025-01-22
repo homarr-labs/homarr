@@ -83,10 +83,12 @@ export default async function EditUserPage(props: Props) {
         </Box>
       </Group>
 
-      <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.language")}</Title>
-        <CurrentLanguageCombobox />
-      </Stack>
+      {session?.user.id === user.id && (
+        <Stack mb="lg">
+          <Title order={2}>{tGeneral("item.language")}</Title>
+          <CurrentLanguageCombobox />
+        </Stack>
+      )}
 
       <Stack mb="lg">
         <Title order={2}>{tGeneral("item.board.title")}</Title>
