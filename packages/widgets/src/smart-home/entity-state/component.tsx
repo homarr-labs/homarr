@@ -77,7 +77,12 @@ export default function SmartHomeEntityStateWidget({
       onClick={handleClick}
       w="100%"
       h="100%"
-      styles={{ root: { cursor: options.clickable && !isEditMode ? "pointer" : "initial" } }}
+      styles={{
+        root: {
+          cursor: options.clickable && !isEditMode ? "pointer" : "initial",
+          pointerEvents: isEditMode ? "none" : undefined,
+        },
+      }}
     >
       <Center h="100%" w="100%">
         <Stack align="center" gap="md">
