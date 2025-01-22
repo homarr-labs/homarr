@@ -23,6 +23,7 @@
     "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/docker": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/gridstack": "^1.12.0",
     "@homarr/icons": "workspace:^0.1.0",
