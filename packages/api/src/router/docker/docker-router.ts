@@ -1,26 +1,24 @@
 import { TRPCError } from "@trpc/server";
-import type Docker from "dockerode";
-import type { Container } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
-import type { DockerContainerState } from "@homarr/definitions";
+import { DockerSingleton } from "@homarr/docker";
+import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@homarr/docker";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 import { z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
-import { DockerSingleton } from "./docker-singleton";
 
 const dockerCache = createCacheChannel<{
-  containers: (Docker.ContainerInfo & { instance: string; iconUrl: string | null })[];
+  containers: (ContainerInfo & { instance: string; iconUrl: string | null })[];
 }>("docker-containers", 5 * 60 * 1000);
 
 export const dockerRouter = createTRPCRouter({
   getContainers: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
     const result = await dockerCache
       .consumeAsync(async () => {
-        const dockerInstances = DockerSingleton.getInstance();
+        const dockerInstances = DockerSingleton.getInstances();
         const containers = await Promise.all(
           // Return all the containers of all the instances into only one item
           dockerInstances.map(({ instance, host: key }) =>
@@ -33,8 +31,7 @@ export const dockerRouter = createTRPCRouter({
           ),
         ).then((containers) => containers.flat());
 
-        const extractImage = (container: Docker.ContainerInfo) =>
-          container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+        const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
         const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
         const dbIcons =
           likeQueries.length >= 1
@@ -151,7 +148,7 @@ const getContainerOrDefaultAsync = async (instance: Docker, id: string) => {
 };
 
 const getContainerOrThrowAsync = async (id: string) => {
-  const dockerInstances = DockerSingleton.getInstance();
+  const dockerInstances = DockerSingleton.getInstances();
   const containers = await Promise.all(dockerInstances.map(({ instance }) => getContainerOrDefaultAsync(instance, id)));
   const foundContainer = containers.find((container) => container) ?? null;
 
@@ -168,21 +165,21 @@ const getContainerOrThrowAsync = async (id: string) => {
 interface DockerContainer {
   name: string;
   id: string;
-  state: DockerContainerState;
+  state: ContainerState;
   image: string;
-  ports: Docker.Port[];
+  ports: Port[];
   iconUrl: string | null;
 }
 
 function sanitizeContainers(
-  containers: (Docker.ContainerInfo & { instance: string; iconUrl: string | null })[],
+  containers: (ContainerInfo & { instance: string; iconUrl: string | null })[],
 ): DockerContainer[] {
   return containers.map((container) => {
     return {
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       id: container.Id,
       instance: container.instance,
-      state: container.State as DockerContainerState,
+      state: container.State as ContainerState,
       image: container.Image,
       ports: container.Ports,
       iconUrl: container.iconUrl,

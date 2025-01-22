@@ -2,6 +2,7 @@
 
 import type { MouseEvent } from "react";
 import { useCallback, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Group, Menu } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
@@ -9,9 +10,11 @@ import {
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
+  IconLayoutBoard,
   IconPencil,
   IconPencilOff,
   IconPlus,
+  IconReplace,
   IconResize,
   IconSettings,
 } from "@tabler/icons-react";
@@ -49,6 +52,8 @@ export const BoardContentHeaderActions = () => {
       <HeaderButton href={`/boards/${board.name}/settings`}>
         <IconSettings stroke={1.5} />
       </HeaderButton>
+
+      <SelectBoardsMenu />
     </>
   );
 };
@@ -148,6 +153,32 @@ const EditModeMenu = () => {
     <HeaderButton onClick={toggle} loading={isPending}>
       {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
     </HeaderButton>
+  );
+};
+
+const SelectBoardsMenu = () => {
+  const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
+
+  return (
+    <Menu position="bottom-end" withArrow>
+      <Menu.Target>
+        <HeaderButton w="auto" px={4}>
+          <IconReplace stroke={1.5} />
+        </HeaderButton>
+      </Menu.Target>
+      <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
+        {boards.map((board) => (
+          <Menu.Item
+            key={board.id}
+            component={Link}
+            href={`/boards/${board.name}`}
+            leftSection={<IconLayoutBoard size={20} />}
+          >
+            {board.name}
+          </Menu.Item>
+        ))}
+      </Menu.Dropdown>
+    </Menu>
   );
 };
 

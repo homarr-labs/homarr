@@ -27,7 +27,11 @@ export const env = createEnv({
       .default(drivers.betterSqlite3),
     ...(urlRequired
       ? {
-          DB_URL: z.string(),
+          DB_URL:
+            // Fallback to the default sqlite file path in production
+            process.env.NODE_ENV === "production" && isDriver("better-sqlite3")
+              ? z.string().default("/appdata/db/db.sqlite")
+              : z.string().nonempty(),
         }
       : {}),
     ...(hostRequired
@@ -58,4 +62,5 @@ export const env = createEnv({
     DB_PORT: process.env.DB_PORT,
   },
   skipValidation: shouldSkipEnvValidation(),
+  emptyStringAsUndefined: true,
 });

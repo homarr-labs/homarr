@@ -30,7 +30,9 @@ const handler = auth(async (req) => {
     req,
     createContext: () => createTRPCContext({ session: req.auth, headers: req.headers }),
     onError({ error, path, type }) {
-      logger.error(`tRPC Error with ${type} on '${path}': (${error.code}) - ${error.message}`);
+      logger.error(
+        `tRPC Error with ${type} on '${path}': (${error.code}) - ${error.message}\n${error.stack}\n${error.cause}`,
+      );
     },
   });
 

@@ -733,6 +733,14 @@
         "password": {
           "label": "密码",
           "newLabel": "新密码"
+        },
+        "tokenId": {
+          "label": "密鑰 ID",
+          "newLabel": "新密鑰 ID"
+        },
+        "realm": {
+          "label": "領域",
+          "newLabel": "新領域"
         }
       }
     },
@@ -777,6 +785,9 @@
       },
       "copy": {
         "label": "复制 URL"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -897,7 +908,7 @@
           "passwordRequirements": "密码不符合要求",
           "boardAlreadyExists": "具有此名称的面板已存在",
           "invalidFileType": "无效的文件类型，例如 {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "無效的檔案名稱",
           "fileTooLarge": "文件太大，最大大小为 {maxSize}",
           "invalidConfiguration": "无效配置",
           "groupNameTaken": "用户组名称已存在"
@@ -1411,6 +1422,12 @@
         },
         "fileSystem": {
           "label": "显示文件系统信息"
+        },
+        "defaultTab": {
+          "label": "預設頁面"
+        },
+        "sectionIndicatorRequirement": {
+          "label": "部分指示需求"
         }
       },
       "popover": {
@@ -1430,6 +1447,52 @@
       "memory": {},
       "error": {
         "internalServerError": "获取健康状态失败"
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "處理器",
+          "memory": "記憶體"
+        },
+        "resource": {
+          "node": {
+            "name": "節點"
+          },
+          "qemu": {
+            "name": "虛擬機"
+          },
+          "lxc": {
+            "name": "LXCs"
+          },
+          "storage": {
+            "name": "儲存裝置"
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "節點",
+            "vmId": "虛擬機 ID",
+            "plugin": "插件"
+          },
+          "detail": {
+            "cpu": "核心",
+            "memory": "記憶體",
+            "storage": "儲存裝置",
+            "uptime": "運行時間",
+            "haState": "HA 状态",
+            "storageType": {
+              "local": "本地存储",
+              "shared": "共享存储"
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "名称",
+            "cpu": "处理器",
+            "memory": "内存",
+            "node": "节点"
+          }
+        }
       }
     },
     "common": {
@@ -2102,7 +2165,7 @@
             "docker": "Docker",
             "logs": "日志",
             "api": "API",
-            "certificates": "",
+            "certificates": "证书",
             "tasks": "任务"
           }
         },
@@ -2710,7 +2773,7 @@
           "label": "日志"
         },
         "certificates": {
-          "label": ""
+          "label": "证书"
         }
       },
       "settings": {
@@ -3110,39 +3173,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "可信证书",
+        "description": "Homarr 用于从集成请求数据。",
         "noResults": {
-          "title": ""
+          "title": "还没有证书"
         },
-        "expires": ""
+        "expires": "到期时间 {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "添加证书",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "已添加证书",
+            "message": "已成功添加证书"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "添加证书失败",
+            "message": "无法添加证书"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "删除证书",
+        "confirm": "您确定要删除证书吗？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "证书已删除",
+            "message": "证书删除成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "证书未删除",
+            "message": "无法删除证书"
           }
         }
       }

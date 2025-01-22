@@ -712,7 +712,7 @@
         "label": "Değer ayarlanmadı",
         "tooltip": "Gizli anahtar gereklidir ve henüz ayarlanmadı"
       },
-      "secureNotice": "Bu Gizli anahtar oluşturulduktan sonra geri alınamaz",
+      "secureNotice": "Entegrasyonu oluşturduktan sonra gizli anahtarı tekrar görüntüleyemezsiniz",
       "reset": {
         "title": "Gizli anahtarı sıfırla",
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
@@ -733,6 +733,14 @@
         "password": {
           "label": "Şifre",
           "newLabel": "Yeni Şifre"
+        },
+        "tokenId": {
+          "label": "Token Kimliği",
+          "newLabel": "Yeni Token Kimliği"
+        },
+        "realm": {
+          "label": "Realm",
+          "newLabel": "Yeni realm"
         }
       }
     },
@@ -777,6 +785,9 @@
       },
       "copy": {
         "label": "URL'yi kopyala"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -897,7 +908,7 @@
           "passwordRequirements": "Parola gereksinimleri karşılamıyor",
           "boardAlreadyExists": "Bu isimde bir panel zaten mevcut",
           "invalidFileType": "Geçersiz dosya türü, {expected} bekleniyor",
-          "invalidFileName": "",
+          "invalidFileName": "Geçersiz dosya adı",
           "fileTooLarge": "Dosya çok büyük, azami boyut {maxSize}",
           "invalidConfiguration": "Geçersiz yapılandırma",
           "groupNameTaken": "Grup adı zaten alınmış"
@@ -1411,6 +1422,12 @@
         },
         "fileSystem": {
           "label": "Dosya Sistemi Bilgilerini Göster"
+        },
+        "defaultTab": {
+          "label": "Varsayılan sekme"
+        },
+        "sectionIndicatorRequirement": {
+          "label": "Bölüm göstergesi gereksinimi"
         }
       },
       "popover": {
@@ -1430,6 +1447,52 @@
       "memory": {},
       "error": {
         "internalServerError": "Sağlık durumu alınamadı"
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "İşlemci",
+          "memory": "BELLEK"
+        },
+        "resource": {
+          "node": {
+            "name": "Nodes"
+          },
+          "qemu": {
+            "name": "VM's"
+          },
+          "lxc": {
+            "name": "LXC'ler"
+          },
+          "storage": {
+            "name": "Depolama"
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "Node",
+            "vmId": "VM Kimliği",
+            "plugin": "Eklenti"
+          },
+          "detail": {
+            "cpu": "Çekirdekler",
+            "memory": "Hafıza",
+            "storage": "Depolama",
+            "uptime": "Çalışma Süresi",
+            "haState": "HA Durumu",
+            "storageType": {
+              "local": "Yerel depolama",
+              "shared": "Paylaşılan depolama"
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "İsim",
+            "cpu": "İşlemci",
+            "memory": "BELLEK",
+            "node": "Node"
+          }
+        }
       }
     },
     "common": {
@@ -1673,7 +1736,7 @@
           "main": "Medya İstatistikleri",
           "approved": "Onaylanan",
           "pending": "Onay bekleyen",
-          "processing": "İşleniyor",
+          "processing": "İşlenen",
           "declined": "Reddedilen",
           "available": "Mevcut",
           "tv": "Dizi talepleri",
@@ -2039,9 +2102,9 @@
     "error": {
       "noBoard": {
         "title": "Homarr'a Hoş Geldiniz",
-        "description": "Tüm uygulamalarınızı ve hizmetlerinizi parmaklarınızın ucuna getiren şık ve modern bir gösterge paneli.",
+        "description": "Tüm uygulamalarınızı ve hizmetlerinizi parmaklarınızın ucuna getiren şık ve modern kontrol paneli.",
         "link": "İlk panelinizi oluşturun",
-        "notice": "Bu sayfanın kaybolmasını sağlamak için bir panel oluşturun ve bunu ana panel olarak ayarlayın"
+        "notice": "Bu sayfanın kaybolmasını sağlamak için bir panel oluşturun ve bunu ön tanımlı panel olarak atayın"
       },
       "notFound": {
         "title": "Panel bulunamadı",
@@ -2102,7 +2165,7 @@
             "docker": "Docker",
             "logs": "Günlükler",
             "api": "API",
-            "certificates": "",
+            "certificates": "Sertifikalar",
             "tasks": "Görevler"
           }
         },
@@ -2710,7 +2773,7 @@
           "label": "Günlükler"
         },
         "certificates": {
-          "label": ""
+          "label": "Sertifikalar"
         }
       },
       "settings": {
@@ -3110,39 +3173,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Güvenilen sertifikalar",
+        "description": "Homarr tarafından, Entegrasyonlardan veri çekmek için kullanılır.",
         "noResults": {
-          "title": ""
+          "title": "Henüz sertifika yok"
         },
-        "expires": ""
+        "expires": "{when} Sonra Süresi Doluyor"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Sertifika ekle",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sertifika eklendi",
+            "message": "Sertifika başarıyla eklendi"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sertifika eklenemedi",
+            "message": "Sertifika eklenemedi"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Sertifikayı kaldır",
+        "confirm": "Sertifikayı kaldırmak istediğinizden emin misiniz?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sertifika kaldırıldı",
+            "message": "Sertifika başarıyla kaldırıldı"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sertifika kaldırılmadı",
+            "message": "Sertifika kaldırılamadı"
           }
         }
       }

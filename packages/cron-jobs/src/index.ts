@@ -11,7 +11,6 @@ import { mediaServerJob } from "./jobs/integrations/media-server";
 import { mediaTranscodingJob } from "./jobs/integrations/media-transcoding";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
-import type { RssFeed } from "./jobs/rss-feeds";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { sessionCleanupJob } from "./jobs/session-cleanup";
 import { updateCheckerJob } from "./jobs/update-checker";
@@ -38,4 +37,3 @@ export const jobGroup = createCronJobGroup({
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
-export type { RssFeed };

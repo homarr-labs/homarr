@@ -733,6 +733,14 @@
         "password": {
           "label": "סיסמה",
           "newLabel": "סיסמה חדשה"
+        },
+        "tokenId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "realm": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -777,6 +785,9 @@
       },
       "copy": {
         "label": "העתק קישור"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -1411,6 +1422,12 @@
         },
         "fileSystem": {
           "label": "הצג מידע על מערכת הקבצים"
+        },
+        "defaultTab": {
+          "label": ""
+        },
+        "sectionIndicatorRequirement": {
+          "label": ""
         }
       },
       "popover": {
@@ -1430,6 +1447,52 @@
       "memory": {},
       "error": {
         "internalServerError": "נכשל בעדכון סטטוס בריאות המערכת"
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "",
+          "memory": ""
+        },
+        "resource": {
+          "node": {
+            "name": ""
+          },
+          "qemu": {
+            "name": ""
+          },
+          "lxc": {
+            "name": ""
+          },
+          "storage": {
+            "name": ""
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "",
+            "vmId": "",
+            "plugin": ""
+          },
+          "detail": {
+            "cpu": "",
+            "memory": "",
+            "storage": "",
+            "uptime": "",
+            "haState": "",
+            "storageType": {
+              "local": "",
+              "shared": ""
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "",
+            "cpu": "",
+            "memory": "",
+            "node": ""
+          }
+        }
       }
     },
     "common": {

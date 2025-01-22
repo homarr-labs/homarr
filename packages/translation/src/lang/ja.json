@@ -733,6 +733,14 @@
         "password": {
           "label": "パスワード",
           "newLabel": "新しいパスワード"
+        },
+        "tokenId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "realm": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -776,6 +784,9 @@
         }
       },
       "copy": {
+        "label": ""
+      },
+      "open": {
         "label": ""
       }
     }
@@ -1411,6 +1422,12 @@
         },
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
+        },
+        "defaultTab": {
+          "label": ""
+        },
+        "sectionIndicatorRequirement": {
+          "label": ""
         }
       },
       "popover": {
@@ -1430,6 +1447,52 @@
       "memory": {},
       "error": {
         "internalServerError": ""
+      },
+      "cluster": {
+        "summary": {
+          "cpu": "",
+          "memory": ""
+        },
+        "resource": {
+          "node": {
+            "name": ""
+          },
+          "qemu": {
+            "name": ""
+          },
+          "lxc": {
+            "name": ""
+          },
+          "storage": {
+            "name": ""
+          }
+        },
+        "popover": {
+          "rightSection": {
+            "node": "",
+            "vmId": "",
+            "plugin": ""
+          },
+          "detail": {
+            "cpu": "",
+            "memory": "",
+            "storage": "",
+            "uptime": "",
+            "haState": "",
+            "storageType": {
+              "local": "",
+              "shared": ""
+            }
+          }
+        },
+        "table": {
+          "header": {
+            "name": "",
+            "cpu": "",
+            "memory": "",
+            "node": ""
+          }
+        }
       }
     },
     "common": {
