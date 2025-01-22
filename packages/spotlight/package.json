@@ -35,9 +35,9 @@
     "@mantine/core": "^7.16.1",
     "@mantine/hooks": "^7.16.1",
     "@mantine/spotlight": "^7.16.1",
-    "@tabler/icons-react": "^3.28.1",
+    "@tabler/icons-react": "^3.29.0",
     "jotai": "^2.11.1",
-    "next": "15.1.5",
+    "next": "15.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "use-deep-compare-effect": "^1.8.1"

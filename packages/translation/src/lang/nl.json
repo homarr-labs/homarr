@@ -785,6 +785,9 @@
       },
       "copy": {
         "label": "URL kopiëren"
+      },
+      "open": {
+        "label": "Media openen"
       }
     }
   },
