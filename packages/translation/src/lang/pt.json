@@ -2,123 +2,123 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Bem-vindo ao Homarr",
+        "subtitle": "Vamos começar configurando a sua instância Homarr.",
+        "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Começar do zero",
+          "importOldmarr": "Importe de uma instância Homarr anterior a 1,0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importar dados",
+        "subtitle": "Você pode importar dados de uma instância existente do Homarr.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Arraste o arquivo zip aqui ou clique para procurar",
+          "description": "O arquivo zip enviado será processado e você poderá selecionar o que deseja importar"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Alterar arquivo"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importar configurações",
+          "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "{count} quadros encontrados",
+          "description": "Escolha todos os quadros com o tamanho que você deseja importar",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Selecionar todos",
+            "unselectAll": "Desmarcar Todos"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Resumo da importação",
+          "description": "No resumo abaixo, você pode ver o que será importado",
           "action": {
-            "import": ""
+            "import": "Confirmar a importação e continuar"
           },
           "entities": {
             "apps": "Aplicativos",
             "boards": "Placas",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integrações",
+            "credentialUsers": "Usuários credenciados"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Insira o token de importação",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Insira o token de importação mostrado em sua instância homarr anterior"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Token inválido",
+              "message": "O token que você inseriu é inválido"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Usuário Administrador",
+        "subtitle": "Especifique as credenciais para seu usuário administrador.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Usuário criado",
+            "message": "O usuário foi criado com sucesso"
           },
           "error": {
-            "title": ""
+            "title": "Falha ao criar usuário"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Grupo externo",
+        "subtitle": "Especifique o grupo que deve ser usado para usuários externos.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Nome do grupo",
+            "description": "O nome tem que coincidir com o grupo administrador do provedor externo"
           }
         }
       },
       "settings": {
         "title": "Configurações",
-        "subtitle": ""
+        "subtitle": "Definir as configurações do servidor."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Concluir configuração",
+        "subtitle": "Você está pronto para começar!",
+        "description": "Você concluiu com sucesso o processo de configuração. Agora você pode começar a usar o Homarr. Selecione sua próxima ação:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Ir para o quadro {name}",
+          "createBoard": "Crie seu primeiro quadro",
+          "inviteUser": "Convidar outros usuários",
+          "docs": "Ler a documentação"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Voltar ao início"
   },
   "user": {
     "title": "Usuários",
     "name": "Usuário",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Acesse a sua conta",
+        "subtitle": "Bem-vindo(a) de volta! Por favor, insira suas credenciais"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Junte-se ao Homarr",
+        "subtitle": "Bem-vindo ao Homarr! Por favor, crie sua conta",
+        "description": "Você foi convidado(a) por {username}"
       },
       "init": {
-        "title": "",
+        "title": "Nova instalação do Homarr",
         "subtitle": ""
       }
     },
@@ -784,6 +784,9 @@
         }
       },
       "copy": {
+        "label": ""
+      },
+      "open": {
         "label": ""
       }
     }
