@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -40,27 +40,27 @@
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@turbo/gen": "^2.3.3",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/coverage-v8": "^3.0.2",
-    "@vitest/ui": "^3.0.2",
+    "@vitest/coverage-v8": "^3.0.3",
+    "@vitest/ui": "^3.0.3",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "cross-env": "^7.0.3",
     "jsdom": "^26.0.0",
     "prettier": "^3.4.2",
     "semantic-release": "^24.2.1",
-    "testcontainers": "^10.16.0",
+    "testcontainers": "^10.17.1",
     "turbo": "^2.3.3",
     "typescript": "^5.7.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.2"
+    "vitest": "^3.0.3"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=22.13.1"
   },
   "pnpm": {
     "allowNonAppliedPatches": true,
     "overrides": {
-      "proxmox-api>undici": "7.2.3"
+      "proxmox-api>undici": "7.3.0"
     },
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"

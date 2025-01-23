@@ -15,7 +15,7 @@ export const mapApp = (
   boardSize: BoardSize,
   appsMap: Map<string, { id: string }>,
   sectionMap: Map<string, { id: string }>,
-): InferInsertModel<typeof items> => {
+): InferInsertModel<typeof items> | null => {
   if (app.area.type === "sidebar") throw new Error("Mapping app in sidebar is not supported");
 
   const shapeForSize = app.shape[boardSize];
@@ -25,7 +25,8 @@ export const mapApp = (
 
   const sectionId = sectionMap.get(app.area.properties.id)?.id;
   if (!sectionId) {
-    throw new Error(`Failed to find section for app appId='${app.id}' sectionId='${app.area.properties.id}'`);
+    logger.warn(`Failed to find section for app appId='${app.id}' sectionId='${app.area.properties.id}'. Removing app`);
+    return null;
   }
 
   return {
@@ -69,9 +70,10 @@ export const mapWidget = (
 
   const sectionId = sectionMap.get(widget.area.properties.id)?.id;
   if (!sectionId) {
-    throw new Error(
-      `Failed to find section for widget widgetId='${widget.id}' sectionId='${widget.area.properties.id}'`,
+    logger.warn(
+      `Failed to find section for widget widgetId='${widget.id}' sectionId='${widget.area.properties.id}'. Removing widget`,
     );
+    return null;
   }
 
   return {

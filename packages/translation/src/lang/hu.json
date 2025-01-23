@@ -785,6 +785,9 @@
       },
       "copy": {
         "label": "URL másolása"
+      },
+      "open": {
+        "label": ""
       }
     }
   },

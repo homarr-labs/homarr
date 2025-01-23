@@ -16,7 +16,7 @@ import { MantineReactTable } from "mantine-react-table";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
-import type { DockerContainerState } from "@homarr/definitions";
+import type { ContainerState } from "@homarr/docker";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -246,9 +246,9 @@ const containerStates = {
   exited: "red",
   removing: "pink",
   dead: "dark",
-} satisfies Record<DockerContainerState, MantineColor>;
+} satisfies Record<ContainerState, MantineColor>;
 
-const ContainerStateBadge = ({ state }: { state: DockerContainerState }) => {
+const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
 
   return (

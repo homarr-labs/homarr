@@ -785,6 +785,9 @@
       },
       "copy": {
         "label": "Skopírovať URL"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
