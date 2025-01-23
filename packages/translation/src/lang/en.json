@@ -1071,10 +1071,10 @@
           "label": "Hide icons"
         },
         "hideHostname": {
-          "label": "Hide hostname"
+          "label": "Hide hostnames"
         },
         "openNewTab": {
-          "label": "Open new tab"
+          "label": "Open in new tab"
         },
         "items": {
           "label": "Bookmarks",
