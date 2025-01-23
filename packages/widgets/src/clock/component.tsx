@@ -30,7 +30,7 @@ export default function ClockWidget({ options }: WidgetComponentProps<"clock">) 
         {dayjs(time).tz(timezone).format(timeFormat)}
       </Text>
       {options.showDate && (
-        <Text className="clock-date-text" size="12.5cqmin" pt="1cqmin" lineClamp={1}>
+        <Text className="clock-date-text" size="12.5cqmin" p="1cqmin" lineClamp={1}>
           {dayjs(time).tz(timezone).format(dateFormat)}
         </Text>
       )}
