@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": "Hide icons"
+        },
+        "hideHostname": {
+          "label": "Hide hostnames"
+        },
+        "openNewTab": {
+          "label": "Open in new tab"
+        },
         "items": {
           "label": "Bookmarks",
           "add": "Add bookmark"

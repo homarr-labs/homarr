@@ -1,6 +1,6 @@
 "use client";
 
-import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import { Anchor, Box, Card, Divider, Flex, Group, Image, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -42,8 +42,25 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
       <Title order={4} px="0.25rem">
         {options.title}
       </Title>
-      {options.layout === "grid" && <GridLayout data={data} width={width} height={height} />}
-      {options.layout !== "grid" && <FlexLayout data={data} direction={options.layout} />}
+      {options.layout === "grid" && (
+        <GridLayout
+          data={data}
+          width={width}
+          height={height}
+          hideIcon={options.hideIcon}
+          hideHostname={options.hideHostname}
+          openNewTab={options.openNewTab}
+        />
+      )}
+      {options.layout !== "grid" && (
+        <FlexLayout
+          data={data}
+          direction={options.layout}
+          hideIcon={options.hideIcon}
+          hideHostname={options.hideHostname}
+          openNewTab={options.openNewTab}
+        />
+      )}
     </Stack>
   );
 }
@@ -51,9 +68,12 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
 interface FlexLayoutProps {
   data: RouterOutputs["app"]["byIds"];
   direction: "row" | "column";
+  hideIcon: boolean;
+  hideHostname: boolean;
+  openNewTab: boolean;
 }
 
-const FlexLayout = ({ data, direction }: FlexLayoutProps) => {
+const FlexLayout = ({ data, direction, hideIcon, hideHostname, openNewTab }: FlexLayoutProps) => {
   return (
     <Flex direction={direction} gap="0" h="100%" w="100%">
       {data.map((app, index) => (
@@ -66,7 +86,7 @@ const FlexLayout = ({ data, direction }: FlexLayoutProps) => {
           <UnstyledButton
             component="a"
             href={app.href ?? undefined}
-            target="_blank"
+            target={openNewTab ? "_blank" : "_self"}
             rel="noopener noreferrer"
             key={app.id}
             h="100%"
@@ -81,7 +101,11 @@ const FlexLayout = ({ data, direction }: FlexLayoutProps) => {
               display="flex"
               p={0}
             >
-              {direction === "row" ? <VerticalItem app={app} /> : <HorizontalItem app={app} />}
+              {direction === "row" ? (
+                <VerticalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} />
+              ) : (
+                <HorizontalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} />
+              )}
             </Card>
           </UnstyledButton>
         </div>
@@ -94,9 +118,12 @@ interface GridLayoutProps {
   data: RouterOutputs["app"]["byIds"];
   width: number;
   height: number;
+  hideIcon: boolean;
+  hideHostname: boolean;
+  openNewTab: boolean;
 }
 
-const GridLayout = ({ data, width, height }: GridLayoutProps) => {
+const GridLayout = ({ data, width, height, hideIcon, hideHostname, openNewTab }: GridLayoutProps) => {
   // Calculates the perfect number of columns for the grid layout based on the width and height in pixels and the number of items
   const columns = Math.ceil(Math.sqrt(data.length * (width / height)));
 
@@ -113,13 +140,13 @@ const GridLayout = ({ data, width, height }: GridLayoutProps) => {
         <UnstyledButton
           component="a"
           href={app.href ?? undefined}
-          target="_blank"
+          target={openNewTab ? "_blank" : "_self"}
           rel="noopener noreferrer"
           key={app.id}
           h="100%"
         >
           <Card withBorder style={{ containerType: "size" }} h="100%" className={classes.card} p="5cqmin">
-            <VerticalItem app={app} />
+            <VerticalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} />
           </Card>
         </UnstyledButton>
       ))}
@@ -127,55 +154,79 @@ const GridLayout = ({ data, width, height }: GridLayoutProps) => {
   );
 };
 
-const VerticalItem = ({ app }: { app: RouterOutputs["app"]["byIds"][number] }) => {
+const VerticalItem = ({
+  app,
+  hideIcon,
+  hideHostname,
+}: {
+  app: RouterOutputs["app"]["byIds"][number];
+  hideIcon: boolean;
+  hideHostname: boolean;
+}) => {
   return (
     <Stack h="100%" gap="5cqmin">
       <Text fw={700} ta="center" size="20cqmin">
         {app.name}
       </Text>
-      <img
-        style={{
-          maxHeight: "100%",
-          maxWidth: "100%",
-          overflow: "auto",
-          flex: 1,
-          objectFit: "contain",
-          scale: 0.8,
-        }}
-        src={app.iconUrl}
-        alt={app.name}
-      />
-      <Anchor ta="center" component="span" size="12cqmin">
-        {app.href ? new URL(app.href).hostname : undefined}
-      </Anchor>
+      {!hideIcon && (
+        <Image
+          style={{
+            maxHeight: "100%",
+            maxWidth: "100%",
+            overflow: "auto",
+            flex: 1,
+            objectFit: "contain",
+            scale: 0.8,
+          }}
+          src={app.iconUrl}
+          alt={app.name}
+        />
+      )}
+      {!hideHostname && (
+        <Anchor ta="center" component="span" size="12cqmin">
+          {app.href ? new URL(app.href).hostname : undefined}
+        </Anchor>
+      )}
     </Stack>
   );
 };
 
-const HorizontalItem = ({ app }: { app: RouterOutputs["app"]["byIds"][number] }) => {
+const HorizontalItem = ({
+  app,
+  hideIcon,
+  hideHostname,
+}: {
+  app: RouterOutputs["app"]["byIds"][number];
+  hideIcon: boolean;
+  hideHostname: boolean;
+}) => {
   return (
     <Group wrap="nowrap">
-      <img
-        style={{
-          overflow: "auto",
-          objectFit: "contain",
-          scale: 0.8,
-          minHeight: "100cqh",
-          maxHeight: "100cqh",
-          minWidth: "100cqh",
-          maxWidth: "100cqh",
-        }}
-        src={app.iconUrl}
-        alt={app.name}
-      />
+      {!hideIcon && (
+        <Image
+          style={{
+            overflow: "auto",
+            objectFit: "contain",
+            scale: 0.8,
+            minHeight: "100cqh",
+            maxHeight: "100cqh",
+            minWidth: "100cqh",
+            maxWidth: "100cqh",
+          }}
+          src={app.iconUrl}
+          alt={app.name}
+        />
+      )}
       <Stack justify="space-between" gap={0}>
         <Text fw={700} size="45cqh" lineClamp={1}>
           {app.name}
         </Text>
 
-        <Anchor component="span" size="30cqh">
-          {app.href ? new URL(app.href).hostname : undefined}
-        </Anchor>
+        {!hideHostname && (
+          <Anchor component="span" size="30cqh">
+            {app.href ? new URL(app.href).hostname : undefined}
+          </Anchor>
+        )}
       </Stack>
     </Group>
   );
