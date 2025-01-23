@@ -1999,10 +1999,10 @@
       },
       "customCss": {
         "label": "Brugerdefineret css for denne tavle",
-        "description": "Yderligere, tilpasse dit dashboard ved hjælp af CSS, anbefales kun til erfarne brugere",
+        "description": "Tilpas din tavle ved hjælp af CSS, anbefales kun til erfarne brugere",
         "customClassesAlert": {
           "title": "Brugerdefinerede klasser",
-          "description": "Du kan tilføje brugerdefinerede klasser til dine board elementer i de avancerede muligheder for hvert element og bruge dem i den brugerdefinerede CSS ovenfor."
+          "description": "Du kan tilføje brugerdefinerede klasser til dine tavle elementer i de avancerede muligheder for hvert element og bruge dem i den brugerdefinerede CSS ovenfor."
         }
       },
       "columnCount": {
@@ -2043,7 +2043,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "Se board"
+                "label": "Se tavle"
               },
               "modify": {
                 "label": "Rediger tavle"
@@ -2091,7 +2091,7 @@
               "description": "Når du sletter en tavle, er der ingen vej tilbage. Vær venligst sikker.",
               "button": "Slet denne tavle",
               "confirm": {
-                "title": "Slet board",
+                "title": "Slet tavle",
                 "description": "Er du sikker på, at du vil slette denne tavle? Dette vil permanent slette tavlen og alt dens indhold."
               }
             }
@@ -2200,7 +2200,7 @@
         }
       },
       "board": {
-        "title": "Dine boards",
+        "title": "Dine tavler",
         "action": {
           "new": {
             "label": "Ny tavle"
@@ -2231,7 +2231,7 @@
           "delete": {
             "label": "Slet permanent",
             "confirm": {
-              "title": "Slet board",
+              "title": "Slet tavle",
               "description": "Er du sikker på, at du vil slette {name} tavlen?"
             }
           }
