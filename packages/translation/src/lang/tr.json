@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "Yer İmleri",
           "add": "Yer imi ekle"
@@ -3178,7 +3187,7 @@
         "noResults": {
           "title": "Henüz sertifika yok"
         },
-        "expires": "{when} Sonra Süresi Doluyor"
+        "expires": "{when} süresi doluyor"
       }
     },
     "action": {
