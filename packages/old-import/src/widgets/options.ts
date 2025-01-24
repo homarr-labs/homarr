@@ -2,8 +2,8 @@ import { objectEntries } from "@homarr/common";
 import { logger } from "@homarr/log";
 
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
-import { mapKind } from "./definitions";
 import type { InversedWidgetMapping, OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
+import { mapKind } from "./definitions";
 
 // This type enforces, that for all widget mappings there is a corresponding option mapping,
 // each option of newmarr can be mapped from the value of the oldmarr options
@@ -38,6 +38,9 @@ const optionMapping: OptionMapping = {
 
       return mappedLayouts[oldOptions.layout];
     },
+    hideIcon: (oldOptions) => oldOptions.items.some((item) => item.hideIcon),
+    hideHostname: (oldOptions) => oldOptions.items.some((item) => item.hideHostname),
+    openNewTab: (oldOptions) => oldOptions.items.some((item) => item.openNewTab),
   },
   calendar: {
     releaseType: (oldOptions) => [oldOptions.radarrReleaseType],

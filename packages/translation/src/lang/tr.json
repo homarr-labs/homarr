@@ -787,7 +787,7 @@
         "label": "URL'yi kopyala"
       },
       "open": {
-        "label": ""
+        "label": "Medyayı aç"
       }
     }
   },
@@ -1066,6 +1066,15 @@
               "label": "Izgara"
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "Yer İmleri",
@@ -3178,7 +3187,7 @@
         "noResults": {
           "title": "Henüz sertifika yok"
         },
-        "expires": "{when} Sonra Süresi Doluyor"
+        "expires": "{when} süresi doluyor"
       }
     },
     "action": {

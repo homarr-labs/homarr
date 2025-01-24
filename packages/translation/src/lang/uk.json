@@ -645,7 +645,7 @@
         },
         "invalidUrl": {
           "title": "Неправильна URL-адреса",
-          "message": ""
+          "message": "Невірна URL-адреса"
         },
         "secretNotDefined": {
           "title": "",
@@ -677,7 +677,7 @@
         },
         "internalServerError": {
           "title": "Внутрішня помилка сервера",
-          "message": ""
+          "message": "На сервері сталася помилка"
         },
         "serviceUnavailable": {
           "title": "",
@@ -727,8 +727,8 @@
           "newLabel": "Нове ім'я користувача"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Ключ API",
+          "newLabel": "Новий ключ API"
         },
         "password": {
           "label": "Пароль",
@@ -747,11 +747,11 @@
     "permission": {
       "use": "",
       "interact": "",
-      "full": ""
+      "full": "Повний доступ до інтеграції"
     }
   },
   "media": {
-    "plural": "",
+    "plural": "Медіа",
     "search": "Пошук медіафайлів",
     "field": {
       "name": "Ім’я",
@@ -772,7 +772,7 @@
         }
       },
       "delete": {
-        "label": "",
+        "label": "Видалити медіа",
         "description": "",
         "notification": {
           "success": {
@@ -787,7 +787,7 @@
         "label": ""
       },
       "open": {
-        "label": ""
+        "label": "Відкрити медіа"
       }
     }
   },
@@ -797,7 +797,7 @@
     "action": {
       "add": "Додати",
       "apply": "Застосувати",
-      "backToOverview": "",
+      "backToOverview": "Назад до огляду",
       "create": "Створити",
       "edit": "Редагувати",
       "import": "Імпорт",
@@ -874,7 +874,7 @@
         "preferences": "Ваші уподобання",
         "logout": "Вийти",
         "login": "Логін",
-        "homeBoard": "",
+        "homeBoard": "Ваша домашня дошка",
         "loggedOut": "Ви вийшли",
         "updateAvailable": ""
       }
@@ -939,8 +939,8 @@
         "remove": "Видалити категорію",
         "moveUp": "Рухайся.",
         "moveDown": "Вниз.",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Нові категорії зверху",
+        "createBelow": "Нова категорія знизу"
       },
       "create": {
         "title": "Нова категорія",
@@ -964,12 +964,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Новий елемент",
+      "import": "Імпортувати елемент",
+      "edit": "Редагувати елемент",
+      "moveResize": "Перемістити/змінити розмір",
+      "duplicate": "Дублювати елемент",
+      "remove": "Видалити елемент"
     },
     "menu": {
       "label": {
@@ -977,12 +977,12 @@
       }
     },
     "create": {
-      "title": "",
-      "search": "",
+      "title": "Виберіть елемент для додавання",
+      "search": "Фільтр елементів",
       "addToBoard": ""
     },
     "moveResize": {
-      "title": "",
+      "title": "Перемістити/змінити розмір",
       "field": {
         "width": {
           "label": "Ширина"
@@ -999,14 +999,14 @@
       }
     },
     "edit": {
-      "title": "",
+      "title": "Редагувати елемент",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Розширені налаштування",
+        "title": "Розширені налаштування елемента"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Інтеграції"
         },
         "customCssClasses": {
           "label": ""
@@ -1014,17 +1014,17 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Видалити елемент",
+      "message": "Ви впевнені, що хочете видалити цей елемент?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
+      "name": "Додаток",
       "description": "",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Виберіть додаток"
         },
         "openInNewTab": {
           "label": "Відкрити в новій вкладці"
@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "",
           "add": ""
@@ -1100,8 +1109,8 @@
         "integrationsDisconnected": ""
       },
       "data": {
-        "adsBlockedToday": "",
-        "adsBlockedTodayPercentage": "",
+        "adsBlockedToday": "Заблоковано сьогодні",
+        "adsBlockedTodayPercentage": "Заблоковано сьогодні",
         "dnsQueriesToday": "Запити за сьогодні",
         "domainsBeingBlocked": ""
       },
@@ -1135,7 +1144,7 @@
       "controls": {
         "enableAll": "",
         "disableAll": "",
-        "setTimer": "",
+        "setTimer": "Встановити таймер",
         "set": "",
         "enabled": "Увімкнено",
         "disabled": "Вимкнено",
@@ -1147,7 +1156,7 @@
       }
     },
     "clock": {
-      "name": "",
+      "name": "Дата і час",
       "description": "Показує поточні дату і час.",
       "option": {
         "customTitleToggle": {
@@ -1155,11 +1164,11 @@
           "description": ""
         },
         "customTitle": {
-          "label": ""
+          "label": "Назва"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-годинний формат",
+          "description": "Використовувати 24-годинний формат замість 12-годинного"
         },
         "showSeconds": {
           "label": ""
@@ -1175,28 +1184,28 @@
           "label": ""
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Формат дати",
+          "description": "Як має виглядати дата"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
+      "name": "Статус сервера Minecraft",
       "description": "",
       "option": {
         "title": {
-          "label": ""
+          "label": "Назва"
         },
         "domain": {
-          "label": ""
+          "label": "Адреса сервера"
         },
         "isBedrockServer": {
           "label": ""
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Онлайн",
+        "offline": "Офлайн"
       }
     },
     "notebook": {
@@ -1214,13 +1223,13 @@
         }
       },
       "controls": {
-        "bold": "",
-        "italic": "",
+        "bold": "Жирний",
+        "italic": "Курсив",
         "strikethrough": "",
         "underline": "",
-        "colorText": "",
+        "colorText": "Колір тексту",
         "colorHighlight": "",
-        "code": "",
+        "code": "Код",
         "clear": "",
         "heading": "",
         "align": "",
@@ -1231,8 +1240,8 @@
         "checkList": "",
         "increaseIndent": "",
         "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
+        "link": "Посилання",
+        "unlink": "Видалити посилання",
         "image": "",
         "addTable": "",
         "deleteTable": "",
@@ -1338,9 +1347,9 @@
         "releaseType": {
           "label": "Radarr - тип релізів",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "У кінотеатрі",
+            "digitalRelease": "Цифровий випуск",
+            "physicalRelease": "Фізичний випуск"
           }
         },
         "filterPastMonths": {
@@ -1497,18 +1506,18 @@
     },
     "common": {
       "location": {
-        "query": "",
+        "query": "Місто / Поштовий індекс",
         "latitude": "",
         "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "disabledTooltip": "Введіть місто або поштовий індекс",
+        "unknownLocation": "Невідоме місцерозташування",
         "search": "Пошук",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Місто",
+            "country": "Країна",
+            "coordinates": "Координати",
+            "population": "Населення"
           },
           "action": {
             "select": ""
@@ -1560,9 +1569,9 @@
       "description": "",
       "option": {},
       "items": {
-        "user": "",
+        "user": "Користувач",
         "name": "",
-        "id": ""
+        "id": "Id"
       }
     },
     "downloads": {
@@ -1621,11 +1630,11 @@
           "detailsTitle": "Швидкість завантаження"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Інтеграція"
@@ -1650,7 +1659,7 @@
           "detailsTitle": ""
         },
         "size": {
-          "columnTitle": "",
+          "columnTitle": "Розмір файлу",
           "detailsTitle": ""
         },
         "state": {
@@ -1662,7 +1671,7 @@
           "detailsTitle": ""
         },
         "type": {
-          "columnTitle": "",
+          "columnTitle": "Тип",
           "detailsTitle": ""
         },
         "upSpeed": {
@@ -1696,7 +1705,7 @@
           "pause": "",
           "resume": "",
           "delete": {
-            "title": "",
+            "title": "Видалити елемент",
             "modalTitle": "",
             "entry": "",
             "entryAndFiles": ""
@@ -1706,7 +1715,7 @@
       "globalRatio": ""
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Список медіа запитів",
       "description": "Перегляньте список усіх медіазапитів від ваших Overseerr або Jellyseerr",
       "option": {
         "linksTargetNewTab": {
@@ -1714,21 +1723,21 @@
         }
       },
       "pending": {
-        "approve": "",
+        "approve": "Схвалити запит",
         "approving": "",
-        "decline": ""
+        "decline": "Відхилити запит"
       },
       "availability": {
         "unknown": "Невідомо",
-        "pending": "",
-        "processing": "",
+        "pending": "В очікуванні",
+        "processing": "В обробці",
         "partiallyAvailable": "",
-        "available": ""
+        "available": "Доступно"
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Статистика медіазапитів",
       "description": "Статистика ваших запитів у медіа",
       "option": {},
       "titles": {
@@ -1736,16 +1745,16 @@
           "main": "Медіа-статистика",
           "approved": "Вже затверджено",
           "pending": "Очікує схвалення",
-          "processing": "",
-          "declined": "",
-          "available": "",
-          "tv": "Запити на ТБ",
+          "processing": "Обробляється",
+          "declined": "Вже відхилено",
+          "available": "Вже доступно",
+          "tv": "Запити на серіали",
           "movie": "Запити на фільми",
           "total": "Всього"
         },
         "users": {
           "main": "Найкращі користувачі",
-          "requests": ""
+          "requests": "Запитів"
         }
       }
     },
@@ -2033,7 +2042,7 @@
           "title": "Фон"
         },
         "color": {
-          "title": ""
+          "title": "Кольори"
         },
         "customCss": {
           "title": ""
@@ -2043,7 +2052,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "Дошка оголошень"
+                "label": "Перегляд дошки"
               },
               "modify": {
                 "label": ""
@@ -2187,7 +2196,7 @@
         "statistic": {
           "board": "Дошки",
           "user": "Користувачі",
-          "invite": "Запрошує",
+          "invite": "Запрошення",
           "integration": "",
           "app": "Додатки",
           "group": ""
@@ -2260,7 +2269,7 @@
           "general": {
             "title": "Загальне",
             "item": {
-              "language": "",
+              "language": "Мова та Регіон",
               "board": {
                 "title": "",
                 "type": {
@@ -2321,14 +2330,14 @@
           "title": "Керування запрошеннями користувачів",
           "action": {
             "new": {
-              "title": "",
+              "title": "Нове запрошення",
               "description": "Після закінчення терміну дії запрошення буде недійсним, і одержувач запрошення не зможе створити обліковий запис."
             },
             "copy": {
-              "title": "",
+              "title": "Копіювати запрошення",
               "description": "",
               "link": "Посилання на запрошення",
-              "button": ""
+              "button": "Копіювати та закрити"
             },
             "delete": {
               "title": "Видалити запрошення",
@@ -2346,7 +2355,7 @@
               "label": "Термін придатності"
             },
             "token": {
-              "label": "Токен."
+              "label": "Токен"
             }
           }
         }
@@ -2761,7 +2770,7 @@
           "label": ""
         },
         "invites": {
-          "label": "Запрошує"
+          "label": "Запрошення"
         }
       },
       "tools": {
@@ -2879,7 +2888,7 @@
                 "label": ""
               },
               "newInvite": {
-                "label": ""
+                "label": "Створити нове запрошення"
               },
               "newGroup": {
                 "label": ""

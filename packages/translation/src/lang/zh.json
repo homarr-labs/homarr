@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "書籤",
           "add": "新增書籤"
