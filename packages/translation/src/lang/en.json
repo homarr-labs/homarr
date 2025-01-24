@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "System Health Monitoring",
       "description": "Displays information showing the health and status of your system(s).",
+      "tab": {
+        "system": "System",
+        "cluster": "Cluster"
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU Temp in Fahrenheit"
