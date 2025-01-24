@@ -10,6 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
+import { useWidgetOptionSettings } from "../../../../apps/nextjs/src/app/[locale]/boards/(content)/_widget-option-settings-context";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
@@ -17,6 +18,7 @@ import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
   const t = useI18n();
+  const widgetOptionSettings = useWidgetOptionSettings();
   const [app] = clientApi.app.byId.useSuspenseQuery(
     {
       id: options.appId,
@@ -81,7 +83,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
         </Flex>
       </Tooltip.Floating>
-      {options.pingEnabled && app.href ? (
+      {options.pingEnabled && !widgetOptionSettings.server.board.forceDisableSimplePing && app.href ? (
         <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
           <PingIndicator href={app.href} />
         </Suspense>

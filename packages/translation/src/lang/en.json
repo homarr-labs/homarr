@@ -2438,6 +2438,17 @@
               "label": "Global home board",
               "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
+            },
+            "simplePing": {
+              "title": "Simple ping",
+              "enableSimplePingByDefault": {
+                "label": "Enable simple ping by default",
+                "description": "When adding an app item, the simple ping will be enabled by default"
+              },
+              "forceDisableSimplePing": {
+                "label": "Force disable simple ping",
+                "description": "Simple ping will be disabled for all users and can't be enabled"
+              }
             }
           },
           "search": {

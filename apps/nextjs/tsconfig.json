@@ -12,6 +12,6 @@
     ],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": [".", ".next/types/**/*.ts"],
+  "include": [".", ".next/types/**/*.ts", "src/app/[locale]/boards/(content)/_widget-option-settings-context.tsx"],
   "exclude": ["node_modules", ".next"]
 }

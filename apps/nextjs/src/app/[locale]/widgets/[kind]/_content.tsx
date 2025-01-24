@@ -6,6 +6,7 @@ import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@ta
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
@@ -29,6 +30,7 @@ interface WidgetPreviewPageContentProps {
 }
 
 export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPreviewPageContentProps) => {
+  const [data] = clientApi.widget.options.getWidgetOptionSettings.useSuspenseQuery();
   const t = useScopedI18n("widgetPreview");
   const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
@@ -43,7 +45,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     integrationIds: string[];
     advancedOptions: BoardItemAdvancedOptions;
   }>({
-    options: reduceWidgetOptionsWithDefaultValues(kind, {}),
+    options: reduceWidgetOptionsWithDefaultValues(kind, data, {}),
     integrationIds: [],
     advancedOptions: {
       customCssClasses: [],
@@ -63,8 +65,9 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
           (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
+      optionSettings: data,
     });
-  }, [currentDefinition, integrationData, kind, openWidgetEditModal, state]);
+  }, [currentDefinition, integrationData, kind, openWidgetEditModal, data, state]);
 
   const Comp = loadWidgetDynamic(kind);
 

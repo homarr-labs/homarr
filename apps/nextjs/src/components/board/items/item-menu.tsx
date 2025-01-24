@@ -10,6 +10,7 @@ import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
+import { useWidgetOptionSettings } from "~/app/[locale]/boards/(content)/_widget-option-settings-context";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMoveModal } from "./item-move-modal";
@@ -35,6 +36,7 @@ export const BoardItemMenu = ({
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
+  const widgetOptionSettings = useWidgetOptionSettings();
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -75,6 +77,7 @@ export const BoardItemMenu = ({
           (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
+      optionSettings: widgetOptionSettings,
     });
   };
 

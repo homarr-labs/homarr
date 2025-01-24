@@ -11,6 +11,7 @@ import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { useIsBoardReady, useRequiredBoard } from "./_context";
+import { WidgetOptionSettingsProvider } from "./_widget-option-settings-context";
 
 let boardName: string | null = null;
 
@@ -51,23 +52,25 @@ export const ClientBoard = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <Box h="100%" pos="relative">
-      <BoardBackgroundVideo />
-      <LoadingOverlay
-        visible={!isReady}
-        transitionProps={{ duration: 500 }}
-        loaderProps={{ size: "lg" }}
-        h={fullHeightWithoutHeaderAndFooter}
-      />
-      <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
-        {fullWidthSortedSections.map((section) =>
-          section.kind === "empty" ? (
-            <BoardEmptySection key={section.id} section={section} />
-          ) : (
-            <BoardCategorySection key={section.id} section={section} />
-          ),
-        )}
-      </Stack>
-    </Box>
+    <WidgetOptionSettingsProvider>
+      <Box h="100%" pos="relative">
+        <BoardBackgroundVideo />
+        <LoadingOverlay
+          visible={!isReady}
+          transitionProps={{ duration: 500 }}
+          loaderProps={{ size: "lg" }}
+          h={fullHeightWithoutHeaderAndFooter}
+        />
+        <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
+          {fullWidthSortedSections.map((section) =>
+            section.kind === "empty" ? (
+              <BoardEmptySection key={section.id} section={section} />
+            ) : (
+              <BoardCategorySection key={section.id} section={section} />
+            ),
+          )}
+        </Stack>
+      </Box>
+    </WidgetOptionSettingsProvider>
   );
 };

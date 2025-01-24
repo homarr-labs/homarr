@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Text } from "@mantine/core";
+import { Group, Switch, Text } from "@mantine/core";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -55,6 +55,18 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
               </Group>
             )}
             {...form.getInputProps("mobileHomeBoardId")}
+          />
+
+          <Text fw={500}>{tBoard("simplePing.title")}</Text>
+          <Switch
+            {...form.getInputProps("enableSimplePingByDefault", { type: "checkbox" })}
+            label={tBoard("simplePing.enableSimplePingByDefault.label")}
+            description={tBoard("simplePing.enableSimplePingByDefault.description")}
+          />
+          <Switch
+            {...form.getInputProps("forceDisableSimplePing", { type: "checkbox" })}
+            label={tBoard("simplePing.forceDisableSimplePing.label")}
+            description={tBoard("simplePing.forceDisableSimplePing.description")}
           />
         </>
       )}

@@ -7,11 +7,13 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
-  options: optionsBuilder.from((factory) => ({
-    openIndexerSiteInNewTab: factory.switch({
-      defaultValue: true,
-    }),
-  })),
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      openIndexerSiteInNewTab: factory.switch({
+        defaultValue: true,
+      }),
+    }));
+  },
   supportedIntegrations: getIntegrationKindsByCategory("indexerManager"),
   errors: {
     INTERNAL_SERVER_ERROR: {
