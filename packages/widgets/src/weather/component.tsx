@@ -63,7 +63,11 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
           </HoverCard.Dropdown>
         </HoverCard>
         <Text fz="17.5cqmin">
-          {getPreferredUnit(weather.current.temperature, options.isFormatFahrenhei, options.disableTemperatureDecimals)}
+          {getPreferredUnit(
+            weather.current.temperature,
+            options.isFormatFahrenheit,
+            options.disableTemperatureDecimals,
+          )}
         </Text>
       </Group>
       <Space h="1cqmin" />
