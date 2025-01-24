@@ -1,3 +1,17 @@
+## [1.2.0](https://github.com/homarr-labs/homarr/compare/v1.1.0...v1.2.0) (2025-01-24)
+
+### Features
+
+* add bookmarks options (apps) ([#2048](https://github.com/homarr-labs/homarr/issues/2048)) ([132db15](https://github.com/homarr-labs/homarr/commit/132db154242959dc2f16add4e58b0bdb7b96fb8c))
+
+### Bug Fixes
+
+* date & time widget padding cut off ([#2089](https://github.com/homarr-labs/homarr/issues/2089)) ([e4dd19b](https://github.com/homarr-labs/homarr/commit/e4dd19b574bfe0dcbcd92a3c5993aef550683fc3))
+* **deps:** update turbo monorepo to ^2.3.4 ([#2085](https://github.com/homarr-labs/homarr/issues/2085)) ([8b040ed](https://github.com/homarr-labs/homarr/commit/8b040eddef8dbc1269489038bc503dcf23ba9580))
+* issue with foreign key constraint do to empty string for home board ([#2088](https://github.com/homarr-labs/homarr/issues/2088)) ([ac78865](https://github.com/homarr-labs/homarr/commit/ac788650fb60d7aca889ec270dc29edb7ee53123))
+* system health monitoring gets proxmox id passed ([#2094](https://github.com/homarr-labs/homarr/issues/2094)) ([a1ba437](https://github.com/homarr-labs/homarr/commit/a1ba4372da3430777a85dc83bbfc59f4b03d65fb))
+* url-encode nzbget credentials ([#2093](https://github.com/homarr-labs/homarr/issues/2093)) ([4e153b8](https://github.com/homarr-labs/homarr/commit/4e153b804664e4fbc63ee5eb945c8096c809c6d5))
+
 ## [1.1.0](https://github.com/homarr-labs/homarr/compare/v1.0.1...v1.1.0) (2025-01-22)
 
 ### Features
