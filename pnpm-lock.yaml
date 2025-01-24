@@ -198,16 +198,16 @@ importers:
         version: 5.64.2(@tanstack/react-query@5.64.2(react@19.0.0))(next@15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4))(react@19.0.0)
       '@trpc/client':
         specifier: next
-        version: 11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3)
+        version: 11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(next@15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+        version: 11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(next@15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+        version: 11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-rc.718(typescript@5.7.3)
+        version: 11.0.0-rc.724(typescript@5.7.3)
       '@xterm/addon-canvas':
         specifier: ^0.7.0
         version: 0.7.0(@xterm/xterm@5.5.0)
@@ -306,8 +306,8 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       node-loader:
         specifier: ^2.1.0
         version: 2.1.0(webpack@5.94.0)
@@ -394,8 +394,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -455,8 +455,8 @@ importers:
         specifier: ^8.5.14
         version: 8.5.14
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -492,8 +492,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -559,13 +559,13 @@ importers:
         version: link:../validation
       '@trpc/client':
         specifier: next
-        version: 11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3)
+        version: 11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+        version: 11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-rc.718(typescript@5.7.3)
+        version: 11.0.0-rc.724(typescript@5.7.3)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -583,7 +583,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.1.2
-        version: 2.1.2(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1)
+        version: 2.1.2(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -595,8 +595,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -671,8 +671,8 @@ importers:
         specifier: 0.9.0
         version: 0.9.0
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -699,8 +699,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -733,8 +733,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -773,8 +773,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -801,8 +801,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -823,8 +823,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -893,8 +893,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -921,8 +921,8 @@ importers:
         specifier: ^3.0.11
         version: 3.0.11
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -988,8 +988,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -1016,8 +1016,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1047,8 +1047,8 @@ importers:
         specifier: ^3.3.34
         version: 3.3.34
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1078,8 +1078,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1106,8 +1106,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1173,8 +1173,8 @@ importers:
         specifier: ^0.4.14
         version: 0.4.14
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1201,8 +1201,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1235,8 +1235,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1302,8 +1302,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1330,8 +1330,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1412,8 +1412,8 @@ importers:
         specifier: 0.5.7
         version: 0.5.7
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1437,8 +1437,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1462,8 +1462,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1499,8 +1499,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1551,8 +1551,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1576,8 +1576,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1649,8 +1649,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1695,8 +1695,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1756,8 +1756,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1787,8 +1787,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1932,8 +1932,8 @@ importers:
         specifier: ^7.3.58
         version: 7.3.58
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1945,25 +1945,25 @@ importers:
         version: 15.1.6
       eslint-config-prettier:
         specifier: ^10.0.1
-        version: 10.0.1(eslint@9.18.0)
+        version: 10.0.1(eslint@9.19.0)
       eslint-config-turbo:
         specifier: ^2.3.4
-        version: 2.3.4(eslint@9.18.0)(turbo@2.3.4)
+        version: 2.3.4(eslint@9.19.0)(turbo@2.3.4)
       eslint-plugin-import:
         specifier: ^2.31.0
-        version: 2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)
+        version: 2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3))(eslint@9.19.0)
       eslint-plugin-jsx-a11y:
         specifier: ^6.10.2
-        version: 6.10.2(eslint@9.18.0)
+        version: 6.10.2(eslint@9.19.0)
       eslint-plugin-react:
         specifier: ^7.37.4
-        version: 7.37.4(eslint@9.18.0)
+        version: 7.37.4(eslint@9.19.0)
       eslint-plugin-react-hooks:
         specifier: ^5.1.0
-        version: 5.1.0(eslint@9.18.0)
+        version: 5.1.0(eslint@9.19.0)
       typescript-eslint:
         specifier: ^8.21.0
-        version: 8.21.0(eslint@9.18.0)(typescript@5.7.3)
+        version: 8.21.0(eslint@9.19.0)(typescript@5.7.3)
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -1972,8 +1972,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../typescript
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0
+        specifier: ^9.19.0
+        version: 9.19.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -2975,8 +2975,8 @@ packages:
     resolution: {integrity: sha512-grOjVNN8P3hjJn/eIETF1wwd12DdnwFDoyceUJLYYdkpbwq3nLi+4fqrTAONx7XDALqlL220wC/RHSC/QTI/0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/js@9.18.0':
-    resolution: {integrity: sha512-fK6L7rxcq6/z+AaQMtiFTkvbHkBLNlwyRxHpKawP0x3u9+NC6MQTnFW+AdpwC6gfHTW0051cokQgtTN2FqlxQA==}
+  '@eslint/js@9.19.0':
+    resolution: {integrity: sha512-rbq9/g38qjfqFLOVPvwjIvFFdNziEC5S65jmjPw5r6A//QH+W91akh9irMwjDN8zKUTak6W9EsAv4m/7Wnw0UQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@2.1.4':
@@ -4220,19 +4220,19 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@trpc/client@11.0.0-rc.718':
-    resolution: {integrity: sha512-pTeMVFcNSw7akDz7XySsbBckfmoEYVSKLB4TCare4eAmJkFRnuPuFeKvs97hm2hxTQ43j9rrEOQGCRY84Vc4Ew==}
+  '@trpc/client@11.0.0-rc.724':
+    resolution: {integrity: sha512-Ou62Zw2wmfJ/X9/YlSacrGbkLP7FE1Ohv/bgQJYzWctSeEkQkIAsFOgy7a/T0Ry7kD78w3YTf7U1MKOf5X3NNA==}
     peerDependencies:
-      '@trpc/server': 11.0.0-rc.718+2018e3914
+      '@trpc/server': 11.0.0-rc.724+0eee7e763
       typescript: '>=5.7.2'
 
-  '@trpc/next@11.0.0-rc.718':
-    resolution: {integrity: sha512-z9Yp9rcQbEmqcY8AuGdAArVyoWV2fQA2JVA0kJ1FYpatgpJqMEXFXnxyS7TduZsC0VNWlANdveUOW9Fsv5T4AA==}
+  '@trpc/next@11.0.0-rc.724':
+    resolution: {integrity: sha512-wHioN0C/HIS1wkAfZOEbL0MG8VLBwImEpils3NZK+zyxQfuOM8pzzagE9cVDA8XrW0kO6DtffS7U4Yr4GnxErA==}
     peerDependencies:
       '@tanstack/react-query': ^5.59.15
-      '@trpc/client': 11.0.0-rc.718+2018e3914
-      '@trpc/react-query': 11.0.0-rc.718+2018e3914
-      '@trpc/server': 11.0.0-rc.718+2018e3914
+      '@trpc/client': 11.0.0-rc.724+0eee7e763
+      '@trpc/react-query': 11.0.0-rc.724+0eee7e763
+      '@trpc/server': 11.0.0-rc.724+0eee7e763
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -4243,18 +4243,18 @@ packages:
       '@trpc/react-query':
         optional: true
 
-  '@trpc/react-query@11.0.0-rc.718':
-    resolution: {integrity: sha512-oFz47ice2sxjH9X4jqlny/XBm03//Q7fBxaXdrlZD2OjkQhBFzA1QXcvtFwq2M54a3kwpa7IqfrFoJnRzvAMAw==}
+  '@trpc/react-query@11.0.0-rc.724':
+    resolution: {integrity: sha512-m98fkA7h51FKWe16fQACQN0aZJzLa7emtdBVqJqzCg6h8OTbexNbHx2NYpF3zAWZft5sGTVSljL9ixWFqLUYqg==}
     peerDependencies:
       '@tanstack/react-query': ^5.62.8
-      '@trpc/client': 11.0.0-rc.718+2018e3914
-      '@trpc/server': 11.0.0-rc.718+2018e3914
+      '@trpc/client': 11.0.0-rc.724+0eee7e763
+      '@trpc/server': 11.0.0-rc.724+0eee7e763
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
 
-  '@trpc/server@11.0.0-rc.718':
-    resolution: {integrity: sha512-u9xKci9yEVBjia3X6XhYG9Me3klf0HmyQUAPCzxPYUg8WNvwXEGfTJrIC1bBfst2pjvv3xmXsi16e3tGU16c6g==}
+  '@trpc/server@11.0.0-rc.724':
+    resolution: {integrity: sha512-kdDDwLYWGlnoXxgNeOzgb620lsnueEXMn8PLPDZW5Lpm5T3kJPT4F0JYTZINk/DM0e7q4iWx488FvwBNpNhACA==}
     peerDependencies:
       typescript: '>=5.7.2'
 
@@ -5973,8 +5973,8 @@ packages:
     resolution: {integrity: sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  eslint@9.18.0:
-    resolution: {integrity: sha512-+waTfRWQlSbpt3KWE+CjrPPYnbq9kfZIYUqapc0uBXyjTp8aYXZDsUH16m39Ryq3NjAVP4tjuF7KaukeqoCoaA==}
+  eslint@9.19.0:
+    resolution: {integrity: sha512-ug92j0LepKlbbEv6hD911THhoRHmbdXt2gX+VDABAW/Ir7D3nqKdv5Pf5vtlyY6HQMTEP2skXY43ueqTCWssEA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
     peerDependencies:
@@ -7096,6 +7096,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isarguments@3.1.0:
     resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
@@ -10543,9 +10544,9 @@ snapshots:
   '@esbuild/win32-x64@0.23.1':
     optional: true
 
-  '@eslint-community/eslint-utils@4.4.0(eslint@9.18.0)':
+  '@eslint-community/eslint-utils@4.4.0(eslint@9.19.0)':
     dependencies:
-      eslint: 9.18.0
+      eslint: 9.19.0
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.1': {}
@@ -10576,7 +10577,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.18.0': {}
+  '@eslint/js@9.19.0': {}
 
   '@eslint/object-schema@2.1.4': {}
 
@@ -12114,33 +12115,33 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3)':
+  '@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
-      '@trpc/server': 11.0.0-rc.718(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.724(typescript@5.7.3)
       typescript: 5.7.3
 
-  '@trpc/next@11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(next@15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
+  '@trpc/next@11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(next@15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
     dependencies:
-      '@trpc/client': 11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server': 11.0.0-rc.718(typescript@5.7.3)
+      '@trpc/client': 11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.724(typescript@5.7.3)
       next: 15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       typescript: 5.7.3
     optionalDependencies:
       '@tanstack/react-query': 5.64.2(react@19.0.0)
-      '@trpc/react-query': 11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+      '@trpc/react-query': 11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
 
-  '@trpc/react-query@11.0.0-rc.718(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
+  '@trpc/react-query@11.0.0-rc.724(@tanstack/react-query@5.64.2(react@19.0.0))(@trpc/client@11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
     dependencies:
       '@tanstack/react-query': 5.64.2(react@19.0.0)
-      '@trpc/client': 11.0.0-rc.718(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server': 11.0.0-rc.718(typescript@5.7.3)
+      '@trpc/client': 11.0.0-rc.724(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.724(typescript@5.7.3)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       typescript: 5.7.3
 
-  '@trpc/server@11.0.0-rc.718(typescript@5.7.3)':
+  '@trpc/server@11.0.0-rc.724(typescript@5.7.3)':
     dependencies:
       typescript: 5.7.3
 
@@ -12405,15 +12406,15 @@ snapshots:
     dependencies:
       '@types/node': 22.10.10
 
-  '@typescript-eslint/eslint-plugin@8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3)':
+  '@typescript-eslint/eslint-plugin@8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3))(eslint@9.19.0)(typescript@5.7.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
       '@typescript-eslint/scope-manager': 8.21.0
-      '@typescript-eslint/type-utils': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
-      '@typescript-eslint/utils': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
+      '@typescript-eslint/type-utils': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.21.0
-      eslint: 9.18.0
+      eslint: 9.19.0
       graphemer: 1.4.0
       ignore: 5.3.2
       natural-compare: 1.4.0
@@ -12422,14 +12423,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3)':
+  '@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.21.0
       '@typescript-eslint/types': 8.21.0
       '@typescript-eslint/typescript-estree': 8.21.0(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.21.0
       debug: 4.4.0
-      eslint: 9.18.0
+      eslint: 9.19.0
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
@@ -12439,12 +12440,12 @@ snapshots:
       '@typescript-eslint/types': 8.21.0
       '@typescript-eslint/visitor-keys': 8.21.0
 
-  '@typescript-eslint/type-utils@8.21.0(eslint@9.18.0)(typescript@5.7.3)':
+  '@typescript-eslint/type-utils@8.21.0(eslint@9.19.0)(typescript@5.7.3)':
     dependencies:
       '@typescript-eslint/typescript-estree': 8.21.0(typescript@5.7.3)
-      '@typescript-eslint/utils': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
       debug: 4.4.0
-      eslint: 9.18.0
+      eslint: 9.19.0
       ts-api-utils: 2.0.0(typescript@5.7.3)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -12466,13 +12467,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.21.0(eslint@9.18.0)(typescript@5.7.3)':
+  '@typescript-eslint/utils@8.21.0(eslint@9.19.0)(typescript@5.7.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@9.18.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.19.0)
       '@typescript-eslint/scope-manager': 8.21.0
       '@typescript-eslint/types': 8.21.0
       '@typescript-eslint/typescript-estree': 8.21.0(typescript@5.7.3)
-      eslint: 9.18.0
+      eslint: 9.19.0
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
@@ -14125,14 +14126,14 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-config-prettier@10.0.1(eslint@9.18.0):
+  eslint-config-prettier@10.0.1(eslint@9.19.0):
     dependencies:
-      eslint: 9.18.0
+      eslint: 9.19.0
 
-  eslint-config-turbo@2.3.4(eslint@9.18.0)(turbo@2.3.4):
+  eslint-config-turbo@2.3.4(eslint@9.19.0)(turbo@2.3.4):
     dependencies:
-      eslint: 9.18.0
-      eslint-plugin-turbo: 2.3.4(eslint@9.18.0)(turbo@2.3.4)
+      eslint: 9.19.0
+      eslint-plugin-turbo: 2.3.4(eslint@9.19.0)(turbo@2.3.4)
       turbo: 2.3.4
 
   eslint-import-resolver-node@0.3.9:
@@ -14143,17 +14144,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint@9.18.0):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint@9.19.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
-      eslint: 9.18.0
+      '@typescript-eslint/parser': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
+      eslint: 9.19.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3))(eslint@9.19.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -14162,9 +14163,9 @@ snapshots:
       array.prototype.flatmap: 1.3.2
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: 9.18.0
+      eslint: 9.19.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint@9.18.0)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint@9.19.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -14176,13 +14177,13 @@ snapshots:
       string.prototype.trimend: 1.0.8
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jsx-a11y@6.10.2(eslint@9.18.0):
+  eslint-plugin-jsx-a11y@6.10.2(eslint@9.19.0):
     dependencies:
       aria-query: 5.3.2
       array-includes: 3.1.8
@@ -14192,7 +14193,7 @@ snapshots:
       axobject-query: 4.1.0
       damerau-levenshtein: 1.0.8
       emoji-regex: 9.2.2
-      eslint: 9.18.0
+      eslint: 9.19.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
       language-tags: 1.0.9
@@ -14201,11 +14202,11 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-react-hooks@5.1.0(eslint@9.18.0):
+  eslint-plugin-react-hooks@5.1.0(eslint@9.19.0):
     dependencies:
-      eslint: 9.18.0
+      eslint: 9.19.0
 
-  eslint-plugin-react@7.37.4(eslint@9.18.0):
+  eslint-plugin-react@7.37.4(eslint@9.19.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlast: 1.2.5
@@ -14213,7 +14214,7 @@ snapshots:
       array.prototype.tosorted: 1.1.4
       doctrine: 2.1.0
       es-iterator-helpers: 1.2.1
-      eslint: 9.18.0
+      eslint: 9.19.0
       estraverse: 5.3.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
@@ -14227,10 +14228,10 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-turbo@2.3.4(eslint@9.18.0)(turbo@2.3.4):
+  eslint-plugin-turbo@2.3.4(eslint@9.19.0)(turbo@2.3.4):
     dependencies:
       dotenv: 16.0.3
-      eslint: 9.18.0
+      eslint: 9.19.0
       turbo: 2.3.4
 
   eslint-scope@5.1.1:
@@ -14247,14 +14248,14 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
-  eslint@9.18.0:
+  eslint@9.19.0:
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@9.18.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.19.0)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.19.0
       '@eslint/core': 0.10.0
       '@eslint/eslintrc': 3.2.0
-      '@eslint/js': 9.18.0
+      '@eslint/js': 9.19.0
       '@eslint/plugin-kit': 0.2.5
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
@@ -17761,9 +17762,9 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-to-openapi@2.1.2(@trpc/server@11.0.0-rc.718(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1):
+  trpc-to-openapi@2.1.2(@trpc/server@11.0.0-rc.724(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1):
     dependencies:
-      '@trpc/server': 11.0.0-rc.718(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.724(typescript@5.7.3)
       co-body: 6.2.0
       h3: 1.13.0
       openapi3-ts: 4.4.0
@@ -17949,12 +17950,12 @@ snapshots:
     dependencies:
       ts-toolbelt: 9.6.0
 
-  typescript-eslint@8.21.0(eslint@9.18.0)(typescript@5.7.3):
+  typescript-eslint@8.21.0(eslint@9.19.0)(typescript@5.7.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3)
-      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
-      '@typescript-eslint/utils': 8.21.0(eslint@9.18.0)(typescript@5.7.3)
-      eslint: 9.18.0
+      '@typescript-eslint/eslint-plugin': 8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0)(typescript@5.7.3))(eslint@9.19.0)(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0)(typescript@5.7.3)
+      eslint: 9.19.0
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
