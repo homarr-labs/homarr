@@ -18,8 +18,7 @@ export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
   const [readySections, setReadySections] = useState<string[]>([]);
 
-  // Invalidate the board when the pathname changes
-  // This allows to refetch the board when it might have changed - e.g. if someone else added an item
+  // Reset sections required for ready state
   useEffect(() => {
     return () => {
       setReadySections([]);
@@ -51,7 +50,7 @@ export const useMarkSectionAsReady = () => {
   const context = useContext(BoardReadyContext);
 
   if (!context) {
-    throw new Error("Board is required");
+    throw new Error("BoardReadyProvider is required");
   }
 
   return context.markAsReady;
@@ -61,7 +60,7 @@ export const useIsBoardReady = () => {
   const context = useContext(BoardReadyContext);
 
   if (!context) {
-    throw new Error("Board is required");
+    throw new Error("BoardReadyProvider is required");
   }
 
   return context.isReady;

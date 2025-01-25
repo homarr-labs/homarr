@@ -2,8 +2,6 @@
 
 import { Button, Group, Stack, Switch } from "@mantine/core";
 
-import "~/styles/prismjs.scss";
-
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 

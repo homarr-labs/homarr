@@ -30,7 +30,7 @@ interface WidgetPreviewPageContentProps {
 }
 
 export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPreviewPageContentProps) => {
-  const [data] = clientApi.widget.options.getWidgetOptionSettings.useSuspenseQuery();
+  const [optionSettings] = clientApi.widget.options.getWidgetOptionSettings.useSuspenseQuery();
   const t = useScopedI18n("widgetPreview");
   const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
@@ -45,7 +45,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     integrationIds: string[];
     advancedOptions: BoardItemAdvancedOptions;
   }>({
-    options: reduceWidgetOptionsWithDefaultValues(kind, data, {}),
+    options: reduceWidgetOptionsWithDefaultValues(kind, optionSettings, {}),
     integrationIds: [],
     advancedOptions: {
       customCssClasses: [],
@@ -65,9 +65,9 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
           (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
-      optionSettings: data,
+      optionSettings,
     });
-  }, [currentDefinition, integrationData, kind, openWidgetEditModal, data, state]);
+  }, [currentDefinition, integrationData, kind, openWidgetEditModal, optionSettings, state]);
 
   const Comp = loadWidgetDynamic(kind);
 

@@ -10,7 +10,7 @@ import { BookmarkAddButton } from "./add-button";
 
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
   icon: IconClock,
-  createOptions: () => {
+  createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text(),
       layout: factory.select({

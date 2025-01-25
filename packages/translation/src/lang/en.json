@@ -1036,7 +1036,7 @@
           "label": "Show description tooltip"
         },
         "pingEnabled": {
-          "label": "Enable simple ping"
+          "label": "Enable status check"
         }
       },
       "error": {
@@ -2446,15 +2446,15 @@
               "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
             },
-            "simplePing": {
-              "title": "Simple ping",
-              "enableSimplePingByDefault": {
-                "label": "Enable simple ping by default",
-                "description": "When adding an app item, the simple ping will be enabled by default"
+            "status": {
+              "title": "App status",
+              "enableStatusByDefault": {
+                "label": "Enable status by default",
+                "description": "When adding an app item, the status will be enabled by default"
               },
-              "forceDisableSimplePing": {
-                "label": "Force disable simple ping",
-                "description": "Simple ping will be disabled for all users and can't be enabled"
+              "forceDisableStatus": {
+                "label": "Force disable status",
+                "description": "Status for apps will be disabled for all users and can't be enabled"
               }
             }
           },

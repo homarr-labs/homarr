@@ -5,8 +5,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
-  createOptions: (settings) =>
-    optionsBuilder.from(
+  createOptions(settings) {
+    return optionsBuilder.from(
       (factory) => ({
         appId: factory.app(),
         openInNewTab: factory.switch({ defaultValue: true }),
@@ -21,7 +21,8 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
           },
         },
       },
-    ),
+    );
+  },
   errors: {
     NOT_FOUND: {
       icon: IconDeviceDesktopX,

@@ -42,13 +42,16 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
 
   // Translate the error messages
   z.setErrorMap(zodErrorMap(t));
+  const { definition } = widgetImports[innerProps.kind];
+  const options = definition.createOptions(innerProps.optionSettings) as Record<string, OptionsBuilderResult[string]>;
+
   const form = useForm({
     mode: "controlled",
     initialValues: innerProps.value,
     validate: zodResolver(
       z.object({
         options: z.object(
-          objectEntries(widgetImports[innerProps.kind].definition.createOptions).reduce(
+          objectEntries(options).reduce(
             (acc, [key, value]: [string, { type: string; validate?: z.ZodType<unknown> }]) => {
               if (value.validate) {
                 acc[key] = value.type === "multiText" ? z.array(value.validate).optional() : value.validate;
@@ -69,10 +72,6 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
     validateInputOnChange: true,
   });
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
-
-  const { definition } = widgetImports[innerProps.kind];
-
-  const options = definition.createOptions(innerProps.optionSettings) as Record<string, OptionsBuilderResult[string]>;
 
   return (
     <form

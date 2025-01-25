@@ -8,26 +8,43 @@ import { widgetImports } from "..";
 describe("Widget properties with description should have matching translations", async () => {
   const enTranslation = await createLanguageMapping().en();
   objectEntries(widgetImports).forEach(([key, value]) => {
-    Object.entries(value.definition.createOptions).forEach(
-      ([optionKey, optionValue]: [string, { withDescription?: boolean }]) => {
-        it(`should have matching translations for ${optionKey} option description of ${key} widget`, () => {
-          const option = enTranslation.default.widget[key].option;
-          if (!(optionKey in option)) {
-            throw new Error(`Option ${optionKey} not found in translation`);
-          }
-          const value = option[optionKey as keyof typeof option];
+    Object.entries(
+      value.definition.createOptions({
+        server: {
+          board: {
+            enableStatusByDefault: false,
+            forceDisableStatus: false,
+          },
+        },
+      }),
+    ).forEach(([optionKey, optionValue_]) => {
+      const optionValue = optionValue_ as { withDescription: boolean };
+      it(`should have matching translations for ${optionKey} option description of ${key} widget`, () => {
+        const option = enTranslation.default.widget[key].option;
+        if (!(optionKey in option)) {
+          throw new Error(`Option ${optionKey} not found in translation`);
+        }
+        const value = option[optionKey as keyof typeof option];
 
-          expect("description" in value).toBe(optionValue.withDescription);
-        });
-      },
-    );
+        expect("description" in value).toBe(optionValue.withDescription);
+      });
+    });
   });
 });
 
 describe("Widget properties should have matching name translations", async () => {
   const enTranslation = await createLanguageMapping().en();
   objectEntries(widgetImports).forEach(([key, value]) => {
-    Object.keys(value.definition.createOptions).forEach((optionKey) => {
+    Object.keys(
+      value.definition.createOptions({
+        server: {
+          board: {
+            enableStatusByDefault: false,
+            forceDisableStatus: false,
+          },
+        },
+      }),
+    ).forEach((optionKey) => {
       it(`should have matching translations for ${optionKey} option name of ${key} widget`, () => {
         const option = enTranslation.default.widget[key].option;
         if (!(optionKey in option)) {
