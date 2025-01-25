@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "",
           "add": ""
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Παρακολούθηση της υγείας του συστήματος",
       "description": "Εμφανίζει πληροφορίες που δείχνουν την κατάσταση και την υγεία του/ων συστήματος/ων σας.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Θερμοκρασία CPU σε Φαρενάιτ"

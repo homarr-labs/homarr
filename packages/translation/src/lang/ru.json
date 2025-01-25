@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "Закладки",
           "add": "Добавить закладку"
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Мониторинг состояния системы",
       "description": "Отображает информацию о состоянии и работоспособности вашей системы (систем).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Температура CPU в градусах Фаренгейта"

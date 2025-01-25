@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "Záložky",
           "add": "Pridať záložku"
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Monitorovanie stavu systému",
       "description": "Zobrazuje informácie o stave a kondícii vášho systému.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Teplota CPU v stupňoch Fahrenheita"

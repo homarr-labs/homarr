@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "",
           "add": ""
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Giám sát tình trạng hệ thống",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": ""

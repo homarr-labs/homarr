@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "סימניות",
           "add": "הוסף סימניה"
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "ניטור בריאות המערכת",
       "description": "מציג מידע המציג את התקינות והסטטוס של המערכות שלך.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "טמפרטורת המעבד בפרנהייט"

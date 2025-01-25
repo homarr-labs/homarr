@@ -39,8 +39,8 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   });
   const form = useZodForm(validation.user.changeHomeBoards, {
     initialValues: {
-      homeBoardId: user.homeBoardId ?? "",
-      mobileHomeBoardId: user.mobileHomeBoardId ?? "",
+      homeBoardId: user.homeBoardId,
+      mobileHomeBoardId: user.mobileHomeBoardId,
     },
   });
 

@@ -735,12 +735,12 @@
           "newLabel": "新密码"
         },
         "tokenId": {
-          "label": "密鑰 ID",
-          "newLabel": "新密鑰 ID"
+          "label": "令牌ID",
+          "newLabel": "新令牌 ID"
         },
         "realm": {
-          "label": "領域",
-          "newLabel": "新領域"
+          "label": "领域",
+          "newLabel": "新领域"
         }
       }
     },
@@ -787,7 +787,7 @@
         "label": "复制 URL"
       },
       "open": {
-        "label": ""
+        "label": "打开媒体"
       }
     }
   },
@@ -908,7 +908,7 @@
           "passwordRequirements": "密码不符合要求",
           "boardAlreadyExists": "具有此名称的面板已存在",
           "invalidFileType": "无效的文件类型，例如 {expected}",
-          "invalidFileName": "無效的檔案名稱",
+          "invalidFileName": "文件名无效",
           "fileTooLarge": "文件太大，最大大小为 {maxSize}",
           "invalidConfiguration": "无效配置",
           "groupNameTaken": "用户组名称已存在"
@@ -1066,6 +1066,15 @@
               "label": "网格"
             }
           }
+        },
+        "hideIcon": {
+          "label": "隐藏图标"
+        },
+        "hideHostname": {
+          "label": "隐藏主机名"
+        },
+        "openNewTab": {
+          "label": "在新标签页中打开"
         },
         "items": {
           "label": "书签",
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "系统健康监测",
       "description": "显示系统运行状况和状态的信息。",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU 温度（华氏度）"
@@ -1424,10 +1437,10 @@
           "label": "显示文件系统信息"
         },
         "defaultTab": {
-          "label": "預設頁面"
+          "label": "默认标签"
         },
         "sectionIndicatorRequirement": {
-          "label": "部分指示需求"
+          "label": "部分指标要求"
         }
       },
       "popover": {
@@ -1450,34 +1463,34 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "處理器",
-          "memory": "記憶體"
+          "cpu": "处理器",
+          "memory": "内存"
         },
         "resource": {
           "node": {
-            "name": "節點"
+            "name": "节点"
           },
           "qemu": {
-            "name": "虛擬機"
+            "name": "虚拟机"
           },
           "lxc": {
             "name": "LXCs"
           },
           "storage": {
-            "name": "儲存裝置"
+            "name": "存储"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "節點",
-            "vmId": "虛擬機 ID",
+            "node": "节点",
+            "vmId": "虚拟 ID",
             "plugin": "插件"
           },
           "detail": {
             "cpu": "核心",
-            "memory": "記憶體",
-            "storage": "儲存裝置",
-            "uptime": "運行時間",
+            "memory": "内存",
+            "storage": "存储",
+            "uptime": "运行时间",
             "haState": "HA 状态",
             "storageType": {
               "local": "本地存储",

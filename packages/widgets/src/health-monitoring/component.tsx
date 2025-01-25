@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { ClusterHealthMonitoring } from "./cluster/cluster-health";
@@ -14,6 +15,7 @@ dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
   const [integrations] = clientApi.integration.byIds.useSuspenseQuery(props.integrationIds);
+  const t = useI18n();
 
   const proxmoxIntegrationId = integrations.find((integration) => integration.kind === "proxmox")?.id;
 
@@ -43,14 +45,14 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
       <Tabs defaultValue={props.options.defaultTab} variant="outline">
         <Tabs.List grow>
           <Tabs.Tab value="system">
-            <b>System</b>
+            <b>{t("widget.healthMonitoring.tab.system")}</b>
           </Tabs.Tab>
           <Tabs.Tab value="cluster">
-            <b>Cluster</b>
+            <b>{t("widget.healthMonitoring.tab.cluster")}</b>
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel mt="lg" value="system">
-          <SystemHealthMonitoring {...props} />
+          <SystemHealthMonitoring {...props} integrationIds={otherIntegrationIds} />
         </Tabs.Panel>
         <Tabs.Panel mt="lg" value="cluster">
           <ClusterHealthMonitoring integrationId={proxmoxIntegrationId} {...props} />

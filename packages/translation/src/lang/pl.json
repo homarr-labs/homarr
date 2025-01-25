@@ -1067,6 +1067,15 @@
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
+        },
         "items": {
           "label": "Zakładki",
           "add": "Dodaj zakładkę"
@@ -1410,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Monitorowanie zdrowia  systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura procesora w Fahrenheit"
