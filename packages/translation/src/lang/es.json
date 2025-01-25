@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Monitorización de Salud del Sistema",
       "description": "Muestra información sobre la salud y el estado de tu(s) sistema(s).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura de la CPU en grados Fahrenheit"

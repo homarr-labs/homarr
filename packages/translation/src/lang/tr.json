@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Sistem Sağlığı İzleme",
       "description": "Sistem(ler)inizin sağlığını ve durumunu gösteren bilgileri görüntüler.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Fahrenheit cinsinden CPU Sıcaklığı"

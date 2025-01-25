@@ -787,7 +787,7 @@
         "label": "複製網址"
       },
       "open": {
-        "label": ""
+        "label": "開啟多媒體"
       }
     }
   },
@@ -1068,13 +1068,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "隱藏 icons"
         },
         "hideHostname": {
-          "label": ""
+          "label": "隱藏 hostname"
         },
         "openNewTab": {
-          "label": ""
+          "label": "於新分頁開啟"
         },
         "items": {
           "label": "書籤",
@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "系統健康監測",
       "description": "顯示系統運行狀態",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "處理器溫度"

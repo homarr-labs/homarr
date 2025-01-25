@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Surveillance de l'état du système",
       "description": "Affiche des informations sur l'état et la santé de votre (vos) système(s).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Température du processeur en Fahrenheit"

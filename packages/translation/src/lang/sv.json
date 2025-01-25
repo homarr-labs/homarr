@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Övervakning av systemhälsan",
       "description": "Visar information som visar hälsa och status för ditt/dina system.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-temperatur i Fahrenheit"
