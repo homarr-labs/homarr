@@ -2014,6 +2014,10 @@
           "description": "You can add custom classes to your board items in the advanced options of each item and use them in the custom CSS above."
         }
       },
+      "disableStatus": {
+        "label": "Disable app status",
+        "description": "Disables the status check for all apps on this board"
+      },
       "columnCount": {
         "label": "Column count"
       },
@@ -2046,6 +2050,9 @@
         },
         "customCss": {
           "title": "Custom css"
+        },
+        "behavior": {
+          "title": "Behavior"
         },
         "access": {
           "title": "Access control",
