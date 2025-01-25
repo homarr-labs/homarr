@@ -28,7 +28,7 @@
         },
         "boardSelection": {
           "title": "Found {count} boards",
-          "description": "Choose all boards with there size you want to import",
+          "description": "Choose all boards with the size you want to import",
           "action": {
             "selectAll": "Select all",
             "unselectAll": "Unselect all"
