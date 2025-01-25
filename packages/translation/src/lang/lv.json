@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Sistēmas Stāvokļa Uzraudzība",
       "description": "Tiek parādīta informācija par sistēmas(-u) stāvokli un stāvokli.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU temperatūra pēc Fārenheita"

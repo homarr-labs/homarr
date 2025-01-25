@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Sistemos būklės stebėjimas",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": ""

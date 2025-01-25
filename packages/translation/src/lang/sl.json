@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": ""

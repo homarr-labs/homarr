@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Giám sát tình trạng hệ thống",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": ""

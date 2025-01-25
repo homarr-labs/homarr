@@ -438,8 +438,8 @@
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
+        "label": "Змінити власника",
+        "description": "Передати право власності на цю групу іншому користувачеві.",
         "confirm": "Ви впевнені, що бажаєте передати право власності на групу {name} користувачу {username}?",
         "notification": {
           "success": {
@@ -637,7 +637,7 @@
         "create": "Перевірити підключення та створити",
         "edit": "Перевірити підключення та зберегти"
       },
-      "alertNotice": "",
+      "alertNotice": "Кнопка \"Зберегти\" стане доступною після успішного підключення",
       "notification": {
         "success": {
           "title": "З'єднання встановлено",
@@ -680,34 +680,34 @@
           "message": "На сервері сталася помилка"
         },
         "serviceUnavailable": {
-          "title": "",
+          "title": "Сервіс недоступний",
           "message": "Сервер зараз недоступний"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Підключення перервано",
+          "message": "Підключення було перервано"
         },
         "domainNotFound": {
           "title": "Домен не знайдено",
           "message": "Домен не знайдено"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "У підключенні відмовлено",
+          "message": "У підключенні було відмовлено"
         },
         "invalidJson": {
-          "title": "",
+          "title": "Невірний JSON",
           "message": ""
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Неправильний шлях",
+          "message": "Ймовірно, шлях не правильний"
         }
       }
     },
     "secrets": {
       "title": "",
-      "lastUpdated": "",
+      "lastUpdated": "Останнє оновлення {date}",
       "notSet": {
         "label": "",
         "tooltip": "Обов’язковий ключ ще не був встановлений"
@@ -746,7 +746,7 @@
     },
     "permission": {
       "use": "",
-      "interact": "",
+      "interact": "Взаємодія з інтеграціями",
       "full": "Повний доступ до інтеграції"
     }
   },
@@ -764,22 +764,22 @@
         "file": "Виберіть файл",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Медіафайл успішно завантажено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося завантажити медіафайл"
           }
         }
       },
       "delete": {
         "label": "Видалити медіа",
-        "description": "",
+        "description": "Ви впевнені, що хочете видалити медіа <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Медіафайл успішно видалено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося видалити медіафайл"
           }
         }
       },
@@ -807,17 +807,17 @@
       "saveChanges": "Зберегти зміни",
       "cancel": "Скасувати",
       "delete": "Видалити",
-      "discard": "",
+      "discard": "Відмінити",
       "confirm": "Підтвердити",
       "continue": "Продовжити",
       "previous": "Попередній",
       "next": "Далі",
-      "checkoutDocs": "",
+      "checkoutDocs": "Переглянути документацію",
       "checkLogs": "Щоб дізнатися більше, перевірте логи",
       "tryAgain": "Повторіть спробу",
       "loading": "Завантаження"
     },
-    "here": "",
+    "here": "тут",
     "iconPicker": {
       "label": "",
       "header": ""
@@ -849,15 +849,15 @@
         "error": "Не вдалося застосувати зміни"
       },
       "transfer": {
-        "success": "",
+        "success": "Передача пройшла успішно",
         "error": ""
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Виберіть одне або декілька значень"
     },
     "multiText": {
-      "placeholder": "",
+      "placeholder": "Додати більше значень",
       "addLabel": "Додати {value}"
     },
     "select": {
@@ -937,8 +937,8 @@
         "create": "Нова категорія",
         "edit": "Перейменувати категорію",
         "remove": "Видалити категорію",
-        "moveUp": "Рухайся.",
-        "moveDown": "Вниз.",
+        "moveUp": "Перемістити вгору",
+        "moveDown": "Перемістити вниз",
         "createAbove": "Нові категорії зверху",
         "createBelow": "Нова категорія знизу"
       },
@@ -979,7 +979,7 @@
     "create": {
       "title": "Виберіть елемент для додавання",
       "search": "Фільтр елементів",
-      "addToBoard": ""
+      "addToBoard": "Додати до дошки"
     },
     "moveResize": {
       "title": "Перемістити/змінити розмір",
@@ -1042,16 +1042,16 @@
       "error": {
         "notFound": {
           "label": "",
-          "tooltip": ""
+          "tooltip": "Ви не обрали дійсну програму"
         }
       }
     },
     "bookmarks": {
-      "name": "",
+      "name": "Закладки",
       "description": "",
       "option": {
         "title": {
-          "label": ""
+          "label": "Назва"
         },
         "layout": {
           "label": "Макет",
@@ -1063,7 +1063,7 @@
               "label": "Вертикальний"
             },
             "grid": {
-              "label": ""
+              "label": "Сітка"
             }
           }
         },
@@ -1071,14 +1071,14 @@
           "label": ""
         },
         "hideHostname": {
-          "label": ""
+          "label": "Приховати імена хостів"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Відкрити в новій вкладці"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Закладки",
+          "add": "Додати закладку"
         }
       }
     },
@@ -1096,7 +1096,7 @@
               "label": "Вертикальний"
             },
             "grid": {
-              "label": ""
+              "label": "Сітка"
             }
           }
         },
@@ -1106,7 +1106,7 @@
       },
       "error": {
         "internalServerError": "",
-        "integrationsDisconnected": ""
+        "integrationsDisconnected": "Немає даних, всі інтеграції відключені"
       },
       "data": {
         "adsBlockedToday": "Заблоковано сьогодні",
@@ -1130,7 +1130,7 @@
               "label": "Вертикальний"
             },
             "grid": {
-              "label": ""
+              "label": "Сітка"
             }
           }
         },
@@ -1149,7 +1149,7 @@
         "enabled": "Увімкнено",
         "disabled": "Вимкнено",
         "processing": "",
-        "disconnected": "",
+        "disconnected": "Відключено",
         "hours": "",
         "minutes": "",
         "unlimited": ""
@@ -1181,7 +1181,7 @@
           "description": ""
         },
         "showDate": {
-          "label": ""
+          "label": "Показувати дату"
         },
         "dateFormat": {
           "label": "Формат дати",
@@ -1191,7 +1191,7 @@
     },
     "minecraftServerStatus": {
       "name": "Статус сервера Minecraft",
-      "description": "",
+      "description": "Відображає статус сервера Minecraft",
       "option": {
         "title": {
           "label": "Назва"
@@ -1243,8 +1243,8 @@
         "link": "Посилання",
         "unlink": "Видалити посилання",
         "image": "",
-        "addTable": "",
-        "deleteTable": "",
+        "addTable": "Додати таблицю",
+        "deleteTable": "Видалити таблицю",
         "colorCell": "",
         "mergeCell": "",
         "addColumnLeft": "",
@@ -1261,7 +1261,7 @@
       },
       "popover": {
         "clearColor": "",
-        "source": "",
+        "source": "Джерело",
         "widthPlaceholder": "",
         "columns": "",
         "rows": "",
@@ -1371,10 +1371,10 @@
           "label": "Погодна локація"
         },
         "showCity": {
-          "label": ""
+          "label": "Показувати місто"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Показувати прогноз погоди"
         },
         "forecastDayCount": {
           "label": "",
@@ -1417,17 +1417,21 @@
       }
     },
     "healthMonitoring": {
-      "name": "",
+      "name": "Моніторинг системних ресурсів",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": ""
         },
         "cpu": {
-          "label": ""
+          "label": "Показати інформацію про ЦП"
         },
         "memory": {
-          "label": ""
+          "label": "Показати інформацію про пам'ять"
         },
         "fileSystem": {
           "label": ""
@@ -1440,17 +1444,17 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
+        "information": "Інформація",
+        "processor": "Процесор: {cpuModelName}",
         "memory": "",
         "memoryAvailable": "",
-        "version": "",
+        "version": "Версія: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
+        "loadAverage": "Середнє навантаження:",
+        "minute": "1 хвилина",
+        "minutes": "{count} хвилин(и)",
+        "used": "Використано",
+        "available": "Доступно",
         "lastSeen": ""
       },
       "memory": {},
@@ -1520,7 +1524,7 @@
             "population": "Населення"
           },
           "action": {
-            "select": ""
+            "select": "Виберіть {city}, {countryCode}"
           },
           "population": {
             "fallback": "Невідомо"
@@ -1528,16 +1532,16 @@
         }
       },
       "integration": {
-        "noData": "",
+        "noData": "Не знайдено інтеграції",
         "description": ""
       },
       "app": {
-        "noData": "",
+        "noData": "Додаток не знайдено",
         "description": ""
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Інтеграція не вибрана",
+        "noData": "Немає даних про інтеграцію"
       },
       "option": {}
     },
@@ -1618,7 +1622,7 @@
           "columnTitle": ""
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Додано",
           "detailsTitle": "Дата додавання"
         },
         "category": {
@@ -1644,7 +1648,7 @@
         },
         "progress": {
           "columnTitle": "Прогрес",
-          "detailsTitle": ""
+          "detailsTitle": "Прогрес завантаження"
         },
         "ratio": {
           "columnTitle": "Співвідношення",
@@ -1652,11 +1656,11 @@
         },
         "received": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Всього завантажено"
         },
         "sent": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Всього вивантажено"
         },
         "size": {
           "columnTitle": "Розмір файлу",
@@ -1667,7 +1671,7 @@
           "detailsTitle": ""
         },
         "time": {
-          "columnTitle": "",
+          "columnTitle": "Час завершення",
           "detailsTitle": ""
         },
         "type": {
@@ -1676,7 +1680,7 @@
         },
         "upSpeed": {
           "columnTitle": "Віддача",
-          "detailsTitle": ""
+          "detailsTitle": "Швидкість вивантаження"
         }
       },
       "states": {
@@ -1684,8 +1688,8 @@
         "queued": "У черзі",
         "paused": "Призупинено",
         "completed": "Завершено",
-        "failed": "",
-        "processing": "",
+        "failed": "Невдало",
+        "processing": "В обробці",
         "leeching": "",
         "stalled": "",
         "unknown": "Невідомо",
@@ -1693,16 +1697,16 @@
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Завантажити список клієнтів",
+          "pause": "Призупинити всі клієнти/елементи",
+          "resume": "Відновити всі клієнти/елементи"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Призупинити клієнт",
+          "resume": "Відновити клієнт"
         },
         "item": {
-          "pause": "",
+          "pause": "Призупинити елемент",
           "resume": "",
           "delete": {
             "title": "Видалити елемент",
@@ -1759,7 +1763,7 @@
       }
     },
     "mediaTranscoding": {
-      "name": "",
+      "name": "Перекодування медіа",
       "description": "",
       "option": {
         "defaultView": {

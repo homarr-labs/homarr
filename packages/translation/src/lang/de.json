@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Überwachung des Systemzustands",
       "description": "Zeigt Informationen zum Zustand und Status Ihres/Ihrer Systeme(s) an.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-Temperatur in Fahrenheit"
