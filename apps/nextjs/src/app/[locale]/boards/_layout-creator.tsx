@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
 
+import { BoardProvider } from "@homarr/boards/context";
+import { EditModeProvider } from "@homarr/boards/edit-mode";
 import { logger } from "@homarr/log";
 
 import { MainHeader } from "~/components/layout/header";
@@ -10,9 +12,9 @@ import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
-import { BoardProvider } from "./(content)/_context";
 import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
+import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
 
 interface CreateBoardLayoutProps<TParams extends Params> {
@@ -42,17 +44,21 @@ export const createBoardLayout = <TParams extends Params>({
 
     return (
       <BoardProvider initialBoard={initialBoard}>
-        <BoardMantineProvider defaultColorScheme={colorScheme}>
-          <CustomCss />
-          <ClientShell hasNavigation={false}>
-            <MainHeader
-              logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-              actions={headerActions}
-              hasNavigation={false}
-            />
-            <AppShellMain>{children}</AppShellMain>
-          </ClientShell>
-        </BoardMantineProvider>
+        <BoardReadyProvider>
+          <EditModeProvider>
+            <BoardMantineProvider defaultColorScheme={colorScheme}>
+              <CustomCss />
+              <ClientShell hasNavigation={false}>
+                <MainHeader
+                  logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                  actions={headerActions}
+                  hasNavigation={false}
+                />
+                <AppShellMain>{children}</AppShellMain>
+              </ClientShell>
+            </BoardMantineProvider>
+          </EditModeProvider>
+        </BoardReadyProvider>
       </BoardProvider>
     );
   };

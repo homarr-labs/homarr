@@ -10,8 +10,8 @@ export const optionsRouter = createTRPCRouter({
     return {
       server: {
         board: {
-          enableSimplePingByDefault: serverSettings.board.enableSimplePingByDefault,
-          forceDisableSimplePing: serverSettings.board.forceDisableSimplePing,
+          enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+          forceDisableStatus: serverSettings.board.forceDisableStatus,
         },
       },
     };

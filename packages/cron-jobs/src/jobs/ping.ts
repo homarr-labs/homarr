@@ -17,7 +17,7 @@ export const pingJob = createCronJob("ping", EVERY_MINUTE, {
 }).withCallback(async () => {
   const boardSettings = await getServerSettingByKeyAsync(db, "board");
 
-  if (boardSettings.forceDisableSimplePing) {
+  if (boardSettings.forceDisableStatus) {
     logger.debug("Simple ping is disabled by server settings");
     return;
   }

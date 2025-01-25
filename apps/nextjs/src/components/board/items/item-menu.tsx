@@ -3,14 +3,14 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
+import { useWidgetOptionSettings } from "@homarr/widgets/option-settings";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
-import { useWidgetOptionSettings } from "~/app/[locale]/boards/(content)/_widget-option-settings-context";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMoveModal } from "./item-move-modal";

@@ -66,6 +66,6 @@ export type WidgetOptionsRecordOf<TKind extends WidgetKind> = WidgetImports[TKin
  */
 export interface WidgetOptionsSettings {
   server: {
-    board: Pick<ServerSettings["board"], "enableSimplePingByDefault" | "forceDisableSimplePing">;
+    board: Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus">;
   };
 }

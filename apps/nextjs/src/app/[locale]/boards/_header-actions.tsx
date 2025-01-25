@@ -2,8 +2,9 @@
 
 import { IconLayoutBoard } from "@tabler/icons-react";
 
+import { useRequiredBoard } from "@homarr/boards/context";
+
 import { HeaderButton } from "~/components/layout/header/button";
-import { useRequiredBoard } from "./(content)/_context";
 
 export const BoardOtherHeaderActions = () => {
   const board = useRequiredBoard();

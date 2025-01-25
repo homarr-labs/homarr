@@ -28,8 +28,8 @@ export const defaultServerSettings = {
   board: {
     homeBoardId: null as string | null,
     mobileHomeBoardId: null as string | null,
-    enableSimplePingByDefault: true,
-    forceDisableSimplePing: false,
+    enableStatusByDefault: true,
+    forceDisableStatus: false,
   },
   appearance: {
     defaultColorScheme: "light" as ColorScheme,

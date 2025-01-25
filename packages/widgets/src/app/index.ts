@@ -12,12 +12,12 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
         openInNewTab: factory.switch({ defaultValue: true }),
         showTitle: factory.switch({ defaultValue: true }),
         showDescriptionTooltip: factory.switch({ defaultValue: false }),
-        pingEnabled: factory.switch({ defaultValue: settings.server.board.enableSimplePingByDefault }),
+        pingEnabled: factory.switch({ defaultValue: settings.server.board.enableStatusByDefault }),
       }),
       {
         pingEnabled: {
           shouldHide() {
-            return settings.server.board.forceDisableSimplePing;
+            return settings.server.board.forceDisableStatus;
           },
         },
       },

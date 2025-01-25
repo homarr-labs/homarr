@@ -91,6 +91,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
+      '@homarr/boards':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/boards
       '@homarr/certificates':
         specifier: workspace:^0.1.0
         version: link:../../packages/certificates
@@ -676,6 +679,34 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
+  packages/boards:
+    dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../api
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
+      react-dom:
+        specifier: 19.0.0
+        version: 19.0.0(react@19.0.0)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.18.0
+        version: 9.18.0
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1807,6 +1838,9 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
+      '@homarr/boards':
+        specifier: workspace:^0.1.0
+        version: link:../boards
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common

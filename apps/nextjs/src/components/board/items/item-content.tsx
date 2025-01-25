@@ -5,12 +5,13 @@ import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "node_modules/@homarr/widgets/src/errors";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
+import { useWidgetOptionSettings } from "@homarr/widgets/option-settings";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
-import { useWidgetOptionSettings } from "~/app/[locale]/boards/(content)/_widget-option-settings-context";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import { BoardItemMenu } from "./item-menu";

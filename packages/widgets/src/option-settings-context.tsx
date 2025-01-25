@@ -4,7 +4,8 @@ import type { PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
 
 import { clientApi } from "@homarr/api/client";
-import type { WidgetOptionsSettings } from "@homarr/widgets";
+
+import type { WidgetOptionsSettings } from "./definition";
 
 const WidgetOptionSettingsContext = createContext<WidgetOptionsSettings | null>(null);
 
