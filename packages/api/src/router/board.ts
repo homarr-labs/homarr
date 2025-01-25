@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { z } from "zod";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
@@ -25,8 +26,7 @@ import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
-import { createSectionSchema, sharedItemSchema, validation, z, odUnionFromArray } from "@homarr/validation";
-import { z } from "zod";
+import { createSectionSchema, sharedItemSchema, validation, zodUnionFromArray } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";

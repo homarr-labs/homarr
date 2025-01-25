@@ -2,8 +2,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import { boardSizes } from "@homarr/old-schema";
-import { validation, odEnumFromArray } from "@homarr/validation";
-import { z } from "zod";
+import { validation, zodEnumFromArray } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
 export const sidebarBehaviours = ["remove-items", "last-section"] as const;

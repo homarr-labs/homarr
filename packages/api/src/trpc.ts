@@ -9,6 +9,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { OpenApiMeta } from "trpc-to-openapi";
+import { ZodError } from "zod";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";
@@ -16,7 +17,6 @@ import { userAgent } from "@homarr/common/server";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 import { logger } from "@homarr/log";
-import { ZodError } from "@homarr/validation";
 
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 
