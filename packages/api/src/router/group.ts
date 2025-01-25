@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like, not, sql } from "@homarr/db";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";

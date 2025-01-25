@@ -1,6 +1,7 @@
+import { z } from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
-import { z } from "@homarr/validation";
 
 import { Integration } from "../base/integration";
 import type { ISearchableIntegration } from "../base/searchable-integration";

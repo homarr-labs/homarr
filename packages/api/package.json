@@ -48,7 +48,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "superjson": "2.2.2",
-    "trpc-to-openapi": "^2.1.2"
+    "trpc-to-openapi": "^2.1.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

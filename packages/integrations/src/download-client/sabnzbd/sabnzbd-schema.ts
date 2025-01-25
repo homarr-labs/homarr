@@ -1,4 +1,4 @@
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 export const queueSchema = z.object({
   queue: z.object({

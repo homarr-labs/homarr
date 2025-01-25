@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -23,7 +24,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { integrationCreator } from "@homarr/integrations";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";

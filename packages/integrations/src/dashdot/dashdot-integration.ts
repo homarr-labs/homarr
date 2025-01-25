@@ -3,9 +3,9 @@ import { humanFileSize } from "@homarr/common";
 import "@homarr/redis";
 
 import dayjs from "dayjs";
+import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { z } from "@homarr/validation";
 
 import { createChannelEventHistory } from "../../../redis/src/lib/channel";
 import { Integration } from "../base/integration";

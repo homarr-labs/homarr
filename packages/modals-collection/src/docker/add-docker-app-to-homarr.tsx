@@ -1,4 +1,5 @@
 import { Button, Group, Image, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
+import { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -6,7 +7,6 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
 
 interface AddDockerAppToHomarrProps {
   selectedContainers: RouterOutputs["docker"]["getContainers"]["containers"];

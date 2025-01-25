@@ -1,10 +1,10 @@
 import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
 import type { ActionIconProps } from "@mantine/core";
+import { z } from "zod";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import type { ZodType } from "@homarr/validation";
-import { z } from "@homarr/validation";
 
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 

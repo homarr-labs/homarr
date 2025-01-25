@@ -1,5 +1,6 @@
+import { z } from "zod";
+
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
-import { z } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 

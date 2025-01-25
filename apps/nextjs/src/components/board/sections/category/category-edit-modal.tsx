@@ -1,9 +1,9 @@
 import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
 
 interface Category {
   id: string;

@@ -1,6 +1,5 @@
 import { IconTransform } from "@tabler/icons-react";
-
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

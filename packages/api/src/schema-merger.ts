@@ -1,5 +1,6 @@
+import { z } from "zod";
+
 import type { AnyZodObject, ZodIntersection, ZodObject } from "@homarr/validation";
-import { z } from "@homarr/validation";
 
 export function convertIntersectionToZodObject<TIntersection extends ZodIntersection<AnyZodObject, AnyZodObject>>(
   intersection: TIntersection,
