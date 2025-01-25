@@ -57,16 +57,16 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
             {...form.getInputProps("mobileHomeBoardId")}
           />
 
-          <Text fw={500}>{tBoard("simplePing.title")}</Text>
+          <Text fw={500}>{tBoard("status.title")}</Text>
           <Switch
-            {...form.getInputProps("enableSimplePingByDefault", { type: "checkbox" })}
-            label={tBoard("simplePing.enableSimplePingByDefault.label")}
-            description={tBoard("simplePing.enableSimplePingByDefault.description")}
+            {...form.getInputProps("enableStatusByDefault", { type: "checkbox" })}
+            label={tBoard("status.enableStatusByDefault.label")}
+            description={tBoard("status.enableStatusByDefault.description")}
           />
           <Switch
-            {...form.getInputProps("forceDisableSimplePing", { type: "checkbox" })}
-            label={tBoard("simplePing.forceDisableSimplePing.label")}
-            description={tBoard("simplePing.forceDisableSimplePing.description")}
+            {...form.getInputProps("forceDisableStatus", { type: "checkbox" })}
+            label={tBoard("status.forceDisableStatus.label")}
+            description={tBoard("status.forceDisableStatus.description")}
           />
         </>
       )}
