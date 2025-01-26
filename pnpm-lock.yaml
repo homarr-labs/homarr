@@ -145,6 +145,9 @@ importers:
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../../packages/server-settings
+      '@homarr/settings':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/settings
       '@homarr/spotlight':
         specifier: workspace:^0.1.0
         version: link:../../packages/spotlight
@@ -1600,6 +1603,46 @@ importers:
         specifier: ^5.7.3
         version: 5.7.3
 
+  packages/settings:
+    dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../api
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../server-settings
+      '@mantine/dates':
+        specifier: ^7.16.2
+        version: 7.16.2(@mantine/core@7.16.2(@mantine/hooks@7.16.2(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.2(react@19.0.0))(dayjs@1.11.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next:
+        specifier: 15.1.6
+        version: 15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4)
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
+      react-dom:
+        specifier: 19.0.0
+        version: 19.0.0(react@19.0.0)
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.19.0
+        version: 9.19.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
   packages/spotlight:
     dependencies:
       '@homarr/api':
@@ -1623,6 +1666,9 @@ importers:
       '@homarr/modals-collection':
         specifier: workspace:^0.1.0
         version: link:../modals-collection
+      '@homarr/settings':
+        specifier: workspace:^0.1.0
+        version: link:../settings
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
@@ -1849,6 +1895,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
+      '@homarr/settings':
+        specifier: workspace:^0.1.0
+        version: link:../settings
       '@homarr/spotlight':
         specifier: workspace:^0.1.0
         version: link:../spotlight

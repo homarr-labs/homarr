@@ -148,6 +148,13 @@
       "when": 1736510755691,
       "tag": "0020_empty_hellfire_club",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1737883733050,
+      "tag": "0021_famous_bruce_banner",
+      "breakpoints": true
     }
   ]
 }

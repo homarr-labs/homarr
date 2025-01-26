@@ -9,10 +9,14 @@ import "~/styles/scroll-area.scss";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 
+import { api } from "@homarr/api/server";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
+import { db } from "@homarr/db";
+import { getServerSettingsAsync } from "@homarr/db/queries";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
+import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
@@ -73,6 +77,8 @@ export default async function Layout(props: {
   }
 
   const session = await auth();
+  const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
+  const serverSettings = await getServerSettingsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
   const i18nMessages = await getI18nMessages();
@@ -81,6 +87,19 @@ export default async function Layout(props: {
     (innerProps) => {
       return <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
     },
+    (innerProps) => (
+      <SettingsProvider
+        user={user}
+        serverSettings={{
+          board: {
+            homeBoardId: serverSettings.board.homeBoardId,
+            mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
+          },
+          search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
+        }}
+        {...innerProps}
+      />
+    ),
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,

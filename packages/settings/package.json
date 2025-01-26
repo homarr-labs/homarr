@@ -1,12 +1,11 @@
 {
-  "name": "@homarr/spotlight",
+  "name": "@homarr/settings",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./styles.css": "./src/styles.css"
+    ".": "./index.ts"
   },
   "typesVersions": {
     "*": {
@@ -24,24 +23,12 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
-    "@homarr/auth": "workspace:^0.1.0",
-    "@homarr/common": "workspace:^0.1.0",
-    "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/integrations": "workspace:^0.1.0",
-    "@homarr/modals": "workspace:^0.1.0",
-    "@homarr/modals-collection": "workspace:^0.1.0",
-    "@homarr/settings": "workspace:^0.1.0",
-    "@homarr/translation": "workspace:^0.1.0",
-    "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^7.16.2",
-    "@mantine/hooks": "^7.16.2",
-    "@mantine/spotlight": "^7.16.2",
-    "@tabler/icons-react": "^3.29.0",
-    "jotai": "^2.11.1",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/server-settings": "workspace:^0.1.0",
+    "@mantine/dates": "^7.16.2",
     "next": "15.1.6",
     "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "use-deep-compare-effect": "^1.8.1"
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
