@@ -1,7 +1,7 @@
 import type { MantineColor } from "@mantine/core";
 import { Box, Tooltip } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
+import { useSettings } from "@homarr/settings";
 import type { TablerIcon } from "@homarr/ui";
 
 interface PingDotProps {
@@ -11,7 +11,7 @@ interface PingDotProps {
 }
 
 export const PingDot = ({ color, tooltip, ...props }: PingDotProps) => {
-  const [pingIconsEnabled] = clientApi.user.getPingIconsEnabledOrDefault.useSuspenseQuery();
+  const { pingIconsEnabled } = useSettings();
 
   return (
     <Box bottom="2.5cqmin" right="2.5cqmin" pos="absolute">
