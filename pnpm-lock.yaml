@@ -300,8 +300,8 @@ importers:
         specifier: 19.0.3
         version: 19.0.3(@types/react@19.0.8)
       '@types/swagger-ui-react':
-        specifier: ^4.18.3
-        version: 4.18.3
+        specifier: ^4.19.0
+        version: 4.19.0
       concurrently:
         specifier: ^9.1.2
         version: 9.1.2
@@ -4449,8 +4449,8 @@ packages:
   '@types/ssh2@1.15.1':
     resolution: {integrity: sha512-ZIbEqKAsi5gj35y4P4vkJYly642wIbY6PqoN0xiyQGshKUGXR9WQjF/iF9mXBQ8uBKy3ezfsCkcoHKhd0BzuDA==}
 
-  '@types/swagger-ui-react@4.18.3':
-    resolution: {integrity: sha512-Mo/R7IjDVwtiFPs84pWvh5pI9iyNGBjmfielxqbOh2Jv+8WVSDVe8Nu25kb5BOuV2xmGS3o33jr6nwDJMBcX+Q==}
+  '@types/swagger-ui-react@4.19.0':
+    resolution: {integrity: sha512-uScp1xkLZJej0bt3/lO4U11ywWEBnI5CFCR0tqp+5Rvxl1Mj1v6VkGED0W70jJwqlBvbD+/a6bDiK8rjepCr8g==}
 
   '@types/through@0.0.33':
     resolution: {integrity: sha512-HsJ+z3QuETzP3cswwtzt2vEIiHBk/dCcHGhbmG5X3ecnwFD/lPrMpliGXxSCg03L9AhrdwA4Oz/qfspkDW+xGQ==}
@@ -12387,7 +12387,7 @@ snapshots:
     dependencies:
       '@types/node': 18.19.50
 
-  '@types/swagger-ui-react@4.18.3':
+  '@types/swagger-ui-react@4.19.0':
     dependencies:
       '@types/react': 19.0.8
 
