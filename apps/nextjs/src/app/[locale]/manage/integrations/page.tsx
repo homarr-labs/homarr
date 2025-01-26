@@ -148,15 +148,12 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
     {} as Record<IntegrationKind, RouterOutputs["integration"]["all"]>,
   );
 
+  const entries = objectEntries(groupedIntegrations);
+
   return (
     <ActiveTabAccordion defaultValue={activeTab} radius="lg" classNames={classes}>
-      {objectEntries(groupedIntegrations).map(([kind, integrations], index) => (
-        <AccordionItem
-          key={kind}
-          value={kind}
-          data-first={index === 0}
-          data-last={index === objectEntries(groupedIntegrations).length - 1}
-        >
+      {entries.map(([kind, integrations], index) => (
+        <AccordionItem key={kind} value={kind} data-first={index === 0} data-last={index === entries.length - 1}>
           <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} radius="sm" />}>
             <Group>
               <Text>{getIntegrationName(kind)}</Text>

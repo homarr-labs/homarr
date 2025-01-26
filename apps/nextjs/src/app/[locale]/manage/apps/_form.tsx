@@ -58,7 +58,7 @@ export const AppForm = ({
             {t("common.action.backToOverview")}
           </Button>
           {buttonLabels.submitAndCreateAnother && (
-            <Button disabled={!form.isValid()} onClick={handleSubmitAndCreateAnother} loading={isPending}>
+            <Button onClick={handleSubmitAndCreateAnother} loading={isPending}>
               {buttonLabels.submitAndCreateAnother}
             </Button>
           )}

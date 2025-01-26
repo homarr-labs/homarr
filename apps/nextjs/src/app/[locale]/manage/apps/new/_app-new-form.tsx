@@ -7,14 +7,14 @@ import type { z } from "zod";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
 
 import { AppForm } from "../_form";
 
 export const AppNewForm = () => {
   const tScoped = useScopedI18n("app.page.create.notification");
-  const t = useScopedI18n();
+  const t = useI18n();
   const router = useRouter();
 
   const { mutate, isPending } = clientApi.app.create.useMutation({
