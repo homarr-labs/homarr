@@ -41,7 +41,7 @@ export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur
     onChange,
   });
   const [search, setSearch] = useUncontrolled({
-    value: value,
+    value,
     onChange: (value) => {
       setValue(value);
     },

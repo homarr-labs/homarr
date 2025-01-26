@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
+import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
 
 import type { TablerIcon, TablerIconProps } from "@homarr/ui";
 
@@ -28,7 +28,12 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
           }
 
           const { icon: TablerIcon, iconProps, ...props } = link;
-          const Icon = <TablerIcon size={20} stroke={1.5} {...iconProps} />;
+          const Icon =
+            typeof TablerIcon === "string" ? (
+              <Image src={TablerIcon} w={20} h={20} />
+            ) : (
+              <TablerIcon size={20} stroke={1.5} {...iconProps} />
+            );
           let clientLink: ClientNavigationLink;
           if ("items" in props) {
             clientLink = {
@@ -55,7 +60,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
 
 interface CommonNavigationLinkProps {
   label: string;
-  icon: TablerIcon;
+  icon: TablerIcon | string;
   iconProps?: TablerIconProps;
   hidden?: boolean;
 }
