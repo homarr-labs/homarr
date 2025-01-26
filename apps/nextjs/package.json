@@ -89,7 +89,7 @@
     "@types/prismjs": "^1.26.5",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
-    "@types/swagger-ui-react": "^4.18.3",
+    "@types/swagger-ui-react": "^4.19.0",
     "concurrently": "^9.1.2",
     "eslint": "^9.19.0",
     "node-loader": "^2.1.0",
