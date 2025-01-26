@@ -1068,13 +1068,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "הסתרת אייקונים"
         },
         "hideHostname": {
-          "label": ""
+          "label": "הסתרת כתובת רשת"
         },
         "openNewTab": {
-          "label": ""
+          "label": "פתיחה בכרטיסיה חדשה"
         },
         "items": {
           "label": "סימניות",
@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "ניטור בריאות המערכת",
       "description": "מציג מידע המציג את התקינות והסטטוס של המערכות שלך.",
+      "tab": {
+        "system": "מערכת",
+        "cluster": "אשכול"
+      },
       "option": {
         "fahrenheit": {
           "label": "טמפרטורת המעבד בפרנהייט"

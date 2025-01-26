@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "システムヘルスモニタリング",
       "description": "システムの健全性とステータスを示す情報を表示します。",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU温度（華氏）"

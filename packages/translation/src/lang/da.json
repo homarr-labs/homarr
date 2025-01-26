@@ -1068,13 +1068,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Skjul ikoner"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Skjul værtsnavne"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Åbn i nyt faneblad"
         },
         "items": {
           "label": "Bogmærker",
@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Systemsundhedsovervågning",
       "description": "Viser oplysninger om dit/dine systems tilstand og status.",
+      "tab": {
+        "system": "System",
+        "cluster": "Klynge"
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-temperatur i Fahrenheit"

@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Rendszerállapot-felügyelet",
       "description": "Megjeleníti a rendszer(ek) állapotát és állapotát mutató információkat.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU hőmérséklet Fahrenheitben"

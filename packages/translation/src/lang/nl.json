@@ -1419,6 +1419,10 @@
     "healthMonitoring": {
       "name": "Systeem gezondheidsmonitoring",
       "description": "Toont informatie over de gezondheid en status van je systeem(en).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-temperatuur in fahrenheit"

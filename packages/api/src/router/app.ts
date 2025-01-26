@@ -103,7 +103,7 @@ export const appRouter = createTRPCRouter({
 
       return app;
     }),
-  byIds: protectedProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
     return await ctx.db.query.apps.findMany({
       where: inArray(apps.id, input),
     });
