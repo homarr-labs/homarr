@@ -27,13 +27,7 @@ export const BoardCategorySection = ({ section }: Props) => {
     <Card withBorder p={0}>
       <Stack>
         <Group wrap="nowrap" gap="sm">
-          <UnstyledButton
-            w="100%"
-            p="sm"
-            onClick={() => {
-              toggle();
-            }}
-          >
+          <UnstyledButton w="100%" p="sm" onClick={toggle}>
             <Group wrap="nowrap">
               {opened ? <IconChevronUp size={20} /> : <IconChevronDown size={20} />}
               <Title order={3}>{section.name}</Title>
