@@ -27,7 +27,7 @@ export const sectionRouter = createTRPCRouter({
       if (!section) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Section not found",
+          message: `Section not found id=${input.sectionId}`,
         });
       }
 
