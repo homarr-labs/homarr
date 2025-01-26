@@ -1,7 +1,8 @@
+import { z } from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import { logger } from "@homarr/log";
-import { z } from "@homarr/validation";
 
 import type { CalendarEvent } from "../../calendar-types";
 import { radarrReleaseTypes } from "../../calendar-types";

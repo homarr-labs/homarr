@@ -1,5 +1,6 @@
+import { z } from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { z } from "@homarr/validation";
 
 import { Integration } from "../base/integration";
 import type { TdarrQueue } from "../interfaces/media-transcoding/queue";

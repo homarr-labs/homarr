@@ -2,13 +2,14 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { validation, z } from "@homarr/validation";
+import type { validation } from "@homarr/validation";
 
 import { AppForm } from "../_form";
 

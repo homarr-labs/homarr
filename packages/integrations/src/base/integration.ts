@@ -1,10 +1,10 @@
 import type { Response } from "undici";
+import { z } from "zod";
 
 import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import type { TranslationObject } from "@homarr/translation";
-import { z } from "@homarr/validation";
 
 import { IntegrationTestConnectionError } from "./test-connection-error";
 import type { IntegrationSecret } from "./types";

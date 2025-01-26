@@ -16,6 +16,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconExternalLink } from "@tabler/icons-react";
+import { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -25,7 +26,6 @@ import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
-import { z } from "@homarr/validation";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

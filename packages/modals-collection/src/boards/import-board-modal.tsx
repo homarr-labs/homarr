@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, FileInput, Group, Radio, Stack, TextInput } from "@mantine/core";
 import { IconFileUpload } from "@tabler/icons-react";
+import { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -12,7 +13,6 @@ import type { OldmarrImportConfiguration } from "@homarr/old-import/shared";
 import { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
 
 import { useBoardNameStatus } from "./add-board-modal";
 
