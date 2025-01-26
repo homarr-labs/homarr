@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 
+import { useUpdateBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/db/client";
 
 import type { CategorySection, EmptySection } from "~/app/[locale]/boards/_types";
-import { useUpdateBoard } from "~/app/[locale]/boards/(content)/_client";
 import type { MoveCategoryInput } from "./actions/move-category";
 import { moveCategoryCallback } from "./actions/move-category";
 import type { RemoveCategoryInput } from "./actions/remove-category";

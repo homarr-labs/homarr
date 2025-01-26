@@ -149,6 +149,10 @@ export type WidgetOptionType = WidgetOptionDefinition["type"];
 export type WidgetOptionOfType<TType extends WidgetOptionType> = Extract<WidgetOptionDefinition, { type: TType }>;
 
 type inferOptionFromDefinition<TDefinition extends WidgetOptionDefinition> = TDefinition["defaultValue"];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type inferOptionsFromCreator<TOptions extends (settings: any) => WidgetOptionsRecord> =
+  inferOptionsFromDefinition<ReturnType<TOptions>>;
 export type inferOptionsFromDefinition<TOptions extends WidgetOptionsRecord> = {
   [key in keyof TOptions]: inferOptionFromDefinition<TOptions[key]>;
 };

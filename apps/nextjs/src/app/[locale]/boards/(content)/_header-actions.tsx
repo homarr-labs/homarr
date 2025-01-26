@@ -20,6 +20,8 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -32,7 +34,6 @@ import { CategoryEditModal } from "~/components/board/sections/category/category
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
 import { env } from "~/env";
-import { useEditMode, useRequiredBoard } from "./_context";
 
 export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
@@ -119,7 +120,7 @@ const AddMenu = () => {
 };
 
 const EditModeMenu = () => {
-  const [isEditMode, setEditMode] = useEditMode();
+  const [isEditMode, { open, close }] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
@@ -131,7 +132,7 @@ const EditModeMenu = () => {
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
       void revalidatePathActionAsync(`/boards/${board.name}`);
-      setEditMode(false);
+      close();
     },
     onError() {
       showErrorNotification({
@@ -143,8 +144,8 @@ const EditModeMenu = () => {
 
   const toggle = useCallback(() => {
     if (isEditMode) return saveBoard(board);
-    setEditMode(true);
-  }, [board, isEditMode, saveBoard, setEditMode]);
+    open();
+  }, [board, isEditMode, saveBoard, open]);
 
   useHotkeys([["mod+e", toggle]]);
   usePreventLeaveWithDirty(isEditMode);

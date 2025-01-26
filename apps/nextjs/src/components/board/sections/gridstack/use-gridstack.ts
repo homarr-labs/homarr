@@ -2,10 +2,12 @@ import type { RefObject } from "react";
 import { createRef, useCallback, useEffect, useRef } from "react";
 import { useElementSize } from "@mantine/hooks";
 
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
 import type { Section } from "~/app/[locale]/boards/_types";
-import { useEditMode, useMarkSectionAsReady, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
+import { useMarkSectionAsReady } from "~/app/[locale]/boards/(content)/_ready-context";
 import { useItemActions } from "../../items/item-actions";
 import { useSectionActions } from "../section-actions";
 import { initializeGridstack } from "./init-gridstack";

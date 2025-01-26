@@ -1,6 +1,7 @@
 "use client";
 
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
+import { useRequiredBoard } from "@homarr/boards/context";
+
 import { homarrLogoPath, homarrPageTitle } from "./homarr-logo";
 import type { LogoWithTitleProps } from "./logo";
 import { Logo, LogoWithTitle } from "./logo";

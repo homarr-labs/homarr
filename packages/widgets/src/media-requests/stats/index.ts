@@ -6,6 +6,8 @@ import { createWidgetDefinition } from "../../definition";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestStats", {
   icon: IconChartBar,
-  options: {},
+  createOptions() {
+    return {};
+  },
   supportedIntegrations: getIntegrationKindsByCategory("mediaRequest"),
 }).withDynamicImport(() => import("./component"));

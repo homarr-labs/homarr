@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Text } from "@mantine/core";
+import { Group, Switch, Text } from "@mantine/core";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -55,6 +55,18 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
               </Group>
             )}
             {...form.getInputProps("mobileHomeBoardId")}
+          />
+
+          <Text fw={500}>{tBoard("status.title")}</Text>
+          <Switch
+            {...form.getInputProps("enableStatusByDefault", { type: "checkbox" })}
+            label={tBoard("status.enableStatusByDefault.label")}
+            description={tBoard("status.enableStatusByDefault.description")}
+          />
+          <Switch
+            {...form.getInputProps("forceDisableStatus", { type: "checkbox" })}
+            label={tBoard("status.forceDisableStatus.label")}
+            description={tBoard("status.forceDisableStatus.description")}
           />
         </>
       )}

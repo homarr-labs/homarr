@@ -12,21 +12,23 @@ import { optionsBuilder } from "../options";
  */
 export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
   icon: IconRss,
-  options: optionsBuilder.from((factory) => ({
-    feedUrls: factory.multiText({
-      defaultValue: [],
-      validate: z.string().url(),
-    }),
-    enableRtl: factory.switch({
-      defaultValue: false,
-    }),
-    textLinesClamp: factory.number({
-      defaultValue: 5,
-      validate: z.number().min(1).max(50),
-    }),
-    maximumAmountPosts: factory.number({
-      defaultValue: 100,
-      validate: z.number().min(1).max(9999),
-    }),
-  })),
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      feedUrls: factory.multiText({
+        defaultValue: [],
+        validate: z.string().url(),
+      }),
+      enableRtl: factory.switch({
+        defaultValue: false,
+      }),
+      textLinesClamp: factory.number({
+        defaultValue: 5,
+        validate: z.number().min(1).max(50),
+      }),
+      maximumAmountPosts: factory.number({
+        defaultValue: 100,
+        validate: z.number().min(1).max(9999),
+      }),
+    }));
+  },
 }).withDynamicImport(() => import("./component"));

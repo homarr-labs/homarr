@@ -11,6 +11,7 @@ import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form";
 
+import type { WidgetOptionsSettings } from "..";
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
@@ -32,6 +33,7 @@ interface ModalProps<TSort extends WidgetKind> {
   onSuccessfulEdit: (value: WidgetEditModalState) => void;
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
+  optionSettings: WidgetOptionsSettings;
 }
 
 export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
@@ -40,13 +42,16 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
 
   // Translate the error messages
   z.setErrorMap(zodErrorMap(t));
+  const { definition } = widgetImports[innerProps.kind];
+  const options = definition.createOptions(innerProps.optionSettings) as Record<string, OptionsBuilderResult[string]>;
+
   const form = useForm({
     mode: "controlled",
     initialValues: innerProps.value,
     validate: zodResolver(
       z.object({
         options: z.object(
-          objectEntries(widgetImports[innerProps.kind].definition.options).reduce(
+          objectEntries(options).reduce(
             (acc, [key, value]: [string, { type: string; validate?: z.ZodType<unknown> }]) => {
               if (value.validate) {
                 acc[key] = value.type === "multiText" ? z.array(value.validate).optional() : value.validate;
@@ -68,8 +73,6 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   });
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 
-  const { definition } = widgetImports[innerProps.kind];
-
   return (
     <form
       onSubmit={form.onSubmit((values) => {
@@ -89,7 +92,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               {...form.getInputProps("integrationIds")}
             />
           )}
-          {Object.entries(definition.options).map(([key, value]: [string, OptionsBuilderResult[string]]) => {
+          {Object.entries(options).map(([key, value]) => {
             const Input = getInputForType(value.type);
 
             if (

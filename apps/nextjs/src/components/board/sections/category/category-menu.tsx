@@ -12,11 +12,11 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
-import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useCategoryMenuActions } from "./category-menu-actions";
 
 interface Props {

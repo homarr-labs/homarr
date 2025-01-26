@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
-import { useRequiredBoard } from "../../(content)/_context";
 import classes from "./danger.module.css";
 
 export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: boolean }) => {

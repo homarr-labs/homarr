@@ -4,6 +4,8 @@ import { createWidgetDefinition } from "../definition";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
-  options: {},
+  createOptions() {
+    return {};
+  },
   supportedIntegrations: ["jellyfin", "plex"],
 }).withDynamicImport(() => import("./component"));

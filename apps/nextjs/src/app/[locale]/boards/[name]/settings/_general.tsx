@@ -5,13 +5,13 @@ import { Button, Grid, Group, Loader, Stack, TextInput, Tooltip } from "@mantine
 import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
+import { useUpdateBoard } from "@homarr/boards/updater";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
 import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
-import { useUpdateBoard } from "../../(content)/_client";
 import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {
