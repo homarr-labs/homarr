@@ -1068,13 +1068,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Simgeleri gizle"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Ana bilgisayar adlarını gizle"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Yeni sekmede aç"
         },
         "items": {
           "label": "Yer İmleri",
@@ -1420,8 +1420,8 @@
       "name": "Sistem Sağlığı İzleme",
       "description": "Sistem(ler)inizin sağlığını ve durumunu gösteren bilgileri görüntüler.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Sistem",
+        "cluster": "Küme"
       },
       "option": {
         "fahrenheit": {
