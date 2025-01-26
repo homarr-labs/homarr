@@ -1,8 +1,8 @@
 import { useForm, zodResolver } from "@mantine/form";
+import { z } from "zod";
+import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod";
 
 import { useI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
-import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "@homarr/validation";
 import { zodErrorMap } from "@homarr/validation/form";
 
 export const useZodForm = <

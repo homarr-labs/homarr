@@ -1,4 +1,4 @@
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 export const entityStateSchema = z.object({
   attributes: z.record(

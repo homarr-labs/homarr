@@ -1,8 +1,8 @@
 import { observable } from "@trpc/server/observable";
+import { z } from "zod";
 
 import { sendPingRequestAsync } from "@homarr/ping";
 import { pingChannel, pingUrlChannel } from "@homarr/redis";
-import { z } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 

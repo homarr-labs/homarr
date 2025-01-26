@@ -1,8 +1,8 @@
 import { IconDownload } from "@tabler/icons-react";
+import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
-import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

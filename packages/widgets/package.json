@@ -64,7 +64,8 @@
     "next": "15.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "video.js": "^8.21.0"
+    "video.js": "^8.21.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

@@ -17,6 +17,7 @@ import {
 } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { IconPlus, IconUserCheck } from "@tabler/icons-react";
+import { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { everyoneGroup, groupPermissions } from "@homarr/definitions";
@@ -26,7 +27,7 @@ import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput, UserAvatar } from "@homarr/ui";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
 import { GroupSelectModal } from "~/components/access/group-select-modal";

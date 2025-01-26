@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
@@ -8,7 +9,7 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {

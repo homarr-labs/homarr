@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { z } from "zod";
 
 import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -12,7 +13,7 @@ import type { useForm } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 interface LoginFormProps {
   providers: string[];

@@ -1,4 +1,5 @@
 import { CredentialsSignin } from "@auth/core/errors";
+import { z } from "zod";
 
 import { extractErrorMessage } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
@@ -6,7 +7,6 @@ import { and, createId, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { validation } from "@homarr/validation";
-import { z } from "@homarr/validation";
 
 import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";

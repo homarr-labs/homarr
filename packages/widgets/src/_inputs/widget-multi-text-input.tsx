@@ -49,6 +49,17 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
     return null;
   }, [currentValidationResult, search]);
 
+  const handleAddSearch = () => {
+    if (search.length === 0 || !currentValidationResult.success) {
+      return;
+    }
+    if (values.includes(search)) {
+      return;
+    }
+    onChange([...values, search]);
+    setSearch("");
+  };
+
   return (
     <Combobox store={combobox}>
       <Combobox.DropdownTarget>
@@ -68,7 +79,10 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
             <Combobox.EventsTarget>
               <PillsInput.Field
                 onFocus={() => combobox.openDropdown()}
-                onBlur={() => combobox.closeDropdown()}
+                onBlur={() => {
+                  handleAddSearch();
+                  combobox.closeDropdown();
+                }}
                 value={search}
                 placeholder={tCommon("multiText.placeholder")}
                 onChange={(event) => {
@@ -81,14 +95,7 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
                     onChange(values.slice(0, -1));
                   } else if (event.key === "Enter") {
                     event.preventDefault();
-                    if (search.length === 0 || !currentValidationResult.success) {
-                      return;
-                    }
-                    if (values.includes(search)) {
-                      return;
-                    }
-                    onChange([...values, search]);
-                    setSearch("");
+                    handleAddSearch();
                   }
                 }}
               />
