@@ -25,11 +25,11 @@ export const AppForm = (props: AppFormProps) => {
   const t = useI18n();
 
   const form = useZodForm(validation.app.manage, {
-    initialValues: initialValues ?? {
-      name: "",
-      description: "",
-      iconUrl: "",
-      href: "",
+    initialValues: {
+      name: initialValues?.name ?? "",
+      description: initialValues?.description ?? "",
+      iconUrl: initialValues?.iconUrl ?? "",
+      href: initialValues?.href ?? "",
     },
   });
 
