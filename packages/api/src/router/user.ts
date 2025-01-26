@@ -21,6 +21,7 @@ import {
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
+import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
 
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
@@ -422,43 +423,34 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  changeSearchPreferences: protectedProcedure
+  changeDefaultSearchEngine: protectedProcedure
     .input(
-      convertIntersectionToZodObject(validation.user.changeSearchPreferences.and(z.object({ userId: z.string() }))),
+      convertIntersectionToZodObject(
+        validation.user.changeSearchPreferences.omit({ openInNewTab: true }).and(z.object({ userId: z.string() })),
+      ),
     )
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/changeSearchEngine",
+        tags: ["users"],
+        protect: true,
+        deprecated: true,
+      },
+    })
+    .mutation(async ({ input, ctx }) => {
+      await changeSearchPreferencesAsync(ctx.db, ctx.session, {
+        ...input,
+        openInNewTab: undefined,
+      });
+    }),
+  changeSearchPreferences: protectedProcedure
+    .input(convertIntersectionToZodObject(changeSearchPreferencesInputSchema))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/search-preferences", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
-      const user = ctx.session.user;
-      // Only admins can change other users passwords
-      if (!user.permissions.includes("admin") && user.id !== input.userId) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-        },
-        where: eq(users.id, input.userId),
-      });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          defaultSearchEngineId: input.defaultSearchEngineId,
-          openSearchInNewTab: input.openInNewTab,
-        })
-        .where(eq(users.id, input.userId));
+      await changeSearchPreferencesAsync(ctx.db, ctx.session, input);
     }),
   changeColorScheme: protectedProcedure
     .input(validation.user.changeColorScheme)
