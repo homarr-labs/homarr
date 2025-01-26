@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Group, Select, Stack } from "@mantine/core";
+import { Button, Group, Select, Stack, Switch } from "@mantine/core";
 import type { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -11,34 +11,36 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-interface ChangeDefaultSearchEngineFormProps {
+interface ChangeSearchPreferencesFormProps {
   user: RouterOutputs["user"]["getById"];
   searchEnginesData: { value: string; label: string }[];
 }
 
-export const ChangeDefaultSearchEngineForm = ({ user, searchEnginesData }: ChangeDefaultSearchEngineFormProps) => {
+export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeSearchPreferencesFormProps) => {
   const t = useI18n();
-  const { mutate, isPending } = clientApi.user.changeDefaultSearchEngine.useMutation({
+  const { mutate, isPending } = clientApi.user.changeSearchPreferences.useMutation({
     async onSettled() {
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
     },
     onSuccess(_, variables) {
       form.setInitialValues({
         defaultSearchEngineId: variables.defaultSearchEngineId,
+        openInNewTab: variables.openInNewTab,
       });
       showSuccessNotification({
-        message: t("user.action.changeDefaultSearchEngine.notification.success.message"),
+        message: t("user.action.changeSearchPreferences.notification.success.message"),
       });
     },
     onError() {
       showErrorNotification({
-        message: t("user.action.changeDefaultSearchEngine.notification.error.message"),
+        message: t("user.action.changeSearchPreferences.notification.error.message"),
       });
     },
   });
-  const form = useZodForm(validation.user.changeDefaultSearchEngine, {
+  const form = useZodForm(validation.user.changeSearchPreferences, {
     initialValues: {
-      defaultSearchEngineId: user.defaultSearchEngineId ?? "",
+      defaultSearchEngineId: user.defaultSearchEngineId,
+      openInNewTab: user.openSearchInNewTab,
     },
   });
 
@@ -52,7 +54,16 @@ export const ChangeDefaultSearchEngineForm = ({ user, searchEnginesData }: Chang
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Select w="100%" data={searchEnginesData} {...form.getInputProps("defaultSearchEngineId")} />
+        <Select
+          label={t("user.field.defaultSearchEngine.label")}
+          w="100%"
+          data={searchEnginesData}
+          {...form.getInputProps("defaultSearchEngineId")}
+        />
+        <Switch
+          label={t("user.field.openSearchInNewTab.label")}
+          {...form.getInputProps("openInNewTab", { type: "checkbox" })}
+        />
 
         <Group justify="end">
           <Button type="submit" color="teal" loading={isPending}>
@@ -64,4 +75,4 @@ export const ChangeDefaultSearchEngineForm = ({ user, searchEnginesData }: Chang
   );
 };
 
-type FormType = z.infer<typeof validation.user.changeDefaultSearchEngine>;
+type FormType = z.infer<typeof validation.user.changeSearchPreferences>;
