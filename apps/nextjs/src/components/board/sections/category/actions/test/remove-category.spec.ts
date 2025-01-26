@@ -118,6 +118,7 @@ const createSections = (initialYOffsets: number[]) => {
     id: yOffset.toString(),
     kind: index % 2 === 0 ? "empty" : "category",
     name: "Category",
+    collapsed: false,
     yOffset,
     xOffset: 0,
     items: [createItem({ id: yOffset.toString() })],
