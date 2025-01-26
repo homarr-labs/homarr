@@ -3,6 +3,7 @@ import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { integrationCreator, IntegrationTestConnectionError } from "@homarr/integrations";
+import { logger } from "@homarr/log";
 
 type FormIntegration = Integration & {
   secrets: {
@@ -28,11 +29,22 @@ export const testConnectionAsync = async (
       source: "form" as const,
     }));
 
-  const decryptedDbSecrets = dbSecrets.map((secret) => ({
-    ...secret,
-    value: decryptSecret(secret.value),
-    source: "db" as const,
-  }));
+  const decryptedDbSecrets = dbSecrets
+    .map((secret) => {
+      try {
+        return {
+          ...secret,
+          value: decryptSecret(secret.value),
+          source: "db" as const,
+        };
+      } catch {
+        logger.warn(
+          `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"`,
+        );
+        return null;
+      }
+    })
+    .filter((secret) => secret !== null);
 
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
