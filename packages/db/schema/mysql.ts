@@ -583,6 +583,17 @@ export const sectionRelations = relations(sections, ({ many, one }) => ({
   collapseStates: many(sectionCollapseStates),
 }));
 
+export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({ one }) => ({
+  user: one(users, {
+    fields: [sectionCollapseStates.userId],
+    references: [users.id],
+  }),
+  section: one(sections, {
+    fields: [sectionCollapseStates.sectionId],
+    references: [sections.id],
+  }),
+}));
+
 export const itemRelations = relations(items, ({ one, many }) => ({
   section: one(sections, {
     fields: [items.sectionId],
