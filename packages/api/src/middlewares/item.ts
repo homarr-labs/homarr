@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { and, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
-import { z } from "@homarr/validation";
 
 import { publicProcedure } from "../trpc";
 

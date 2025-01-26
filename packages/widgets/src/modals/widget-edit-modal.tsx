@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { Button, Group, Stack } from "@mantine/core";
+import { z } from "zod";
 
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
 import { zodErrorMap } from "@homarr/validation/form";
 
 import { widgetImports } from "..";

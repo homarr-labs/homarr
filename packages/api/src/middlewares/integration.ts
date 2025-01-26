@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
@@ -9,7 +10,6 @@ import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
-import { z } from "@homarr/validation";
 
 import { publicProcedure } from "../trpc";
 
