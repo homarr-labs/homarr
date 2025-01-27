@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "השתמש בסמלים עבור פינגים"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "מנוע ברירת המחדל השתנה בהצלחה"
+            "message": ""
           },
           "error": {
-            "message": "אין אפשרות לשנות מנוע חיפוש ברירת מחדל"
+            "message": ""
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": "מכשיר נייד"
                 }
               },
-              "defaultSearchEngine": "מנוע חיפוש ברירת מחדל",
+              "search": "",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
             }

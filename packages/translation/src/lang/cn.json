@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "为 ping 使用图标"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "默认搜索引擎更改成功"
+            "message": ""
           },
           "error": {
-            "message": "无法更改默认的搜索引擎"
+            "message": ""
           }
         }
       },
@@ -1420,8 +1426,8 @@
       "name": "系统健康监测",
       "description": "显示系统运行状况和状态的信息。",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "系统",
+        "cluster": "集群"
       },
       "option": {
         "fahrenheit": {
@@ -2281,7 +2287,7 @@
                   "mobile": "手机"
                 }
               },
-              "defaultSearchEngine": "默认搜索引擎",
+              "search": "",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }

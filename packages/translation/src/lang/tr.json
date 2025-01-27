@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Pingler İçin Simgeler Kullanın"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Öntanımlı arama motoru başarıyla değiştirildi"
+            "message": ""
           },
           "error": {
-            "message": "Öntanımlı arama motoru değiştirilemiyor"
+            "message": ""
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "defaultSearchEngine": "Öntanımlı arama motoru",
+              "search": "",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }

@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "為 Pings 使用 icon"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "預設搜尋引擎已變更成功"
+            "message": ""
           },
           "error": {
-            "message": "預設搜尋引擎無法變更"
+            "message": ""
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": "移動裝置"
                 }
               },
-              "defaultSearchEngine": "預設搜尋引擎",
+              "search": "",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }

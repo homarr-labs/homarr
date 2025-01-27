@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Использовать индикаторы доступности"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Поисковая система по умолчанию успешно изменена"
+            "message": ""
           },
           "error": {
-            "message": "Не удалось изменить поисковую систему по умолчанию"
+            "message": ""
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": "Мобильная"
                 }
               },
-              "defaultSearchEngine": "Поисковая система по умолчанию",
+              "search": "",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
