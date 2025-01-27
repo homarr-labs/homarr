@@ -4,8 +4,6 @@ export type OldmarrWeatherDefinition = CommonOldmarrWidgetDefinition<
   "weather",
   {
     displayInFahrenheit: boolean;
-    disableTemperatureDecimals: boolean;
-    displayCurrentWindSpeed: boolean;
     displayCityName: boolean;
     displayWeekly: boolean;
     forecastDays: number;
