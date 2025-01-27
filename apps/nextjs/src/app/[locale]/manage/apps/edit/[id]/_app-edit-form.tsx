@@ -8,8 +8,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import type { TranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
 
 import { AppForm } from "../../_form";
@@ -19,14 +18,15 @@ interface AppEditFormProps {
 }
 
 export const AppEditForm = ({ app }: AppEditFormProps) => {
-  const t = useScopedI18n("app.page.edit.notification");
+  const tScoped = useScopedI18n("app.page.edit.notification");
+  const t = useI18n();
   const router = useRouter();
 
   const { mutate, isPending } = clientApi.app.update.useMutation({
     onSuccess: () => {
       showSuccessNotification({
-        title: t("success.title"),
-        message: t("success.message"),
+        title: tScoped("success.title"),
+        message: tScoped("success.message"),
       });
       void revalidatePathActionAsync("/manage/apps").then(() => {
         router.push("/manage/apps");
@@ -34,8 +34,8 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
     },
     onError: () => {
       showErrorNotification({
-        title: t("error.title"),
-        message: t("error.message"),
+        title: tScoped("error.title"),
+        message: tScoped("error.message"),
       });
     },
   });
@@ -50,11 +50,11 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
     [mutate, app.id],
   );
 
-  const submitButtonTranslation = useCallback((t: TranslationFunction) => t("common.action.save"), []);
-
   return (
     <AppForm
-      submitButtonTranslation={submitButtonTranslation}
+      buttonLabels={{
+        submit: t("common.action.save"),
+      }}
       initialValues={app}
       handleSubmit={handleSubmit}
       isPending={isPending}

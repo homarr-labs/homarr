@@ -1,26 +1,26 @@
 import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
 import {
+  IconAffiliateFilled,
   IconBook2,
   IconBox,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
+  IconBrandTablerFilled,
   IconCertificate,
+  IconClipboardListFilled,
+  IconDirectionsFilled,
   IconGitFork,
-  IconHome,
-  IconInfoSmall,
-  IconLayoutDashboard,
-  IconLogs,
+  IconHelpSquareRoundedFilled,
+  IconHomeFilled,
+  IconLayoutDashboardFilled,
   IconMailForward,
-  IconPhoto,
-  IconPlug,
-  IconQuestionMark,
-  IconReport,
+  IconPhotoFilled,
+  IconPointerFilled,
   IconSearch,
-  IconSettings,
-  IconTool,
-  IconUser,
+  IconSettingsFilled,
+  IconUserFilled,
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -31,6 +31,7 @@ import { createDocumentationLink } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
+import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
@@ -41,11 +42,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
-      icon: IconHome,
+      icon: IconHomeFilled,
       href: "/manage",
     },
     {
-      icon: IconLayoutDashboard,
+      icon: IconLayoutDashboardFilled,
       href: "/manage/boards",
       label: t("items.boards"),
     },
@@ -54,9 +55,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       href: "/manage/apps",
       label: t("items.apps"),
       hidden: !session,
+      iconProps: {
+        strokeWidth: 2.5,
+      },
     },
     {
-      icon: IconPlug,
+      icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
       hidden: !session,
@@ -66,15 +70,18 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       href: "/manage/search-engines",
       label: t("items.searchEngies"),
       hidden: !session,
+      iconProps: {
+        strokeWidth: 2.5,
+      },
     },
     {
-      icon: IconPhoto,
+      icon: IconPhotoFilled,
       href: "/manage/medias",
       label: t("items.medias"),
       hidden: !session,
     },
     {
-      icon: IconUser,
+      icon: IconUserFilled,
       label: t("items.users.label"),
       hidden: !session?.user.permissions.includes("admin"),
       items: [
@@ -98,7 +105,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     },
     {
       label: t("items.tools.label"),
-      icon: IconTool,
+      icon: IconPointerFilled,
       // As permissions always include there children permissions, we can check other-view-logs as admin includes it
       hidden: !session?.user.permissions.includes("other-view-logs"),
       items: [
@@ -110,13 +117,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         },
         {
           label: t("items.tools.items.api"),
-          icon: IconPlug,
+          icon: IconDirectionsFilled,
           href: "/manage/tools/api",
           hidden: !session?.user.permissions.includes("admin"),
         },
         {
           label: t("items.tools.items.logs"),
-          icon: IconLogs,
+          icon: IconBrandTablerFilled,
           href: "/manage/tools/logs",
           hidden: !session?.user.permissions.includes("other-view-logs"),
         },
@@ -128,7 +135,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
         },
         {
           label: t("items.tools.items.tasks"),
-          icon: IconReport,
+          icon: IconClipboardListFilled,
           href: "/manage/tools/tasks",
           hidden: !session?.user.permissions.includes("admin"),
         },
@@ -137,12 +144,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       label: t("items.settings"),
       href: "/manage/settings",
-      icon: IconSettings,
+      icon: IconSettingsFilled,
       hidden: !session?.user.permissions.includes("admin"),
     },
     {
       label: t("items.help.label"),
-      icon: IconQuestionMark,
+      icon: IconHelpSquareRoundedFilled,
       items: [
         {
           label: t("items.help.items.documentation"),
@@ -172,7 +179,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     },
     {
       label: t("items.about"),
-      icon: IconInfoSmall,
+      icon: homarrLogoPath,
       href: "/manage/about",
     },
   ];

@@ -45,7 +45,7 @@ export default async function AppsPage(props: AppsPageProps) {
       <Stack>
         <Title>{t("page.list.title")}</Title>
         <Group justify="space-between" align="center">
-          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} />
+          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />
           {session.user.permissions.includes("app-create") && (
             <MobileAffixButton component={Link} href="/manage/apps/new">
               {t("page.create.title")}
