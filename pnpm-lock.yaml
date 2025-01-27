@@ -578,6 +578,9 @@ importers:
       next:
         specifier: 15.1.6
         version: 15.1.6(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.83.4)
+      pretty-print-error:
+        specifier: ^1.1.2
+        version: 1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u)
       react:
         specifier: 19.0.0
         version: 19.0.0
