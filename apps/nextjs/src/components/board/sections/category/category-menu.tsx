@@ -5,6 +5,7 @@ import { ActionIcon, Menu } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
+  IconExternalLink,
   IconRowInsertBottom,
   IconRowInsertTop,
   IconTransitionBottom,
@@ -12,6 +13,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+import { MaybePromise } from "@homarr/common/types";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -27,7 +29,9 @@ export const CategoryMenu = ({ category }: Props) => {
   const actions = useActions(category);
   const t = useScopedI18n("section.category");
 
-  if (actions.length === 0) return null;
+  if (actions.filter(action => !("disabled" in action)).length === 0) {
+    return null;
+  }
 
   return (
     <Menu withArrow>
@@ -106,15 +110,23 @@ const useEditModeActions = (category: CategorySection) => {
   ] as const satisfies ActionDefinition[];
 };
 
-// TODO: once apps are added we can use this for the open many apps action
-const useNonEditModeActions = (_category: CategorySection) => {
-  return [] as const satisfies ActionDefinition[];
+const useNonEditModeActions = (category: CategorySection) => {
+  const { openAllInNewTabs } = useCategoryMenuActions(category);
+  return [
+    {
+      icon: IconExternalLink,
+      label: "action.openAllInNewTabs",
+      onClick: openAllInNewTabs,
+      disabled: 
+    },
+  ] as const satisfies ActionDefinition[];
 };
 
 interface ActionDefinition {
   icon: TablerIcon;
   label: string;
-  onClick: () => void;
+  onClick: () => MaybePromise<void>;
   color?: string;
   group?: string;
+  disabled?: boolean | (() => boolean);
 }
