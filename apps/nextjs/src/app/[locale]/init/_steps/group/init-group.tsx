@@ -2,12 +2,12 @@
 
 import { Button, Card, Stack, TextInput } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 export const InitGroup = () => {

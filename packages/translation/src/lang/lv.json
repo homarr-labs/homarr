@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": ""
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "Sistēmas Stāvokļa Uzraudzība",
       "description": "Tiek parādīta informācija par sistēmas(-u) stāvokli un stāvokli.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU temperatūra pēc Fārenheita"
@@ -2277,7 +2287,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Nedēļas pirmā diena",
               "accessibility": "Piekļūstamība"
             }

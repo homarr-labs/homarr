@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Používanie ikon pre pingy"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Predvolený vyhľadávací nástroj sa úspešne zmenil"
+            "message": ""
           },
           "error": {
-            "message": "Nie je možné zmeniť predvolený vyhľadávací nástroj"
+            "message": ""
           }
         }
       },
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "Monitorovanie stavu systému",
       "description": "Zobrazuje informácie o stave a kondícii vášho systému.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Teplota CPU v stupňoch Fahrenheita"
@@ -2277,7 +2287,7 @@
                   "mobile": "Mobilná"
                 }
               },
-              "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
+              "search": "",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
             }

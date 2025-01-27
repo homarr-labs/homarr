@@ -1,11 +1,11 @@
 import { useCallback, useRef } from "react";
 import { Button, Grid, Group, NumberInput, Stack } from "@mantine/core";
+import { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
 import type { GridStack } from "@homarr/gridstack";
 import { createModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { z } from "@homarr/validation";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 

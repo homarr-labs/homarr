@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Użyj ikon dla pingów"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Domyślna wyszukiwarka zmieniona pomyślnie"
+            "message": ""
           },
           "error": {
-            "message": "Nie można zmienić domyślnej wyszukiwarki"
+            "message": ""
           }
         }
       },
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "Monitorowanie zdrowia  systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura procesora w Fahrenheit"
@@ -2277,7 +2287,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Pierwszy dzień tygodnia",
               "accessibility": "Ułatwienia dostępu"
             }

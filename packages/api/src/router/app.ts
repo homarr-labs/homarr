@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { asc, createId, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
@@ -102,7 +103,7 @@ export const appRouter = createTRPCRouter({
 
       return app;
     }),
-  byIds: protectedProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
     return await ctx.db.query.apps.findMany({
       where: inArray(apps.id, input),
     });

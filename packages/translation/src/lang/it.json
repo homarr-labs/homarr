@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Usa le icone per i ping"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "Monitoraggio Salute di Sistema",
       "description": "Visualizza informazioni sulla salute e stato dei tuoi sistemi.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura CPU in Fahrenheit"
@@ -2277,7 +2287,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Primo giorno della settimana",
               "accessibility": "Accessibilità"
             }

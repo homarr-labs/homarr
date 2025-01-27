@@ -1,4 +1,4 @@
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 export const indexerResponseSchema = z.object({
   id: z.number(),

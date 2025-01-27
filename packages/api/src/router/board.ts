@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { z } from "zod";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
@@ -16,6 +17,7 @@ import {
   integrationItems,
   integrationUserPermissions,
   items,
+  sectionCollapseStates,
   sections,
   users,
 } from "@homarr/db/schema";
@@ -25,7 +27,7 @@ import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
-import { createSectionSchema, sharedItemSchema, validation, z, zodUnionFromArray } from "@homarr/validation";
+import { createSectionSchema, sharedItemSchema, validation, zodUnionFromArray } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -1024,6 +1026,9 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
       },
       sections: {
         with: {
+          collapseStates: {
+            where: eq(sectionCollapseStates.userId, userId ?? ""),
+          },
           items: {
             with: {
               integrations: {
@@ -1058,9 +1063,10 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
 
   return {
     ...otherBoardProperties,
-    sections: sections.map((section) =>
+    sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,
+        collapsed: collapseStates.at(0)?.collapsed ?? false,
         items: section.items.map(({ integrations: itemIntegrations, ...item }) => ({
           ...item,
           integrationIds: itemIntegrations.map((item) => item.integration.id),

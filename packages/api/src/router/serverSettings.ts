@@ -1,7 +1,9 @@
+import { z } from "zod";
+
 import { getServerSettingByKeyAsync, getServerSettingsAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, publicProcedure } from "../trpc";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";

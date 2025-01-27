@@ -67,6 +67,7 @@ const createSections = (categoryCount: number) => {
     name: `Category ${index}`,
     yOffset: index,
     xOffset: 0,
+    collapsed: false,
     items: [],
   })) satisfies Section[];
 };

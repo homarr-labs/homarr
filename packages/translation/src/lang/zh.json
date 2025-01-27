@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "為 Pings 使用 icon"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "預設搜尋引擎已變更成功"
+            "message": ""
           },
           "error": {
-            "message": "預設搜尋引擎無法變更"
+            "message": ""
           }
         }
       },
@@ -787,7 +793,7 @@
         "label": "複製網址"
       },
       "open": {
-        "label": ""
+        "label": "開啟多媒體"
       }
     }
   },
@@ -1068,13 +1074,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "隱藏 icons"
         },
         "hideHostname": {
-          "label": ""
+          "label": "隱藏 hostname"
         },
         "openNewTab": {
-          "label": ""
+          "label": "於新分頁開啟"
         },
         "items": {
           "label": "書籤",
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "系統健康監測",
       "description": "顯示系統運行狀態",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "處理器溫度"
@@ -2277,7 +2287,7 @@
                   "mobile": "移動裝置"
                 }
               },
-              "defaultSearchEngine": "預設搜尋引擎",
+              "search": "",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }

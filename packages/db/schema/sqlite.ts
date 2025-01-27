@@ -51,6 +51,7 @@ export const users = sqliteTable("user", {
   defaultSearchEngineId: text().references(() => searchEngines.id, {
     onDelete: "set null",
   }),
+  openSearchInNewTab: int({ mode: "boolean" }).default(true).notNull(),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
@@ -311,6 +312,24 @@ export const sections = sqliteTable("section", {
   }),
 });
 
+export const sectionCollapseStates = sqliteTable(
+  "section_collapse_state",
+  {
+    userId: text()
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    sectionId: text()
+      .notNull()
+      .references(() => sections.id, { onDelete: "cascade" }),
+    collapsed: int({ mode: "boolean" }).default(false).notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.userId, table.sectionId],
+    }),
+  }),
+);
+
 export const items = sqliteTable("item", {
   id: text().notNull().primaryKey(),
   sectionId: text()
@@ -548,6 +567,18 @@ export const sectionRelations = relations(sections, ({ many, one }) => ({
   board: one(boards, {
     fields: [sections.boardId],
     references: [boards.id],
+  }),
+  collapseStates: many(sectionCollapseStates),
+}));
+
+export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({ one }) => ({
+  user: one(users, {
+    fields: [sectionCollapseStates.userId],
+    references: [users.id],
+  }),
+  section: one(sections, {
+    fields: [sectionCollapseStates.sectionId],
+    references: [sections.id],
   }),
 }));
 

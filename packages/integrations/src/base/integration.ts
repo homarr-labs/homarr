@@ -1,10 +1,10 @@
 import type { Response } from "undici";
+import { z } from "zod";
 
 import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 import type { TranslationObject } from "@homarr/translation";
-import { z } from "@homarr/validation";
 
 import { IntegrationTestConnectionError } from "./test-connection-error";
 import type { IntegrationSecret } from "./types";
@@ -91,7 +91,8 @@ export abstract class Integration {
     });
 
     if (response.status >= 400) {
-      logger.error(`Failed to test connection with status code ${response.status}`);
+      const body = await response.text();
+      logger.error(`Failed to test connection with status code ${response.status}. Body: '${body}'`);
 
       throwErrorByStatusCode(response.status);
     }

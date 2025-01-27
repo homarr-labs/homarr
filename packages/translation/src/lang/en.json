@@ -28,7 +28,7 @@
         },
         "boardSelection": {
           "title": "Found {count} boards",
-          "description": "Choose all boards with there size you want to import",
+          "description": "Choose all boards with the size you want to import",
           "action": {
             "selectAll": "Select all",
             "unselectAll": "Unselect all"
@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Use icons for pings"
+      },
+      "defaultSearchEngine": {
+        "label": "Default search engine"
+      },
+      "openSearchInNewTab": {
+        "label": "Open search results in new tab"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Default search engine changed successfully"
+            "message": "Search preferences changed successfully"
           },
           "error": {
-            "message": "Unable to change default search engine"
+            "message": "Unable to change search preferences"
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": "Mobile"
                 }
               },
-              "defaultSearchEngine": "Default search engine",
+              "search": "Search",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility"
             }

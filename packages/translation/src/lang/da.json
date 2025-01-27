@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Brug ikoner til pings"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Standard søgemaskine ændret med succes"
+            "message": ""
           },
           "error": {
-            "message": "Kan ikke ændre standardsøgemaskine"
+            "message": ""
           }
         }
       },
@@ -1068,13 +1074,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Skjul ikoner"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Skjul værtsnavne"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Åbn i nyt faneblad"
         },
         "items": {
           "label": "Bogmærker",
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "Systemsundhedsovervågning",
       "description": "Viser oplysninger om dit/dine systems tilstand og status.",
+      "tab": {
+        "system": "System",
+        "cluster": "Klynge"
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-temperatur i Fahrenheit"
@@ -2277,7 +2287,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "defaultSearchEngine": "Standardsøgemaskine",
+              "search": "",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner"
             }
