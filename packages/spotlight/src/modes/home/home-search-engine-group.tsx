@@ -6,6 +6,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { Session } from "@homarr/auth";
 import { useSession } from "@homarr/auth/client";
+import { useSettings } from "@homarr/settings";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -135,10 +136,12 @@ const createDefaultSearchEntries = (
         }),
         icon: defaultSearchEngine.iconUrl,
         useInteraction(query) {
+          const { openSearchInNewTab } = useSettings();
           return {
             type: "link",
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             href: defaultSearchEngine.urlTemplate!.replace("%s", query),
+            newTab: openSearchInNewTab,
           };
         },
       },

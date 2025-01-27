@@ -1,6 +1,7 @@
+import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod";
+import { ZodIssueCode } from "zod";
+
 import type { TranslationObject } from "@homarr/translation";
-import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "@homarr/validation";
-import { ZodIssueCode } from "@homarr/validation";
 
 const handleStringError = (issue: z.ZodInvalidStringIssue) => {
   if (typeof issue.validation === "object") {

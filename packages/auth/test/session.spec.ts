@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 import { expireDateAfter, generateSessionToken } from "../session";
 

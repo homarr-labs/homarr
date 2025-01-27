@@ -1,11 +1,11 @@
 import { observable } from "@trpc/server/observable";
+import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { integrationCreator, MediaRequestStatus } from "@homarr/integrations";
 import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
-import { z } from "@homarr/validation";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";

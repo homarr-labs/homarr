@@ -1,5 +1,6 @@
+import { z } from "zod";
+
 import type { Integration } from "@homarr/db/schema";
-import { z } from "@homarr/validation";
 
 const usenetQueueState = ["downloading", "queued", "paused"] as const;
 const usenetHistoryState = ["completed", "failed", "processing"] as const;

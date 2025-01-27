@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
+import type { z } from "zod";
 
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
-import type { validation, z } from "@homarr/validation";
+import type { validation } from "@homarr/validation";
 
 export const authorizeWithBasicCredentialsAsync = async (
   db: Database,

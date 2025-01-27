@@ -96,7 +96,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
   ): Promise<ReturnType<NzbGetClient[CallType]>> {
     const username = this.getSecretValue("username");
     const password = this.getSecretValue("password");
-    const url = this.url(`/${username}:${password}/jsonrpc`);
+    const url = this.url(`/${encodeURIComponent(username)}:${encodeURIComponent(password)}/jsonrpc`);
     const body = JSON.stringify({ method, params });
     return await fetchWithTrustedCertificatesAsync(url, { method: "POST", body })
       .then(async (response) => {

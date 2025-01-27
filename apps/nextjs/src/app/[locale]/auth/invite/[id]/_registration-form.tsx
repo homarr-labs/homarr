@@ -2,13 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 interface RegistrationFormProps {

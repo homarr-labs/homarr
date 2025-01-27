@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Group, Select, Stack } from "@mantine/core";
+import type { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -8,7 +9,6 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 interface ChangeHomeBoardFormProps {
@@ -39,8 +39,8 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   });
   const form = useZodForm(validation.user.changeHomeBoards, {
     initialValues: {
-      homeBoardId: user.homeBoardId ?? "",
-      mobileHomeBoardId: user.mobileHomeBoardId ?? "",
+      homeBoardId: user.homeBoardId,
+      mobileHomeBoardId: user.mobileHomeBoardId,
     },
   });
 

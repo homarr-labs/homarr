@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Používat ikony pro pingy"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -1419,6 +1425,10 @@
     "healthMonitoring": {
       "name": "Monitorování stavu systému",
       "description": "Zobrazuje informace o stavu a kondici Vašeho systému (systémů).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Teplota CPU ve stupních Fahrenheit"
@@ -2277,7 +2287,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "Výchozí vyhledávač",
+              "search": "",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost"
             }

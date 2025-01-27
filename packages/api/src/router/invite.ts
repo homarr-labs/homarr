@@ -1,10 +1,10 @@
 import { randomBytes } from "crypto";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { asc, createId, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { selectInviteSchema } from "@homarr/db/validationSchemas";
-import { z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";

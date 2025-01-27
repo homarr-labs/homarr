@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
@@ -6,7 +7,6 @@ import { DockerSingleton } from "@homarr/docker";
 import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@homarr/docker";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
-import { z } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 

@@ -1,4 +1,4 @@
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 export const summaryResponseSchema = z.object({
   status: z.enum(["enabled", "disabled"]),

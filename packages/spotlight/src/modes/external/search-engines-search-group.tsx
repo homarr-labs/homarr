@@ -7,6 +7,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory, getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { RequestMediaModal } from "@homarr/modals-collection";
+import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
@@ -39,6 +40,8 @@ export const useFromIntegrationSearchInteraction = (
   searchEngine: SearchEngine,
   searchResult: FromIntegrationSearchResult,
 ): inferSearchInteractionDefinition<"link" | "javaScript" | "children"> => {
+  const { openSearchInNewTab } = useSettings();
+
   if (searchEngine.type !== "fromIntegration") {
     throw new Error("Invalid search engine type");
   }
@@ -58,7 +61,7 @@ export const useFromIntegrationSearchInteraction = (
       return {
         type: "link",
         href: searchResult.link,
-        newTab: true,
+        newTab: openSearchInNewTab,
       };
     }
 
@@ -127,10 +130,11 @@ const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenP
           );
         },
         useInteraction({ result }) {
+          const { openSearchInNewTab } = useSettings();
           return {
             type: "link",
             href: result.link,
-            newTab: true,
+            newTab: openSearchInNewTab,
           };
         },
       },
@@ -166,6 +170,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
         enabled: searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && query.length > 0,
       },
     );
+    const { openSearchInNewTab } = useSettings();
 
     if (searchEngine.type === "generic") {
       return [
@@ -184,6 +189,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
           useInteraction: interaction.link(({ urlTemplate }, query) => ({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             href: urlTemplate!.replace("%s", query),
+            newTab: openSearchInNewTab,
           })),
         },
       ];
@@ -258,11 +264,12 @@ export const searchEnginesSearchGroups = createGroup<SearchEngine>({
     setChildrenOptions(searchEnginesChildrenOptions(engine));
   },
   useInteraction: (searchEngine, query) => {
+    const { openSearchInNewTab } = useSettings();
     if (searchEngine.type === "generic" && searchEngine.urlTemplate) {
       return {
         type: "link" as const,
         href: searchEngine.urlTemplate.replace("%s", query),
-        newTab: true,
+        newTab: openSearchInNewTab,
       };
     }
 
