@@ -1,13 +1,17 @@
-import { Stack, Text } from "@mantine/core";
+import { List, Stack, Text } from "@mantine/core";
 import {
   IconCloud,
   IconCloudFog,
   IconCloudRain,
   IconCloudSnow,
   IconCloudStorm,
+  IconMoon,
   IconQuestionMark,
   IconSnowflake,
   IconSun,
+  IconTemperatureMinus,
+  IconTemperaturePlus,
+  IconWind,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -41,6 +45,10 @@ interface WeatherDescriptionProps {
   weatherCode: number;
   maxTemp?: string;
   minTemp?: string;
+  sunrise?: string;
+  sunset?: string;
+  maxWindSpeed?: number;
+  maxWindGusts?: number;
 }
 
 /**
@@ -50,6 +58,10 @@ interface WeatherDescriptionProps {
  * @param weatherCode weather code from api
  * @param maxTemp preformatted string for max temperature
  * @param minTemp preformatted string for min temperature
+ * @param sunrise preformatted string for sunrise time
+ * @param sunset preformatted string for sunset time
+ * @param maxWindSpeed maximum wind speed
+ * @param maxWindGusts maximum wind gusts
  * @returns Content for a HoverCard dropdown presenting weather information
  */
 export const WeatherDescription = ({
@@ -59,6 +71,10 @@ export const WeatherDescription = ({
   weatherCode,
   maxTemp,
   minTemp,
+  sunrise,
+  sunset,
+  maxWindSpeed,
+  maxWindGusts,
 }: WeatherDescriptionProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
@@ -73,8 +89,14 @@ export const WeatherDescription = ({
     <Stack align="center" gap="0">
       <Text fz="24px">{dayjs(time).format(dateFormat)}</Text>
       <Text fz="16px">{t(`kind.${name}`)}</Text>
-      <Text fz="16px">{`${tCommon("information.max")}: ${maxTemp}`}</Text>
-      <Text fz="16px">{`${tCommon("information.min")}: ${minTemp}`}</Text>
+      <List>
+        <List.Item icon={<IconTemperaturePlus size={15} />}>{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
+        <List.Item icon={<IconTemperatureMinus size={15} />}>{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
+        <List.Item icon={<IconSun size={15} />}>{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
+        <List.Item icon={<IconMoon size={15} />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
+        <List.Item icon={<IconWind size={15} />}>{t("dailyForecast.maxWindSpeed", { maxWindSpeed })}</List.Item>
+        <List.Item icon={<IconWind size={15} />}>{t("dailyForecast.maxWindGusts", { maxWindGusts })}</List.Item>
+      </List>
     </Stack>
   );
 };
