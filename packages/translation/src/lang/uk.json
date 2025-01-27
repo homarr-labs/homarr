@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Використовувати значки для ping"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Стандартну систему пошуку змінено успішно"
+            "message": ""
           },
           "error": {
-            "message": "Не вдалося змінити стандартну систему пошуку"
+            "message": ""
           }
         }
       },
@@ -1421,11 +1427,11 @@
       "description": "",
       "tab": {
         "system": "",
-        "cluster": ""
+        "cluster": "Кластер"
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "Температура ЦП у Фаренгейтах"
         },
         "cpu": {
           "label": "Показати інформацію про ЦП"
@@ -2062,7 +2068,7 @@
                 "label": ""
               },
               "full": {
-                "label": ""
+                "label": "Повний доступ"
               }
             }
           }
@@ -2071,7 +2077,7 @@
           "title": "Небезпечна зона",
           "action": {
             "rename": {
-              "label": "",
+              "label": "Перейменувати дошку",
               "description": "",
               "button": "",
               "modal": {
@@ -2281,7 +2287,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Перший день тижня",
               "accessibility": "Доступність"
             }

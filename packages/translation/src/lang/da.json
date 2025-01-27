@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Brug ikoner til pings"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Standard søgemaskine ændret med succes"
+            "message": ""
           },
           "error": {
-            "message": "Kan ikke ændre standardsøgemaskine"
+            "message": ""
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "defaultSearchEngine": "Standardsøgemaskine",
+              "search": "",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner"
             }

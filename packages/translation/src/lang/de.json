@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Symbole für Pings verwenden"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Standard-Suchmaschine erfolgreich geändert"
+            "message": ""
           },
           "error": {
-            "message": "Standard Suchmaschine kann nicht geändert werden"
+            "message": ""
           }
         }
       },
@@ -2281,7 +2287,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit"
             }
