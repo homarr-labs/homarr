@@ -1,3 +1,28 @@
+## [1.3.0](https://github.com/homarr-labs/homarr/compare/v1.2.0...v1.3.0) (2025-01-27)
+
+### Features
+
+* add opacity for categories ([#2132](https://github.com/homarr-labs/homarr/issues/2132)) ([1146c59](https://github.com/homarr-labs/homarr/commit/1146c59a41ddd4b4cda14f6601437cd9bceb305a))
+* **category:** save collapse state for signed in users ([#2134](https://github.com/homarr-labs/homarr/issues/2134)) ([7cb0aa7](https://github.com/homarr-labs/homarr/commit/7cb0aa70f11253aa4016d928f326eb71183626f6))
+* log body integration test failure ([#2151](https://github.com/homarr-labs/homarr/issues/2151)) ([5c8d7fc](https://github.com/homarr-labs/homarr/commit/5c8d7fcc153ba4b94cd88c6ca8b22962d812b2b4))
+* **user:** add search in new tab preference ([#2125](https://github.com/homarr-labs/homarr/issues/2125)) ([92f70f5](https://github.com/homarr-labs/homarr/commit/92f70f5a03048c7b269604f1ce33313ecf23a64b))
+
+### Bug Fixes
+
+* app url not required ([#2130](https://github.com/homarr-labs/homarr/issues/2130)) ([b38de29](https://github.com/homarr-labs/homarr/commit/b38de29a882ce26a9326f7f65403ea3916a58cac))
+* bookmarks show unauthorized when not logged in ([#2123](https://github.com/homarr-labs/homarr/issues/2123)) ([2bb44e1](https://github.com/homarr-labs/homarr/commit/2bb44e16669f94d3d7500e828b1ab66b98c54bc7))
+* **deps:** update dependency @t3-oss/env-nextjs to ^0.12.0 ([#2117](https://github.com/homarr-labs/homarr/issues/2117)) ([963d774](https://github.com/homarr-labs/homarr/commit/963d77463a5206ac1cb5d035b52271c6bbbd5e73))
+* **deps:** update dependency drizzle-kit to ^0.30.3 ([#2142](https://github.com/homarr-labs/homarr/issues/2142)) ([0d54873](https://github.com/homarr-labs/homarr/commit/0d5487366c2616738b2542838f5cbd9c6d628973))
+* **deps:** update dependency drizzle-orm to ^0.39.0 ([#2144](https://github.com/homarr-labs/homarr/issues/2144)) ([f0daef2](https://github.com/homarr-labs/homarr/commit/f0daef237c08c866f1f2aaefc113e70838b76be4))
+* **deps:** update dependency drizzle-zod to ^0.7.0 ([#2143](https://github.com/homarr-labs/homarr/issues/2143)) ([af67bf2](https://github.com/homarr-labs/homarr/commit/af67bf26d674539abd7a0fdc54d7764d90f7007c))
+* **deps:** update mantine monorepo to ^7.16.2 ([#2129](https://github.com/homarr-labs/homarr/issues/2129)) ([bbac412](https://github.com/homarr-labs/homarr/commit/bbac4128eb36d934310a83087c733338ae2b9b9c))
+* **deps:** update tanstack-query monorepo to ^5.65.0 ([#2146](https://github.com/homarr-labs/homarr/issues/2146)) ([50970e4](https://github.com/homarr-labs/homarr/commit/50970e431d7654d2db43a4b1d55cc4f7d15a4ac2))
+* **deps:** update testcontainers-node monorepo to ^10.17.2 ([#2148](https://github.com/homarr-labs/homarr/issues/2148)) ([5c219a8](https://github.com/homarr-labs/homarr/commit/5c219a8b595f90c53189569bd63fb85db8eab882))
+* multi-text-input not saving on blur ([#2128](https://github.com/homarr-labs/homarr/issues/2128)) ([dd2ca13](https://github.com/homarr-labs/homarr/commit/dd2ca1300422a6ad477089efe905901515eebaf6))
+* split up proxmox secrets are incorrectly migrated ([#2124](https://github.com/homarr-labs/homarr/issues/2124)) ([57b523f](https://github.com/homarr-labs/homarr/commit/57b523fa805de56d8795169a535e5e45d7c22ad7))
+* unable to update integration when encryption key changed ([#2133](https://github.com/homarr-labs/homarr/issues/2133)) ([93dc3ae](https://github.com/homarr-labs/homarr/commit/93dc3ae97ed97691c304c9b6de9245930d5461ae))
+* websocket is not keep alive ([#2131](https://github.com/homarr-labs/homarr/issues/2131)) ([af1f8ea](https://github.com/homarr-labs/homarr/commit/af1f8eaf76062a9fde5570097fc6a75742174d97))
+
 ## [1.2.0](https://github.com/homarr-labs/homarr/compare/v1.1.0...v1.2.0) (2025-01-24)
 
 ### Features
