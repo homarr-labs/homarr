@@ -91,7 +91,8 @@ export abstract class Integration {
     });
 
     if (response.status >= 400) {
-      logger.error(`Failed to test connection with status code ${response.status}`);
+      const body = await response.text();
+      logger.error(`Failed to test connection with status code ${response.status}. Body: '${body}'`);
 
       throwErrorByStatusCode(response.status);
     }
