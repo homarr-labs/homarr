@@ -70,9 +70,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           if (testConnectionError) {
             showErrorNotification({
               title: t(`integration.testConnection.notification.${testConnectionError.key}.title`),
-              message: testConnectionError.message
-                ? testConnectionError.message
-                : t(`integration.testConnection.notification.${testConnectionError.key}.message`),
+              message:
+                testConnectionError.message ??
+                t(`integration.testConnection.notification.${testConnectionError.key}.message`),
             });
             return;
           }
