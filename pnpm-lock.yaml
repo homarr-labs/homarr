@@ -65,8 +65,8 @@ importers:
         specifier: ^24.2.1
         version: 24.2.1(typescript@5.7.3)
       testcontainers:
-        specifier: ^10.17.1
-        version: 10.17.1
+        specifier: ^10.17.2
+        version: 10.17.2
       turbo:
         specifier: ^2.3.4
         version: 2.3.4
@@ -963,8 +963,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0(typescript@5.7.3)(zod@3.24.1)
       '@testcontainers/mysql':
-        specifier: ^10.17.1
-        version: 10.17.1
+        specifier: ^10.17.2
+        version: 10.17.2
       better-sqlite3:
         specifier: ^11.8.1
         version: 11.8.1
@@ -4099,8 +4099,8 @@ packages:
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
 
-  '@testcontainers/mysql@10.17.1':
-    resolution: {integrity: sha512-gXDLsXWT9yPJCZ7WyrQI7OP1ypiB0GShOdWzOjYVOTXjV81eOfqxGewKT2YLQP/Dus3bUKGS3Qe7u0apbVcX6A==}
+  '@testcontainers/mysql@10.17.2':
+    resolution: {integrity: sha512-L5wYQZMX1QrsXsnPpKEgm5AWCnlP2JHGfqWnf1uJtBISLREWzCllDprYirL8zLSyrZoUAqikUiQD0ust4KiQoQ==}
 
   '@tiptap/core@2.11.3':
     resolution: {integrity: sha512-ibfi6U1gMRLo319Re6olv8uAuxtUpK343ygcVoZrJ8O4sqRnU9CEqPAM+n7YAKlOks1+Di0sTheIxZRak7Pj4g==}
@@ -9101,8 +9101,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@10.17.1:
-    resolution: {integrity: sha512-pYwpm6iH1UtZFVoSWjfUol4JCMyX4UksA5fwDotlTp2GgMqoHud+A+PY60kYUBVdSJJ/5AsSqhhFRvoK4ijISg==}
+  testcontainers@10.17.2:
+    resolution: {integrity: sha512-tnvXQsqwnOUjNENWLllfFmDLQUm24Q0MNL6kbVH35bIKPujEhyG6dOcpU8N5vwA4mD/ZdtwfHel++Z1Tw084uQ==}
 
   text-decoder@1.2.0:
     resolution: {integrity: sha512-n1yg1mOj9DNpk3NeZOx7T6jchTbyJS3i3cucbNN6FcdPriMZx7NsgrGpWWdWZZGxD7ES1XB+3uoqHMgOKaN+fg==}
@@ -9443,8 +9443,8 @@ packages:
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
-  undici@5.28.4:
-    resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
+  undici@5.28.5:
+    resolution: {integrity: sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==}
     engines: {node: '>=14.0'}
 
   undici@7.3.0:
@@ -11979,9 +11979,9 @@ snapshots:
 
   '@tanstack/virtual-core@3.11.2': {}
 
-  '@testcontainers/mysql@10.17.1':
+  '@testcontainers/mysql@10.17.2':
     dependencies:
-      testcontainers: 10.17.1
+      testcontainers: 10.17.2
     transitivePeerDependencies:
       - supports-color
 
@@ -17707,7 +17707,7 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.5
 
-  testcontainers@10.17.1:
+  testcontainers@10.17.2:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.34
@@ -17723,7 +17723,7 @@ snapshots:
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.0.6
       tmp: 0.2.3
-      undici: 5.28.4
+      undici: 5.28.5
     transitivePeerDependencies:
       - supports-color
 
@@ -18070,7 +18070,7 @@ snapshots:
 
   undici-types@6.20.0: {}
 
-  undici@5.28.4:
+  undici@5.28.5:
     dependencies:
       '@fastify/busboy': 2.1.1
 
