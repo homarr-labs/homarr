@@ -2,6 +2,8 @@ import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/co
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
+
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { CategoryMenu } from "./category/category-menu";
@@ -13,8 +15,16 @@ interface Props {
 }
 
 export const BoardCategorySection = ({ section }: Props) => {
-  const [opened, { toggle }] = useDisclosure(false);
+  const { mutate } = clientApi.section.changeCollapsed.useMutation();
   const board = useRequiredBoard();
+  const [opened, { toggle }] = useDisclosure(section.collapsed, {
+    onOpen() {
+      mutate({ sectionId: section.id, collapsed: true });
+    },
+    onClose() {
+      mutate({ sectionId: section.id, collapsed: false });
+    },
+  });
 
   return (
     <Card style={{ "--opacity": board.opacity / 100 }} withBorder p={0} className={classes.itemCard}>

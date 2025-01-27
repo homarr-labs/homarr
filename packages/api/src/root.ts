@@ -15,6 +15,7 @@ import { logRouter } from "./router/log";
 import { mediaRouter } from "./router/medias/media-router";
 import { onboardRouter } from "./router/onboard/onboard-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
+import { sectionRouter } from "./router/section/section-router";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { updateCheckerRouter } from "./router/update-checker";
 import { userRouter } from "./router/user";
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   invite: inviteRouter,
   integration: integrationRouter,
   board: boardRouter,
+  section: sectionRouter,
   app: innerAppRouter,
   searchEngine: searchEngineRouter,
   widget: widgetRouter,

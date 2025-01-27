@@ -44,6 +44,7 @@ const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TIte
     yOffset: z.number(),
     xOffset: z.number(),
     items: z.array(itemSchema),
+    collapsed: z.boolean(),
   });
 
 const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
