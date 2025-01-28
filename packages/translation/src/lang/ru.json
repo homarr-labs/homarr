@@ -153,10 +153,10 @@
         "label": "Использовать индикаторы доступности"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Поисковая система по умолчанию"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Открыть результаты поиска в новой вкладке"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Настройки поиска успешно изменены"
           },
           "error": {
-            "message": ""
+            "message": "Не удается изменить настройки поиска"
           }
         }
       },
@@ -2287,7 +2287,7 @@
                   "mobile": "Мобильная"
                 }
               },
-              "search": "",
+              "search": "Поиск",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }
