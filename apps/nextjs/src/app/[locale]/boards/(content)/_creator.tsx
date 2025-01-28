@@ -48,11 +48,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         return {
           title: board.metaTitle ?? createMetaTitle(t("board.content.metaTitle", { boardName: board.name })),
           icons: {
-            icon: board.faviconImageUrl ? board.faviconImageUrl : undefined,
-            apple: board.faviconImageUrl ? board.faviconImageUrl : undefined,
+            icon: board.faviconImageUrl ?? undefined,
+            apple: board.faviconImageUrl ?? undefined,
           },
           appleWebApp: {
-            startupImage: { url: board.faviconImageUrl ? board.faviconImageUrl : "/logo/logo.png" },
+            startupImage: { url: board.faviconImageUrl ?? "/logo/logo.png" },
           },
         };
       } catch (error) {

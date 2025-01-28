@@ -28,7 +28,7 @@
         },
         "boardSelection": {
           "title": "Fundet {count} tavler",
-          "description": "Vælg alle tavler med deres størrelser du vil importere",
+          "description": "Vælg alle tavler med den størrelse, du vil importere",
           "action": {
             "selectAll": "Vælg alle",
             "unselectAll": "Fravælg alle"
@@ -153,10 +153,10 @@
         "label": "Brug ikoner til pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Standardsøgemaskine"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Åben søgeresultater i en ny fane"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Søgeindstillingerne blev ændret"
           },
           "error": {
-            "message": ""
+            "message": "Kan ikke ændre søgeindstillinger"
           }
         }
       },
@@ -2287,7 +2287,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "search": "",
+              "search": "Søg",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner"
             }

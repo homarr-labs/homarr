@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "Token",
-              "description": "Angi vist import-token for din forrige homarr forekomst"
+              "description": "Angi vist import-token for din forrige Homarr forekomst"
             }
           },
           "notification": {
@@ -153,10 +153,10 @@
         "label": "Bruk ikoner for pinger"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Standard søkemotor"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Åpne søkeresultater i ny fane"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Søkeinnstillingene endret"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke endre søkeinnstillingene"
           }
         }
       },
@@ -742,23 +742,23 @@
         },
         "tokenId": {
           "label": "Token ID",
-          "newLabel": ""
+          "newLabel": "Ny token ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Område",
+          "newLabel": "Nytt område"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Velg integrasjon i elementer",
+      "interact": "Samhandle med integrasjoner",
+      "full": "Full integrasjons-tilgang"
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Medier",
+    "search": "Finn et medie",
     "field": {
       "name": "Navn",
       "size": "Størrelse",
@@ -766,115 +766,115 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Last opp medie",
+        "file": "Velg fil",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Medie lastet opp"
           },
           "error": {
-            "message": ""
+            "message": "Mediet kunne ikke lastes opp"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Slett medie",
+        "description": "Er du sikker på at du vil slette mediet <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mediet slettet"
           },
           "error": {
-            "message": ""
+            "message": "Mediet kunne ikke slettes"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Kopier URL"
       },
       "open": {
-        "label": ""
+        "label": "Åpne medie"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Feil",
     "action": {
       "add": "Legg til",
       "apply": "Bruk",
-      "backToOverview": "",
+      "backToOverview": "Tilbake til oversikt",
       "create": "Opprett",
       "edit": "Rediger",
-      "import": "",
+      "import": "Import",
       "insert": "Sett inn",
       "remove": "Fjern",
       "save": "Lagre",
       "saveChanges": "Lagre endringer",
       "cancel": "Avbryt",
       "delete": "Slett",
-      "discard": "",
+      "discard": "Forkast",
       "confirm": "Bekreft",
-      "continue": "",
+      "continue": "Fortsett",
       "previous": "Tidligere",
       "next": "Neste",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "Les dokumentasjonen",
+      "checkLogs": "Sjekk loggene for mer informasjon",
       "tryAgain": "Prøv igjen",
-      "loading": ""
+      "loading": "Laster"
     },
-    "here": "",
+    "here": "her",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "Ikon-URL",
+      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg."
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Lys",
+        "dark": "Mørk"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Min",
+      "max": "Maks",
+      "days": "Dager",
+      "hours": "Timer",
+      "minutes": "Minutter"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Opprettelse vellykket",
+        "error": "Opprettelse mislyktes"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Sletting vellykket",
+        "error": "Sletting feilet"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Endringer fullført",
+        "error": "Kunne ikke fullføre endringer"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Overføring vellykket",
+        "error": "Overføring feilet"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Velg en eller flere verdier"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Legg til flere verdier",
+      "addLabel": "Legg til {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Velg verdi",
       "badge": {
-        "recommended": ""
+        "recommended": "Anbefalt"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
+        "switchToDarkMode": "Bytt til mørk modus",
         "switchToLightMode": "Bytt til lys modus",
         "management": "Administrasjon",
         "preferences": "Dine innstillinger",
@@ -1020,44 +1020,44 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Slett element",
+      "message": "Er du sikker på at du vil slette dette elementet?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "App",
+      "description": "Bygger inn en app i tavlen.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Velg app"
         },
         "openInNewTab": {
           "label": "Åpne i ny fane"
         },
         "showTitle": {
-          "label": ""
+          "label": "Vis app navn"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Vis beskrivelse verktøytips"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Aktiver enkel ping"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Ingen app",
+          "tooltip": "Du har ikke valgt en gyldig app"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Bokmerke",
+      "description": "Viser flere applinker",
       "option": {
         "title": {
-          "label": ""
+          "label": "Tittel"
         },
         "layout": {
           "label": "Oppsett",
@@ -1069,28 +1069,28 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Rutenettet"
             }
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Skjul ikoner"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Skjul vertsnavn"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Åpne i ny fane"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Bokmerke",
+          "add": "Legg til bokmerke"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole Sammendrag",
+      "description": "Viser sammendrag av DNS Hole",
       "option": {
         "layout": {
           "label": "Oppsett",
@@ -1102,28 +1102,28 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Rutenett"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Bruk farger fra Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Kunne ikke hente DNS Hole Sammendrag",
+        "integrationsDisconnected": "Ingen data er tilgjengelig, alle integrasjoner frakoblet"
       },
       "data": {
         "adsBlockedToday": "Blokkert i dag",
         "adsBlockedTodayPercentage": "Blokkert i dag",
         "dnsQueriesToday": "Spørringer i dag",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domener på blokkliste"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "På grunn av flere integrasjons Homarr kan ikke kalkulere nøyaktig antall domener som blokkeres"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole kontroller",
       "description": "Kontroller PiHole eller AdGuard fra dashbordet",
       "option": {
         "layout": {
@@ -1136,58 +1136,58 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Rutenett"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Vis av/på alle knapper"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke kontrollere DNS Hole"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
+        "enableAll": "Aktiver alle",
+        "disableAll": "Deaktiver Alle",
+        "setTimer": "Sett tidtaker",
+        "set": "Angi",
         "enabled": "Aktivert",
         "disabled": "Deaktivert",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "processing": "Prosesserer",
+        "disconnected": "Frakoblet",
+        "hours": "Timer",
+        "minutes": "Minutter",
+        "unlimited": "Blank for ubegrenset"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Dato og tid",
       "description": "Viser gjeldende dato og klokkeslett.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Tilpasset Tittel/By visning",
+          "description": "Vis av en egendefinert tittel eller navnet på byen/landet øverst i klokken."
         },
         "customTitle": {
-          "label": ""
+          "label": "Tittel"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-timersformat",
+          "description": "Bruk 24-timers format i stedet for 12-timers format"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Vis sekunder"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Bruk en fast tidssone"
         },
         "timezone": {
           "label": "Tidssone",
-          "description": ""
+          "description": "Velg tidssonen etter IANA-standarden"
         },
         "showDate": {
-          "label": ""
+          "label": "Vis dato"
         },
         "dateFormat": {
           "label": "Datoformat",
@@ -1315,25 +1315,25 @@
     },
     "smartHome-entityState": {
       "name": "Enhet status",
-      "description": "",
+      "description": "Vis status for en enhet og aktiver det valgfritt",
       "option": {
         "entityId": {
           "label": "Enhets-ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Visningsnavn"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Enhet målingsenhet"
         },
         "clickable": {
-          "label": ""
+          "label": "Klikkbar"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Kjør automatisering",
+      "description": "Utløs en automatisering med ett klikk",
       "option": {
         "displayName": {
           "label": "Visningsnavn"
@@ -1343,26 +1343,26 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Kjør {name}"
       }
     },
     "calendar": {
       "name": "Kalender",
-      "description": "",
+      "description": "Vis hendelser fra integrasjonene dine i en kalendervisning innenfor en bestemt relativ tidsperiode",
       "option": {
         "releaseType": {
           "label": "Radarr utgivelsestype",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "På Kino",
+            "digitalRelease": "Digital utgivelse",
+            "physicalRelease": "Fysisk utgivelse"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Start fra"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Slutt på"
         }
       }
     },
@@ -1371,24 +1371,24 @@
       "description": "Viser gjeldende værinformasjon for en angitt plassering.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatur i Fahrenheit"
         },
         "location": {
           "label": "Vær plassering"
         },
         "showCity": {
-          "label": ""
+          "label": "Vis by"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Vis værmelding"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Antall dagers værvarsel",
+          "description": "Når widget ikke er bred nok, blir færre dager vist"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datoformat",
+          "description": "Hvordan datoen skal se ut"
         }
       },
       "kind": {
@@ -1410,24 +1410,24 @@
     },
     "indexerManager": {
       "name": "Indekserings-behandler status",
-      "description": "",
+      "description": "Status for indekserere",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Åpne indekserer-side i ny fane"
         }
       },
       "title": "Indekserings-behandler",
       "testAll": "Test alle",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente indekser status"
       }
     },
     "healthMonitoring": {
       "name": "Systemhelseovervåking",
       "description": "Viser informasjon som viser helsen og statusen til systemet(e).",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "System",
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
@@ -1443,80 +1443,80 @@
           "label": "Vis filsysteminfo"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Standard fane"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Krav til seksjonsindikator"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "Informasjon",
+        "processor": "Prosessor: {cpuModelName}",
+        "memory": "Minne: {memory}GiB",
+        "memoryAvailable": "Tilgjengelig: {memoryAvailable}GiB ({percent}%)",
+        "version": "Versjon: {version}",
+        "uptime": "Oppetid: {months} Måneder, {days} Dager, {hours} Timer, {minutes} Minutter",
+        "loadAverage": "Gjennomsnittsbelastning:",
+        "minute": "1 minutt",
+        "minutes": "{count} minutter",
+        "used": "Brukt",
         "available": "Tilgjengelig",
-        "lastSeen": ""
+        "lastSeen": "Siste statusoppdatering: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente helse status"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Noder"
           },
           "qemu": {
-            "name": ""
+            "name": "VMer"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCer"
           },
           "storage": {
-            "name": ""
+            "name": "Lagring"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Kjerner",
+            "memory": "Minne",
+            "storage": "Lagring",
+            "uptime": "Oppetid",
+            "haState": "HA status",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Lokal lagring",
+              "shared": "Delt lagring"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Navn",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
     },
     "common": {
       "location": {
-        "query": "",
+        "query": "By / Postnummer",
         "latitude": "",
         "longitude": "",
         "disabledTooltip": "",
@@ -1613,119 +1613,119 @@
           "label": ""
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtrer som hvitliste"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Bruk filter for å beregne ratio"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Velg kolonner i elementer",
+        "noCommunications": "Kan ikke laste inn data fra integrasjon"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Lagt til",
           "detailsTitle": "Dato lagt til"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Ekstra",
+          "detailsTitle": "Kategorier (eller ekstra informasjon)"
         },
         "downSpeed": {
           "columnTitle": "Ned",
           "detailsTitle": "Nedlastings- hastighet"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Gjeldende indeks i klienten"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integrasjon"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Jobb navn"
         },
         "progress": {
           "columnTitle": "Fremgang",
-          "detailsTitle": ""
+          "detailsTitle": "Nedlastings fremdrift"
         },
         "ratio": {
           "columnTitle": "Forhold",
-          "detailsTitle": ""
+          "detailsTitle": "Torrent-ratio (mottatt/sendt)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Totalt ned",
+          "detailsTitle": "Totalt nedlastet"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Totalt opp",
+          "detailsTitle": "Totalt opplastet"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Filstørrelse",
+          "detailsTitle": "Total størrelse for utvalg/filer"
         },
         "state": {
           "columnTitle": "Status",
-          "detailsTitle": ""
+          "detailsTitle": "Jobb status"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Fullfør tid",
+          "detailsTitle": "Tid siden/til fullførelse"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Type",
+          "detailsTitle": "Nedlastings-klient type"
         },
         "upSpeed": {
           "columnTitle": "Opp",
-          "detailsTitle": ""
+          "detailsTitle": "Opplastnings hastighet"
         }
       },
       "states": {
         "downloading": "Laster ned",
-        "queued": "",
+        "queued": "I kø",
         "paused": "Pauset",
         "completed": "Fullført",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Feilet",
+        "processing": "Behandler",
+        "leeching": "Laster ned",
+        "stalled": "Stanset",
         "unknown": "Ukjent",
-        "seeding": ""
+        "seeding": "Deler"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Nedlastings-klient liste",
+          "pause": "Pause alle klienter/elementer",
+          "resume": "Fortsett alle klienter/elementer"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Pause klient",
+          "resume": "Fortsett klient"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Pause element",
+          "resume": "Fortsett element",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Slett element",
+            "modalTitle": "Er du sikker på at du vil slette denne jobben?",
+            "entry": "Slett oppføring",
+            "entryAndFiles": "Slett oppføring og fil(er)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Global ratio"
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Liste over mediaspillforespørsler",
       "description": "Se en liste over alle medieforespørsler fra din Overseerr eller Jellyseerr instans",
       "option": {
         "linksTargetNewTab": {
@@ -1733,21 +1733,21 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Godkjenn forespørsel",
+        "approving": "Godkjenner forespørsel...",
+        "decline": "Avslå forespørsel"
       },
       "availability": {
         "unknown": "Ukjent",
-        "pending": "",
-        "processing": "",
+        "pending": "Pågår",
+        "processing": "Prosesserer",
         "partiallyAvailable": "Delvis",
         "available": "Tilgjengelig"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "Uavklart"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Statistikk for mediaforespørsler",
       "description": "Statistikk om dine medieforespørsler",
       "option": {},
       "titles": {
@@ -1755,52 +1755,52 @@
           "main": "Media statistikk",
           "approved": "Allerede godkjent",
           "pending": "Venter på godkjenning",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Prosesseres",
+          "declined": "Allerede avslått",
+          "available": "Allerede tilgjengelig",
           "tv": "TV forespørsler",
           "movie": "Film forespørsler",
           "total": "Totalt"
         },
         "users": {
           "main": "Topp brukere",
-          "requests": ""
+          "requests": "Forespørsler"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Konvertering av medier",
+      "description": "Statistikk, gjeldende kø- og arbeidstakerstatus på din media transkoding",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Standardvisning"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Sidestørrelse i kø"
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Arbeidere",
         "queue": "Kø",
-        "statistics": ""
+        "statistics": "Statistikk"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} av {total}",
       "healthCheck": {
-        "title": "",
-        "queued": "",
+        "title": "Helsesjekk",
+        "queued": "I kø",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Frisk",
+          "unhealthy": "Ustabil"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Tøm",
-          "transcodes": "",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
+          "transcodes": "Transkoder",
+          "transcodesCount": "Transkoder: {value}",
+          "healthChecksCount": "Helsesjekker: {value}",
+          "filesCount": "Filer: {value}",
+          "savedSpace": "Diskplass spart: {value}",
           "healthChecks": "",
           "videoCodecs": "",
           "videoContainers": "",

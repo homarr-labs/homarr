@@ -17,6 +17,7 @@ import {
   integrationItems,
   integrationUserPermissions,
   items,
+  sectionCollapseStates,
   sections,
   users,
 } from "@homarr/db/schema";
@@ -1025,6 +1026,9 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
       },
       sections: {
         with: {
+          collapseStates: {
+            where: eq(sectionCollapseStates.userId, userId ?? ""),
+          },
           items: {
             with: {
               integrations: {
@@ -1059,9 +1063,10 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
 
   return {
     ...otherBoardProperties,
-    sections: sections.map((section) =>
+    sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,
+        collapsed: collapseStates.at(0)?.collapsed ?? false,
         items: section.items.map(({ integrations: itemIntegrations, ...item }) => ({
           ...item,
           integrationIds: itemIntegrations.map((item) => item.integration.id),
