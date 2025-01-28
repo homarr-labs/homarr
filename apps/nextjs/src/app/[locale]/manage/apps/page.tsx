@@ -80,7 +80,7 @@ const AppCard = async ({ app }: AppCardProps) => {
   return (
     <Card withBorder>
       <Group justify="space-between" wrap="nowrap">
-        <Group align="top" justify="start" wrap="nowrap">
+        <Group align="top" justify="start" wrap="nowrap" style={{ flex: "1" }}>
           <Avatar
             size="sm"
             src={app.iconUrl}
@@ -91,7 +91,7 @@ const AppCard = async ({ app }: AppCardProps) => {
               },
             }}
           />
-          <Stack gap={0}>
+          <Stack gap={0} style={{ flex: "1" }}>
             <Text fw={500} lineClamp={1}>
               {app.name}
             </Text>
@@ -101,7 +101,7 @@ const AppCard = async ({ app }: AppCardProps) => {
               </Text>
             )}
             {app.href && (
-              <Anchor href={app.href} lineClamp={1} size="sm" w="min-content">
+              <Anchor href={app.href} lineClamp={1} size="sm" style={{ wordBreak: "break-all" }}>
                 {app.href}
               </Anchor>
             )}
