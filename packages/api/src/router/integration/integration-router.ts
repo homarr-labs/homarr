@@ -206,7 +206,10 @@ export const integrationRouter = createTRPCRouter({
         );
       }
 
-      if (input.attemptSearchEngineCreation) {
+      if (
+        input.attemptSearchEngineCreation &&
+        integrationDefs[input.kind].category.flatMap((category) => category).includes("search")
+      ) {
         const icon = getIconUrl(input.kind);
         await ctx.db.insert(searchEngines).values({
           id: createId(),
