@@ -1,3 +1,13 @@
+## [1.3.1](https://github.com/homarr-labs/homarr/compare/v1.3.0...v1.3.1) (2025-01-28)
+
+### Bug Fixes
+
+* app url line clamp ([#2170](https://github.com/homarr-labs/homarr/issues/2170)) ([780efab](https://github.com/homarr-labs/homarr/commit/780efab80cdc5446a6468d60afe2c1d9ecca0f1e))
+* automatic search engine creation ([#2172](https://github.com/homarr-labs/homarr/issues/2172)) ([8dd7fe2](https://github.com/homarr-labs/homarr/commit/8dd7fe297c431bbe448bc47b381370ade7c4d3d9))
+* **deps:** update dependency swagger-ui-react to ^5.18.3 ([#2164](https://github.com/homarr-labs/homarr/issues/2164)) ([a4e9abc](https://github.com/homarr-labs/homarr/commit/a4e9abcda192a96754078eece4343c2c1c9fa032))
+* **deps:** update dependency typescript-eslint to ^8.22.0 ([#2149](https://github.com/homarr-labs/homarr/issues/2149)) ([9d4aea2](https://github.com/homarr-labs/homarr/commit/9d4aea2c4187ddda6a0484d0f6a0403c04961dde))
+* **deps:** update tanstack-query monorepo to ^5.65.1 ([#2161](https://github.com/homarr-labs/homarr/issues/2161)) ([55b1afb](https://github.com/homarr-labs/homarr/commit/55b1afbb2167ccb6f5115cbb1291dfe561a5aa05))
+
 ## [1.3.0](https://github.com/homarr-labs/homarr/compare/v1.2.0...v1.3.0) (2025-01-27)
 
 ### Features
