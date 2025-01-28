@@ -109,6 +109,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           hidden: !session?.user.permissions.includes("admin"),
         },
         {
+          label: t("items.tools.items.kubernetes"),
+          icon: IconBox,
+          href: "/manage/tools/kubernetes",
+          hidden: !session?.user.permissions.includes("admin"),
+        },
+        {
           label: t("items.tools.items.api"),
           icon: IconPlug,
           href: "/manage/tools/api",

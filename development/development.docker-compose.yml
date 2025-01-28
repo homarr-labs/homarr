@@ -12,3 +12,19 @@ services:
     image: redis
     ports:
       - "6379:6379"
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: homarr
+      MYSQL_DATABASE: homarrdb
+      MYSQL_USER: homarr
+      MYSQL_PASSWORD: homarr
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
