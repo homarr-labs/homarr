@@ -153,10 +153,10 @@
         "label": "Pingler İçin Simgeler Kullanın"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Öntanımlı arama motoru"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Arama sonucunu yeni sekmede aç"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Arama tercihleri ​​başarıyla değiştirildi"
           },
           "error": {
-            "message": ""
+            "message": "Arama tercihleri ​​değiştirilemiyor"
           }
         }
       },
@@ -2287,7 +2287,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "search": "",
+              "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
