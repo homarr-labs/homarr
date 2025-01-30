@@ -49,7 +49,10 @@ const initBetterSqlite = () => {
 
 const initMySQL2 = () => {
   if (!env.DB_HOST) {
-    connection = mysql.createConnection({ uri: env.DB_URL });
+    connection = mysql.createConnection({
+      uri: env.DB_URL,
+      enableKeepAlive: true, // See https://github.com/homarr-labs/homarr/issues/2021
+    });
   } else {
     connection = mysql.createConnection({
       host: env.DB_HOST,
@@ -57,6 +60,7 @@ const initMySQL2 = () => {
       port: env.DB_PORT,
       user: env.DB_USER,
       password: env.DB_PASSWORD,
+      enableKeepAlive: true, // See https://github.com/homarr-labs/homarr/issues/2021
     });
   }
 
