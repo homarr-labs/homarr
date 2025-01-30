@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Температура в градусах Фаренгейта"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Местоположение"
         },
@@ -1390,6 +1397,13 @@
           "label": "Формат даты",
           "description": "Как должна отображаться дата"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Ясно",

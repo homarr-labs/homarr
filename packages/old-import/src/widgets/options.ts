@@ -77,6 +77,8 @@ const optionMapping: OptionMapping = {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,
     hasForecast: (oldOptions) => oldOptions.displayWeekly,
     isFormatFahrenheit: (oldOptions) => oldOptions.displayInFahrenheit,
+    disableTemperatureDecimals: () => undefined,
+    showCurrentWindSpeed: () => undefined,
     location: (oldOptions) => oldOptions.location,
     showCity: (oldOptions) => oldOptions.displayCityName,
     dateFormat: (oldOptions) => (oldOptions.dateFormat === "hide" ? undefined : oldOptions.dateFormat),

@@ -1381,6 +1381,13 @@
         "isFormatFahrenheit": {
           "label": "Temperature in Fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": "Disable temperature decimals"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Show current wind speed",
+          "description": "Only on current weather"
+        },
         "location": {
           "label": "Weather location"
         },
@@ -1398,6 +1405,13 @@
           "label": "Date Format",
           "description": "How the date should look like"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "dailyForecast": {
+        "sunrise": "Sunrise",
+        "sunset": "Sunset",
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} km/h",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "Clear",

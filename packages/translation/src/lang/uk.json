@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Температура за Фаренгейтом"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Погодна локація"
         },
@@ -1390,6 +1397,13 @@
           "label": "Формат дати",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Ясно",
@@ -2318,7 +2332,7 @@
             },
             "groups": {
               "label": "Групи",
-              "title": "",
+              "title": "Виберіть усі групи, учасником яких має бути користувач",
               "description": ""
             },
             "review": {

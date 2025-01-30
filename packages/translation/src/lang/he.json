@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "טמפרטורה בפרנהייט"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "מיקום מזג האוויר"
         },
@@ -1390,6 +1397,13 @@
           "label": "פורמט תאריך",
           "description": "איך צריך להיראות התאריך"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "בהיר",

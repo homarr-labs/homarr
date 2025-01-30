@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Fahrenheit cinsinden sıcaklık"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Hava durumu konumu"
         },
@@ -1390,6 +1397,13 @@
           "label": "Tarih Biçimi",
           "description": "Tarihin nasıl görüneceği"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Temiz",
