@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatura w Fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Lokalizacja pogody"
         },
@@ -1390,6 +1397,13 @@
           "label": "Format daty",
           "description": "Jak powinna wyglądać data"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Bezchmurnie",

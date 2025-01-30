@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatuur in fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Weerlocatie"
         },
@@ -1390,6 +1397,13 @@
           "label": "Datumnotatie",
           "description": "Hoe de datum eruit moet zien"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Wissen",

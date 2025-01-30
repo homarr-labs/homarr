@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "华氏温度"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "天气位置"
         },
@@ -1390,6 +1397,13 @@
           "label": "日期格式",
           "description": "日期应该是什么样的"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "晴朗",
