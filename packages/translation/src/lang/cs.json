@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Teplota ve Fahrenheitech"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Lokalita pro počasí"
         },
@@ -1390,6 +1397,13 @@
           "label": "Formát data",
           "description": "Jak by datum mělo vypadat"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Jasno",

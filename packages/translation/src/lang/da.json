@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatur i Fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Vejr lokation"
         },
@@ -1390,6 +1397,13 @@
           "label": "Datoformat",
           "description": "Hvordan datoen skal se ud"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Skyfrit",
