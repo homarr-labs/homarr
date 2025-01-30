@@ -318,7 +318,7 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
 
 const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
   const { width, ref } = useElementSize();
-  const fallbackWidth = width || 1;
+  const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
 
   return (
     <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu">
@@ -349,7 +349,7 @@ const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
 
 const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: number }) => {
   const { width, ref } = useElementSize();
-  const fallbackWidth = width || 1;
+  const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
   return (
     <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu-temperature">
       <RingProgress
@@ -378,7 +378,7 @@ const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: nu
 
 const MemoryRing = ({ available, used }: { available: string; used: string }) => {
   const { width, ref } = useElementSize();
-  const fallbackWidth = width || 1;
+  const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
   const memoryUsage = formatMemoryUsage(available, used);
 
   return (
