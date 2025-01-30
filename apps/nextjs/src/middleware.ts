@@ -4,7 +4,7 @@ import { createTRPCClient, httpLink } from "@trpc/client";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@homarr/api";
-import { createHeadersCallbackForSource } from "@homarr/api/shared";
+import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 export async function middleware(request: NextRequest) {
@@ -34,7 +34,7 @@ export const config = {
 export const serverFetchApi = createTRPCClient<AppRouter>({
   links: [
     httpLink({
-      url: `http://${process.env.HOSTNAME ?? "localhost"}:3000/api/trpc`,
+      url: getTrpcUrl(),
       transformer: SuperJSON,
       headers: createHeadersCallbackForSource("server-fetch"),
     }),

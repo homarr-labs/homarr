@@ -36,3 +36,18 @@ async function importCookiesAsync() {
     .map(({ name, value }) => `${name}=${value}`)
     .join(";");
 }
+
+function getBaseUrl() {
+  if (typeof window !== "undefined") return window.location.origin;
+  return `http://${process.env.HOSTNAME ?? "localhost"}:3000`;
+}
+
+export const trpcPath = "/api/trpc";
+
+/**
+ * Creates the full url for the trpc api endpoint
+ * @returns
+ */
+export function getTrpcUrl() {
+  return `${getBaseUrl()}${trpcPath}`;
+}
