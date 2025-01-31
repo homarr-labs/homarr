@@ -7,8 +7,7 @@
   "exports": {
     ".": "./index.ts",
     "./errors": "./src/errors/component.tsx",
-    "./modals": "./src/modals/index.ts",
-    "./option-settings": "./src/option-settings-context.tsx"
+    "./modals": "./src/modals/index.ts"
   },
   "typesVersions": {
     "*": {

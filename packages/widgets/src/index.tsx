@@ -5,12 +5,13 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { SettingsContextProps } from "@homarr/settings";
 
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
-import type { WidgetComponentProps, WidgetOptionsSettings } from "./definition";
+import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as downloads from "./downloads";
@@ -96,7 +97,7 @@ export type inferSupportedIntegrationsStrict<TKind extends WidgetKind> = (Widget
 
 export const reduceWidgetOptionsWithDefaultValues = (
   kind: WidgetKind,
-  settings: WidgetOptionsSettings,
+  settings: SettingsContextProps,
   currentValue: Record<string, unknown> = {},
 ) => {
   const definition = widgetImports[kind].definition;

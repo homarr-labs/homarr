@@ -53,7 +53,16 @@ export const createRequestIntegrationJobHandler = <
       const oneOrMultipleInputs = getInput[itemForIntegration.kind](
         reduceWidgetOptionsWithDefaultValues(
           itemForIntegration.kind,
-          { server: serverSettings },
+          {
+            defaultSearchEngineId: serverSettings.search.defaultSearchEngineId,
+            openSearchInNewTab: true,
+            firstDayOfWeek: 1,
+            homeBoardId: serverSettings.board.homeBoardId,
+            mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
+            pingIconsEnabled: true,
+            enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+            forceDisableStatus: serverSettings.board.forceDisableStatus,
+          },
           SuperJSON.parse<Record<string, unknown>>(itemForIntegration.options),
         ) as never,
       );

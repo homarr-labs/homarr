@@ -7,9 +7,9 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useSettings } from "@homarr/settings";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
-import { useWidgetOptionSettings } from "@homarr/widgets/option-settings";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
@@ -55,12 +55,12 @@ interface InnerContentProps {
 }
 
 const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
-  const widgetOptionsSettings = useWidgetOptionSettings();
+  const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const Comp = loadWidgetDynamic(item.kind);
   const { definition } = widgetImports[item.kind];
-  const options = reduceWidgetOptionsWithDefaultValues(item.kind, widgetOptionsSettings, item.options);
+  const options = reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options);
   const newItem = { ...item, options };
   const { updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>

@@ -3,6 +3,7 @@ import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import"
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
+import type { SettingsContextProps } from "@homarr/settings";
 import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -31,7 +32,7 @@ export interface WidgetDefinition {
   icon: TablerIcon;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
-  createOptions: (settings: WidgetOptionsSettings) => WidgetOptionsRecord;
+  createOptions: (settings: SettingsContextProps) => WidgetOptionsRecord;
   errors?: Partial<
     Record<
       DefaultErrorData["code"],

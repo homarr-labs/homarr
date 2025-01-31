@@ -6,7 +6,6 @@ import { Box, LoadingOverlay, Stack } from "@mantine/core";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { WidgetOptionSettingsProvider } from "@homarr/widgets/option-settings";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
@@ -53,25 +52,23 @@ export const ClientBoard = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <WidgetOptionSettingsProvider>
-      <Box h="100%" pos="relative">
-        <BoardBackgroundVideo />
-        <LoadingOverlay
-          visible={!isReady}
-          transitionProps={{ duration: 500 }}
-          loaderProps={{ size: "lg" }}
-          h={fullHeightWithoutHeaderAndFooter}
-        />
-        <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
-          {fullWidthSortedSections.map((section) =>
-            section.kind === "empty" ? (
-              <BoardEmptySection key={section.id} section={section} />
-            ) : (
-              <BoardCategorySection key={section.id} section={section} />
-            ),
-          )}
-        </Stack>
-      </Box>
-    </WidgetOptionSettingsProvider>
+    <Box h="100%" pos="relative">
+      <BoardBackgroundVideo />
+      <LoadingOverlay
+        visible={!isReady}
+        transitionProps={{ duration: 500 }}
+        loaderProps={{ size: "lg" }}
+        h={fullHeightWithoutHeaderAndFooter}
+      />
+      <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
+        {fullWidthSortedSections.map((section) =>
+          section.kind === "empty" ? (
+            <BoardEmptySection key={section.id} section={section} />
+          ) : (
+            <BoardCategorySection key={section.id} section={section} />
+          ),
+        )}
+      </Stack>
+    </Box>
   );
 };

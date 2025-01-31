@@ -8,18 +8,18 @@ import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useSettings } from "@homarr/settings";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { useWidgetOptionSettings } from "../option-settings-context";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
   const t = useI18n();
-  const widgetOptionSettings = useWidgetOptionSettings();
+  const settings = useSettings();
   const board = useRequiredBoard();
   const [app] = clientApi.app.byId.useSuspenseQuery(
     {
@@ -85,10 +85,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
         </Flex>
       </Tooltip.Floating>
-      {options.pingEnabled &&
-      !widgetOptionSettings.server.board.forceDisableStatus &&
-      !board.disableStatus &&
-      app.href ? (
+      {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
         <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
           <PingIndicator href={app.href} />
         </Suspense>

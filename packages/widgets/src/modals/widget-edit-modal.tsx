@@ -8,10 +8,10 @@ import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
+import type { SettingsContextProps } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form";
 
-import type { WidgetOptionsSettings } from "..";
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
@@ -33,7 +33,7 @@ interface ModalProps<TSort extends WidgetKind> {
   onSuccessfulEdit: (value: WidgetEditModalState) => void;
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
-  optionSettings: WidgetOptionsSettings;
+  settings: SettingsContextProps;
 }
 
 export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
@@ -43,7 +43,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   // Translate the error messages
   z.setErrorMap(zodErrorMap(t));
   const { definition } = widgetImports[innerProps.kind];
-  const options = definition.createOptions(innerProps.optionSettings) as Record<string, OptionsBuilderResult[string]>;
+  const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
 
   const form = useForm({
     mode: "controlled",
