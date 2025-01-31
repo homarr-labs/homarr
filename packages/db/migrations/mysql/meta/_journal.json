@@ -148,13 +148,6 @@
       "when": 1736514409126,
       "tag": "0020_salty_doorman",
       "breakpoints": true
-    },
-    {
-      "idx": 21,
-      "version": "5",
-      "when": 1737812128341,
-      "tag": "0021_furry_iron_man",
-      "breakpoints": true
     }
   ]
 }
