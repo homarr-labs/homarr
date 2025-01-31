@@ -1703,6 +1703,9 @@
         "showCompletedTorrent": {
           "label": "Show torrent entries marked as completed"
         },
+        "showCompletedHttp": {
+          "label": "Show Miscellaneous entries marked as completed"
+        },
         "activeTorrentThreshold": {
           "label": "Hide completed torrent under this threshold (in kiB/s)"
         },
