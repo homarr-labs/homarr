@@ -20,6 +20,7 @@ export const DesktopSearchInput = () => {
       size="sm"
       leftSection={<IconSearch size={20} stroke={1.5} />}
       onClick={openSpotlight}
+      radius="xl"
     >
       {`${t("search.placeholder")}...`}
     </TextInput>
