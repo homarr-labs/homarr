@@ -32,7 +32,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
         down: Math.floor(download_rate),
         up: Math.floor(upload_rate),
       },
-      type,
+      types: [type],
     };
     const items = torrents.map((torrent): DownloadClientItem => {
       const state = DelugeIntegration.getTorrentState(torrent.state);

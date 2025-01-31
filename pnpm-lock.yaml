@@ -1306,6 +1306,9 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.8.4)
+      maria2:
+        specifier: ^0.4.0
+        version: 0.4.0
       node-ical:
         specifier: ^0.20.1
         version: 0.20.1
@@ -7749,6 +7752,10 @@ packages:
       dayjs: '>=1.11'
       react: '>=18.0'
       react-dom: '>=18.0'
+
+  maria2@0.4.0:
+    resolution: {integrity: sha512-jQ9yezKDaSeiy7SZRA8zMAYkFyfx3yoeB/lhcOSQsoGf4YyVaPDopP+dEU6HWNJwK2Oo/rmgqTb5Na1gJcLtrg==}
+    engines: {node: '>= 22.5.0'}
 
   markdown-it@14.1.0:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
@@ -16582,6 +16589,8 @@ snapshots:
       dayjs: 1.11.13
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
+
+  maria2@0.4.0: {}
 
   markdown-it@14.1.0:
     dependencies:
