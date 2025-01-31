@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
 import type { z } from "zod";
@@ -39,14 +40,20 @@ export const AppForm = ({
     },
   });
 
-  const handleSubmitAndCreateAnother = () => {
-    originalHandleSubmit(form.values, false, () => {
-      form.reset();
-    });
+  const shouldCreateAnother = useRef(false);
+  const handleSubmit = (values: FormType) => {
+    const redirect = !shouldCreateAnother.current;
+    const afterSuccess = shouldCreateAnother.current
+      ? () => {
+          form.reset();
+          shouldCreateAnother.current = false;
+        }
+      : undefined;
+    originalHandleSubmit(values, redirect, afterSuccess);
   };
 
   return (
-    <form onSubmit={form.onSubmit((values) => originalHandleSubmit(values, true))}>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker {...form.getInputProps("iconUrl")} />
@@ -58,11 +65,17 @@ export const AppForm = ({
             {t("common.action.backToOverview")}
           </Button>
           {buttonLabels.submitAndCreateAnother && (
-            <Button onClick={handleSubmitAndCreateAnother} loading={isPending}>
+            <Button
+              type="submit"
+              onClick={() => {
+                shouldCreateAnother.current = true;
+              }}
+              loading={isPending}
+            >
               {buttonLabels.submitAndCreateAnother}
             </Button>
           )}
-          <Button disabled={!form.isValid()} type="submit" loading={isPending}>
+          <Button type="submit" loading={isPending}>
             {buttonLabels.submit}
           </Button>
         </Group>
