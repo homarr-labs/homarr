@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import type { InferInsertModel } from "@homarr/db";
 import { and, createId, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
 import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 

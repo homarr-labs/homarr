@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
+import type { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -13,7 +14,6 @@ import { convertIntegrationTestConnectionError } from "@homarr/integrations/clie
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
@@ -70,9 +70,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           if (testConnectionError) {
             showErrorNotification({
               title: t(`integration.testConnection.notification.${testConnectionError.key}.title`),
-              message: testConnectionError.message
-                ? testConnectionError.message
-                : t(`integration.testConnection.notification.${testConnectionError.key}.message`),
+              message:
+                testConnectionError.message ??
+                t(`integration.testConnection.notification.${testConnectionError.key}.message`),
             });
             return;
           }

@@ -1,5 +1,6 @@
+import { z } from "zod";
+
 import { FlattenError } from "@homarr/common";
-import { z } from "@homarr/validation";
 
 import type { TestConnectionError } from "./integration";
 

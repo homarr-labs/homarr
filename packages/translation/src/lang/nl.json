@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Gebruik iconen voor pings"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Standaard zoekmachine succesvol gewijzigd"
+            "message": ""
           },
           "error": {
-            "message": "Standaard zoekmachine kan niet worden gewijzigd"
+            "message": ""
           }
         }
       },
@@ -1367,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatuur in fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Weerlocatie"
         },
@@ -1384,6 +1397,13 @@
           "label": "Datumnotatie",
           "description": "Hoe de datum eruit moet zien"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Wissen",
@@ -2281,7 +2301,7 @@
                   "mobile": "Mobiel"
                 }
               },
-              "defaultSearchEngine": "Standaard zoekmachine",
+              "search": "",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
             }

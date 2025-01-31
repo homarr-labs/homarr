@@ -39,6 +39,14 @@ const handler = applyWSSHandler({
       });
     }
   },
+  // Enable heartbeat messages to keep connection open (disabled by default)
+  keepAlive: {
+    enabled: true,
+    // server ping message interval in milliseconds
+    pingMs: 30000,
+    // connection is terminated if pong message is not received in this many milliseconds
+    pongWaitMs: 5000,
+  },
 });
 
 wss.on("connection", (websocket, incomingMessage) => {

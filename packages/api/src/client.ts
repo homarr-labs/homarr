@@ -5,7 +5,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from ".";
-import { createHeadersCallbackForSource } from "./shared";
+import { createHeadersCallbackForSource, getTrpcUrl } from "./shared";
 
 export const clientApi = createTRPCReact<AppRouter>();
 export const fetchApi = createTRPCClient<AppRouter>({
@@ -17,16 +17,3 @@ export const fetchApi = createTRPCClient<AppRouter>({
     }),
   ],
 });
-
-function getBaseUrl() {
-  if (typeof window !== "undefined") return window.location.origin;
-  return `http://localhost:${process.env.PORT ?? 3000}`;
-}
-
-/**
- * Creates the full url for the trpc api endpoint
- * @returns
- */
-export function getTrpcUrl() {
-  return `${getBaseUrl()}/api/trpc`;
-}

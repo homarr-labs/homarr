@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { CalendarEvent } from "@homarr/integrations/types";
+import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
@@ -58,7 +59,7 @@ interface CalendarBaseProps {
 const CalendarBase = ({ isEditMode, events, month, setMonth, options }: CalendarBaseProps) => {
   const params = useParams();
   const locale = params.locale as string;
-  const [firstDayOfWeek] = clientApi.user.getFirstDayOfWeekForUserOrDefault.useSuspenseQuery();
+  const { firstDayOfWeek } = useSettings();
 
   return (
     <Calendar

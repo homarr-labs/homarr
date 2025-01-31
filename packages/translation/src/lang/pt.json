@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Usar ícone para pings"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Mecanismo de busca padrão alterado com sucesso"
+            "message": ""
           },
           "error": {
-            "message": "Não foi possível alterar o mecanismo de busca padrão"
+            "message": ""
           }
         }
       },
@@ -1367,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Localização do tempo"
         },
@@ -1384,6 +1397,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Limpar",
@@ -2281,7 +2301,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Primeiro dia da semana",
               "accessibility": "Acessibilidade"
             }

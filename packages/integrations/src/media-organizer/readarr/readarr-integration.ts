@@ -1,6 +1,7 @@
+import { z } from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
-import { z } from "@homarr/validation";
 
 import type { CalendarEvent } from "../../calendar-types";
 import { MediaOrganizerIntegration } from "../media-organizer-integration";

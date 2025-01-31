@@ -1,5 +1,6 @@
+import type { z } from "zod";
+
 import { fetchWithTimeout } from "@homarr/common";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";

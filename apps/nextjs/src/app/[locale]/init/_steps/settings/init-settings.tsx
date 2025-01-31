@@ -3,6 +3,7 @@
 import { startTransition } from "react";
 import { Button, Card, Group, Stack, Switch, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -11,7 +12,6 @@ import type { CheckboxProps } from "@homarr/form/types";
 import { defaultServerSettings } from "@homarr/server-settings";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 export const InitSettings = () => {

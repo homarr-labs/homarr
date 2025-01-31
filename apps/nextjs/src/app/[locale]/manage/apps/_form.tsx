@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import type { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { IconPicker } from "~/components/icons/picker/icon-picker";
@@ -25,11 +25,11 @@ export const AppForm = (props: AppFormProps) => {
   const t = useI18n();
 
   const form = useZodForm(validation.app.manage, {
-    initialValues: initialValues ?? {
-      name: "",
-      description: "",
-      iconUrl: "",
-      href: "",
+    initialValues: {
+      name: initialValues?.name ?? "",
+      description: initialValues?.description ?? "",
+      iconUrl: initialValues?.iconUrl ?? "",
+      href: initialValues?.href ?? "",
     },
   });
 

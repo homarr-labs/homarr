@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Alert, Button, Checkbox, Fieldset, Group, SegmentedControl, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -15,7 +16,6 @@ import { useZodForm } from "@homarr/form";
 import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
@@ -63,9 +63,9 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           if (testConnectionError) {
             showErrorNotification({
               title: t(`integration.testConnection.notification.${testConnectionError.key}.title`),
-              message: testConnectionError.message
-                ? testConnectionError.message
-                : t(`integration.testConnection.notification.${testConnectionError.key}.message`),
+              message:
+                testConnectionError.message ??
+                t(`integration.testConnection.notification.${testConnectionError.key}.message`),
             });
             return;
           }

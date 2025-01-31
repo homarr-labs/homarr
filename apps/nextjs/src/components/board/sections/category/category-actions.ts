@@ -40,6 +40,7 @@ export const useCategoryActions = () => {
             kind: "category",
             yOffset,
             xOffset: 0,
+            collapsed: false,
             items: [],
           },
           {
@@ -89,6 +90,7 @@ export const useCategoryActions = () => {
               kind: "category",
               yOffset: lastYOffset + 1,
               xOffset: 0,
+              collapsed: false,
               items: [],
             },
             {

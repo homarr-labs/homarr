@@ -18,8 +18,8 @@ import superjson from "superjson";
 import type { SuperJSONResult } from "superjson";
 
 import type { AppRouter } from "@homarr/api";
-import { clientApi, getTrpcUrl } from "@homarr/api/client";
-import { createHeadersCallbackForSource } from "@homarr/api/shared";
+import { clientApi } from "@homarr/api/client";
+import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 
 import { env } from "~/env";
 

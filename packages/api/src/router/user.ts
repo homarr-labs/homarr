@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
@@ -8,7 +9,7 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
@@ -21,6 +22,7 @@ import {
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
+import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
 
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
@@ -214,6 +216,7 @@ export const userRouter = createTRPCRouter({
         firstDayOfWeek: true,
         pingIconsEnabled: true,
         defaultSearchEngineId: true,
+        openSearchInNewTab: true,
       }),
     )
     .meta({ openapi: { method: "GET", path: "/api/users/{userId}", tags: ["users"], protect: true } })
@@ -238,6 +241,7 @@ export const userRouter = createTRPCRouter({
           firstDayOfWeek: true,
           pingIconsEnabled: true,
           defaultSearchEngineId: true,
+          openSearchInNewTab: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -422,40 +426,32 @@ export const userRouter = createTRPCRouter({
     }),
   changeDefaultSearchEngine: protectedProcedure
     .input(
-      convertIntersectionToZodObject(validation.user.changeDefaultSearchEngine.and(z.object({ userId: z.string() }))),
+      convertIntersectionToZodObject(
+        validation.user.changeSearchPreferences.omit({ openInNewTab: true }).and(z.object({ userId: z.string() })),
+      ),
     )
     .output(z.void())
-    .meta({ openapi: { method: "PATCH", path: "/api/users/changeSearchEngine", tags: ["users"], protect: true } })
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/changeSearchEngine",
+        tags: ["users"],
+        protect: true,
+        deprecated: true,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
-      const user = ctx.session.user;
-      // Only admins can change other users passwords
-      if (!user.permissions.includes("admin") && user.id !== input.userId) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-        },
-        where: eq(users.id, input.userId),
+      await changeSearchPreferencesAsync(ctx.db, ctx.session, {
+        ...input,
+        openInNewTab: undefined,
       });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          defaultSearchEngineId: input.defaultSearchEngineId,
-        })
-        .where(eq(users.id, input.userId));
+    }),
+  changeSearchPreferences: protectedProcedure
+    .input(convertIntersectionToZodObject(changeSearchPreferencesInputSchema))
+    .output(z.void())
+    .meta({ openapi: { method: "PATCH", path: "/api/users/search-preferences", tags: ["users"], protect: true } })
+    .mutation(async ({ input, ctx }) => {
+      await changeSearchPreferencesAsync(ctx.db, ctx.session, input);
     }),
   changeColorScheme: protectedProcedure
     .input(validation.user.changeColorScheme)
@@ -469,21 +465,6 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, ctx.session.user.id));
     }),
-  getPingIconsEnabledOrDefault: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.session?.user) {
-      return false;
-    }
-
-    const user = await ctx.db.query.users.findFirst({
-      columns: {
-        id: true,
-        pingIconsEnabled: true,
-      },
-      where: eq(users.id, ctx.session.user.id),
-    });
-
-    return user?.pingIconsEnabled ?? false;
-  }),
   changePingIconsEnabled: protectedProcedure
     .input(validation.user.pingIconsEnabled.and(validation.common.byId))
     .mutation(async ({ input, ctx }) => {
@@ -502,21 +483,6 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, ctx.session.user.id));
     }),
-  getFirstDayOfWeekForUserOrDefault: publicProcedure.input(z.undefined()).query(async ({ ctx }) => {
-    if (!ctx.session?.user) {
-      return 1 as const;
-    }
-
-    const user = await ctx.db.query.users.findFirst({
-      columns: {
-        id: true,
-        firstDayOfWeek: true,
-      },
-      where: eq(users.id, ctx.session.user.id),
-    });
-
-    return user?.firstDayOfWeek ?? (1 as const);
-  }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(validation.user.firstDayOfWeek.and(validation.common.byId)))
     .output(z.void())

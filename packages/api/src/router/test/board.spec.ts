@@ -812,7 +812,7 @@ describe("saveBoard should save full board", () => {
     expect(integration).toBeUndefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
-  it.each([[{ kind: "empty" as const }], [{ kind: "category" as const, name: "My first category" }]])(
+  it.each([[{ kind: "empty" as const }], [{ kind: "category" as const, collapsed: false, name: "My first category" }]])(
     "should add section when present in input",
     async (partialSection) => {
       const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -1023,6 +1023,7 @@ describe("saveBoard should save full board", () => {
           yOffset: 1,
           xOffset: 0,
           name: "Test",
+          collapsed: true,
           items: [],
         },
         {
@@ -1031,6 +1032,7 @@ describe("saveBoard should save full board", () => {
           name: "After",
           yOffset: 0,
           xOffset: 0,
+          collapsed: false,
           items: [],
         },
       ],

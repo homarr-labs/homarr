@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "為 Pings 使用 icon"
+      },
+      "defaultSearchEngine": {
+        "label": "預設搜尋引擎"
+      },
+      "openSearchInNewTab": {
+        "label": "於新分頁中開啟搜尋結果"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "預設搜尋引擎已變更成功"
+            "message": "搜尋設定更改成功"
           },
           "error": {
-            "message": "預設搜尋引擎無法變更"
+            "message": "無法更改搜尋設定"
           }
         }
       },
@@ -1367,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "華氏溫度"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "天氣位置"
         },
@@ -1384,6 +1397,13 @@
           "label": "日期格式",
           "description": "日期應該是什麼樣式"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "晴朗",
@@ -1420,8 +1440,8 @@
       "name": "系統健康監測",
       "description": "顯示系統運行狀態",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "系統",
+        "cluster": "叢集"
       },
       "option": {
         "fahrenheit": {
@@ -2281,7 +2301,7 @@
                   "mobile": "移動裝置"
                 }
               },
-              "defaultSearchEngine": "預設搜尋引擎",
+              "search": "搜尋",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }

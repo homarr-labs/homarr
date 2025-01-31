@@ -2,6 +2,7 @@
 
 import { Button, FileInput, Group, Stack } from "@mantine/core";
 import { IconCertificate } from "@tabler/icons-react";
+import { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -9,7 +10,7 @@ import { useZodForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { superRefineCertificateFile, z } from "@homarr/validation";
+import { superRefineCertificateFile } from "@homarr/validation";
 
 export const AddCertificateButton = () => {
   const { openModal } = useModalAction(AddCertificateModal);

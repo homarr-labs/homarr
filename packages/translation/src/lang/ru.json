@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Использовать индикаторы доступности"
+      },
+      "defaultSearchEngine": {
+        "label": "Поисковая система по умолчанию"
+      },
+      "openSearchInNewTab": {
+        "label": "Открыть результаты поиска в новой вкладке"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Поисковая система по умолчанию успешно изменена"
+            "message": "Настройки поиска успешно изменены"
           },
           "error": {
-            "message": "Не удалось изменить поисковую систему по умолчанию"
+            "message": "Не удается изменить настройки поиска"
           }
         }
       },
@@ -787,7 +793,7 @@
         "label": "Копировать URL"
       },
       "open": {
-        "label": ""
+        "label": "Открыть медиа"
       }
     }
   },
@@ -1068,13 +1074,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Скрывать иконки"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Скрыть имена хостов"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Открывать в новой вкладке"
         },
         "items": {
           "label": "Закладки",
@@ -1367,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Температура в градусах Фаренгейта"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Местоположение"
         },
@@ -1384,6 +1397,13 @@
           "label": "Формат даты",
           "description": "Как должна отображаться дата"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Ясно",
@@ -1420,8 +1440,8 @@
       "name": "Мониторинг состояния системы",
       "description": "Отображает информацию о состоянии и работоспособности вашей системы (систем).",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Система",
+        "cluster": "Кластер"
       },
       "option": {
         "fahrenheit": {
@@ -2281,7 +2301,7 @@
                   "mobile": "Мобильная"
                 }
               },
-              "defaultSearchEngine": "Поисковая система по умолчанию",
+              "search": "Поиск",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности"
             }

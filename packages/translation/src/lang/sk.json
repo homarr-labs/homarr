@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Používanie ikon pre pingy"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Predvolený vyhľadávací nástroj sa úspešne zmenil"
+            "message": ""
           },
           "error": {
-            "message": "Nie je možné zmeniť predvolený vyhľadávací nástroj"
+            "message": ""
           }
         }
       },
@@ -1367,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Teplota vo stupňoch Fahrenheita"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Poloha počasia"
         },
@@ -1384,6 +1397,13 @@
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Jasno",
@@ -2281,7 +2301,7 @@
                   "mobile": "Mobilná"
                 }
               },
-              "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
+              "search": "",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
             }

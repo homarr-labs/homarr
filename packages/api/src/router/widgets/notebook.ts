@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
+import { z } from "zod";
 
 import { eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";
-import { z } from "@homarr/validation";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 

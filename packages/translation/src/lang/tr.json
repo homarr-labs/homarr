@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Pingler İçin Simgeler Kullanın"
+      },
+      "defaultSearchEngine": {
+        "label": "Öntanımlı arama motoru"
+      },
+      "openSearchInNewTab": {
+        "label": "Arama sonucunu yeni sekmede aç"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Öntanımlı arama motoru başarıyla değiştirildi"
+            "message": "Arama tercihleri ​​başarıyla değiştirildi"
           },
           "error": {
-            "message": "Öntanımlı arama motoru değiştirilemiyor"
+            "message": "Arama tercihleri ​​değiştirilemiyor"
           }
         }
       },
@@ -1068,13 +1074,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Simgeleri gizle"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Ana bilgisayar adlarını gizle"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Yeni sekmede aç"
         },
         "items": {
           "label": "Yer İmleri",
@@ -1367,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Fahrenheit cinsinden sıcaklık"
         },
+        "disableTemperatureDecimals": {
+          "label": "Sıcaklık ondalıklarını devre dışı bırak"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Mevcut rüzgar hızını göster",
+          "description": "Yalnızca mevcut hava durumunda"
+        },
         "location": {
           "label": "Hava durumu konumu"
         },
@@ -1384,6 +1397,13 @@
           "label": "Tarih Biçimi",
           "description": "Tarihin nasıl görüneceği"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} km/s",
+      "dailyForecast": {
+        "sunrise": "Gün Doğumu",
+        "sunset": "Gün Batımı",
+        "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "Temiz",
@@ -1420,8 +1440,8 @@
       "name": "Sistem Sağlığı İzleme",
       "description": "Sistem(ler)inizin sağlığını ve durumunu gösteren bilgileri görüntüler.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Sistem",
+        "cluster": "Küme"
       },
       "option": {
         "fahrenheit": {
@@ -2281,7 +2301,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "defaultSearchEngine": "Öntanımlı arama motoru",
+              "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }
