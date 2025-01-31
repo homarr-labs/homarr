@@ -1374,11 +1374,11 @@
           "label": "Fahrenheit cinsinden sıcaklık"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Sıcaklık ondalıklarını devre dışı bırak"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Mevcut rüzgar hızını göster",
+          "description": "Yalnızca mevcut hava durumunda"
         },
         "location": {
           "label": "Hava durumu konumu"
@@ -1398,12 +1398,12 @@
           "description": "Tarihin nasıl görüneceği"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} km/s",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Gün Doğumu",
+        "sunset": "Gün Batımı",
+        "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "Temiz",
