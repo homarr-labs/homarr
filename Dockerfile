@@ -63,6 +63,7 @@ ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
+ENV NODE_ENV='production'
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]
