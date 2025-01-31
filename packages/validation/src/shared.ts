@@ -21,10 +21,16 @@ export type BoardItemAdvancedOptions = z.infer<typeof itemAdvancedOptionsSchema>
 
 export const sharedItemSchema = z.object({
   id: z.string(),
-  xOffset: z.number(),
-  yOffset: z.number(),
-  height: z.number(),
-  width: z.number(),
+  layouts: z.array(
+    z.object({
+      layoutId: z.string(),
+      yOffset: z.number(),
+      xOffset: z.number(),
+      width: z.number(),
+      height: z.number(),
+      sectionId: z.string(),
+    }),
+  ),
   integrationIds: z.array(z.string()),
   advancedOptions: itemAdvancedOptionsSchema,
 });
@@ -60,10 +66,15 @@ const createDynamicSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItem
   z.object({
     id: z.string(),
     kind: z.literal("dynamic"),
-    yOffset: z.number(),
-    xOffset: z.number(),
-    width: z.number(),
-    height: z.number(),
+    layouts: z.array(
+      z.object({
+        layoutId: z.string(),
+        yOffset: z.number(),
+        xOffset: z.number(),
+        width: z.number(),
+        height: z.number(),
+      }),
+    ),
     items: z.array(itemSchema),
     parentSectionId: z.string(),
   });

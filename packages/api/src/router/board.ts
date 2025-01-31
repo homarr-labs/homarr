@@ -1029,15 +1029,17 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           collapseStates: {
             where: eq(sectionCollapseStates.userId, userId ?? ""),
           },
-          items: {
+          layouts: true,
+        },
+      },
+      items: {
+        with: {
+          integrations: {
             with: {
-              integrations: {
-                with: {
-                  integration: true,
-                },
-              },
+              integration: true,
             },
           },
+          layouts: true,
         },
       },
       userPermissions: {
@@ -1059,20 +1061,40 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
     });
   }
 
-  const { sections, ...otherBoardProperties } = board;
+  const { sections, items, ...otherBoardProperties } = board;
 
   return {
     ...otherBoardProperties,
     sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,
-        collapsed: collapseStates.at(0)?.collapsed ?? false,
-        items: section.items.map(({ integrations: itemIntegrations, ...item }) => ({
-          ...item,
-          integrationIds: itemIntegrations.map((item) => item.integration.id),
-          advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
-          options: superjson.parse<Record<string, unknown>>(item.options),
+        xOffset: section.xOffset,
+        yOffset: section.yOffset,
+        layouts: section.layouts.map((layout) => ({
+          xOffset: layout.xOffset,
+          yOffset: layout.yOffset,
+          width: layout.width,
+          height: layout.height,
+          parentSectionId: layout.parentSectionId,
+          layoutId: layout.layoutId,
         })),
+        collapsed: collapseStates.at(0)?.collapsed ?? false,
+        items: items.map(({ integrations: itemIntegrations, ...item }) =>
+          parseItem({
+            ...item,
+            layouts: item.layouts.map((layout) => ({
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              width: layout.width,
+              height: layout.height,
+              layoutId: layout.layoutId,
+              sectionId: layout.sectionId,
+            })),
+            integrationIds: itemIntegrations.map((item) => item.integration.id),
+            advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+            options: superjson.parse<Record<string, unknown>>(item.options),
+          }),
+        ),
       }),
     ),
   };
@@ -1085,6 +1107,15 @@ const forKind = <T extends WidgetKind>(kind: T) =>
   });
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
+
+const parseItem = (item: z.infer<typeof outputItemSchema>) => {
+  const result = outputItemSchema.safeParse(item);
+
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+};
 
 const parseSection = (section: unknown) => {
   const result = createSectionSchema(outputItemSchema).safeParse(section);
