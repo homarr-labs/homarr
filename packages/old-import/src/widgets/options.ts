@@ -57,7 +57,7 @@ const optionMapping: OptionMapping = {
     timezone: (oldOptions) => oldOptions.timezone,
     useCustomTimezone: () => true,
     customTimeFormat: () => undefined,
-    customDateFormat: () => undefined
+    customDateFormat: () => undefined,
   },
   downloads: {
     activeTorrentThreshold: (oldOptions) =>
