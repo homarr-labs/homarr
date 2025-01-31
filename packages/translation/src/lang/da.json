@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatur i Fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": "Deaktiver temperaturdecimaler"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Vis aktuel vindhastighed",
+          "description": "Kun på nuværende vejr"
+        },
         "location": {
           "label": "Vejr lokation"
         },
@@ -1390,6 +1397,13 @@
           "label": "Datoformat",
           "description": "Hvordan datoen skal se ud"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} km/t",
+      "dailyForecast": {
+        "sunrise": "Solopgang",
+        "sunset": "Solnedgang",
+        "maxWindSpeed": "Maks. vindhastighed: {maxWindSpeed} km/t",
+        "maxWindGusts": "Maks. vindstød {maxWindGusts} km/t"
       },
       "kind": {
         "clear": "Skyfrit",

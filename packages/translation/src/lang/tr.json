@@ -153,10 +153,10 @@
         "label": "Pingler İçin Simgeler Kullanın"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Öntanımlı arama motoru"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Arama sonucunu yeni sekmede aç"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Arama tercihleri ​​başarıyla değiştirildi"
           },
           "error": {
-            "message": ""
+            "message": "Arama tercihleri ​​değiştirilemiyor"
           }
         }
       },
@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Fahrenheit cinsinden sıcaklık"
         },
+        "disableTemperatureDecimals": {
+          "label": "Sıcaklık ondalıklarını devre dışı bırak"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Mevcut rüzgar hızını göster",
+          "description": "Yalnızca mevcut hava durumunda"
+        },
         "location": {
           "label": "Hava durumu konumu"
         },
@@ -1390,6 +1397,13 @@
           "label": "Tarih Biçimi",
           "description": "Tarihin nasıl görüneceği"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} km/s",
+      "dailyForecast": {
+        "sunrise": "Gün Doğumu",
+        "sunset": "Gün Batımı",
+        "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "Temiz",
@@ -2287,7 +2301,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "search": "",
+              "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }

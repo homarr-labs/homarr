@@ -153,10 +153,10 @@
         "label": "Використовувати значки для ping"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Стандартна система пошуку"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Відкрити результати пошуку в новій вкладці"
       }
     },
     "error": {
@@ -222,7 +222,7 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося змінити налаштування пошуку"
           }
         }
       },
@@ -1373,6 +1373,13 @@
         "isFormatFahrenheit": {
           "label": "Температура за Фаренгейтом"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Погодна локація"
         },
@@ -1390,6 +1397,13 @@
           "label": "Формат дати",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Ясно",
@@ -1575,8 +1589,8 @@
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Поточні потоки медіасервера",
+      "description": "Показує поточні потоки з ваших медіасерверів",
       "option": {},
       "items": {
         "user": "Користувач",
@@ -1674,7 +1688,7 @@
         },
         "state": {
           "columnTitle": "Стан",
-          "detailsTitle": ""
+          "detailsTitle": "Стан"
         },
         "time": {
           "columnTitle": "Час завершення",
@@ -1682,7 +1696,7 @@
         },
         "type": {
           "columnTitle": "Тип",
-          "detailsTitle": ""
+          "detailsTitle": "Тип клієнта"
         },
         "upSpeed": {
           "columnTitle": "Віддача",
@@ -1696,10 +1710,10 @@
         "completed": "Завершено",
         "failed": "Невдало",
         "processing": "В обробці",
-        "leeching": "",
+        "leeching": "Завантажується",
         "stalled": "",
         "unknown": "Невідомо",
-        "seeding": ""
+        "seeding": "Роздається"
       },
       "actions": {
         "clients": {
@@ -1828,7 +1842,7 @@
       }
     },
     "rssFeed": {
-      "name": "",
+      "name": "RSS-канали",
       "description": "",
       "option": {
         "feedUrls": {
@@ -2079,20 +2093,20 @@
             "rename": {
               "label": "Перейменувати дошку",
               "description": "",
-              "button": "",
+              "button": "Змінити назву",
               "modal": {
-                "title": ""
+                "title": "Перейменувати дошку"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Змінити видимість дошки",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Ця дошка є загальнодоступною.",
+                "private": "Ця дошка є приватною."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Зробити приватною",
+                "private": "Зробити загальнодоступною"
               },
               "confirm": {
                 "public": {
@@ -2281,13 +2295,13 @@
             "item": {
               "language": "Мова та Регіон",
               "board": {
-                "title": "",
+                "title": "Домашня дошка",
                 "type": {
                   "general": "",
-                  "mobile": ""
+                  "mobile": "Мобільна"
                 }
               },
-              "search": "",
+              "search": "Пошук",
               "firstDayOfWeek": "Перший день тижня",
               "accessibility": "Доступність"
             }
@@ -2304,11 +2318,11 @@
           "title": "Користувачі"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Редагувати користувача {username}"
         },
         "create": {
           "metaTitle": "Створити користувача",
-          "title": "",
+          "title": "Створити нового користувача",
           "step": {
             "personalInformation": {
               "label": ""
@@ -2317,23 +2331,23 @@
               "label": "Безпека"
             },
             "groups": {
-              "label": "",
-              "title": "",
+              "label": "Групи",
+              "title": "Виберіть усі групи, учасником яких має бути користувач",
               "description": ""
             },
             "review": {
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Користувача створено"
             },
             "error": {
-              "title": ""
+              "title": "Не вдалося створити користувача"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Створити іншого користувача",
+            "back": "Повернутися до списку користувачів"
           }
         },
         "invite": {
@@ -2371,23 +2385,23 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Назад до груп",
         "setting": {
           "general": {
             "title": "Загальне",
             "owner": "Власник",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Власник цієї групи",
+            "ownerOfGroupDeleted": "Власника цієї групи видалено. Наразі не має власника."
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "Учасники",
+            "search": "Знайти учасника",
+            "notFound": "Учасників не знайдено"
           },
           "permissions": {
-            "title": "",
+            "title": "Дозволи",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "У вас є незбережені зміни!"
             }
           }
         }
@@ -2477,7 +2491,7 @@
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Завдання",
           "status": {
             "idle": "",
             "running": "Запущено",
@@ -2485,13 +2499,13 @@
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Статус сервера Minecraft"
             },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
-              "label": ""
+              "label": "Аналітика"
             },
             "smartHomeEntityState": {
               "label": ""
@@ -2591,7 +2605,7 @@
     "table": {
       "updated": "Оновлено {when}",
       "search": "",
-      "selected": ""
+      "selected": "Вибрано {selectCount} із {totalCount} контейнерів"
     },
     "field": {
       "name": {
@@ -2852,25 +2866,25 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Інтеграції"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "Активувати командний режим",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Локальні команди"
           },
           "globalCommand": {
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Перемикнути на світлу тему",
+                "dark": "Перемикнути на темну тему"
               },
               "language": {
-                "label": "",
+                "label": "Змінити мову",
                 "children": {
                   "detail": {
                     "title": ""
@@ -2881,53 +2895,53 @@
                 "label": "Створити нову дошку"
               },
               "importBoard": {
-                "label": ""
+                "label": "Імпортувати дошку"
               },
               "newApp": {
-                "label": ""
+                "label": "Створити новий додаток"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Створити нову інтеграцію",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Виберіть тип інтеграції, який потрібно створити"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Створити нового користувача"
               },
               "newInvite": {
                 "label": "Створити нове запрошення"
               },
               "newGroup": {
-                "label": ""
+                "label": "Створити нову групу"
               }
             }
           }
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Запросити фільм",
+        "requestSeries": "Запросити серіал",
+        "openIn": "Відкрити в {kind}"
       },
       "external": {
         "help": "Використовувати зовнішню пошукову систему",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Пошукові системи",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Шукати з {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Виберіть дію для пошукової системи"
               },
               "searchResults": {
-                "title": ""
+                "title": "Виберіть результат пошуку для дій"
               }
             },
             "option": {
@@ -3053,7 +3067,7 @@
                 "label": "Про програму"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Домашня дошка"
               },
               "preferences": {
                 "label": "Ваші уподобання"
@@ -3139,21 +3153,21 @@
           }
         },
         "edit": {
-          "title": "",
+          "title": "Редагувати систему пошуку",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Зміни успішно застосовано",
+              "message": "Пошукову систему успішно збережено"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Не вдалося застосувати зміни",
+              "message": "Не вдалося зберегти пошукову систему"
             }
           },
-          "configControl": "",
+          "configControl": "Конфігурація",
           "searchEngineType": {
             "generic": "",
-            "fromIntegration": ""
+            "fromIntegration": "З інтеграції"
           }
         },
         "delete": {
@@ -3182,7 +3196,7 @@
               }
             },
             "button": {
-              "send": ""
+              "send": "Надіслати запит"
             }
           }
         }
@@ -3195,36 +3209,36 @@
         "title": "",
         "description": "",
         "noResults": {
-          "title": ""
+          "title": "Сертифікати відсутні"
         },
         "expires": ""
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Додати сертифікат",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Додано сертифікат",
+            "message": "Сертифікат було успішно додано"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося додати сертифікат",
+            "message": "Не вдалося додати сертифікат"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Видалити сертифікат",
+        "confirm": "Ви впевнені, що хочете видалити сертифікат?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Сертифікат видалено",
+            "message": "Сертифікат успішно видалено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Сертификат не видалено",
+            "message": "Не вдалося видалити сертифікат"
           }
         }
       }

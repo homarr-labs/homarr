@@ -11,7 +11,7 @@
         }
       },
       "import": {
-        "title": "Importēt datus",
+        "title": "",
         "subtitle": "",
         "dropzone": {
           "title": "",
@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "Lietotnes",
-            "boards": "Dēļi",
+            "apps": "",
+            "boards": "",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Atslēga",
+              "label": "",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "Iestatījumi",
+        "title": "",
         "subtitle": ""
       },
       "finish": {
@@ -105,8 +105,8 @@
     "backToStart": ""
   },
   "user": {
-    "title": "Lietotāji",
-    "name": "Lietotājs",
+    "title": "",
+    "name": "",
     "page": {
       "login": {
         "title": "",
@@ -124,24 +124,24 @@
     },
     "field": {
       "email": {
-        "label": "E-pasts",
+        "label": "",
         "verified": ""
       },
       "username": {
-        "label": "Lietotājvārds"
+        "label": ""
       },
       "password": {
-        "label": "Parole",
+        "label": "",
         "requirement": {
           "length": "",
-          "lowercase": "Ietver mazo burtu",
-          "uppercase": "Ietver lielo burtu",
-          "number": "Ietver numuru",
+          "lowercase": "",
+          "uppercase": "",
+          "number": "",
           "special": ""
         }
       },
       "passwordConfirm": {
-        "label": "Apstipriniet paroli"
+        "label": ""
       },
       "previousPassword": {
         "label": ""
@@ -164,7 +164,7 @@
     },
     "action": {
       "login": {
-        "label": "Pieslēgties",
+        "label": "",
         "labelWith": "",
         "notification": {
           "success": {
@@ -182,10 +182,10 @@
         }
       },
       "register": {
-        "label": "Izveidot kontu",
+        "label": "",
         "notification": {
           "success": {
-            "title": "Konts izveidots",
+            "title": "",
             "message": ""
           },
           "error": {
@@ -194,7 +194,7 @@
           }
         }
       },
-      "create": "Izveidot lietotāju",
+      "create": "",
       "changePassword": {
         "label": "",
         "notification": {
@@ -304,12 +304,12 @@
     "name": "",
     "search": "",
     "field": {
-      "name": "Nosaukums",
+      "name": "",
       "members": ""
     },
     "permission": {
       "admin": {
-        "title": "Administrators",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -318,7 +318,7 @@
         }
       },
       "app": {
-        "title": "Lietotnes",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -339,7 +339,7 @@
         }
       },
       "board": {
-        "title": "Dēļi",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -508,7 +508,7 @@
     "search": "",
     "page": {
       "list": {
-        "title": "Lietotnes",
+        "title": "",
         "noResults": {
           "title": "",
           "action": ""
@@ -557,7 +557,7 @@
     },
     "field": {
       "name": {
-        "label": "Nosaukums"
+        "label": ""
       },
       "description": {
         "label": ""
@@ -625,7 +625,7 @@
     },
     "field": {
       "name": {
-        "label": "Nosaukums"
+        "label": ""
       },
       "url": {
         "label": ""
@@ -650,7 +650,7 @@
           "message": ""
         },
         "invalidUrl": {
-          "title": "Nederīgs URL",
+          "title": "",
           "message": ""
         },
         "secretNotDefined": {
@@ -729,7 +729,7 @@
       },
       "kind": {
         "username": {
-          "label": "Lietotājvārds",
+          "label": "",
           "newLabel": ""
         },
         "apiKey": {
@@ -737,8 +737,8 @@
           "newLabel": ""
         },
         "password": {
-          "label": "Parole",
-          "newLabel": "Jauna parole"
+          "label": "",
+          "newLabel": ""
         },
         "tokenId": {
           "label": "",
@@ -760,9 +760,9 @@
     "plural": "",
     "search": "",
     "field": {
-      "name": "Nosaukums",
-      "size": "Lielums",
-      "creator": "Izveidotājs"
+      "name": "",
+      "size": "",
+      "creator": ""
     },
     "action": {
       "upload": {
@@ -799,28 +799,28 @@
   },
   "common": {
     "beta": "",
-    "error": "Kļūda",
+    "error": "",
     "action": {
-      "add": "Pievienot",
-      "apply": "Lietot",
+      "add": "",
+      "apply": "",
       "backToOverview": "",
-      "create": "Izveidot",
-      "edit": "Rediģēt",
+      "create": "",
+      "edit": "",
       "import": "",
-      "insert": "Ievietot",
-      "remove": "Noņemt",
-      "save": "Saglabāt",
-      "saveChanges": "Saglabāt izmaiņas",
-      "cancel": "Atcelt",
-      "delete": "Dzēst",
+      "insert": "",
+      "remove": "",
+      "save": "",
+      "saveChanges": "",
+      "cancel": "",
+      "delete": "",
       "discard": "",
-      "confirm": "Apstipriniet",
+      "confirm": "",
       "continue": "",
-      "previous": "Iepriekšējais",
-      "next": "Nākamais",
+      "previous": "",
+      "next": "",
       "checkoutDocs": "",
       "checkLogs": "",
-      "tryAgain": "Mēģiniet vēlreiz",
+      "tryAgain": "",
       "loading": ""
     },
     "here": "",
@@ -877,37 +877,37 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "",
-        "preferences": "Jūsu iestatījumi",
+        "preferences": "",
         "logout": "",
-        "login": "Pieslēgties",
+        "login": "",
         "homeBoard": "",
         "loggedOut": "",
         "updateAvailable": ""
       }
     },
-    "dangerZone": "Bīstamā zona",
-    "noResults": "Nav atrasts neviens rezultāts",
+    "dangerZone": "",
+    "noResults": "",
     "preview": {
       "show": "",
       "hide": ""
     },
     "zod": {
       "errors": {
-        "default": "Šis lauks nav derīgs",
-        "required": "Šis lauks ir obligāts",
+        "default": "",
+        "required": "",
         "string": {
-          "startsWith": "Šim laukam jāsākas ar {startsWith}",
-          "endsWith": "Šim laukam jābeidzas ar {endsWith}",
-          "includes": "Šajā laukā jāiekļauj {includes}",
+          "startsWith": "",
+          "endsWith": "",
+          "includes": "",
           "invalidEmail": ""
         },
         "tooSmall": {
-          "string": "Šim laukam jābūt vismaz {minimum} rakstzīmju garam",
-          "number": "Šim laukam jābūt lielākam vai vienādam ar {minimum}"
+          "string": "",
+          "number": ""
         },
         "tooBig": {
-          "string": "Šim laukam jābūt ne garākam par {maximum} rakstzīmēm",
-          "number": "Šim laukam jābūt mazākam vai vienādam ar {maximum}"
+          "string": "",
+          "number": ""
         },
         "custom": {
           "passwordsDoNotMatch": "",
@@ -936,15 +936,15 @@
     "category": {
       "field": {
         "name": {
-          "label": "Nosaukums"
+          "label": ""
         }
       },
       "action": {
         "create": "",
         "edit": "",
         "remove": "",
-        "moveUp": "Virzīt augšup",
-        "moveDown": "Virzīt lejup",
+        "moveUp": "",
+        "moveDown": "",
         "createAbove": "",
         "createBelow": ""
       },
@@ -963,7 +963,7 @@
       "menu": {
         "label": {
           "create": "",
-          "changePosition": "Mainīt pozīciju"
+          "changePosition": ""
         }
       }
     }
@@ -979,7 +979,7 @@
     },
     "menu": {
       "label": {
-        "settings": "Iestatījumi"
+        "settings": ""
       }
     },
     "create": {
@@ -991,10 +991,10 @@
       "title": "",
       "field": {
         "width": {
-          "label": "Platums"
+          "label": ""
         },
         "height": {
-          "label": "Augstums"
+          "label": ""
         },
         "xOffset": {
           "label": ""
@@ -1033,7 +1033,7 @@
           "label": ""
         },
         "openInNewTab": {
-          "label": "Atvērt jaunā cilnē"
+          "label": ""
         },
         "showTitle": {
           "label": ""
@@ -1060,13 +1060,13 @@
           "label": ""
         },
         "layout": {
-          "label": "Izkārtojums",
+          "label": "",
           "option": {
             "row": {
-              "label": "Horizontāli"
+              "label": ""
             },
             "column": {
-              "label": "Vertikāli"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1093,13 +1093,13 @@
       "description": "",
       "option": {
         "layout": {
-          "label": "Izkārtojums",
+          "label": "",
           "option": {
             "row": {
-              "label": "Horizontāli"
+              "label": ""
             },
             "column": {
-              "label": "Vertikāli"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1115,25 +1115,25 @@
         "integrationsDisconnected": ""
       },
       "data": {
-        "adsBlockedToday": "Šodien bloķēti",
-        "adsBlockedTodayPercentage": "Šodien bloķēti",
-        "dnsQueriesToday": "Pieprasījumi šodien",
+        "adsBlockedToday": "",
+        "adsBlockedTodayPercentage": "",
+        "dnsQueriesToday": "",
         "domainsBeingBlocked": ""
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
-      "description": "Vadiet PiHole vai AdGuard no sava informācijas paneļa",
+      "description": "",
       "option": {
         "layout": {
-          "label": "Izkārtojums",
+          "label": "",
           "option": {
             "row": {
-              "label": "Horizontāli"
+              "label": ""
             },
             "column": {
-              "label": "Vertikāli"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1152,8 +1152,8 @@
         "disableAll": "",
         "setTimer": "",
         "set": "",
-        "enabled": "Iespējots",
-        "disabled": "Atspējots",
+        "enabled": "",
+        "disabled": "",
         "processing": "",
         "disconnected": "",
         "hours": "",
@@ -1163,7 +1163,7 @@
     },
     "clock": {
       "name": "",
-      "description": "Rāda pašreizējo datumu un laiku.",
+      "description": "",
       "option": {
         "customTitleToggle": {
           "label": "",
@@ -1183,7 +1183,7 @@
           "label": ""
         },
         "timezone": {
-          "label": "Laika zona",
+          "label": "",
           "description": ""
         },
         "showDate": {
@@ -1215,102 +1215,102 @@
       }
     },
     "notebook": {
-      "name": "Piezīmes",
+      "name": "",
       "description": "",
       "option": {
         "showToolbar": {
-          "label": "Rādīt rīkjoslu, lai palīdzētu rakstīt markdown tekstu"
+          "label": ""
         },
         "allowReadOnlyCheck": {
-          "label": "Atļaut atzīmi lasīšanas režīmā"
+          "label": ""
         },
         "content": {
-          "label": "Piezīmju saturs"
+          "label": ""
         }
       },
       "controls": {
-        "bold": "Treknraksts",
-        "italic": "Slīpraksts",
-        "strikethrough": "Pārsvītrojums",
-        "underline": "Pasvītrojums",
-        "colorText": "Krāsains teksts",
-        "colorHighlight": "Krāsains izcelts teksts",
-        "code": "Kods",
-        "clear": "Notīrīt formatējumu",
-        "heading": "Virsraksts {level}",
-        "align": "Teksta līdzināšana: {position}",
-        "blockquote": "Citāts",
-        "horizontalLine": "Horizontāla līnija",
-        "bulletList": "Aizzīmju saraksts",
-        "orderedList": "Numurēts saraksts",
-        "checkList": "Pārbaudes saraksts",
-        "increaseIndent": "Palielināt atkāpi",
-        "decreaseIndent": "Samazināt atkāpi",
-        "link": "Saite",
-        "unlink": "Noņemt saiti",
-        "image": "Iegult attēlu",
-        "addTable": "Pievienot tabulu",
-        "deleteTable": "Dzēst tabulu",
-        "colorCell": "Krāsaina šūna",
-        "mergeCell": "Pārslēgt šūnu apvienošanu",
-        "addColumnLeft": "Pievienot kolonnu pirms",
-        "addColumnRight": "Pievienot kolonnu pēc",
-        "deleteColumn": "Dzēst kolonnu",
-        "addRowTop": "Pievienot rindu pirms",
-        "addRowBelow": "Pievienot rindu pēc",
-        "deleteRow": "Dzēst rindu"
+        "bold": "",
+        "italic": "",
+        "strikethrough": "",
+        "underline": "",
+        "colorText": "",
+        "colorHighlight": "",
+        "code": "",
+        "clear": "",
+        "heading": "",
+        "align": "",
+        "blockquote": "",
+        "horizontalLine": "",
+        "bulletList": "",
+        "orderedList": "",
+        "checkList": "",
+        "increaseIndent": "",
+        "decreaseIndent": "",
+        "link": "",
+        "unlink": "",
+        "image": "",
+        "addTable": "",
+        "deleteTable": "",
+        "colorCell": "",
+        "mergeCell": "",
+        "addColumnLeft": "",
+        "addColumnRight": "",
+        "deleteColumn": "",
+        "addRowTop": "",
+        "addRowBelow": "",
+        "deleteRow": ""
       },
       "align": {
-        "left": "Pa kreisi",
-        "center": "Centrā",
-        "right": "Pa labi"
+        "left": "",
+        "center": "",
+        "right": ""
       },
       "popover": {
-        "clearColor": "Notīrīt krāsu",
-        "source": "Avots",
-        "widthPlaceholder": "Vērtība % vai pikseļos",
-        "columns": "Kolonnas",
-        "rows": "Rindas",
-        "width": "Platums",
-        "height": "Augstums"
+        "clearColor": "",
+        "source": "",
+        "widthPlaceholder": "",
+        "columns": "",
+        "rows": "",
+        "width": "",
+        "height": ""
       }
     },
     "iframe": {
       "name": "",
-      "description": "Iegult jebkuru saturu no interneta. Dažas vietnes var ierobežot piekļuvi.",
+      "description": "",
       "option": {
         "embedUrl": {
-          "label": "Iegult URL"
+          "label": ""
         },
         "allowFullScreen": {
-          "label": "Atļaut pilnekrāna režīmu"
+          "label": ""
         },
         "allowTransparency": {
-          "label": "Atļaut caurspīdīgumu"
+          "label": ""
         },
         "allowScrolling": {
-          "label": "Atļaut ritināšanu"
+          "label": ""
         },
         "allowPayment": {
-          "label": "Atļaut maksājumus"
+          "label": ""
         },
         "allowAutoPlay": {
-          "label": "Atļaut automātisko atskaņošanu"
+          "label": ""
         },
         "allowMicrophone": {
-          "label": "Atļaut piekļuvi mikrofonam"
+          "label": ""
         },
         "allowCamera": {
-          "label": "Atļaut piekļuvi kamerai"
+          "label": ""
         },
         "allowGeolocation": {
-          "label": "Atļaut ģeogrāfiskās atrašanās vietas noteikšanu"
+          "label": ""
         }
       },
       "error": {
         "noUrl": "",
         "unsupportedProtocol": "",
-        "noBrowerSupport": "Jūsu pārlūkprogramma neatbalsta iframe. Lūdzu, atjauniniet pārlūkprogrammu."
+        "noBrowerSupport": ""
       }
     },
     "smartHome-entityState": {
@@ -1318,7 +1318,7 @@
       "description": "",
       "option": {
         "entityId": {
-          "label": "Vienības ID"
+          "label": ""
         },
         "displayName": {
           "label": ""
@@ -1336,10 +1336,10 @@
       "description": "",
       "option": {
         "displayName": {
-          "label": "Parādāmais nosaukums"
+          "label": ""
         },
         "automationId": {
-          "label": "Automatizācijas ID"
+          "label": ""
         }
       },
       "spotlightAction": {
@@ -1347,11 +1347,11 @@
       }
     },
     "calendar": {
-      "name": "Kalendārs",
+      "name": "",
       "description": "",
       "option": {
         "releaseType": {
-          "label": "Radarr laiduma tips",
+          "label": "",
           "options": {
             "inCinemas": "",
             "digitalRelease": "",
@@ -1367,8 +1367,8 @@
       }
     },
     "weather": {
-      "name": "Laikapstākļi",
-      "description": "Rāda pašreizējo laikapstākļu informāciju par iestatīto atrašanās vietu.",
+      "name": "",
+      "description": "",
       "option": {
         "isFormatFahrenheit": {
           "label": ""
@@ -1381,7 +1381,7 @@
           "description": ""
         },
         "location": {
-          "label": "Laikapstākļu atrašānās vieta"
+          "label": ""
         },
         "showCity": {
           "label": ""
@@ -1406,55 +1406,55 @@
         "maxWindGusts": ""
       },
       "kind": {
-        "clear": "Skaidrs",
-        "mainlyClear": "Galvenokārt skaidrs",
-        "fog": "Migla",
-        "drizzle": "Smidzinošs lietus",
-        "freezingDrizzle": "Smidzinošs ledus",
-        "rain": "Lietus",
-        "freezingRain": "Ledus lietus",
-        "snowFall": "Gāziensnidze",
-        "snowGrains": "Sniega graudi",
-        "rainShowers": "Lietusgāzes",
-        "snowShowers": "Sniegputenis",
-        "thunderstorm": "Pērkona negaiss",
-        "thunderstormWithHail": "Pērkona negaiss ar krusu",
-        "unknown": "Nezināms"
+        "clear": "",
+        "mainlyClear": "",
+        "fog": "",
+        "drizzle": "",
+        "freezingDrizzle": "",
+        "rain": "",
+        "freezingRain": "",
+        "snowFall": "",
+        "snowGrains": "",
+        "rainShowers": "",
+        "snowShowers": "",
+        "thunderstorm": "",
+        "thunderstormWithHail": "",
+        "unknown": ""
       }
     },
     "indexerManager": {
-      "name": "Indeksētāja pārvaldnieka statuss",
+      "name": "",
       "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": ""
         }
       },
-      "title": "Indexer pārvaldnieks",
-      "testAll": "Pārbaudīt visu",
+      "title": "",
+      "testAll": "",
       "error": {
         "internalServerError": ""
       }
     },
     "healthMonitoring": {
-      "name": "Sistēmas Stāvokļa Uzraudzība",
-      "description": "Tiek parādīta informācija par sistēmas(-u) stāvokli un stāvokli.",
+      "name": "",
+      "description": "",
       "tab": {
         "system": "",
         "cluster": ""
       },
       "option": {
         "fahrenheit": {
-          "label": "CPU temperatūra pēc Fārenheita"
+          "label": ""
         },
         "cpu": {
-          "label": "Rādīt CPU informāciju"
+          "label": ""
         },
         "memory": {
-          "label": "Rādīt atmiņas informāciju"
+          "label": ""
         },
         "fileSystem": {
-          "label": "Rādīt failu sistēmas informāciju"
+          "label": ""
         },
         "defaultTab": {
           "label": ""
@@ -1474,7 +1474,7 @@
         "minute": "",
         "minutes": "",
         "used": "",
-        "available": "Pieejams",
+        "available": "",
         "lastSeen": ""
       },
       "memory": {},
@@ -1535,7 +1535,7 @@
         "longitude": "",
         "disabledTooltip": "",
         "unknownLocation": "",
-        "search": "Meklēt",
+        "search": "",
         "table": {
           "header": {
             "city": "",
@@ -1547,7 +1547,7 @@
             "select": ""
           },
           "population": {
-            "fallback": "Nezināms"
+            "fallback": ""
           }
         }
       },
@@ -1566,14 +1566,14 @@
       "option": {}
     },
     "video": {
-      "name": "Videostraume",
-      "description": "Ieguldīt videostraumi vai video no kameras vai tīmekļvietnes",
+      "name": "",
+      "description": "",
       "option": {
         "feedUrl": {
-          "label": "Plūsmas URL"
+          "label": ""
         },
         "hasAutoPlay": {
-          "label": "Automātiskā atskaņošana",
+          "label": "",
           "description": ""
         },
         "isMuted": {
@@ -1643,15 +1643,15 @@
         },
         "added": {
           "columnTitle": "",
-          "detailsTitle": "Pievienošanas datums"
+          "detailsTitle": ""
         },
         "category": {
           "columnTitle": "",
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Lejupielāde",
-          "detailsTitle": "Lejupielādes Ātrums"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "index": {
           "columnTitle": "",
@@ -1661,7 +1661,7 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Integrācija"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
@@ -1671,7 +1671,7 @@
           "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Attiecība",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "received": {
@@ -1687,7 +1687,7 @@
           "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Stāvoklis",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "time": {
@@ -1699,20 +1699,20 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Augšupielāde",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
       "states": {
-        "downloading": "Lejupielādē",
+        "downloading": "",
         "queued": "",
-        "paused": "Apstādināts",
-        "completed": "Pabeigts",
+        "paused": "",
+        "completed": "",
         "failed": "",
         "processing": "",
         "leeching": "",
         "stalled": "",
-        "unknown": "Nezināms",
+        "unknown": "",
         "seeding": ""
       },
       "actions": {
@@ -1740,10 +1740,10 @@
     },
     "mediaRequests-requestList": {
       "name": "",
-      "description": "Skatiet sarakstu ar visiem multimediju pieprasījumiem no jūsu Overseerr vai Jellyseerr instances",
+      "description": "",
       "option": {
         "linksTargetNewTab": {
-          "label": "Atvērt saites jaunā cilnē"
+          "label": ""
         }
       },
       "pending": {
@@ -1752,32 +1752,32 @@
         "decline": ""
       },
       "availability": {
-        "unknown": "Nezināms",
+        "unknown": "",
         "pending": "",
         "processing": "",
-        "partiallyAvailable": "Daļējs",
-        "available": "Pieejams"
+        "partiallyAvailable": "",
+        "available": ""
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
       "name": "",
-      "description": "Statistika par jūsu mediju pieprasījumiem",
+      "description": "",
       "option": {},
       "titles": {
         "stats": {
-          "main": "Mediju statistika",
-          "approved": "Jau apstiprināts",
-          "pending": "Nepabeigtie apstiprinājumi",
+          "main": "",
+          "approved": "",
+          "pending": "",
           "processing": "",
           "declined": "",
           "available": "",
-          "tv": "TV pieprasījumi",
-          "movie": "Filmu pieprasījumi",
-          "total": "Kopā"
+          "tv": "",
+          "movie": "",
+          "total": ""
         },
         "users": {
-          "main": "Top Lietotāji",
+          "main": "",
           "requests": ""
         }
       }
@@ -1795,7 +1795,7 @@
       },
       "tab": {
         "workers": "",
-        "queue": "Rinda",
+        "queue": "",
         "statistics": ""
       },
       "currentIndex": "",
@@ -1809,7 +1809,7 @@
       },
       "panel": {
         "statistics": {
-          "empty": "Tukšs",
+          "empty": "",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
@@ -1821,7 +1821,7 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "Tukšs",
+          "empty": "",
           "table": {
             "file": "",
             "eta": "",
@@ -1831,10 +1831,10 @@
           }
         },
         "queue": {
-          "empty": "Tukšs",
+          "empty": "",
           "table": {
             "file": "",
-            "size": "Lielums",
+            "size": "",
             "transcode": "",
             "healthCheck": ""
           }
@@ -1919,7 +1919,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Lietotnes",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -1936,9 +1936,9 @@
             "label": "",
             "description": "",
             "option": {
-              "sm": "Mazs",
-              "md": "Vidējs",
-              "lg": "Liels"
+              "sm": "",
+              "md": "",
+              "lg": ""
             }
           },
           "sidebarBehavior": {
@@ -1975,7 +1975,7 @@
         "label": ""
       },
       "backgroundImageAttachment": {
-        "label": "Fona attēla pielikums",
+        "label": "",
         "option": {
           "fixed": {
             "label": "",
@@ -2009,7 +2009,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Fona attēla izmērs",
+        "label": "",
         "option": {
           "cover": {
             "label": "",
@@ -2022,17 +2022,17 @@
         }
       },
       "primaryColor": {
-        "label": "Pamatkrāsa"
+        "label": ""
       },
       "secondaryColor": {
-        "label": "Sekundārā krāsa"
+        "label": ""
       },
       "opacity": {
         "label": ""
       },
       "customCss": {
         "label": "",
-        "description": "Turklāt pielāgojiet paneli, izmantojot CSS, ieteicams tikai pieredzējušiem lietotājiem",
+        "description": "",
         "customClassesAlert": {
           "title": "",
           "description": ""
@@ -2042,10 +2042,10 @@
         "label": ""
       },
       "name": {
-        "label": "Nosaukums"
+        "label": ""
       },
       "isPublic": {
-        "label": "Publisks",
+        "label": "",
         "description": ""
       }
     },
@@ -2056,14 +2056,14 @@
       "title": "",
       "section": {
         "general": {
-          "title": "Vispārīgi",
+          "title": "",
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Izkārtojums"
+          "title": ""
         },
         "background": {
-          "title": "Fons"
+          "title": ""
         },
         "color": {
           "title": ""
@@ -2076,7 +2076,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "Apskatīt dēli"
+                "label": ""
               },
               "modify": {
                 "label": ""
@@ -2088,7 +2088,7 @@
           }
         },
         "dangerZone": {
-          "title": "Bīstamā zona",
+          "title": "",
           "action": {
             "rename": {
               "label": "",
@@ -2124,7 +2124,7 @@
               "description": "",
               "button": "",
               "confirm": {
-                "title": "Dzēst dēli",
+                "title": "",
                 "description": ""
               }
             }
@@ -2178,22 +2178,22 @@
     },
     "navbar": {
       "items": {
-        "home": "Sākums",
-        "boards": "Dēļi",
-        "apps": "Lietotnes",
+        "home": "",
+        "boards": "",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
         "users": {
-          "label": "Lietotāji",
+          "label": "",
           "items": {
-            "manage": "Pārvaldīt",
-            "invites": "Uzaicinājumi",
+            "manage": "",
+            "invites": "",
             "groups": ""
           }
         },
         "tools": {
-          "label": "Rīki",
+          "label": "",
           "items": {
             "docker": "",
             "logs": "",
@@ -2202,38 +2202,38 @@
             "tasks": ""
           }
         },
-        "settings": "Iestatījumi",
+        "settings": "",
         "help": {
-          "label": "Palīdzība",
+          "label": "",
           "items": {
-            "documentation": "Dokumentācija",
+            "documentation": "",
             "submitIssue": "",
-            "discord": "Kopienas Discord",
+            "discord": "",
             "sourceCode": ""
           }
         },
-        "about": "Par Programmu"
+        "about": ""
       }
     },
     "page": {
       "home": {
         "statistic": {
-          "board": "Dēļi",
-          "user": "Lietotāji",
-          "invite": "Uzaicinājumi",
+          "board": "",
+          "user": "",
+          "invite": "",
           "integration": "",
-          "app": "Lietotnes",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "Dēļi",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
         }
       },
       "board": {
-        "title": "Jūsu dēļi",
+        "title": "",
         "action": {
           "new": {
             "label": ""
@@ -2242,12 +2242,12 @@
             "label": ""
           },
           "settings": {
-            "label": "Iestatījumi"
+            "label": ""
           },
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "Sākums",
+              "label": "",
               "tooltip": ""
             }
           },
@@ -2262,9 +2262,9 @@
             "label": ""
           },
           "delete": {
-            "label": "Neatgriezeniski dzēst",
+            "label": "",
             "confirm": {
-              "title": "Dzēst dēli",
+              "title": "",
               "description": ""
             }
           }
@@ -2277,7 +2277,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "Nosaukums"
+                "label": ""
               }
             }
           }
@@ -2291,7 +2291,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "Vispārīgi",
+            "title": "",
             "item": {
               "language": "",
               "board": {
@@ -2302,33 +2302,33 @@
                 }
               },
               "search": "",
-              "firstDayOfWeek": "Nedēļas pirmā diena",
-              "accessibility": "Piekļūstamība"
+              "firstDayOfWeek": "",
+              "accessibility": ""
             }
           },
           "security": {
-            "title": "Drošība"
+            "title": ""
           },
           "board": {
-            "title": "Dēļi"
+            "title": ""
           }
         },
         "list": {
-          "metaTitle": "Pārvaldīt lietotājus",
-          "title": "Lietotāji"
+          "metaTitle": "",
+          "title": ""
         },
         "edit": {
           "metaTitle": ""
         },
         "create": {
-          "metaTitle": "Izveidot lietotāju",
+          "metaTitle": "",
           "title": "",
           "step": {
             "personalInformation": {
               "label": ""
             },
             "security": {
-              "label": "Drošība"
+              "label": ""
             },
             "groups": {
               "label": "",
@@ -2351,21 +2351,21 @@
           }
         },
         "invite": {
-          "title": "Lietotāju uzaicinājumu pārvaldīšana",
+          "title": "",
           "action": {
             "new": {
               "title": "",
-              "description": "Pēc derīguma termiņa beigām uzaicinājums vairs nebūs derīgs, un uzaicinājuma saņēmējs nevarēs izveidot kontu."
+              "description": ""
             },
             "copy": {
               "title": "",
               "description": "",
-              "link": "Uzaicinājuma saite",
+              "link": "",
               "button": ""
             },
             "delete": {
-              "title": "Dzēst uzaicinājumu",
-              "description": "Vai esat pārliecināts, ka vēlaties dzēst šo uzaicinājumu? Lietotāji ar vairs nevarēs izveidot kontu, izmantojot šo saiti."
+              "title": "",
+              "description": ""
             }
           },
           "field": {
@@ -2373,13 +2373,13 @@
               "label": ""
             },
             "creator": {
-              "label": "Izveidotājs"
+              "label": ""
             },
             "expirationDate": {
-              "label": "Derīguma termiņš"
+              "label": ""
             },
             "token": {
-              "label": "Atslēga"
+              "label": ""
             }
           }
         }
@@ -2388,8 +2388,8 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "Vispārīgi",
-            "owner": "Īpašnieks",
+            "title": "",
+            "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2407,7 +2407,7 @@
         }
       },
       "settings": {
-        "title": "Iestatījumi",
+        "title": "",
         "notification": {
           "success": {
             "message": ""
@@ -2457,7 +2457,7 @@
             }
           },
           "board": {
-            "title": "Dēļi",
+            "title": "",
             "homeBoard": {
               "label": "",
               "mobileLabel": "",
@@ -2472,7 +2472,7 @@
             }
           },
           "appearance": {
-            "title": "Izskats",
+            "title": "",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2494,8 +2494,8 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "Darbojas",
-            "error": "Kļūda"
+            "running": "",
+            "error": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -2514,7 +2514,7 @@
               "label": ""
             },
             "mediaServer": {
-              "label": "Multivides Serveris"
+              "label": ""
             },
             "mediaOrganizer": {
               "label": ""
@@ -2562,7 +2562,7 @@
           },
           "tab": {
             "documentation": {
-              "label": "Dokumentācija"
+              "label": ""
             },
             "apiKey": {
               "label": "",
@@ -2609,22 +2609,22 @@
     },
     "field": {
       "name": {
-        "label": "Nosaukums"
+        "label": ""
       },
       "state": {
-        "label": "Stāvoklis",
+        "label": "",
         "option": {
-          "created": "Izveidots",
-          "running": "Darbojas",
-          "paused": "Apstādināts",
-          "restarting": "Restartējas",
+          "created": "",
+          "running": "",
+          "paused": "",
+          "restarting": "",
           "exited": "",
-          "removing": "Noņemšana",
+          "removing": "",
           "dead": ""
         }
       },
       "containerImage": {
-        "label": "Attēls"
+        "label": ""
       },
       "ports": {
         "label": ""
@@ -2632,7 +2632,7 @@
     },
     "action": {
       "start": {
-        "label": "Palaist",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2645,7 +2645,7 @@
         }
       },
       "stop": {
-        "label": "Apstādināt",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2658,7 +2658,7 @@
         }
       },
       "restart": {
-        "label": "Restartēt",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2671,7 +2671,7 @@
         }
       },
       "remove": {
-        "label": "Noņemt",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2726,13 +2726,13 @@
       "title": ""
     },
     "tab": {
-      "user": "Lietotāji",
+      "user": "",
       "group": "",
       "inherited": ""
     },
     "field": {
       "user": {
-        "label": "Lietotājs"
+        "label": ""
       },
       "group": {
         "label": ""
@@ -2748,14 +2748,14 @@
   },
   "navigationStructure": {
     "manage": {
-      "label": "Pārvaldīt",
+      "label": "",
       "boards": {
-        "label": "Dēļi"
+        "label": ""
       },
       "integrations": {
         "label": "",
         "edit": {
-          "label": "Rediģēt"
+          "label": ""
         },
         "new": {
           "label": ""
@@ -2767,38 +2767,38 @@
           "label": ""
         },
         "edit": {
-          "label": "Rediģēt"
+          "label": ""
         }
       },
       "medias": {
         "label": ""
       },
       "apps": {
-        "label": "Lietotnes",
+        "label": "",
         "new": {
           "label": ""
         },
         "edit": {
-          "label": "Rediģēt"
+          "label": ""
         }
       },
       "users": {
-        "label": "Lietotāji",
+        "label": "",
         "create": {
-          "label": "Izveidot"
+          "label": ""
         },
-        "general": "Vispārīgi",
-        "security": "Drošība",
-        "board": "Dēļi",
+        "general": "",
+        "security": "",
+        "board": "",
         "groups": {
           "label": ""
         },
         "invites": {
-          "label": "Uzaicinājumi"
+          "label": ""
         }
       },
       "tools": {
-        "label": "Rīki",
+        "label": "",
         "docker": {
           "label": ""
         },
@@ -2810,10 +2810,10 @@
         }
       },
       "settings": {
-        "label": "Iestatījumi"
+        "label": ""
       },
       "about": {
-        "label": "Par Programmu"
+        "label": ""
       }
     }
   },
@@ -2828,7 +2828,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Lietotnes",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2844,7 +2844,7 @@
             }
           },
           "board": {
-            "title": "Dēļi",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2958,7 +2958,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torenti",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2975,16 +2975,16 @@
             "title": ""
           },
           "help": {
-            "title": "Palīdzība",
+            "title": "",
             "option": {
               "documentation": {
-                "label": "Dokumentācija"
+                "label": ""
               },
               "submitIssue": {
                 "label": ""
               },
               "discord": {
-                "label": "Kopienas Discord"
+                "label": ""
               }
             }
           }
@@ -3040,7 +3040,7 @@
                 "label": ""
               },
               "manageUser": {
-                "label": "Pārvaldīt lietotājus"
+                "label": ""
               },
               "manageInvite": {
                 "label": ""
@@ -3064,13 +3064,13 @@
                 "label": ""
               },
               "about": {
-                "label": "Par Programmu"
+                "label": ""
               },
               "homeBoard": {
                 "label": ""
               },
               "preferences": {
-                "label": "Jūsu iestatījumi"
+                "label": ""
               }
             }
           }
@@ -3080,7 +3080,7 @@
         "help": "",
         "group": {
           "user": {
-            "title": "Lietotāji",
+            "title": "",
             "children": {
               "action": {
                 "detail": {
@@ -3118,7 +3118,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": "Nosaukums"
+          "label": ""
         },
         "short": {
           "label": ""
