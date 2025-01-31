@@ -1615,10 +1615,13 @@
           "label": ""
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Hiển thị các mục Usenet đã hoàn thành"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Hiển thị các mục Torrent đã hoàn thành"
+        },
+        "showCompletedHttp": {
+          "label": "Hiển thị các mục Http(s) đã hoàn thành"
         },
         "activeTorrentThreshold": {
           "label": ""

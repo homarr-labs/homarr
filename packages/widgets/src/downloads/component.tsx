@@ -182,7 +182,8 @@ export default function DownloadClientsWidget({
                     options.showCompletedTorrent &&
                     (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
                     progress !== 1)) ||
-                (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)),
+                (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)) ||
+                (type === "http(s)" && ((progress === 1 && options.showCompletedHttp) || progress !== 1)),
             )
             //Filter following user quick setting
             .filter(
@@ -204,10 +205,10 @@ export default function DownloadClientsWidget({
                 //Only add if permission to use mutations
                 actions: integrationsWithInteractions.includes(pair.integration.id)
                   ? {
-                      resume: () => mutateResumeItem({ integrationIds, item }),
-                      pause: () => mutatePauseItem({ integrationIds, item }),
-                      delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds, item, fromDisk }),
-                    }
+                    resume: () => mutateResumeItem({ integrationIds, item }),
+                    pause: () => mutatePauseItem({ integrationIds, item }),
+                    delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds, item, fromDisk }),
+                  }
                   : undefined,
               };
             }),
@@ -243,11 +244,11 @@ export default function DownloadClientsWidget({
             .filter(
               ({ category }) =>
                 !options.applyFilterToRatio ||
-                data.status.type !== "torrent" ||
+                !data.status.types.includes("torrent") ||
                 options.filterIsWhitelist ===
-                  options.categoryFilter.some((filter) =>
-                    (Array.isArray(category) ? category : [category]).includes(filter),
-                  ),
+                options.categoryFilter.some((filter) =>
+                  (Array.isArray(category) ? category : [category]).includes(filter),
+                ),
             )
             .reduce(
               ({ totalUp, totalDown }, { sent, size, progress }) => ({
@@ -269,7 +270,7 @@ export default function DownloadClientsWidget({
         })
         .sort(
           ({ status: statusA }, { status: statusB }) =>
-            (statusA?.type.length ?? Infinity) - (statusB?.type.length ?? Infinity),
+            (statusA?.types.length ?? Infinity) - (statusB?.types.length ?? Infinity),
         ),
     [
       currentItems,
@@ -283,8 +284,11 @@ export default function DownloadClientsWidget({
 
   //Check existing types between torrents and usenet
   const integrationTypes: ExtendedDownloadClientItem["type"][] = [];
+
+
   if (data.some(({ type }) => type === "torrent")) integrationTypes.push("torrent");
   if (data.some(({ type }) => type === "usenet")) integrationTypes.push("usenet");
+  if (data.some(({ type }) => type === "http(s)")) integrationTypes.push("http(s)");
 
   //Set the visibility of columns depending on widget settings and available data/integrations.
   const columnVisibility: MRT_VisibilityState = {
@@ -726,15 +730,22 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           <NormalizedLine itemKey="index" values={item.index} />
           <NormalizedLine itemKey="type" values={item.type} />
           <NormalizedLine itemKey="state" values={t(item.state)} />
-          <NormalizedLine
-            itemKey="upSpeed"
-            values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")}
-          />
+          {item.type === "torrent" &&
+            <NormalizedLine
+              itemKey="upSpeed"
+              values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")}
+            />
+          }
+
           <NormalizedLine
             itemKey="downSpeed"
             values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed, "/s")}
           />
-          <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
+
+          {item.type === "torrent" &&
+            <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
+          }
+
           <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
           <NormalizedLine itemKey="size" values={humanFileSize(item.size)} />
           <NormalizedLine
@@ -745,9 +756,9 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
               unitDisplay: "narrow",
             }).format(item.progress)}
           />
-          <NormalizedLine itemKey="ratio" values={item.ratio} />
+          {item.type === "torrent" && <NormalizedLine itemKey="ratio" values={item.ratio} />}
           <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
-          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
+          {item.added && <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />}
           <NormalizedLine itemKey="category" values={item.category} />
         </Stack>
       )}

@@ -10,6 +10,7 @@ import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration"
 import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
+import { Aria2Integration } from "../download-client/aria2/aria2-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
@@ -65,6 +66,7 @@ export const integrationCreators = {
   qBittorrent: QBitTorrentIntegration,
   deluge: DelugeIntegration,
   transmission: TransmissionIntegration,
+  aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
