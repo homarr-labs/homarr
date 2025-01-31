@@ -49,6 +49,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg",
     category: ["downloadClient", "torrent"],
   },
+  aria2: {
+    name: "Aria2",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/aria2.png",
+    category: ["downloadClient", "torrent", "miscellaneous"],
+  },
   sonarr: {
     name: "Sonarr",
     secretKinds: [["apiKey"]],
@@ -205,6 +211,7 @@ export type IntegrationCategory =
   | "downloadClient"
   | "usenet"
   | "torrent"
+  | "miscellaneous"
   | "smartHomeServer"
   | "indexerManager"
   | "healthMonitoring"
