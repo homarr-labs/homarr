@@ -2570,10 +2570,17 @@
               "button": {
                 "createApiToken": "Create API token"
               },
+              "modal": {
+                "delete": {
+                  "title": "Delete API token",
+                  "text": "This will permanently delete the API token. API clients using this token can no longer authenticate and perform API requests. This action cannot be undone."
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Created by"
+                  "createdBy": "Created by",
+                  "actions": "Actions"
                 }
               }
             }
