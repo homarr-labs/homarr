@@ -805,6 +805,7 @@
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
       "create": "Oluştur",
+      "createAnother": "",
       "edit": "Düzenle",
       "import": "İçe aktar",
       "insert": "Ekle",
@@ -1191,7 +1192,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Tarihin nasıl görüneceği"
+          "description": "Görüntülenecek tarih biçimi"
         }
       }
     },
@@ -1395,7 +1396,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Tarihin nasıl görüneceği"
+          "description": "Görüntülenecek tarih biçimi"
         }
       },
       "currentWindSpeed": "{currentWindSpeed} km/s",
@@ -1403,7 +1404,7 @@
         "sunrise": "Gün Doğumu",
         "sunset": "Gün Batımı",
         "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
-        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/h"
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s"
       },
       "kind": {
         "clear": "Temiz",
