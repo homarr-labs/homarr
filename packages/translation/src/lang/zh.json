@@ -805,6 +805,7 @@
       "apply": "應用",
       "backToOverview": "返回總覽",
       "create": "創建",
+      "createAnother": "",
       "edit": "編輯",
       "import": "匯入",
       "insert": "插入",
@@ -1374,11 +1375,11 @@
           "label": "華氏溫度"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "關閉溫度小數點"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "顯示當前風速",
+          "description": "僅限當前天氣"
         },
         "location": {
           "label": "天氣位置"
@@ -1398,12 +1399,12 @@
           "description": "日期應該是什麼樣式"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} 公里/時",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "日出",
+        "sunset": "日落",
+        "maxWindSpeed": "最大風速：{maxWindSpeed} 公里/時",
+        "maxWindGusts": "最大陣風：{maxWindGusts} 公里/時"
       },
       "kind": {
         "clear": "晴朗",

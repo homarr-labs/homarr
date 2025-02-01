@@ -28,7 +28,7 @@
         },
         "boardSelection": {
           "title": "נמצאו {count} לוחות",
-          "description": "בחר את כל הלוחות שברצונך לייבא",
+          "description": "בחר את כל הלוחות עם הגודל שברצונך לייבא",
           "action": {
             "selectAll": "בחר הכל",
             "unselectAll": "בטל את הבחירה בכולם"
@@ -153,10 +153,10 @@
         "label": "השתמש בסמלים עבור פינגים"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "מנוע חיפוש ברירת מחדל"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "פתיחת תוצאות חיפוש בכרטיסיה חדשה"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "העדפות חיפוש השתנו בהצלחה"
           },
           "error": {
-            "message": ""
+            "message": "לא ניתן לשנות העדפות חיפוש"
           }
         }
       },
@@ -805,6 +805,7 @@
       "apply": "החל",
       "backToOverview": "חזרה לסקירה כללית",
       "create": "צור",
+      "createAnother": "",
       "edit": "עריכה",
       "import": "ייבוא",
       "insert": "הוספה",
@@ -1374,11 +1375,11 @@
           "label": "טמפרטורה בפרנהייט"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "ביטול טמפרטורה עשרונית"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "הצגת מהירות רוח נוכחית",
+          "description": "רק במזג אוויר נוכחי"
         },
         "location": {
           "label": "מיקום מזג האוויר"
@@ -1398,12 +1399,12 @@
           "description": "איך צריך להיראות התאריך"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} קמ״ש",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "זריחה",
+        "sunset": "שקיעה",
+        "maxWindSpeed": "מהירות רוח מקסימלית: {maxWindSpeed} קמ״ש",
+        "maxWindGusts": "משבי רוח מקסימלים: {maxWindGusts} קמ״ש"
       },
       "kind": {
         "clear": "בהיר",
@@ -2301,7 +2302,7 @@
                   "mobile": "מכשיר נייד"
                 }
               },
-              "search": "",
+              "search": "חיפוש",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות"
             }
