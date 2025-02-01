@@ -895,8 +895,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       semver-parser:
-        specifier: ^4.1.7
-        version: 4.1.7
+        specifier: ^4.1.8
+        version: 4.1.8
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -8683,8 +8683,8 @@ packages:
     resolution: {integrity: sha512-0Ju4+6A8iOnpL/Thra7dZsSlOHYAHIeMxfhWQRI1/VLcT3WDBZKKtQt/QkBOsiIN9ZpuvHE6cGZ0x4glCMmfiA==}
     engines: {node: '>=12'}
 
-  semver-parser@4.1.7:
-    resolution: {integrity: sha512-RNNvmr1JKZ4Eia7Cyfxtr6aR7eiQs1bPGBv4EC3OJ5pTKEoHjLsT+dY1SSny2tq/uqx9bzNR4lL8tzaB70TN9A==}
+  semver-parser@4.1.8:
+    resolution: {integrity: sha512-VFJx75RLTS4hHoiFG+JzDP5dE89JUQS0+/h4Zvcqw8djO6HInA5N7BtvbYBOD6W1u9eOfax7v3xf6CoSIAQBSg==}
 
   semver-regex@4.0.5:
     resolution: {integrity: sha512-hunMQrEy1T6Jr2uEVjrAIqjwWcQTgOAcIM52C8MY1EZSD3DDNft04XzvYKPqjED65bNVVko0YI38nYeEHCX3yw==}
@@ -17179,7 +17179,7 @@ snapshots:
     dependencies:
       semver: 7.6.3
 
-  semver-parser@4.1.7: {}
+  semver-parser@4.1.8: {}
 
   semver-regex@4.0.5: {}
 
