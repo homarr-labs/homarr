@@ -9,7 +9,7 @@ import {
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
-import { commonItemSchema, createSectionSchema } from "./shared";
+import { commonItemSchema, sectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
@@ -63,7 +63,8 @@ const savePartialSettingsSchema = z
 
 const saveSchema = z.object({
   id: z.string(),
-  sections: z.array(createSectionSchema(commonItemSchema)),
+  sections: z.array(sectionSchema),
+  items: z.array(commonItemSchema),
 });
 
 const createSchema = z.object({ name: boardNameSchema, columnCount: z.number().min(1).max(24), isPublic: z.boolean() });

@@ -42,42 +42,35 @@ export const commonItemSchema = z
   })
   .and(sharedItemSchema);
 
-const createCategorySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
-  z.object({
-    id: z.string(),
-    name: z.string(),
-    kind: z.literal("category"),
-    yOffset: z.number(),
-    xOffset: z.number(),
-    items: z.array(itemSchema),
-    collapsed: z.boolean(),
-  });
+const categorySectionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  kind: z.literal("category"),
+  yOffset: z.number(),
+  xOffset: z.number(),
+  collapsed: z.boolean(),
+});
 
-const createEmptySchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
-  z.object({
-    id: z.string(),
-    kind: z.literal("empty"),
-    yOffset: z.number(),
-    xOffset: z.number(),
-    items: z.array(itemSchema),
-  });
+const emptySectionSchema = z.object({
+  id: z.string(),
+  kind: z.literal("empty"),
+  yOffset: z.number(),
+  xOffset: z.number(),
+});
 
-const createDynamicSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
-  z.object({
-    id: z.string(),
-    kind: z.literal("dynamic"),
-    layouts: z.array(
-      z.object({
-        layoutId: z.string(),
-        yOffset: z.number(),
-        xOffset: z.number(),
-        width: z.number(),
-        height: z.number(),
-      }),
-    ),
-    items: z.array(itemSchema),
-    parentSectionId: z.string(),
-  });
+const dynamicSectionSchema = z.object({
+  id: z.string(),
+  kind: z.literal("dynamic"),
+  layouts: z.array(
+    z.object({
+      layoutId: z.string(),
+      yOffset: z.number(),
+      xOffset: z.number(),
+      width: z.number(),
+      height: z.number(),
+      parentSectionId: z.string(),
+    }),
+  ),
+});
 
-export const createSectionSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItemSchema) =>
-  z.union([createCategorySchema(itemSchema), createEmptySchema(itemSchema), createDynamicSchema(itemSchema)]);
+export const sectionSchema = z.union([categorySectionSchema, emptySectionSchema, dynamicSectionSchema]);

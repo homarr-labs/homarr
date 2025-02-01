@@ -688,6 +688,7 @@ export const layoutSectionRelations = relations(layoutSections, ({ one }) => ({
   section: one(sections, {
     fields: [layoutSections.sectionId],
     references: [sections.id],
+    relationName: "layoutSectionRelations__section__sectionId",
   }),
   layout: one(layouts, {
     fields: [layoutSections.layoutId],
@@ -696,6 +697,7 @@ export const layoutSectionRelations = relations(layoutSections, ({ one }) => ({
   parentSection: one(sections, {
     fields: [layoutSections.parentSectionId],
     references: [sections.id],
+    relationName: "layoutSectionRelations__section__parentSectionId",
   }),
 }));
 

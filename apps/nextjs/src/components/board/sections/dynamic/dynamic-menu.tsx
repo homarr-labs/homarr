@@ -4,11 +4,11 @@ import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import type { DynamicSection } from "~/app/[locale]/boards/_types";
+import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useDynamicSectionActions } from "./dynamic-actions";
 
-export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }) => {
+export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionItem }) => {
   const t = useI18n();
   const tDynamic = useScopedI18n("section.dynamic");
   const { removeDynamicSection } = useDynamicSectionActions();

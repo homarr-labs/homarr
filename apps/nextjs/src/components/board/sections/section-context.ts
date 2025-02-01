@@ -1,11 +1,12 @@
 import { createContext, useContext } from "react";
 
-import type { Section } from "~/app/[locale]/boards/_types";
+import type { DynamicSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
 import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 
 interface SectionContextProps {
-  section: Section;
-  innerSections: Exclude<Section, { kind: "category" } | { kind: "empty" }>[];
+  section: Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem;
+  innerSections: DynamicSectionItem[];
+  items: SectionItem[];
   refs: UseGridstackRefs;
 }
 

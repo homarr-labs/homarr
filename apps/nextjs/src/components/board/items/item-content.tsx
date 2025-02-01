@@ -8,14 +8,14 @@ import { ErrorBoundary } from "react-error-boundary";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 
-import type { Item } from "~/app/[locale]/boards/_types";
+import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useEditMode, useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import { BoardItemMenu } from "./item-menu";
 
 interface BoardItemContentProps {
-  item: Item;
+  item: SectionItem;
 }
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
@@ -47,7 +47,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
 };
 
 interface InnerContentProps {
-  item: Item;
+  item: SectionItem;
   width: number;
   height: number;
 }

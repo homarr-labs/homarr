@@ -27,7 +27,7 @@ import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
-import { createSectionSchema, sharedItemSchema, validation, zodUnionFromArray } from "@homarr/validation";
+import { sectionSchema, sharedItemSchema, validation, zodUnionFromArray } from "@homarr/validation";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -1079,22 +1079,22 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           layoutId: layout.layoutId,
         })),
         collapsed: collapseStates.at(0)?.collapsed ?? false,
-        items: items.map(({ integrations: itemIntegrations, ...item }) =>
-          parseItem({
-            ...item,
-            layouts: item.layouts.map((layout) => ({
-              xOffset: layout.xOffset,
-              yOffset: layout.yOffset,
-              width: layout.width,
-              height: layout.height,
-              layoutId: layout.layoutId,
-              sectionId: layout.sectionId,
-            })),
-            integrationIds: itemIntegrations.map((item) => item.integration.id),
-            advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
-            options: superjson.parse<Record<string, unknown>>(item.options),
-          }),
-        ),
+      }),
+    ),
+    items: items.map(({ integrations: itemIntegrations, ...item }) =>
+      parseItem({
+        ...item,
+        layouts: item.layouts.map((layout) => ({
+          xOffset: layout.xOffset,
+          yOffset: layout.yOffset,
+          width: layout.width,
+          height: layout.height,
+          layoutId: layout.layoutId,
+          sectionId: layout.sectionId,
+        })),
+        integrationIds: itemIntegrations.map((item) => item.integration.id),
+        advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+        options: superjson.parse<Record<string, unknown>>(item.options),
       }),
     ),
   };
@@ -1108,7 +1108,7 @@ const forKind = <T extends WidgetKind>(kind: T) =>
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
 
-const parseItem = (item: z.infer<typeof outputItemSchema>) => {
+const parseItem = (item: unknown) => {
   const result = outputItemSchema.safeParse(item);
 
   if (!result.success) {
@@ -1118,7 +1118,7 @@ const parseItem = (item: z.infer<typeof outputItemSchema>) => {
 };
 
 const parseSection = (section: unknown) => {
-  const result = createSectionSchema(outputItemSchema).safeParse(section);
+  const result = sectionSchema.safeParse(section);
 
   if (!result.success) {
     throw new Error(result.error.message);

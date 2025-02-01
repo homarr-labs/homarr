@@ -8,7 +8,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
-import type { Item } from "~/app/[locale]/boards/_types";
+import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
@@ -20,7 +20,7 @@ export const BoardItemMenu = ({
   resetErrorBoundary,
 }: {
   offset: number;
-  item: Item;
+  item: SectionItem;
   resetErrorBoundary?: () => void;
 }) => {
   const refResetErrorBoundaryOnNextRender = useRef(false);

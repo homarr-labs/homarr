@@ -29,7 +29,7 @@ export const validation = {
 };
 
 export {
-  createSectionSchema,
+  sectionSchema,
   itemAdvancedOptionsSchema,
   sharedItemSchema,
   type BoardItemAdvancedOptions,

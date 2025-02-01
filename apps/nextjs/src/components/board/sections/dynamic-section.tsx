@@ -1,13 +1,13 @@
 import { Box, Card } from "@mantine/core";
 
-import type { DynamicSection } from "~/app/[locale]/boards/_types";
+import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";
 import { GridStack } from "./gridstack/gridstack";
 import classes from "./item.module.css";
 
 interface Props {
-  section: DynamicSection;
+  section: DynamicSectionItem;
 }
 
 export const BoardDynamicSection = ({ section }: Props) => {

@@ -53,11 +53,10 @@ CREATE TABLE `__new_item` (
 	`height` integer NOT NULL,
 	`options` text DEFAULT '{"json": {}}' NOT NULL,
 	`advanced_options` text DEFAULT '{"json": {}}' NOT NULL,
-	FOREIGN KEY (`section_id`) REFERENCES `section`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-INSERT INTO `__new_item`("id", "board_id", "kind", "x_offset", "y_offset", "width", "height", "options", "advanced_options") SELECT "id", section.boardId, "board_id", "kind", "x_offset", "y_offset", "width", "height", "options", "advanced_options" FROM `item` LEFT JOIN `section` ON section.id=item.sectionId;--> statement-breakpoint
+INSERT INTO `__new_item`("id", "board_id", "kind", "x_offset", "y_offset", "width", "height", "options", "advanced_options") SELECT item.id, section.board_id, item.kind, item.x_offset, item.y_offset, item.width, item.height, "options", "advanced_options" FROM `item` LEFT JOIN `section` ON section.id=item.section_id;--> statement-breakpoint
 DROP TABLE `item`;--> statement-breakpoint
 ALTER TABLE `__new_item` RENAME TO `item`;--> statement-breakpoint
 PRAGMA foreign_keys=ON;

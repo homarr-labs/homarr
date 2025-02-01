@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "90156f6e-79fd-4846-9e0c-86edcab0e355",
+  "id": "87cdc847-5a24-4159-8d2a-d9bdfb8ecf93",
   "prevId": "614b0b2c-a9cf-48d0-acff-a14d807f9e2c",
   "tables": {
     "account": {
@@ -1128,18 +1128,11 @@
           "notNull": true,
           "autoincrement": false
         },
-        "section_id": {
-          "name": "section_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "board_id": {
           "name": "board_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "kind": {
@@ -1196,19 +1189,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "item_section_id_section_id_fk": {
-          "name": "item_section_id_section_id_fk",
-          "tableFrom": "item",
-          "tableTo": "section",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "item_board_id_board_id_fk": {
           "name": "item_board_id_board_id_fk",
           "tableFrom": "item",
