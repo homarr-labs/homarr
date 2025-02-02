@@ -805,7 +805,7 @@
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
       "create": "Oluştur",
-      "createAnother": "",
+      "createAnother": "Oluştur ve baştan başla",
       "edit": "Düzenle",
       "import": "İçe aktar",
       "insert": "Ekle",
@@ -1192,7 +1192,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Görüntülenecek tarih biçimi"
+          "description": "Görüntülenecek tarihin biçimi"
         }
       }
     },
@@ -1355,8 +1355,8 @@
           "label": "Radarr yayın türü",
           "options": {
             "inCinemas": "Sinemalarda",
-            "digitalRelease": "Dijital sürüm",
-            "physicalRelease": "Fiziksel Yayınlanan"
+            "digitalRelease": "Dijital Yayın",
+            "physicalRelease": "Fiziksel Yayın"
           }
         },
         "filterPastMonths": {
@@ -1375,7 +1375,7 @@
           "label": "Fahrenheit cinsinden sıcaklık"
         },
         "disableTemperatureDecimals": {
-          "label": "Sıcaklık ondalıklarını devre dışı bırak"
+          "label": "Sıcaklıklarda ondalıkları gösterme"
         },
         "showCurrentWindSpeed": {
           "label": "Mevcut rüzgar hızını göster",
@@ -1396,7 +1396,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Görüntülenecek tarih biçimi"
+          "description": "Görüntülenecek tarihin biçimi"
         }
       },
       "currentWindSpeed": "{currentWindSpeed} km/s",
