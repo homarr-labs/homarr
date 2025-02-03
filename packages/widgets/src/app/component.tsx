@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
-import { Flex, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
+import { Flex, Image, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -98,7 +98,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
               }}
             />
           ) : (
-            <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
+            <Image className={combineClasses(classes.appIcon, "app-icon")} src={app.iconUrl} alt={app.name} />
           )}
         </Flex>
       </Tooltip.Floating>
