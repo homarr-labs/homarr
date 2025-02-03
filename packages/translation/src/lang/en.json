@@ -1193,6 +1193,14 @@
         "dateFormat": {
           "label": "Date Format",
           "description": "How the date should look like"
+        },
+        "customTimeFormat": {
+          "label": "Custom time format",
+          "description": "Use ISO 8601 to format time (this will override other options)"
+        },
+        "customDateFormat": {
+          "label": "Custom date format",
+          "description": "Use ISO 8601 to format date (this will override other options)"
         }
       }
     },
