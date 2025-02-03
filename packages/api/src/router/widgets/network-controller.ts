@@ -4,14 +4,10 @@ import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-//import { integrationCreator } from "@homarr/integrations";
 import type { NetworkControllerSummary } from "@homarr/integrations/types";
-//import { controlsInputSchema } from "@homarr/integrations/types";
 import { networkControllerRequestHandler } from "@homarr/request-handler/network-controller";
 
-//import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-//import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const networkControllerRouter = createTRPCRouter({
@@ -64,30 +60,4 @@ export const networkControllerRouter = createTRPCRouter({
       });
     }),
 
-  /* enable: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("networkController")))
-    .mutation(async ({ ctx: { integration } }) => {
-      const client = integrationCreator(integration);
-      await client.enableAsync();
-
-      const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-      // We need to wait for the integration to be enabled before invalidating the cache
-      await new Promise<void>((resolve) => {
-        setTimeout(() => void innerHandler.invalidateAsync().then(resolve), 1000);
-      });
-    }), */
-
-  /* disable: protectedProcedure
-    .input(controlsInputSchema)
-    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("networkController")))
-    .mutation(async ({ ctx: { integration }, input }) => {
-      const client = integrationCreator(integration);
-      await client.disableAsync(input.duration);
-
-      const innerHandler = dnsHoleRequestHandler.handler(integration, {});
-      // We need to wait for the integration to be disabled before invalidating the cache
-      await new Promise<void>((resolve) => {
-        setTimeout(() => void innerHandler.invalidateAsync().then(resolve), 1000);
-      });
-    }), */
 });

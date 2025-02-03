@@ -321,16 +321,6 @@ const StatCard = ({ item, data, t }: StatCardProps) => {
 };
 
 const boxPropsByLayout = (layout: WidgetProps<"networkControllerSummary">["options"]["layout"]): BoxProps => {
-  //if (layout === "grid") {
-    /* return {
-      display: "grid",
-      style: {
-        gridTemplateColumns: "1fr 1fr",
-        gridTemplateRows: "1fr 1fr",
-      },
-    }; */
-  //}
-
   return {
     display: "flex",
     style: {
