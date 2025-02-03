@@ -947,7 +947,8 @@
         "moveUp": "Move up",
         "moveDown": "Move down",
         "createAbove": "New category above",
-        "createBelow": "New category below"
+        "createBelow": "New category below",
+        "openAllInNewTabs": "Open all in tabs"
       },
       "create": {
         "title": "New category",
@@ -966,6 +967,10 @@
           "create": "New category",
           "changePosition": "Change position"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "Open all in tabs",
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },
