@@ -13,6 +13,12 @@ import { commonItemSchema, createSectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
+const hexColorNullableSchema = z
+  .string()
+  .regex(/^(#[0-9A-Fa-f]{6}|)$/)
+  .nullable()
+  .transform((value) => (value?.trim().length === 0 ? null : value));
+
 const boardNameSchema = z
   .string()
   .min(1)
@@ -58,7 +64,7 @@ const savePartialSettingsSchema = z
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     columnCount: z.number().min(1).max(24),
-    iconColor: hexColorSchema.or(z.string().length(0)),
+    iconColor: hexColorNullableSchema,
   })
   .partial();
 

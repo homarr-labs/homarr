@@ -39,7 +39,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
       primaryColor: board.primaryColor,
       secondaryColor: board.secondaryColor,
       opacity: board.opacity,
-      iconColor: board.iconColor,
+      iconColor: board.iconColor ?? "",
     },
   });
   const [showPreview, { toggle }] = useDisclosure(false);

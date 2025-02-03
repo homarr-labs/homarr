@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import type { MantineColorsTuple } from "@mantine/core";
-import { createTheme, darken, lighten, MantineProvider } from "@mantine/core";
+import { colorsTuple, createTheme, darken, lighten, MantineProvider } from "@mantine/core";
 
 import type { ColorScheme } from "@homarr/definitions";
 
@@ -20,12 +20,12 @@ export const BoardMantineProvider = ({
     colors: {
       primaryColor: generateColors(board.primaryColor),
       secondaryColor: generateColors(board.secondaryColor),
-      iconColor: generateColors(board.iconColor),
+      iconColor: board.iconColor ? generateColors(board.iconColor) : colorsTuple("#000000"),
     },
     primaryColor: "primaryColor",
     autoContrast: true,
     other: {
-      hasIconColor: board.iconColor !== "",
+      hasIconColor: board.iconColor !== null,
     },
   });
 
