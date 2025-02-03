@@ -51,7 +51,7 @@
           "title": "Введіть токен імпорту",
           "field": {
             "token": {
-              "label": "Токен.",
+              "label": "Токен",
               "description": "Введіть показаний токен імпорту з вашого попереднього екземпляра homarr"
             }
           },
@@ -805,6 +805,7 @@
       "apply": "Застосувати",
       "backToOverview": "Назад до огляду",
       "create": "Створити",
+      "createAnother": "",
       "edit": "Редагувати",
       "import": "Імпорт",
       "insert": "Вставити",
@@ -877,7 +878,7 @@
         "switchToDarkMode": "Перемикнути на темну тему",
         "switchToLightMode": "Перемикнути на світлу тему",
         "management": "Управління",
-        "preferences": "Ваші уподобання",
+        "preferences": "Ваші налаштування",
         "logout": "Вийти",
         "login": "Логін",
         "homeBoard": "Ваша домашня дошка",
@@ -2072,14 +2073,14 @@
           "title": ""
         },
         "access": {
-          "title": "",
+          "title": "Управління доступом",
           "permission": {
             "item": {
               "view": {
                 "label": "Перегляд дошки"
               },
               "modify": {
-                "label": ""
+                "label": "Змінювати дошку"
               },
               "full": {
                 "label": "Повний доступ"
@@ -2297,7 +2298,7 @@
               "board": {
                 "title": "Домашня дошка",
                 "type": {
-                  "general": "",
+                  "general": "Загальна",
                   "mobile": "Мобільна"
                 }
               },
@@ -2753,7 +2754,7 @@
         "label": "Дошки"
       },
       "integrations": {
-        "label": "",
+        "label": "Інтеграції",
         "edit": {
           "label": "Редагувати"
         },
@@ -2771,7 +2772,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Медіа"
       },
       "apps": {
         "label": "Додатки",
@@ -2791,7 +2792,7 @@
         "security": "Безпека",
         "board": "Дошки",
         "groups": {
-          "label": ""
+          "label": "Групи"
         },
         "invites": {
           "label": "Запрошення"
@@ -2800,13 +2801,13 @@
       "tools": {
         "label": "Інструменти",
         "docker": {
-          "label": ""
+          "label": "Докер"
         },
         "logs": {
-          "label": ""
+          "label": "Логи"
         },
         "certificates": {
-          "label": ""
+          "label": "Сертифікати"
         }
       },
       "settings": {
@@ -2819,7 +2820,7 @@
   },
   "search": {
     "placeholder": "",
-    "nothingFound": "",
+    "nothingFound": "Нічого не знайдено",
     "error": {
       "fetch": ""
     },
@@ -2835,7 +2836,7 @@
                   "label": "Відкрити посилання на додаток"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Редагувати додаток"
                 }
               },
               "detail": {
@@ -2851,10 +2852,10 @@
                   "label": "Відкрити дошку"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Встановити як домашню дошку"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Встановити як мобільну дошку"
                 },
                 "settings": {
                   "label": "Відкрити налаштування"
