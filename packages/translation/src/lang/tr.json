@@ -1407,19 +1407,19 @@
         "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s"
       },
       "kind": {
-        "clear": "Temiz",
+        "clear": "Açık",
         "mainlyClear": "Genel olarak açık",
-        "fog": "Sis",
+        "fog": "Sisli",
         "drizzle": "Çiseleme",
-        "freezingDrizzle": "Soğuk çiseleme",
+        "freezingDrizzle": "Donan Çisenti",
         "rain": "Yağmur",
-        "freezingRain": "Dondurucu yağmur",
-        "snowFall": "Kar yağışı",
-        "snowGrains": "Kar taneleri",
-        "rainShowers": "Sağanak yağmur",
-        "snowShowers": "Kar yağışı",
+        "freezingRain": "Donan Yağmur",
+        "snowFall": "Kar Yağış",
+        "snowGrains": "Donmuş Kar",
+        "rainShowers": "Sağanak Yağmur",
+        "snowShowers": "Kar Yağışlı",
         "thunderstorm": "Fırtına",
-        "thunderstormWithHail": "Fırtına ve dolu",
+        "thunderstormWithHail": "Dolu Yağışlı Fırtına",
         "unknown": "Bilinmeyen"
       }
     },
