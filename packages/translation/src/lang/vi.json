@@ -805,6 +805,7 @@
       "apply": "Áp dụng",
       "backToOverview": "",
       "create": "Tạo nên",
+      "createAnother": "",
       "edit": "Sửa",
       "import": "",
       "insert": "Thêm",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Vị trí thời tiết"
         },
@@ -1390,6 +1398,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Quang đãng",

@@ -805,6 +805,7 @@
       "apply": "Aplică",
       "backToOverview": "",
       "create": "Creează",
+      "createAnother": "",
       "edit": "Editare",
       "import": "",
       "insert": "Introdu",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Locație meteo"
         },
@@ -1390,6 +1398,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Senin",

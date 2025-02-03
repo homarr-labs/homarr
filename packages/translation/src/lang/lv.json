@@ -805,6 +805,7 @@
       "apply": "Lietot",
       "backToOverview": "",
       "create": "Izveidot",
+      "createAnother": "",
       "edit": "Rediģēt",
       "import": "",
       "insert": "Ievietot",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Laikapstākļu atrašānās vieta"
         },
@@ -1390,6 +1398,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Skaidrs",

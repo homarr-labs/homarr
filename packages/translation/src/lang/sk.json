@@ -805,6 +805,7 @@
       "apply": "Použiť",
       "backToOverview": "Späť na prehľad",
       "create": "Vytvoriť",
+      "createAnother": "",
       "edit": "Upraviť",
       "import": "Importovať",
       "insert": "Vložiť",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": "Teplota vo stupňoch Fahrenheita"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Poloha počasia"
         },
@@ -1390,6 +1398,13 @@
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Jasno",

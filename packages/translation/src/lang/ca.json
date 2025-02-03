@@ -2,155 +2,155 @@
   "init": {
     "step": {
       "start": {
-        "title": "Witaj w Homarrze",
-        "subtitle": "Zacznijmy od konfiguracji twojego Homarra.",
-        "description": "Aby rozpocząć, wybierz jak chcesz skonfigurować Homarra.",
+        "title": "Us donem la benvinguda a Homarr",
+        "subtitle": "Comencem configurant la vostra instància de Homarr.",
+        "description": "Per començar, seleccioneu com voleu configurar la vostra instància de Homarr.",
         "action": {
-          "scratch": "Zacznij od zera",
-          "importOldmarr": "Importuj z Homarr przed 1.0"
+          "scratch": "Comença des de zero",
+          "importOldmarr": "Importa des d'una versió de Homarr anterior a 1.0"
         }
       },
       "import": {
-        "title": "Importuj dane",
-        "subtitle": "Możesz zaimportować dane z istniejącej instancji Homarra.",
+        "title": "Importa dades",
+        "subtitle": "Pot importar dades des d'una instància de Homarr existent.",
         "dropzone": {
-          "title": "Przeciągnij tutaj plik zip lub kliknij, aby przeglądać",
-          "description": "Przesłany zip zostanie przetworzony i będziesz mógł wybrać co chcesz zaimportować"
+          "title": "Arrossegueu el fitxer zip aquí o feu clic per navegar",
+          "description": "El fitxer zip carregat es processarà i podreu seleccionar què voleu importar"
         },
         "fileInfo": {
           "action": {
-            "change": "Zmień plik"
+            "change": "Canvia el fitzer"
           }
         },
         "importSettings": {
-          "title": "Importuj ustawienia",
-          "description": "Skonfiguruj zachowanie importu"
+          "title": "Importa la configuració",
+          "description": "Configura el comportament d'importació"
         },
         "boardSelection": {
-          "title": "Znaleziono {count} tablic",
-          "description": "Wybierz wszystkie działy o rozmiarze do zaimportowania",
+          "title": "S'han trobat {count} taulers",
+          "description": "Escolliu tots els taulers amb la mida que voleu importar",
           "action": {
-            "selectAll": "Zaznacz wszystkie",
-            "unselectAll": "Odznacz wszystkie"
+            "selectAll": "Seleccionar-ho tot",
+            "unselectAll": "Anul·la la selecció"
           }
         },
         "summary": {
-          "title": "Podsumowanie importu",
-          "description": "W poniższym podsumowaniu możesz zobaczyć, co zostanie zaimportowane",
+          "title": "Resum de la importació",
+          "description": "En el resum següent podeu veure el que s'importarà",
           "action": {
-            "import": "Potwierdź import i kontynuuj"
+            "import": "Confirma la importació i continua"
           },
           "entities": {
-            "apps": "Aplikacje",
-            "boards": "Tablice",
-            "integrations": "Integracje",
-            "credentialUsers": "Dane użytkowników"
+            "apps": "Aplicacions",
+            "boards": "Tauler",
+            "integrations": "Integracions",
+            "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "Wpisz token importu",
+          "title": "Introduïu el token d'importació",
           "field": {
             "token": {
               "label": "Token",
-              "description": "Wprowadź token importu z poprzedniej instancji hommara"
+              "description": "Introduïu el token d'importació mostrat a la instància prèvia de Homarr"
             }
           },
           "notification": {
             "error": {
-              "title": "Nieprawidłowy token",
-              "message": "Wprowadzony token jest nieprawidłowy"
+              "title": "Token invàlid",
+              "message": "El token que heu introduït no és vàlid"
             }
           }
         }
       },
       "user": {
-        "title": "Administrator",
-        "subtitle": "Określ dane uwierzytelniające dla administratora",
+        "title": "Usuari administrador",
+        "subtitle": "Especifiqueu les credencials del vostre usuari administrador.",
         "notification": {
           "success": {
-            "title": "Użytkownik został utworzony",
-            "message": "Użytkownik został pomyślnie utworzony"
+            "title": "S'ha creat l'usuari",
+            "message": "L'usuari s'ha creat correctament"
           },
           "error": {
-            "title": "Błąd podczas tworzenia użytkownika"
+            "title": "S'ha produït un error al crear l'usuari"
           }
         }
       },
       "group": {
-        "title": "Zewnętrzna grupa",
-        "subtitle": "Określ grupę, która powinna być używana przez użytkowników zewnętrznych.",
+        "title": "Grup extern",
+        "subtitle": "Especifiqueu el grup que s'ha d'utilitzar per als usuaris externs.",
         "form": {
           "name": {
-            "label": "Nazwa grupy",
-            "description": "Nazwa musi być zgodna z grupą administratora zewnętrznego dostawcy"
+            "label": "Nom del grup",
+            "description": ""
           }
         }
       },
       "settings": {
-        "title": "Ustawienia",
-        "subtitle": "Konfiguruj ustawienia serwera"
+        "title": "Configuració",
+        "subtitle": "Configureu els paràmetres del servidor."
       },
       "finish": {
-        "title": "Zakończ konfigurację",
-        "subtitle": "Gotowe!",
-        "description": "Pomyślnie zakończyłeś proces konfiguracji. Teraz możesz zacząć używać Homarr. Wybierz następną akcję:",
+        "title": "Finalitza la configuració",
+        "subtitle": "Ja està tot llest!",
+        "description": "El procés de configuració s'ha completat correctament. Podeu començar a utilitzar Homarr. Escolliu la vostra propera acció:",
         "action": {
-          "goToBoard": "Idź do tablicy {name}",
-          "createBoard": "Stwórz swoją pierwszą tablicę",
-          "inviteUser": "Zaproś innych użytkowników",
-          "docs": "Przeczytaj dokumentację!"
+          "goToBoard": "Ves al tauler {name}",
+          "createBoard": "Creeu el vostre primer tauler",
+          "inviteUser": "Convideu altres usuaris",
+          "docs": "Llegiu la documentació"
         }
       }
     },
-    "backToStart": "Powrót do początku"
+    "backToStart": "Torna a l'inici"
   },
   "user": {
-    "title": "Użytkownicy",
-    "name": "Użytkownik",
+    "title": "Usuaris",
+    "name": "Usuari",
     "page": {
       "login": {
-        "title": "Zaloguj się do swojego konta",
-        "subtitle": "Witamy ponownie! Wprowadź swoje dane logowania"
+        "title": "Entreu al vostre compte",
+        "subtitle": ""
       },
       "invite": {
-        "title": "Dołącz do Homarr",
-        "subtitle": "Witamy w Homarr! Utwórz swoje konto",
-        "description": "Zostałeś(aś) zaproszony(a) przez {username}"
+        "title": "",
+        "subtitle": "",
+        "description": ""
       },
       "init": {
-        "title": "Nowa instalacja Homarra",
-        "subtitle": "Proszę utworzyć użytkownika dla podstawowego administratora"
+        "title": "",
+        "subtitle": ""
       }
     },
     "field": {
       "email": {
-        "label": "E-mail",
-        "verified": "Zweryfikowany"
+        "label": "",
+        "verified": ""
       },
       "username": {
-        "label": "Nazwa użytkownika"
+        "label": ""
       },
       "password": {
-        "label": "Hasło",
+        "label": "",
         "requirement": {
-          "length": "Zawiera co najmniej 8 znaków",
-          "lowercase": "Zawiera małą literę",
-          "uppercase": "Zawiera wielką literę",
-          "number": "Zawiera cyfrę",
-          "special": "Zawiera specjalny symbol"
+          "length": "",
+          "lowercase": "",
+          "uppercase": "",
+          "number": "",
+          "special": ""
         }
       },
       "passwordConfirm": {
-        "label": "Potwierdź hasło"
+        "label": ""
       },
       "previousPassword": {
-        "label": "Stare hasło:"
+        "label": ""
       },
       "homeBoard": {
-        "label": "Tablica główna"
+        "label": ""
       },
       "pingIconsEnabled": {
-        "label": "Użyj ikon dla pingów"
+        "label": ""
       },
       "defaultSearchEngine": {
         "label": ""
@@ -160,59 +160,59 @@
       }
     },
     "error": {
-      "usernameTaken": "Nazwa użytkownika jest już zajęta"
+      "usernameTaken": ""
     },
     "action": {
       "login": {
-        "label": "Zaloguj się",
-        "labelWith": "Zaloguj się przez {provider}",
+        "label": "",
+        "labelWith": "",
         "notification": {
           "success": {
-            "title": "Logowanie zakończone pomyślnie",
-            "message": "Jesteś teraz zalogowany!"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Logowanie nieudane",
-            "message": "Twoje logowanie nie powiodło się"
+            "title": "",
+            "message": ""
           }
         },
         "forgotPassword": {
-          "label": "Zapomniałeś(aś) hasła?",
-          "description": "Administrator może użyć następującej komendy do zresetowania hasła:"
+          "label": "",
+          "description": ""
         }
       },
       "register": {
-        "label": "Utwórz konto",
+        "label": "",
         "notification": {
           "success": {
-            "title": "Utworzono konto",
-            "message": "Zaloguj się, aby kontynuować"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Tworzenie konta nie powiodło się",
-            "message": "Twoje konto nie może zostać utworzone"
+            "title": "",
+            "message": ""
           }
         }
       },
-      "create": "Dodaj użytkownika",
+      "create": "",
       "changePassword": {
-        "label": "Zmień hasło",
+        "label": "",
         "notification": {
           "success": {
-            "message": "Hasło zostało pomyślnie zmienione"
+            "message": ""
           },
           "error": {
-            "message": "Problem ze zmianą hasła"
+            "message": ""
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": "Tablica główna zmieniona pomyślnie"
+            "message": ""
           },
           "error": {
-            "message": "Nie można zmienić tablicy głównej"
+            "message": ""
           }
         }
       },
@@ -229,48 +229,48 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": "Pierwszy dzień tygodnia został pomyślnie zmieniony"
+            "message": ""
           },
           "error": {
-            "message": "Nie można zmienić pierwszego dnia tygodnia"
+            "message": ""
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": "Włączono ping na ikonach"
+            "message": ""
           },
           "error": {
-            "message": "Nie można włączyć pingowania ikon"
+            "message": ""
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "Zmień obraz",
+          "label": "",
           "notification": {
             "success": {
-              "message": "Obraz zmieniony pomyślnie"
+              "message": "La imatge s'ha canviat correctament"
             },
             "error": {
-              "message": "Nie można zmienić obrazu"
+              "message": "No s'ha pogut canviar la imatge"
             },
             "toLarge": {
-              "title": "Obraz jest zbyt duży",
-              "message": "Maksymalny rozmiar obrazu to {size}"
+              "title": "La imatge és massa gran",
+              "message": "La mida màxima de la imatge és {size}"
             }
           }
         },
         "removeImage": {
-          "label": "Usuń obraz",
-          "confirm": "Czy na pewno chcesz usunąć ten obraz?",
+          "label": "Elimina la imatge",
+          "confirm": "Esteu segur que voleu eliminar la imatge?",
           "notification": {
             "success": {
-              "message": "Obraz został pomyślnie usunięty."
+              "message": "La imatge s'ha eliminat correctament"
             },
             "error": {
-              "message": "Nie można usunąć obrazu"
+              "message": "No s'ha pogut eliminar la imatge"
             }
           }
         }
@@ -278,467 +278,467 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": "Pomyślnie zaktualizowano profil"
+            "message": "El perfil s'ha actualitzat correctament"
           },
           "error": {
-            "message": "Problem z aktualizacją profilu"
+            "message": "No s'ha pogut actualitzar el perfil"
           }
         }
       },
       "delete": {
-        "label": "Usuń trwale użytkownika",
-        "description": "Usuwa tego użytkownika, w tym jego preferencje. To nie usunie żadnych tablic. Użytkownik nie będzie powiadamiany.",
-        "confirm": "Czy na pewno chcesz usunąć użytkownika {username} z jego preferencjami?"
+        "label": "Eliminar l'usuari permanentment",
+        "description": "Elimina l'usuari incloent les seves configuracions. Això no esborrarà cap tauler. No es notificarà l'usuari.",
+        "confirm": "Esteu segur que voleu eliminar l'usuari {username} i les seves configuracions?"
       },
       "select": {
-        "label": "Wybierz użytkownika",
-        "notFound": "Nie znaleziono użytkownika"
+        "label": "Seleccioneu l'usuari",
+        "notFound": "No s'ha trobat l'usuari"
       },
       "transfer": {
-        "label": "Wybierz nowego właściciela"
+        "label": "Seleccioneu un nou propietari"
       }
     }
   },
   "group": {
-    "title": "Grupy",
-    "name": "Grupa",
-    "search": "Znajdź grupę",
+    "title": "Grups",
+    "name": "Grup",
+    "search": "Troba un grup",
     "field": {
-      "name": "Nazwa",
-      "members": "Członkowie"
+      "name": "Nom",
+      "members": "Membres"
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "Administrador",
         "item": {
           "admin": {
-            "label": "Administrator",
-            "description": "Członkowie z tym uprawnieniem mają pełny dostęp do wszystkich funkcji i ustawień"
+            "label": "Administrador",
+            "description": "Els membres amb aquest permís tenen accés complet a totes les funcions i configuracions"
           }
         }
       },
       "app": {
-        "title": "Aplikacje",
+        "title": "Aplicacions",
         "item": {
           "create": {
-            "label": "Utwórz aplikacje",
-            "description": "Zezwól użytkownikom na tworzenie aplikacji"
+            "label": "Crear aplicacions",
+            "description": "Permet que els membres crein aplicacions"
           },
           "use-all": {
-            "label": "Używaj wszystkich aplikacji",
-            "description": "Zezwalaj użytkownikom na dodawanie aplikacji do ich tablic"
+            "label": "Utilitzar totes les aplicacions",
+            "description": "Permet que els membres afegeixin qualsevol aplicació als seus taulers"
           },
           "modify-all": {
-            "label": "Modyfikuj wszystkie aplikacje",
-            "description": "Zezwalaj użytkownikom na modyfikowanie wszystkich aplikacji"
+            "label": "Modificar totes les aplicacions",
+            "description": "Permet que els memebres modifiquin totes les aplicacions"
           },
           "full-all": {
-            "label": "Pełny dostęp do aplikacji",
-            "description": "Zezwalaj użytkownikom na zarządzanie, używanie i usuwanie dowolnej aplikacji"
+            "label": "Accés complet a les aplicacions",
+            "description": "Permet que els membres gestionin, utilitzin i eliminin qualsevol aplicació"
           }
         }
       },
       "board": {
-        "title": "Tablice",
+        "title": "Taulers",
         "item": {
           "create": {
-            "label": "Utwórz tablice",
-            "description": "Zezwalaj użytkownikom na tworzenie tablic"
+            "label": "Crear taulers",
+            "description": "Permet que els membres crein taulers"
           },
           "view-all": {
-            "label": "Wyświetl wszystkie tablice",
-            "description": "Zezwalaj użytkownikom na wyświetlanie wszystkich tablic"
+            "label": "Visualitzar tots els taulers",
+            "description": "Permet que els membres visualitzin tots els taulers"
           },
           "modify-all": {
-            "label": "Modyfikuj wszystkie tablice",
-            "description": "Zezwalaj użytkownikom na modyfikowanie wszystkich tablic (nie uwzględnia kontroli dostępu i strefy niebezpiecznej)"
+            "label": "Modificar tots els taulers",
+            "description": "Permet que els membres modifiquin tots els taulers (No inclou control d'accés ni zona de perill)"
           },
           "full-all": {
-            "label": "Pełny dostęp do tablicy",
-            "description": "Zezwalaj użytkownikom na przeglądanie, modyfikowanie i usuwanie wszystkich tablic (w tym kontroli dostępu i strefy niebezpiecznej)"
+            "label": "Accés total a tots els taulers",
+            "description": "Permet que els membres visualitzin, modifiquin i esborrin tots els taulers (incloent-hi control d'accés i zona de perill)"
           }
         }
       },
       "integration": {
-        "title": "Integracje",
+        "title": "Integracions",
         "item": {
           "create": {
-            "label": "Utwórz integracje",
-            "description": "Zezwalaj użytkownikom na tworzenie integracji"
+            "label": "Crear integracions",
+            "description": "Permet que els membres crein integracions"
           },
           "use-all": {
-            "label": "Używaj wszystkich integracji",
-            "description": "Pozwala członkom na dodawanie integracji do ich tablic"
+            "label": "Utilitzar totes les integracions",
+            "description": "Permet que els membres afegeixin qualsevol integració als seus taulers"
           },
           "interact-all": {
-            "label": "Interakcja z dowolną integracją",
-            "description": "Zezwalaj użytkownikom na interakcję z dowolną integracją"
+            "label": "Interactuar amb qualsevol integració",
+            "description": "Permet que els usuaris interaccionin amb qualsevol integració"
           },
           "full-all": {
-            "label": "Pełny dostęp do integracji",
-            "description": "Zezwalaj użytkownikom na zarządzanie, używanie i interakcję z dowolną integracją"
+            "label": "Accés total a les integracions",
+            "description": ""
           }
         }
       },
       "media": {
-        "title": "Media",
+        "title": "",
         "item": {
           "upload": {
-            "label": "Prześlij media",
-            "description": "Zezwalaj użytkownikom na przesyłanie mediów"
+            "label": "",
+            "description": ""
           },
           "view-all": {
-            "label": "Wyświetl wszystkie media",
-            "description": "Zezwalaj użytkownikom na wyświetlanie wszystkich mediów"
+            "label": "",
+            "description": ""
           },
           "full-all": {
-            "label": "Pełny dostęp do mediów",
-            "description": "Zezwalaj użytkownikom na zarządzanie i usuwanie wszelkich mediów"
+            "label": "",
+            "description": ""
           }
         }
       },
       "other": {
-        "title": "Inne",
+        "title": "",
         "item": {
           "view-logs": {
-            "label": "Wyświetl logi",
-            "description": "Zezwalaj użytkownikom na przeglądanie logów"
+            "label": "",
+            "description": ""
           }
         }
       },
       "search-engine": {
-        "title": "Wyszukiwarki",
+        "title": "",
         "item": {
           "create": {
-            "label": "Utwórz wyszukiwarki",
-            "description": "Zezwalaj użytkownikom na tworzenie wyszukiwarek"
+            "label": "",
+            "description": ""
           },
           "modify-all": {
-            "label": "Modyfikuj wszystkie wyszukiwarki",
-            "description": "Zezwalaj użytkownikom na modyfikację wszystkich wyszukiwarek"
+            "label": "",
+            "description": ""
           },
           "full-all": {
-            "label": "Pełny dostęp do wyszukiwarki",
-            "description": "Zezwól użytkownikom na zarządzanie i usuwanie dowolnej wyszukiwarki"
+            "label": "",
+            "description": ""
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "Niektórzy członkowie pochodzą od zewnętrznych dostawców i nie mogą być tutaj zarządzani",
-      "external": "Wszyscy członkowie pochodzą od zewnętrznych dostawców i nie mogą być tutaj zarządzani"
+      "mixed": "",
+      "external": ""
     },
     "reservedNotice": {
-      "message": "Ta grupa jest zarezerwowana dla użycia systemowego i ogranicza niektóre działania. <checkoutDocs></checkoutDocs>"
+      "message": ""
     },
     "action": {
       "create": {
-        "label": "Nowa grupa",
+        "label": "",
         "notification": {
           "success": {
-            "message": "Grupa została pomyślnie utworzona"
+            "message": ""
           },
           "error": {
-            "message": "Nie udało się utworzyć grupy"
+            "message": ""
           }
         }
       },
       "transfer": {
-        "label": "Przenieś własność",
-        "description": "Przenieś właściciela tej grupy na innego użytkownika.",
-        "confirm": "Czy na pewno chcesz przenieść właściciela grupy {name} na {username}?",
+        "label": "",
+        "description": "",
+        "confirm": "",
         "notification": {
           "success": {
-            "message": "Przeniesiono pomyślnie właściciela grupy {group} do {user} "
+            "message": ""
           },
           "error": {
-            "message": "Nie można przenieść właściciela"
+            "message": ""
           }
         }
       },
       "addMember": {
-        "label": "Dodaj członka"
+        "label": ""
       },
       "removeMember": {
-        "label": "Usuń użytkownika",
-        "confirm": "Czy na pewno chcesz usunąć {user} z tej grupy?"
+        "label": "",
+        "confirm": ""
       },
       "delete": {
-        "label": "Usuń grupę",
-        "description": "Kiedy usuniesz grupę, nie da się jej przywrócić. Proszę się upewnić czy na pewno chcesz to zrobić.",
-        "confirm": "Czy na pewno chcesz usunąć grupę {name}?",
+        "label": "",
+        "description": "",
+        "confirm": "",
         "notification": {
           "success": {
-            "message": "Usunięto grupę {name}"
+            "message": ""
           },
           "error": {
-            "message": "Nie udało się usunąć grupy {name}"
+            "message": ""
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "Uprawnienia zostały zapisane",
-            "message": "Uprawnienia zostały pomyślnie zapisane"
+            "title": "",
+            "message": ""
           },
           "error": {
-            "title": "Nie zapisano uprawnień",
-            "message": "Uprawnienia nie zostały zapisane"
+            "title": "",
+            "message": ""
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": "Grupa {name} została pomyślnie zapisana"
+            "message": ""
           },
           "error": {
-            "message": "Nie udało się zapisać grupy {name}"
+            "message": ""
           }
         }
       },
       "select": {
-        "label": "Wybierz grupę",
-        "notFound": "Nie znaleziono grupy"
+        "label": "",
+        "notFound": ""
       }
     }
   },
   "app": {
-    "search": "Znajdź aplikację",
+    "search": "",
     "page": {
       "list": {
-        "title": "Aplikacje",
+        "title": "",
         "noResults": {
-          "title": "Nie ma jeszcze żadnych aplikacji",
-          "action": "Utwórz swoją pierwszą aplikację"
+          "title": "",
+          "action": ""
         }
       },
       "create": {
-        "title": "Nowa aplikacja",
+        "title": "",
         "notification": {
           "success": {
-            "title": "Pomyślnie utworzono",
-            "message": "Aplikacja została pomyślnie utworzona"
+            "title": "Creació correcta",
+            "message": "L'aplicació s'ha creat correctament"
           },
           "error": {
-            "title": "Tworzenie nieudane",
-            "message": "Aplikacja nie mogła zostać utworzona"
+            "title": "Creació fallida",
+            "message": "No s'ha pogut crear l'aplicació"
           }
         }
       },
       "edit": {
-        "title": "Edytuj aplikację",
+        "title": "Edita l'aplicació",
         "notification": {
           "success": {
-            "title": "Zmiany zostały pomyślnie zastosowane",
-            "message": "Aplikacja została pomyślnie zapisana"
+            "title": "Els canvis s'han aplicat correctament",
+            "message": "L'aplicació s'ha desat correctament"
           },
           "error": {
-            "title": "Nie można wprowadzić zmian",
-            "message": "Nie można zapisać aplikacji"
+            "title": "No s'han pogut aplicar els canvis",
+            "message": "L'aplicació no s'ha pogut desar"
           }
         }
       },
       "delete": {
-        "title": "Usuń aplikację",
-        "message": "Czy na pewno chcesz usunąć aplikację {name}?",
+        "title": "Elimina l'aplicació",
+        "message": "Esteu segur que voleu eliminar l'aplicació {name}?",
         "notification": {
           "success": {
-            "title": "Usunięto pomyślnie",
-            "message": "Aplikacja została pomyślnie usunięta"
+            "title": "Eliminació correcta",
+            "message": "L'aplicació s'ha eliminat correctament"
           },
           "error": {
-            "title": "Nie udało się usunąć",
-            "message": "Nie można usunąć aplikacji"
+            "title": "Eliminació fallida",
+            "message": "No s'ha pogut eliminar l'aplicació"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": "Nazwa"
+        "label": "Nom"
       },
       "description": {
-        "label": "Opis"
+        "label": "Descripció"
       },
       "url": {
-        "label": "Adres URL"
+        "label": "URL"
       }
     },
     "action": {
       "select": {
-        "label": "Wybierz aplikację",
-        "notFound": "Nie znaleziono aplikacji"
+        "label": "Seleccioneu l'aplicació",
+        "notFound": "No s'ha trobat cap aplicació"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "Integracje",
-        "search": "Wyszukaj integrację",
+        "title": "Integracions",
+        "search": "Cercar integracions",
         "noResults": {
-          "title": "Nie ma jeszcze integracji"
+          "title": "Encara no hi ha cap integració"
         }
       },
       "create": {
-        "title": "Nowa integracja {name}",
+        "title": "Nova integració de {name}",
         "notification": {
           "success": {
-            "title": "Utworzenie udało się",
-            "message": "Integracja została pomyślnie utworzona"
+            "title": "Creació correcta",
+            "message": "La integració s'ha creat correctament"
           },
           "error": {
-            "title": "Nie udało się utworzyć",
-            "message": "Integracja nie może zostać utworzona"
+            "title": "Creació fallida",
+            "message": "No s'ha pogut crear la integració"
           }
         }
       },
       "edit": {
-        "title": "Edytuj integrację z {name}",
+        "title": "Edita la integració de {name}",
         "notification": {
           "success": {
-            "title": "Zmiany zostały pomyślnie zastosowane",
-            "message": "Integracja została pomyślnie zapisana"
+            "title": "Els canvis s'han aplicat correctament",
+            "message": "La integració s'ha desat correctament"
           },
           "error": {
-            "title": "Nie można wprowadzić zmian",
-            "message": "Integracja nie mogła zostać zapisana"
+            "title": "No s'han pogut aplicar els canvis",
+            "message": "No s'ha pogut desar la integració"
           }
         }
       },
       "delete": {
-        "title": "Usuń integrację",
-        "message": "Czy na pewno chcesz usunąć integrację z {name}?",
+        "title": "Elimina la integració",
+        "message": "Esteu segur que voleu eliminar la integració {name}?",
         "notification": {
           "success": {
-            "title": "Usunięto pomyślnie",
-            "message": "Integracja została pomyślnie usunięta"
+            "title": "Eliminació correcta",
+            "message": "La integració s'ha eliminat correctament"
           },
           "error": {
-            "title": "Nie udało się usunąć",
-            "message": "Nie udało się usunąć integracji"
+            "title": "Eliminació fallida",
+            "message": "No s'ha pogut eliminar la integració"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": "Nazwa"
+        "label": "Nom"
       },
       "url": {
-        "label": "Adres URL"
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "Utwórz wyszukiwarkę",
-        "description": "Integracja \"{kind}\" może być używana z wyszukiwarkami. Zaznacz to, aby automatycznie skonfigurować wyszukiwarkę."
+        "label": "Crea un motor de cerca",
+        "description": "La integració \"{kind}\" es pot utilitzar amb els motors de cerca. Seleccioneu aquesta opció per configurar el motor de cerca automàticament."
       }
     },
     "action": {
-      "create": "Nowa integracja"
+      "create": "Nova integració"
     },
     "testConnection": {
       "action": {
-        "create": "Sprawdź połączenie i utwórz",
-        "edit": "Sprawdź połączenie i zapisz"
+        "create": "Comprova la connexió i crea",
+        "edit": "Comprova la connexió i desa"
       },
-      "alertNotice": "Przycisk Zapisz jest włączony po nawiązaniu pomyślnego połączenia",
+      "alertNotice": "El botó \"Desa\" s'habilita quan la connexió s'estableix correctament",
       "notification": {
         "success": {
-          "title": "Połączenie przebiegło pomyślnie",
-          "message": "Połączenie zostało pomyślnie nawiązane"
+          "title": "S'ha connectat",
+          "message": "S'ha connectat correctament"
         },
         "invalidUrl": {
-          "title": "Nieprawidłowy URL",
-          "message": "Adres URL jest nieprawidłowy"
+          "title": "Adreça URL no vàlida",
+          "message": "L'adreça URL no és vàlida"
         },
         "secretNotDefined": {
-          "title": "Brakujące poświadczenia",
-          "message": "Nie podano wszystkich poświadczeń"
+          "title": "",
+          "message": ""
         },
         "invalidCredentials": {
-          "title": "Nieprawidłowe poświadczenia",
-          "message": "Poświadczenia są nieprawidłowe"
+          "title": "",
+          "message": ""
         },
         "commonError": {
-          "title": "Nie udało się połączyć",
-          "message": "Nie udało się nawiązać połączenia"
+          "title": "",
+          "message": ""
         },
         "badRequest": {
-          "title": "Błędne zapytanie",
-          "message": "Zapytanie zostało uszkodzone"
+          "title": "",
+          "message": ""
         },
         "unauthorized": {
-          "title": "Błąd uwierzytelnienia",
-          "message": "Prawdopodobnie nieprawidłowe poświadczenia"
+          "title": "",
+          "message": ""
         },
         "forbidden": {
-          "title": "Odmowa dostępu",
-          "message": "Prawdopodobnie brakuje uprawnień"
+          "title": "",
+          "message": ""
         },
         "notFound": {
-          "title": "Nie znaleziono",
-          "message": "Prawdopodobnie błędny adres URL lub ścieżka"
+          "title": "",
+          "message": ""
         },
         "internalServerError": {
-          "title": "Wewnętrzny błąd serwera",
-          "message": "Wystąpił błąd serwera"
+          "title": "",
+          "message": ""
         },
         "serviceUnavailable": {
-          "title": "Usługa niedostępna",
-          "message": "Serwer jest obecnie niedostępny"
+          "title": "",
+          "message": ""
         },
         "connectionAborted": {
-          "title": "Połączenie przerwano",
-          "message": "Połączenie zostało przerwane"
+          "title": "",
+          "message": ""
         },
         "domainNotFound": {
-          "title": "Domena nie została znaleziona",
-          "message": "Nie można odnaleźć domeny"
+          "title": "",
+          "message": ""
         },
         "connectionRefused": {
-          "title": "Połączenie odrzucone",
-          "message": "Połączenie zostało odrzucone"
+          "title": "",
+          "message": ""
         },
         "invalidJson": {
-          "title": "Nieprawidłowy JSON",
-          "message": "Odpowiedź nie była prawidłowym JSON'em"
+          "title": "",
+          "message": ""
         },
         "wrongPath": {
-          "title": "Błędna ścieżka",
-          "message": "Ścieżka jest prawdopodobnie niepoprawna"
+          "title": "",
+          "message": ""
         }
       }
     },
     "secrets": {
-      "title": "Sekrety",
-      "lastUpdated": "Data ostatniej aktualizacji: {date}",
+      "title": "",
+      "lastUpdated": "",
       "notSet": {
-        "label": "Nie ustawiono wartości",
-        "tooltip": "Ten wymagany sekret nie został jeszcze ustawiony"
+        "label": "",
+        "tooltip": ""
       },
-      "secureNotice": "Ten sekret nie może zostać pobrany po utworzeniu",
+      "secureNotice": "",
       "reset": {
-        "title": "Resetuj sekret",
-        "message": "Czy na pewno chcesz zresetować ten sekret?"
+        "title": "",
+        "message": ""
       },
       "noSecretsRequired": {
-        "segmentTitle": "Brak sekretów",
-        "text": "Dla tej integracji nie są wymagane żadne sekrety"
+        "segmentTitle": "",
+        "text": ""
       },
       "kind": {
         "username": {
-          "label": "Nazwa użytkownika",
-          "newLabel": "Nowa nazwa użytkownika"
+          "label": "",
+          "newLabel": ""
         },
         "apiKey": {
-          "label": "Klucz API",
-          "newLabel": "Nowy klucz API"
+          "label": "",
+          "newLabel": ""
         },
         "password": {
-          "label": "Hasło",
-          "newLabel": "Nowe hasło"
+          "label": "",
+          "newLabel": ""
         },
         "tokenId": {
           "label": "",
@@ -751,46 +751,46 @@
       }
     },
     "permission": {
-      "use": "Wybierz integrację w elementach",
-      "interact": "Interakcja z integracjami",
-      "full": "Pełny dostęp do integracji"
+      "use": "",
+      "interact": "",
+      "full": ""
     }
   },
   "media": {
-    "plural": "Medias",
-    "search": "Znajdź media",
+    "plural": "",
+    "search": "",
     "field": {
-      "name": "Nazwa",
-      "size": "Rozmiar",
-      "creator": "Twórca"
+      "name": "",
+      "size": "",
+      "creator": ""
     },
     "action": {
       "upload": {
-        "label": "Prześlij media",
-        "file": "Wybierz plik",
+        "label": "",
+        "file": "",
         "notification": {
           "success": {
-            "message": "Plik multimedialny został przesłany pomyślnie"
+            "message": ""
           },
           "error": {
-            "message": "Nie można przesłać multimediów"
+            "message": ""
           }
         }
       },
       "delete": {
-        "label": "Usuń media",
-        "description": "Czy na pewno chcesz usunąć media <bName></bName>?",
+        "label": "",
+        "description": "",
         "notification": {
           "success": {
-            "message": "Plik został usunięty pomyślnie"
+            "message": ""
           },
           "error": {
-            "message": "Nie udało się usunąć mediów"
+            "message": ""
           }
         }
       },
       "copy": {
-        "label": "Kopiuj adres URL"
+        "label": ""
       },
       "open": {
         "label": ""
@@ -798,127 +798,127 @@
     }
   },
   "common": {
-    "beta": "Wersja beta",
-    "error": "Błąd",
+    "beta": "",
+    "error": "",
     "action": {
-      "add": "Dodaj",
-      "apply": "Zastosuj",
-      "backToOverview": "Powrót do widoku ogólnego",
-      "create": "Utwórz",
+      "add": "",
+      "apply": "",
+      "backToOverview": "",
+      "create": "",
       "createAnother": "",
-      "edit": "Edytuj",
-      "import": "Importuj",
-      "insert": "Wstaw",
-      "remove": "Usuń",
-      "save": "Zapisz",
-      "saveChanges": "Zapisz zmiany",
-      "cancel": "Anuluj",
-      "delete": "Usuń",
-      "discard": "Odrzuć",
-      "confirm": "Potwierdź",
-      "continue": "Kontynuuj",
-      "previous": "Poprzedni",
-      "next": "Dalej",
-      "checkoutDocs": "Sprawdź dokumentację",
-      "checkLogs": "Sprawdź logi, aby uzyskać więcej informacji.",
-      "tryAgain": "Spróbuj ponownie",
-      "loading": "Ładowanie"
+      "edit": "",
+      "import": "",
+      "insert": "",
+      "remove": "",
+      "save": "",
+      "saveChanges": "",
+      "cancel": "",
+      "delete": "",
+      "discard": "",
+      "confirm": "",
+      "continue": "",
+      "previous": "",
+      "next": "",
+      "checkoutDocs": "",
+      "checkLogs": "",
+      "tryAgain": "",
+      "loading": ""
     },
-    "here": "tutaj",
+    "here": "",
     "iconPicker": {
-      "label": "adres URL ikony",
-      "header": "Wpisz nazwę lub obiekty do filtrowania ikon... Homarr przeszuka dla Ciebie ikony {countIcons}."
+      "label": "",
+      "header": ""
     },
     "colorScheme": {
       "options": {
-        "light": "Jasny",
-        "dark": "Ciemny"
+        "light": "",
+        "dark": ""
       }
     },
     "information": {
-      "min": "Min",
-      "max": "Max.",
-      "days": "Dni",
-      "hours": "Godziny",
-      "minutes": "Minuty"
+      "min": "",
+      "max": "",
+      "days": "",
+      "hours": "",
+      "minutes": ""
     },
     "notification": {
       "create": {
-        "success": "Utworzenie udało się",
-        "error": "Tworzenie nie powiodło się"
+        "success": "",
+        "error": ""
       },
       "delete": {
-        "success": "Usunięto pomyślnie",
-        "error": "Nie udało się usunąć"
+        "success": "",
+        "error": ""
       },
       "update": {
-        "success": "Zmiany zostały pomyślnie zastosowane",
-        "error": "Nie można wprowadzić zmian"
+        "success": "",
+        "error": ""
       },
       "transfer": {
-        "success": "Pomyślnie przesłano",
-        "error": "Przesłanie się nie powiodło"
+        "success": "",
+        "error": ""
       }
     },
     "multiSelect": {
-      "placeholder": "Wybierz jedną lub więcej wartości"
+      "placeholder": ""
     },
     "multiText": {
-      "placeholder": "Dodaj więcej wartości",
-      "addLabel": "Dodaj {value}"
+      "placeholder": "",
+      "addLabel": ""
     },
     "select": {
-      "placeholder": "Wybierz wartość",
+      "placeholder": "",
       "badge": {
-        "recommended": "Rekomendowane"
+        "recommended": ""
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "Przełącz na tryb nocny",
-        "switchToLightMode": "Przełącz na tryb jasny",
-        "management": "Zarządzanie",
-        "preferences": "Twoje preferencje",
-        "logout": "Wyloguj się",
-        "login": "Zaloguj się",
-        "homeBoard": "Twoja tablica główna",
-        "loggedOut": "Wylogowano",
-        "updateAvailable": "Dostępne aktualizacje {countUpdates} : {tag}"
+        "switchToDarkMode": "",
+        "switchToLightMode": "",
+        "management": "",
+        "preferences": "",
+        "logout": "",
+        "login": "",
+        "homeBoard": "",
+        "loggedOut": "",
+        "updateAvailable": ""
       }
     },
-    "dangerZone": "Strefa zagrożenia",
-    "noResults": "Nie znaleziono żadnych wyników",
+    "dangerZone": "",
+    "noResults": "",
     "preview": {
-      "show": "Pokaż podgląd",
-      "hide": "Ukryj podgląd"
+      "show": "",
+      "hide": ""
     },
     "zod": {
       "errors": {
-        "default": "To pole jest nieprawidłowe",
-        "required": "To pole jest wymagane",
+        "default": "",
+        "required": "",
         "string": {
-          "startsWith": "To pole musi zaczynać się od {startsWith}",
-          "endsWith": "To pole musi kończyć się na {endsWith}",
-          "includes": "Pole to musi zawierać {includes}",
-          "invalidEmail": "W tym polu musi znajdować się prawidłowy adres e-mail"
+          "startsWith": "",
+          "endsWith": "",
+          "includes": "",
+          "invalidEmail": ""
         },
         "tooSmall": {
-          "string": "To pole musi mieć co najmniej {minimum} znaków",
-          "number": "Wartość tego pola musi być większa lub równa {minimum}"
+          "string": "",
+          "number": ""
         },
         "tooBig": {
-          "string": "To pole może zawierać maksymalnie {maximum} znaków",
-          "number": "Wartość tego pola musi być mniejsza lub równa {maximum}"
+          "string": "",
+          "number": ""
         },
         "custom": {
-          "passwordsDoNotMatch": "Wprowadzone hasła nie zgadzają się",
-          "passwordRequirements": "Twoje hasło nie spełnia wymagań.",
-          "boardAlreadyExists": "Tablica o tej nazwie już istnieje",
-          "invalidFileType": "Nieprawidłowy typ pliku, oczekiwany {expected}",
+          "passwordsDoNotMatch": "",
+          "passwordRequirements": "",
+          "boardAlreadyExists": "",
+          "invalidFileType": "",
           "invalidFileName": "",
-          "fileTooLarge": "Plik jest zbyt duży, maksymalny rozmiar to {maxSize}",
-          "invalidConfiguration": "Nieprawidłowa konfiguracja",
-          "groupNameTaken": "Nazwa użytkownika jest już zajęta"
+          "fileTooLarge": "",
+          "invalidConfiguration": "",
+          "groupNameTaken": ""
         }
       }
     }
@@ -926,151 +926,151 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "Nowa sekcja dynamiczna",
-        "remove": "Usuń sekcję dynamiczną"
+        "create": "",
+        "remove": ""
       },
       "remove": {
-        "title": "Usuń sekcję dynamiczną",
-        "message": "Czy na pewno chcesz usunąć tę sekcję dynamiczną? Elementy zostaną przeniesione w tej samej lokalizacji w sekcji nadrzędnej."
+        "title": "",
+        "message": ""
       }
     },
     "category": {
       "field": {
         "name": {
-          "label": "Nazwa"
+          "label": ""
         }
       },
       "action": {
-        "create": "Nowa kategoria",
-        "edit": "Zmień nazwę kategorii",
-        "remove": "Usuń kategorię",
-        "moveUp": "Przenieś w górę",
-        "moveDown": "Przenieś w dół",
-        "createAbove": "Nowa kategoria powyżej",
-        "createBelow": "Nowa kategoria poniżej"
+        "create": "",
+        "edit": "",
+        "remove": "",
+        "moveUp": "",
+        "moveDown": "",
+        "createAbove": "",
+        "createBelow": ""
       },
       "create": {
-        "title": "Nowa kategoria",
-        "submit": "Dodaj kategorię"
+        "title": "",
+        "submit": ""
       },
       "remove": {
-        "title": "Usuń kategorię",
-        "message": "Czy na pewno chcesz usunąć kategorię {name}?"
+        "title": "",
+        "message": ""
       },
       "edit": {
-        "title": "Zmień nazwę kategorii",
-        "submit": "Zmień nazwę kategorii"
+        "title": "",
+        "submit": ""
       },
       "menu": {
         "label": {
-          "create": "Nowa kategoria",
-          "changePosition": "Zmiana pozycji"
+          "create": "",
+          "changePosition": ""
         }
       }
     }
   },
   "item": {
     "action": {
-      "create": "Nowa pozycja",
-      "import": "Importuj pozycję",
-      "edit": "Edytuj pozycję",
-      "moveResize": "Przenieś / zmień rozmiar pozycji",
-      "duplicate": "Duplikuj pozycję",
-      "remove": "Usuń pozycję"
+      "create": "",
+      "import": "",
+      "edit": "",
+      "moveResize": "",
+      "duplicate": "",
+      "remove": ""
     },
     "menu": {
       "label": {
-        "settings": "Ustawienia"
+        "settings": ""
       }
     },
     "create": {
-      "title": "Wybierz element do dodania",
-      "search": "Filtrowanie elementów",
-      "addToBoard": "Dodaj do tablicy"
+      "title": "",
+      "search": "",
+      "addToBoard": ""
     },
     "moveResize": {
-      "title": "Przenieś / zmień rozmiar pozycji",
+      "title": "",
       "field": {
         "width": {
-          "label": "Szerokość"
+          "label": ""
         },
         "height": {
-          "label": "Wysokość"
+          "label": ""
         },
         "xOffset": {
-          "label": "Przesunięcie X"
+          "label": ""
         },
         "yOffset": {
-          "label": "Przesunięcie Y"
+          "label": ""
         }
       }
     },
     "edit": {
-      "title": "Edytuj pozycje",
+      "title": "",
       "advancedOptions": {
-        "label": "Ustawienia zaawansowane",
-        "title": "Zaawansowane opcje pozycji"
+        "label": "",
+        "title": ""
       },
       "field": {
         "integrations": {
-          "label": "Integracje"
+          "label": ""
         },
         "customCssClasses": {
-          "label": "Niestandardowe klasy CSS"
+          "label": ""
         }
       }
     },
     "remove": {
-      "title": "Usuń pozycję",
-      "message": "Jesteś pewien, że chcesz usunąć ten element?"
+      "title": "",
+      "message": ""
     }
   },
   "widget": {
     "app": {
-      "name": "Aplikacja",
-      "description": "Osadza aplikację w płytce.",
+      "name": "",
+      "description": "",
       "option": {
         "appId": {
-          "label": "Wybierz aplikację"
+          "label": ""
         },
         "openInNewTab": {
-          "label": "Otwórz w nowej karcie"
+          "label": ""
         },
         "showTitle": {
-          "label": "Pokaż nazwę aplikacji"
+          "label": ""
         },
         "showDescriptionTooltip": {
-          "label": "Pokaż opis podpowiedzi"
+          "label": ""
         },
         "pingEnabled": {
-          "label": "Włącz prosty ping"
+          "label": ""
         }
       },
       "error": {
         "notFound": {
-          "label": "Brak aplikacji",
-          "tooltip": "Nie wybrano prawidłowej aplikacji"
+          "label": "",
+          "tooltip": ""
         }
       }
     },
     "bookmarks": {
-      "name": "Zakładki",
-      "description": "Wyświetla wiele linków do aplikacji",
+      "name": "",
+      "description": "",
       "option": {
         "title": {
-          "label": "Tytuł"
+          "label": ""
         },
         "layout": {
-          "label": "Układ",
+          "label": "",
           "option": {
             "row": {
-              "label": "Poziomy"
+              "label": ""
             },
             "column": {
-              "label": "Pionowy"
+              "label": ""
             },
             "grid": {
-              "label": "Siatka"
+              "label": ""
             }
           }
         },
@@ -1084,295 +1084,295 @@
           "label": ""
         },
         "items": {
-          "label": "Zakładki",
-          "add": "Dodaj zakładkę"
+          "label": "",
+          "add": ""
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "Podsumowanie Hole DNS",
-      "description": "Wyświetla podsumowanie Twojego hosta DNS",
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
-          "label": "Układ",
+          "label": "",
           "option": {
             "row": {
-              "label": "Poziomy"
+              "label": ""
             },
             "column": {
-              "label": "Pionowy"
+              "label": ""
             },
             "grid": {
-              "label": "Siatka"
+              "label": ""
             }
           }
         },
         "usePiHoleColors": {
-          "label": "Użyj kolorów Pi-Hole"
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Nie udało się pobrać podsumowanie Hole DNS",
-        "integrationsDisconnected": "Brak dostępnych danych, wszystkie integracje odłączone"
+        "internalServerError": "",
+        "integrationsDisconnected": ""
       },
       "data": {
-        "adsBlockedToday": "Zablokowane dzisiaj",
-        "adsBlockedTodayPercentage": "Zablokowane dzisiaj",
-        "dnsQueriesToday": "Zapytania dzisiaj",
-        "domainsBeingBlocked": "Domeny na liście blokowanych"
+        "adsBlockedToday": "",
+        "adsBlockedTodayPercentage": "",
+        "dnsQueriesToday": "",
+        "domainsBeingBlocked": ""
       },
-      "domainsTooltip": "Ze względu na wiele integracji, Homarr nie może obliczyć dokładnej liczby zablokowanych domen"
+      "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "Sterowanie dziurami DNS",
-      "description": "Kontroluj PiHole lub AdGuard ze swojego pulpitu",
+      "name": "",
+      "description": "",
       "option": {
         "layout": {
-          "label": "Układ",
+          "label": "",
           "option": {
             "row": {
-              "label": "Poziomy"
+              "label": ""
             },
             "column": {
-              "label": "Pionowy"
+              "label": ""
             },
             "grid": {
-              "label": "Siatka"
+              "label": ""
             }
           }
         },
         "showToggleAllButtons": {
-          "label": "Pokaż  \"pokaż wszystkie przyciski\" przycisk"
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Nie udało się kontrolować funkcji DNS Hole"
+        "internalServerError": ""
       },
       "controls": {
-        "enableAll": "Włącz wszystkie",
-        "disableAll": "Wyłącz wszystkie",
-        "setTimer": "Ustaw wyłącznik czasowy",
-        "set": "Ustaw",
-        "enabled": "Włączony",
-        "disabled": "Wyłączony",
-        "processing": "Przetwarzanie",
-        "disconnected": "Rozłączono",
-        "hours": "Godziny",
-        "minutes": "Minuty",
-        "unlimited": "Pozostaw puste do nieograniczonej"
+        "enableAll": "",
+        "disableAll": "",
+        "setTimer": "",
+        "set": "",
+        "enabled": "",
+        "disabled": "",
+        "processing": "",
+        "disconnected": "",
+        "hours": "",
+        "minutes": "",
+        "unlimited": ""
       }
     },
     "clock": {
-      "name": "Data i czas",
-      "description": "Wyświetla bieżącą datę i godzinę.",
+      "name": "",
+      "description": "",
       "option": {
         "customTitleToggle": {
-          "label": "Niestandardowe wyświetlanie tytułu/miasta",
-          "description": "Pokaż własny tytuł lub nazwę miasta/kraju na górze zegara."
+          "label": "",
+          "description": ""
         },
         "customTitle": {
-          "label": "Tytuł"
+          "label": ""
         },
         "is24HourFormat": {
-          "label": "Format 24-godzinny",
-          "description": "Użyj 24-godzinnego formatu zamiast 12-godzinnego"
+          "label": "",
+          "description": ""
         },
         "showSeconds": {
-          "label": "Wyświetlaj sekundy"
+          "label": ""
         },
         "useCustomTimezone": {
-          "label": "Użyj stałej strefy czasowej"
+          "label": ""
         },
         "timezone": {
-          "label": "Strefa czasowa",
-          "description": "Wybierz strefę czasową zgodnie ze standardem IANA"
+          "label": "",
+          "description": ""
         },
         "showDate": {
-          "label": "Pokaż datę"
+          "label": ""
         },
         "dateFormat": {
-          "label": "Format daty",
-          "description": "Jak powinna wyglądać data"
+          "label": "",
+          "description": ""
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "Status serwera Minecraft",
-      "description": "Wyświetla status serwera Minecraft",
+      "name": "",
+      "description": "",
       "option": {
         "title": {
-          "label": "Tytuł"
+          "label": ""
         },
         "domain": {
-          "label": "Adres serwera"
+          "label": ""
         },
         "isBedrockServer": {
-          "label": "Serwer Bedrock"
+          "label": ""
         }
       },
       "status": {
-        "online": "Dostępny",
-        "offline": "Niedostępny"
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
-      "name": "Notatnik",
-      "description": "Prosty widżet notatnika obsługujący markdown",
+      "name": "",
+      "description": "",
       "option": {
         "showToolbar": {
-          "label": "Pokaż pasek narzędzi ułatwiający pisanie w markdown"
+          "label": ""
         },
         "allowReadOnlyCheck": {
-          "label": "Zezwalaj na sprawdzanie w trybie tylko do odczytu"
+          "label": ""
         },
         "content": {
-          "label": "Zawartość notatnika"
+          "label": ""
         }
       },
       "controls": {
-        "bold": "Pogrubienie",
-        "italic": "Kursywa",
-        "strikethrough": "Przekreślenie",
-        "underline": "Podkreślenie",
-        "colorText": "Kolorowy tekst",
-        "colorHighlight": "Kolorowy wyróżniony tekst",
-        "code": "Kod",
-        "clear": "Wyczyść formatowanie",
-        "heading": "Nagłówek {level}",
-        "align": "Wyrównanie tekstu: {position}",
-        "blockquote": "Cytat",
-        "horizontalLine": "Linia pozioma",
-        "bulletList": "Lista punktowana",
-        "orderedList": "Lista numerowana",
-        "checkList": "Lista kontrolna",
-        "increaseIndent": "Zwiększ wcięcie",
-        "decreaseIndent": "Zmniejsz wcięcie",
-        "link": "Odnośnik",
-        "unlink": "Usuń odnośnik",
-        "image": "Osadź obraz",
-        "addTable": "Dodaj tabelę",
-        "deleteTable": "Usuń tabelę",
-        "colorCell": "Kolor Komórki",
-        "mergeCell": "Przełączanie scalania komórek",
-        "addColumnLeft": "Dodaj kolumnę przed",
-        "addColumnRight": "Dodaj kolumnę po",
-        "deleteColumn": "Usuń kolumnę",
-        "addRowTop": "Dodaj wiersz przed",
-        "addRowBelow": "Dodaj wiersz po",
-        "deleteRow": "Usuń wiersz"
+        "bold": "",
+        "italic": "",
+        "strikethrough": "",
+        "underline": "",
+        "colorText": "",
+        "colorHighlight": "",
+        "code": "",
+        "clear": "",
+        "heading": "",
+        "align": "",
+        "blockquote": "",
+        "horizontalLine": "",
+        "bulletList": "",
+        "orderedList": "",
+        "checkList": "",
+        "increaseIndent": "",
+        "decreaseIndent": "",
+        "link": "",
+        "unlink": "",
+        "image": "",
+        "addTable": "",
+        "deleteTable": "",
+        "colorCell": "",
+        "mergeCell": "",
+        "addColumnLeft": "",
+        "addColumnRight": "",
+        "deleteColumn": "",
+        "addRowTop": "",
+        "addRowBelow": "",
+        "deleteRow": ""
       },
       "align": {
-        "left": "Lewo",
-        "center": "Wyśrodkowany",
-        "right": "Prawo"
+        "left": "",
+        "center": "",
+        "right": ""
       },
       "popover": {
-        "clearColor": "Usuń kolor",
-        "source": "Źródło",
-        "widthPlaceholder": "Wartość w % lub pikselach",
-        "columns": "Kolumny",
-        "rows": "Wiersze",
-        "width": "Szerokość",
-        "height": "Wysokość"
+        "clearColor": "",
+        "source": "",
+        "widthPlaceholder": "",
+        "columns": "",
+        "rows": "",
+        "width": "",
+        "height": ""
       }
     },
     "iframe": {
-      "name": "iFrame",
-      "description": "Osadzaj dowolne treści z internetu. Niektóre strony internetowe mogą ograniczać dostęp.",
+      "name": "",
+      "description": "",
       "option": {
         "embedUrl": {
-          "label": "Osadź URL"
+          "label": ""
         },
         "allowFullScreen": {
-          "label": "Pozwól na pełny ekran"
+          "label": ""
         },
         "allowTransparency": {
-          "label": "Zezwól na użycie przeźroczystości"
+          "label": ""
         },
         "allowScrolling": {
-          "label": "Zezwól na przewijanie"
+          "label": ""
         },
         "allowPayment": {
-          "label": "Zezwalaj na płatności"
+          "label": ""
         },
         "allowAutoPlay": {
-          "label": "Zezwalaj na automatyczne odtwarzanie"
+          "label": ""
         },
         "allowMicrophone": {
-          "label": "Zezwól na używanie mikrofonu"
+          "label": ""
         },
         "allowCamera": {
-          "label": "Zezwól na używanie kamery"
+          "label": ""
         },
         "allowGeolocation": {
-          "label": "Zezwalaj na geolokalizację"
+          "label": ""
         }
       },
       "error": {
-        "noUrl": "Adres URL iFrame nie został podany",
-        "unsupportedProtocol": "Podany adres URL używa nieobsługiwanego protokołu. Proszę użyć jednego z ({supportedProtocols})",
-        "noBrowerSupport": "Twoja przeglądarka nie obsługuje ramek iframe. Zaktualizuj przeglądarkę."
+        "noUrl": "",
+        "unsupportedProtocol": "",
+        "noBrowerSupport": ""
       }
     },
     "smartHome-entityState": {
-      "name": "Stan obiektu",
-      "description": "Wyświetl stan obiektu i przełącz go opcjonalnie",
+      "name": "",
+      "description": "",
       "option": {
         "entityId": {
-          "label": "ID obiektu"
+          "label": ""
         },
         "displayName": {
-          "label": "Wyświetlana nazwa"
+          "label": ""
         },
         "entityUnit": {
-          "label": "Jednostka"
+          "label": ""
         },
         "clickable": {
-          "label": "Element klikalny"
+          "label": ""
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "Wykonaj automatyzację",
-      "description": "Uruchom automatyzację jednym kliknięciem",
+      "name": "",
+      "description": "",
       "option": {
         "displayName": {
-          "label": "Nazwa wyświetlana"
+          "label": ""
         },
         "automationId": {
-          "label": "ID automatyzacji"
+          "label": ""
         }
       },
       "spotlightAction": {
-        "run": "Uruchom {name}"
+        "run": ""
       }
     },
     "calendar": {
-      "name": "Kalendarz",
-      "description": "Wyświetlaj zdarzenia z integracji w widoku kalendarza w określonym okresie czasowym",
+      "name": "",
+      "description": "",
       "option": {
         "releaseType": {
-          "label": "Rodzaj premiery w Radarr",
+          "label": "",
           "options": {
-            "inCinemas": "W kinach",
-            "digitalRelease": "Wydanie cyfrowe",
-            "physicalRelease": "Wydanie fizyczne"
+            "inCinemas": "",
+            "digitalRelease": "",
+            "physicalRelease": ""
           }
         },
         "filterPastMonths": {
-          "label": "Początek od"
+          "label": ""
         },
         "filterFutureMonths": {
-          "label": "Koniec o"
+          "label": ""
         }
       }
     },
     "weather": {
-      "name": "Pogoda",
-      "description": "Wyświetla aktualne informacje o pogodzie w ustawionej lokalizacji.",
+      "name": "",
+      "description": "",
       "option": {
         "isFormatFahrenheit": {
-          "label": "Temperatura w Fahrenheit"
+          "label": ""
         },
         "disableTemperatureDecimals": {
           "label": ""
@@ -1382,21 +1382,21 @@
           "description": ""
         },
         "location": {
-          "label": "Lokalizacja pogody"
+          "label": ""
         },
         "showCity": {
-          "label": "Pokaż miasto"
+          "label": ""
         },
         "hasForecast": {
-          "label": "Pokaż Prognozę"
+          "label": ""
         },
         "forecastDayCount": {
-          "label": "Liczba dni prognozy",
-          "description": "Kiedy widżet nie jest wystarczająco szeroki, mniej dni jest wyświetlane"
+          "label": "",
+          "description": ""
         },
         "dateFormat": {
-          "label": "Format daty",
-          "description": "Jak powinna wyglądać data"
+          "label": "",
+          "description": ""
         }
       },
       "currentWindSpeed": "",
@@ -1407,55 +1407,55 @@
         "maxWindGusts": ""
       },
       "kind": {
-        "clear": "Bezchmurnie",
-        "mainlyClear": "Częściowe zachmurzenie",
-        "fog": "Mgła",
-        "drizzle": "Mżawka",
-        "freezingDrizzle": "Mrożąca mżawka",
-        "rain": "Deszcz",
-        "freezingRain": "Marznący deszcz",
-        "snowFall": "Opady śniegu",
-        "snowGrains": "Ziarna śniegu",
-        "rainShowers": "Deszczownice",
-        "snowShowers": "Przelotne opady śniegu",
-        "thunderstorm": "Burza",
-        "thunderstormWithHail": "Burza z gradem",
-        "unknown": "Nieznany"
+        "clear": "",
+        "mainlyClear": "",
+        "fog": "",
+        "drizzle": "",
+        "freezingDrizzle": "",
+        "rain": "",
+        "freezingRain": "",
+        "snowFall": "",
+        "snowGrains": "",
+        "rainShowers": "",
+        "snowShowers": "",
+        "thunderstorm": "",
+        "thunderstormWithHail": "",
+        "unknown": ""
       }
     },
     "indexerManager": {
-      "name": "Status menedżera indeksu",
-      "description": "Status Twoich indeksów",
+      "name": "",
+      "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": "Otwórz stronę indeksującą w nowej karcie"
+          "label": ""
         }
       },
-      "title": "Menedżer indeksów",
-      "testAll": "Przetestuj wszystkie",
+      "title": "",
+      "testAll": "",
       "error": {
-        "internalServerError": "Nie udało się pobrać statusu indeksów"
+        "internalServerError": ""
       }
     },
     "healthMonitoring": {
-      "name": "Monitorowanie zdrowia  systemu",
-      "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
+      "name": "",
+      "description": "",
       "tab": {
         "system": "",
         "cluster": ""
       },
       "option": {
         "fahrenheit": {
-          "label": "Temperatura procesora w Fahrenheit"
+          "label": ""
         },
         "cpu": {
-          "label": "Pokaż informacje o procesorze"
+          "label": ""
         },
         "memory": {
-          "label": "Pokaż informacje o pamięci"
+          "label": ""
         },
         "fileSystem": {
-          "label": "Pokaż informacje o systemie plików"
+          "label": ""
         },
         "defaultTab": {
           "label": ""
@@ -1465,22 +1465,22 @@
         }
       },
       "popover": {
-        "information": "Informacja",
-        "processor": "Procesor: {cpuModelName}",
-        "memory": "Pamięć: {memory}GiB",
-        "memoryAvailable": "Dostępna pamięć {memoryAvailable} GB ({percent}%)",
-        "version": "Wersja: {version}",
+        "information": "",
+        "processor": "",
+        "memory": "",
+        "memoryAvailable": "",
+        "version": "",
         "uptime": "",
-        "loadAverage": "Średnie obciążenie",
-        "minute": "1 minuta",
-        "minutes": "{count} minut",
-        "used": "Używane",
-        "available": "Dostępne",
-        "lastSeen": "Ostatnia aktualizacja statusu: {lastSeen}"
+        "loadAverage": "",
+        "minute": "",
+        "minutes": "",
+        "used": "",
+        "available": "",
+        "lastSeen": ""
       },
       "memory": {},
       "error": {
-        "internalServerError": "Nie udało się pobrać stanu zdrowia"
+        "internalServerError": ""
       },
       "cluster": {
         "summary": {
@@ -1531,254 +1531,254 @@
     },
     "common": {
       "location": {
-        "query": "Miasto / kod pocztowy",
-        "latitude": "Szerokość geograficzna (Latitude)",
-        "longitude": "Długość geograficzna (Longitude)",
-        "disabledTooltip": "Podaj miasto lub kod pocztowy.",
-        "unknownLocation": "Nieznana lokalizacja",
-        "search": "Szukaj",
+        "query": "",
+        "latitude": "",
+        "longitude": "",
+        "disabledTooltip": "",
+        "unknownLocation": "",
+        "search": "",
         "table": {
           "header": {
-            "city": "Miasto",
-            "country": "Kraj",
-            "coordinates": "Współrzędne",
-            "population": "Populacja"
+            "city": "",
+            "country": "",
+            "coordinates": "",
+            "population": ""
           },
           "action": {
-            "select": "Wybierz {city}, {countryCode}"
+            "select": ""
           },
           "population": {
-            "fallback": "Nieznany"
+            "fallback": ""
           }
         }
       },
       "integration": {
-        "noData": "Nie znaleziono integracji",
-        "description": "Kliknij <here></here> aby utworzyć nową integrację"
+        "noData": "",
+        "description": ""
       },
       "app": {
-        "noData": "Nie znaleziono aplikacji",
-        "description": "Kliknij <here></here> aby utworzyć nową aplikację"
+        "noData": "",
+        "description": ""
       },
       "error": {
-        "noIntegration": "Nie wybrano integracji",
-        "noData": "Brak danych dotyczących integracji"
+        "noIntegration": "",
+        "noData": ""
       },
       "option": {}
     },
     "video": {
-      "name": "Strumień wideo",
-      "description": "Osadź strumień wideo lub wideo z kamery lub strony internetowej",
+      "name": "",
+      "description": "",
       "option": {
         "feedUrl": {
-          "label": "Adres URL kanału"
+          "label": ""
         },
         "hasAutoPlay": {
-          "label": "Autoodtwarzanie",
-          "description": "Automatyczne odtwarzanie działa tylko po wyciszeniu odtwarzacza z powodu ograniczeń przeglądarki"
+          "label": "",
+          "description": ""
         },
         "isMuted": {
-          "label": "Wyciszono"
+          "label": ""
         },
         "hasControls": {
-          "label": "Pokaż klawisze nawigacyjne"
+          "label": ""
         }
       },
       "error": {
-        "noUrl": "Nie podano adresu URL wideo",
-        "forYoutubeUseIframe": "Dla filmów YouTube użyj opcji iframe"
+        "noUrl": "",
+        "forYoutubeUseIframe": ""
       }
     },
     "mediaServer": {
-      "name": "Bieżące strumienie serwera multimediów",
-      "description": "Pokaż bieżące strumienie na serwerach multimedialnych",
+      "name": "",
+      "description": "",
       "option": {},
       "items": {
-        "user": "Użytkownik",
-        "name": "Nazwa",
-        "id": "ID"
+        "user": "",
+        "name": "",
+        "id": ""
       }
     },
     "downloads": {
-      "name": "Klient pobierania",
-      "description": "Pozwala na oglądanie i zarządzanie pobieraniem zarówno przez klientów Torrent, jak i Usenet.",
+      "name": "",
+      "description": "",
       "option": {
         "columns": {
-          "label": "Kolumny do pokazania"
+          "label": ""
         },
         "enableRowSorting": {
-          "label": "Włącz sortowanie przedmiotów"
+          "label": ""
         },
         "defaultSort": {
-          "label": "Kolumna używana do sortowania domyślnie"
+          "label": ""
         },
         "descendingDefaultSort": {
-          "label": "Odwróć sortowanie"
+          "label": ""
         },
         "showCompletedUsenet": {
-          "label": "Pokaż wpisy usenet oznaczone jako zakończone"
+          "label": ""
         },
         "showCompletedTorrent": {
-          "label": "Pokaż wpisy torrent oznaczone jako ukończone"
+          "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Ukryj ukończony torrent poniżej tego progu (w kiB/s)"
+          "label": ""
         },
         "categoryFilter": {
-          "label": "Kategorie/etykiety do filtrowania"
+          "label": ""
         },
         "filterIsWhitelist": {
-          "label": "Filtruj jako białą listę"
+          "label": ""
         },
         "applyFilterToRatio": {
-          "label": "Użyj filtra do obliczenia współczynnika"
+          "label": ""
         }
       },
       "errors": {
-        "noColumns": "Wybierz kolumny w elementach",
-        "noCommunications": "Nie można załadować danych z integracji"
+        "noColumns": "",
+        "noCommunications": ""
       },
       "items": {
         "actions": {
-          "columnTitle": "Sterowanie"
+          "columnTitle": ""
         },
         "added": {
-          "columnTitle": "Dodano",
-          "detailsTitle": "Data dodania"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "category": {
-          "columnTitle": "Dodatki",
-          "detailsTitle": "Kategorie (lub dodatkowe informacje)"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Pobieranie",
-          "detailsTitle": "Prędkość pobierania"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "index": {
-          "columnTitle": "#",
-          "detailsTitle": "Bieżący indeks w ramach klienta"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Integracja"
+          "columnTitle": ""
         },
         "name": {
-          "columnTitle": "Nazwa zlecenia"
+          "columnTitle": ""
         },
         "progress": {
-          "columnTitle": "Postęp",
-          "detailsTitle": "Postęp pobierania"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "ratio": {
-          "columnTitle": "Proporcja",
-          "detailsTitle": "Współczynnik torrenta (otrzymany/wysłany)"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "received": {
-          "columnTitle": "Łączne pobieranie",
-          "detailsTitle": "Łącznie pobrano"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "sent": {
-          "columnTitle": "Łączne wysyłanie",
-          "detailsTitle": "Łącznie wysłano"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "size": {
-          "columnTitle": "Rozmiar pliku",
-          "detailsTitle": "Całkowity rozmiar zaznaczenia/plików"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Status",
-          "detailsTitle": "Stan pracy"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "time": {
-          "columnTitle": "Czas zakończenia",
-          "detailsTitle": "Czas od/do zakończenia"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "type": {
-          "columnTitle": "Typ",
-          "detailsTitle": "Pobierz typ klienta"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Udostępnianie",
-          "detailsTitle": "Prędkość wysyłania"
+          "columnTitle": "",
+          "detailsTitle": ""
         }
       },
       "states": {
-        "downloading": "Pobieranie",
-        "queued": "W kolejce",
-        "paused": "Zatrzymane",
-        "completed": "Zakończono",
-        "failed": "Nieudane",
-        "processing": "Przetwarzanie",
-        "leeching": "Leeching",
-        "stalled": "Zatrzymano",
-        "unknown": "Nieznany",
-        "seeding": "Wysyłanie"
+        "downloading": "",
+        "queued": "",
+        "paused": "",
+        "completed": "",
+        "failed": "",
+        "processing": "",
+        "leeching": "",
+        "stalled": "",
+        "unknown": "",
+        "seeding": ""
       },
       "actions": {
         "clients": {
-          "modalTitle": "Pobierz listę klientów",
+          "modalTitle": "",
           "pause": "",
           "resume": ""
         },
         "client": {
-          "pause": "Wstrzymaj klienta",
-          "resume": "Wznów klient"
+          "pause": "",
+          "resume": ""
         },
         "item": {
-          "pause": "Wstrzymaj element",
-          "resume": "Wznów element",
+          "pause": "",
+          "resume": "",
           "delete": {
-            "title": "Usuń przedmiot",
-            "modalTitle": "Czy jesteś pewien, że chcesz skasować to zadanie?",
-            "entry": "Usuń wpis",
-            "entryAndFiles": "Usuń wpis i plik(i)"
+            "title": "",
+            "modalTitle": "",
+            "entry": "",
+            "entryAndFiles": ""
           }
         }
       },
-      "globalRatio": "Wskaźnik globalny"
+      "globalRatio": ""
     },
     "mediaRequests-requestList": {
-      "name": "Lista żądań multimediów",
-      "description": "Zobacz listę wszystkich zapytań o media z Twoich instancji Overseerr lub Jellyseerr",
+      "name": "",
+      "description": "",
       "option": {
         "linksTargetNewTab": {
-          "label": "Otwieraj linki w nowej karcie"
+          "label": ""
         }
       },
       "pending": {
-        "approve": "Zatwierdź prośbę",
-        "approving": "Zatwierdzanie zapytania...",
-        "decline": "Odrzuć prośbę"
+        "approve": "",
+        "approving": "",
+        "decline": ""
       },
       "availability": {
-        "unknown": "Nieznany",
-        "pending": "Oczekujący",
-        "processing": "Przetwarzanie",
+        "unknown": "",
+        "pending": "",
+        "processing": "",
         "partiallyAvailable": "",
-        "available": "Dostępne"
+        "available": ""
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "Statystyki zapytań o media",
-      "description": "Statystyki Twoich zapytań o media",
+      "name": "",
+      "description": "",
       "option": {},
       "titles": {
         "stats": {
-          "main": "Statystyki mediów",
-          "approved": "Zatwierdzone",
-          "pending": "Oczekujące na zatwierdzenie",
+          "main": "",
+          "approved": "",
+          "pending": "",
           "processing": "",
           "declined": "",
           "available": "",
-          "tv": "Zapytania o seriale",
-          "movie": "Zapytania o filmy",
-          "total": "Razem"
+          "tv": "",
+          "movie": "",
+          "total": ""
         },
         "users": {
-          "main": "Najaktywniejsi użytkownicy",
+          "main": "",
           "requests": ""
         }
       }
@@ -1788,7 +1788,7 @@
       "description": "",
       "option": {
         "defaultView": {
-          "label": "Domyślny widok"
+          "label": ""
         },
         "queuePageSize": {
           "label": ""
@@ -1796,13 +1796,13 @@
       },
       "tab": {
         "workers": "",
-        "queue": "Kolejka",
+        "queue": "",
         "statistics": ""
       },
-      "currentIndex": "{start}-{end} z {total}",
+      "currentIndex": "",
       "healthCheck": {
-        "title": "Ocena stanu zdrowia",
-        "queued": "W kolejce",
+        "title": "",
+        "queued": "",
         "status": {
           "healthy": "",
           "unhealthy": ""
@@ -1810,11 +1810,11 @@
       },
       "panel": {
         "statistics": {
-          "empty": "Puste",
+          "empty": "",
           "transcodes": "",
           "transcodesCount": "",
           "healthChecksCount": "",
-          "filesCount": "Pliki: {value}",
+          "filesCount": "",
           "savedSpace": "",
           "healthChecks": "",
           "videoCodecs": "",
@@ -1822,20 +1822,20 @@
           "videoResolutions": ""
         },
         "workers": {
-          "empty": "Puste",
+          "empty": "",
           "table": {
             "file": "",
             "eta": "",
-            "progress": "Postęp",
+            "progress": "",
             "transcode": "",
             "healthCheck": ""
           }
         },
         "queue": {
-          "empty": "Puste",
+          "empty": "",
           "table": {
             "file": "",
-            "size": "Rozmiar",
+            "size": "",
             "transcode": "",
             "healthCheck": ""
           }
@@ -1920,13 +1920,13 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Aplikacje",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
             },
             "onlyImportApps": {
-              "label": "Import tylko aplikacje",
+              "label": "",
               "description": ""
             }
           },
@@ -1937,9 +1937,9 @@
             "label": "",
             "description": "",
             "option": {
-              "sm": "Mały",
-              "md": "Średni",
-              "lg": "Duży"
+              "sm": "",
+              "md": "",
+              "lg": ""
             }
           },
           "sidebarBehavior": {
@@ -1976,7 +1976,7 @@
         "label": ""
       },
       "backgroundImageAttachment": {
-        "label": "Ustawienie obrazu tła",
+        "label": "",
         "option": {
           "fixed": {
             "label": "",
@@ -2010,7 +2010,7 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Rozmiar obrazu tła",
+        "label": "",
         "option": {
           "cover": {
             "label": "",
@@ -2023,17 +2023,17 @@
         }
       },
       "primaryColor": {
-        "label": "Kolor podstawowy"
+        "label": ""
       },
       "secondaryColor": {
-        "label": "Kolor akcentowy"
+        "label": ""
       },
       "opacity": {
         "label": ""
       },
       "customCss": {
         "label": "",
-        "description": "Jeszcze bardziej dostosuj swój pulpit za pomocą CSS, zalecane tylko dla doświadczonych użytkowników",
+        "description": "",
         "customClassesAlert": {
           "title": "",
           "description": ""
@@ -2043,10 +2043,10 @@
         "label": ""
       },
       "name": {
-        "label": "Nazwa"
+        "label": ""
       },
       "isPublic": {
-        "label": "Publiczna",
+        "label": "",
         "description": ""
       }
     },
@@ -2054,17 +2054,17 @@
       "metaTitle": ""
     },
     "setting": {
-      "title": "Ustawienia tablicy {boardName}",
+      "title": "",
       "section": {
         "general": {
-          "title": "Ogólne",
+          "title": "",
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Układ"
+          "title": ""
         },
         "background": {
-          "title": "Tło"
+          "title": ""
         },
         "color": {
           "title": ""
@@ -2077,7 +2077,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "Zobacz tablicę"
+                "label": ""
               },
               "modify": {
                 "label": ""
@@ -2089,7 +2089,7 @@
           }
         },
         "dangerZone": {
-          "title": "Strefa zagrożenia",
+          "title": "",
           "action": {
             "rename": {
               "label": "",
@@ -2112,7 +2112,7 @@
               "confirm": {
                 "public": {
                   "title": "",
-                  "description": "Czy na pewno chcesz sprawić, by ta tablica była prywatna? Tablica nie będzie publiczna. Linki dla gości nie będą działać."
+                  "description": ""
                 },
                 "private": {
                   "title": "",
@@ -2125,7 +2125,7 @@
               "description": "",
               "button": "",
               "confirm": {
-                "title": "Usuń tablicę",
+                "title": "",
                 "description": ""
               }
             }
@@ -2179,22 +2179,22 @@
     },
     "navbar": {
       "items": {
-        "home": "Strona główna",
-        "boards": "Tablice",
-        "apps": "Aplikacje",
+        "home": "",
+        "boards": "",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
         "users": {
-          "label": "Użytkownicy",
+          "label": "",
           "items": {
-            "manage": "Zarządzaj",
-            "invites": "Zaproszenia",
+            "manage": "",
+            "invites": "",
             "groups": ""
           }
         },
         "tools": {
-          "label": "Narzędzia",
+          "label": "",
           "items": {
             "docker": "",
             "logs": "",
@@ -2203,38 +2203,38 @@
             "tasks": ""
           }
         },
-        "settings": "Ustawienia",
+        "settings": "",
         "help": {
-          "label": "Pomoc",
+          "label": "",
           "items": {
-            "documentation": "Dokumentacja",
+            "documentation": "",
             "submitIssue": "",
-            "discord": "Discord społeczności",
+            "discord": "",
             "sourceCode": ""
           }
         },
-        "about": "O programie"
+        "about": ""
       }
     },
     "page": {
       "home": {
         "statistic": {
-          "board": "Tablice",
-          "user": "Użytkownicy",
-          "invite": "Zaproszenia",
+          "board": "",
+          "user": "",
+          "invite": "",
           "integration": "",
-          "app": "Aplikacje",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "Tablice",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
         }
       },
       "board": {
-        "title": "Twoje tablice",
+        "title": "",
         "action": {
           "new": {
             "label": ""
@@ -2243,12 +2243,12 @@
             "label": ""
           },
           "settings": {
-            "label": "Ustawienia"
+            "label": ""
           },
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "Strona główna",
+              "label": "",
               "tooltip": ""
             }
           },
@@ -2263,9 +2263,9 @@
             "label": ""
           },
           "delete": {
-            "label": "Usuń trwale",
+            "label": "",
             "confirm": {
-              "title": "Usuń tablicę",
+              "title": "",
               "description": ""
             }
           }
@@ -2278,7 +2278,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "Nazwa"
+                "label": ""
               }
             }
           }
@@ -2292,7 +2292,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "Ogólne",
+            "title": "",
             "item": {
               "language": "",
               "board": {
@@ -2303,33 +2303,33 @@
                 }
               },
               "search": "",
-              "firstDayOfWeek": "Pierwszy dzień tygodnia",
-              "accessibility": "Ułatwienia dostępu"
+              "firstDayOfWeek": "",
+              "accessibility": ""
             }
           },
           "security": {
-            "title": "Bezpieczeństwo"
+            "title": ""
           },
           "board": {
-            "title": "Tablice"
+            "title": ""
           }
         },
         "list": {
-          "metaTitle": "Zarządzaj użytkownikami",
-          "title": "Użytkownicy"
+          "metaTitle": "",
+          "title": ""
         },
         "edit": {
           "metaTitle": ""
         },
         "create": {
-          "metaTitle": "Dodaj użytkownika",
+          "metaTitle": "",
           "title": "",
           "step": {
             "personalInformation": {
               "label": ""
             },
             "security": {
-              "label": "Bezpieczeństwo"
+              "label": ""
             },
             "groups": {
               "label": "",
@@ -2352,21 +2352,21 @@
           }
         },
         "invite": {
-          "title": "Zarządzaj zaproszeniami",
+          "title": "",
           "action": {
             "new": {
               "title": "",
-              "description": "Po wygaśnięciu zaproszenie straci ważność, a odbiorca zaproszenia nie będzie mógł utworzyć konta."
+              "description": ""
             },
             "copy": {
               "title": "",
               "description": "",
-              "link": "Link do zaproszenia",
+              "link": "",
               "button": ""
             },
             "delete": {
-              "title": "Usuń zaproszenie",
-              "description": "Czy na pewno chcesz usunąć to zaproszenie? Użytkownicy z tym linkiem nie będą już mogli utworzyć konta przy jego użyciu."
+              "title": "",
+              "description": ""
             }
           },
           "field": {
@@ -2374,10 +2374,10 @@
               "label": ""
             },
             "creator": {
-              "label": "Twórca"
+              "label": ""
             },
             "expirationDate": {
-              "label": "Wygasa"
+              "label": ""
             },
             "token": {
               "label": ""
@@ -2389,8 +2389,8 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "Ogólne",
-            "owner": "Właściciel",
+            "title": "",
+            "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2408,7 +2408,7 @@
         }
       },
       "settings": {
-        "title": "Ustawienia",
+        "title": "",
         "notification": {
           "success": {
             "message": ""
@@ -2458,7 +2458,7 @@
             }
           },
           "board": {
-            "title": "Tablice",
+            "title": "",
             "homeBoard": {
               "label": "",
               "mobileLabel": "",
@@ -2473,7 +2473,7 @@
             }
           },
           "appearance": {
-            "title": "Wygląd",
+            "title": "",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2495,8 +2495,8 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "Uruchomione",
-            "error": "Błąd"
+            "running": "",
+            "error": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -2515,7 +2515,7 @@
               "label": ""
             },
             "mediaServer": {
-              "label": "Serwery mediów"
+              "label": ""
             },
             "mediaOrganizer": {
               "label": ""
@@ -2563,7 +2563,7 @@
           },
           "tab": {
             "documentation": {
-              "label": "Dokumentacja"
+              "label": ""
             },
             "apiKey": {
               "label": "",
@@ -2610,30 +2610,30 @@
     },
     "field": {
       "name": {
-        "label": "Nazwa"
+        "label": ""
       },
       "state": {
-        "label": "Status",
+        "label": "",
         "option": {
-          "created": "Utworzony",
-          "running": "Uruchomione",
-          "paused": "Zatrzymane",
-          "restarting": "Restartowanie",
+          "created": "",
+          "running": "",
+          "paused": "",
+          "restarting": "",
           "exited": "",
-          "removing": "Usuwanie",
+          "removing": "",
           "dead": ""
         }
       },
       "containerImage": {
-        "label": "Obraz"
+        "label": ""
       },
       "ports": {
-        "label": "Porty"
+        "label": ""
       }
     },
     "action": {
       "start": {
-        "label": "Uruchom",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2646,7 +2646,7 @@
         }
       },
       "stop": {
-        "label": "Zatrzymaj",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2659,7 +2659,7 @@
         }
       },
       "restart": {
-        "label": "Uruchom ponownie",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2672,7 +2672,7 @@
         }
       },
       "remove": {
-        "label": "Usuń",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2727,13 +2727,13 @@
       "title": ""
     },
     "tab": {
-      "user": "Użytkownicy",
+      "user": "",
       "group": "",
       "inherited": ""
     },
     "field": {
       "user": {
-        "label": "Użytkownik"
+        "label": ""
       },
       "group": {
         "label": ""
@@ -2749,14 +2749,14 @@
   },
   "navigationStructure": {
     "manage": {
-      "label": "Zarządzaj",
+      "label": "",
       "boards": {
-        "label": "Tablice"
+        "label": ""
       },
       "integrations": {
         "label": "",
         "edit": {
-          "label": "Edytuj"
+          "label": ""
         },
         "new": {
           "label": ""
@@ -2768,38 +2768,38 @@
           "label": ""
         },
         "edit": {
-          "label": "Edytuj"
+          "label": ""
         }
       },
       "medias": {
         "label": ""
       },
       "apps": {
-        "label": "Aplikacje",
+        "label": "",
         "new": {
           "label": ""
         },
         "edit": {
-          "label": "Edytuj"
+          "label": ""
         }
       },
       "users": {
-        "label": "Użytkownicy",
+        "label": "",
         "create": {
-          "label": "Utwórz"
+          "label": ""
         },
-        "general": "Ogólne",
-        "security": "Bezpieczeństwo",
-        "board": "Tablice",
+        "general": "",
+        "security": "",
+        "board": "",
         "groups": {
           "label": ""
         },
         "invites": {
-          "label": "Zaproszenia"
+          "label": ""
         }
       },
       "tools": {
-        "label": "Narzędzia",
+        "label": "",
         "docker": {
           "label": ""
         },
@@ -2811,10 +2811,10 @@
         }
       },
       "settings": {
-        "label": "Ustawienia"
+        "label": ""
       },
       "about": {
-        "label": "O programie"
+        "label": ""
       }
     }
   },
@@ -2829,7 +2829,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Aplikacje",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2845,7 +2845,7 @@
             }
           },
           "board": {
-            "title": "Tablice",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -2959,7 +2959,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrenty",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -2976,16 +2976,16 @@
             "title": ""
           },
           "help": {
-            "title": "Pomoc",
+            "title": "",
             "option": {
               "documentation": {
-                "label": "Dokumentacja"
+                "label": ""
               },
               "submitIssue": {
                 "label": ""
               },
               "discord": {
-                "label": "Discord społeczności"
+                "label": ""
               }
             }
           }
@@ -3041,7 +3041,7 @@
                 "label": ""
               },
               "manageUser": {
-                "label": "Zarządzaj użytkownikami"
+                "label": ""
               },
               "manageInvite": {
                 "label": ""
@@ -3065,13 +3065,13 @@
                 "label": ""
               },
               "about": {
-                "label": "O programie"
+                "label": ""
               },
               "homeBoard": {
                 "label": ""
               },
               "preferences": {
-                "label": "Twoje preferencje"
+                "label": ""
               }
             }
           }
@@ -3081,7 +3081,7 @@
         "help": "",
         "group": {
           "user": {
-            "title": "Użytkownicy",
+            "title": "",
             "children": {
               "action": {
                 "detail": {
@@ -3119,7 +3119,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": "Nazwa"
+          "label": ""
         },
         "short": {
           "label": ""

@@ -153,10 +153,10 @@
         "label": "為 Pings 使用 icon"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "預設搜尋引擎"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "於新分頁中開啟搜尋結果"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "搜尋設定更改成功"
           },
           "error": {
-            "message": ""
+            "message": "無法更改搜尋設定"
           }
         }
       },
@@ -805,6 +805,7 @@
       "apply": "應用",
       "backToOverview": "返回總覽",
       "create": "創建",
+      "createAnother": "",
       "edit": "編輯",
       "import": "匯入",
       "insert": "插入",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": "華氏溫度"
         },
+        "disableTemperatureDecimals": {
+          "label": "關閉溫度小數點"
+        },
+        "showCurrentWindSpeed": {
+          "label": "顯示當前風速",
+          "description": "僅限當前天氣"
+        },
         "location": {
           "label": "天氣位置"
         },
@@ -1390,6 +1398,13 @@
           "label": "日期格式",
           "description": "日期應該是什麼樣式"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} 公里/時",
+      "dailyForecast": {
+        "sunrise": "日出",
+        "sunset": "日落",
+        "maxWindSpeed": "最大風速：{maxWindSpeed} 公里/時",
+        "maxWindGusts": "最大陣風：{maxWindGusts} 公里/時"
       },
       "kind": {
         "clear": "晴朗",
@@ -1426,8 +1441,8 @@
       "name": "系統健康監測",
       "description": "顯示系統運行狀態",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "系統",
+        "cluster": "叢集"
       },
       "option": {
         "fahrenheit": {
@@ -2287,7 +2302,7 @@
                   "mobile": "移動裝置"
                 }
               },
-              "search": "",
+              "search": "搜尋",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }

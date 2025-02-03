@@ -805,6 +805,7 @@
       "apply": "適用",
       "backToOverview": "",
       "create": "作成",
+      "createAnother": "",
       "edit": "編集",
       "import": "",
       "insert": "挿入",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "天候の場所"
         },
@@ -1390,6 +1398,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "クリア",

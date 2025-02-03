@@ -805,6 +805,7 @@
       "apply": "",
       "backToOverview": "",
       "create": "",
+      "createAnother": "",
       "edit": "",
       "import": "",
       "insert": "",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": ""
         },
@@ -1390,6 +1398,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "",

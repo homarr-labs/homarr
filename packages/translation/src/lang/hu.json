@@ -805,6 +805,7 @@
       "apply": "Alkalmaz",
       "backToOverview": "Vissza az áttekintéshez",
       "create": "Létrehozás",
+      "createAnother": "",
       "edit": "Szerkesztés",
       "import": "Importálás",
       "insert": "Beillesztés",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Időjárás helye"
         },
@@ -1390,6 +1398,13 @@
           "label": "Dátum formátum",
           "description": "Hogyan nézzen ki a dátum"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Tiszta",

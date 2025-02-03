@@ -318,14 +318,15 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
 
 const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
   const { width, ref } = useElementSize();
+  const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
 
   return (
     <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu">
       <RingProgress
         className="health-monitoring-cpu-utilization"
         roundCaps
-        size={width * 0.95}
-        thickness={width / 10}
+        size={fallbackWidth * 0.95}
+        thickness={fallbackWidth / 10}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text
@@ -348,13 +349,14 @@ const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
 
 const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: number }) => {
   const { width, ref } = useElementSize();
+  const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
   return (
     <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu-temperature">
       <RingProgress
         className="health-monitoring-cpu-temp"
         roundCaps
-        size={width * 0.95}
-        thickness={width / 10}
+        size={fallbackWidth * 0.95}
+        thickness={fallbackWidth / 10}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text className="health-monitoring-cpu-temp-value" size="3cqmin">
@@ -376,6 +378,7 @@ const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: nu
 
 const MemoryRing = ({ available, used }: { available: string; used: string }) => {
   const { width, ref } = useElementSize();
+  const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
   const memoryUsage = formatMemoryUsage(available, used);
 
   return (
@@ -383,8 +386,8 @@ const MemoryRing = ({ available, used }: { available: string; used: string }) =>
       <RingProgress
         className="health-monitoring-memory-use"
         roundCaps
-        size={width * 0.95}
-        thickness={width / 10}
+        size={fallbackWidth * 0.95}
+        thickness={fallbackWidth / 10}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text className="health-monitoring-memory-value" size="3cqmin">

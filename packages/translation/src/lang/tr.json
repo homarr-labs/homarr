@@ -153,10 +153,10 @@
         "label": "Pingler İçin Simgeler Kullanın"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Öntanımlı arama motoru"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Arama sonucunu yeni sekmede aç"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Arama tercihleri ​​başarıyla değiştirildi"
           },
           "error": {
-            "message": ""
+            "message": "Arama tercihleri ​​değiştirilemiyor"
           }
         }
       },
@@ -805,6 +805,7 @@
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
       "create": "Oluştur",
+      "createAnother": "Oluştur ve baştan başla",
       "edit": "Düzenle",
       "import": "İçe aktar",
       "insert": "Ekle",
@@ -1191,7 +1192,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Tarihin nasıl görüneceği"
+          "description": "Görüntülenecek tarihin biçimi"
         }
       }
     },
@@ -1354,8 +1355,8 @@
           "label": "Radarr yayın türü",
           "options": {
             "inCinemas": "Sinemalarda",
-            "digitalRelease": "Dijital sürüm",
-            "physicalRelease": "Fiziksel Yayınlanan"
+            "digitalRelease": "Dijital Yayın",
+            "physicalRelease": "Fiziksel Yayın"
           }
         },
         "filterPastMonths": {
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": "Fahrenheit cinsinden sıcaklık"
         },
+        "disableTemperatureDecimals": {
+          "label": "Sıcaklıklarda ondalıkları gösterme"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Mevcut rüzgar hızını göster",
+          "description": "Yalnızca mevcut hava durumunda"
+        },
         "location": {
           "label": "Hava durumu konumu"
         },
@@ -1388,8 +1396,15 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Tarihin nasıl görüneceği"
+          "description": "Görüntülenecek tarihin biçimi"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} km/s",
+      "dailyForecast": {
+        "sunrise": "Gün Doğumu",
+        "sunset": "Gün Batımı",
+        "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s"
       },
       "kind": {
         "clear": "Temiz",
@@ -2287,7 +2302,7 @@
                   "mobile": "Mobil"
                 }
               },
-              "search": "",
+              "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik"
             }

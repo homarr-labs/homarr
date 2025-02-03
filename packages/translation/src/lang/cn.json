@@ -805,6 +805,7 @@
       "apply": "应用",
       "backToOverview": "返回概览",
       "create": "创建",
+      "createAnother": "",
       "edit": "编辑",
       "import": "导入",
       "insert": "插入",
@@ -1373,6 +1374,13 @@
         "isFormatFahrenheit": {
           "label": "华氏温度"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "天气位置"
         },
@@ -1390,6 +1398,13 @@
           "label": "日期格式",
           "description": "日期应该是什么样的"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "晴朗",
