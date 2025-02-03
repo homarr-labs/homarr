@@ -1,22 +1,14 @@
-import { Response } from "undici";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { z } from "zod";
 
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
 import { unifiSummaryResponseSchema } from "./unifi-controller-types";
-import { extractErrorMessage } from "@homarr/common";
 import { logger } from "@homarr/log";
-
-import { fetch } from "undici";
 
 const udmpPrefix = "proxy/network";
 
-const causeSchema = z.object({
-  code: z.string(),
-});
 
 
 export class UnifiControllerIntegration extends Integration implements NetworkControllerSummaryIntegration {
@@ -157,121 +149,6 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
 
     await this.authenticateAndConstructSessionInHeaderAsync();
 
-  }
-
-
-
-  private async loginUnifiControllerAsync(csrfToken: string | null | undefined): Promise<Response> {
-    
-    const endpoint = this.prefix === udmpPrefix ? "auth/login" : "login";
-
-    logger.debug("endpoint: "+endpoint); 
-
-    const loginUrl = this.url(`/${endpoint}`);
-    logger.debug("loginUrl: "+loginUrl.toString()); 
-    
-    const loginBody = { 
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"), 
-      remember: true,
-    };
-
-    //logger.debug("loginBody: "+JSON.stringify(loginBody)); 
-
-    const requestHeaders: Record<string, string> = { "Content-Type": "application/json" };
-    if (csrfToken) {
-      requestHeaders["X-CSRF-TOKEN"] = csrfToken;
-    } 
-    logger.debug("requestHeaders: "+JSON.stringify(requestHeaders)); 
-    
-    return await fetchWithTrustedCertificatesAsync(loginUrl,  {
-      method: 'POST', 
-      headers: {
-        ...requestHeaders,
-      },
-      body: JSON.stringify(loginBody),
-      })
-      .then(res => res)
-      .catch((error) => {
-        if (error instanceof Error) {
-          const cause = causeSchema.safeParse(error.cause);
-          if (!cause.success) {
-            logger.error("Failed to login: ", cause.error);
-            logger.error("Failed to login: ", error.name);
-            logger.error("Failed to login: ", error.message);
-            logger.error("Failed to login: ", error.cause);
-            throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-          }
-  
-          if (cause.data.code === "ENOTFOUND") {
-            logger.error("Failed to login: Domain not found");
-            throw new IntegrationTestConnectionError("domainNotFound");
-          }
-  
-          if (cause.data.code === "ECONNREFUSED") {
-            logger.error("Failed to login: Connection refused");
-            throw new IntegrationTestConnectionError("connectionRefused");
-          }
-  
-          if (cause.data.code === "ECONNABORTED") {
-            logger.error("Failed to login: Connection aborted");
-            throw new IntegrationTestConnectionError("connectionAborted");
-          }
-
-          logger.error("error stack", error.stack);
-        }
-  
-        logger.error("Failed to login", error);
-  
-        throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-      });
-  }
-
-
-  private async makeUnifiControllerCallAsync(
-    servicePoint: string,
-    method: string,
-    params: Record<string, unknown>,
-    headers: Record<string, string> = {},
-  ): Promise<Response> {
-    const path = servicePoint + "/" + method;
-    logger.info("path is set to:"+path);
-
-    logger.info("define agent");
-
-    /* const httpsAgent = new Agent({
-      connect:{
-        rejectUnauthorized: false
-      }
-    }); */
-
-    logger.info("trigger fetch with other agent");
-
-    //logger.info("headers:"+headers.));
-    logger.info("params:"+JSON.stringify({params}));
-
-    const url = this.url("/api/auth/login");
-
-    logger.info("url:"+url.toString());
-
-    const resp = await fetch(url, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-        ...headers,
-      },
-      body: JSON.stringify({
-        params,
-      }),
-      /* dispatcher: httpsAgent, */
-    });
-
-    logger.info("we got here");
-
-    return resp;
-
-    /* return await fetchWithTrustedCertificatesAsync(this.url("/api/auth/login"), { */
-    /*return await fetch(this.url("/api/auth/login"), {*/
   }
 
   private headers: Record<string, string> | undefined = undefined;
