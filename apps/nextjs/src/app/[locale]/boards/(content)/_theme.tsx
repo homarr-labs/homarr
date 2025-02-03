@@ -20,9 +20,13 @@ export const BoardMantineProvider = ({
     colors: {
       primaryColor: generateColors(board.primaryColor),
       secondaryColor: generateColors(board.secondaryColor),
+      iconColor: generateColors(board.iconColor),
     },
     primaryColor: "primaryColor",
     autoContrast: true,
+    other: {
+      hasIconColor: board.iconColor !== "",
+    },
   });
 
   return (

@@ -58,6 +58,7 @@ const savePartialSettingsSchema = z
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     columnCount: z.number().min(1).max(24),
+    iconColor: hexColorSchema.or(z.string().length(0)),
   })
   .partial();
 

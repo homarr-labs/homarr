@@ -39,6 +39,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
       primaryColor: board.primaryColor,
       secondaryColor: board.secondaryColor,
       opacity: board.opacity,
+      iconColor: board.iconColor,
     },
   });
   const [showPreview, { toggle }] = useDisclosure(false);
@@ -97,6 +98,14 @@ export const ColorSettingsContent = ({ board }: Props) => {
                 {...form.getInputProps("opacity")}
               />
             </InputWrapper>
+          </Grid.Col>
+          <Grid.Col span={{ sm: 12, md: 6 }}>
+            <ColorInput
+              label={t("board.field.iconColor.label")}
+              format="hex"
+              swatches={Object.values(theme.colors).map((color) => color[6])}
+              {...form.getInputProps("iconColor")}
+            />
           </Grid.Col>
         </Grid>
         <Group justify="end">

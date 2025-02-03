@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
-import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Flex, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -17,6 +17,7 @@ import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
   const t = useI18n();
+  const theme = useMantineTheme();
   const [app] = clientApi.app.byId.useSuspenseQuery(
     {
       id: options.appId,
@@ -65,7 +66,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
-          className={combineClasses("app-flex-wrapper", app.name, app.id)}
+          className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWrapper)}
           h="100%"
           w="100%"
           direction="column"
@@ -78,7 +79,27 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
               {app.name}
             </Text>
           )}
-          <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
+          {theme.other.hasIconColor ? (
+            <div
+              className={combineClasses(classes.appIconWithColor, "app-icon")}
+              role="img"
+              aria-label={app.name}
+              style={{
+                height: "100%",
+                width: "100%",
+                WebkitMaskSize: "contain",
+                WebkitMaskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                WebkitMaskImage: `url(${app.iconUrl})`,
+                maskSize: "contain",
+                maskRepeat: "no-repeat",
+                maskPosition: "center",
+                maskImage: `url(${app.iconUrl})`,
+              }}
+            />
+          ) : (
+            <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
+          )}
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && app.href ? (
