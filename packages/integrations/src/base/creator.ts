@@ -24,6 +24,7 @@ import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
+import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
@@ -74,4 +75,5 @@ export const integrationCreators = {
   dashDot: DashDotIntegration,
   tdarr: TdarrIntegration,
   proxmox: ProxmoxIntegration,
+  unifiController: UnifiControllerIntegration,
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;

@@ -16,6 +16,7 @@ if (!(Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS))) {
 const logger = winston.createLogger({
   format: format.combine(format.colorize(), format.timestamp(), logMessageFormat),
   transports: logTransports,
+  //level: "debug",
 });
 
 export { logger };
