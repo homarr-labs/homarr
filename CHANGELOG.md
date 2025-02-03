@@ -1,3 +1,23 @@
+## [1.4.0](https://github.com/homarr-labs/homarr/compare/v1.3.1...v1.4.0) (2025-01-31)
+
+### Features
+
+* weather widget - add wind speed, option to disable decimals for temperature & redesign dropdown forecast ([#2099](https://github.com/homarr-labs/homarr/issues/2099)) ([c19a400](https://github.com/homarr-labs/homarr/commit/c19a4009f37ec2aba8d4edd2d19819605ecb9575))
+
+### Bug Fixes
+
+* board crashes with empty string favicon ([#2192](https://github.com/homarr-labs/homarr/issues/2192)) ([bd0b7c9](https://github.com/homarr-labs/homarr/commit/bd0b7c9518af88e0a329ea6286cb5ef97098782a))
+* **deps:** update dependency drizzle-kit to ^0.30.4 ([#2183](https://github.com/homarr-labs/homarr/issues/2183)) ([37ccfab](https://github.com/homarr-labs/homarr/commit/37ccfab89a7843c65d6f354bef2b0537b20ea757))
+* **deps:** update dependency drizzle-orm to ^0.39.1 ([#2186](https://github.com/homarr-labs/homarr/issues/2186)) ([4c72a34](https://github.com/homarr-labs/homarr/commit/4c72a34daf06c5e00fc4ece6d990148c1cd6d87f))
+* **deps:** update dependency jotai to ^2.11.2 ([#2201](https://github.com/homarr-labs/homarr/issues/2201)) ([c287e99](https://github.com/homarr-labs/homarr/commit/c287e9965f008b6ac6f3bac56057b94c412a3779))
+* **deps:** update tanstack-query monorepo to ^5.66.0 ([#2202](https://github.com/homarr-labs/homarr/issues/2202)) ([e44c3a7](https://github.com/homarr-labs/homarr/commit/e44c3a7bc8be5b67d78096d5daa53ad23ccdea5d))
+* **deps:** update tiptap monorepo to v2.11.4 ([#2195](https://github.com/homarr-labs/homarr/issues/2195)) ([c05c518](https://github.com/homarr-labs/homarr/commit/c05c51856baff5222b0abda56e1c11d9bc9bd6f9))
+* **deps:** update tiptap monorepo to v2.11.5 ([#2203](https://github.com/homarr-labs/homarr/issues/2203)) ([9662e1a](https://github.com/homarr-labs/homarr/commit/9662e1abba3e105fd549d25ee0a0efc48cf293a1))
+* **docker:** missing production env variable ([#2188](https://github.com/homarr-labs/homarr/issues/2188)) ([7774627](https://github.com/homarr-labs/homarr/commit/77746278a36f2b9d39c780eada25195121cc0803))
+* negative curve radius system health ([#2197](https://github.com/homarr-labs/homarr/issues/2197)) ([c75d4f0](https://github.com/homarr-labs/homarr/commit/c75d4f0f58136a0499a51494eb54c78c745f0b3f))
+* respect certificates for app ping ([#2198](https://github.com/homarr-labs/homarr/issues/2198)) ([d4154d2](https://github.com/homarr-labs/homarr/commit/d4154d259fa50bfd754e7ea98b872df78864e014))
+* use hostname for suspense query url ([#2187](https://github.com/homarr-labs/homarr/issues/2187)) ([96fd5cc](https://github.com/homarr-labs/homarr/commit/96fd5cc35e9ca85aba48670860e6bf2a4a2caaa9))
+
 ## [1.3.1](https://github.com/homarr-labs/homarr/compare/v1.3.0...v1.3.1) (2025-01-28)
 
 ### Bug Fixes

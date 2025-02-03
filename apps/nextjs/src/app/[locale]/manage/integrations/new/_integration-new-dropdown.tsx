@@ -33,6 +33,7 @@ export const IntegrationCreateDropdownContent = () => {
         value={search}
         data-autofocus
         onChange={handleSearch}
+        variant="filled"
       />
 
       {filteredKinds.length > 0 ? (

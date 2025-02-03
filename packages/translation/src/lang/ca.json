@@ -2,114 +2,114 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Us donem la benvinguda a Homarr",
+        "subtitle": "Comencem configurant la vostra instància de Homarr.",
+        "description": "Per començar, seleccioneu com voleu configurar la vostra instància de Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Comença des de zero",
+          "importOldmarr": "Importa des d'una versió de Homarr anterior a 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importa dades",
+        "subtitle": "Pot importar dades des d'una instància de Homarr existent.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Arrossegueu el fitxer zip aquí o feu clic per navegar",
+          "description": "El fitxer zip carregat es processarà i podreu seleccionar què voleu importar"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Canvia el fitzer"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importa la configuració",
+          "description": "Configura el comportament d'importació"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "S'han trobat {count} taulers",
+          "description": "Escolliu tots els taulers amb la mida que voleu importar",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Seleccionar-ho tot",
+            "unselectAll": "Anul·la la selecció"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Resum de la importació",
+          "description": "En el resum següent podeu veure el que s'importarà",
           "action": {
-            "import": ""
+            "import": "Confirma la importació i continua"
           },
           "entities": {
-            "apps": "",
-            "boards": "",
-            "integrations": "",
+            "apps": "Aplicacions",
+            "boards": "Tauler",
+            "integrations": "Integracions",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Introduïu el token d'importació",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Introduïu el token d'importació mostrat a la instància prèvia de Homarr"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Token invàlid",
+              "message": "El token que heu introduït no és vàlid"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Usuari administrador",
+        "subtitle": "Especifiqueu les credencials del vostre usuari administrador.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "S'ha creat l'usuari",
+            "message": "L'usuari s'ha creat correctament"
           },
           "error": {
-            "title": ""
+            "title": "S'ha produït un error al crear l'usuari"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Grup extern",
+        "subtitle": "Especifiqueu el grup que s'ha d'utilitzar per als usuaris externs.",
         "form": {
           "name": {
-            "label": "",
+            "label": "Nom del grup",
             "description": ""
           }
         }
       },
       "settings": {
-        "title": "",
-        "subtitle": ""
+        "title": "Configuració",
+        "subtitle": "Configureu els paràmetres del servidor."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Finalitza la configuració",
+        "subtitle": "Ja està tot llest!",
+        "description": "El procés de configuració s'ha completat correctament. Podeu començar a utilitzar Homarr. Escolliu la vostra propera acció:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Ves al tauler {name}",
+          "createBoard": "Creeu el vostre primer tauler",
+          "inviteUser": "Convideu altres usuaris",
+          "docs": "Llegiu la documentació"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Torna a l'inici"
   },
   "user": {
-    "title": "",
-    "name": "",
+    "title": "Usuaris",
+    "name": "Usuari",
     "page": {
       "login": {
-        "title": "",
+        "title": "Entreu al vostre compte",
         "subtitle": ""
       },
       "invite": {
@@ -251,26 +251,26 @@
           "label": "",
           "notification": {
             "success": {
-              "message": ""
+              "message": "La imatge s'ha canviat correctament"
             },
             "error": {
-              "message": ""
+              "message": "No s'ha pogut canviar la imatge"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "La imatge és massa gran",
+              "message": "La mida màxima de la imatge és {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Elimina la imatge",
+          "confirm": "Esteu segur que voleu eliminar la imatge?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "La imatge s'ha eliminat correctament"
             },
             "error": {
-              "message": ""
+              "message": "No s'ha pogut eliminar la imatge"
             }
           }
         }
@@ -278,104 +278,104 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "El perfil s'ha actualitzat correctament"
           },
           "error": {
-            "message": ""
+            "message": "No s'ha pogut actualitzar el perfil"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Eliminar l'usuari permanentment",
+        "description": "Elimina l'usuari incloent les seves configuracions. Això no esborrarà cap tauler. No es notificarà l'usuari.",
+        "confirm": "Esteu segur que voleu eliminar l'usuari {username} i les seves configuracions?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Seleccioneu l'usuari",
+        "notFound": "No s'ha trobat l'usuari"
       },
       "transfer": {
-        "label": ""
+        "label": "Seleccioneu un nou propietari"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Grups",
+    "name": "Grup",
+    "search": "Troba un grup",
     "field": {
-      "name": "",
-      "members": ""
+      "name": "Nom",
+      "members": "Membres"
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Administrador",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrador",
+            "description": "Els membres amb aquest permís tenen accés complet a totes les funcions i configuracions"
           }
         }
       },
       "app": {
-        "title": "",
+        "title": "Aplicacions",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear aplicacions",
+            "description": "Permet que els membres crein aplicacions"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Utilitzar totes les aplicacions",
+            "description": "Permet que els membres afegeixin qualsevol aplicació als seus taulers"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar totes les aplicacions",
+            "description": "Permet que els memebres modifiquin totes les aplicacions"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accés complet a les aplicacions",
+            "description": "Permet que els membres gestionin, utilitzin i eliminin qualsevol aplicació"
           }
         }
       },
       "board": {
-        "title": "",
+        "title": "Taulers",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear taulers",
+            "description": "Permet que els membres crein taulers"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Visualitzar tots els taulers",
+            "description": "Permet que els membres visualitzin tots els taulers"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar tots els taulers",
+            "description": "Permet que els membres modifiquin tots els taulers (No inclou control d'accés ni zona de perill)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accés total a tots els taulers",
+            "description": "Permet que els membres visualitzin, modifiquin i esborrin tots els taulers (incloent-hi control d'accés i zona de perill)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integracions",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear integracions",
+            "description": "Permet que els membres crein integracions"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Utilitzar totes les integracions",
+            "description": "Permet que els membres afegeixin qualsevol integració als seus taulers"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interactuar amb qualsevol integració",
+            "description": "Permet que els usuaris interaccionin amb qualsevol integració"
           },
           "full-all": {
-            "label": "",
+            "label": "Accés total a les integracions",
             "description": ""
           }
         }
@@ -518,140 +518,140 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Creació correcta",
+            "message": "L'aplicació s'ha creat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Creació fallida",
+            "message": "No s'ha pogut crear l'aplicació"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Edita l'aplicació",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Els canvis s'han aplicat correctament",
+            "message": "L'aplicació s'ha desat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No s'han pogut aplicar els canvis",
+            "message": "L'aplicació no s'ha pogut desar"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Elimina l'aplicació",
+        "message": "Esteu segur que voleu eliminar l'aplicació {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Eliminació correcta",
+            "message": "L'aplicació s'ha eliminat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Eliminació fallida",
+            "message": "No s'ha pogut eliminar l'aplicació"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Nom"
       },
       "description": {
-        "label": ""
+        "label": "Descripció"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Seleccioneu l'aplicació",
+        "notFound": "No s'ha trobat cap aplicació"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integracions",
+        "search": "Cercar integracions",
         "noResults": {
-          "title": ""
+          "title": "Encara no hi ha cap integració"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nova integració de {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Creació correcta",
+            "message": "La integració s'ha creat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Creació fallida",
+            "message": "No s'ha pogut crear la integració"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Edita la integració de {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Els canvis s'han aplicat correctament",
+            "message": "La integració s'ha desat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No s'han pogut aplicar els canvis",
+            "message": "No s'ha pogut desar la integració"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Elimina la integració",
+        "message": "Esteu segur que voleu eliminar la integració {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Eliminació correcta",
+            "message": "La integració s'ha eliminat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Eliminació fallida",
+            "message": "No s'ha pogut eliminar la integració"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Nom"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Crea un motor de cerca",
+        "description": "La integració \"{kind}\" es pot utilitzar amb els motors de cerca. Seleccioneu aquesta opció per configurar el motor de cerca automàticament."
       }
     },
     "action": {
-      "create": ""
+      "create": "Nova integració"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Comprova la connexió i crea",
+        "edit": "Comprova la connexió i desa"
       },
-      "alertNotice": "",
+      "alertNotice": "El botó \"Desa\" s'habilita quan la connexió s'estableix correctament",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "S'ha connectat",
+          "message": "S'ha connectat correctament"
         },
         "invalidUrl": {
-          "title": "",
-          "message": ""
+          "title": "Adreça URL no vàlida",
+          "message": "L'adreça URL no és vàlida"
         },
         "secretNotDefined": {
           "title": "",
@@ -805,6 +805,7 @@
       "apply": "",
       "backToOverview": "",
       "create": "",
+      "createAnother": "",
       "edit": "",
       "import": "",
       "insert": "",

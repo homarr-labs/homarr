@@ -805,6 +805,7 @@
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
       "create": "Oluştur",
+      "createAnother": "Oluştur ve baştan başla",
       "edit": "Düzenle",
       "import": "İçe aktar",
       "insert": "Ekle",
@@ -1191,7 +1192,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Tarihin nasıl görüneceği"
+          "description": "Görüntülenecek tarihin biçimi"
         }
       }
     },
@@ -1354,8 +1355,8 @@
           "label": "Radarr yayın türü",
           "options": {
             "inCinemas": "Sinemalarda",
-            "digitalRelease": "Dijital sürüm",
-            "physicalRelease": "Fiziksel Yayınlanan"
+            "digitalRelease": "Dijital Yayın",
+            "physicalRelease": "Fiziksel Yayın"
           }
         },
         "filterPastMonths": {
@@ -1374,7 +1375,7 @@
           "label": "Fahrenheit cinsinden sıcaklık"
         },
         "disableTemperatureDecimals": {
-          "label": "Sıcaklık ondalıklarını devre dışı bırak"
+          "label": "Sıcaklıklarda ondalıkları gösterme"
         },
         "showCurrentWindSpeed": {
           "label": "Mevcut rüzgar hızını göster",
@@ -1395,7 +1396,7 @@
         },
         "dateFormat": {
           "label": "Tarih Biçimi",
-          "description": "Tarihin nasıl görüneceği"
+          "description": "Görüntülenecek tarihin biçimi"
         }
       },
       "currentWindSpeed": "{currentWindSpeed} km/s",
@@ -1403,22 +1404,22 @@
         "sunrise": "Gün Doğumu",
         "sunset": "Gün Batımı",
         "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
-        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/h"
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s"
       },
       "kind": {
-        "clear": "Temiz",
+        "clear": "Açık",
         "mainlyClear": "Genel olarak açık",
-        "fog": "Sis",
+        "fog": "Sisli",
         "drizzle": "Çiseleme",
-        "freezingDrizzle": "Soğuk çiseleme",
+        "freezingDrizzle": "Donan Çisenti",
         "rain": "Yağmur",
-        "freezingRain": "Dondurucu yağmur",
-        "snowFall": "Kar yağışı",
-        "snowGrains": "Kar taneleri",
-        "rainShowers": "Sağanak yağmur",
-        "snowShowers": "Kar yağışı",
+        "freezingRain": "Donan Yağmur",
+        "snowFall": "Kar Yağış",
+        "snowGrains": "Donmuş Kar",
+        "rainShowers": "Sağanak Yağmur",
+        "snowShowers": "Kar Yağışlı",
         "thunderstorm": "Fırtına",
-        "thunderstormWithHail": "Fırtına ve dolu",
+        "thunderstormWithHail": "Dolu Yağışlı Fırtına",
         "unknown": "Bilinmeyen"
       }
     },

@@ -67,7 +67,7 @@ const BoardCard = async ({ board }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card withBorder>
+    <Card radius="lg" withBorder>
       <CardSection p="sm" withBorder>
         <Group justify="space-between" align="center">
           <Group gap="sm">
@@ -106,15 +106,25 @@ const BoardCard = async ({ board }: BoardCardProps) => {
         </Group>
       </CardSection>
 
-      <CardSection p="sm">
-        <Group wrap="nowrap">
-          <Button component={Link} href={`/boards/${board.name}`} variant="default" fullWidth>
+      <CardSection>
+        <Group gap={0} wrap="nowrap">
+          <Button
+            style={{ border: "none", borderRadius: 0 }}
+            component={Link}
+            href={`/boards/${board.name}`}
+            variant="default"
+            fullWidth
+          >
             {t("action.open.label")}
           </Button>
           {isMenuVisible && (
             <Menu position="bottom-end">
               <MenuTarget>
-                <ActionIcon variant="default" size="lg">
+                <ActionIcon
+                  style={{ borderTop: "none", borderBottom: "none", borderRight: "none", borderRadius: 0 }}
+                  variant="default"
+                  size="lg"
+                >
                   <IconDotsVertical size={16} stroke={1.5} />
                 </ActionIcon>
               </MenuTarget>
