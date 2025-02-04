@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ActionIcon, Button, Group, Stack, Text, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -36,18 +36,20 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
     },
   });
 
-  const handleDelete = (id: string) => {
-    openConfirmModal({
-      title: t("modal.delete.title"),
-      children: t("modal.delete.text"),
-      // eslint-disable-next-line no-restricted-syntax
-      async onConfirm() {
-        await mutateDeleteAsync({ apiKeyId: id });
-      },
-    });
-  };
-
   const t = useScopedI18n("management.page.tool.api.tab.apiKey");
+  const handleDelete = useCallback(
+    (id: string) => {
+      openConfirmModal({
+        title: t("modal.delete.title"),
+        children: t("modal.delete.text"),
+        // eslint-disable-next-line no-restricted-syntax
+        async onConfirm() {
+          await mutateDeleteAsync({ apiKeyId: id });
+        },
+      });
+    },
+    [t, openConfirmModal, mutateDeleteAsync],
+  );
 
   const columns = useMemo<MRT_ColumnDef<RouterOutputs["apiKeys"]["getAll"][number]>[]>(
     () => [
@@ -69,11 +71,7 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
         header: t("table.header.actions"),
         Cell: ({ row }) => (
           <Group gap="xs">
-            <ActionIcon
-              onClick={() => handleDelete(row.original.id)}
-              loading={isPendingDelete}
-              c="red"
-            >
+            <ActionIcon onClick={() => handleDelete(row.original.id)} loading={isPendingDelete} c="red">
               <IconTrash size="1rem" />
             </ActionIcon>
           </Group>
