@@ -66,7 +66,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
-          className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWrapper)}
+          className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWithUrl)}
           h="100%"
           w="100%"
           direction="column"
@@ -81,7 +81,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           )}
           {theme.other.hasIconColor ? (
             <div
-              className={combineClasses(classes.appIconWithColor, "app-icon")}
+              className={combineClasses(classes.appIcon, classes.appIconWithColor, "app-icon")}
               role="img"
               aria-label={app.name}
               style={{

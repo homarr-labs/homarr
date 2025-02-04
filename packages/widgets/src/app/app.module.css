@@ -9,17 +9,13 @@
 }
 
 .appIconWithColor {
-  max-height: 100%;
-  max-width: 100%;
-  overflow: auto;
-  flex: 1;
-  object-fit: contain;
-  scale: 0.8;
-  transition: scale 0.2s ease-in-out;
   background-color: var(--mantine-color-iconColor-filled);
 }
 
-.appWrapper:hover > .appIconWithColor {
+.appWithUrl:hover > .appIcon {
   scale: 0.9;
+}
+
+.appWithUrl:hover > .appIconWithColor {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }
