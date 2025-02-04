@@ -947,7 +947,8 @@
         "moveUp": "Posunúť nahor",
         "moveDown": "Posunúť nadol",
         "createAbove": "Nová kategória vyššie",
-        "createBelow": "Nová kategória nižšie"
+        "createBelow": "Nová kategória nižšie",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nová kategória",
@@ -966,6 +967,10 @@
           "create": "Nová kategória",
           "changePosition": "Zmeniť pozíciu"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },

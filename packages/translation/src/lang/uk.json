@@ -947,7 +947,8 @@
         "moveUp": "Перемістити вгору",
         "moveDown": "Перемістити вниз",
         "createAbove": "Нові категорії зверху",
-        "createBelow": "Нова категорія знизу"
+        "createBelow": "Нова категорія знизу",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Нова категорія",
@@ -966,6 +967,10 @@
           "create": "Нова категорія",
           "changePosition": "Змінити положення"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Формат дати",
           "description": "Як має виглядати дата"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },

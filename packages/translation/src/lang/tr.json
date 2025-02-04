@@ -805,7 +805,7 @@
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
       "create": "Oluştur",
-      "createAnother": "Oluştur ve baştan başla",
+      "createAnother": "Kaydet ve Yeni Oluştur",
       "edit": "Düzenle",
       "import": "İçe aktar",
       "insert": "Ekle",
@@ -947,7 +947,8 @@
         "moveUp": "Yukarı taşı",
         "moveDown": "Aşağı taşı",
         "createAbove": "Yukarı Yeni Kategori",
-        "createBelow": "Aşağı Yeni Kategori"
+        "createBelow": "Aşağı Yeni Kategori",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Yeni Kategori",
@@ -966,6 +967,10 @@
           "create": "Yeni Kategori",
           "changePosition": "Pozisyonu değiştir"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Tarih Biçimi",
           "description": "Görüntülenecek tarihin biçimi"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -2149,8 +2162,8 @@
       "homeBoard": {
         "title": "Öntanımlı Panel Yapılandırılmadı",
         "admin": {
-          "description": "Sunucu için henüz bir ana sayfa paneli belirlemediniz.",
-          "link": "Sunucu geneli için ana panel yapılandırın",
+          "description": "Sunucu için henüz öntanımlı panel belirlemediniz.",
+          "link": "Sunucu geneli için öntanımlı panel atayın",
           "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucu için bir ana panel ayarlayın"
         },
         "user": {
@@ -2460,8 +2473,8 @@
           "board": {
             "title": "Paneller",
             "homeBoard": {
-              "label": "Genel Ana Sayfa Paneli",
-              "mobileLabel": "Genel Mobil Panel",
+              "label": "Genel öntanımlı panel",
+              "mobileLabel": "Genel öntanımlı mobil panel",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             }
           },

@@ -947,7 +947,8 @@
         "moveUp": "上移",
         "moveDown": "下移",
         "createAbove": "新分類之上",
-        "createBelow": "新分類之下"
+        "createBelow": "新分類之下",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "創建分類",
@@ -966,6 +967,10 @@
           "create": "創建分類",
           "changePosition": "變更位置"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "日期格式",
           "description": "日期應該是什麼樣式"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
