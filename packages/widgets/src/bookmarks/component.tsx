@@ -64,7 +64,7 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
-          hasIconColor={theme.other.hasIconColor as boolean}
+          hasIconColor={theme.other.hasIconColor}
         />
       )}
       {options.layout !== "grid" && (
@@ -74,7 +74,7 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
-          hasIconColor={theme.other.hasIconColor as boolean}
+          hasIconColor={theme.other.hasIconColor}
         />
       )}
     </Stack>

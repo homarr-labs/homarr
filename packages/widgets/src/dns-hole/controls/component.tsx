@@ -278,7 +278,7 @@ export default function DnsHoleControlsWidget({
               setSelectedIntegrationIds={setSelectedIntegrationIds}
               open={open}
               t={t}
-              hasIconColor={theme.other.hasIconColor as boolean}
+              hasIconColor={theme.other.hasIconColor}
             />
           ))}
         </Stack>

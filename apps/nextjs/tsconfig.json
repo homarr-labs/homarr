@@ -10,7 +10,9 @@
         "name": "next"
       }
     ],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "typeRoots": ["node_modules/@types", "node_modules/@homarr/types/src"],
+    "types": ["theme.other"]
   },
   "include": [".", ".next/types/**/*.ts"],
   "exclude": ["node_modules", ".next"]
