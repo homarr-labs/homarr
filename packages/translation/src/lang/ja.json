@@ -947,7 +947,8 @@
         "moveUp": "上に移動",
         "moveDown": "下へ移動",
         "createAbove": "",
-        "createBelow": ""
+        "createBelow": "",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "",
@@ -966,6 +967,10 @@
           "create": "",
           "changePosition": "ポジションを変更する"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1191,6 +1196,14 @@
           "label": ""
         },
         "dateFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }

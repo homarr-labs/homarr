@@ -947,7 +947,8 @@
         "moveUp": "Flytte opp",
         "moveDown": "Flytt ned",
         "createAbove": "Ny kategori over",
-        "createBelow": "Ny kategori under"
+        "createBelow": "Ny kategori under",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Ny kategori",
@@ -966,6 +967,10 @@
           "create": "Ny kategori",
           "changePosition": "Endre posisjon"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Datoformat",
           "description": "Hvordan datoen skal se ut"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -2583,30 +2596,30 @@
       },
       "about": {
         "version": "Versjon {version}",
-        "text": "",
+        "text": "Homarr er et samfunnsdrevet åpen kildekode-prosjekt som vedlikeholdes av frivillige. Takket være disse personene, har Homarr vært et voksende prosjekt siden 2021. Teamet vårt jobber på Homarr fra mange forskjellige land og i fritiden uten kompensasjon.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Bidragsytere",
+            "subtitle": "{count} vedlikeholder kode og Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Oversettere",
+            "subtitle": "{count} bidrar med oversettelser på mange språk"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Biblioteker",
+            "subtitle": "{count} brukt i koden til Homarr"
           }
         }
       }
     }
   },
   "docker": {
-    "title": "",
+    "title": "Containere",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": ""
+      "updated": "Oppdatert {when}",
+      "search": "Søk i {count} containere",
+      "selected": "{selectCount} av {totalCount} containere valgt"
     },
     "field": {
       "name": {
@@ -2619,13 +2632,13 @@
           "running": "Kjører",
           "paused": "Pauset",
           "restarting": "Starter på nytt",
-          "exited": "",
+          "exited": "Avsluttet",
           "removing": "Fjerner",
-          "dead": ""
+          "dead": "Død"
         }
       },
       "containerImage": {
-        "label": ""
+        "label": "Image"
       },
       "ports": {
         "label": "Porter"
@@ -2633,15 +2646,15 @@
     },
     "action": {
       "start": {
-        "label": "",
+        "label": "Start",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere startet",
+            "message": "Containerene ble startet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke startet",
+            "message": "Containerene kunne ikke startes"
           }
         }
       },
@@ -2649,12 +2662,12 @@
         "label": "Stopp",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere stoppet",
+            "message": "Containerene ble stoppet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke stoppet",
+            "message": "Containerene kunne ikke stoppes"
           }
         }
       },
@@ -2662,12 +2675,12 @@
         "label": "Omstart",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere restartet",
+            "message": "Containerene ble restartet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke restartet",
+            "message": "Containerene kunne ikke restartes"
           }
         }
       },
@@ -2675,71 +2688,71 @@
         "label": "Fjern",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere fjernet",
+            "message": "Containerene ble fjernet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke fjernet",
+            "message": "Containerene kunne ikke fjernes"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Oppfrisk",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere oppfrisket",
+            "message": "Du ser nå på de siste dataene"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke oppfrisket",
+            "message": "Noe gikk galt under du oppforfrisking av containerne"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Legg til i Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Lagt til i Homarr",
+            "message": "Valgte apper er lagt til i Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunne ikke legge til i Homarr",
+            "message": "Valgte apper er kunne ikke legges til i Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Legg til docker container(e) i Homarr"
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Klarte ikke hente Docker-containere"
     }
   },
   "permission": {
-    "title": "",
+    "title": "Rettigheter",
     "userSelect": {
-      "title": ""
+      "title": "Legg til brukerrettighet"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Legg til grupperettigheter"
     },
     "tab": {
       "user": "Brukere",
-      "group": "",
-      "inherited": ""
+      "group": "Grupper",
+      "inherited": "Arvede grupper"
     },
     "field": {
       "user": {
         "label": "Bruker"
       },
       "group": {
-        "label": ""
+        "label": "Gruppe"
       },
       "permission": {
-        "label": ""
+        "label": "Rettighet"
       }
     },
     "action": {
@@ -2951,20 +2964,20 @@
                 "description": "Søk på nettet med Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Søk på nettet med Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Søk på nettet med DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrenter",
-                "description": ""
+                "description": "Søk etter torrents på torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Søk etter videoer på YouTube"
               }
             }
           }
@@ -2973,7 +2986,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Moduser"
           },
           "help": {
             "title": "Hjelp",
@@ -2982,7 +2995,7 @@
                 "label": "Dokumentasjon"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Send inn en sak"
               },
               "discord": {
                 "label": "Discord"
@@ -2994,81 +3007,81 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Søk",
             "option": {
               "other": {
-                "label": ""
+                "label": "Søk med en annen søkemotor"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Ingen standard søkemotor",
+                "description": "Angi en standard søkemotor i innstillingene"
               },
               "search": {
-                "label": ""
+                "label": "Søk etter \"{query}\" med {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Start å skrive for å søke"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Lokale resultater"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Søk etter sider",
         "group": {
           "page": {
-            "title": "",
+            "title": "Sider",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Administrer hjemmeside"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Administrer tavler"
               },
               "manageApp": {
-                "label": ""
+                "label": "Administrer apper"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Administrer integrasjoner"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Administrere søkemotorer"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Administrere medier"
               },
               "manageUser": {
                 "label": "Administrer brukere"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Administrer invitasjoner"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Administrer grupper"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Administrer docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "Se logger"
               },
               "manageTask": {
-                "label": ""
+                "label": "Administrer oppgaver"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Globale innstillinger"
               },
               "about": {
                 "label": "Info"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Hjem tavle"
               },
               "preferences": {
                 "label": "Dine innstillinger"
@@ -3078,37 +3091,37 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Søk etter bruker og grupper",
         "group": {
           "user": {
             "title": "Brukere",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Vis brukerdetaljer"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for brukeren"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Grupper",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Vis gruppedetaljer"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Administrere medlemmer"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Administrer rettigheter"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for gruppen"
               }
             }
           }
@@ -3116,35 +3129,35 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Finn en søkemotor",
       "field": {
         "name": {
           "label": "Navn"
         },
         "short": {
-          "label": ""
+          "label": "Kort"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL søkemal"
         },
         "description": {
-          "label": ""
+          "label": "Beskrivelse"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Søkemotorer",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Det er ingen søkemotorer enda",
+            "action": "Opprett din første søkemotor"
           },
-          "interactive": ""
+          "interactive": "Interaktiv, bruker en integrasjon"
         },
         "create": {
-          "title": "",
+          "title": "Ny søkemotor",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Søkemotor opprettet",
               "message": "Søkemotoren ble opprettet"
             },
             "error": {

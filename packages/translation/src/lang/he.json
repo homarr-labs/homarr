@@ -947,7 +947,8 @@
         "moveUp": "הזזה למעלה",
         "moveDown": "הזזה למטה",
         "createAbove": "קטגוריה חדשה למעלה",
-        "createBelow": "קטגוריה חדשה למטה"
+        "createBelow": "קטגוריה חדשה למטה",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "קטגוריה חדשה",
@@ -966,6 +967,10 @@
           "create": "קטגוריה חדשה",
           "changePosition": "שנה מיקום"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "פורמט תאריך",
           "description": "איך צריך להיראות התאריך"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },

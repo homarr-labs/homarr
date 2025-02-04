@@ -947,7 +947,8 @@
         "moveUp": "上移",
         "moveDown": "下移",
         "createAbove": "上方新建分类",
-        "createBelow": "下方新建分类"
+        "createBelow": "下方新建分类",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "新建分类",
@@ -966,6 +967,10 @@
           "create": "新建分类",
           "changePosition": "换位"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "日期格式",
           "description": "日期应该是什么样的"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
