@@ -5,7 +5,7 @@ import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { AppNewForm } from "./_app-new-form";
+import { AppNewForm } from "../../../../../../../../packages/ui/src/components/forms/new-app/_app-new-form";
 
 export default async function AppNewPage() {
   const session = await auth();
