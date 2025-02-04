@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 import Link from "next/link";
 import type { SelectProps } from "@mantine/core";
-import { Anchor, Group, Loader, Select, Text } from "@mantine/core";
+import { Anchor, Button, Group, Loader, Select, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -13,6 +13,8 @@ import { useI18n } from "@homarr/translation/client";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
+import { useModalAction } from "@homarr/modals";
+import { QuickAddAppModal } from "../../../modals-collection/src";
 
 export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">) => {
   const t = useI18n();
@@ -20,40 +22,46 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
   const form = useFormContext();
   const { data: apps, isPending } = clientApi.app.selectable.useQuery();
 
+  const { openModal } = useModalAction(QuickAddAppModal);
+
   const currentApp = useMemo(
     () => apps?.find((app) => app.id === form.values.options.appId),
     [apps, form.values.options.appId],
   );
 
   return (
-    <Select
-      label={tInput("label")}
-      searchable
-      limit={10}
-      leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
-      nothingFoundMessage={t("widget.common.app.noData")}
-      renderOption={renderSelectOption}
-      data={
-        apps?.map((app) => ({
-          label: app.name,
-          value: app.id,
-          iconUrl: app.iconUrl,
-        })) ?? []
-      }
-      inputWrapperOrder={["label", "input", "description", "error"]}
-      description={
-        <Text size="xs">
-          {t.rich("widget.common.app.description", {
-            here: () => (
-              <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
-                {t("common.here")}
-              </Anchor>
-            ),
-          })}
-        </Text>
-      }
-      {...form.getInputProps(`options.${property}`)}
-    />
+    <Group>
+      <Select
+        label={tInput("label")}
+        searchable
+        limit={10}
+        leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
+        nothingFoundMessage={t("widget.common.app.noData")}
+        renderOption={renderSelectOption}
+        data={
+          apps?.map((app) => ({
+            label: app.name,
+            value: app.id,
+            iconUrl: app.iconUrl,
+          })) ?? []
+        }
+        inputWrapperOrder={["label", "input", "description", "error"]}
+        description={
+          <Text size="xs">
+            {t.rich("widget.common.app.description", {
+              here: () => (
+                <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
+                  {t("common.here")}
+                </Anchor>
+              ),
+            })}
+          </Text>
+        }
+        styles={{ root: { flex: '1' } }}
+        {...form.getInputProps(`options.${property}`)}
+      />
+      <Button onClick={() => openModal({})}>Quick Create</Button>
+    </Group>
   );
 };
 
