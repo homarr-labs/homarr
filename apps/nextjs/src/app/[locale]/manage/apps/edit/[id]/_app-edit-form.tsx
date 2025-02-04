@@ -11,7 +11,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
 
-import { AppForm } from "../../_form";
+import { AppForm } from "../../../../../../../../../packages/ui/src/components/forms/new-app/_form";
 
 interface AppEditFormProps {
   app: RouterOutputs["app"]["byId"];

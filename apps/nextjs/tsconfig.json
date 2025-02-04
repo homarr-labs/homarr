@@ -12,6 +12,6 @@
     ],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": [".", ".next/types/**/*.ts"],
+  "include": [".", ".next/types/**/*.ts", "../../packages/ui/src/components/forms/new-app/_form.tsx", "../../packages/ui/src/components/forms/new-app/_app-new-form.tsx"],
   "exclude": ["node_modules", ".next"]
 }
