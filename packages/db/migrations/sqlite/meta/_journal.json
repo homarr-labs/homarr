@@ -166,15 +166,8 @@
     {
       "idx": 23,
       "version": "6",
-      "when": 1738584167149,
-      "tag": "0023_empty_triton",
-      "breakpoints": true
-    },
-    {
-      "idx": 24,
-      "version": "6",
-      "when": 1738618669946,
-      "tag": "0024_right_mongu",
+      "when": 1738686324915,
+      "tag": "0023_fix_on_delete_actions",
       "breakpoints": true
     }
   ]
