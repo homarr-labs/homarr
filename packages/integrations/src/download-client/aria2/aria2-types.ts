@@ -2,7 +2,6 @@ export interface Aria2GetClient {
     getVersion: Aria2VoidFunc<Aria2GetVersion>
     getGlobalStat: Aria2VoidFunc<Aria2GetGlobalStat>
 
-
     tellActive: Aria2VoidFunc<Aria2Download[]>
     tellWaiting: Aria2VoidFunc<Aria2Download[], Aria2TellStatusListParams>
     tellStopped: Aria2VoidFunc<Aria2Download[], Aria2TellStatusListParams>
@@ -57,11 +56,8 @@ export interface Aria2Download {
     connections: string;
     errorCode?: string;
     errorMessage?: string;
-    // gid[]
     followedBy?: AriaGID[];
-    // gid[]
     following?: AriaGID;
-    // gid[]
     belongsTo?: AriaGID;
     dir: string;
     files: {
