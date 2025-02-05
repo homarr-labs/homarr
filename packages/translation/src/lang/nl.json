@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "API-token aanmaken"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Aangemaakt door"
+                  "createdBy": "Aangemaakt door",
+                  "actions": ""
                 }
               }
             }

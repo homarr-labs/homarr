@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "Vytvorte token API"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Vytvoril/a"
+                  "createdBy": "Vytvoril/a",
+                  "actions": ""
                 }
               }
             }

@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "API Token erstellen"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Erstellt von"
+                  "createdBy": "Erstellt von",
+                  "actions": ""
                 }
               }
             }
