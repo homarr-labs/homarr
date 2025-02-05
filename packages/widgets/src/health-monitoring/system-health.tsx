@@ -347,9 +347,14 @@ const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
   );
 };
 
-const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: number }) => {
+const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: number | undefined }) => {
   const { width, ref } = useElementSize();
   const fallbackWidth = width || 1; // See https://github.com/homarr-labs/homarr/issues/2196
+
+  if (!cpuTemp) {
+    return null;
+  }
+
   return (
     <Box ref={ref} w="100%" h="100%" className="health-monitoring-cpu-temperature">
       <RingProgress

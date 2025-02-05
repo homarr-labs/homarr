@@ -947,7 +947,8 @@
         "moveUp": "Przenieś w górę",
         "moveDown": "Przenieś w dół",
         "createAbove": "Nowa kategoria powyżej",
-        "createBelow": "Nowa kategoria poniżej"
+        "createBelow": "Nowa kategoria poniżej",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nowa kategoria",
@@ -966,6 +967,10 @@
           "create": "Nowa kategoria",
           "changePosition": "Zmiana pozycji"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Format daty",
           "description": "Jak powinna wyglądać data"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -2571,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

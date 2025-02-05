@@ -805,7 +805,7 @@
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
       "create": "Oluştur",
-      "createAnother": "Oluştur ve baştan başla",
+      "createAnother": "Kaydet ve Yeni Oluştur",
       "edit": "Düzenle",
       "import": "İçe aktar",
       "insert": "Ekle",
@@ -947,7 +947,8 @@
         "moveUp": "Yukarı taşı",
         "moveDown": "Aşağı taşı",
         "createAbove": "Yukarı Yeni Kategori",
-        "createBelow": "Aşağı Yeni Kategori"
+        "createBelow": "Aşağı Yeni Kategori",
+        "openAllInNewTabs": "Tümünü sekmelerde aç"
       },
       "create": {
         "title": "Yeni Kategori",
@@ -966,6 +967,10 @@
           "create": "Yeni Kategori",
           "changePosition": "Pozisyonu değiştir"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "Tümünü sekmelerde aç",
+        "text": "Bazı tarayıcılar güvenlik nedeniyle sekmelerin toplu olarak açılmasını engelleyebilir. Homarr tüm pencereleri açamadı, çünkü tarayıcınız bu eylemi engelledi. Lütfen \"Açılır pencereleri aç\"a izin verin ve tekrar deneyin."
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Tarih Biçimi",
           "description": "Görüntülenecek tarihin biçimi"
+        },
+        "customTimeFormat": {
+          "label": "Özel zaman biçimi",
+          "description": "Zaman biçimini değiştirmek için ISO 8601 standardını kullanın (bu diğer seçenekleri geçersiz kılacaktır)"
+        },
+        "customDateFormat": {
+          "label": "Özel tarih biçimi",
+          "description": "Tarih biçimini değiştirmek için ISO 8601 standardını kullanın (bu diğer seçenekleri geçersiz kılacaktır)"
         }
       }
     },
@@ -1407,19 +1420,19 @@
         "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s"
       },
       "kind": {
-        "clear": "Temiz",
+        "clear": "Açık",
         "mainlyClear": "Genel olarak açık",
-        "fog": "Sis",
+        "fog": "Sisli",
         "drizzle": "Çiseleme",
-        "freezingDrizzle": "Soğuk çiseleme",
+        "freezingDrizzle": "Donan Çisenti",
         "rain": "Yağmur",
-        "freezingRain": "Dondurucu yağmur",
-        "snowFall": "Kar yağışı",
-        "snowGrains": "Kar taneleri",
-        "rainShowers": "Sağanak yağmur",
-        "snowShowers": "Kar yağışı",
+        "freezingRain": "Donan Yağmur",
+        "snowFall": "Kar Yağış",
+        "snowGrains": "Donmuş Kar",
+        "rainShowers": "Sağanak Yağmur",
+        "snowShowers": "Kar Yağışlı",
         "thunderstorm": "Fırtına",
-        "thunderstormWithHail": "Fırtına ve dolu",
+        "thunderstormWithHail": "Dolu Yağışlı Fırtına",
         "unknown": "Bilinmeyen"
       }
     },
@@ -1711,7 +1724,7 @@
         "completed": "Tamamlanan",
         "failed": "Başarısız",
         "processing": "İşlemde",
-        "leeching": "Leechleme",
+        "leeching": "Aranıyor",
         "stalled": "Durduruldu",
         "unknown": "Bilinmeyen",
         "seeding": "Seed ediliyor"
@@ -2149,8 +2162,8 @@
       "homeBoard": {
         "title": "Öntanımlı Panel Yapılandırılmadı",
         "admin": {
-          "description": "Sunucu için henüz bir ana sayfa paneli belirlemediniz.",
-          "link": "Sunucu geneli için ana panel yapılandırın",
+          "description": "Sunucu için henüz öntanımlı panel belirlemediniz.",
+          "link": "Sunucu geneli için öntanımlı panel atayın",
           "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucu için bir ana panel ayarlayın"
         },
         "user": {
@@ -2460,8 +2473,8 @@
           "board": {
             "title": "Paneller",
             "homeBoard": {
-              "label": "Genel Ana Sayfa Paneli",
-              "mobileLabel": "Genel Mobil Panel",
+              "label": "Genel öntanımlı panel",
+              "mobileLabel": "Genel öntanımlı mobil panel",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             }
           },
@@ -2571,10 +2584,17 @@
               "button": {
                 "createApiToken": "API token'ı oluştur"
               },
+              "modal": {
+                "delete": {
+                  "title": "API belirtecini sil",
+                  "text": "Bu, API belirtecini kalıcı olarak silecektir. Bu belirteci kullanan API istemcileri artık kimlik doğrulaması yapamaz ve API istekleri gerçekleştiremez. Bu eylem geri alınamaz."
+                }
+              },
               "table": {
                 "header": {
                   "id": "Kimlik",
-                  "createdBy": "Tarafından oluşturuldu"
+                  "createdBy": "Tarafından oluşturuldu",
+                  "actions": "Eylemler"
                 }
               }
             }
