@@ -948,7 +948,7 @@
         "moveDown": "Aşağı taşı",
         "createAbove": "Yukarı Yeni Kategori",
         "createBelow": "Aşağı Yeni Kategori",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Tümünü sekmelerde aç"
       },
       "create": {
         "title": "Yeni Kategori",
@@ -969,8 +969,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Tümünü sekmelerde aç",
+        "text": "Bazı tarayıcılar güvenlik nedeniyle sekmelerin toplu olarak açılmasını engelleyebilir. Homarr tüm pencereleri açamadı, çünkü tarayıcınız bu eylemi engelledi. Lütfen \"Açılır pencereleri aç\"a izin verin ve tekrar deneyin."
       }
     }
   },
@@ -1200,12 +1200,12 @@
           "description": "Görüntülenecek tarihin biçimi"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Özel zaman biçimi",
+          "description": "Zaman biçimini değiştirmek için ISO 8601 standardını kullanın (bu diğer seçenekleri geçersiz kılacaktır)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Özel tarih biçimi",
+          "description": "Tarih biçimini değiştirmek için ISO 8601 standardını kullanın (bu diğer seçenekleri geçersiz kılacaktır)"
         }
       }
     },
@@ -1724,7 +1724,7 @@
         "completed": "Tamamlanan",
         "failed": "Başarısız",
         "processing": "İşlemde",
-        "leeching": "Leechleme",
+        "leeching": "Aranıyor",
         "stalled": "Durduruldu",
         "unknown": "Bilinmeyen",
         "seeding": "Seed ediliyor"
@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "API token'ı oluştur"
               },
+              "modal": {
+                "delete": {
+                  "title": "API belirtecini sil",
+                  "text": "Bu, API belirtecini kalıcı olarak silecektir. Bu belirteci kullanan API istemcileri artık kimlik doğrulaması yapamaz ve API istekleri gerçekleştiremez. Bu eylem geri alınamaz."
+                }
+              },
               "table": {
                 "header": {
                   "id": "Kimlik",
-                  "createdBy": "Tarafından oluşturuldu"
+                  "createdBy": "Tarafından oluşturuldu",
+                  "actions": "Eylemler"
                 }
               }
             }

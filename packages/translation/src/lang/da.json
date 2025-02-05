@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "Opret API token"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Oprettet af"
+                  "createdBy": "Oprettet af",
+                  "actions": ""
                 }
               }
             }

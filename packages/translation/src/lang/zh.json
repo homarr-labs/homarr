@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "創建 API 密鑰"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "創建者"
+                  "createdBy": "創建者",
+                  "actions": ""
                 }
               }
             }

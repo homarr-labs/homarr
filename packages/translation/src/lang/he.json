@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "יצירת מפתח  API"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "מספר מזהה",
-                  "createdBy": "נוצר על ידי"
+                  "createdBy": "נוצר על ידי",
+                  "actions": ""
                 }
               }
             }

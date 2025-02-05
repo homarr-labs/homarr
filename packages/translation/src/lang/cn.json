@@ -2584,10 +2584,17 @@
               "button": {
                 "createApiToken": "创建 API 令牌"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "创建者"
+                  "createdBy": "创建者",
+                  "actions": ""
                 }
               }
             }
