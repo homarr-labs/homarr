@@ -27,10 +27,10 @@ import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { ImageColored } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
-import classes from "./dns-hole-controls.module.css";
 import TimerModal from "./TimerModal";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
@@ -331,21 +331,13 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
     >
       <Flex className="dns-hole-controls-item-container" gap="4cqmin" align="center" direction="row">
         {hasIconColor ? (
-          <div
-            className={classes.integrationIconWithColor}
-            role="img"
-            aria-label={data.integration.name}
-            style={{
+          <ImageColored
+            src={iconUrl}
+            color="iconColor"
+            alt={data.integration.name}
+            styles={{
               height: "20cqmin",
               width: "20cqmin",
-              WebkitMaskSize: "contain",
-              WebkitMaskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-              WebkitMaskImage: `url(${iconUrl})`,
-              maskSize: "contain",
-              maskRepeat: "no-repeat",
-              maskPosition: "center",
-              maskImage: `url(${iconUrl})`,
               filter: !isConnected ? "grayscale(100%)" : undefined,
             }}
           />
@@ -356,7 +348,9 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             w="20cqmin"
             h="20cqmin"
             fit="contain"
-            style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
+            style={{
+              filter: !isConnected ? "grayscale(100%)" : undefined,
+            }}
           />
         )}
         <Flex className="dns-hole-controls-item-data-stack" direction="column" gap="1.5cqmin">

@@ -8,10 +8,6 @@
   transition: scale 0.2s ease-in-out;
 }
 
-.appIconWithColor {
-  background-color: var(--mantine-color-iconColor-filled);
-}
-
 .appWithUrl:hover > .appIcon {
   scale: 0.9;
 }

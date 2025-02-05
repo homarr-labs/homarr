@@ -18,6 +18,7 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
+import { ImageColored } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
@@ -190,24 +191,17 @@ const VerticalItem = ({
       </Text>
       {!hideIcon &&
         (hasIconColor ? (
-          <div
+          <ImageColored
+            src={app.iconUrl}
+            color="iconColor"
+            alt={app.name}
             className={classes.bookmarkIconWithColor}
-            role="img"
-            aria-label={app.name}
-            style={{
+            styles={{
               maxHeight: "100%",
               maxWidth: "100%",
               overflow: "auto",
               flex: 1,
               scale: 0.8,
-              WebkitMaskSize: "contain",
-              WebkitMaskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-              WebkitMaskImage: `url(${app.iconUrl})`,
-              maskSize: "contain",
-              maskRepeat: "no-repeat",
-              maskPosition: "center",
-              maskImage: `url(${app.iconUrl})`,
             }}
           />
         ) : (
@@ -248,25 +242,18 @@ const HorizontalItem = ({
     <Group wrap="nowrap">
       {!hideIcon &&
         (hasIconColor ? (
-          <div
+          <ImageColored
+            src={app.iconUrl}
+            color="iconColor"
+            alt={app.name}
             className={classes.bookmarkIconWithColor}
-            role="img"
-            aria-label={app.name}
-            style={{
+            styles={{
               overflow: "auto",
               scale: 0.8,
               minHeight: "100cqh",
               maxHeight: "100cqh",
               minWidth: "100cqh",
               maxWidth: "100cqh",
-              WebkitMaskSize: "contain",
-              WebkitMaskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-              WebkitMaskImage: `url(${app.iconUrl})`,
-              maskSize: "contain",
-              maskRepeat: "no-repeat",
-              maskPosition: "center",
-              maskImage: `url(${app.iconUrl})`,
             }}
           />
         ) : (

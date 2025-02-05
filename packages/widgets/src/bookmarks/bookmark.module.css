@@ -5,7 +5,3 @@
 .card:hover > div > .bookmarkIconWithColor {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }
-
-.bookmarkIconWithColor {
-  background-color: var(--mantine-color-iconColor-filled);
-}
