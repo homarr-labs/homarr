@@ -148,7 +148,6 @@ export const integrationDefs = {
   unifiController: {
     name: "Unifi Controller",
     secretKinds: [["username", "password"]],
-    //secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },

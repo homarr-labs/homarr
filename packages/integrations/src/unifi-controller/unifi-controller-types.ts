@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const healthSchema = z.discriminatedUnion('subsystem', [
+export const healthSchema = z.discriminatedUnion("subsystem", [
   z.object({
     subsystem: z.literal("wlan"),
     num_user: z.number(),
@@ -32,32 +32,36 @@ export const healthSchema = z.discriminatedUnion('subsystem', [
     gw_mac: z.string(),
     gw_name: z.string(),
     "gw_system-stats": z.object({
-        cpu: z.string(),
-        mem: z.string(),
-        uptime: z.string(),
+      cpu: z.string(),
+      mem: z.string(),
+      uptime: z.string(),
     }),
     gw_version: z.string(),
     isp_name: z.string(),
     isp_organization: z.string(),
     uptime_stats: z.object({
-        WAN: z.object({
-            alerting_monitors: z.array(z.object({
-                availability: z.number(),
-                latency_average: z.number(),
-                target: z.string(),
-                type: z.enum(["icmp","dns"]),
-              })),
+      WAN: z.object({
+        alerting_monitors: z.array(
+          z.object({
             availability: z.number(),
             latency_average: z.number(),
-            monitors: z.array(z.object({
-                availability: z.number(),
-                latency_average: z.number(),
-                target: z.string(),
-                type: z.enum(["icmp","dns"]),
-                })),
-            time_period: z.number(),
-            uptime: z.number(),
-        }),
+            target: z.string(),
+            type: z.enum(["icmp", "dns"]),
+          }),
+        ),
+        availability: z.number(),
+        latency_average: z.number(),
+        monitors: z.array(
+          z.object({
+            availability: z.number(),
+            latency_average: z.number(),
+            target: z.string(),
+            type: z.enum(["icmp", "dns"]),
+          }),
+        ),
+        time_period: z.number(),
+        uptime: z.number(),
+      }),
     }),
   }),
   z.object({
@@ -119,11 +123,8 @@ export const siteSchema = z.object({
 export type Site = z.infer<typeof siteSchema>;
 
 export const unifiSummaryResponseSchema = z.object({
-
-  meta: z.object(
-    {
-      rc: z.enum(["ok"]),
-    }
-  ),
+  meta: z.object({
+    rc: z.enum(["ok"]),
+  }),
   data: z.array(siteSchema),
 });

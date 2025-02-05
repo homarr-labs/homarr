@@ -1,4 +1,4 @@
-import { IconTopologyFull, IconServerOff } from "@tabler/icons-react";
+import { IconServerOff, IconTopologyFull } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
@@ -18,22 +18,14 @@ export const { definition, componentLoader } = createWidgetDefinition(widgetKind
       defaultValue: "row",
     }),
     content: factory.multiSelect({
-      options: ([
-        "wwwLatency", 
-        "wwwPing", 
-        "wwwUptime",
-        "wifiUsers",
-        "wifiGuests",
-        "lanUsers",
-        "lanGuests",
-        "vpnUsers",
-      ] as const).map((value) => ({
+      options: (
+        ["wwwLatency", "wwwPing", "wwwUptime", "wifiUsers", "wifiGuests", "lanUsers", "lanGuests", "vpnUsers"] as const
+      ).map((value) => ({
         value,
         label: (t) => t(`widget.networkControllerSummary.option.content.option.${value}.label`),
       })),
       defaultValue: ["wifiUsers"],
     }),
-
   })),
   supportedIntegrations: getIntegrationKindsByCategory("networkController"),
   errors: {

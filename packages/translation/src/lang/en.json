@@ -1905,7 +1905,8 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "No data available, all integrations disconnected"
+        "integrationsDisconnected": "No data available, all integrations disconnected",
+        "unknownContentOption": "Unknown content option for network controller summary widget: "
       },
       "data": {
         "wifiUsers": "WiFi Users",

@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
 import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconWifi, IconTopologyBus, IconShieldDown, IconWorldWww } from "@tabler/icons-react";
-//IconWifiOff
+import { IconShieldDown, IconTopologyBus, IconWifi, IconWorldWww } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
@@ -18,7 +18,10 @@ import type { TablerIcon } from "@homarr/ui";
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 
-export default function NetworkControllerSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
+export default function NetworkControllerSummaryWidget({
+  options,
+  integrationIds,
+}: WidgetComponentProps<typeof widgetKind>) {
   const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
     {
       integrationIds,
@@ -64,7 +67,7 @@ export default function NetworkControllerSummaryWidget({ options, integrationIds
   // prepare the blocks
   stats.length = 0;
   for (const layout of options.content) {
-    switch(layout) {
+    switch (layout) {
       case "wifiUsers":
         stats.push(wifiUsersBlock);
         break;
@@ -90,16 +93,14 @@ export default function NetworkControllerSummaryWidget({ options, integrationIds
         stats.push(wwwUptimeBlock);
         break;
       default:
-        break;
+        throw new Error(t("widget.networkControllerSummary.error.unknownContentOption"), layout);
     }
   }
 
   return (
     <Box h="100%" {...boxPropsByLayout(options.layout)} p="2cqmin">
       {data.length > 0 ? (
-        stats.map((item) => (
-          <StatCard key={item.label.toString()} item={item} data={data} t={t} />
-        ))
+        stats.map((item) => <StatCard key={item.label.toString()} item={item} data={data} t={t} />)
       ) : (
         <Stack h="100%" w="100%" justify="center" align="center" gap="2.5cqmin" p="2.5cqmin">
           <AvatarGroup spacing="10cqmin">
@@ -121,13 +122,14 @@ export default function NetworkControllerSummaryWidget({ options, integrationIds
 const stats = [
   {
     icon: IconWifi,
-    value: (_) => {return("Default")},
+    value: (_) => {
+      return "Default";
+    },
     label: (t) => t("widget.networkControllerSummary.data.default"),
-    color: "rgba(80, 80, 80, 0)", // dark gray
-  }
+    color: "rgba(80, 80, 80, 0)",
+  },
 ] satisfies StatItem[];
 
-//possible blocks
 const wifiUsersBlock = {
   icon: IconWifi,
   value: (data) => {
@@ -135,10 +137,10 @@ const wifiUsersBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.wifiUsers,0);
-    },
+    return formatNumber(summaryItem.wifiUsers, 0);
+  },
   label: (t) => t("widget.networkControllerSummary.data.wifiUsers"),
-  color: "rgba(0, 176, 95, 0.4)", // green
+  color: "rgba(0, 176, 95, 0.4)",
 } satisfies StatItem;
 
 const wifiGuestsBlock = {
@@ -148,10 +150,10 @@ const wifiGuestsBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.wifiGuests,0);
-    },
+    return formatNumber(summaryItem.wifiGuests, 0);
+  },
   label: (t) => t("widget.networkControllerSummary.data.wifiGuests"),
-  color: "rgba(0, 176, 94, 0.4)", // lighter
+  color: "rgba(0, 176, 94, 0.4)",
 } satisfies StatItem;
 
 const lanUsersBlock = {
@@ -161,10 +163,10 @@ const lanUsersBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.lanUsers,0);
-    },
+    return formatNumber(summaryItem.lanUsers, 0);
+  },
   label: (t) => t("widget.networkControllerSummary.data.lanUsers"),
-  color: "rgba(0, 175, 217, 0.4)", // BLUE
+  color: "rgba(0, 175, 217, 0.4)",
 } satisfies StatItem;
 
 const lanGuestsBlock = {
@@ -174,10 +176,10 @@ const lanGuestsBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.lanGuests,0);
-    },
+    return formatNumber(summaryItem.lanGuests, 0);
+  },
   label: (t) => t("widget.networkControllerSummary.data.lanGuests"),
-  color: "rgba(0, 175, 216, 0.4)", // BLUE lighter
+  color: "rgba(0, 175, 216, 0.4)",
 } satisfies StatItem;
 
 const vpnUsersBlock = {
@@ -187,10 +189,10 @@ const vpnUsersBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.vpnUsers,0);
-    },
+    return formatNumber(summaryItem.vpnUsers, 0);
+  },
   label: (t) => t("widget.networkControllerSummary.data.vpnUsers"),
-  color: "rgba(240, 82, 61, 0.4)", // red
+  color: "rgba(240, 82, 61, 0.4)",
 } satisfies StatItem;
 
 const wwwLatencyBlock = {
@@ -200,10 +202,10 @@ const wwwLatencyBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.wwwLatency,0)+"ms";
-    },
+    return formatNumber(summaryItem.wwwLatency, 0) + "ms";
+  },
   label: (t) => t("widget.networkControllerSummary.data.wwwLatency"),
-  color: "rgba(255, 165, 17, 0.4)", // yellow
+  color: "rgba(255, 165, 17, 0.4)",
 } satisfies StatItem;
 
 const wwwPingBlock = {
@@ -213,10 +215,10 @@ const wwwPingBlock = {
     if (summaryItem === undefined) {
       return "NaN";
     }
-    return formatNumber(summaryItem.wwwPing,0)+"ms";
-    },
+    return formatNumber(summaryItem.wwwPing, 0) + "ms";
+  },
   label: (t) => t("widget.networkControllerSummary.data.wwwPing"),
-  color: "rgba(255, 165, 19, 0.4)", // yellow
+  color: "rgba(255, 165, 19, 0.4)",
 } satisfies StatItem;
 
 const wwwUptimeBlock = {
@@ -227,24 +229,29 @@ const wwwUptimeBlock = {
       return "NaN";
     }
     return secondsToDhms(summaryItem.wwwUptime);
-    },
+  },
   label: (t) => t("widget.networkControllerSummary.data.wwwUptime"),
-  color: "rgba(255, 165, 18, 0.4)", // yellow
+  color: "rgba(255, 165, 18, 0.4)",
 } satisfies StatItem;
 
 function secondsToDhms(seconds: number): string {
   seconds = Number(seconds);
-  const day = Math.floor(seconds / (3600*24));
-  const hour = Math.floor(seconds % (3600*24) / 3600);
-  const min = Math.floor(seconds % 3600 / 60);
+  const day = Math.floor(seconds / (3600 * 24));
+  const hour = Math.floor((seconds % (3600 * 24)) / 3600);
+  const min = Math.floor((seconds % 3600) / 60);
   const sec = Math.floor(seconds % 60);
-  
-  if (day > 0) {return day + "d" + hour + "h" + min + "m";}
-  if (hour > 0) {return hour + "h" + min + "m";}
-  if (min > 0) {return min + "m" + sec + "s";}
+
+  if (day > 0) {
+    return day + "d" + hour + "h" + min + "m";
+  }
+  if (hour > 0) {
+    return hour + "h" + min + "m";
+  }
+  if (min > 0) {
+    return min + "m" + sec + "s";
+  }
   return sec + "s";
 }
-
 
 interface StatItem {
   icon: TablerIcon;
@@ -271,7 +278,7 @@ const StatCard = ({ item, data, t }: StatCardProps) => {
         className="summary-card"
         m="2cqmin"
         p="2.5cqmin"
-        bg= {item.color}
+        bg={item.color}
         style={{
           flex: 1,
         }}

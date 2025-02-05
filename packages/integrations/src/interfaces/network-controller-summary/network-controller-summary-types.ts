@@ -1,12 +1,11 @@
 export interface NetworkControllerSummary {
-  
   wanStatus: "enabled" | "disabled";
 
   wwwStatus: "enabled" | "disabled";
   wwwLatency: number;
   wwwPing: number;
   wwwUptime: number;
-  
+
   wifiStatus: "enabled" | "disabled";
   wifiUsers: number;
   wifiGuests: number;
