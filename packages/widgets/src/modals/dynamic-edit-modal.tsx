@@ -1,0 +1,62 @@
+"use client";
+
+import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { z } from "zod";
+
+import { createModal } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
+import { zodErrorMap } from "@homarr/validation/form";
+
+import { FormProvider, useForm } from "../_inputs/dynamic-form";
+
+export interface DynamicEditModalState {
+  options: Record<string, unknown>;
+}
+
+interface ModalProps {
+  kind: ["dynamic"];
+  onSuccessfulEdit: (value: DynamicEditModalState) => void;
+}
+
+export const DynamicEditModal = createModal<ModalProps>(({ actions }) => {
+  const t = useI18n();
+
+  // Translate the error messages
+  z.setErrorMap(zodErrorMap(t));
+  const form = useForm({
+    mode: "controlled",
+    validateInputOnBlur: true,
+    validateInputOnChange: true,
+  });
+
+  return (
+    <form
+      onSubmit={form.onSubmit((values) => {
+        console.log("values", values);
+        actions.closeModal();
+      })}
+    >
+      <FormProvider form={form}>
+        <Stack>
+          <TextInput label={t("section.dynamic.option.borderColor.label")} placeholder={"#000000"} />
+          <Group justify="space-between">
+            <Group justify="end" w={{ base: "100%", xs: "auto" }}>
+              <Button onClick={actions.closeModal} variant="subtle" color="gray">
+                {t("common.action.cancel")}
+              </Button>
+              <Button type="submit" color="teal">
+                {t("common.action.saveChanges")}
+              </Button>
+            </Group>
+          </Group>
+        </Stack>
+      </FormProvider>
+    </form>
+  );
+}).withOptions({
+  keepMounted: true,
+  defaultTitle(t) {
+    return t("item.edit.title");
+  },
+  size: "lg",
+});

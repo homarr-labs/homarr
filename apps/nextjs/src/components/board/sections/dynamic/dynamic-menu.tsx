@@ -1,8 +1,9 @@
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 
-import { useConfirmModal } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { DynamicEditModal } from "@homarr/widgets/modals";
 
 import type { DynamicSection } from "~/app/[locale]/boards/_types";
 import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
@@ -11,11 +12,23 @@ import { useDynamicSectionActions } from "./dynamic-actions";
 export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }) => {
   const t = useI18n();
   const tDynamic = useScopedI18n("section.dynamic");
+  const tItem = useScopedI18n("item");
+  const { openModal } = useModalAction(DynamicEditModal);
   const { removeDynamicSection } = useDynamicSectionActions();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
 
   if (!isEditMode) return null;
+
+  const openEditModal = () => {
+    openModal({
+      kind: ["dynamic"],
+      onSuccessfulEdit: () => {
+        // todo
+        return;
+      },
+    });
+  };
 
   const openRemoveModal = () => {
     openConfirmModal({
@@ -35,6 +48,11 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
+        <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
+        <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
+          {tItem("action.edit")}
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
           {tDynamic("action.remove")}
