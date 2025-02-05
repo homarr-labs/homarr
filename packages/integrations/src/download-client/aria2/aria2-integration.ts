@@ -3,15 +3,19 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
-import { CreateAria2, Aria2DownloadState } from './aria2-client';
 import path from "path"
+import type { Aria2Download, Aria2GetClient } from "./aria2-types";
 
 
 export class Aria2Integration extends DownloadClientIntegration {
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
-    const client = await this.getClientAsync();
-    // ?: Should recursive retrive all items or just few first item?
-    const [actives, waitings, stoppeds, globalstats] = await Promise.all([client.tellActive(), client.tellWaiting(0, 1000), client.tellStopped(0, 1000), client.getGlobalStat()]);
+    const client = this.getClient();
+    const [actives, waitings, stoppeds, globalstats] = await Promise.all([
+      client.tellActive(),
+      client.tellWaiting(0, 1000),
+      client.tellStopped(0, 1000),
+      client.getGlobalStat()
+    ]);
 
     const downloadings = [...actives, ...waitings, ...stoppeds];
 
@@ -24,23 +28,23 @@ export class Aria2Integration extends DownloadClientIntegration {
           down: Number(globalstats.downloadSpeed),
         }
       },
-      items: downloadings.map((item, idx) => {
-        const totalSize = Number(item.totalLength);
-        const completedSize = Number(item.completedLength);
+      items: downloadings.map((download, index) => {
+        const totalSize = Number(download.totalLength);
+        const completedSize = Number(download.completedLength);
         const progress = totalSize > 0 ? completedSize / totalSize : 0;
-        const itemName = item?.bittorrent?.info?.name || path.basename(item.files[0]?.path || "Unknown");
+        const itemName = download.bittorrent?.info.name ?? path.basename(download.files[0]?.path ?? "Unknown");
 
         return {
-          id: item.gid,
-          index: idx,
+          id: download.gid,
+          index: index,
           name: itemName,
-          type: !!item.bittorrent ? "torrent" : "http(s)",
+          type: download.bittorrent ? "torrent" : "http(s)",
           size: totalSize,
-          sent: Number(item.uploadLength),
-          downSpeed: Number(item.downloadSpeed),
-          upSpeed: Number(item.uploadSpeed),
-          time: this.calculateEta(completedSize, totalSize, Number(item.downloadSpeed)),
-          state: this.getState(item.status, !!item.bittorrent),
+          sent: Number(download.uploadLength),
+          downSpeed: Number(download.downloadSpeed),
+          upSpeed: Number(download.uploadSpeed),
+          time: this.calculateEta(completedSize, totalSize, Number(download.downloadSpeed)),
+          state: this.getState(download.status, !!download.bittorrent),
           progress: progress,
           category: [],
         }
@@ -49,26 +53,21 @@ export class Aria2Integration extends DownloadClientIntegration {
   }
   public async pauseQueueAsync(): Promise<void> {
 
-    const client = await this.getClientAsync();
+    const client = this.getClient();
     await client.pauseAll();
   }
   public async pauseItemAsync(item: DownloadClientItem): Promise<void> {
-    const client = await this.getClientAsync();
-    switch (item.state) {
-      case "downloading":
-      case "leeching":
-        await client.pause(item.id);
-        return;
-      default:
-        return;
+    const client = this.getClient();
+    if (item.state == "downloading" || item.state == "leeching") {
+      await client.pause(item.id);
     }
   }
   public async resumeQueueAsync(): Promise<void> {
-    const client = await this.getClientAsync();
+    const client = this.getClient();
     await client.unpauseAll();
   }
   public async resumeItemAsync(item: DownloadClientItem): Promise<void> {
-    const client = await this.getClientAsync();
+    const client = this.getClient();
     switch (item.state) {
       case "paused":
         await client.unpause(item.id);
@@ -78,7 +77,7 @@ export class Aria2Integration extends DownloadClientIntegration {
     }
   }
   public async deleteItemAsync(item: DownloadClientItem, fromDisk: boolean): Promise<void> {
-    const client = await this.getClientAsync();
+    const client = this.getClient();
     // Note: Remove download file is not support by aria2, replace with forceremove 
     switch (item.state) {
       case "downloading":
@@ -93,24 +92,48 @@ export class Aria2Integration extends DownloadClientIntegration {
   }
 
   public async testConnectionAsync(): Promise<void> {
-    const client = await this.getClientAsync();
-    await client.getVersion()
+    const client = this.getClient();
+    await client.getVersion();
   }
 
-  private async getClientAsync() {
-    const dispatcher = fetchWithTrustedCertificatesAsync
-    const aria2Client = await CreateAria2({
-      baseUrl: this.url("/jsonrpc").toString(),
-      secretKey: this.getSecretValue("apiKey"),
-      dispatcher: dispatcher,
-    });
-    return aria2Client
+  private getClient() {
+    const apiKey = this.getSecretValue("apiKey");
+    const url = this.url('/jsonrpc');
+
+    return new Proxy({}, {
+      get: (target, key: keyof Aria2GetClient) => {
+        return async (...args: Parameters<Aria2GetClient[typeof key]>) => {
+
+          const body = JSON.stringify({
+            'jsonrpc': '2.0',
+            'id': "",
+            'method': `aria2.${key}`,
+            "params": [apiKey, ...args],
+          });
+
+          return await fetchWithTrustedCertificatesAsync(url, { method: "POST", body })
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error(response.statusText);
+              }
+              return ((await response.json()) as { result: ReturnType<Aria2GetClient[typeof key]> }).result;
+            })
+            .catch((error) => {
+              if (error instanceof Error) {
+                throw new Error(error.message);
+              } else {
+                throw new Error("Error communicating with NzbGet");
+              }
+            });
+        };
+      },
+    }) as Aria2GetClient;
   }
 
-  private getState(aria2Status: Aria2DownloadState, isTorrent: boolean): DownloadClientItem["state"] {
+  private getState(aria2Status: Aria2Download["status"], isTorrent: boolean): DownloadClientItem["state"] {
     return isTorrent ? this.getTorrentState(aria2Status) : this.getNonTorrentState(aria2Status)
   }
-  private getNonTorrentState(aria2Status: Aria2DownloadState): DownloadClientItem["state"] {
+  private getNonTorrentState(aria2Status: Aria2Download["status"]): DownloadClientItem["state"] {
     switch (aria2Status) {
       case 'active':
         return 'downloading';
@@ -127,7 +150,7 @@ export class Aria2Integration extends DownloadClientIntegration {
         return 'unknown';
     }
   }
-  private getTorrentState(aria2Status: Aria2DownloadState): DownloadClientItem["state"] {
+  private getTorrentState(aria2Status: Aria2Download["status"]): DownloadClientItem["state"] {
     switch (aria2Status) {
       case 'active':
         return 'leeching'
