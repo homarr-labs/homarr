@@ -29,7 +29,6 @@ export class Aria2Integration extends DownloadClientIntegration {
     ]);
 
     const downloadings = [...actives, ...waitings, ...stoppeds];
-
     return {
       status: {
         types: ["torrent", "miscellaneous"],
@@ -114,20 +113,20 @@ export class Aria2Integration extends DownloadClientIntegration {
               method: `aria2.${method}`,
               params: [`token:${apiKey}`, ...args],
             });
-
             return await fetchWithTrustedCertificatesAsync(url, { method: "POST", body })
               .then(async (response) => {
+                const responseBody = (await response.json()) as { result: ReturnType<Aria2GetClient[typeof method]> };
+
                 if (!response.ok) {
                   throw new Error(response.statusText);
                 }
-                const responseBody = (await response.json()) as { result: ReturnType<Aria2GetClient[typeof method]> };
                 return responseBody.result;
               })
               .catch((error) => {
                 if (error instanceof Error) {
                   throw new Error(error.message);
                 } else {
-                  throw new Error("Error communicating with NzbGet");
+                  throw new Error("Error communicating with Aria2");
                 }
               });
           };

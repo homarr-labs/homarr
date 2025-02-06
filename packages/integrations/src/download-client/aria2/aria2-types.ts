@@ -11,7 +11,6 @@ export interface Aria2GetClient {
   pauseAll: Aria2VoidFunc<"OK">;
   unpause: Aria2GidFunc<AriaGID>;
   unpauseAll: Aria2VoidFunc<"OK">;
-
   remove: Aria2GidFunc<AriaGID>;
   forceRemove: Aria2GidFunc<AriaGID>;
   removeDownloadResult: Aria2GidFunc<"OK">;

@@ -145,7 +145,7 @@ const createAria2Container = () => {
       ARIA2RPCPORT: "443",
       RPC_SECRET: API_KEY,
     })
-    .withWaitStrategy(Wait.forLogMessage("Successfully started Caddy"));
+    .withWaitStrategy(Wait.forLogMessage("listening on TCP port"));
 };
 
 const createAria2Intergration = (container: StartedTestContainer, apikey: string) => {
@@ -163,15 +163,17 @@ const createAria2Intergration = (container: StartedTestContainer, apikey: string
 };
 
 const aria2AddItemAsync = async (container: StartedTestContainer, apiKey: string, integration: Aria2Integration) => {
-  await fetch(`http://${container.getHost()}:${container.getMappedPort(6789)}/jsonrpc`, {
+  await fetch(`http://${container.getHost()}:${container.getMappedPort(8080)}/jsonrpc`, {
     method: "POST",
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: btoa(["Homarr", Date.now().toString(), Math.random()].join(".")), // unique id per request
       method: "aria2.addUri",
-      params: [`token:${apiKey}`, "http://google.com"],
+      params: [`token:${apiKey}`, ["https://google.com"]],
     }),
   });
+
+  await delay(3000);
 
   const {
     items: [item],
@@ -183,3 +185,5 @@ const aria2AddItemAsync = async (container: StartedTestContainer, apiKey: string
 
   return item;
 };
+const delay = (microseconds: number) => new Promise(resolve => setTimeout(resolve, microseconds));
+
