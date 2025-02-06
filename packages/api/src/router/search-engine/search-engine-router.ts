@@ -195,6 +195,12 @@ export const searchEngineRouter = createTRPCRouter({
     .requiresPermission("search-engine-full-all")
     .input(validation.common.byId)
     .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(users)
+        .set({
+          defaultSearchEngineId: null,
+        })
+        .where(eq(users.defaultSearchEngineId, input.id));
       await ctx.db.delete(searchEngines).where(eq(searchEngines.id, input.id));
     }),
 });

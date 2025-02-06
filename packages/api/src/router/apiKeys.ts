@@ -1,6 +1,8 @@
+import { z } from "zod";
+
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { createId, db } from "@homarr/db";
+import { createId, db, eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
@@ -39,4 +41,10 @@ export const apiKeysRouter = createTRPCRouter({
       apiKey: `${id}.${randomToken}`,
     };
   }),
+  delete: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ apiKeyId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(apiKeys).where(eq(apiKeys.id, input.apiKeyId)).limit(1);
+    }),
 });

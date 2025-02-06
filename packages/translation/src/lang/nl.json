@@ -947,7 +947,8 @@
         "moveUp": "Omhoog",
         "moveDown": "Omlaag",
         "createAbove": "Nieuwe categorie hierboven",
-        "createBelow": "Nieuwe categorie hieronder"
+        "createBelow": "Nieuwe categorie hieronder",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nieuwe categorie",
@@ -966,6 +967,10 @@
           "create": "Nieuwe categorie",
           "changePosition": "Positie wijzigen"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1193,6 +1198,14 @@
         "dateFormat": {
           "label": "Datumnotatie",
           "description": "Hoe de datum eruit moet zien"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -2571,10 +2584,17 @@
               "button": {
                 "createApiToken": "API-token aanmaken"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Aangemaakt door"
+                  "createdBy": "Aangemaakt door",
+                  "actions": ""
                 }
               }
             }

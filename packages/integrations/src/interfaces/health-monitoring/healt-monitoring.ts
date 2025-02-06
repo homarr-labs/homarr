@@ -12,7 +12,7 @@ export interface HealthMonitoring {
   };
   rebootRequired: boolean;
   availablePkgUpdates: number;
-  cpuTemp: number;
+  cpuTemp: number | undefined;
   fileSystem: {
     deviceName: string;
     used: string;
