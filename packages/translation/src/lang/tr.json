@@ -1172,21 +1172,21 @@
       "description": "Geçerli tarih ve saati görüntüler.",
       "option": {
         "customTitleToggle": {
-          "label": "Özel Başlık/Şehir gösterimi",
-          "description": "Saatin üstüne özel bir başlık veya şehir/ülke adını ekleyin."
+          "label": "Özel Başlık/Şehir göster",
+          "description": "Saatin üstüne özel bir başlık veya şehir/ülke adı ekleminizi sağlar."
         },
         "customTitle": {
           "label": "Başlık"
         },
         "is24HourFormat": {
-          "label": "24 saatlik format",
-          "description": "12 saatlik format yerine 24 saatlik formatı kullanın"
+          "label": "24 saatlik biçim",
+          "description": "12 saatlik format yerine 24 saatlik biçimi kullanın"
         },
         "showSeconds": {
-          "label": "Saniyeleri görüntüle"
+          "label": "Saniyeleri göster"
         },
         "useCustomTimezone": {
-          "label": "Sabit bir zaman dilimi kullanın"
+          "label": "Sabit zaman dilimi kullan"
         },
         "timezone": {
           "label": "Saat dilimi",
