@@ -805,7 +805,7 @@
       "apply": "應用",
       "backToOverview": "返回總覽",
       "create": "創建",
-      "createAnother": "",
+      "createAnother": "創建並重新開始",
       "edit": "編輯",
       "import": "匯入",
       "insert": "插入",
@@ -948,7 +948,7 @@
         "moveDown": "下移",
         "createAbove": "新分類之上",
         "createBelow": "新分類之下",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "於分頁中開啟全部"
       },
       "create": {
         "title": "創建分類",
@@ -969,8 +969,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "於分頁中開啟全部",
+        "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，Homarr 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
       }
     }
   },
@@ -1200,12 +1200,12 @@
           "description": "日期應該是什麼樣式"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "自訂時間格式",
+          "description": "使用 ISO 8601 格式化時間 (此操作將覆蓋其他選項)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "自訂日期格式",
+          "description": "使用 ISO 8601 格式化日期 (此操作將覆蓋其他選項)"
         }
       }
     },
@@ -2586,15 +2586,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "刪除 API 密鑰",
+                  "text": "這將永久刪除 API 金鑰，使用此金鑰的 API 客戶端將無法再進行身份驗證或執行 API 請求，此操作無法撤銷"
                 }
               },
               "table": {
                 "header": {
                   "id": "ID",
                   "createdBy": "創建者",
-                  "actions": ""
+                  "actions": "動作"
                 }
               }
             }

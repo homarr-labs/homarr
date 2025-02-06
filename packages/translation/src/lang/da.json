@@ -2586,15 +2586,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Slet API token",
+                  "text": "Dette vil permanent slette API-token. API-klienter der bruger dette token kan ikke længere godkende og udføre API-anmodninger. Denne handling kan ikke fortrydes."
                 }
               },
               "table": {
                 "header": {
                   "id": "ID",
                   "createdBy": "Oprettet af",
-                  "actions": ""
+                  "actions": "Handlinger"
                 }
               }
             }
