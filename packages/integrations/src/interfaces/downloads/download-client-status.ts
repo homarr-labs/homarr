@@ -8,7 +8,7 @@ export interface DownloadClientStatus {
     down: number;
     up?: number;
   };
-  types: ("usenet" | "torrent" | 'http(s)')[];
+  types: ("usenet" | "torrent" | "miscellaneous")[];
 }
 export interface ExtendedClientStatus {
   integration: Pick<Integration, "id" | "name" | "kind"> & { updatedAt: Date };

@@ -62,7 +62,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
       showCompletedTorrent: factory.switch({
         defaultValue: true,
       }),
-      showCompletedHttp: factory.switch({
+      showCompletedMiscellaneous: factory.switch({
         defaultValue: true,
       }),
       activeTorrentThreshold: factory.number({
@@ -97,9 +97,9 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         shouldHide: (_, integrationKinds) =>
           !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
       },
-      showCompletedHttp: {
+      showCompletedMiscellaneous: {
         shouldHide: (_, integrationKinds) =>
-          !getIntegrationKindsByCategory("http(s)").some((kinds) => integrationKinds.includes(kinds)),
+          !getIntegrationKindsByCategory("miscellaneous").some((kinds) => integrationKinds.includes(kinds)),
       },
       activeTorrentThreshold: {
         shouldHide: (_, integrationKinds) =>

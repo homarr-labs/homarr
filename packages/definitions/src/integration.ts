@@ -53,7 +53,7 @@ export const integrationDefs = {
     name: "Aria2",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/aria2.png",
-    category: ["downloadClient", "torrent", "http(s)"],
+    category: ["downloadClient", "torrent", "miscellaneous"],
   },
   sonarr: {
     name: "Sonarr",
@@ -181,11 +181,11 @@ export const getIntegrationKindsByCategory = <TCategory extends IntegrationCateg
  */
 export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
   [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number]
-  ? Key
-  : never;
+    ? Key
+    : never;
 }[keyof typeof integrationDefs] extends infer U
   ? //Needed to simplify the type when using it
-  U
+    U
   : never;
 
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
@@ -199,7 +199,7 @@ export type IntegrationCategory =
   | "downloadClient"
   | "usenet"
   | "torrent"
-  | "http(s)"
+  | "miscellaneous"
   | "smartHomeServer"
   | "indexerManager"
   | "healthMonitoring"

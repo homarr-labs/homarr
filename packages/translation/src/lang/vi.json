@@ -1621,8 +1621,8 @@
         "showCompletedTorrent": {
           "label": "Hiển thị các mục Torrent đã hoàn thành"
         },
-        "showCompletedHttp": {
-          "label": "Hiển thị các mục Http(s) đã hoàn thành"
+        "showCompletedMiscellaneous": {
+          "label": "Hiển thị các mục khác đã hoàn thành"
         },
         "activeTorrentThreshold": {
           "label": ""

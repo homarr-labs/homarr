@@ -21,7 +21,7 @@ export const downloadClientItemSchema = z.object({
   /** Filename */
   name: z.string(),
   /** Download Client identifier */
-  type: z.enum(["torrent", "usenet", "http(s)"]),
+  type: z.enum(["torrent", "usenet", "miscellaneous"]),
   /** Item size in Bytes */
   size: z.number(),
   /** Total uploaded in Bytes, only required for Torrent items */
