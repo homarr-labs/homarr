@@ -183,7 +183,8 @@ export default function DownloadClientsWidget({
                     (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
                     progress !== 1)) ||
                 (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)) ||
-                (type === "miscellaneous" && ((progress === 1 && options.showCompletedMiscellaneous) || progress !== 1)),
+                (type === "miscellaneous" &&
+                  ((progress === 1 && options.showCompletedMiscellaneous) || progress !== 1)),
             )
             //Filter following user quick setting
             .filter(

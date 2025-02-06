@@ -56,7 +56,7 @@ export class Aria2Integration extends DownloadClientIntegration {
           downSpeed: Number(download.downloadSpeed),
           upSpeed: Number(download.uploadSpeed),
           time: Aria2Integration.calculateEta(completedSize, totalSize, Number(download.downloadSpeed)),
-          state: this.getState(download.status, Boolean(download.bittorrent)),
+          state: Aria2Integration.getState(download.status, Boolean(download.bittorrent)),
           category: [],
           progress,
         };
@@ -79,7 +79,7 @@ export class Aria2Integration extends DownloadClientIntegration {
   }
   public async resumeItemAsync(item: DownloadClientItem): Promise<void> {
     const client = this.getClient();
-    if (item.state == "paused") {
+    if (item.state === "paused") {
       await client.unpause(item.id);
     }
   }
@@ -136,7 +136,7 @@ export class Aria2Integration extends DownloadClientIntegration {
     ) as Aria2GetClient;
   }
 
-  private getState(aria2Status: Aria2Download["status"], isTorrent: boolean): DownloadClientItem["state"] {
+  static getState(aria2Status: Aria2Download["status"], isTorrent: boolean): DownloadClientItem["state"] {
     return isTorrent
       ? Aria2Integration.getNonTorrentState(aria2Status)
       : Aria2Integration.getNonTorrentState(aria2Status);

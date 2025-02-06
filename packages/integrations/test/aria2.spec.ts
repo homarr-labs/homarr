@@ -168,7 +168,7 @@ const aria2AddItemAsync = async (container: StartedTestContainer, apiKey: string
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: btoa(["Homarr", Date.now().toString(), Math.random()].join(".")), // unique id per request
-      method: `aria2.addUri`,
+      method: "aria2.addUri",
       params: [`token:${apiKey}`, "http://google.com"],
     }),
   });
