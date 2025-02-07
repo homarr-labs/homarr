@@ -302,6 +302,7 @@ export const layouts = sqliteTable("layout", {
   boardId: text()
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
+  columnCount: int().notNull(),
   breakpoint: int().notNull().default(0),
 });
 
@@ -627,7 +628,12 @@ export const sectionRelations = relations(sections, ({ many, one }) => ({
     references: [boards.id],
   }),
   collapseStates: many(sectionCollapseStates),
-  layouts: many(layoutSections),
+  layouts: many(layoutSections, {
+    relationName: "layoutSectionRelations__section__sectionId",
+  }),
+  children: many(layoutSections, {
+    relationName: "layoutSectionRelations__section__parentSectionId",
+  }),
 }));
 
 export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({ one }) => ({

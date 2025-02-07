@@ -1,14 +1,9 @@
 import type { ChangeEvent } from "react";
 import { Anchor, Card, Checkbox, Group, Stack, Text } from "@mantine/core";
 
-import { objectEntries, objectKeys } from "@homarr/common";
-import { boardSizes } from "@homarr/old-schema";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-type BoardSize = (typeof boardSizes)[number];
-
-export type BoardSizeRecord = Record<BoardSize, boolean | null>;
-export type BoardSelectionMap = Map<string, BoardSizeRecord>;
+export type BoardSelectionMap = Map<string, boolean>;
 
 interface BoardSelectionCardProps {
   selections: BoardSelectionMap;
@@ -16,11 +11,8 @@ interface BoardSelectionCardProps {
 }
 
 const allChecked = (map: BoardSelectionMap) => {
-  return [...map.values()].every((selection) => groupChecked(selection));
+  return [...map.values()].every((selection) => selection);
 };
-
-const groupChecked = (selection: BoardSizeRecord) =>
-  objectEntries(selection).every(([_, value]) => value === true || value === null);
 
 export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelectionCardProps) => {
   const tBoardSelection = useScopedI18n("init.step.import.boardSelection");
@@ -29,50 +21,14 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
 
   const handleToggleAll = () => {
     updateSelections((selections) => {
-      const updated = new Map(selections);
-
-      [...selections.entries()].forEach(([name, selection]) => {
-        objectKeys(selection).forEach((size) => {
-          if (selection[size] === null) return;
-          selection[size] = !areAllChecked;
-        });
-
-        updated.set(name, selection);
-      });
-
-      return updated;
+      return new Map([...selections.keys()].map((name) => [name, !areAllChecked] as const));
     });
   };
 
-  const registerToggleGroup = (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
+  const registerToggle = (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
     updateSelections((selections) => {
       const updated = new Map(selections);
-      const selection = selections.get(name);
-
-      if (!selection) return updated;
-
-      objectKeys(selection).forEach((size) => {
-        if (selection[size] === null) return;
-        selection[size] = event.target.checked;
-      });
-
-      updated.set(name, selection);
-
-      return updated;
-    });
-  };
-
-  const registerToggle = (name: string, size: BoardSize) => (event: ChangeEvent<HTMLInputElement>) => {
-    updateSelections((selections) => {
-      const updated = new Map(selections);
-      const selection = selections.get(name);
-
-      if (!selection) return updated;
-
-      selection[size] = event.target.checked;
-
-      updated.set(name, selection);
-
+      updated.set(name, event.target.checked);
       return updated;
     });
   };
@@ -100,53 +56,17 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
         </Stack>
 
         <Stack gap="sm">
-          {[...selections.entries()].map(([name, selection]) => (
+          {[...selections.entries()].map(([name, selected]) => (
             <Card key={name} withBorder>
-              <Group justify="space-between" align="center" visibleFrom="md">
-                <Checkbox
-                  checked={groupChecked(selection)}
-                  onChange={registerToggleGroup(name)}
-                  label={
-                    <Text fw={500} size="sm">
-                      {name}
-                    </Text>
-                  }
-                />
-                <Group>
-                  {boardSizes.map((size) => (
-                    <Checkbox
-                      key={size}
-                      disabled={selection[size] === null}
-                      checked={selection[size] ?? undefined}
-                      onChange={registerToggle(name, size)}
-                      label={t(`board.action.oldImport.form.screenSize.option.${size}`)}
-                    />
-                  ))}
-                </Group>
-              </Group>
-              <Stack hiddenFrom="md">
-                <Checkbox
-                  checked={groupChecked(selection)}
-                  onChange={registerToggleGroup(name)}
-                  label={
-                    <Text fw={500} size="sm">
-                      {name}
-                    </Text>
-                  }
-                />
-                <Stack gap="sm" ps="sm">
-                  {objectEntries(selection)
-                    .filter(([_, value]) => value !== null)
-                    .map(([size, value]) => (
-                      <Checkbox
-                        key={size}
-                        checked={value ?? undefined}
-                        onChange={registerToggle(name, size)}
-                        label={`screenSize.${size}`}
-                      />
-                    ))}
-                </Stack>
-              </Stack>
+              <Checkbox
+                checked={selected}
+                onChange={registerToggle(name)}
+                label={
+                  <Text fw={500} size="sm">
+                    {name}
+                  </Text>
+                }
+              />
             </Card>
           ))}
         </Stack>

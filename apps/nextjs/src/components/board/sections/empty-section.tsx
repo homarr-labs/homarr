@@ -10,14 +10,15 @@ interface Props {
 }
 
 export const BoardEmptySection = ({ section }: Props) => {
-  const { itemIds } = useSectionItems(section);
+  const { items, innerSections } = useSectionItems(section.id);
+  const totalLength = items.length + innerSections.length;
   const [isEditMode] = useEditMode();
 
   return (
     <GridStack
       section={section}
       style={{ transitionDuration: "0s" }}
-      className={combineClasses("min-row", itemIds.length > 0 || isEditMode ? undefined : "grid-stack-empty-wrapper")}
+      className={combineClasses("min-row", totalLength > 0 || isEditMode ? undefined : "grid-stack-empty-wrapper")}
     />
   );
 };

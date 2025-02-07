@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod";
@@ -1042,6 +1043,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           layouts: true,
         },
       },
+      layouts: true,
       userPermissions: {
         where: eq(boardUserPermissions.userId, userId ?? ""),
         columns: {
@@ -1061,10 +1063,11 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
     });
   }
 
-  const { sections, items, ...otherBoardProperties } = board;
+  const { sections, items, layouts, ...otherBoardProperties } = board;
 
   return {
     ...otherBoardProperties,
+    layouts: layouts.map(({ boardId: _, ...layout }) => layout),
     sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,

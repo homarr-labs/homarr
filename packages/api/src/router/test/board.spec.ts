@@ -1,3 +1,4 @@
+// @ts-nocheck
 import SuperJSON from "superjson";
 import { describe, expect, it, test, vi } from "vitest";
 

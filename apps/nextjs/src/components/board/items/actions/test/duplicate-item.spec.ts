@@ -1,51 +1,61 @@
 import { describe, expect, test, vi } from "vitest";
 
-import type { Board } from "~/app/[locale]/boards/_types";
 import { duplicateItemCallback } from "../duplicate-item";
-import * as emptyPosition from "../empty-position";
-import { createEmptySection, createItem } from "./shared";
+import * as emptyPositionModule from "../empty-position";
+import { BoardMockBuilder, ItemMockBuilder, LayoutMockBuilder } from "./shared";
 
 describe("item actions duplicate-item", () => {
   test("should copy it in the same section", () => {
-    const spy = vi.spyOn(emptyPosition, "getFirstEmptyPosition");
-    spy.mockReturnValue({ xOffset: 5, yOffset: 5 });
-    const currentSection = createEmptySection("2", 1);
-    const currentItem = createItem({
-      id: "1",
-      xOffset: 1,
-      yOffset: 3,
-      width: 3,
-      height: 2,
-      kind: "minecraftServerStatus",
+    // Arrange
+    const itemKind = "minecraftServerStatus";
+    const emptyPosition = { xOffset: 5, yOffset: 5 };
+    const currentSectionId = "2";
+    const layoutId = "1";
+    const currentItemSize = { height: 2, width: 3 };
+
+    const layout = new LayoutMockBuilder({ id: layoutId, columnCount: 4 }).build();
+    const currentItem = new ItemMockBuilder({
+      kind: itemKind,
       integrationIds: ["1"],
       options: { address: "localhost" },
       advancedOptions: { customCssClasses: ["test"] },
-    });
-    const otherItem = createItem({
-      id: "2",
-    });
-    currentSection.items.push(currentItem, otherItem);
-    const input = {
-      columnCount: 10,
-      sections: [createEmptySection("1", 0), currentSection, createEmptySection("3", 2)],
-    } satisfies Pick<Board, "sections" | "columnCount">;
+    })
+      .addLayout({ layoutId, sectionId: currentSectionId, ...currentItemSize })
+      .build();
+    const otherItem = new ItemMockBuilder({ id: "2" }).addLayout({ layoutId }).build();
 
-    const result = duplicateItemCallback({ itemId: currentItem.id })(input as unknown as Board);
+    const board = new BoardMockBuilder()
+      .addLayout(layout)
+      .addItem(currentItem)
+      .addItem(otherItem)
+      .addEmptySection({ id: "1", yOffset: 2 })
+      .addEmptySection({ id: currentSectionId, yOffset: 0 })
+      .addEmptySection({ id: "3", yOffset: 1 })
+      .build();
 
-    const section = result.sections.find((section) => section.id === "2");
-    expect(section?.items.length).toBe(3);
-    const duplicatedItem = section?.items.find((item) => item.id !== currentItem.id && item.id !== otherItem.id);
+    const spy = vi.spyOn(emptyPositionModule, "getFirstEmptyPosition");
+    spy.mockReturnValue(emptyPosition);
+
+    // Act
+    const result = duplicateItemCallback({ itemId: currentItem.id })(board);
+
+    // Assert
+    expect(result.items.length).toBe(3);
+    const duplicatedItem = result.items.find((item) => item.id !== currentItem.id && item.id !== otherItem.id);
 
     expect(duplicatedItem).toEqual(
       expect.objectContaining({
-        kind: "minecraftServerStatus",
-        xOffset: 5,
-        yOffset: 5,
-        width: 3,
-        height: 2,
-        integrationIds: ["1"],
-        options: { address: "localhost" },
-        advancedOptions: { customCssClasses: ["test"] },
+        kind: itemKind,
+        integrationIds: currentItem.integrationIds,
+        options: currentItem.options,
+        advancedOptions: currentItem.advancedOptions,
+        layouts: [
+          expect.objectContaining({
+            ...emptyPosition,
+            ...currentItemSize,
+            sectionId: currentSectionId,
+          }),
+        ],
       }),
     );
   });

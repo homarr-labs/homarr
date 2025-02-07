@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
+import type { Board } from "../_types";
 import { updateBoardName } from "./_client";
 
 const BoardContext = createContext<{
@@ -115,4 +116,19 @@ export const useEditMode = () => {
   }
 
   return [context.isEditMode, context.setEditMode] as const;
+};
+
+export const getCurrentLayout = (board: Board) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+  return board.layouts
+    .sort((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint)
+    .find((layout) => layout.breakpoint <= window.innerWidth)?.id!;
+};
+
+export const getBoardLayouts = (board: Board) => [board.id];
+
+export const useLayouts = () => {
+  const board = useRequiredBoard();
+
+  return getBoardLayouts(board);
 };
