@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 
-import * as boardContext from "~/app/[locale]/boards/(content)/_context";
+import * as boardContext from "@homarr/boards/context";
+
 import { createItemCallback } from "../create-item";
 import * as emptyPositionModule from "../empty-position";
 import { BoardMockBuilder, DynamicSectionMockBuilder, ItemMockBuilder, LayoutMockBuilder } from "./shared";

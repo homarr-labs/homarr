@@ -1,5 +1,6 @@
+import { getCurrentLayout } from "@homarr/boards/context";
+
 import type { Board } from "~/app/[locale]/boards/_types";
-import { getCurrentLayout } from "~/app/[locale]/boards/(content)/_context";
 
 export interface MoveAndResizeItemInput {
   itemId: string;
