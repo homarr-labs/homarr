@@ -1,3 +1,28 @@
+## [1.5.0](https://github.com/homarr-labs/homarr/compare/v1.4.0...v1.5.0) (2025-02-07)
+
+### Features
+
+* add api key delete ([#2210](https://github.com/homarr-labs/homarr/issues/2210)) ([8058b62](https://github.com/homarr-labs/homarr/commit/8058b6207ad4be1d646182b67b810c397097c054))
+* custom time/date format in clock widget ([#2180](https://github.com/homarr-labs/homarr/issues/2180)) ([be603ba](https://github.com/homarr-labs/homarr/commit/be603badfed63ad7583a5265bef3b9e85f6b6b61))
+* improve consistency and design ([#1867](https://github.com/homarr-labs/homarr/issues/1867)) ([5f36d8b](https://github.com/homarr-labs/homarr/commit/5f36d8b12528fd2c8c3da783b266d614203ec46a))
+* open all apps in category ([#2212](https://github.com/homarr-labs/homarr/issues/2212)) ([bb67bf5](https://github.com/homarr-labs/homarr/commit/bb67bf5fa2968d91ad3522ebae960a6880f85987))
+
+### Bug Fixes
+
+* **deps:** update dependency @tabler/icons-react to ^3.30.0 ([#2266](https://github.com/homarr-labs/homarr/issues/2266)) ([c849109](https://github.com/homarr-labs/homarr/commit/c849109df5b622aca8cf7b392b94685581bf6b32))
+* **deps:** update dependency drizzle-orm to ^0.39.2 ([#2255](https://github.com/homarr-labs/homarr/issues/2255)) ([3d0b319](https://github.com/homarr-labs/homarr/commit/3d0b319a88bdb8d955d7942553d92988bf5b2c28))
+* **deps:** update dependency ioredis to v5.5.0 ([#2264](https://github.com/homarr-labs/homarr/issues/2264)) ([0da5a1b](https://github.com/homarr-labs/homarr/commit/0da5a1b0fb86ff2074f12a5e028fcc09ff94a4a5))
+* **deps:** update dependency jotai to ^2.11.3 ([#2215](https://github.com/homarr-labs/homarr/issues/2215)) ([a385337](https://github.com/homarr-labs/homarr/commit/a3853372687aed543fad2dd89bfb13871af0f2c1))
+* **deps:** update dependency octokit to ^4.1.1 ([#2262](https://github.com/homarr-labs/homarr/issues/2262)) ([3cbb656](https://github.com/homarr-labs/homarr/commit/3cbb656ee9b540d2dd4c7db37946efacbbfdc522))
+* **deps:** update dependency sass to ^1.84.0 ([#2257](https://github.com/homarr-labs/homarr/issues/2257)) ([7bbbaf3](https://github.com/homarr-labs/homarr/commit/7bbbaf343befaaa3d03a91e932f683c5aec4b41e))
+* **deps:** update dependency semver-parser to ^4.1.8 ([#2216](https://github.com/homarr-labs/homarr/issues/2216)) ([46cfb23](https://github.com/homarr-labs/homarr/commit/46cfb2383b6628472d3972da2166884330bf6d24))
+* **deps:** update dependency trpc-to-openapi to ^2.1.3 ([#2244](https://github.com/homarr-labs/homarr/issues/2244)) ([c623a42](https://github.com/homarr-labs/homarr/commit/c623a420cadce677e39b99fceeb3f3a391f879ea))
+* **deps:** update dependency typescript-eslint to ^8.23.0 ([#2232](https://github.com/homarr-labs/homarr/issues/2232)) ([83044d2](https://github.com/homarr-labs/homarr/commit/83044d23dd7accb1b3a21cdde1e034969a494ccb))
+* **deps:** update testcontainers-node monorepo to ^10.18.0 ([#2259](https://github.com/homarr-labs/homarr/issues/2259)) ([7a8e671](https://github.com/homarr-labs/homarr/commit/7a8e67120576b333bfcf73171b54ccfeeda0d44a))
+* **deps:** update turbo monorepo to ^2.4.0 ([#2207](https://github.com/homarr-labs/homarr/issues/2207)) ([6ce7bc0](https://github.com/homarr-labs/homarr/commit/6ce7bc0ee2dcd5150d72fdbc2070c05ba836ebd5))
+* foreign key reference default search engine ([#2211](https://github.com/homarr-labs/homarr/issues/2211)) ([26468a4](https://github.com/homarr-labs/homarr/commit/26468a413795afa7cc3444058bfc73435fb7f2a0))
+* make system health temp optional ([#2247](https://github.com/homarr-labs/homarr/issues/2247)) ([da09826](https://github.com/homarr-labs/homarr/commit/da098263930c9c9611a1505d52d3816bd2a49e7e))
+
 ## [1.4.0](https://github.com/homarr-labs/homarr/compare/v1.3.1...v1.4.0) (2025-01-31)
 
 ### Features
