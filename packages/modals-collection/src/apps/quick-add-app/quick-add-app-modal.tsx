@@ -5,6 +5,6 @@ export const QuickAddAppModal = createModal(({ actions }) => {
   return <AppNewForm showCreateAnother={false} showBackToOverview={false} />;
 }).withOptions({
   defaultTitle(t) {
-    return "TEST"; // TODO: change
+    return t("board.action.quickCreateApp.modal.title");
   },
 });
