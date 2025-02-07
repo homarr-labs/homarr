@@ -8,13 +8,13 @@ import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
+import { QuickAddAppModal } from "../../../modals-collection/src";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
-import { useModalAction } from "@homarr/modals";
-import { QuickAddAppModal } from "../../../modals-collection/src";
 
 export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">) => {
   const t = useI18n();
@@ -57,7 +57,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
             })}
           </Text>
         }
-        styles={{ root: { flex: '1' } }}
+        styles={{ root: { flex: "1" } }}
         {...form.getInputProps(`options.${property}`)}
       />
       <Button onClick={() => openModal({})}>Quick Create</Button>

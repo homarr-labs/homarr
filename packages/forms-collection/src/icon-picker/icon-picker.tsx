@@ -24,8 +24,8 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import classes from "./icon-picker.module.css";
 import { UploadMedia } from "../upload-media/upload-media";
+import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
   value?: string;

@@ -8,6 +8,7 @@ import type { z } from "zod";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
+
 import { IconPicker } from "../icon-picker/icon-picker";
 
 type FormType = z.infer<typeof validation.app.manage>;
@@ -24,12 +25,12 @@ interface AppFormProps {
 }
 
 export const AppForm = ({
-                          buttonLabels,
-                          showBackToOverview,
-                          handleSubmit: originalHandleSubmit,
-                          initialValues,
-                          isPending,
-                        }: AppFormProps) => {
+  buttonLabels,
+  showBackToOverview,
+  handleSubmit: originalHandleSubmit,
+  initialValues,
+  isPending,
+}: AppFormProps) => {
   const t = useI18n();
 
   const form = useZodForm(validation.app.manage, {
@@ -46,9 +47,9 @@ export const AppForm = ({
     const redirect = !shouldCreateAnother.current;
     const afterSuccess = shouldCreateAnother.current
       ? () => {
-        form.reset();
-        shouldCreateAnother.current = false;
-      }
+          form.reset();
+          shouldCreateAnother.current = false;
+        }
       : undefined;
     originalHandleSubmit(values, redirect, afterSuccess);
   };
@@ -56,16 +57,17 @@ export const AppForm = ({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")}/>
+        <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker {...form.getInputProps("iconUrl")} />
-        <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")}/>
-        <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")}/>
+        <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
+        <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
         <Group justify="end">
-
-          {showBackToOverview && (<Button variant="default" component={Link} href="/manage/apps">
-            {t("common.action.backToOverview")}
-          </Button>)}
+          {showBackToOverview && (
+            <Button variant="default" component={Link} href="/manage/apps">
+              {t("common.action.backToOverview")}
+            </Button>
+          )}
           {buttonLabels.submitAndCreateAnother && (
             <Button
               type="submit"

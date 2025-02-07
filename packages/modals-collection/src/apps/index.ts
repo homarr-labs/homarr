@@ -1,1 +1,1 @@
-export { QuickAddAppModal } from './quick-add-app/quick-add-app-modal';
+export { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
