@@ -708,7 +708,8 @@
         "wrongPath": {
           "title": "Wrong path",
           "message": "The path is probably not correct"
-        }
+        },
+        "tooManyRequests": "Too many requests in a given time"
       }
     },
     "secrets": {
@@ -1871,6 +1872,72 @@
         "maximumAmountPosts": {
           "label": "Amount posts limit"
         }
+      }
+    },
+    "networkControllerSummary": {
+      "option": {
+        "content": {
+          "option": {
+            "wwwLatency": {
+              "label": "WWW Latency"
+            },
+            "wwwPing": {
+              "label": "WWW Ping"
+            },
+            "wwwUptime": {
+              "label": "WWW Uptime"
+            },
+            "wifiUsers": {
+              "label": "WiFi Users"
+            },
+            "lanUsers": {
+              "label": "LAN Users"
+            },
+            "lanGuests": {
+              "label": "LAN Guests"
+            },
+            "vpnUsers": {
+              "label": "VPN Users"
+            },
+            "wifiGuests": {
+              "label": "WiFi Guests"
+            }
+          },
+          "label": "Widget Content (select in order of appearence)"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "row": {
+              "label": "Horizontal"
+            },
+            "column": {
+              "label": "Vertical"
+            }
+          }
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "No data available, all integrations disconnected",
+        "unknownContentOption": "Unknown content option for network controller summary widget: "
+      },
+      "data": {
+        "wifiUsers": "WiFi Users",
+        "lanUsers": "LAN Users",
+        "vpnUsers": "VPN Users",
+        "wifiGuests": "WiFi Guests",
+        "lanGuests": "LAN Guests",
+        "wwwLatency": "WWW Latency",
+        "wwwPing": "WWW Ping",
+        "wwwUptime": "WWW Uptime",
+        "default": "Default"
+      },
+      "name": "Network Controller Summary",
+      "description": "Displays the summary of a Network Controller (like Unifi Controller)"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": "Failed to fetch Network Controller Summary"
       }
     }
   },

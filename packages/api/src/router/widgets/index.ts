@@ -9,6 +9,7 @@ import { mediaRequestsRouter } from "./media-requests";
 import { mediaServerRouter } from "./media-server";
 import { mediaTranscodingRouter } from "./media-transcoding";
 import { minecraftRouter } from "./minecraft";
+import { networkControllerRouter } from "./network-controller";
 import { notebookRouter } from "./notebook";
 import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
@@ -29,4 +30,5 @@ export const widgetRouter = createTRPCRouter({
   healthMonitoring: healthMonitoringRouter,
   mediaTranscoding: mediaTranscodingRouter,
   minecraft: minecraftRouter,
+  networkController: networkControllerRouter,
 });
