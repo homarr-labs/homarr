@@ -5,6 +5,7 @@ export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
 export { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
 export { SabnzbdIntegration } from "./download-client/sabnzbd/sabnzbd-integration";
 export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
+export { Aria2Integration } from "./download-client/aria2/aria2-integration";
 export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
 export { DownloadClientIntegration } from "./interfaces/downloads/download-client-integration";
 export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";

@@ -1629,10 +1629,13 @@
           "label": ""
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Hiển thị các mục Usenet đã hoàn thành"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Hiển thị các mục Torrent đã hoàn thành"
+        },
+        "showCompletedMiscellaneous": {
+          "label": "Hiển thị các mục khác đã hoàn thành"
         },
         "activeTorrentThreshold": {
           "label": ""
