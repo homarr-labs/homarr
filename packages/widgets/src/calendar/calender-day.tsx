@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { Container, Popover, useMantineTheme } from "@mantine/core";
-import { useClickOutside, useDisclosure } from "@mantine/hooks";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
 
@@ -12,9 +12,8 @@ interface CalendarDayProps {
 }
 
 export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
-  const [opened, { close, open }] = useDisclosure(false);
+  const [opened, setOpend] = useState(false);
   const { primaryColor } = useMantineTheme();
-  const popoverRef = useClickOutside(close);
 
   return (
     <Popover
@@ -26,14 +25,12 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
       transitionProps={{
         transition: "pop",
       }}
-      onClose={close}
+      onChange={() => setOpend(false)}
       opened={opened}
       disabled={disabled}
     >
       <Popover.Target>
         <Container
-          onClick={events.length > 0 && !opened ? open : close}
-          ref={popoverRef}
           h="100%"
           w="100%"
           p={0}
@@ -43,6 +40,11 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
             alignContent: "center",
             borderRadius: "3.5cqmin",
             cursor: events.length === 0 || disabled ? "default" : "pointer",
+          }}
+          onClick={() => {
+            if (events.length > 0 && !disabled) {
+              setOpend((prev) => !prev);
+            }
           }}
         >
           <div
