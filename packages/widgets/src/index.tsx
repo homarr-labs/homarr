@@ -5,6 +5,7 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { SettingsContextProps } from "@homarr/settings";
 
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
@@ -31,7 +32,7 @@ import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
 
-export type { WidgetDefinition } from "./definition";
+export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
 
 export const widgetImports = {
@@ -94,9 +95,13 @@ export type inferSupportedIntegrationsStrict<TKind extends WidgetKind> = (Widget
   ? WidgetImports[TKind]["definition"]["supportedIntegrations"]
   : never[])[number];
 
-export const reduceWidgetOptionsWithDefaultValues = (kind: WidgetKind, currentValue: Record<string, unknown> = {}) => {
+export const reduceWidgetOptionsWithDefaultValues = (
+  kind: WidgetKind,
+  settings: SettingsContextProps,
+  currentValue: Record<string, unknown> = {},
+) => {
   const definition = widgetImports[kind].definition;
-  const options = definition.options as Record<string, WidgetOptionDefinition>;
+  const options = definition.createOptions(settings) as Record<string, WidgetOptionDefinition>;
   return objectEntries(options).reduce(
     (prev, [key, value]) => ({
       ...prev,

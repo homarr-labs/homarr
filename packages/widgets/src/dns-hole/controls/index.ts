@@ -9,11 +9,13 @@ export const widgetKind = "dnsHoleControls";
 
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   icon: IconDeviceGamepad,
-  options: optionsBuilder.from((factory) => ({
-    showToggleAllButtons: factory.switch({
-      defaultValue: true,
-    }),
-  })),
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      showToggleAllButtons: factory.switch({
+        defaultValue: true,
+      }),
+    }));
+  },
   supportedIntegrations: getIntegrationKindsByCategory("dnsHole"),
   errors: {
     INTERNAL_SERVER_ERROR: {

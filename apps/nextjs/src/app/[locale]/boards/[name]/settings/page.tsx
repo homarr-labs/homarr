@@ -4,6 +4,7 @@ import { AccordionControl, AccordionItem, AccordionPanel, Container, Stack, Text
 import {
   IconAlertTriangle,
   IconBrush,
+  IconClick,
   IconFileTypeCss,
   IconLayout,
   IconPhoto,
@@ -23,6 +24,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
 import { BackgroundSettingsContent } from "./_background";
+import { BehaviorSettingsContent } from "./_behavior";
 import { BoardAccessSettings } from "./_board-access";
 import { ColorSettingsContent } from "./_colors";
 import { CustomCssSettingsContent } from "./_customCss";
@@ -94,6 +96,9 @@ export default async function BoardSettingsPage(props: Props) {
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>
             <CustomCssSettingsContent board={board} />
+          </AccordionItemFor>
+          <AccordionItemFor value="behavior" icon={IconClick}>
+            <BehaviorSettingsContent board={board} />
           </AccordionItemFor>
           {hasFullAccess && (
             <>

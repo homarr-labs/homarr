@@ -272,6 +272,7 @@ export const boards = mysqlTable("board", {
   opacity: int().default(100).notNull(),
   customCss: text(),
   columnCount: int().default(10).notNull(),
+  disableStatus: boolean().default(false).notNull(),
 });
 
 export const boardUserPermissions = mysqlTable(

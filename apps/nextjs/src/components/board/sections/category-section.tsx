@@ -3,9 +3,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { CategoryMenu } from "./category/category-menu";
 import { GridStack } from "./gridstack/gridstack";
 import classes from "./item.module.css";
