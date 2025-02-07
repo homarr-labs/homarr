@@ -12,7 +12,13 @@ import type { validation } from "@homarr/validation";
 
 import { AppForm } from "./_form";
 
-export const AppNewForm = ({ showCreateAnother, showBackToOverview }: { showCreateAnother: boolean, showBackToOverview: boolean }) => {
+export const AppNewForm = ({
+  showCreateAnother,
+  showBackToOverview,
+}: {
+  showCreateAnother: boolean;
+  showBackToOverview: boolean;
+}) => {
   const tScoped = useScopedI18n("app.page.create.notification");
   const t = useI18n();
   const router = useRouter();

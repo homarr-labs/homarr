@@ -9,10 +9,10 @@ import type { z } from "zod";
 import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
+import { IconPicker } from "@homarr/forms-collection";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
-import { IconPicker } from "@homarr/forms-collection";
 
 type FormType = z.infer<typeof validation.searchEngine.manage>;
 
