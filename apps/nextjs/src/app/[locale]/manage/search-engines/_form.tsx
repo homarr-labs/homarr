@@ -12,8 +12,7 @@ import { useZodForm } from "@homarr/form";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
-
-import { IconPicker } from "~/components/icons/picker/icon-picker";
+import { IconPicker } from "@homarr/forms-collection";
 
 type FormType = z.infer<typeof validation.searchEngine.manage>;
 
