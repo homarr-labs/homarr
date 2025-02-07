@@ -45,7 +45,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
       <Stack>
         <Title>{tEngine("page.list.title")}</Title>
         <Group justify="space-between" align="center">
-          <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} />
+          <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} flexExpand />
           {session.user.permissions.includes("search-engine-create") && (
             <MobileAffixButton component={Link} href="/manage/search-engines/new">
               {tEngine("page.create.title")}

@@ -58,7 +58,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
             />
           </Grid.Col>
         </Grid>
-        <IconPicker initialValue={initialValues?.iconUrl} {...form.getInputProps("iconUrl")} />
+        <IconPicker {...form.getInputProps("iconUrl")} />
 
         <Fieldset legend={t("search.engine.page.edit.configControl")}>
           <SegmentedControl

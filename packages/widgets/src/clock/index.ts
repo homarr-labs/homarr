@@ -47,6 +47,14 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           defaultValue: "dddd, MMMM D",
           withDescription: true,
         }),
+        customTimeFormat: factory.text({
+          defaultValue: "",
+          withDescription: true,
+        }),
+        customDateFormat: factory.text({
+          defaultValue: "",
+          withDescription: true,
+        }),
       }),
       {
         customTitle: {

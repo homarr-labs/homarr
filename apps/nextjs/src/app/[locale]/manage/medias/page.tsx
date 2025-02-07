@@ -61,7 +61,7 @@ export default async function GroupsListPage(props: MediaListPageProps) {
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
 
   return (
-    <ManageContainer size="xl">
+    <ManageContainer>
       <DynamicBreadcrumb />
       <Stack>
         <Title>{t("media.plural")}</Title>

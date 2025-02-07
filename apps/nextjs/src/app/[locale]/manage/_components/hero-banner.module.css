@@ -1,5 +1,5 @@
 .bannerContainer {
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
   @mixin dark {
     background: linear-gradient(
