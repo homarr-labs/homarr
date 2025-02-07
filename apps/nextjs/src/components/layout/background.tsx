@@ -1,7 +1,7 @@
 import { usePathname } from "next/navigation";
 import type { AppShellProps } from "@mantine/core";
 
-import { useOptionalBoard } from "~/app/[locale]/boards/(content)/_context";
+import { useOptionalBoard } from "@homarr/boards/context";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
 const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLowerCase().endsWith(`.${format}`));

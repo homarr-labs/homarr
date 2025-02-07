@@ -1,11 +1,11 @@
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
 
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
-import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useDynamicSectionActions } from "./dynamic-actions";
 
 export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionItem }) => {

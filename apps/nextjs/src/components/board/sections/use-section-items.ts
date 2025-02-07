@@ -1,8 +1,6 @@
-import type { DynamicSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
+import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const getCurrentLayout = <TLayout>(layouts: TLayout[]) => layouts.at(0)!;
+import type { DynamicSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
 
 export const useSectionItems = (sectionId: string): { innerSections: DynamicSectionItem[]; items: SectionItem[] } => {
   const board = useRequiredBoard();
@@ -12,7 +10,10 @@ export const useSectionItems = (sectionId: string): { innerSections: DynamicSect
         innerSection.kind === "dynamic",
     )
     .map(({ layouts, ...innerSection }) => {
-      const layout = getCurrentLayout(layouts);
+      const currentLayoutId = getCurrentLayout(board);
+      const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
+
+      if (!layout) return null;
 
       return {
         ...layout,
@@ -20,11 +21,14 @@ export const useSectionItems = (sectionId: string): { innerSections: DynamicSect
         type: "section" as const,
       };
     })
+    .filter((item) => item !== null)
     .filter((innerSection) => innerSection.parentSectionId === sectionId);
 
   const items = board.items
     .map(({ layouts, ...item }) => {
-      const layout = getCurrentLayout(layouts);
+      const currentLayoutId = getCurrentLayout(board);
+      const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
+      if (!layout) return null;
 
       return {
         ...layout,
@@ -32,6 +36,7 @@ export const useSectionItems = (sectionId: string): { innerSections: DynamicSect
         type: "item" as const,
       };
     })
+    .filter((item) => item !== null)
     .filter((item) => item.sectionId === sectionId);
 
   return {

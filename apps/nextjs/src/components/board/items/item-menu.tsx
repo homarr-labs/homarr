@@ -3,13 +3,14 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMoveModal } from "./item-move-modal";
@@ -35,6 +36,7 @@ export const BoardItemMenu = ({
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
+  const settings = useSettings();
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -75,6 +77,7 @@ export const BoardItemMenu = ({
           (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
+      settings,
     });
   };
 

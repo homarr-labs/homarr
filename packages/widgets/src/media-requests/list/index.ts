@@ -7,10 +7,12 @@ import { optionsBuilder } from "../../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestList", {
   icon: IconZoomQuestion,
-  options: optionsBuilder.from((factory) => ({
-    linksTargetNewTab: factory.switch({
-      defaultValue: true,
-    }),
-  })),
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      linksTargetNewTab: factory.switch({
+        defaultValue: true,
+      }),
+    }));
+  },
   supportedIntegrations: getIntegrationKindsByCategory("mediaRequest"),
 }).withDynamicImport(() => import("./component"));

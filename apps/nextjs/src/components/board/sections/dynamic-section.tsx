@@ -1,7 +1,8 @@
 import { Box, Card } from "@mantine/core";
 
+import { useRequiredBoard } from "@homarr/boards/context";
+
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";
 import { GridStack } from "./gridstack/gridstack";
 import classes from "./item.module.css";

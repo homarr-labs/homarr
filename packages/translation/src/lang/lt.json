@@ -805,6 +805,7 @@
       "apply": "",
       "backToOverview": "",
       "create": "Sukurti",
+      "createAnother": "",
       "edit": "",
       "import": "",
       "insert": "",
@@ -946,7 +947,8 @@
         "moveUp": "Pakelti aukštyn",
         "moveDown": "Perkelti žemyn",
         "createAbove": "",
-        "createBelow": ""
+        "createBelow": "",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "",
@@ -965,6 +967,10 @@
           "create": "",
           "changePosition": ""
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1190,6 +1196,14 @@
           "label": ""
         },
         "dateFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }
@@ -2570,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

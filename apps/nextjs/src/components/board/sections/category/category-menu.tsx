@@ -5,6 +5,7 @@ import { ActionIcon, Menu } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
+  IconExternalLink,
   IconRowInsertBottom,
   IconRowInsertTop,
   IconTransitionBottom,
@@ -12,11 +13,12 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+import { useEditMode } from "@homarr/boards/edit-mode";
+import type { MaybePromise } from "@homarr/common/types";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
-import { useEditMode } from "~/app/[locale]/boards/(content)/_context";
 import { useCategoryMenuActions } from "./category-menu-actions";
 
 interface Props {
@@ -27,8 +29,6 @@ export const CategoryMenu = ({ category }: Props) => {
   const actions = useActions(category);
   const t = useScopedI18n("section.category");
 
-  if (actions.length === 0) return null;
-
   return (
     <Menu withArrow>
       <Menu.Target>
@@ -37,18 +37,20 @@ export const CategoryMenu = ({ category }: Props) => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
-        {actions.map((action) => (
-          <React.Fragment key={action.label}>
-            {"group" in action && <Menu.Label>{t(action.group)}</Menu.Label>}
-            <Menu.Item
-              leftSection={<action.icon size="1rem" />}
-              onClick={action.onClick}
-              color={"color" in action ? action.color : undefined}
-            >
-              {t(action.label)}
-            </Menu.Item>
-          </React.Fragment>
-        ))}
+        {actions.map((action) => {
+          return (
+            <React.Fragment key={action.label}>
+              {"group" in action && <Menu.Label>{t(action.group)}</Menu.Label>}
+              <Menu.Item
+                leftSection={<action.icon size="1rem" />}
+                onClick={action.onClick}
+                color={"color" in action ? action.color : undefined}
+              >
+                {t(action.label)}
+              </Menu.Item>
+            </React.Fragment>
+          );
+        })}
       </Menu.Dropdown>
     </Menu>
   );
@@ -106,15 +108,21 @@ const useEditModeActions = (category: CategorySection) => {
   ] as const satisfies ActionDefinition[];
 };
 
-// TODO: once apps are added we can use this for the open many apps action
-const useNonEditModeActions = (_category: CategorySection) => {
-  return [] as const satisfies ActionDefinition[];
+const useNonEditModeActions = (category: CategorySection) => {
+  const { openAllInNewTabs } = useCategoryMenuActions(category);
+  return [
+    {
+      icon: IconExternalLink,
+      label: "action.openAllInNewTabs",
+      onClick: openAllInNewTabs,
+    },
+  ] as const satisfies ActionDefinition[];
 };
 
 interface ActionDefinition {
   icon: TablerIcon;
   label: string;
-  onClick: () => void;
+  onClick: () => MaybePromise<void>;
   color?: string;
   group?: string;
 }

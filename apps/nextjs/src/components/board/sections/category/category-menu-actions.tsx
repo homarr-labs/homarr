@@ -1,12 +1,15 @@
 import { useCallback } from "react";
 
+import { fetchApi } from "@homarr/api/client";
 import { createId } from "@homarr/db/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { useCategoryActions } from "./category-actions";
 import { CategoryEditModal } from "./category-edit-modal";
+import { filterByItemKind } from "./filter";
 
 export const useCategoryMenuActions = (category: CategorySection) => {
   const { openModal } = useModalAction(CategoryEditModal);
@@ -97,6 +100,29 @@ export const useCategoryMenuActions = (category: CategorySection) => {
     );
   }, [category, openModal, renameCategory, t]);
 
+  const settings = useSettings();
+  const openAllInNewTabs = useCallback(async () => {
+    const appIds = filterByItemKind(category.items, settings, "app").map((item) => {
+      return item.options.appId;
+    });
+
+    const apps = await fetchApi.app.byIds.query(appIds);
+    const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
+
+    for (const app of appsWithUrls) {
+      const openedWindow = window.open(app.href ?? undefined);
+      if (openedWindow) {
+        continue;
+      }
+
+      openConfirmModal({
+        title: t("section.category.openAllInNewTabs.title"),
+        children: t("section.category.openAllInNewTabs.text"),
+      });
+      break;
+    }
+  }, [category, t, openConfirmModal, settings]);
+
   return {
     addCategoryAbove,
     addCategoryBelow,
@@ -104,5 +130,6 @@ export const useCategoryMenuActions = (category: CategorySection) => {
     moveCategoryDown,
     remove,
     edit,
+    openAllInNewTabs,
   };
 };
