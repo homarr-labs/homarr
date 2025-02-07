@@ -113,126 +113,126 @@
         "subtitle": ""
       },
       "invite": {
-        "title": "",
+        "title": "Uneix-te a Homarr",
         "subtitle": "",
         "description": ""
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nova instal·lació de Homarr",
+        "subtitle": "Creeu l'usuari administrador inicial"
       }
     },
     "field": {
       "email": {
-        "label": "",
-        "verified": ""
+        "label": "Adreça electrònica",
+        "verified": "Verificat"
       },
       "username": {
-        "label": ""
+        "label": "Nom d’usuari"
       },
       "password": {
-        "label": "",
+        "label": "Contrasenya",
         "requirement": {
-          "length": "",
-          "lowercase": "",
-          "uppercase": "",
-          "number": "",
-          "special": ""
+          "length": "Inclou com a mínim 8 caràcters",
+          "lowercase": "Inclou minúscules",
+          "uppercase": "Inclou majúscules",
+          "number": "Inclou nombres",
+          "special": "Inclou símbols especials"
         }
       },
       "passwordConfirm": {
-        "label": ""
+        "label": "Confiremeu la contrasenya"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Contrasenya anterior"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Tauler principal"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Utilitza icones pels pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Motor de cerca principal"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Obre els resultats de la cerca en una pestanya nova"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "El nom d’usuari ja està en ús"
     },
     "action": {
       "login": {
-        "label": "",
-        "labelWith": "",
+        "label": "Inicia la sessió",
+        "labelWith": "Inicia la sessió amb {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Inici de sessió correcte",
+            "message": "Heu iniciat sessió"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No s'ha pogut iniciar sessió",
+            "message": "No s'ha pogut iniciar la sessió"
           }
         },
         "forgotPassword": {
-          "label": "",
+          "label": "Heu oblidat la contrasenya?",
           "description": ""
         }
       },
       "register": {
-        "label": "",
+        "label": "Crear un compte",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "S'ha creat el compte",
+            "message": "Inicieu la sessió per continuar"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "La creació del compte ha fallat",
+            "message": "No s'ha pogut crear el compte"
           }
         }
       },
-      "create": "",
+      "create": "Crea un usuari",
       "changePassword": {
-        "label": "",
+        "label": "Canvia la contrasenya",
         "notification": {
           "success": {
-            "message": ""
+            "message": "La contrasenya s'ha canviat correctament"
           },
           "error": {
-            "message": ""
+            "message": "No s'ha pogut canviar la contrasenya"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "El tauler d'inici s'ha canviat correctament"
           },
           "error": {
-            "message": ""
+            "message": "No 'ha pogut canviar el tauler d'inici"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Els paràmetres de cerca s'han canviat correctament"
           },
           "error": {
-            "message": ""
+            "message": "No s'han pogut canviar els paràmetres de cerca"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Primer dia de la setmana establert correctament"
           },
           "error": {
-            "message": ""
+            "message": "No s'ha pogut canviar el primer dia de la setmana"
           }
         }
       },
@@ -248,7 +248,7 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Canvia la imatge",
           "notification": {
             "success": {
               "message": "La imatge s'ha canviat correctament"

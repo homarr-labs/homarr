@@ -1438,10 +1438,10 @@
     },
     "indexerManager": {
       "name": "Статус менеджера індексування",
-      "description": "",
+      "description": "Статус ваших індексаторів",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Відкрити сайт індексатора у новій вкладці"
         }
       },
       "title": "Менеджер індексації",
