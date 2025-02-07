@@ -33,76 +33,78 @@ const columnsSort = columnsList.filter((column) =>
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
-  options: optionsBuilder.from(
-    (factory) => ({
-      columns: factory.multiSelect({
-        defaultValue: ["integration", "name", "progress", "time", "actions"],
-        options: columnsList.map((value) => ({
-          value,
-          label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
-        })),
-        searchable: true,
+  createOptions() {
+    return optionsBuilder.from(
+      (factory) => ({
+        columns: factory.multiSelect({
+          defaultValue: ["integration", "name", "progress", "time", "actions"],
+          options: columnsList.map((value) => ({
+            value,
+            label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
+          })),
+          searchable: true,
+        }),
+        enableRowSorting: factory.switch({
+          defaultValue: false,
+        }),
+        defaultSort: factory.select({
+          defaultValue: "type",
+          options: columnsSort.map((value) => ({
+            value,
+            label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
+          })),
+        }),
+        descendingDefaultSort: factory.switch({
+          defaultValue: false,
+        }),
+        showCompletedUsenet: factory.switch({
+          defaultValue: true,
+        }),
+        showCompletedTorrent: factory.switch({
+          defaultValue: true,
+        }),
+        activeTorrentThreshold: factory.number({
+          //in KiB/s
+          validate: z.number().min(0),
+          defaultValue: 0,
+          step: 1,
+        }),
+        categoryFilter: factory.multiText({
+          defaultValue: [] as string[],
+          validate: z.string(),
+        }),
+        filterIsWhitelist: factory.switch({
+          defaultValue: false,
+        }),
+        applyFilterToRatio: factory.switch({
+          defaultValue: true,
+        }),
       }),
-      enableRowSorting: factory.switch({
-        defaultValue: false,
-      }),
-      defaultSort: factory.select({
-        defaultValue: "type",
-        options: columnsSort.map((value) => ({
-          value,
-          label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
-        })),
-      }),
-      descendingDefaultSort: factory.switch({
-        defaultValue: false,
-      }),
-      showCompletedUsenet: factory.switch({
-        defaultValue: true,
-      }),
-      showCompletedTorrent: factory.switch({
-        defaultValue: true,
-      }),
-      activeTorrentThreshold: factory.number({
-        //in KiB/s
-        validate: z.number().min(0),
-        defaultValue: 0,
-        step: 1,
-      }),
-      categoryFilter: factory.multiText({
-        defaultValue: [] as string[],
-        validate: z.string(),
-      }),
-      filterIsWhitelist: factory.switch({
-        defaultValue: false,
-      }),
-      applyFilterToRatio: factory.switch({
-        defaultValue: true,
-      }),
-    }),
-    {
-      defaultSort: {
-        shouldHide: (options) => !options.enableRowSorting,
+      {
+        defaultSort: {
+          shouldHide: (options) => !options.enableRowSorting,
+        },
+        descendingDefaultSort: {
+          shouldHide: (options) => !options.enableRowSorting,
+        },
+        showCompletedUsenet: {
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
+        },
+        showCompletedTorrent: {
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+        },
+        activeTorrentThreshold: {
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+        },
+        applyFilterToRatio: {
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+        },
       },
-      descendingDefaultSort: {
-        shouldHide: (options) => !options.enableRowSorting,
-      },
-      showCompletedUsenet: {
-        shouldHide: (_, integrationKinds) =>
-          !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
-      },
-      showCompletedTorrent: {
-        shouldHide: (_, integrationKinds) =>
-          !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
-      },
-      activeTorrentThreshold: {
-        shouldHide: (_, integrationKinds) =>
-          !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
-      },
-      applyFilterToRatio: {
-        shouldHide: (_, integrationKinds) =>
-          !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
-      },
-    },
-  ),
+    );
+  },
   supportedIntegrations: getIntegrationKindsByCategory("downloadClient"),
 }).withDynamicImport(() => import("./component"));

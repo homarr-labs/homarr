@@ -8,7 +8,7 @@ import type { RouterOutputs } from "@homarr/api";
 import type { User } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
 
-type SettingsContextProps = Pick<
+export type SettingsContextProps = Pick<
   User,
   | "firstDayOfWeek"
   | "defaultSearchEngineId"
@@ -16,11 +16,15 @@ type SettingsContextProps = Pick<
   | "mobileHomeBoardId"
   | "openSearchInNewTab"
   | "pingIconsEnabled"
->;
+> &
+  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus">;
 
 interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
-  board: Pick<ServerSettings["board"], "homeBoardId" | "mobileHomeBoardId">;
+  board: Pick<
+    ServerSettings["board"],
+    "homeBoardId" | "mobileHomeBoardId" | "enableStatusByDefault" | "forceDisableStatus"
+  >;
 }
 
 const SettingsContext = createContext<SettingsContextProps | null>(null);
@@ -39,6 +43,8 @@ export const SettingsProvider = ({
         homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
         mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
         pingIconsEnabled: user?.pingIconsEnabled ?? false,
+        enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+        forceDisableStatus: serverSettings.board.forceDisableStatus,
       }}
     >
       {children}

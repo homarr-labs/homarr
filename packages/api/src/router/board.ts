@@ -484,6 +484,9 @@ export const boardRouter = createTRPCRouter({
 
           // layout settings
           columnCount: input.columnCount,
+
+          // Behavior settings
+          disableStatus: input.disableStatus,
         })
         .where(eq(boards.id, input.id));
     }),
