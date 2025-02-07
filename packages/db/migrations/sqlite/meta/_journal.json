@@ -162,13 +162,6 @@
       "when": 1737927609085,
       "tag": "0022_modern_sunfire",
       "breakpoints": true
-    },
-    {
-      "idx": 23,
-      "version": "6",
-      "when": 1738917041656,
-      "tag": "0023_minor_carmella_unuscione",
-      "breakpoints": true
     }
   ]
 }
