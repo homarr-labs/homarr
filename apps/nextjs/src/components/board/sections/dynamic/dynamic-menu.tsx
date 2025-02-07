@@ -14,7 +14,7 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
   const tDynamic = useScopedI18n("section.dynamic");
   const tItem = useScopedI18n("item");
   const { openModal } = useModalAction(DynamicEditModal);
-  const { removeDynamicSection } = useDynamicSectionActions();
+  const { updateDynamicSection, removeDynamicSection } = useDynamicSectionActions();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
 
@@ -23,9 +23,11 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
   const openEditModal = () => {
     openModal({
       kind: ["dynamic"],
-      onSuccessfulEdit: () => {
-        // todo
-        return;
+      value: { options: { ...section.options} },
+      onSuccessfulEdit: ({ options }) => {
+        updateDynamicSection({ itemId: section.id, newOptions: { 
+          ...options,
+        } });
       },
     });
   };

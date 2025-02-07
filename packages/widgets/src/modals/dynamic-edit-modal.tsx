@@ -15,16 +15,22 @@ export interface DynamicEditModalState {
 
 interface ModalProps {
   kind: ["dynamic"];
+  value: DynamicEditModalState;
   onSuccessfulEdit: (value: DynamicEditModalState) => void;
 }
 
-export const DynamicEditModal = createModal<ModalProps>(({ actions }) => {
+export const DynamicEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
 
   // Translate the error messages
   z.setErrorMap(zodErrorMap(t));
   const form = useForm({
     mode: "controlled",
+    initialValues: {
+      options: {
+        borderColor: innerProps.value.options.borderColor ?? "",
+      },
+    },
     validateInputOnBlur: true,
     validateInputOnChange: true,
   });
@@ -32,13 +38,17 @@ export const DynamicEditModal = createModal<ModalProps>(({ actions }) => {
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        console.log("values", values);
+        innerProps.onSuccessfulEdit(values);
         actions.closeModal();
       })}
     >
       <FormProvider form={form}>
         <Stack>
-          <TextInput label={t("section.dynamic.option.borderColor.label")} placeholder={"#000000"} />
+          <TextInput 
+            label={t("section.dynamic.option.borderColor.label")} 
+            placeholder={"#000000"} 
+            {...form.getInputProps("options.borderColor")}
+           />
           <Group justify="space-between">
             <Group justify="end" w={{ base: "100%", xs: "auto" }}>
               <Button onClick={actions.closeModal} variant="subtle" color="gray">
