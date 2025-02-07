@@ -10,9 +10,10 @@ import { IconSearch } from "@tabler/icons-react";
 interface SearchInputProps {
   defaultValue?: string;
   placeholder: string;
+  flexExpand?: boolean;
 }
 
-export const SearchInput = ({ placeholder, defaultValue }: SearchInputProps) => {
+export const SearchInput = ({ placeholder, defaultValue, flexExpand = false }: SearchInputProps) => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { replace } = useRouter();
   const pathName = usePathname();
@@ -40,6 +41,7 @@ export const SearchInput = ({ placeholder, defaultValue }: SearchInputProps) => 
       defaultValue={defaultValue}
       onChange={handleSearch}
       placeholder={placeholder}
+      style={{ flex: flexExpand ? "1" : undefined }}
     />
   );
 };

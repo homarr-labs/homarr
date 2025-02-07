@@ -805,6 +805,7 @@
       "apply": "Apply",
       "backToOverview": "Back to overview",
       "create": "Create",
+      "createAnother": "Create and start over",
       "edit": "Edit",
       "import": "Import",
       "insert": "Insert",
@@ -946,7 +947,8 @@
         "moveUp": "Move up",
         "moveDown": "Move down",
         "createAbove": "New category above",
-        "createBelow": "New category below"
+        "createBelow": "New category below",
+        "openAllInNewTabs": "Open all in tabs"
       },
       "create": {
         "title": "New category",
@@ -965,6 +967,10 @@
           "create": "New category",
           "changePosition": "Change position"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "Open all in tabs",
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },
@@ -1192,6 +1198,14 @@
         "dateFormat": {
           "label": "Date Format",
           "description": "How the date should look like"
+        },
+        "customTimeFormat": {
+          "label": "Custom time format",
+          "description": "Use ISO 8601 to format time (this will override other options)"
+        },
+        "customDateFormat": {
+          "label": "Custom date format",
+          "description": "Use ISO 8601 to format date (this will override other options)"
         }
       }
     },
@@ -2570,10 +2584,17 @@
               "button": {
                 "createApiToken": "Create API token"
               },
+              "modal": {
+                "delete": {
+                  "title": "Delete API token",
+                  "text": "This will permanently delete the API token. API clients using this token can no longer authenticate and perform API requests. This action cannot be undone."
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Created by"
+                  "createdBy": "Created by",
+                  "actions": "Actions"
                 }
               }
             }

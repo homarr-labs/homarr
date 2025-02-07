@@ -51,7 +51,7 @@
           "title": "Введіть токен імпорту",
           "field": {
             "token": {
-              "label": "Токен.",
+              "label": "Токен",
               "description": "Введіть показаний токен імпорту з вашого попереднього екземпляра homarr"
             }
           },
@@ -219,7 +219,7 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Налаштування пошуку успішно змінено"
           },
           "error": {
             "message": "Не вдалося змінити налаштування пошуку"
@@ -805,6 +805,7 @@
       "apply": "Застосувати",
       "backToOverview": "Назад до огляду",
       "create": "Створити",
+      "createAnother": "",
       "edit": "Редагувати",
       "import": "Імпорт",
       "insert": "Вставити",
@@ -877,7 +878,7 @@
         "switchToDarkMode": "Перемикнути на темну тему",
         "switchToLightMode": "Перемикнути на світлу тему",
         "management": "Управління",
-        "preferences": "Ваші уподобання",
+        "preferences": "Ваші налаштування",
         "logout": "Вийти",
         "login": "Логін",
         "homeBoard": "Ваша домашня дошка",
@@ -946,7 +947,8 @@
         "moveUp": "Перемістити вгору",
         "moveDown": "Перемістити вниз",
         "createAbove": "Нові категорії зверху",
-        "createBelow": "Нова категорія знизу"
+        "createBelow": "Нова категорія знизу",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Нова категорія",
@@ -965,6 +967,10 @@
           "create": "Нова категорія",
           "changePosition": "Змінити положення"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1192,6 +1198,14 @@
         "dateFormat": {
           "label": "Формат дати",
           "description": "Як має виглядати дата"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1424,10 +1438,10 @@
     },
     "indexerManager": {
       "name": "Статус менеджера індексування",
-      "description": "",
+      "description": "Статус ваших індексаторів",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Відкрити сайт індексатора у новій вкладці"
         }
       },
       "title": "Менеджер індексації",
@@ -2072,14 +2086,14 @@
           "title": ""
         },
         "access": {
-          "title": "",
+          "title": "Управління доступом",
           "permission": {
             "item": {
               "view": {
                 "label": "Перегляд дошки"
               },
               "modify": {
-                "label": ""
+                "label": "Змінювати дошку"
               },
               "full": {
                 "label": "Повний доступ"
@@ -2297,7 +2311,7 @@
               "board": {
                 "title": "Домашня дошка",
                 "type": {
-                  "general": "",
+                  "general": "Загальна",
                   "mobile": "Мобільна"
                 }
               },
@@ -2336,7 +2350,7 @@
               "description": ""
             },
             "review": {
-              "label": ""
+              "label": "Огляд"
             },
             "completed": {
               "title": "Користувача створено"
@@ -2570,10 +2584,17 @@
               "button": {
                 "createApiToken": "Створити API токен"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ІДЕНТИФІКАТОР",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }
@@ -2720,10 +2741,10 @@
   "permission": {
     "title": "Дозволи",
     "userSelect": {
-      "title": ""
+      "title": "Додати дозвіл для користувача"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Додати дозвіл для групи"
     },
     "tab": {
       "user": "Користувачі",
@@ -2738,12 +2759,12 @@
         "label": "Група"
       },
       "permission": {
-        "label": ""
+        "label": "Дозвіл"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Зберегти дозвіл користувача",
+      "saveGroup": "Зберегти дозвіл групи"
     }
   },
   "navigationStructure": {
@@ -2753,7 +2774,7 @@
         "label": "Дошки"
       },
       "integrations": {
-        "label": "",
+        "label": "Інтеграції",
         "edit": {
           "label": "Редагувати"
         },
@@ -2762,7 +2783,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Пошукові системи",
         "new": {
           "label": ""
         },
@@ -2771,7 +2792,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Медіа"
       },
       "apps": {
         "label": "Додатки",
@@ -2791,7 +2812,7 @@
         "security": "Безпека",
         "board": "Дошки",
         "groups": {
-          "label": ""
+          "label": "Групи"
         },
         "invites": {
           "label": "Запрошення"
@@ -2800,13 +2821,13 @@
       "tools": {
         "label": "Інструменти",
         "docker": {
-          "label": ""
+          "label": "Докер"
         },
         "logs": {
-          "label": ""
+          "label": "Логи"
         },
         "certificates": {
-          "label": ""
+          "label": "Сертифікати"
         }
       },
       "settings": {
@@ -2819,7 +2840,7 @@
   },
   "search": {
     "placeholder": "",
-    "nothingFound": "",
+    "nothingFound": "Нічого не знайдено",
     "error": {
       "fetch": ""
     },
@@ -2835,7 +2856,7 @@
                   "label": "Відкрити посилання на додаток"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Редагувати додаток"
                 }
               },
               "detail": {
@@ -2851,10 +2872,10 @@
                   "label": "Відкрити дошку"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Встановити як домашню дошку"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Встановити як мобільну дошку"
                 },
                 "settings": {
                   "label": "Відкрити налаштування"
@@ -3140,15 +3161,15 @@
           "interactive": ""
         },
         "create": {
-          "title": "",
+          "title": "Нова пошукова система",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Пошукова система створена",
+              "message": "Пошукова система успішно створена"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Пошукова система не створена",
+              "message": "Не вдалося створити пошукову систему"
             }
           }
         },
@@ -3171,16 +3192,16 @@
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Видалити пошукову систему",
+          "message": "Ви впевнені, що хочете видалити пошукову систему \"{name}\"?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Пошукову систему видалено",
+              "message": "Пошукову систему успішно видалено"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Пошукова система не видалена",
+              "message": "Не вдалося видалити пошукову систему"
             }
           }
         }
@@ -3188,11 +3209,11 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Запит \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Сезон",
+                "episodes": "Серії"
               }
             },
             "button": {

@@ -25,7 +25,7 @@
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
     "@mantine/notifications": "^7.16.2",
-    "@tabler/icons-react": "^3.29.0"
+    "@tabler/icons-react": "^3.30.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

@@ -805,6 +805,7 @@
       "apply": "Použiť",
       "backToOverview": "Späť na prehľad",
       "create": "Vytvoriť",
+      "createAnother": "",
       "edit": "Upraviť",
       "import": "Importovať",
       "insert": "Vložiť",
@@ -946,7 +947,8 @@
         "moveUp": "Posunúť nahor",
         "moveDown": "Posunúť nadol",
         "createAbove": "Nová kategória vyššie",
-        "createBelow": "Nová kategória nižšie"
+        "createBelow": "Nová kategória nižšie",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nová kategória",
@@ -965,6 +967,10 @@
           "create": "Nová kategória",
           "changePosition": "Zmeniť pozíciu"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1192,6 +1198,14 @@
         "dateFormat": {
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -2570,10 +2584,17 @@
               "button": {
                 "createApiToken": "Vytvorte token API"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Vytvoril/a"
+                  "createdBy": "Vytvoril/a",
+                  "actions": ""
                 }
               }
             }

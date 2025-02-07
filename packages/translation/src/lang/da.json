@@ -805,6 +805,7 @@
       "apply": "Anvend",
       "backToOverview": "Tilbage til oversigt",
       "create": "Opret",
+      "createAnother": "Opret og start forfra",
       "edit": "Rediger",
       "import": "Importér",
       "insert": "Indsæt",
@@ -946,7 +947,8 @@
         "moveUp": "Flyt op",
         "moveDown": "Flyt ned",
         "createAbove": "Ny kategori ovenover",
-        "createBelow": "Ny kategori nedenunder"
+        "createBelow": "Ny kategori nedenunder",
+        "openAllInNewTabs": "Åbn alt i faneblade"
       },
       "create": {
         "title": "Ny kategori",
@@ -965,6 +967,10 @@
           "create": "Ny kategori",
           "changePosition": "Ændre placering"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "Åbn alt i faneblade",
+        "text": "Nogle browsere kan blokere bulk-åbning af faner af sikkerhedsmæssige årsager. Homarr kunne ikke åbne alle vinduer, fordi din browser blokerede denne handling. Tillad venligst \"Åbn pop op-vinduer\" og prøv igen."
       }
     }
   },
@@ -1192,6 +1198,14 @@
         "dateFormat": {
           "label": "Datoformat",
           "description": "Hvordan datoen skal se ud"
+        },
+        "customTimeFormat": {
+          "label": "Brugerdefineret tidsformat",
+          "description": "Brug ISO 8601 til at formatere tid (dette vil tilsidesætte andre valgmuligheder)"
+        },
+        "customDateFormat": {
+          "label": "Brugerdefineret datoformat",
+          "description": "Brug ISO 8601 til at formatere dato (dette vil tilsidesætte andre valg)"
         }
       }
     },
@@ -2570,10 +2584,17 @@
               "button": {
                 "createApiToken": "Opret API token"
               },
+              "modal": {
+                "delete": {
+                  "title": "Slet API token",
+                  "text": "Dette vil permanent slette API-token. API-klienter der bruger dette token kan ikke længere godkende og udføre API-anmodninger. Denne handling kan ikke fortrydes."
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Oprettet af"
+                  "createdBy": "Oprettet af",
+                  "actions": "Handlinger"
                 }
               }
             }

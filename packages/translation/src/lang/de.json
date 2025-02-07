@@ -805,6 +805,7 @@
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
+      "createAnother": "",
       "edit": "Bearbeiten",
       "import": "Import",
       "insert": "Einfügen",
@@ -946,7 +947,8 @@
         "moveUp": "Nach oben bewegen",
         "moveDown": "Nach unten bewegen",
         "createAbove": "Neue Kategorie oben",
-        "createBelow": "Neue Kategorie unten"
+        "createBelow": "Neue Kategorie unten",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Neue Kategorie",
@@ -965,6 +967,10 @@
           "create": "Neue Kategorie",
           "changePosition": "Position wechseln"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1192,6 +1198,14 @@
         "dateFormat": {
           "label": "Datumsformat",
           "description": "Wie das Datum aussehen sollte"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -2570,10 +2584,17 @@
               "button": {
                 "createApiToken": "API Token erstellen"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Erstellt von"
+                  "createdBy": "Erstellt von",
+                  "actions": ""
                 }
               }
             }
