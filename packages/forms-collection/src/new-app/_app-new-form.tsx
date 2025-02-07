@@ -10,9 +10,9 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
 
-import { AppForm } from "../_form";
+import { AppForm } from "./_form";
 
-export const AppNewForm = () => {
+export const AppNewForm = ({ showCreateAnother, showBackToOverview }: { showCreateAnother: boolean, showBackToOverview: boolean }) => {
   const tScoped = useScopedI18n("app.page.create.notification");
   const t = useI18n();
   const router = useRouter();
@@ -52,8 +52,9 @@ export const AppNewForm = () => {
     <AppForm
       buttonLabels={{
         submit: t("common.action.create"),
-        submitAndCreateAnother: t("common.action.createAnother"),
+        submitAndCreateAnother: showCreateAnother ? t("common.action.createAnother") : undefined,
       }}
+      showBackToOverview={showBackToOverview}
       handleSubmit={handleSubmit}
       isPending={isPending}
     />
